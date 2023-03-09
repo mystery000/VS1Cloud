@@ -146,7 +146,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 103;
+  let allDataToLoad = 105;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -200,6 +200,10 @@ Template.onsuccesswaterfall.onRendered(function () {
   let isImportProduct = localStorage.getItem('CloudImportProd');
   let isStockonHandDemandChart = localStorage.getItem('CloudStockOnHand');
   let isAppointmentSMS = localStorage.getItem('CloudApptSMS');
+
+  /* Damien Begin */
+  let isEmailSettings = true;
+  /* Damien End */
 
   let isSerialNumberList = localStorage.getItem('CloudShowSerial') || false;
 
@@ -507,7 +511,7 @@ Template.onsuccesswaterfall.onRendered(function () {
         $('.checkmarkwrapper').removeClass("hide");
         templateObject.dashboardRedirectOnLogin();
       }
-      addVS1Data('TProductList', JSON.stringify(data));
+      addVS1Data('TProductQtyList', JSON.stringify(data));
       $("<span class='process'>Product List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
 
@@ -2867,6 +2871,63 @@ Template.onsuccesswaterfall.onRendered(function () {
   }
 
   /**
+  * @Damien added by 3/6/2023
+  * */
+  templateObject.getCorrespondenceData = function() {
+    sideBarService.getCorrespondences().then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("AP Report "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Correspondence");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TCorrespondence', JSON.stringify(data));
+      $("<span class='process'>Correspondence Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+  templateObject.getScheduleInfo = function() {
+    sideBarService.getScheduleSettings().then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("AP Report "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Schedule Info");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TReportSchedules', JSON.stringify(data));
+      $("<span class='process'>Schedule Info Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+
+
+  /**
    * @XiaoJang added since 23 January 2023
    */
   templateObject.getBalanceSheetData = function() {
@@ -3763,6 +3824,46 @@ Template.onsuccesswaterfall.onRendered(function () {
           }).catch(function (err) {
             templateObject.getAllTimeSheetData();
           });
+
+          /*
+          * @Damien on 3/6/2023
+          * */
+          if(isEmailSettings){
+            getVS1Data('TCorrespondence').then(function (dataObject) {
+              if (dataObject.length == 0) {
+                templateObject.getCorrespondenceData();
+              } else {
+                let getTimeStamp = dataObject[0].timestamp.split(' ');
+                if (getTimeStamp) {
+                  if (JSON.parse(loggedUserEventFired)) {
+                    if (getTimeStamp[0] != currenctTodayDate) {
+                      templateObject.getCorrespondenceData();
+                    }
+                  }
+                }
+              }
+            }).catch(function (err) {
+              templateObject.getCorrespondenceData();
+            });
+
+            getVS1Data('TReportSchedules').then(function (dataObject) {
+              if (dataObject.length == 0) {
+                templateObject.getScheduleInfo();
+              } else {
+                let getTimeStamp = dataObject[0].timestamp.split(' ');
+                if (getTimeStamp) {
+                  if (JSON.parse(loggedUserEventFired)) {
+                    if (getTimeStamp[0] != currenctTodayDate) {
+                      templateObject.getScheduleInfo();
+                    }
+                  }
+                }
+              }
+            }).catch(function (err) {
+              templateObject.getScheduleInfo();
+            });
+          }
+          /* @Damien End */
 
           // getVS1Data('TPayRun').then(function(dataObject) {
           //     if (dataObject.length == 0) {

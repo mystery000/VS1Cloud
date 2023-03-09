@@ -87,6 +87,8 @@ Template.vs1login.onRendered(function () {
     localStorage.removeItem('VS1TpurchaseOrderBackOrderList');
     localStorage.removeItem('VS1TSalesList');
 
+    localStorage.removeItem('VS1Cloud_SETUP_CONFIRMED_STEPS');
+
     localStorage.setItem('VS1ProductList', '[]');
     localStorage.setItem('VS1CustomerList', '[]');
     localStorage.setItem('VS1SupplierList', '[]');
@@ -1604,13 +1606,12 @@ Template.vs1login.onRendered(function () {
 
             setTimeout(function(){
               if(isSetupWizard == true){
-                if (isAppointmentScheduling == true) {
-                    if (isAllocationLaunch == true) {
-                      //FlowRouter.go('/appointments#allocationModal');
+                if (isAppointmentScheduling == true) { //Check If Appoinment Module is Enabled
+                    if (isAllocationLaunch == true) { // Check If Access is set to Launch Location on Appointment (This is for appointment Users only)
                       window.open('/appointments#allocationModal', '_self');
-                    } else if (isAppointmentLaunch == true) {
+                    } else if (isAppointmentLaunch == true) {// Check if Launch Acces Level Launch Appoinment
                        window.open('/appointments', '_self');
-                    } else {
+                    } else { //If not, then redirect to the Dashbaord and check which Dashboard option is selected.
                        window.open('/'+passloginredirect, '_self');
                     }
                 } else {

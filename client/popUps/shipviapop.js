@@ -38,6 +38,20 @@ Template.shipviapop.onCreated(function() {
     templateObject.includePurchaseDefault = new ReactiveVar();
     templateObject.includePurchaseDefault.set(false);
 
+    templateObject.getDataTableList = function(data){
+            var dataList = [
+                data.Id || "",
+                data.ShippingMethod || "",
+            ];
+        return dataList;
+    }
+
+    let headerStructure  = [
+        { index: 0, label: '#ID', class: 'colID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Shipping Method', class: 'colShipName', active: true, display: true, width: "500" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+
 });
 
 Template.shipviapop.onRendered(function() {
@@ -77,150 +91,150 @@ Template.shipviapop.onRendered(function() {
         });
     };
 
-    templateObject.getShpVias = function() {
-        getVS1Data('TShippingMethod').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getShippingMethodData().then(function(data) {
-                  addVS1Data('TShippingMethod',JSON.stringify(data));
-                    for (let i in data.tshippingmethod) {
+    // templateObject.getShpVias = function() {
+    //     getVS1Data('TShippingMethod').then(function(dataObject) {
+    //         if (dataObject.length == 0) {
+    //             sideBarService.getShippingMethodData().then(function(data) {
+    //               addVS1Data('TShippingMethod',JSON.stringify(data));
+    //                 for (let i in data.tshippingmethod) {
 
-                        let viarecordObj = {
-                            shippingmethod: data.tshippingmethod[i].ShippingMethod || ' ',
-                            id: data.tshippingmethod[i].Id || ' '
-                        };
-                        var dataList = [
-                        	data.tshippingmethod[i].ShippingMethod || ' '
-                        ];
-                        splashArrayShipViaList.push(dataList);
-                        viarecords.push(viarecordObj);
-                        templateObject.shipviarecords.set(viarecords);
+    //                     let viarecordObj = {
+    //                         shippingmethod: data.tshippingmethod[i].ShippingMethod || ' ',
+    //                         id: data.tshippingmethod[i].Id || ' '
+    //                     };
+    //                     var dataList = [
+    //                     	data.tshippingmethod[i].ShippingMethod || ' '
+    //                     ];
+    //                     splashArrayShipViaList.push(dataList);
+    //                     viarecords.push(viarecordObj);
+    //                     templateObject.shipviarecords.set(viarecords);
 
-                    }
-                    setTimeout(function() {
-                        $('#tblShipViaPopList').DataTable({
-                            data: splashArrayShipViaList,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: true,
-                            "aaSorting": [],
-                            "orderMulti": true,
-                            columnDefs: [
-                                { className: "colShipName", "targets": [0] }
-                            ],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                            info: true,
-                            responsive: true,
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function () {
-                                $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
-                                $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
-                            },
+    //                 }
+    //                 setTimeout(function() {
+    //                     $('#tblShipViaPopList').DataTable({
+    //                         data: splashArrayShipViaList,
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         paging: true,
+    //                         "aaSorting": [],
+    //                         "orderMulti": true,
+    //                         columnDefs: [
+    //                             { className: "colShipName", "targets": [0] }
+    //                         ],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //                         pageLength: initialDatatableLoad,
+    //                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                         info: true,
+    //                         responsive: true,
+    //                         language: { search: "",searchPlaceholder: "Search List..." },
+    //                         "fnInitComplete": function () {
+    //                             $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
+    //                             $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
+    //                         },
 
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 10);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tshippingmethod;
-                for (let i in useData) {
+    //                     });
+    //                     $('.fullScreenSpin').css('display', 'none');
+    //                 }, 10);
+    //             });
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.tshippingmethod;
+    //             for (let i in useData) {
 
-                    let viarecordObj = {
-                        shippingmethod: useData[i].ShippingMethod || ' ',
-                        id: useData[i].ID || ' '
-                    };
-                    var dataList = [
-                      data.tshippingmethod[i].ShippingMethod || ' '
-                    ];
-                    splashArrayShipViaList.push(dataList);
-                    viarecords.push(viarecordObj);
+    //                 let viarecordObj = {
+    //                     shippingmethod: useData[i].ShippingMethod || ' ',
+    //                     id: useData[i].ID || ' '
+    //                 };
+    //                 var dataList = [
+    //                   data.tshippingmethod[i].ShippingMethod || ' '
+    //                 ];
+    //                 splashArrayShipViaList.push(dataList);
+    //                 viarecords.push(viarecordObj);
 
-                    templateObject.shipviarecords.set(viarecords);
+    //                 templateObject.shipviarecords.set(viarecords);
 
-                }
+    //             }
 
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#tblShipViaPopList').DataTable({
-                        data: splashArrayShipViaList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [
-                            { className: "colShipName", "targets": [0] }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
-                            $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
-                        },
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             setTimeout(function() {
+    //                 $('#tblShipViaPopList').DataTable({
+    //                     data: splashArrayShipViaList,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     paging: true,
+    //                     "aaSorting": [],
+    //                     "orderMulti": true,
+    //                     columnDefs: [
+    //                         { className: "colShipName", "targets": [0] }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     language: { search: "",searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function () {
+    //                         $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
+    //                         $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
+    //                     },
 
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 10);
+    //                 });
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //             }, 10);
 
 
-            }
-        }).catch(function(err) {
+    //         }
+    //     }).catch(function(err) {
 
-          sideBarService.getShippingMethodData().then(function(data) {
-            addVS1Data('TShippingMethod',JSON.stringify(data));
-              for (let i in data.tshippingmethod) {
+    //       sideBarService.getShippingMethodData().then(function(data) {
+    //         addVS1Data('TShippingMethod',JSON.stringify(data));
+    //           for (let i in data.tshippingmethod) {
 
-                  let viarecordObj = {
-                      shippingmethod: data.tshippingmethod[i].ShippingMethod || ' ',
-                      id: data.tshippingmethod[i].Id || ' '
-                  };
-                  var dataList = [
-                    data.tshippingmethod[i].ShippingMethod || ' '
-                  ];
-                  splashArrayShipViaList.push(dataList);
-                  viarecords.push(viarecordObj);
-                  templateObject.shipviarecords.set(viarecords);
+    //               let viarecordObj = {
+    //                   shippingmethod: data.tshippingmethod[i].ShippingMethod || ' ',
+    //                   id: data.tshippingmethod[i].Id || ' '
+    //               };
+    //               var dataList = [
+    //                 data.tshippingmethod[i].ShippingMethod || ' '
+    //               ];
+    //               splashArrayShipViaList.push(dataList);
+    //               viarecords.push(viarecordObj);
+    //               templateObject.shipviarecords.set(viarecords);
 
-              }
-              setTimeout(function() {
-                  $('#tblShipViaPopList').DataTable({
-                      data: splashArrayShipViaList,
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                      paging: true,
-                      "aaSorting": [],
-                      "orderMulti": true,
-                      columnDefs: [
-                          { className: "colShipName", "targets": [0] }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      language: { search: "",searchPlaceholder: "Search List..." },
-                      "fnInitComplete": function () {
-                          $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
-                          $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
-                      },
+    //           }
+    //           setTimeout(function() {
+    //               $('#tblShipViaPopList').DataTable({
+    //                   data: splashArrayShipViaList,
+    //                   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                   paging: true,
+    //                   "aaSorting": [],
+    //                   "orderMulti": true,
+    //                   columnDefs: [
+    //                       { className: "colShipName", "targets": [0] }
+    //                   ],
+    //                   select: true,
+    //                   destroy: true,
+    //                   colReorder: true,
+    //                   pageLength: initialDatatableLoad,
+    //                   lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                   info: true,
+    //                   responsive: true,
+    //                   language: { search: "",searchPlaceholder: "Search List..." },
+    //                   "fnInitComplete": function () {
+    //                       $("<button class='btn btn-primary btnAddNewShipVia' data-dismiss='modal' data-toggle='modal' data-target='#newShipViaModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblShipViaPopList_filter");
+    //                       $("<button class='btn btn-primary btnRefreshVia' type='button' id='btnRefreshVia' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblShipViaPopList_filter");
+    //                   },
 
-                  });
-                  $('.fullScreenSpin').css('display', 'none');
-              }, 10);
-          });
-        });
+    //               });
+    //               $('.fullScreenSpin').css('display', 'none');
+    //           }, 10);
+    //       });
+    //     });
 
-    }
-    templateObject.getShpVias();
+    // }
+    // templateObject.getShpVias();
 
 
     $(document).on('click', '.table-remove', function() {
@@ -237,110 +251,6 @@ Template.shipviapop.onRendered(function() {
         // event.preventDefault();
         // return false;
         // }
-    });
-
-    $('#tblShipViaPopList tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function() {
-        var listData = $(this).closest('tr').attr('id');
-        var is7days = false;
-        var is30days = false;
-        var isEOM = false;
-        var isEOMPlus = false;
-        var isSalesDefault = false;
-        var isPurchaseDefault = false;
-        if (listData) {
-            $('#add-terms-title').text('Edit Term ');
-            //$('#isformcreditcard').removeAttr('checked');
-            if (listData !== '') {
-                listData = Number(listData);
-                //taxRateService.getOneTerms(listData).then(function (data) {
-
-                var termsID = listData || '';
-                var termsName = $(event.target).closest("tr").find(".colName").text() || '';
-                var description = $(event.target).closest("tr").find(".colDescription").text() || '';
-                var days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
-                //let isDays = data.fields.IsDays || '';
-                if ($(event.target).closest("tr").find(".colIsEOM .chkBox").is(':checked')) {
-                    isEOM = true;
-                }
-
-                if ($(event.target).closest("tr").find(".colIsEOMPlus .chkBox").is(':checked')) {
-                    isEOMPlus = true;
-                }
-
-                if ($(event.target).closest("tr").find(".colCustomerDef .chkBox").is(':checked')) {
-                    isSalesDefault = true;
-                }
-
-                if ($(event.target).closest("tr").find(".colSupplierDef .chkBox").is(':checked')) {
-                    isPurchaseDefault = true;
-                }
-
-                if (isEOM == true || isEOMPlus == true) {
-                    isDays = false;
-                } else {
-                    isDays = true;
-                }
-
-
-                $('#edtTermsID').val(termsID);
-                $('#edtName').val(termsName);
-                $('#edtName').prop('readonly', true);
-                $('#edtDesc').val(description);
-                $('#edtDays').val(days);
-
-
-                // if((isDays == true) && (days == 7)){
-                //   templateObject.include7Days.set(true);
-                // }else{
-                //   templateObject.include7Days.set(false);
-                // }
-                if ((isDays == true) && (days == 0)) {
-                    templateObject.includeCOD.set(true);
-                } else {
-                    templateObject.includeCOD.set(false);
-                }
-
-                if ((isDays == true) && (days == 30)) {
-                    templateObject.include30Days.set(true);
-                } else {
-                    templateObject.include30Days.set(false);
-                }
-
-                if (isEOM == true) {
-                    templateObject.includeEOM.set(true);
-                } else {
-                    templateObject.includeEOM.set(false);
-                }
-
-                if (isEOMPlus == true) {
-                    templateObject.includeEOMPlus.set(true);
-                } else {
-                    templateObject.includeEOMPlus.set(false);
-                }
-
-
-                if (isSalesDefault == true) {
-                    templateObject.includeSalesDefault.set(true);
-                } else {
-                    templateObject.includeSalesDefault.set(false);
-                }
-
-                if (isPurchaseDefault == true) {
-                    templateObject.includePurchaseDefault.set(true);
-                } else {
-                    templateObject.includePurchaseDefault.set(false);
-                }
-
-                //});
-
-
-                $(this).closest('tr').attr('data-target', '#myModal');
-                $(this).closest('tr').attr('data-toggle', 'modal');
-
-            }
-
-        }
-
     });
 });
 
@@ -1002,7 +912,39 @@ Template.shipviapop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+    apiFunction:function() {
+        // let sideBarService = new SideBarService();
+        return sideBarService.getShippingMethodList
+    },
+    service:()=>{
+        return sideBarService;
+    },
+    searchAPI: function() {
+        // let sideBarService = new SideBarService();
+        return sideBarService.getOneShippingMethod
+    },
+
+    apiParams:()=>{
+        return ['limitCount', 'limitFrom']
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+
 });
 
 Template.registerHelper('equals', function(a, b) {

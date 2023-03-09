@@ -6,7 +6,7 @@ import { Session } from 'meteor/session';
 import { HTTP } from "meteor/http";
 let sideBarService = new SideBarService();
 modalDraggable = function () {
-  //$.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
+  $.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
     $('.modal-dialog').draggable({
         containment: "body",
         "handle":".modal-header, .modal-footer"
@@ -706,7 +706,7 @@ checkSetupFinished = function () {
     let ERPPassword = localStorage.getItem('EPassword');
     let ERPDatabase = localStorage.getItem('EDatabase');
     let ERPPort = localStorage.getItem('EPort');
-    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
+    const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard`; //,IsSetUpWizard
     const _headers = {
         database: ERPDatabase,
         username: ERPUsername,
@@ -719,10 +719,11 @@ checkSetupFinished = function () {
           if(result.data != undefined) {
             if( result.data.tcompanyinfo.length > 0 ){
               let data = result.data.tcompanyinfo[0];
-              let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+              // let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+              let cntConfirmedSteps = data.IsSetUpWizard||false;
               setupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
               localStorage.setItem("IS_SETUP_FINISHED", setupFinished);
-              if (setupFinished) {
+              if (data.IsSetUpWizard == true) {
                   $('.setupIncompleatedMsg').hide();
               } else {
                   $('.setupIncompleatedMsg').show();

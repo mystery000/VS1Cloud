@@ -121,8 +121,8 @@ Template.termsettings.onCreated(function () {
     { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
     { index: 4, label: 'EOM Plus', class: 'colIsEOMPlus', active: true, display: true, width: "80" },
     { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "130" },
-    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "130" },
+    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "155" },
+    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "155" },
     { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     { index: 9, label: 'Is Progress Payment', class: 'colIsProgressPayment', active: false, display: true, width: "200" },
     { index: 10, label: 'Required', class: 'colRequired', active: false, display: true, width: "100" },
@@ -236,7 +236,7 @@ Template.termsettings.onRendered(function () {
       $('.btnActiveTerms').removeClass('d-none')
     } else {
       $('.btnActiveTerms').addClass('d-none')
-      $('.btnDeleteTerms').removeClass('d-none')      
+      $('.btnDeleteTerms').removeClass('d-none')
     }
   });
 });
@@ -284,7 +284,7 @@ Template.termsettings.events({
       .catch(function (err) {
         Meteor._reload.reload();
       });
-  },  
+  },
   "click .btnAddTerms": function () {
     let templateObject = Template.instance();
     $("#add-terms-title").text("Add New Term");
@@ -456,7 +456,6 @@ Template.termsettings.events({
     Papa.parse(templateObject.selectedFile.get(), {
       complete: function (results) {
         if (results.data.length > 0) {
-          console.log('import-term-setting');
           if (
             results.data[0][0] == "Term Name" &&
             results.data[0][4] == "Description"

@@ -284,13 +284,13 @@ const erpObject = {
     TVATReturn: "TVATReturns",
     TVATReturnDetail: "TVATReturnDetail",
     VS1_Customize: "VS1_Customize",
-    TProductList: "TProductList",
+    TProductQtyList: "TProductQtyList",
     TProductMovementList: "TProductMovementList",
     TCardDataReport: "TCardDataReport",
     TProcTree: "TProcTree",
     TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
     TRateTypes: "TRateTypes",
-    TEarningData: "TEarningData",
+    TEarnings: "TEarnings",
     TTimeSheetDetails: "TTimeSheetDetails",
     TCurrencyFrequencySettings: "TCurrencyFrequencySettings",
     TLeavRequest: "TLeavRequest",
@@ -321,8 +321,8 @@ const erpObject = {
     TPreference: "TPreference",
     BuildProfitabilityReport: "BuildProfitabilityReport",
     ProductionWorksheetReport: "ProductionWorksheetReport",
-    WorkOrderReport: "WorkOrderReport"
-
+    WorkOrderReport: "WorkOrderReport",
+    TProductQtyList:"TProductQtyList"
 };
 
 export default erpObject;
