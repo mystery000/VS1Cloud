@@ -2,12 +2,16 @@ import {TaxRateService} from "../settings/settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {
+    ProductService
+} from "../product/product-service";
 
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './departmentpop.html';
 
 let sideBarService = new SideBarService();
+let productService = new ProductService();
 Template.departmentpop.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -111,24 +115,41 @@ Template.departmentpop.onRendered(function() {
     };
     templateObject.getAllEmployees();
 
-    templateObject.getRooms = function () {
+    templateObject.getRooms = function() {
+        getVS1Data('TProductBin').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(async function (data) {
+                    await addVS1Data('TProductBin', JSON.stringify(data));
+                    templateObject.setBinRecords(data);
+                }).catch(function (err) {
 
-        taxRateService.getBins().then(function (data) {
-            let binList = [];
-            for (let i = 0; i < data.tproductbin.length; i++) {
-
-                let dataObj = {
-                    roomid: data.tproductbin[i].BinNumber || ' ',
-                    roomname: data.tproductbin[i].BinLocation || ' '
-                };
-                if(data.tproductbin[i].BinLocation.replace(/\s/g, '') != ''){
-                    binList.push(dataObj);
-                }
-
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.setBinRecords(data);
             }
-            templateObject.roomrecords.set(binList);
+        }).catch(function (err) {
+            productService.getBins().then(async function (data) {
+                await addVS1Data('TProductBin', JSON.stringify(data));
+                templateObject.setBinRecords(data);
+            }).catch(function (err) {
+            });
         });
     };
+    templateObject.setBinRecords = function(data){
+        let binList = [];
+        for (let i = 0; i < data.tproductbin.length; i++) {
+
+            let dataObj = {
+                roomid: data.tproductbin[i].BinNumber || ' ',
+                roomname: data.tproductbin[i].BinLocation || ' '
+            };
+            if (data.tproductbin[i].BinLocation.replace(/\s/g, '') != '') {
+                binList.push(dataObj);
+            }
+        }
+        templateObject.roomrecords.set(binList);
+    }
     templateObject.getRooms();
 
     templateObject.getDeptList = function () {

@@ -2445,7 +2445,6 @@ Template.non_transactional_list.onRendered(function() {
                         addVS1Data("TProductBin", JSON.stringify(data));
                         templateObject.displayAllProductBinData(data, deptname);
                     });
-
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 templateObject.displayAllProductBinData(data, deptname);

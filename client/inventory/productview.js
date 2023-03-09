@@ -322,13 +322,11 @@ Template.productview.onRendered(function () {
         $("#UOMListModal").modal("toggle");
       });
 
-      $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
+      $(document).on("click", "#departmentList tbody tr", function (e) {
         let table = $(this);
         let deptName = table.find(".colDeptName").text();
-        let deptID = table.find(".colDeptID").text();
         templateObject.bindept.set(deptName);
         $('#sltdepartment').val(deptName);
-        templateObject.bindeptid.set(deptID);
         $("#myModalDepartment").modal("hide");
       });
 
@@ -3875,26 +3873,29 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            sideBarService
-              .getNewProductListVS1(initialBaseDataLoad, 0)
-              .then(function (dataReload) {
-                addVS1Data("TProductVS1", JSON.stringify(dataReload))
-                  .then(function (datareturn) {
-                    $(".fullScreenSpin").css("display", "none");
-                    swal('Success', 'Saved Successfully!', 'success');
-                    FlowRouter.go("/inventorylist?success=true");
-                  })
-                  .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
-                    swal('Success', 'Saved Successfully!', 'success');
-                    FlowRouter.go("/inventorylist?success=true");
-                  });
-              })
-              .catch(function (err) {
-                $(".fullScreenSpin").css("display", "none");
-                swal('Success', 'Saved Successfully!', 'success');
-                FlowRouter.go("/inventorylist?success=true");
-              });
+            $(".fullScreenSpin").css("display", "none");
+            swal('Success', 'Saved Successfully!', 'success');
+            FlowRouter.go("/inventorylist?success=true");
+            // sideBarService
+            //   .getNewProductListVS1(initialBaseDataLoad, 0)
+            //   .then(function (dataReload) {
+            //     addVS1Data("TProductVS1", JSON.stringify(dataReload))
+            //       .then(function (datareturn) {
+            //         $(".fullScreenSpin").css("display", "none");
+            //         swal('Success', 'Saved Successfully!', 'success');
+            //         FlowRouter.go("/inventorylist?success=true");
+            //       })
+            //       .catch(function (err) {
+            //         $(".fullScreenSpin").css("display", "none");
+            //         swal('Success', 'Saved Successfully!', 'success');
+            //         FlowRouter.go("/inventorylist?success=true");
+            //       });
+            //   })
+            //   .catch(function (err) {
+            //     $(".fullScreenSpin").css("display", "none");
+            //     swal('Success', 'Saved Successfully!', 'success');
+            //     FlowRouter.go("/inventorylist?success=true");
+            //   });
           })
           .catch(function (err) {
             swal({
