@@ -2242,7 +2242,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCredit, options);
   }
 
-  getTCreditListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getTCreditListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -2263,7 +2263,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-
+    if(deleteFilter) options.Search = '';
     return this.getList(this.ERPObjects.TCreditList, options);
   }
 
