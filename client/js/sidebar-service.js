@@ -1294,6 +1294,43 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployeeList, options);
   }
 
+  getAllTCorrespondenceList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+          IgnoreDates:true,
+          orderby: '"EmployeeName asc"',
+          Search: "Active = true",
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"EmployeeName asc"',
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+          orderby: '"EmployeeName asc"',
+          IgnoreDates:true,
+        };
+      } else {
+        options = {
+          IgnoreDates:true,
+          orderby: '"EmployeeName asc"',
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
 
   getAllTCustomerList(limitcount, limitfrom, deleteFilter) {
     let options = "";
