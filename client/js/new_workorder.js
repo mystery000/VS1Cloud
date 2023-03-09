@@ -1040,6 +1040,7 @@ Template.new_workorder.events({
                     }else {
                         workorders = [...workorders, {type:'TVS1Workorder', fields:objDetail}];
                     }
+                    
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
                     // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                 }

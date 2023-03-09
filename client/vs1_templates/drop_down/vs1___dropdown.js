@@ -1,22 +1,9 @@
-// import { ContactService } from "../../contacts/contact-service";
-// import { ReactiveVar } from 'meteor/reactive-var';
-// import { CoreService } from '../../js/core-service';
-// import { UtilityService } from "../../utility-service";
-// import { TaxRateService } from "../../settings/settings-service.js";
-// import XLSX from 'xlsx';
-// import { SideBarService } from '../../js/sidebar-service';
-// import { ProductService } from '../../product/product-service';
-// import { ManufacturingService } from "../../manufacture/manufacturing-service";
-// import { CRMService } from "../../crm/crm-service";
-// import { ReportService } from "../../reports/report-service";
-// import { FixedAssetService } from "../../fixedassets/fixedasset-service";
-// import { StockTransferService } from '../../inventory/stockadjust-service';
+
 import '../../lib/global/indexdbstorage.js';
-// import TableHandler from '../../js/Table/TableHandler';
 import { Template } from 'meteor/templating';
 import './vs1___dropdown.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-import { cloneDeep, reject } from "lodash";
+import { cloneDeep } from "lodash";
 import 'datatables.net';
 import 'datatables.net-buttons';
 import 'pdfmake/build/pdfmake';
@@ -31,6 +18,8 @@ Template.vs1___dropdown.onCreated(function(){
     templateObject.edtParam = new ReactiveVar();
     templateObject.targetTemp = new ReactiveVar();
     templateObject.listTemp = new ReactiveVar();
+    templateObject.targetEle = new ReactiveVar();
+    
     let keyword = templateObject.data.data
     let idVal = templateObject.data.value
     let email = templateObject.data.email
@@ -50,7 +39,10 @@ Template.vs1___dropdown.onRendered(async function(){
     let popupid = templateObject.data.modalId;
     
     async function setEditableSelect() {
-        $('#'+id).editableSelect();
+        // $('#'+id).editableSelect();
+        $('.'+id).each(function(i, obj) {
+            $(obj).editableSelect();
+        })
     }
     await setEditableSelect();
     if(templateObject.data.data) {
@@ -70,34 +62,37 @@ Template.vs1___dropdown.onRendered(async function(){
     $(document).on('click', '#'+id, function(event, li) {
         event.preventDefault();
         event.stopPropagation();
+        templateObject.targetEle.set($(event.target));
         var $earch = $(this);
         var offset = $earch.offset();
         // $("#"+popupid).val("");
+        let parent = $(event.target).parent();
+        let edtModalId = templateObject.data.target_modal_id;
+        let popupmodal = $(parent).find("> .vs1_dropdown_modal");
+        let edtmodal = $(parent).find('> .'+ edtModalId);
         if (event.pageX > offset.left + $earch.width() - 8) {
             // X button 16px wide?
-            templateObject.targetTemp.set('')
-            $("#"+popupid).modal('toggle');
+            templateObject.targetTemp.set('');
+            $(popupmodal).modal('show');
             
         } else {
             setTimeout(()=>{
                 let value = event.target.value;
                 if (value.replace(/\s/g, '') == '') {
-                // if($(event.target).val() == '') {
-                    
-                    templateObject.targetTemp.set('')
-                    $('#'+popupid).modal('toggle');
+                    templateObject.targetTemp.set('');
+                    $(popupmodal).modal('show');
                 } else {
                     
                     if(templateObject.data.is_editable == true) {
-                        let edtModalId = templateObject.data.target_modal_id;
+                        
                         let params = templateObject.edtParam.get();
                         if(!params.name || params.name == '' ) {
                             params.name = value;
                         }
                         templateObject.edtParam.set(params)
-                        $('#'+ edtModalId).modal('toggle');
+                        $(edtmodal).modal('show');
                     } else {
-                        $('#'+popupid).modal('toggle');
+                        $(popupmodal).modal('show');
                     }
                 }
             }, 1000)
@@ -123,53 +118,31 @@ Template.vs1___dropdown.helpers({
 
 Template.vs1___dropdown.events({
     'click .vs1_dropdown_modal tbody tr': function(event) {
-        event.preventDefault();
         let templateObject = Template.instance();
         let id = templateObject.data.id;
         let colName = templateObject.data.colNameForValue;
         let modalId = templateObject.data.modalId;
+        let modal = $(event.target).closest('.modal.fade.show')
         let label = templateObject.data.label;
         let value = $(event.target).closest('tr').find('.'+colName).text();
-        let objectId = $(event.target).closest('tr').find('.colID').text();
+
+        let objectId = $(event.target).closest('tr').find('.colID')?.text();
+
         let email = $(event.target).closest('tr').find('.colEmail')?.text();
        
         templateObject.edtParam.set({name: value, id: objectId, email: email })
         
         templateObject.targetTemp.set(templateObject.data.target_template_id)
         
-        $('#'+id).val(value)
-        if(label == 'Customer' || label == 'Supplier') {
-            let address = '';
-            let billingAddressField = $('#txabillingAddress');
-            if(billingAddressField && billingAddressField.length > 0) {
-                let street = $(event.target).closest('tr').find('.colStreetAddress')?.text()
-                let city = $(event.target).closest('tr').find('.colCity')?.text()
-                let state = $(event.target).closest('tr').find('.colState')?.text()
-                let postCode = $(event.target).closest('tr').find('.colZipCode')?.text()
-                let country = $(event.target).closest('tr').find('.colCountry')?.text()
-
-                address = value + '\n' + street+" "+ city + '\n'+ state+'\n' + postCode + ' ' + country 
-                $(billingAddressField).val(address)
-            }
-            let clientEmailInput = 'edtCustomerEmail';
-            let colTerms = 'colCustomerTermName'
-            if(label == 'Supplier') {
-                clientEmailInput = 'edtSupplierEmail';
-                colTerms = 'colSupplierTermName'
-            }
-            let email = $(event.target).closest('tr').find('.colEmail').text();
-            $('#'+clientEmailInput).val(email)
-            let termsField = $('#selectTerms');
-            if(termsField && termsField.length > 0) {
-                $(termsField).val($(event.target).closest('tr').find('.'+ colTerms).text())
-            }
-        } 
-        $('#'+modalId).modal('toggle');
-
-        $("#"+modalId + '> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
-        setTimeout(function() {
-            $("#"+modalId + '> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .btnRefreshTable').trigger('click')
-        }, 1000)
+        // $('#'+id).val(value)
+        let target = templateObject.targetEle.get();
+        $(target).val(value)
+        $(modal).modal('hide');    
+        // $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
+        // setTimeout(function() {
+        //     $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .btnRefreshTable').trigger('click')
+            
+        // }, 100)
         
     },
 

@@ -3668,7 +3668,7 @@ Template.billcard.onRendered(() => {
     });
     $(document).on("click", "#termsList tbody tr", function (e) {
         $('#sltTerms').val($(this).find(".colName").text());
-        $('#termsListModal').modal('toggle');
+        $('#termsListModal').modal('hide');
     });
     $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
         $('#sltStatus').val($(this).find(".colStatusName").text());
@@ -5252,7 +5252,7 @@ Template.billcard.onRendered(() => {
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
         templateObject.setSupplierInfo();
-        // $('#supplierListModal').modal('hide');
+        $('#supplierListModal').modal('hide');
     });
 
 

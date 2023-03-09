@@ -89,6 +89,18 @@ Template.transaction_header.helpers({
       default:
         return 'addcustomerpop'
     }
+  },
+
+  getModalId: ()=> {
+    const cardType = Template.instance().data.cardType.toLowerCase();
+    switch(cardType) {
+      case 'bill':
+      case 'po':
+      case 'credit':
+        return '';
+      default: 'supplierListModal'
+        return 'customerListModal'
+    }
   }
   
 })

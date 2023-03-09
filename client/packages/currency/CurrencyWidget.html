@@ -88,13 +88,20 @@
 
 
         {{#if trans}}
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2" type="{{rate}}">
+        <style>
+
+            .currency-module>div {
+                width: 100%;
+
+            }
+        </style>
+            <div class="col-12 col-md-6" type="{{rate}}">
                 <div class="form-group">
                 {{> currencydropdown}}
                 </div>
             </div>
 
-            <div class="col-12 col-md-6 col-lg-4 col-xl-2" type="{{rate}}">
+            <div class="col-12 col-md-6" type="{{rate}}">
                 <div class="form-group">
                 {{> CurrencyRate }}
                 </div>
@@ -135,13 +142,13 @@
 
 
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="currencyModal">
         {{> currencypop}}
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="newCurrencyModal">
         {{> newcurrencypop}}
-    </div>
+    </div> -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
         {{> CountryModal}}
