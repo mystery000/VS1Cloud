@@ -654,7 +654,7 @@ Template.vatreturn.onRendered(function() {
         }).catch(function(err) {
             let taxRateList = templateObject.taxRateList.get();
 
-            reportService.getAllBASReturn().then(function(data) {
+            reportService.getAllVATReturn().then(function(data) {
                 let accountingmethodflag = false;
                 for (let i = 0; i < data.tvatreturns.length; i++) {
                     if (getid == "") {

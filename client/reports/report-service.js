@@ -897,8 +897,8 @@ export class ReportService extends BaseService {
                 IgnoreDates: true,
                 Search: "",
                 OrderBy: "ID desc",
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
                 ListType: "Detail",
             };
         } else {
@@ -906,10 +906,10 @@ export class ReportService extends BaseService {
                 OrderBy: "ID desc",
                 IgnoreDates: false,
                 Search: "",
-                DateFrom: '"' + dateFrom + '"',
-                DateTo: '"' + dateTo + '"',
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
+                // DateFrom: '"' + dateFrom + '"',
+                // DateTo: '"' + dateTo + '"',
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
                 ListType: "Detail",
             };
         }
@@ -937,8 +937,8 @@ export class ReportService extends BaseService {
                 IgnoreDates: true,
                 Search: "",
                 OrderBy: "ID desc",
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
                 ListType: "Detail",
             };
         } else {
@@ -946,10 +946,10 @@ export class ReportService extends BaseService {
                 OrderBy: "ID desc",
                 IgnoreDates: false,
                 Search: "",
-                DateFrom: '"' + dateFrom + '"',
-                DateTo: '"' + dateTo + '"',
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
+                // DateFrom: '"' + dateFrom + '"',
+                // DateTo: '"' + dateTo + '"',
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
                 ListType: "Detail",
             };
         }
