@@ -734,7 +734,6 @@ Template.appointments.onRendered(function() {
                     $("#hoursTo").val(globalSet.apptEndTime);
                 }
                 templateObject.globalSettings.set(globalSet);
-
                 if (globalSet.productID != "") {
                     getVS1Data("TERPPreferenceExtra")
                         .then(function(dataObjectExtra) {
@@ -3764,7 +3763,7 @@ Template.appointments.onRendered(function() {
                 .catch(function(err) {});
         });
 
-    templateObject.getAllAppointmentListData = function(refresh = true) {
+    templateObject.getAllAppointmentListData = function(refresh = false) {
         getVS1Data("TAppointment").then(function(dataObject) {
                 if (dataObject.length == 0 || refresh) {
                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
@@ -11423,44 +11422,85 @@ Template.appointments.onRendered(function() {
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
     };
-    smsService
-        .getSMSSettings()
-        .then((result) => {
-            if (result.terppreference.length > 0) {
-                for (let i = 0; i < result.terppreference.length; i++) {
-                    switch (result.terppreference[i].PrefName) {
+    getVS1Data("TERPPreference").then(function(dataObject) {
+        if(dataObject.length == 0){
+            smsService
+            .getSMSSettings()
+            .then((result) => {
+                if (result.terppreference.length > 0) {
+                    console.log('result.terppreference:',result.terppreference)
+                    for (let i = 0; i < result.terppreference.length; i++) {
+                        switch (result.terppreference[i].PrefName) {
+                            case "VS1SMSID":
+                                smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1SMSToken":
+                                smsSettings.twilioAccountToken =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1SMSPhone":
+                                smsSettings.twilioTelephoneNumber =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1HEADERSMSMSG":
+                                smsSettings.headerAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1SAVESMSMSG":
+                                smsSettings.saveAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1STARTSMSMSG":
+                                smsSettings.startAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1STOPSMSMSG":
+                                smsSettings.stopAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                        }
+                    }
+                    templateObject.defaultSMSSettings.set(smsSettings);
+                }
+            })
+            .catch((error) => {});
+        }else{
+            let data = JSON.parse(dataObject[0].data);
+            if (data.terppreference.length > 0) {
+                for (let i = 0; i < data.terppreference.length; i++) {
+                    switch (data.terppreference[i].PrefName) {
                         case "VS1SMSID":
-                            smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                            smsSettings.twilioAccountId = data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1SMSToken":
                             smsSettings.twilioAccountToken =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1SMSPhone":
                             smsSettings.twilioTelephoneNumber =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1HEADERSMSMSG":
                             smsSettings.headerAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1SAVESMSMSG":
                             smsSettings.saveAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1STARTSMSMSG":
                             smsSettings.startAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1STOPSMSMSG":
                             smsSettings.stopAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                     }
                 }
                 templateObject.defaultSMSSettings.set(smsSettings);
             }
-        })
-        .catch((error) => {});
+        }
+    })
+    
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
