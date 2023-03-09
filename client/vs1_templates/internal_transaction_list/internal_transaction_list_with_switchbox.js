@@ -582,60 +582,115 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         //var splashArrayCustomerListDupp = new Array();
                         let dataLenght = oSettings._iDisplayLength;
                         let customerSearch = $('#' + currenttablename + '_filter input').val();
+                        getVS1Data("TProductQtyList")
+                        .then(function(dataObject) {
+                            if (dataObject.length == 0) {
+                                sideBarService.getProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+                                for (let j = 0; j < dataObjectnew.tproductqtylist.length; j++) {
+                                    let chkBox;
+                                    let costprice = 0.00;
+                                    let sellrate = 0.00;
+                                    let linestatus = '';
+                                    if (dataObjectnew.tproductqtylist[j].Active == true) {
+                                        linestatus = "";
+                                    } else if (dataObjectnew.tproductqtylist[j].Active == false) {
+                                        linestatus = "In-Active";
+                                    };
+                                    chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                        '"></label></div>'; //switchbox
 
-                        sideBarService.getProductListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-                            for (let j = 0; j < dataObjectnew.tproductqtylist.length; j++) {
-                                let chkBox;
-                                let costprice = 0.00;
-                                let sellrate = 0.00;
-                                let linestatus = '';
-                                if (dataObjectnew.tproductqtylist[j].Active == true) {
-                                    linestatus = "";
-                                } else if (dataObjectnew.tproductqtylist[j].Active == false) {
-                                    linestatus = "In-Active";
-                                };
-                                chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[j].PARTSID +
-                                    '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[j].PARTSID +
-                                    '"></label></div>'; //switchbox
+                                    costprice = utilityService.modifynegativeCurrencyFormat(
+                                        Math.floor(data.tproductqtylist[j].BuyQTY1 * 100) / 100); //Cost Price
+                                    sellprice = utilityService.modifynegativeCurrencyFormat(
+                                        Math.floor(data.tproductqtylist[j].SellQTY1 * 100) / 100); //Sell Price
 
-                                costprice = utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductqtylist[j].BuyQTY1 * 100) / 100); //Cost Price
-                                sellprice = utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductqtylist[j].SellQTY1 * 100) / 100); //Sell Price
+                                    var dataListDupp = [
+                                        chkBox,
+                                        dataObjectnew.tproductqtylist[j].PARTSID || "",
+                                        dataObjectnew.tproductqtylist[j].ProductName || "",
+                                        dataObjectnew.tproductqtylist[j].SalesDescription || "",
+                                        dataObjectnew.tproductqtylist[j].BARCODE || "",
+                                        costprice,
+                                        sellprice,
+                                        dataObjectnew.tproductqtylist[j].InstockQty,
+                                        dataObjectnew.tproductqtylist[j].PURCHTAXCODE || "",
+                                        dataObjectnew.tproductqtylist[j].PRODUCTCODE || "",
+                                        dataObjectnew.tproductqtylist[j].Ex_Works || null,
+                                        linestatus
+                                    ];
 
-                                var dataListDupp = [
-                                    chkBox,
-                                    dataObjectnew.tproductqtylist[j].PARTSID || "",
-                                    dataObjectnew.tproductqtylist[j].ProductName || "",
-                                    dataObjectnew.tproductqtylist[j].SalesDescription || "",
-                                    dataObjectnew.tproductqtylist[j].BARCODE || "",
-                                    costprice,
-                                    sellprice,
-                                    dataObjectnew.tproductqtylist[j].InstockQty,
-                                    dataObjectnew.tproductqtylist[j].PURCHTAXCODE || "",
-                                    dataObjectnew.tproductqtylist[j].PRODUCTCODE || "",
-                                    dataObjectnew.tproductqtylist[j].Ex_Works || null,
-                                    linestatus
-                                ];
+                                    splashArrayProductList.push(dataListDupp);
+                                }
+                                let uniqueChars = [...new Set(splashArrayProductList)];
+                                templateObject.transactiondatatablerecords.set(uniqueChars);
+                                var datatable = $('#' + currenttablename).DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function() {
+                                    $('#' + currenttablename).dataTable().fnPageChange('last');
+                                }, 400);
+                                checkBoxClick();
+                                $('.fullScreenSpin').css('display', 'none');
 
-                                splashArrayProductList.push(dataListDupp);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                            }else{
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.tproductqtylist;
+                                for (let j = 0; j < useData.tproductqtylist.length; j++) {
+                                    let chkBox;
+                                    let costprice = 0.00;
+                                    let sellrate = 0.00;
+                                    let linestatus = '';
+                                    if (useData.tproductqtylist[j].Active == true) {
+                                        linestatus = "";
+                                    } else if (useData.tproductqtylist[j].Active == false) {
+                                        linestatus = "In-Active";
+                                    };
+                                    chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                        '"></label></div>'; //switchbox
+
+                                    costprice = utilityService.modifynegativeCurrencyFormat(
+                                        Math.floor(data.tproductqtylist[j].BuyQTY1 * 100) / 100); //Cost Price
+                                    sellprice = utilityService.modifynegativeCurrencyFormat(
+                                        Math.floor(data.tproductqtylist[j].SellQTY1 * 100) / 100); //Sell Price
+
+                                    var dataListDupp = [
+                                        chkBox,
+                                        useData.tproductqtylist[j].PARTSID || "",
+                                        useData.tproductqtylist[j].ProductName || "",
+                                        useData.tproductqtylist[j].SalesDescription || "",
+                                        useData.tproductqtylist[j].BARCODE || "",
+                                        costprice,
+                                        sellprice,
+                                        useData.tproductqtylist[j].InstockQty,
+                                        useData.tproductqtylist[j].PURCHTAXCODE || "",
+                                        useData.tproductqtylist[j].PRODUCTCODE || "",
+                                        useData.tproductqtylist[j].Ex_Works || null,
+                                        linestatus
+                                    ];
+
+                                    splashArrayProductList.push(dataListDupp);
+                                }
+                                let uniqueChars = [...new Set(splashArrayProductList)];
+                                templateObject.transactiondatatablerecords.set(uniqueChars);
+                                var datatable = $('#' + currenttablename).DataTable();
+                                datatable.clear();
+                                datatable.rows.add(uniqueChars);
+                                datatable.draw(false);
+                                setTimeout(function() {
+                                    $('#' + currenttablename).dataTable().fnPageChange('last');
+                                }, 400);
+                                checkBoxClick();
+                                $('.fullScreenSpin').css('display', 'none');
                             }
-                            let uniqueChars = [...new Set(splashArrayProductList)];
-                            templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
-                            datatable.clear();
-                            datatable.rows.add(uniqueChars);
-                            datatable.draw(false);
-                            setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
-                            }, 400);
-                            checkBoxClick();
-                            $('.fullScreenSpin').css('display', 'none');
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-
+                            
+                        })
+                        
                     });
                     setTimeout(function() {
                         MakeNegative();
