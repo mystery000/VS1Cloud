@@ -3395,7 +3395,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TVS1BankDeposit, options);
   }
 
-  getAllTBankDepositListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTBankDepositListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -3416,6 +3416,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TBankDepositList, options);
   }
 
@@ -4405,6 +4406,38 @@ export class SideBarService extends BaseService {
                 [4,"Ms",""],
             ];
             resolve({"ttitlelist" : splashArrayTitleList});
+        });
+        return promise;
+    }
+
+    getTransactionDescription() {
+        return this.getManualTransactionDescription();
+
+    }
+    getManualTransactionDescription() {
+        return this.getWowTransactionDescription();
+    }
+    getWowTransactionDescription() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [['', 'Payroll'], ['', 'Supplier'], ['', 'Insurance'], ['', 'Accounting']]
+            resolve({"ttransactiondescription" : splashArrayTitleList});
+        });
+        return promise;
+    }
+
+    getTransactionCode() {
+        return this.getManualTransactionCode();
+
+    }
+    getManualTransactionCode() {
+        return this.getWowTransactionCode();
+    }
+    getWowTransactionCode() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [['', 'Debit Items'], ['', 'Credit Items']]
+            resolve({"ttransactioncode" : splashArrayTitleList});
         });
         return promise;
     }
