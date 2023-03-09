@@ -638,8 +638,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                 $('.fullScreenSpin').css('display', 'none');
                             });
                             }else{
-                                let data = JSON.parse(dataObject[0].data);
-                                let useData = data.tproductqtylist;
+                                let useData = JSON.parse(dataObject[0].data);
                                 for (let j = 0; j < useData.tproductqtylist.length; j++) {
                                     let chkBox;
                                     let costprice = 0.00;
