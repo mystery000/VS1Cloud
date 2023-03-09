@@ -1562,8 +1562,8 @@ Template.accountant_company.onRendered(() => {
         let signatureBox = $(this).parents('.signdiv')[0];
         let signatures = $('.' + signatureBox.id);
         signatures.css('display', 'none');
-        signatures.css('top', '105px');
-        signatures.css('left', '20px');
+        signatures.css('top', '56px');
+        signatures.css('left', '60px');
     });
 
     // Alex: Add for Docusign end
