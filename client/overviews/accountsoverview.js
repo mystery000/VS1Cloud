@@ -807,6 +807,10 @@ Template.accountsoverview.onRendered(function() {
                     setTimeout(function() {
                         makeNegativeGlobal();
                         $('#tblAccountTreeOverview tbody td').attr('style', 'padding: 0 12px 0 12px !important')
+                        $('#tblAccountTreeOverview .tt-details-control').attr('style', 'padding: 0 !important; border-right-width: 0; width: 30px; position: relative; z-index: 100;')                        
+                        $('#tblAccountTreeOverview th.colAccountName').attr('style', 'padding-left: 0')
+                        $('#tblAccountTreeOverview td.colAccountName').attr('style', 'padding: 0 12px 0 0px !important')
+                        $('#tblAccountTreeOverview tbody tr.has-parent.level-1 td.colAccountName').attr('style', 'padding: 0 12px 0 18px !important')
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
@@ -1787,6 +1791,7 @@ Template.accountsoverview.onRendered(function() {
                       $('#chkEftOption_credit').prop('checked', data.taccountvs1[0].fields.IncludeCreditTotal);
                       $('#chkEftOption_debit').prop('checked', data.taccountvs1[0].fields.IncludeDebitTotal);
                       $('#accountIsHeader').prop('checked', data.taccountvs1[0].fields.IsHeader);
+                      $('#useReceiptClaim').prop('checked', data.taccountvs1[0].fields.AllowExpenseClaim);
                     }).catch(function(err) {
                     })
                     //accountService.getOneAccount(listData).then(function (data) {
@@ -1856,12 +1861,7 @@ Template.accountsoverview.onRendered(function() {
                             $(".showOnTransactions").prop("checked", false);
                         }
                     }
-                    let useReceiptClaim = $(event.target).closest("tr").find(".colUseReceiptClaim").attr("checkheader") || false;
-                    if (useReceiptClaim == "true") {
-                        $(".useReceiptClaim").prop("checked", true);
-                    } else {
-                        $(".useReceiptClaim").prop("checked", false);
-                    }
+                    
                     let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
                     $("#expenseCategory").val(category);
 
@@ -1983,207 +1983,7 @@ Template.accountsoverview.events({
             .catch(function(err) {
                 //location.reload();
             });
-    },
-    "click .btnSaveAccount": function() {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        let accountService = new AccountService();
-        let organisationService = new OrganisationService();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
-        let forTransaction = false;
-        let isHeader = false;
-        let useReceiptClaim = false;
-
-        if ($("#showOnTransactions").is(":checked")) {
-            forTransaction = true;
-        }
-        if ($("#useReceiptClaim").is(":checked")) {
-            useReceiptClaim = true;
-        }
-        if ($("#accountIsHeader").is(":checked")) {
-            isHeader = true;
-        }
-        let accountID = $("#edtAccountID").val();
-        const accounttype = $("#sltAccountType").val();
-        const accountname = $("#edtAccountName").val();
-        const accountno = $("#edtAccountNo").val();
-        const taxcode = $("#sltTaxCode").val();
-        const accountdesc = $("#txaAccountDescription").val();
-        const swiftCode = $("#swiftCode").val();
-        const routingNo = $("#routingNo").val();
-        // var comments = $('#txaAccountComments').val();
-        const bankname = $("#edtBankName").val();
-        const bankaccountname = $("#edtBankAccountName").val();
-        const bankbsb = $("#edtBSB").val();
-        const bankacountno = $("#edtBankAccountNo").val();
-        const isBankAccount = templateObject.isBankAccount.get();
-        const expenseCategory = $("#expenseCategory").val();
-        const categoryAccountID = $("#categoryAccountID").val();
-        const categoryAccountName = $("#categoryAccountName").val();
-        const expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
-        const cardnumber = $("#edtCardNumber").val();
-        const cardcvc = $("#edtCvc").val();
-        const expiryDate =
-            expirydateTime.getFullYear() +
-            "-" +
-            (expirydateTime.getMonth() + 1) +
-            "-" +
-            expirydateTime.getDate();
-
-        let companyID = 1;
-        let data = "";
-        if (categoryAccountID != "" && categoryAccountID != accountID) {
-            data = {
-                type: "TAccount",
-                fields: {
-                    ID: categoryAccountID,
-                    ReceiptCategory: ""
-                },
-            };
-            accountService.saveAccount(data).then(function(data2) {
-                doBeforeSave(accountID);
-            }).catch(function(err) {
-                swal({
-                    title: "Oooops...",
-                    text: err,
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: "Try Again",
-                }).then((result) => {
-                    if (result.value) {} else if (result.dismiss === "cancel") {}
-                });
-                return false;
-            })
-        } else {
-            doBeforeSave(accountID);
-        }
-        function doBeforeSave(accountID) {
-            if (accountID == "") {
-                accountService.getCheckAccountData(accountname).then(function (data) {
-                    accountID = parseInt(data.taccount[0].Id) || 0;
-                    doSaveAccount(accountID);
-                }).catch(function (err) {
-                    doSaveAccount(0);
-                });
-            } else {
-                doSaveAccount(accountID);
-            }
-        }
-        function doSaveAccount(accountID) {
-            data = {
-                type: "TAccount",
-                fields: {
-                    ID: accountID,
-                    // AccountName: accountname|| '',
-                    AccountNumber: accountno || "",
-                    // AccountTypeName: accounttype|| '',
-                    ReceiptCategory: expenseCategory || "",
-                    Active: true,
-                    BankAccountName: bankaccountname || "",
-                    BankAccountNumber: bankacountno || "",
-                    BSB: bankbsb || "",
-                    Description: accountdesc || "",
-                    TaxCode: taxcode || "",
-                    PublishOnVS1: true,
-                    Extra: swiftCode,
-                    BankNumber: routingNo,
-                    IsHeader: isHeader,
-                    AllowExpenseClaim: useReceiptClaim,
-                    Required: forTransaction,
-                    CarNumber: cardnumber || "",
-                    CVC: cardcvc || "",
-                    ExpiryDate: expiryDate || "",
-                },
-            };
-            accountService.saveAccount(data).then(function(data) {
-                if ($("#showOnTransactions").is(":checked")) {
-                    const objDetails = {
-                        type: "TCompanyInfo",
-                        fields: {
-                            Id: companyID,
-                            AccountNo: bankacountno,
-                            BankBranch: swiftCode,
-                            BankAccountName: bankaccountname,
-                            BankName: bankname,
-                            Bsb: bankbsb,
-                            SiteCode: routingNo,
-                            FileReference: accountname,
-                        },
-                    };
-                    organisationService.saveOrganisationSetting(objDetails).then(function(data) {
-                        const accNo = bankacountno || "";
-                        const swiftCode1 = swiftCode || "";
-                        const bankAccName = bankaccountname || "";
-                        const accountName = accountname || "";
-                        const bsb = bankbsb || "";
-                        const routingNo = routingNo || "";
-
-                        localStorage.setItem("vs1companyBankName", bankname);
-                        localStorage.setItem(
-                            "vs1companyBankAccountName",
-                            bankAccName
-                        );
-                        localStorage.setItem("vs1companyBankAccountNo", accNo);
-                        localStorage.setItem("vs1companyBankBSB", bsb);
-                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                        doAfterSave(accountID);
-                    }).catch(function(err) {
-                        doAfterSave(accountID);
-                    });
-                } else {
-                    doAfterSave(accountID);
-                }
-            }).catch(function(err) {
-                swal({
-                    title: "Oooops...",
-                    text: err,
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: "Try Again",
-                }).then((result) => {
-                    if (result.value) {
-                        Meteor._reload.reload();
-                    } else if (result.dismiss === "cancel") {}
-                });
-                $(".fullScreenSpin").css("display", "none");
-            });
-        }
-        function doAfterSave(accountID) {
-            sideBarService.getAccountListVS1().then(function(dataReload) {
-                addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                    successSaveEvent(accountID);
-                }).catch(function(err) {
-                    window.open("/accountsoverview", "_self");
-                });
-            }).catch(function(err) {
-                window.open("/accountsoverview", "_self");
-            });
-        }
-        function successSaveEvent(accountID) {
-            let successTxt = "";
-            if (accountID == "") {
-                successTxt = "Account successfully created";
-            } else {
-                successTxt = "Account successfully updated";
-            }
-            swal({
-                title: "Success",
-                text: successTxt,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-            }).then((result) => {
-                if (result.value) {} else if (result.dismiss === "cancel") {}
-            });
-            $(".fullScreenSpin").css("display", "none");
-            setTimeout(function() {
-                window.open("/accountsoverview", "_self");
-            }, 100);
-        }
-       }, delayTimeAfterSound);
-    },
+    },    
     "click .btnAddNewAccounts": function() {
         $("#add-account-title").text("Add New Account");
         $("#edtAccountID").val("");

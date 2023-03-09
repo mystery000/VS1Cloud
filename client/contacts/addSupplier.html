@@ -363,6 +363,14 @@
                             value="{{record.lastname}}">
                         </div>
                       </div>
+                      <div class="col-6 col-md-2">
+                        <div class="custom-control custom-switch chkSamePrimary"
+                          style="padding: 0px 8px; margin-top: 38px; padding-left: 2.25rem;">
+                          <input class="custom-control-input" type="checkbox" id="chkSameAsPrimary"
+                            style=" cursor: pointer;" checked="{{#if record.isprimary}}checked{{/if}}">
+                          <label class="custom-control-label" for="chkSameAsPrimary" style=" cursor: pointer;">Is Primary Accountant</label>
+                        </div>
+                      </div>
                       <div class="col-6 col-md-4">
                         <div class="form-group" style="padding: 0px 8px;">
                           <label class="text-nowrap">Phone</label>
