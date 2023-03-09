@@ -104,197 +104,6 @@ Template.organisationsettings.onRendered(function () {
   };
   templateObject.getCountryData();
 
-  templateObject.getSuppliers = function () {
-    getVS1Data("TSupplierVS1")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-            .getAllSuppliersDataVS1(initialBaseDataLoad, 0)
-            .then(function (data) {
-              addVS1Data("TSupplierVS1", JSON.stringify(data));
-              for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                let arBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.APBalance
-                  ) || 0.0;
-                let creditBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.ExcessAmount
-                  ) || 0.0;
-                let balance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.Balance
-                  ) || 0.0;
-                let creditLimit =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.SupplierCreditLimit
-                  ) || 0.0;
-                let salesOrderBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.Balance
-                  ) || 0.0;
-                var dataList = {
-                  id: data.tsuppliervs1[i].fields.ID + 1 || "",
-                  company: data.tsuppliervs1[i].fields.ClientName || "",
-                  contactname: data.tsuppliervs1[i].fields.ContactName || "",
-                  phone: data.tsuppliervs1[i].fields.Phone || "",
-                  arbalance: arBalance || 0.0,
-                  creditbalance: creditBalance || 0.0,
-                  balance: balance || 0.0,
-                  creditlimit: creditLimit || 0.0,
-                  salesorderbalance: salesOrderBalance || 0.0,
-                  email: data.tsuppliervs1[i].fields.Email || "",
-                  accountno: data.tsuppliervs1[i].fields.AccountNo || "",
-                  clientno: data.tsuppliervs1[i].fields.ClientNo || "",
-                  jobtitle: data.tsuppliervs1[i].fields.JobTitle || "",
-                  notes: data.tsuppliervs1[i].fields.Notes || "",
-                  suburb: data.tsuppliervs1[i].fields.Suburb || "",
-                  country: data.tsuppliervs1[i].fields.Country || "",
-                };
-
-                suppliers.push(dataList);
-              }
-
-              templateObject.suppliersData.set(suppliers);
-            })
-            .catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
-              // Meteor._reload.reload();
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tsuppliervs1;
-
-          // //////////////////////////////////
-          // var dataListinit = {
-          //     id: '',
-          //     company: '',
-          //     contactname: '',
-          //     phone: '',
-          //     arbalance: 0.00,
-          //     creditbalance: 0.00,
-          //     balance: 0.00,
-          //     creditlimit: 0.00,
-          //     salesorderbalance: 0.00,
-          //     email: '',
-          //     accountno: '',
-          //     clientno: '',
-          //     jobtitle: '',
-          //     notes: '',
-          //     suburb: '',
-          //     country: ''
-          // };
-          // suppliers.push(dataListinit);
-
-          // //////////////////////////////////
-
-          for (let i = 0; i < useData.length; i++) {
-            let arBalance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.APBalance
-              ) || 0.0;
-            let creditBalance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.ExcessAmount
-              ) || 0.0;
-            let balance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.Balance
-              ) || 0.0;
-            let creditLimit =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.SupplierCreditLimit
-              ) || 0.0;
-            let salesOrderBalance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.Balance
-              ) || 0.0;
-            var dataList = {
-              id: useData[i].fields.ID + 1 || "",
-              company: useData[i].fields.ClientName || "",
-              contactname: useData[i].fields.ContactName || "",
-              phone: useData[i].fields.Phone || "",
-              arbalance: arBalance || 0.0,
-              creditbalance: creditBalance || 0.0,
-              balance: balance || 0.0,
-              creditlimit: creditLimit || 0.0,
-              salesorderbalance: salesOrderBalance || 0.0,
-              email: useData[i].fields.Email || "",
-              accountno: useData[i].fields.AccountNo || "",
-              clientno: useData[i].fields.ClientNo || "",
-              jobtitle: useData[i].fields.JobTitle || "",
-              notes: useData[i].fields.Notes || "",
-              suburb: useData[i].fields.Suburb || "",
-              country: useData[i].fields.Country || "",
-            };
-
-            suppliers.push(dataList);
-          }
-
-          templateObject.suppliersData.set(suppliers);
-        }
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllSuppliersDataVS1(initialBaseDataLoad, 0)
-          .then(function (data) {
-            addVS1Data("TSupplierVS1", JSON.stringify(data));
-            for (let i = 0; i < data.tsuppliervs1.length; i++) {
-              let arBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.APBalance
-                ) || 0.0;
-              let creditBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.ExcessAmount
-                ) || 0.0;
-              let balance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.Balance
-                ) || 0.0;
-              let creditLimit =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.SupplierCreditLimit
-                ) || 0.0;
-              let salesOrderBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.Balance
-                ) || 0.0;
-              var dataList = {
-                id: data.tsuppliervs1[i].fields.ID || "",
-                company: data.tsuppliervs1[i].fields.ClientName || "",
-                contactname: data.tsuppliervs1[i].fields.ContactName || "",
-                phone: data.tsuppliervs1[i].fields.Phone || "",
-                arbalance: arBalance || 0.0,
-                creditbalance: creditBalance || 0.0,
-                balance: balance || 0.0,
-                creditlimit: creditLimit || 0.0,
-                salesorderbalance: salesOrderBalance || 0.0,
-                email: data.tsuppliervs1[i].fields.Email || "",
-                accountno: data.tsuppliervs1[i].fields.AccountNo || "",
-                clientno: data.tsuppliervs1[i].fields.ClientNo || "",
-                jobtitle: data.tsuppliervs1[i].fields.JobTitle || "",
-                notes: data.tsuppliervs1[i].fields.Notes || "",
-                suburb: data.tsuppliervs1[i].fields.Suburb || "",
-                country: data.tsuppliervs1[i].fields.Country || "",
-              };
-
-              suppliers.push(dataList);
-            }
-
-            templateObject.suppliersData.set(suppliers);
-          })
-          .catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-          });
-      });
-  };
-
-  templateObject.getSuppliers();
-
   templateObject.getDropDown = function (id, country) {
     $("#" + id)
       .autocomplete({
@@ -308,12 +117,24 @@ Template.organisationsettings.onRendered(function () {
       .autocomplete("widget")
       .addClass("countries-dropdown");
   };
+  
   templateObject.getOrganisationDetails = async () => {
     LoadingOverlay.show();
+    let dataObject;
+    try {
+      let companyInfoData = await getVS1Data('TCompanyInfo');
+      if (companyInfoData.length) {
+        dataObject = JSON.parse(companyInfoData[0].data);
+      } else {
+        dataObject = await organisationService.getOrganisationDetail();
+        addVS1Data('TCompanyInfo', JSON.stringify(dataObject));
+      }
+    } catch (e) {
+      dataObject = await organisationService.getOrganisationDetail();
+      addVS1Data('TCompanyInfo', JSON.stringify(dataObject));
+    }    
 
-    const dataListRet = await organisationService.getOrganisationDetail();
-    let mainData = dataListRet.tcompanyinfo[0];
-
+    let mainData = dataObject.tcompanyinfo[0];
     templateObject.showSkype.set(mainData.ContactEmail);
     templateObject.showMob.set(mainData.MobileNumber);
     templateObject.showFax.set(mainData.FaxNumber);
@@ -992,12 +813,12 @@ Template.organisationsettings.onRendered(function () {
     $("#changeLogo").show();
   }
 
-  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-  //   const tableSupplier = $(this);
-  //   $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
-  //   $("#sltAccountant").attr("suppid", tableSupplier.find(".colID").text());
-  //   $("#supplierListModal").modal("toggle");
-  // });
+  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+    const tableSupplier = $(this);
+    $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
+    $("#sltAccountant").data("supplierId", tableSupplier.find(".colID").text());
+    $("#supplierListModal").modal("toggle");
+  });
 });
 
 Template.organisationsettings.helpers({

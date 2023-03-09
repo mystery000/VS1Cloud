@@ -2625,6 +2625,25 @@ Template.supplierscard.events({
     $(".btnTask").attr("disabled", false);
     event.preventDefault();
   },
+
+  "change #chkSameAsPrimary": function (event) {
+    if ($("#chkSameAsPrimary").prop('checked')) {
+      swal({
+        title: 'Warning',
+        text: 'supplier name is already Your primary accountant, do you wish to switch?',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        if (result.value) {
+          
+        } else if (result.dismiss === 'cancel') {
+          $("#chkSameAsPrimary").prop('checked', false)
+        }
+      });  
+    }
+  }
 });
 
 Template.supplierscard.helpers({
