@@ -167,8 +167,7 @@ Template.new_workorder.onRendered(async function(){
             // if(workorder.fields.StoppedTime && new Date(workorder.fields.StoppedTime).getTime() < new Date().getTime()) {
             //     templateObject.isCompleted = true;
             // }
-            
-            console.log(workorder);
+           
 
             let isCompleted = false
             if(workorder.fields.IsCompleted == true) {
@@ -991,8 +990,7 @@ Template.new_workorder.events({
                     let record = templateObject.workorderrecord.get();
                     let totalWorkOrders = await templateObject.getAllWorkorders();
                     
-                    console.log(totalWorkOrders);
-                    
+                   
                     let savedworkorders = totalWorkOrders.filter(order => {
                         return order.fields.SaleID == templateObject.salesOrderId.get();
                     })

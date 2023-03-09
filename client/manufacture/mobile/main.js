@@ -768,18 +768,20 @@ Template.mobileapp.events({
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
-            console.log(currentworkorder);
-
             let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
             workorders.splice(workorderindex, 1, tempworkorder);
-            console.log(workorders);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
                
                 $('.fullScreenSpin').css('display', 'none')
                 swal('Work Order state is updated', '', 'success');
             })
         }
+
+        // modal bom product modal
+            e.preventDefault();
+            e.stopPropagation();
+            $('#BOMSetupModal').modal('toggle')
    
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
