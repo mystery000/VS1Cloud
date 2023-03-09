@@ -3732,7 +3732,7 @@ Template.frmappointmentpop.onRendered(function() {
         // end
 
         let employeeName = $(this).find(".colEmployeeName").text() || '';
-        let employeeID = $(this).find(".colID").text() || '';
+        let employeeID = $(this).find(".colEmployeeNo").text() || '';
         templateObject.empID.set(employeeID);
         let draggedEmployeeID = templateObject.empID.get();
         let calendarData = templateObject.employeeOptions.get();
@@ -3741,7 +3741,6 @@ Template.frmappointmentpop.onRendered(function() {
         let overridesettings = employees.filter((employeeData) => {
             return employeeData.id == parseInt(draggedEmployeeID);
         });
-
         let empData = calendarData.filter((calendarOpt) => {
             return calendarOpt.EmployeeID == parseInt(draggedEmployeeID);
         });
@@ -3762,12 +3761,12 @@ Template.frmappointmentpop.onRendered(function() {
         if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
             //$("#btnHold").prop("disabled", true);
         }
-        if (overridesettings[0].override == "false") {
+        if (overridesettings[0]?.override == "false") {
             document.getElementById("product-list").value =
                 calendarSet.defaultProduct || "";
             document.getElementById("product-list-1").value =
                 calendarSet.defaultProduct || "";
-        } else if (overridesettings[0].override == "true") {
+        } else if (overridesettings[0]?.override == "true") {
             if (empData.length > 0) {
                 document.getElementById("product-list").value =
                     empData[empData.length - 1].DefaultServiceProduct || "";
