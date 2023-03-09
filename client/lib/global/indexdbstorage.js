@@ -393,8 +393,6 @@ openDb = function (dbName) {
       db.createObjectStore("TCurrencyRateHistory", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TXeCurrencySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTripGroup", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TLeaveData", { keyPath: "EmployeeEmail" });
-      // db.createObjectStore('TEarnings', { keyPath: "EmployeeEmail" });
       db.createObjectStore("TReportsAccountantsCategory", {
         keyPath: "EmployeeEmail",
       });
@@ -446,7 +444,6 @@ openDb = function (dbName) {
         keyPath: "EmployeeEmail",
       });
       db.createObjectStore("TRateTypes", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TEarnings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTimeSheetDetails", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });

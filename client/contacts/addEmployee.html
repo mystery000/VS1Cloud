@@ -3714,12 +3714,28 @@
                     </div>
                     <div class="row no-gutters">
                       <div class="col-12">
-                        <button class="btn btn-success " id="btnSaveEmployeePayroll" type="button"
+                        {{> vs1_button
+                          color='success'
+                          classes='float-right btnSaveEmployeePayroll'
+                          type='button'
+                          id="btnSaveEmployeePayroll"
+                          iconName='save'
+                          title='Save'
+                        }}
+                        {{> vs1_button
+                          color='secondary'
+                          classes='float-right btnCancel'
+                          type='button'
+                          id="btnCancel"
+                          iconName='close'
+                          title='Cancel'
+                        }}
+                        <!-- <button class="btn btn-success " id="btnSaveEmployeePayroll" type="button"
                           style="margin: 12px; margin-top: 0px;"><i class="fa fa-save"
                             style="margin-right: 5px;"></i>Save</button>
                         <button class="btn btn-secondary float-right " type="button"
                           style="margin: 12px; margin-left: 0px; margin-top: 0px;"><i class="fa fa-close"
-                            style="margin-right: 5px;"></i>Cancel</button>
+                            style="margin-right: 5px;"></i>Cancel</button> -->
                       </div>
                     </div>
                   </div>
