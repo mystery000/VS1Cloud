@@ -25,6 +25,12 @@ Template.fixedassetcard.onCreated(function () {
   templateObject.edtDepreciationAssetAccount = new ReactiveVar(0);
   templateObject.edtDepreciationExpenseAccount = new ReactiveVar(0);
 
+  templateObject.edtDepreciationType2 = new ReactiveVar(0);
+  templateObject.edtCostAssetAccount2 = new ReactiveVar(0);
+  templateObject.editBankAccount2 = new ReactiveVar(0);
+  templateObject.edtDepreciationAssetAccount2 = new ReactiveVar(0);
+  templateObject.edtDepreciationExpenseAccount2 = new ReactiveVar(0);
+
   templateObject.edtSupplierId = new ReactiveVar(0);
   templateObject.edtInsuranceById = new ReactiveVar(0);
 
@@ -66,24 +72,6 @@ Template.fixedassetcard.onCreated(function () {
       records.push(dataList);
     }
     templateObject.allAcounts.set(records);
-    // templateObject.allAcounts.get().forEach((account) => {
-    //   $('#edtCostAssetAccount').editableSelect('add', function(){
-    //     $(this).val(account.id);
-    //     $(this).text(account.accountName);
-    //   });
-    //   $('#editBankAccount').editableSelect('add', function(){
-    //     $(this).val(account.id);
-    //     $(this).text(account.accountName);
-    //   });
-    //   $('#edtDepreciationAssetAccount').editableSelect('add', function(){
-    //     $(this).val(account.id);
-    //     $(this).text(account.accountName);
-    //   });
-    //   $('#edtDepreciationExpenseAccount').editableSelect('add', function(){
-    //     $(this).val(account.id);
-    //     $(this).text(account.accountName);
-    //   });
-    // });
   }
 
   templateObject.getDateStr = function (dateVal) {
@@ -99,16 +87,17 @@ Template.fixedassetcard.onCreated(function () {
   };
 
   templateObject.inputFieldAry = new ReactiveVar({
-    AssetCode: '', AssetName: '', Description: '', AssetType: '', BrandName: '',
-    Model: '', AssetCondition: '', Colour: '', Size: '', Shape: '',
+    AssetCode: '', AssetName: '', Description: '', AssetType: '',
+    Manufacture: '', BrandName: '', Model: '', AssetCondition: '', Colour: '', Size: '', Shape: '',
     WarrantyType: '',
     EstimatedValue: 'double', ReplacementCost: 'double', Status: '',
-    PurchCost: 'number',
+    PurchCost: 'number', SupplierName: '',
     LocationDescription: '',
-    SupplierName: '',
     DisposalAccumDeprec: 'number', DisposalAccumDeprec2: 'number',
     DisposalBookValue: 'number', DisposalBookValue2: 'number',
-    SalesPrice: 'number', SalesPrice2: 'number', 'Notes': ''
+    SalesPrice: 'number', SalesPrice2: 'number', Notes: '',
+    Salvage: 'number', Salvage2: 'number',
+    Life: 'number', Life2: 'number', BusinessUsePercent: 'number', BusinessUsePercent2: 'number',
   });
 });
 
@@ -133,10 +122,10 @@ Template.fixedassetcard.onRendered(function () {
   // $('#edtBoughtFrom').editableSelect();
   // $('#edtDepartment').editableSelect();
   $('#edtDepreciationType').editableSelect();
-  $('#edtCostAssetAccount').editableSelect();
-  $('#editBankAccount').editableSelect();
-  $('#edtDepreciationAssetAccount').editableSelect();
-  $('#edtDepreciationExpenseAccount').editableSelect();
+  $('#edtCostAssetAccount, #edtCostAssetAccount2').editableSelect();
+  $('#editBankAccount, #editBankAccount2').editableSelect();
+  $('#edtDepreciationAssetAccount, #edtDepreciationAssetAccount2').editableSelect();
+  $('#edtDepreciationExpenseAccount, #edtDepreciationExpenseAccount2').editableSelect();
 
   $('#edtDepreciationType').editableSelect()
     .on('select.editable-select', function (e, li) {
@@ -145,14 +134,14 @@ Template.fixedassetcard.onRendered(function () {
         const val = parseInt(li.val() || 0);
         switch(val) {
           case 0:
-            $('select#edtSalvageValueType').val(1);
-            $('input#edtSalvageValue').val(0);
+            $('select#edtSalvageType').val(1);
+            $('input#edtSalvage').val(0);
             break;
           case 1:
-            $('select#edtSalvageValueType').val(1);
+            $('select#edtSalvageType').val(1);
             break;
           case 2:
-            $('select#edtSalvageValueType').val(2);
+            $('select#edtSalvageType').val(2);
             break;
         }
         templateObject.deprecitationPlans.set([]);
@@ -220,18 +209,18 @@ Template.fixedassetcard.onRendered(function () {
     const callType = $('input#edtSupplierType').val();
     if (callType === 'supplier') {
       $('input#edtSupplierName').val($(this).find('td.colCompany').html());
-      templateObject.edtSupplierId.set(parseInt($(this).attr('id')));
+      templateObject.edtSupplierId.set(parseInt($(this).find('td.colID').html()));
     }
     if (callType === 'insurance') {
       $('input#edtInsuranceByName').val($(this).find('td.colCompany').html());
-      templateObject.edtInsuranceById.set(parseInt($(this).attr('id')));
+      templateObject.edtInsuranceById.set(parseInt($(this).find('td.colID').html()));
     }
     $('#supplierListModal').modal('hide');
   });
 
-  $(document).on("click", "#tblAccountOverview tbody tr", function(e) {
+  $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
     const accountName = $(this).find('td.colAccountName').html();
-    const accountId = parseInt($(this).attr('id'));
+    const accountId = parseInt($(this).find('td.colAccountId').html());
     switch ($('input#edtAccountType').val()) {
       case 'edtCostAssetAccount':
         templateObject.edtCostAssetAccount.set(accountId);
@@ -244,6 +233,18 @@ Template.fixedassetcard.onRendered(function () {
         break;
       case 'edtDepreciationExpenseAccount':
         templateObject.edtDepreciationExpenseAccount.set(accountId);
+        break;
+      case 'edtCostAssetAccount2':
+        templateObject.edtCostAssetAccount2.set(accountId);
+        break;
+      case 'editBankAccount2':
+        templateObject.editBankAccount.set(accountId);
+        break;
+      case 'edtDepreciationAssetAccount2':
+        templateObject.edtDepreciationAssetAccount2.set(accountId);
+        break;
+      case 'edtDepreciationExpenseAccount2':
+        templateObject.edtDepreciationExpenseAccount2.set(accountId);
         break;
     }
     $('input#'+$('input#edtAccountType').val()).val(accountName);
@@ -279,6 +280,7 @@ Template.fixedassetcard.onRendered(function () {
     Object.keys(templateObject.inputFieldAry.get()).map((fieldName) => {
       $("div#fixedAssetCardContainer #edt" + fieldName).val(assetInfo[fieldName]);
     });
+
     // -----------------Depreciation Information-----------------
     templateObject.edtDepreciationType.set(assetInfo.DepreciationOption); //Depreciation Type
     let accountName = $("#edtDepreciationType").parent().find("li[value="+assetInfo.DepreciationOption+"]").html();
@@ -300,10 +302,29 @@ Template.fixedassetcard.onRendered(function () {
     accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID)['accountName'];
     $("#edtDepreciationExpenseAccount").val(accountName);
 
-    $('input#edtSalvageValue').val(assetInfo.Salvage);
-    $('select#edtSalvageValueType').val(assetInfo.SalvageType);
-    $('input#edtAssetLife').val(assetInfo.Life);
-    $('input#edtBusinessUse').val(assetInfo.BusinessUsePercent);
+    // -----------------Depreciation Information-----------------
+    templateObject.edtDepreciationType2.set(assetInfo.DepreciationOption2); //Depreciation Type
+    accountName = $("#edtDepreciationType2").parent().find("li[value="+assetInfo.DepreciationOption2+"]").html();
+    $("#edtDepreciationType2").val(accountName);
+
+    templateObject.edtCostAssetAccount2.set(assetInfo.FixedAssetCostAccountID2);
+    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetCostAccountID2)['accountName'];
+    $("#edtCostAssetAccount2").val(accountName);
+
+    templateObject.editBankAccount2.set(assetInfo.CUSTFLD8); // FixedAssetBankAccountID
+    accountName = allAccountsData.find((account) => account.id == assetInfo.CUSTFLD8)['accountName'];
+    $("#editBankAccount2").val(accountName);
+
+    templateObject.edtDepreciationAssetAccount2.set(assetInfo.FixedAssetDepreciationAccountID2); //FixedAssetDepreciationExpenseAccountID
+    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAccountID2)['accountName'];
+    $("#edtDepreciationAssetAccount2").val(accountName);
+
+    templateObject.edtDepreciationExpenseAccount2.set(assetInfo.FixedAssetDepreciationAssetAccountID2);
+    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID2)['accountName'];
+    $("#edtDepreciationExpenseAccount2").val(accountName);
+
+    $('select#edtSalvageType').val(assetInfo.SalvageType);
+    $('select#edtSalvageType2').val(assetInfo.SalvageType2);
 
     // -----------------Insurance Information-----------------
     $('input#edtInsurancePolicy').val(assetInfo.InsurancePolicy);
@@ -379,15 +400,19 @@ Template.fixedassetcard.events({
         InsuredUntil: templateObject.getDateStr($("#edtInsuranceEndDate").datepicker("getDate")),
 
         DepreciationOption: templateObject.edtDepreciationType.get(),
+        DepreciationOption2: templateObject.edtDepreciationType2.get(),
         FixedAssetCostAccountID: templateObject.edtCostAssetAccount.get(),
+        FixedAssetCostAccountID2: templateObject.edtCostAssetAccount2.get(),
         fixedassetsdepreciationdetails1: planList,
         CUSTFLD6: templateObject.editBankAccount.get().toString(),
+        CUSTFLD8: templateObject.editBankAccount2.get().toString(),
         FixedAssetDepreciationAccountID: templateObject.edtDepreciationAssetAccount.get(),
+        FixedAssetDepreciationAccountID2: templateObject.edtDepreciationAssetAccount2.get(),
         FixedAssetDepreciationAssetAccountID: templateObject.edtDepreciationExpenseAccount.get(),
-        Salvage: parseInt($('input#edtSalvageValue').val()) || 0,
-        SalvageType: parseInt($('select#edtSalvageValueType').val()) || 0,
-        Life: parseInt($('input#edtAssetLife').val()) || 1,
-        BusinessUsePercent: parseInt($('input#edtBusinessUse').val()) || 100,
+        FixedAssetDepreciationAssetAccountID2: templateObject.edtDepreciationExpenseAccount2.get(),
+        SalvageType: parseInt($('select#edtSalvageType').val()) || 0,
+        SalvageType2: parseInt($('select#edtSalvageType2').val()) || 0,
+
         Active: true
       }
     };
@@ -398,7 +423,7 @@ Template.fixedassetcard.events({
           newFixedAsset.fields[fieldName] = parseFloat($('div#fixedAssetCardContainer #edt'+fieldName).val());
           break;
         case 'number':
-          newFixedAsset.fields[fieldName] = parseInt($('div#fixedAssetCardContainer #edt'+fieldName).val());
+          newFixedAsset.fields[fieldName] = parseInt($('div#fixedAssetCardContainer #edt'+fieldName).val()) || 0;
           break;
         default:
           newFixedAsset.fields[fieldName] = $('div#fixedAssetCardContainer #edt'+fieldName).val();
@@ -438,11 +463,11 @@ Template.fixedassetcard.events({
   "click button.btnCalculate": function () {
     const templateObject = Template.instance();
     const depreciationType = templateObject.edtDepreciationType.get();
-    const salvage = parseInt($('input#edtSalvageValue').val()) || 0;
+    const salvage = parseInt($('input#edtSalvage').val()) || 0;
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
     const startYear = startDate.getFullYear();
-    const life = parseInt($('input#edtAssetLife').val()) || 1;
-    const businessPercent = parseInt($('input#edtBusinessUse').val()) || 100;
+    const life = parseInt($('input#edtLife').val()) || 1;
+    const businessPercent = parseInt($('input#edtBusinessUsePercent').val()) || 100;
     if (salvage * businessPercent == 0) {
       Bert.alert( '<strong>WARNING:</strong>Salvage is zero ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans.set([]);

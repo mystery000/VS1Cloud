@@ -439,8 +439,8 @@
                           label = 'Manufacture'
                           classes = ''
                           type = 'text'
-                          id = 'edtInsurancePolicy'
-                          name = 'edtInsurancePolicy'
+                          id = 'edtManufacture'
+                          name = 'edtManufacture'
                         }}
                       </div> 
                     </div>
@@ -451,8 +451,8 @@
                           label = 'Brand Name'
                           classes = ''
                           type = 'text'
-                          id = 'edtInsurancePolicy'
-                          name = 'edtInsurancePolicy'
+                          id = 'edtBrandName'
+                          name = 'edtBrandName'
                         }}
                       </div>
                     </div>
@@ -577,21 +577,21 @@
                     <div class="col-12 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>&nbsp;</label>
-                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                        <input type="number" class="form-control" id="edtBusinessUsePercent" name="edtBusinessUsePercent" value="100" min="0" max="100">
                       </div>
                     </div>
 
                     <div class="col-8 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
-                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue" value="0" min="0">
+                        <input type="Number" class="form-control" id="edtSalvage" name="edtSalvage" value="0" min="0">
                       </div>
                     </div>
 
                     <div class="col-4 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;"> 
                         <label>&nbsp;</label>
-                        <select type="search" class="form-control" id="edtSalvageValueType" name="edtSalvageValueType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
+                        <select type="search" class="form-control" id="edtSalvageType" name="edtSalvageType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
                           <option value="1">Amount</option>
                           <option value="2">Percent</option>
                         </select>
@@ -601,13 +601,13 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Life (Years)</label>
-                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" value="1" min="0">
+                        <input type="number" class="form-control" id="edtLife" name="edtLife" value="1" min="0">
                       </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Business Use (%)</label>
-                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                        <input type="number" class="form-control" id="edtBusinessUsePercent" name="edtBusinessUsePercent" value="100" min="0" max="100">
                       </div>
                     </div>
                   </div>
@@ -685,14 +685,14 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Fixed Assets Cost Asset Account</label>
-                            <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            <select type="search" class="form-control" id="edtCostAssetAccount2" name="edtCostAssetAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                             </select>
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Fixed Assets Bank Account</label>
-                            <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            <select type="search" class="form-control" id="editBankAccount2" name="editBankAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                             </select>
                           </div>
                         </div>
@@ -703,14 +703,14 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Asset Account</label>
-                            <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            <select type="search" class="form-control" id="edtDepreciationAssetAccount2" name="edtDepreciationAssetAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                             </select>
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Expense Account</label>
-                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount2" name="edtDepreciationExpenseAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                             </select>
                           </div>
                         </div>
@@ -722,7 +722,7 @@
                     <div class="col-12 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Depreciation Type</label>
-                        <select type="search" class="form-control" id="edtDepreciationType" name="edtDepreciationType" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        <select type="search" class="form-control" id="edtDepreciationType2" name="edtDepreciationType2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                           <option value="0">No Depreciation</option>
                           <option value="1">Straight Line Depreciation</option>
                           <option value="2">Decling Balance</option>
@@ -733,21 +733,21 @@
                     <div class="col-12 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>&nbsp;</label>
-                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                        <input type="number" class="form-control" id="edtBusinessUsePercent2" name="edtBusinessUsePercent2" value="100" min="0" max="100">
                       </div>
                     </div>
 
                     <div class="col-8 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
-                        <input type="Number" class="form-control" id="edtSalvageValue" name="edtSalvageValue" value="0" min="0">
+                        <input type="Number" class="form-control" id="edtSalvage2" name="edtSalvage2" value="0" min="0">
                       </div>
                     </div>
 
                     <div class="col-4 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;"> 
                         <label>&nbsp;</label>
-                        <select type="search" class="form-control" id="edtSalvageValueType" name="edtSalvageValueType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
+                        <select type="search" class="form-control" id="edtSalvageType2" name="edtSalvageType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
                           <option value="1">Amount</option>
                           <option value="2">Percent</option>
                         </select>
@@ -757,13 +757,13 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Life (Years)</label>
-                        <input type="number" class="form-control" id="edtAssetLife" name="edtAssetLife" value="1" min="0">
+                        <input type="number" class="form-control" id="edtLife2" name="edtLife2" value="1" min="0">
                       </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Business Use (%)</label>
-                        <input type="number" class="form-control" id="edtBusinessUse" name="edtBusinessUse" value="100" min="0" max="100">
+                        <input type="number" class="form-control" id="edtBusinessUsePercent2" name="edtBusinessUsePercent2" value="100" min="0" max="100">
                       </div>
                     </div>
                   </div>
@@ -989,39 +989,25 @@
 
   {{> fixedassettypepopup modalID='fixedAssetTypeListModal'}}
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="supplierListModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
-      <div class="modal-content customerListContent">
-        <div class="modal-header">
-          <h4>Supplier List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
+  <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
+        <div class="modal-content supplierListContent">
+            <div class="modal-header">
+                <h4>Supplier List</h4><button type="button" class="close checkclose" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
+                <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
+                <input type="hidden" id="edtSupplierType" />
+                {{> supplierlistpop}}
+            </div>
+            <div class="modal-footer"><button class="btn btn-success addAutoSupplier" type="button">Add Supplier</button>
+            </div>
         </div>
-        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
-          <input type="hidden" id="edtSupplierType" />
-          {{> non_transactional_list tablename="tblSupplierlist"}}
-        </div>
-        <!-- <div class="modal-footer">
-          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div> -->
-      </div>
     </div>
   </div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document">
-      <div class="modal-content customerListContent">
-        <div class="modal-header">
-          <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-              aria-hidden="true">×</span></button>
-        </div>
-        <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 32px;">
-          {{> non_transactional_list tablename="tblAccountOverview"}}
-        </div>
-        <!-- <div class="modal-footer">
-          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-        </div> -->
-      </div>
-    </div>
+    {{> accountlistpop}}
   </div>
 
 </template>
