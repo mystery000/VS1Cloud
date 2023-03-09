@@ -202,22 +202,7 @@
 
 
                         </style>
-                        {{>datatablelist
-                            tablename="tblappointmenttimelist"
-                            apiName= apiFunction
-                            indexeddbname = 'TAppointment'
-                            tableheaderrecords = tableheaderrecords
-                            exportfilename = 'Appointment Time List'
-                            istransaction = false
-                            apiParams= apiParams
-                            datahandler = datahandler
-                            service=service
-                            lowercaseDataName='tappointmentex'
-                            exIndexDBName = 'tappointmentex'
-                            exdatahandler = exDataHandler
-                            isMultipleRows = true
-                        }}
-                        <!-- <table id="tblappointmenttimelist" name="tblappointmenttimelist" class="dataTable table table-hover table-striped table-bordered tblappointmenttimelist">
+                        <table id="tblappointmenttimelist" name="tblappointmenttimelist" class="dataTable table table-hover table-striped table-bordered tblappointmenttimelist">
                             <thead>
                             <tr class="dnd-moved">
                                 <th class="th colSortDate" style="width:60px;">ID</th>
@@ -235,6 +220,7 @@
                             {{#if datatablerecords}}
                                 {{#each item in datatablerecords}}
                                     <tr class="dnd-moved" id="{{item.id}}" logid="{{item.logid}}" style="cursor: pointer;">
+                                        <!-- <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td> -->
                                         <td contenteditable="false" class="colSortDate">{{item.id}}</td>
                                         <td contenteditable="false" class="colDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.appointmentdate}}</td>
                                         <td contenteditable="false" class="colAccountName" id="colAccountName{{item.id}}">{{item.accountname}}</td>
@@ -248,7 +234,7 @@
                                 {{/each}}
                             {{/if}}
                             </tbody>
-                        </table> -->
+                        </table>
 
                         <div class="modal fade" role="dialog"  id="event-modal">
                             <form id="frmAppointment">
