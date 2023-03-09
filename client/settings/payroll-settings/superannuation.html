@@ -8,6 +8,20 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body p-1 rounded">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <a href="#newSuperannuationFundModal" data-toggle="modal">
+                                    {{> vs1_button
+                                        color='primary'
+                                        classes='float-right btnAddordinaryTimeSuperannuation'
+                                        type='button'
+                                        id="btnAddordinaryTimeSuperannuation"
+                                        iconName='plus'
+                                        title='New Superannuation Fund'
+                                    }}
+                                </a>
+                            </div>
+                        </div>
                         {{> datatablelist
                             tablename="tblSuperannuation"
                             apiName=apiFunction8

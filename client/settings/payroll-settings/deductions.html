@@ -10,6 +10,20 @@
                 <div class="modal-body">
                     <!-- <input type="hidden" style="width: 100%; display:none;" id="deductionID" name="deductionID" /> -->
                     <div class="card-body p-1 rounded">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <a href="#noneModal" data-toggle="modal">
+                                    {{> vs1_button
+                                        color='primary'
+                                        classes='float-right btnAddordinaryTimeDeductions'
+                                        type='button'
+                                        id="btnAddordinaryTimeDeductions"
+                                        iconName='plus'
+                                        title='New Deduction'
+                                    }}
+                                </a>
+                            </div>
+                        </div>
                         {{> datatablelist
                             tablename="tblDeductions"
                             apiName=apiFunction5

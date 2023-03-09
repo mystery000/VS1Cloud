@@ -8,6 +8,20 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body p-1 rounded">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <a href="#newReimbursementModal" data-toggle="modal">
+                                    {{> vs1_button
+                                        color='primary'
+                                        classes='float-right btnAddNewReimbursement'
+                                        type='button'
+                                        id="btnAddNewReimbursement"
+                                        iconName='plus'
+                                        title='New Reiumbursement'
+                                    }}
+                                </a>
+                            </div>
+                        </div>
                         {{> datatablelist
                             tablename="tblReimbursements"
                             apiName=apiFunction6
