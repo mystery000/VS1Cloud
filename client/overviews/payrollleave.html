@@ -62,7 +62,7 @@
                     }
                 </style>
 
-                <div class="row no-gutters d-xl-flex align-items-xl-end">
+                <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                     <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                     </div>
@@ -99,8 +99,22 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                {{> transaction_list tablename = "tblPayleaveToReview" }}
+                </div> -->
+                <!-- {{> transaction_list tablename = "tblPayleaveToReview" }} -->
+                {{>datatablelist
+                    tablename="tblPayleaveToReview"
+                    apiName= apiFunction
+                    indexeddbname = 'TLeavRequest'
+                    tableheaderrecords = tableLeaveRequestheaderrecords
+                    exportfilename = 'Payroll Leave Request'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tleavrequest'
+                    exIndexDBName = 'tleavrequest'
+                    exdatahandler = exDataHandler
+                }}
             </div>
         </div>
 
@@ -191,7 +205,7 @@
         </div>
 
     </div>
-    {{> assignLeaveTypePop leaveTypes=leaveTypes}}
+    <!-- {{> assignLeaveTypePop leaveTypes=leaveTypes}} -->
     <script>
         modalDraggable();
     </script>

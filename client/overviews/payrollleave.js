@@ -33,16 +33,41 @@ let utilityService = new UtilityService();
 const contactService = new ContactService();
 
 Template.payrollleave.onCreated(function () {
+  const templateObject = Template.instance();
   this.leaveRequests = new ReactiveVar([]);
   this.leaveRequestFiltered = new ReactiveVar([]);
   this.employees = new ReactiveVar([]);
 
   this.leaveTypes = new ReactiveVar([]);
+
+  this.tableLeaveRequestheaderrecords = new ReactiveVar([]);
+  this.getDataTableList = function(data) {
+    dataList = [
+      data.fields.ID || '',
+      data.fields.Description || '',
+      data.fields.PayPeriod || '',
+      data.fields.LeaveMethod || '',
+      data.fields.Status || '',
+      (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
+    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
+    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
+    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
+    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
+    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+  ];
+  this.tableLeaveRequestheaderrecords.set(headerStructure);
 });
 
 function MakeNegative() {}
 
 Template.payrollleave.onRendered(function () {
+  const templateObject = Template.instance();
   this.loadLeaves = async (refresh = false) => {
     const employees = await this.employees.get();
     let data = await CachedHttp.get("TLeavRequest", async () => {
@@ -665,6 +690,29 @@ Template.payrollleave.onRendered(function () {
      await this.leaveTypes.set(leaveTypes);
   };
 
+  this.saveLeaveRequestLocalDB = async function () {
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+      employeePayrolApis.collectionNames.TLeavRequest
+    );
+
+    employeePayrolEndpoint.url.searchParams.append(
+      "ListType",
+      "'Detail'"
+    );
+    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+    if (employeePayrolEndpointResponse.ok == true) {
+      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+      if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
+        await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+      }
+      return employeePayrolEndpointJsonResponse
+    }
+    return '';
+  };
+
   this.initPage = async (refresh = false) => {
     LoadingOverlay.show();
 
@@ -674,12 +722,12 @@ Template.payrollleave.onRendered(function () {
     await this.loadDefaultScreen(refresh);
 
     this.dataTableSetup(refresh);
-
     if(!refresh) Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   };
 
   this.initPage();
+
 });
 
 Template.payrollleave.events({
@@ -753,5 +801,28 @@ Template.payrollleave.helpers({
     return Template.instance().leaveRequestFiltered.get();
   },
   formatDate: date => moment(date).format("Do MMM YYYY"),
-  leaveTypes: () => Template.instance().leaveTypes.get()
+  leaveTypes: () => Template.instance().leaveTypes.get(),
+  apiFunction:async function() {
+    let data = await this.saveLeaveRequestLocalDB();
+    return data;
+  },
+  apiParams: function() {
+    return ['ignoredate', 'limitCount', 'limitFrom'];
+  },
+  datahandler: function () {
+    return function(data) {
+        let dataReturn =  this.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  exDataHandler: function() {
+    return function(data) {
+        let dataReturn =  this.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+  },
 });
