@@ -3642,6 +3642,21 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TReconciliation, options);
   }
 
+    getAllTReconcilationListDataForBankAccountChart(limitFrom,limitCount, deleteFilter) {
+        let options = "";
+
+        options = {
+            IgnoreDates: false,
+            OrderBy: "ReconciliationID desc",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+            Search: "Deleted != true",
+        };
+
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TReconciliationList, options);
+    }
+
   getAllTReconcilationListData(dateFrom,dateTo,ignoreDate, deleteFilter) {
     let options = "";
 

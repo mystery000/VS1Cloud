@@ -214,7 +214,7 @@ Template.bankaccountschart.helpers({
     },
 
     apiParams: function() {
-        return ["dateFrom","dateTo","ignoredate", "deleteFilter"];
+        return ["limitCount","limitFrom", "deleteFilter"];
     },
 });
 Template.registerHelper('equals', function (a, b) {
