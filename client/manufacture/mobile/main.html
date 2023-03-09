@@ -70,7 +70,7 @@
 		}
 		.mobile-right-btn-containner button{
 			height: 13.45vw;
-			width: 15.97vw;
+			width: 14.45vw;
 			font-weight: 800;
 			font-size: 1.8vw;
 		}
@@ -193,7 +193,24 @@
 			background-color: #fff;
 			margin-top: 2vw;
 		}
+		.mobile-phone-right-btn-containner {
+			display: none;
+		}
+
 		@media (max-width: 480px) {
+			
+			.mobile-phone-right-btn-containner {
+				display: block;
+			}
+
+			.mobile-right-btn-containner   {
+				display: none !important;
+			}
+
+			.mobile-left-btn-containner {
+				display: none !important;
+			}
+						
 			.mobile-checkin-container{
 				height: 100vh;
 			}
@@ -212,9 +229,15 @@
 				margin-bottom: 1vw;
 				font-size: 4vw;
 			}
-			.mobile-left-btn-containner, .mobile-header-container, .mobile-main-input, button.mobile-bg-color-grey, .mobile-right-side-btn{
-				display: none !important;
+
+			.mobile-phone-right-btn-containner .mobile-btn {
+				width: 45.5vw;
+				height: 45.5vw;
+				margin: 0;
+				margin-bottom: 1vw;
+				font-size: 5vw;
 			}
+			
 			.mobile-phone-header-container{
 				display: block;
 			}
@@ -224,7 +247,45 @@
 			.colContent {
 			    overflow-x: unset !important;
 			}
+			
+			.mobile-main-input {
+				width: 70%;
+				height: 10vw;
+
+			}
+			.mobile-right-side-btn {
+				width: 20vw;
+				margin-right: 10px;
+			}
+			.mf-17 {
+				font-size:3.7vw
+			}
+			.phone-footer-btn {
+				width: 30vw;
+				height: 13vw;
+			}
+
+			#txtpause-notes {
+				height: 18vw;
+			}
+
+			.mobile-stop-job-btns, .mobile-stop-job-input{ 
+				height: 14.6vw;
+				font-size: 5vw;
+			}
+			.mobile-header-text {
+				font-size: 3.8vw;
+			}
+
+
 		}
+
+		@media (min-width: 480px) {
+			.mobile-right-btn-containner {
+				display: block;
+			}
+		}
+
 	</style>
 	{{>mobileHeader}}
 	<div class="mobile-page-container">
@@ -272,7 +333,13 @@
 				<table id="tblJobProcessList" name="tblWorkOrderList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
 				</table>
 			</div>
-				
+			
+			<div class="mt-4 mobile-row mobile-stop-job-container mmw-100 mtw-50" style="display: none;">
+				<button class="mobile-stop-job-btns" style="background-color: #999; color: white">QUANTITY BUILT</button>
+				<input class="mobile-stop-job-input" value="0" />
+				<button class="mobile-stop-job-btns mobile-bg-color-blue mobile-color-white" id="btnSaveClose">SAVE & CLOSE</button>
+				<button class="mobile-stop-job-btns mobile-color-white mobile-bg-color-green" id="btnCompleteProcess">COMPLETE PROCESS</button>
+			</div>
 				
 			
 			<div class="mt-4 mobile-row mobile-left-btn-containner mmw-100 mtw-50">
@@ -300,12 +367,22 @@
 				<button id="btnStartJob" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>START JOB</button>
 				<button id="btnStopJob" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>STOP JOB</button>
 			</div>
-			<div class="mt-4 mobile-row mobile-stop-job-container mmw-100 mtw-50" style="display: none;">
-				<button class="mobile-stop-job-btns" style="background-color: #999; color: white">QUANTITY BUILT</button>
-				<input class="mobile-stop-job-input" value="0" />
-				<button class="mobile-stop-job-btns mobile-bg-color-blue mobile-color-white" id="btnSaveClose">SAVE & CLOSE</button>
-				<button class="mobile-stop-job-btns mobile-color-white mobile-bg-color-green" id="btnCompleteProcess">COMPLETE PROCESS</button>
+
+			<div class="mt-4 mobile-row mobile-phone-right-btn-containner mmw-100 mtw-50">
+				
+				<button id="btnClockIn_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK IN</button>
+				<button id="btnClockOut_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK OUT</button>				
+				<button id="btnStartBreak_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>START BREAK</button>
+				<button id="btnStopBreak_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>STOP BREAK</button>				
+				<button id="btnStartJob_phone" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>START JOB</button>
+				<button id="btnStopJob_phone" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>STOP JOB</button>
+				<button id="btnOpentList" class="m-mb-1 mobile-bg-color-grey  phone-footer-btn">OPEN LIST</button>
+				<button class="m-mb-1 mobile-bg-color-grey  phone-footer-btn" id="mobileBtnQrCobeScan">SCAN</button>
+				<button id="mobileBtnCancel" class="mobile-bg-color-grey  phone-footer-btn">CANCEL</button>
+
 			</div>
+
+			
 		</div>
 	</div>
 </template>

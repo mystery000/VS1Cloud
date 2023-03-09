@@ -167,6 +167,9 @@ Template.new_workorder.onRendered(async function(){
             // if(workorder.fields.StoppedTime && new Date(workorder.fields.StoppedTime).getTime() < new Date().getTime()) {
             //     templateObject.isCompleted = true;
             // }
+            
+            console.log(workorder);
+
             let isCompleted = false
             if(workorder.fields.IsCompleted == true) {
                 isCompleted = true;
@@ -987,6 +990,9 @@ Template.new_workorder.events({
                 async function saveMainOrders() {
                     let record = templateObject.workorderrecord.get();
                     let totalWorkOrders = await templateObject.getAllWorkorders();
+                    
+                    console.log(totalWorkOrders);
+                    
                     let savedworkorders = totalWorkOrders.filter(order => {
                         return order.fields.SaleID == templateObject.salesOrderId.get();
                     })
@@ -996,10 +1002,12 @@ Template.new_workorder.events({
                     templateObject.workorderrecord.set(temp);
                     record = templateObject.workorderrecord.get();
                     let objDetail = {
-                        LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                    //    LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        LID: $('#ponumber').val() + "_" + (count + 1).toString(),
                         Customer: $('#edtCustomerName').val() || '',
                         OrderTo: $('#txabillingAddress').val() || '',
                         PONumber: $('#ponumber').val()||'',
+                        OrderNumber:$('#edtOrderNumber').val() || '',
                         SaleDate: record.saledate,
                         DueDate: record.duedate,
                         BOMStructure: JSON.stringify(templateObject.bomStructure.get()),
@@ -1012,7 +1020,9 @@ Template.new_workorder.events({
                         // ProductID: record.productid,
                         Quantity: record.quantity || 1,
                         InProgress: record.isStarted,
-                        ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        //ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        ID: $('#ponumber').val() + "_" + (count + 1).toString(),
+
                         UpdateFromPO: templateObject.updateFromPO.get(),
                         POStatus: record.poStatus,
                         Status: record.status,
@@ -1045,8 +1055,6 @@ Template.new_workorder.events({
                 }
 
                 await saveMainOrders();
-
-
 
                 $('.fullScreenSpin').css('display', 'none');
 
