@@ -670,17 +670,18 @@ div.dataTables_wrapper .row button{
 .dropdown-menu.daterange {
  width: 210px;
 }
-/*
-.table-responsive{
+
+/* .table-responsive{
 overflow-x: auto!important;
 overflow-y: hidden!important;
 }
+ */
 
-.table-responsive table {
-    max-width: 99.7% !important;
-    min-width: 99.7% !important;
-}
-*/
+ .table-responsive table:not(.dtTemplate) {
+     max-width: 99.7% !important;
+     min-width: 99.7% !important;
+ }
+
 .loggedCompanyName h2 {
     padding: 16px 4px 0;
 }

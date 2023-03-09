@@ -4754,111 +4754,111 @@ $(document).ready(function () {
     })
 
 
-  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-  //   let selectLineID = $("#supplierSelectLineID").val();
-  //   const table = $(this);
-  //   let utilityService = new UtilityService();
-  //   let taxcodeList = templateObject.taxraterecords.get();
-  //   let $tblrows = $("#tblChequeLine tbody tr");
-  //   const tableSupplier = $(this);
-  //   $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
-  //   $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
+  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+    let selectLineID = $("#supplierSelectLineID").val();
+    const table = $(this);
+    let utilityService = new UtilityService();
+    let taxcodeList = templateObject.taxraterecords.get();
+    let $tblrows = $("#tblChequeLine tbody tr");
+    const tableSupplier = $(this);
+    $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
+    $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
 
-  //   $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
-  //   $("#edtSupplierEmail").attr(
-  //     "customerid",
-  //     tableSupplier.find(".colID").text()
-  //   );
-  //   $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
+    $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
+    $("#edtSupplierEmail").attr(
+      "customerid",
+      tableSupplier.find(".colID").text()
+    );
+    $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
 
-  //   let postalAddress =
-  //     tableSupplier.find(".colCompany").text() +
-  //     "\n" +
-  //     tableSupplier.find(".colStreetAddress").text() +
-  //     "\n" +
-  //     tableSupplier.find(".colCity").text() +
-  //     " " +
-  //     tableSupplier.find(".colState").text() +
-  //     " " +
-  //     tableSupplier.find(".colZipCode").text() +
-  //     "\n" +
-  //     tableSupplier.find(".colCountry").text();
-  //   $("#txabillingAddress").val(postalAddress);
-  //   $("#pdfSupplierAddress").html(postalAddress);
-  //   $(".pdfSupplierAddress").text(postalAddress);
-  //   $("#txaShipingInfo").val(postalAddress);
-  //   $("#sltTerms").val(tableSupplier.find(".colSupplierTermName").text() || "");
-  //   $("#supplierListModal").modal("toggle");
+    let postalAddress =
+      tableSupplier.find(".colCompany").text() +
+      "\n" +
+      tableSupplier.find(".colStreetAddress").text() +
+      "\n" +
+      tableSupplier.find(".colCity").text() +
+      " " +
+      tableSupplier.find(".colState").text() +
+      " " +
+      tableSupplier.find(".colZipCode").text() +
+      "\n" +
+      tableSupplier.find(".colCountry").text();
+    $("#txabillingAddress").val(postalAddress);
+    $("#pdfSupplierAddress").html(postalAddress);
+    $(".pdfSupplierAddress").text(postalAddress);
+    $("#txaShipingInfo").val(postalAddress);
+    $("#sltTerms").val(tableSupplier.find(".colSupplierTermName").text() || "");
+    $("#supplierListModal").modal("toggle");
 
-  //   let lineAmount = 0;
-  //   let subGrandTotal = 0;
-  //   let taxGrandTotal = 0;
-  //   let taxGrandTotalPrint = 0;
+    let lineAmount = 0;
+    let subGrandTotal = 0;
+    let taxGrandTotal = 0;
+    let taxGrandTotalPrint = 0;
 
-  //   $tblrows.each(function (index) {
-  //     var $tblrow = $(this);
-  //     var amount = $tblrow.find(".colAmountExChange").val() || 0;
-  //     var taxcode = $tblrow.find(".lineTaxCode").val() || "";
-  //     if ($tblrow.find(".lineAccountName").val() == "") {
-  //       $tblrow.find(".colAccountName").addClass("boldtablealertsborder");
-  //     }
-  //     var taxrateamount = 0;
-  //     if (taxcodeList) {
-  //       for (var i = 0; i < taxcodeList.length; i++) {
-  //         if (taxcodeList[i].codename == taxcode) {
-  //           taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-  //         }
-  //       }
-  //     }
+    $tblrows.each(function (index) {
+      var $tblrow = $(this);
+      var amount = $tblrow.find(".colAmountExChange").val() || 0;
+      var taxcode = $tblrow.find(".lineTaxCode").val() || "";
+      if ($tblrow.find(".lineAccountName").val() == "") {
+        $tblrow.find(".colAccountName").addClass("boldtablealertsborder");
+      }
+      var taxrateamount = 0;
+      if (taxcodeList) {
+        for (var i = 0; i < taxcodeList.length; i++) {
+          if (taxcodeList[i].codename == taxcode) {
+            taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+          }
+        }
+      }
 
-  //     var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-  //     if (taxrateamount == "" || taxrateamount == " ") {
-  //       var taxTotal = 0;
-  //     } else {
-  //       var taxTotal =
-  //         parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
-  //         parseFloat(taxrateamount);
-  //     }
-  //     $tblrow
-  //       .find(".lineTaxAmount")
-  //       .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-  //     if (!isNaN(subTotal)) {
-  //       $tblrow
-  //         .find(".colAmountExChange")
-  //         .val(utilityService.modifynegativeCurrencyFormat(subTotal));
-  //       let totalAmountInc = parseFloat(subTotal) + parseFloat(taxTotal) || 0;
-  //       $tblrow
-  //         .find(".colAmountIncChange")
-  //         .val(
-  //           utilityService.modifynegativeCurrencyFormat(
-  //             totalAmountInc.toFixed(2)
-  //           )
-  //         );
-  //       subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-  //       document.getElementById("subtotal_total").innerHTML =
-  //         utilityService.modifynegativeCurrencyFormat(subGrandTotal);
-  //     }
+      var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
+      if (taxrateamount == "" || taxrateamount == " ") {
+        var taxTotal = 0;
+      } else {
+        var taxTotal =
+          parseFloat(amount.replace(/[^0-9.-]+/g, "")) *
+          parseFloat(taxrateamount);
+      }
+      $tblrow
+        .find(".lineTaxAmount")
+        .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+      if (!isNaN(subTotal)) {
+        $tblrow
+          .find(".colAmountExChange")
+          .val(utilityService.modifynegativeCurrencyFormat(subTotal));
+        let totalAmountInc = parseFloat(subTotal) + parseFloat(taxTotal) || 0;
+        $tblrow
+          .find(".colAmountIncChange")
+          .val(
+            utilityService.modifynegativeCurrencyFormat(
+              totalAmountInc.toFixed(2)
+            )
+          );
+        subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+        document.getElementById("subtotal_total").innerHTML =
+          utilityService.modifynegativeCurrencyFormat(subGrandTotal);
+      }
 
-  //     if (!isNaN(taxTotal)) {
-  //       taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
-  //       document.getElementById("subtotal_tax").innerHTML =
-  //         utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
-  //     }
+      if (!isNaN(taxTotal)) {
+        taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
+        document.getElementById("subtotal_tax").innerHTML =
+          utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
+      }
 
-  //     if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-  //       let GrandTotal = parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-  //       document.getElementById("grandTotal").innerHTML =
-  //         utilityService.modifynegativeCurrencyFormat(GrandTotal);
-  //       //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-  //       //document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-  //     }
-  //   });
-  //   $("#tblSupplierlist_filter .form-control-sm").val("");
-  //   setTimeout(function () {
-  //     $(".btnRefreshSupplier").trigger("click");
-  //     $(".fullScreenSpin").css("display", "none");
-  //   }, 1000);
-  // });
+      if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+        let GrandTotal = parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+        document.getElementById("grandTotal").innerHTML =
+          utilityService.modifynegativeCurrencyFormat(GrandTotal);
+        //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+        //document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
+      }
+    });
+    $("#tblSupplierlist_filter .form-control-sm").val("");
+    setTimeout(function () {
+      $(".btnRefreshSupplier").trigger("click");
+      $(".fullScreenSpin").css("display", "none");
+    }, 1000);
+  });
 
 
 
