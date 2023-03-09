@@ -3690,44 +3690,86 @@ Template.stockadjustmentcard.events({
                 }
                 else{
                     let data = JSON.parse(dataObject[0].data);
+                    let existProductInfo = false;
                     for (let i = 0; i < data.tproductqtylist.length; i++) {
-                    if(data.tproductqtylist[i].ProductName == selectedProductName){
-                        if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
-                          return false;
-                        } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
-                          let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                          if(selectedLot != undefined && selectedLot != ""){
-                              shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                          }
-                          else{
-                              shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                          }
-                          setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableLotNumberModal").attr("data-row", row + 1);
-                              $("#availableLotNumberModal").modal("show");
-                          }, 200);
-                        } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
-                          let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                          if(selectedSN != undefined && selectedSN != ""){
-                              shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                          }
-                          else{
-                              shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                          }
-                          setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableSerialNumberModal").attr("data-row", row + 1);
-                              $('#availableSerialNumberModal').modal('show');
-                              if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
-                              $("#availableSerialNumberModal .btnSNCreate").show();
-                              }
-                              else{
-                              $("#availableSerialNumberModal .btnSNCreate").hide();
-                              }
-                          }, 200);
+                        if(data.tproductqtylist[i].ProductName == selectedProductName){
+                            existProductInfo = true;
+                            if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                            return false;
+                            } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                            let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                            if(selectedLot != undefined && selectedLot != ""){
+                                shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                            }
+                            else{
+                                shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                            }
+                            setTimeout(function () {
+                                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                $("#availableLotNumberModal").attr("data-row", row + 1);
+                                $("#availableLotNumberModal").modal("show");
+                            }, 200);
+                            } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                            let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                            if(selectedSN != undefined && selectedSN != ""){
+                                shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                            }
+                            else{
+                                shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                            }
+                            setTimeout(function () {
+                                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                $("#availableSerialNumberModal").attr("data-row", row + 1);
+                                $('#availableSerialNumberModal').modal('show');
+                                if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                                $("#availableSerialNumberModal .btnSNCreate").show();
+                                }
+                                else{
+                                $("#availableSerialNumberModal .btnSNCreate").hide();
+                                }
+                            }, 200);
+                            }
                         }
                     }
+
+                    if (!existProductInfo) {
+                        productService.getProductStatus(selectedProductName).then(async function (data) {
+                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                            return false;
+                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                            let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                            if(selectedLot != undefined && selectedLot != ""){
+                              shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                            }
+                            else{
+                              shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                            }
+                            setTimeout(function () {
+                            var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                            $("#availableLotNumberModal").attr("data-row", row + 1);
+                            $("#availableLotNumberModal").modal("show");
+                            }, 200);
+                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                            let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                            if(selectedSN != undefined && selectedSN != ""){
+                              shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                            }
+                            else{
+                              shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                            }
+                            setTimeout(function () {
+                            var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                            $("#availableSerialNumberModal").attr("data-row", row + 1);
+                            $('#availableSerialNumberModal').modal('show');
+                            if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                                $("#availableSerialNumberModal .btnSNCreate").show();
+                            }
+                            else{
+                                $("#availableSerialNumberModal .btnSNCreate").hide();
+                            }
+                            }, 200);
+                        }
+                        });
                     }
                 }
                 }).catch(function (err) {
@@ -3787,141 +3829,12 @@ Template.stockadjustmentcard.events({
                 event.preventDefault();
                 return false;
             } else {
+                $(".fullScreenSpin").css("display", "inline-block");
                 getVS1Data("TProductQtyList").then(function (dataObject) {
                     if (dataObject.length == 0) {
-                    productService.getProductStatus(selectedProductName).then(async function (data) {
-                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        var buttons = $("<div>")
-                        .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                        .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                        .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                        swal({
-                            title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                            type: "warning",
-                            showCancelButton: false,
-                            showConfirmButton: false,
-                            html: buttons,
-                            onOpen: function (dObj) {
-                            $('#trackSN').on('click',function () {
-                                objDetails = {
-                                type: "TProductVS1",
-                                fields: {
-                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                    Active: true,
-                                    SNTracking: "true",
-                                    Batch: "false",
-                                },
-                                };
-
-                                productService.saveProductVS1(objDetails)
-                                .then(async function (objDetails) {
-                                sideBarService.getProductListVS1("All", 0)
-                                    .then(async function (dataReload) {
-                                        await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                        swal.close();
-                                        $(target).click();
-                                    })
-                                    .catch(function (err) {
-                                    });
-                                })
-                                .catch(function (err) {
-                                swal({
-                                    title: "Oooops...",
-                                    text: err,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonText: "Try Again",
-                                }).then((result) => {
-                                    if (result.value) {
-                                    // Meteor._reload.reload();
-                                    } else if (result.dismiss === "cancel") {
-                                    }
-                                });
-                                });
-                            });
-                            $('#trackLN').on('click',function () {
-                                swal.close();
-                                objDetails = {
-                                type: "TProductVS1",
-                                fields: {
-                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                    Active: true,
-                                    SNTracking: "false",
-                                    Batch: "true",
-                                },
-                                };
-
-                                productService.saveProductVS1(objDetails)
-                                .then(async function (objDetails) {
-                                sideBarService.getProductListVS1("All", 0)
-                                    .then(async function (dataReload) {
-                                        await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                        swal.close();
-                                        $(target).click();
-                                    })
-                                    .catch(function (err) {
-                                    });
-                                })
-                                .catch(function (err) {
-                                swal({
-                                    title: "Oooops...",
-                                    text: err,
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonText: "Try Again",
-                                }).then((result) => {
-                                    if (result.value) {
-                                    // Meteor._reload.reload();
-                                    } else if (result.dismiss === "cancel") {
-                                    }
-                                });
-                                });
-                            });
-                            $('#trackCancel').on('click',function () {
-                                swal.close();
-                            });
-                            }
-                        });
-                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                        let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                        if(selectedLot != undefined && selectedLot != ""){
-                            shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                        }
-                        else{
-                            shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                        }
-                        setTimeout(function () {
-                            var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                            $("#availableLotNumberModal").attr("data-row", row + 1);
-                            $("#availableLotNumberModal").modal("show");
-                        }, 200);
-                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                        let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                        if(selectedSN != undefined && selectedSN != ""){
-                            shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                        }
-                        else{
-                            shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                        }
-                        setTimeout(function () {
-                            var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                            $("#availableSerialNumberModal").attr("data-row", row + 1);
-                            $('#availableSerialNumberModal').modal('show');
-                            if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                                $("#availableSerialNumberModal .btnSNCreate").show();
-                            }
-                            else{
-                                $("#availableSerialNumberModal .btnSNCreate").hide();
-                            }
-                        }, 200);
-                        }
-                    });
-                    }
-                    else{
-                    let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tproductqtylist.length; i++) {
-                        if(data.tproductqtylist[i].ProductName == selectedProductName){
-                        if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                        productService.getProductStatus(selectedProductName).then(async function (data) {
+                            $(".fullScreenSpin").css("display", "none");
+                            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                             var buttons = $("<div>")
                             .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
                             .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
@@ -3933,8 +3846,272 @@ Template.stockadjustmentcard.events({
                                 showConfirmButton: false,
                                 html: buttons,
                                 onOpen: function (dObj) {
-                                    $('#trackSN').on('click',function () {
+                                $('#trackSN').on('click',function () {
                                     objDetails = {
+                                    type: "TProductVS1",
+                                    fields: {
+                                        ID: parseInt(data.tproductqtylist[i].PARTSID),
+                                        Active: true,
+                                        SNTracking: "true",
+                                        Batch: "false",
+                                    },
+                                    };
+
+                                    productService.saveProductVS1(objDetails)
+                                    .then(async function (objDetails) {
+                                    sideBarService.getProductListVS1("All", 0)
+                                        .then(async function (dataReload) {
+                                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                            swal.close();
+                                            $(target).click();
+                                        })
+                                        .catch(function (err) {
+                                        });
+                                    })
+                                    .catch(function (err) {
+                                    swal({
+                                        title: "Oooops...",
+                                        text: err,
+                                        type: "error",
+                                        showCancelButton: false,
+                                        confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                        if (result.value) {
+                                        // Meteor._reload.reload();
+                                        } else if (result.dismiss === "cancel") {
+                                        }
+                                    });
+                                    });
+                                });
+                                $('#trackLN').on('click',function () {
+                                    swal.close();
+                                    objDetails = {
+                                    type: "TProductVS1",
+                                    fields: {
+                                        ID: parseInt(data.tproductqtylist[i].PARTSID),
+                                        Active: true,
+                                        SNTracking: "false",
+                                        Batch: "true",
+                                    },
+                                    };
+
+                                    productService.saveProductVS1(objDetails)
+                                    .then(async function (objDetails) {
+                                    sideBarService.getProductListVS1("All", 0)
+                                        .then(async function (dataReload) {
+                                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                            swal.close();
+                                            $(target).click();
+                                        })
+                                        .catch(function (err) {
+                                        });
+                                    })
+                                    .catch(function (err) {
+                                    swal({
+                                        title: "Oooops...",
+                                        text: err,
+                                        type: "error",
+                                        showCancelButton: false,
+                                        confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                        if (result.value) {
+                                        // Meteor._reload.reload();
+                                        } else if (result.dismiss === "cancel") {
+                                        }
+                                    });
+                                    });
+                                });
+                                $('#trackCancel').on('click',function () {
+                                    swal.close();
+                                });
+                                }
+                            });
+                            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                            let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                            if(selectedLot != undefined && selectedLot != ""){
+                                shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                            }
+                            else{
+                                shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                            }
+                            setTimeout(function () {
+                                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                $("#availableLotNumberModal").attr("data-row", row + 1);
+                                $("#availableLotNumberModal").modal("show");
+                            }, 200);
+                            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                            let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                            if(selectedSN != undefined && selectedSN != ""){
+                                shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                            }
+                            else{
+                                shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                            }
+                            setTimeout(function () {
+                                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                $("#availableSerialNumberModal").attr("data-row", row + 1);
+                                $('#availableSerialNumberModal').modal('show');
+                                if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                                    $("#availableSerialNumberModal .btnSNCreate").show();
+                                }
+                                else{
+                                    $("#availableSerialNumberModal .btnSNCreate").hide();
+                                }
+                            }, 200);
+                            }
+                        });
+                    }
+                    else{
+                        let data = JSON.parse(dataObject[0].data);
+                        let existProductInfo = false;
+                        for (let i = 0; i < data.tproductqtylist.length; i++) {
+                            if(data.tproductqtylist[i].ProductName == selectedProductName){
+                                $(".fullScreenSpin").css("display", "none");
+                                existProductInfo = true;
+                                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                                    var buttons = $("<div>")
+                                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                                    swal({
+                                        title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                                        type: "warning",
+                                        showCancelButton: false,
+                                        showConfirmButton: false,
+                                        html: buttons,
+                                        onOpen: function (dObj) {
+                                            $('#trackSN').on('click',function () {
+                                            objDetails = {
+                                                type: "TProductVS1",
+                                                fields: {
+                                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
+                                                    Active: true,
+                                                    SNTracking: "true",
+                                                    Batch: "false",
+                                                },
+                                            };
+
+                                            productService.saveProductVS1(objDetails)
+                                            .then(async function (objDetails) {
+                                                sideBarService.getProductListVS1("All", 0)
+                                                .then(async function (dataReload) {
+                                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                                    swal.close();
+                                                    $(target).click();
+                                                })
+                                                .catch(function (err) {
+                                                });
+                                            })
+                                            .catch(function (err) {
+                                                swal({
+                                                    title: "Oooops...",
+                                                    text: err,
+                                                    type: "error",
+                                                    showCancelButton: false,
+                                                    confirmButtonText: "Try Again",
+                                                }).then((result) => {
+                                                if (result.value) {
+                                                    // Meteor._reload.reload();
+                                                } else if (result.dismiss === "cancel") {
+                                                }
+                                                });
+                                            });
+                                            });
+                                            $('#trackLN').on('click',function () {
+                                            swal.close();
+                                            objDetails = {
+                                                type: "TProductVS1",
+                                                fields: {
+                                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
+                                                    Active: true,
+                                                    SNTracking: "false",
+                                                    Batch: "true",
+                                                },
+                                            };
+
+                                            productService.saveProductVS1(objDetails)
+                                            .then(async function (objDetails) {
+                                                sideBarService.getProductListVS1("All", 0)
+                                                .then(async function (dataReload) {
+                                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                                    swal.close();
+                                                    $(target).click();
+                                                })
+                                                .catch(function (err) {
+                                                });
+                                            })
+                                            .catch(function (err) {
+                                                swal({
+                                                    title: "Oooops...",
+                                                    text: err,
+                                                    type: "error",
+                                                    showCancelButton: false,
+                                                    confirmButtonText: "Try Again",
+                                                }).then((result) => {
+                                                if (result.value) {
+                                                    // Meteor._reload.reload();
+                                                } else if (result.dismiss === "cancel") {
+                                                }
+                                                });
+                                            });
+                                            });
+                                            $('#trackCancel').on('click',function () {
+                                                swal.close();
+                                            });
+                                        }
+                                    });
+                                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                                    if(selectedLot != undefined && selectedLot != ""){
+                                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                                    }
+                                    else{
+                                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                                    }
+                                    setTimeout(function () {
+                                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                                    $("#availableLotNumberModal").modal("show");
+                                    }, 200);
+                                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                                    if(selectedSN != undefined && selectedSN != ""){
+                                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                                    }
+                                    else{
+                                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                                    }
+                                    setTimeout(function () {
+                                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                                    $('#availableSerialNumberModal').modal('show');
+                                    if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                                        $("#availableSerialNumberModal .btnSNCreate").show();
+                                    }
+                                    else{
+                                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                                    }
+                                    }, 200);
+                                }
+                            }
+                        }
+                        if (!existProductInfo) {
+                            productService.getProductStatus(selectedProductName).then(async function (data) {
+                                $(".fullScreenSpin").css("display", "none");
+                                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                                var buttons = $("<div>")
+                                .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                                .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                                .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                                swal({
+                                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                                    type: "warning",
+                                    showCancelButton: false,
+                                    showConfirmButton: false,
+                                    html: buttons,
+                                    onOpen: function (dObj) {
+                                    $('#trackSN').on('click',function () {
+                                        objDetails = {
                                         type: "TProductVS1",
                                         fields: {
                                             ID: parseInt(data.tproductqtylist[i].PARTSID),
@@ -3942,20 +4119,20 @@ Template.stockadjustmentcard.events({
                                             SNTracking: "true",
                                             Batch: "false",
                                         },
-                                    };
-
-                                    productService.saveProductVS1(objDetails)
-                                    .then(async function (objDetails) {
+                                        };
+    
+                                        productService.saveProductVS1(objDetails)
+                                        .then(async function (objDetails) {
                                         sideBarService.getProductListVS1("All", 0)
-                                        .then(async function (dataReload) {
-                                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                            swal.close();
-                                            $(target).click();
+                                            .then(async function (dataReload) {
+                                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                                swal.close();
+                                                $(target).click();
+                                            })
+                                            .catch(function (err) {
+                                            });
                                         })
                                         .catch(function (err) {
-                                        });
-                                    })
-                                    .catch(function (err) {
                                         swal({
                                             title: "Oooops...",
                                             text: err,
@@ -3963,16 +4140,16 @@ Template.stockadjustmentcard.events({
                                             showCancelButton: false,
                                             confirmButtonText: "Try Again",
                                         }).then((result) => {
-                                        if (result.value) {
+                                            if (result.value) {
                                             // Meteor._reload.reload();
-                                        } else if (result.dismiss === "cancel") {
-                                        }
+                                            } else if (result.dismiss === "cancel") {
+                                            }
+                                        });
                                         });
                                     });
-                                    });
                                     $('#trackLN').on('click',function () {
-                                    swal.close();
-                                    objDetails = {
+                                        swal.close();
+                                        objDetails = {
                                         type: "TProductVS1",
                                         fields: {
                                             ID: parseInt(data.tproductqtylist[i].PARTSID),
@@ -3980,20 +4157,20 @@ Template.stockadjustmentcard.events({
                                             SNTracking: "false",
                                             Batch: "true",
                                         },
-                                    };
-
-                                    productService.saveProductVS1(objDetails)
-                                    .then(async function (objDetails) {
+                                        };
+    
+                                        productService.saveProductVS1(objDetails)
+                                        .then(async function (objDetails) {
                                         sideBarService.getProductListVS1("All", 0)
-                                        .then(async function (dataReload) {
-                                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                            swal.close();
-                                            $(target).click();
+                                            .then(async function (dataReload) {
+                                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                                swal.close();
+                                                $(target).click();
+                                            })
+                                            .catch(function (err) {
+                                            });
                                         })
                                         .catch(function (err) {
-                                        });
-                                    })
-                                    .catch(function (err) {
                                         swal({
                                             title: "Oooops...",
                                             text: err,
@@ -4001,19 +4178,150 @@ Template.stockadjustmentcard.events({
                                             showCancelButton: false,
                                             confirmButtonText: "Try Again",
                                         }).then((result) => {
-                                        if (result.value) {
+                                            if (result.value) {
                                             // Meteor._reload.reload();
-                                        } else if (result.dismiss === "cancel") {
-                                        }
+                                            } else if (result.dismiss === "cancel") {
+                                            }
                                         });
-                                    });
+                                        });
                                     });
                                     $('#trackCancel').on('click',function () {
                                         swal.close();
                                     });
+                                    }
+                                });
+                                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                                let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                                if(selectedLot != undefined && selectedLot != ""){
+                                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                                }
+                                else{
+                                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                                }
+                                setTimeout(function () {
+                                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                                    $("#availableLotNumberModal").modal("show");
+                                }, 200);
+                                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                                let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                                if(selectedSN != undefined && selectedSN != ""){
+                                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                                }
+                                else{
+                                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                                }
+                                setTimeout(function () {
+                                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                                    $('#availableSerialNumberModal').modal('show');
+                                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                                        $("#availableSerialNumberModal .btnSNCreate").show();
+                                    }
+                                    else{
+                                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                                    }
+                                }, 200);
                                 }
                             });
-                        } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                        }
+                    }
+                }).catch(function (err) {
+                    productService.getProductStatus(selectedProductName).then(async function (data) {
+                        $(".fullScreenSpin").css("display", "none");
+                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                            var buttons = $("<div>")
+                            .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                            .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                            .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                            swal({
+                            title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                            type: "warning",
+                            showCancelButton: false,
+                            showConfirmButton: false,
+                            html: buttons,
+                            onOpen: function (dObj) {
+                                $('#trackSN').on('click',function () {
+                                objDetails = {
+                                    type: "TProductVS1",
+                                    fields: {
+                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
+                                    Active: true,
+                                    SNTracking: "true",
+                                    Batch: "false",
+                                    },
+                                };
+
+                                productService.saveProductVS1(objDetails)
+                                .then(async function (objDetails) {
+                                    sideBarService.getProductListVS1("All", 0)
+                                    .then(async function (dataReload) {
+                                        await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                        swal.close();
+                                        $(target).click();
+                                    })
+                                    .catch(function (err) {
+                                    });
+                                })
+                                .catch(function (err) {
+                                    swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                    if (result.value) {
+                                        // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                    });
+                                });
+                                });
+                                $('#trackLN').on('click',function () {
+                                swal.close();
+                                objDetails = {
+                                    type: "TProductVS1",
+                                    fields: {
+                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
+                                    Active: true,
+                                    SNTracking: "false",
+                                    Batch: "true",
+                                    },
+                                };
+
+                                productService.saveProductVS1(objDetails)
+                                .then(async function (objDetails) {
+                                    sideBarService.getProductListVS1("All", 0)
+                                    .then(async function (dataReload) {
+                                        await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                        swal.close();
+                                        $(target).click();
+                                    })
+                                    .catch(function (err) {
+                                    });
+                                })
+                                .catch(function (err) {
+                                    swal({
+                                    title: "Oooops...",
+                                    text: err,
+                                    type: "error",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Try Again",
+                                    }).then((result) => {
+                                    if (result.value) {
+                                        // Meteor._reload.reload();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                    });
+                                });
+                                });
+                                $('#trackCancel').on('click',function () {
+                                    swal.close();
+                                });
+                            }
+                            });
+                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                             let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
                             if(selectedLot != undefined && selectedLot != ""){
                             shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
@@ -4026,7 +4334,7 @@ Template.stockadjustmentcard.events({
                             $("#availableLotNumberModal").attr("data-row", row + 1);
                             $("#availableLotNumberModal").modal("show");
                             }, 200);
-                        } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
                             let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
                             if(selectedSN != undefined && selectedSN != ""){
                             shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
@@ -4038,7 +4346,7 @@ Template.stockadjustmentcard.events({
                             var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                             $("#availableSerialNumberModal").attr("data-row", row + 1);
                             $('#availableSerialNumberModal').modal('show');
-                            if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                            if(data.tproductvs1[0].CUSTFLD13 == 'true'){
                                 $("#availableSerialNumberModal .btnSNCreate").show();
                             }
                             else{
@@ -4046,136 +4354,6 @@ Template.stockadjustmentcard.events({
                             }
                             }, 200);
                         }
-                        }
-                    }
-                    }
-                }).catch(function (err) {
-                    productService.getProductStatus(selectedProductName).then(async function (data) {
-                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        var buttons = $("<div>")
-                        .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                        .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                        .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                        swal({
-                        title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                        type: "warning",
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        html: buttons,
-                        onOpen: function (dObj) {
-                            $('#trackSN').on('click',function () {
-                            objDetails = {
-                                type: "TProductVS1",
-                                fields: {
-                                ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                Active: true,
-                                SNTracking: "true",
-                                Batch: "false",
-                                },
-                            };
-
-                            productService.saveProductVS1(objDetails)
-                            .then(async function (objDetails) {
-                                sideBarService.getProductListVS1("All", 0)
-                                .then(async function (dataReload) {
-                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                    swal.close();
-                                    $(target).click();
-                                })
-                                .catch(function (err) {
-                                });
-                            })
-                            .catch(function (err) {
-                                swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                                }).then((result) => {
-                                if (result.value) {
-                                    // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {
-                                }
-                                });
-                            });
-                            });
-                            $('#trackLN').on('click',function () {
-                            swal.close();
-                            objDetails = {
-                                type: "TProductVS1",
-                                fields: {
-                                ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                Active: true,
-                                SNTracking: "false",
-                                Batch: "true",
-                                },
-                            };
-
-                            productService.saveProductVS1(objDetails)
-                            .then(async function (objDetails) {
-                                sideBarService.getProductListVS1("All", 0)
-                                .then(async function (dataReload) {
-                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                    swal.close();
-                                    $(target).click();
-                                })
-                                .catch(function (err) {
-                                });
-                            })
-                            .catch(function (err) {
-                                swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                                }).then((result) => {
-                                if (result.value) {
-                                    // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {
-                                }
-                                });
-                            });
-                            });
-                            $('#trackCancel').on('click',function () {
-                                swal.close();
-                            });
-                        }
-                        });
-                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                        let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                        if(selectedLot != undefined && selectedLot != ""){
-                        shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                        }
-                        else{
-                        shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                        }
-                        setTimeout(function () {
-                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        $("#availableLotNumberModal").attr("data-row", row + 1);
-                        $("#availableLotNumberModal").modal("show");
-                        }, 200);
-                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                        let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                        if(selectedSN != undefined && selectedSN != ""){
-                        shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                        }
-                        else{
-                        shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                        }
-                        setTimeout(function () {
-                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        $("#availableSerialNumberModal").attr("data-row", row + 1);
-                        $('#availableSerialNumberModal').modal('show');
-                        if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                            $("#availableSerialNumberModal .btnSNCreate").show();
-                        }
-                        else{
-                            $("#availableSerialNumberModal .btnSNCreate").hide();
-                        }
-                        }, 200);
-                    }
                     });
                 });
             }
