@@ -87,7 +87,7 @@ Template.salesorderslist.onCreated(function(){
 
     let headerStructure = [ { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
     { index: 1, label: "Sale Date", class: "colSaleDate", active: true, display: true, width: "100" },
-    { index: 2, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "100" },
+    { index: 2, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "74" },
     { index: 3, label: "Due Date", class: "colDueDate", active: true, display: true, width: "100" },
     { index: 4, label: "Customer", class: "colCustomer", active: true, display: true, width: "150" },
     { index: 5, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "100" },
@@ -96,8 +96,9 @@ Template.salesorderslist.onCreated(function(){
     { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
     { index: 9, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
     { index: 10, label: "Converted", class: "colConverted", active: true, display: true, width: "100" },
-    { index: 11, label: "Comments", class: "colComments", active: true, display: true, width: "" },
-    ]
+    { index: 11, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 
 
     // templateObject.loadCustomFields = async() => {
@@ -105,7 +106,7 @@ Template.salesorderslist.onCreated(function(){
       let customFieldCount = 3; // customfield tempcode
       let customData = {};
       let displayfields = headerStructure;
-
+      /*
       sideBarService.getAllCustomFields().then(function (data) {
         let custIndex = 0;
         for (let x = 0; x < data.tcustomfieldlist.length; x++) {
@@ -152,6 +153,7 @@ Template.salesorderslist.onCreated(function(){
         // }, 500);
 
       })
+      */
     // }
 
     // templateObject.initPage = async () => {
