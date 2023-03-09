@@ -1,4 +1,5 @@
-import { ReactiveVar } from "meteor/reactive-var";
+import { ReactiveVar, Reactive } from "meteor/reactive-var";
+import { ReactiveDict } from 'meteor/reactive-dict'
 import "gauge-chart";
 
 import DashboardApi from "../../js/Api/DashboardApi";
@@ -30,7 +31,7 @@ import '../top10Customers/dsm_top10Customers.html';
 import '../../Dashboard/appointments-widget/dsm-appointments-widget.html';
 import '../../Dashboard/appointments-widget/ds-appointments-widget.html';
 
-
+import moment from "moment";
 let _ = require("lodash");
 
 let chartsPlaceList = {
@@ -229,6 +230,7 @@ async function saveCharts() {
 Template.allChartLists.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.chartList = new ReactiveVar([]);
+    templateObject.updateChart = new ReactiveVar({update: false})
 });
 
 Template.allChartLists.onRendered(function() {
@@ -601,104 +603,6 @@ Template.allChartLists.onRendered(function() {
             }, 0);
         }
 
-        // Now get user preferences
-        // let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( _tabGroup );
-        // if (tvs1ChartDashboardPreference.length > 0) {
-        //     // if charts to be displayed are specified
-        //     tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
-        //         setTimeout(() => {
-        //             if (!tvs1chart.fields.Chartname || tvs1chart.fields.Chartname == "") {
-        //                 return;
-        //             }
-        //             // Now all of chart name is undefined. Why those are all undefined? so below code part is not useful.
-        //             const itemName =
-        //                 tvs1chart.fields.ChartGroup.toLowerCase() +
-        //                 "__" +
-        //                 tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
-        //             $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
-        //             $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
-        //             $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
-        //             $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
-        //             $(`[key='${itemName}']`).attr("chart-id", tvs1chart.fields.ChartID);
-        //             $(`[key='${itemName}']`).attr(
-        //                 "chart-group",
-        //                 tvs1chart.fields.chartGroup
-        //             );
-        //             $(`[key='${itemName}']`).addClass("chart-visibility");
-        //             //$(`[key='${itemName}']`).attr('chart-id', tvs1chart.fields.Id);
-        //             $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                 "chart-slug",
-        //                 itemName
-        //             );
-        //             if (tvs1chart.fields.Active == true) {
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                     "is-hidden",
-        //                     "false"
-        //                 );
-        //                 // If the item name exist
-        //                 if( tvs1chart.fields.ChartWidth ){
-        //                     $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
-        //                         "width",
-        //                         tvs1chart.fields.ChartWidth + '%'
-        //                     );
-        //                     $(`[key='${itemName}'] .ui-resizable`).css(
-        //                         "width", "100%"
-        //                     );
-        //                 }
-        //                 // This is the ChartHeight saved in the preferences
-        //                 if( tvs1chart.fields.ChartHeight ){
-        //                     $(`[key='${itemName}'] .ui-resizable`).css(
-        //                         "height",
-        //                         tvs1chart.fields.ChartHeight + 'vh'
-        //                     );
-        //                 }
-        //                 $(`[key='${itemName}']`).removeClass("hideelement");
-        //             } else {
-        //                 let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
-        //                 $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
-        //                 $(`[key='${itemName}']`).addClass("hideelement");
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye-slash'></i>");
-        //                 // $(`[key='${itemName}']`).attr("is-hidden", true);
-        //                 $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-        //                     "is-hidden",
-        //                     "true"
-        //                 );
-        //             }
-        //         }, 500);
-        //     });
-        //     displayedCharts = document.querySelectorAll(
-        //       ".sortable-chart-widget-js:not(.hideelement)"
-        //     );
-        //     if (displayedCharts.length == 0) {
-        //         // show only the first one
-        //         let item = defaultChartList.length ? defaultChartList[0] : "";
-        //         if (item) {
-        //             $(`[key='${item}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-        //             $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
-        //             $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
-        //             $(`[key='${item}']`).removeClass("hideelement");
-        //             $(`[key='${item}']`).addClass("chart-visibility");
-        //         }
-        //     }
-        // } else {
-        // Set default chart list
-        $('.card-visibility').each(function() {
-            $(this).find('.cardShowBtn .far').removeClass('fa-eye');
-            // let position = $(this).data('default-position');
-            // $(this).attr('position', position);
-            $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
-            $(this).attr("card-active", 'false');
-        })
-        $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
-        $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
-        $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
-        $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
-        $(`[chart-group='${_chartGroup}']`).find('.minHeight100').removeClass('minHeight100');
-        //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget');
-        //$(`[chart-group='${_chartGroup}']`).find('.card').removeClass('ui-widget-content');
-        // }
-        // await ChartHandler.buildPositions();
         // Handle sorting
         setTimeout(() => {
             let $chartWrappper = $(".connectedChartSortable");
@@ -720,9 +624,45 @@ Template.allChartLists.onRendered(function() {
     };
     templateObject.checkChartToDisplay(); // we run this so we load the correct charts to diplay
     templateObject.activateDraggable(); // this will enable charts resiable features
+
+    // Define the new date picker for charts 
+    let previousDate = moment(new Date()).subtract(reportsloadMonths, 'months').format("DD/MM/YYYY");
+    let currentDate = moment(new Date()).format("DD/MM/YYYY");
+    $("#dateFrom_charts").val(previousDate);
+    $("#dateTo_charts").val(currentDate);
+    $("#dateTo_charts, #dateFrom_charts").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "dd/mm/yy",
+        yearRange: "-90:+10",
+        minDate: "-6M",
+        maxDate: "+0D",
+        onSelect: function(selectedDate) {
+            let dateFrom = $("#dateFrom_charts").datepicker("getDate");
+            $("#dateTo_charts").datepicker("option", "minDate", dateFrom);
+            let dateTo = $("#dateTo_charts").datepicker("getDate");
+            $("#dateFrom_charts").datepicker("option", "maxDate", dateTo);   
+
+            const from = $("#dateFrom_charts").val().split('/');
+            const to = $("#dateTo_charts").val().split('/');
+
+            templateObject.updateChart.set({
+                update: true,
+                dateFrom: `${from[2]}-${from[1]}-${from[0]}`,
+                dateTo: `${to[2]}-${to[1]}-${to[0]}`,
+            });
+        }
+    }) 
 });
 
 Template.allChartLists.events({
+
     "click .on-editor-change-mode": (e) => {
         // this will toggle the visibility of the widget
         if ($(e.currentTarget).attr("is-hidden") == "true") {
@@ -732,7 +672,6 @@ Template.allChartLists.events({
             $(e.currentTarget).attr("is-hidden", "true");
             $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
         }
-        // const templateObject = Template.instance();
     },
     "mouseover .card-header": (e) => {
         $(e.currentTarget).parent(".card").addClass("hovered");
@@ -825,6 +764,9 @@ Template.allChartLists.events({
 });
 
 Template.allChartLists.helpers({
+    updateChart: () => {
+        return Template.instance().updateChart.get()
+    },
     isaccountoverview: () => {
         const currentLoc = FlowRouter.current().route.path;
         let isAccountOverviewPage = false;

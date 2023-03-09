@@ -37,7 +37,7 @@ export default class TransactionFields {
         { index: 4,  label: "Fixed Asset",        class: "FixedAsset",    width: "124",       active: true,   display: true },
         { index: 5,  label: "Tax Rate",           class: "TaxRate",       width: "95",        active: true,   display: true },
         { index: 6,  label: "Tax Code",           class: "TaxCode",       width: "95",        active: true,   display: true },
-        { index: 7,  label: "Serial/Lot No",      class: "SerialNo",      width: "100",       active: true,   display: true },
+        { index: 7,  label: "Serial/Lot No",      class: "SerialNo",      width: "110",       active: true,   display: true },
         { index: 8,  label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: true },
         { index: 9,  label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: true },
     ];

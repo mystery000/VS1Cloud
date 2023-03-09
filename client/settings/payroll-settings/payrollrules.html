@@ -33,7 +33,7 @@
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
                 <div class="card shadow mb-3">
-                    <div class="card-header" style="padding: 0px !important;background-color: rgba(0,0,0,0); border-top: 0px; border-left: 0px; border-right: 0px;">
+                    <div class="card-header" style="padding: 0px !important; border-top: 0px; border-left: 0px; border-right: 0px;">
                         <ul class="nav nav-tabs nav-fill" id="myTab" role="tablist" style="border-bottom: 0px;">
                             <li class="nav-item">
                                 <a class="nav-link" id="org-tab" data-toggle="tab" href="#organisation" role="tab" aria-controls="home" aria-selected="true">Organisation</a>
@@ -63,88 +63,78 @@
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="row">
-                                                <div class="col-12 mb-4">
+                                                <div class="col-12">
                                                     <h4>Organisation</h4>
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <input type="hidden" class="form-control"  name='payrollsettingor' id="payrollsettingor" />
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group mb-0">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="edtAllowanceType">Bank Account</label>
                                                         <input type="hidden" class="form-control" style="cursor: pointer;" id="payorgnization_id" value="0">
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editbankaccount" name="editbankaccount">
-
-                                                   </div>
-
+                                                        {{> vs1_dropdown id='editbankaccount' name='editbankaccount' value='' type='search' classes=''}}
+                                                    </div>
                                                 </div>
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editpaygbankaccount">PAYG Liability Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editpaygbankaccount" name="editpaygbankaccount">
-
+                                                        {{> vs1_dropdown id='editpaygbankaccount' name='editpaygbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editwagesexpbankaccount">Wages Expense Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editwagesexpbankaccount" name="editwagesexpbankaccount">
+                                                        {{> vs1_dropdown id='editwagesexpbankaccount' name='editwagesexpbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-
-
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editwagespaybankaccount">Wages Payable Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editwagespaybankaccount" name="editwagespaybankaccount">
+                                                        {{> vs1_dropdown id='editwagespaybankaccount' name='editwagespaybankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editsuperliabbankaccount">Superannuation Liability Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editsuperliabbankaccount" name="editsuperliabbankaccount">
+                                                        {{> vs1_dropdown id='editsuperliabbankaccount' name='editsuperliabbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
-                                                <div class="col-12 col-md-4">
-                                                    <div class="form-group">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
                                                         <label for="editsuperexpbankaccount">Superannuation Expense Account</label>
-                                                        <input type="search" class="form-control" style="cursor: pointer;" id="editsuperexpbankaccount" name="editsuperexpbankaccount">
+                                                        {{> vs1_dropdown id='editsuperexpbankaccount' name='editsuperexpbankaccount' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="row">
-                                                <div class="col-12 mb-4">
+                                                <div class="col-12">
                                                     <h4>Company Logo</h4>
                                                 </div>
-                                            </div>
-                                            <div class="row">
                                                 <style>
                                                     .imgTextArea {
                                                         border: 1px solid #d1d3e2;
                                                         border-radius: 0.35rem;
                                                         padding: 16px;
                                                         height: 160px;
+                                                        display: table;
                                                     }
                                                 </style>
                                                 <div class="col-12 mb-4">
                                                     <div class="imgTextArea">
-                                                        <img class="imageUpload" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" style="    max-width: fit-content;
-                                                        width: 100%;
-                                                        height: 100%;">
+                                                        <img class="imageUpload" id="uploadedImage" data-toggle="modal" data-target="#myModal" src="assets/img/VS1.png" style="max-width: fit-content; width: 100%; height: 100%;">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 mb-2">
-                                                    <button class="btn btn-primary float-rights" type="button" id="changeLogo" data-toggle="modal" data-target="#myModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Logo</button>
+                                                    <button class="btn btn-primary float-right" type="button" id="changeLogo" data-toggle="modal" data-target="#myModal"><i class="fa fa-cloud-upload" style="margin-right: 8px;"></i>Upload Logo</button>
                                                 </div>
                                             </div>
                                             <div class="modal fade" role="dialog" tabindex="-1" id="myModal">
                                                 <div class="modal-dialog" role="document">
                                                     <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Upload logo</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                                        <div class="modal-header" style="padding-bottom: 8px;">
+                                                            <h4 class="modal-title">Upload logo</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 0px !important;"><span aria-hidden="true">×</span></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
@@ -184,15 +174,45 @@
                                                                 </style>
                                                                 <div id="row1">
                                                                     <div id="column1"></div>
-                                                                    <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;">
-                                                                    <i class="fa fa-cloud-upload" style="margin-right: 5px;"></i> Browse </button>
+                                                                    {{> vs1_button
+                                                                        color='primary'
+                                                                        classes='btnUploadFile new_attachment_btn'
+                                                                        type='button'
+                                                                        id="btnUploadFile"
+                                                                        iconName='cloud-upload'
+                                                                        title='Browse'
+                                                                    }}
+                                                                    <!-- <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 12px;">
+                                                                    <i class="fa fa-cloud-upload" style="margin-right: 5px;"></i> Browse </button> -->
                                                                     <div class="file-name" id="column2"></div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div class="modal-footer"><button class="btn btn-primary btnImport" data-dismiss="modal" type="button" id="uploadImg" disabled><i class="fas fa-file-import"
-                                                                    style="margin-right: 5px;"></i>Upload</button>
-                                                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                                                        <div class="modal-footer">
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='primary'
+                                                                    classes='btnImport'
+                                                                    type='button'
+                                                                    id="uploadImg"
+                                                                    iconName2='fas fa-file-import'
+                                                                    disabled="disabled"
+                                                                    title='Upload'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button class="btn btn-primary btnImport" data-dismiss="modal" type="button" id="uploadImg" disabled><i class="fas fa-file-import"
+                                                                    style="margin-right: 5px;"></i>Upload</button> -->
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='secondary'
+                                                                    classes=''
+                                                                    type='button'
+                                                                    id="btnCancel"
+                                                                    iconName='close'
+                                                                    title='Cancel'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -207,23 +227,21 @@
                                     <div class="row">
                                         <div class="col-8">
                                             <div class="row">
-                                                <div class="col-12 mb-4">
+                                                <div class="col-12 mb-0">
                                                     <h4>Payroll Tracking</h4>
                                                 </div>
                                             </div>
                                             <div class="row">
                                                 <div class="col-12 col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="edtRateName">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                        <input type="search" style="cursor: pointer;" class="form-control" id="employegroup" name="employegroup" >
-
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
+                                                        <label for="employegroup">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
+                                                        {{> vs1_dropdown id='employegroup' name='employegroup' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="edtRateName">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                        <input type="search" style="cursor: pointer;" class="form-control" id="timesheetcat" name="timesheetcat">
-
+                                                    <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
+                                                        <label for="timesheetcat">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
+                                                        {{> vs1_dropdown id='timesheetcat' name='timesheetcat' value='' type='search' classes=''}}
                                                     </div>
                                                 </div>
                                             </div>
@@ -236,16 +254,10 @@
                                             </div>
                                             <div class="row mb-3">
                                                 <div class="col-12 mb-3">
-                                                    <div class="custom-control custom-switch">
-                                                        <input class="custom-control-input" type="checkbox" value="swtShowAnnualSalary" id="swtShowAnnualSalary" name="swtShowAnnualSalary" style="cursor: pointer;">
-                                                        <label class="custom-control-label" for="swtShowAnnualSalary" style="cursor: pointer;">Show Annual Salary</label>
-                                                    </div>
+                                                    {{> toggle_button className="" id="swtShowAnnualSalary" isChecked="true" width="100%" for="swtShowAnnualSalary" displayName="Show Annual Salary"}}
                                                 </div>
                                                 <div class="col-12">
-                                                    <div class="custom-control custom-switch">
-                                                        <input class="custom-control-input" type="checkbox" value="swtShowEmploymentBasis" id="swtShowEmploymentBasis" name="swtShowEmploymentBasis" style="cursor: pointer;">
-                                                        <label class="custom-control-label" for="swtShowEmploymentBasis" style="cursor: pointer;">Show Employment Basis</label>
-                                                    </div>
+                                                    {{> toggle_button className="" id="swtShowEmploymentBasis" isChecked="true" width="100%" for="swtShowEmploymentBasis" displayName="Show Employment Basis"}}
                                                 </div>
                                             </div>
                                         </div>
@@ -303,7 +315,6 @@
                                             <hr />
                                         </div>
                                     </div> -->
-
                                 </div>
 
                                 <div class="tab-pane fade" id="calendars" role="tabpanel" aria-labelledby="calendars-tab">
@@ -312,7 +323,17 @@
                                             <h4>Pay Calendars</h4>
                                         </div>
                                         <div class="col-12 col-md-6 mb-3">
-                                            <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button>
+                                            <a href="#newPayCalendarModal" data-toggle="modal">
+                                                {{> vs1_button
+                                                    color='primary'
+                                                    classes='float-right btnAddNewPayCalender'
+                                                    type='button'
+                                                    id="btnAddNewPayCalender"
+                                                    iconName='plus'
+                                                    title='New Pay Calendar'
+                                                }}
+                                            </a>
+                                            <!-- <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button> -->
 
                                             <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -327,15 +348,32 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="edtRateName">Pay Period</label>
+                                                                        {{> default_input 
+                                                                            label="Pay Period" 
+                                                                            classes="payperiod" 
+                                                                            id="payperiod" 
+                                                                            name="payperiod" 
+                                                                            defaultValue="" 
+                                                                            type="search"
+                                                                            placeholder="How often will you pay your employees?"
+                                                                        }}
                                                                         <input type="hidden" id="paycalendarId" name="paycalendarId" value="0" />
-                                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?">
+                                                                        <!-- <label for="edtRateName">Pay Period</label>
+                                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?"> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="edtRateName">Name</label>
-                                                                        <input type="text" class="form-control" id="calender_name">
+                                                                        {{> default_input 
+                                                                            label="Name" 
+                                                                            classes="" 
+                                                                            id="calender_name" 
+                                                                            name="calender_name" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                        <!-- <label for="edtRateName">Name</label>
+                                                                        <input type="text" class="form-control" id="calender_name"> -->
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-6">
@@ -348,7 +386,6 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <div class="form-group">
@@ -360,20 +397,65 @@
                                                                             </div>
                                                                         </div>
                                                                     </div>
-
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-success savenewcalender"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                            {{> vs1_button
+                                                                color='success'
+                                                                classes='savenewcalender'
+                                                                type='button'
+                                                                id="savenewcalender"
+                                                                iconName='save'
+                                                                title='Save'
+                                                            }}
+                                                            <!-- <button type="button" class="btn btn-success savenewcalender"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='secondary'
+                                                                    classes='btnCancel'
+                                                                    type='button'
+                                                                    id="btnCancel"
+                                                                    iconName='close'
+                                                                    title='Close'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <div class="table-responsive">
+                                            <!-- <style>
+                                                .colPayCalendarName{
+                                                    width: 25%;
+                                                }
+                                                .colPayPeriod{
+                                                    width: 25%;
+                                                }
+                                                .colNextPayPeriod{
+                                                    width: 25%;
+                                                }
+                                                .colNextPaymentDate{
+                                                    width: 25%;
+                                                }
+                                            </style> -->
+                                            {{> datatablelist
+                                                tablename="tblPayCalendars"
+                                                apiName=apiFunction
+                                                indexeddbname='TPayrollCalendars'
+                                                tableheaderrecords=tableheaderrecords
+                                                exportfilename='Pay Calendars'
+                                                apiParams=apiParams
+                                                datahandler=datahandler
+                                                service=service
+                                                lowercaseDataName='tpayrollcalendars'
+                                                exIndexDBName='tpayrollcalendars'
+                                                exdatahandler=exDataHandler
+                                                searchAPI=searchAPI
+                                            }}
+                                            <!-- <div class="table-responsive">
                                                 <style>
                                                     th {
                                                       background-color: #ededed;
@@ -423,7 +505,6 @@
                                                     }
 
                                                 </style>
-
                                                 <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
@@ -444,27 +525,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                               <style>
-                                               .colPayCalendarName{
-                                                   width: 25%;
-                                                }
-                                               .colPayPeriod{
-                                                width: 25%;
-                                               }
-
-                                               .colNextPayPeriod{
-                                                width: 25%;
-                                               }
-
-                                               .colNextPaymentDate{
-
-                                                width: 25%;
-                                               }
-
-                                               </style>
-                                                 {{> non_transactional_list tablename="tblPayCalendars"}} 
-                                                <!-- <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
+                                                <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
                                                     <thead>
                                                         <tr class="dnd-moved">
                                                             <th class="th colCalenderID hiddenColumn" >ID</th>
@@ -486,9 +547,8 @@
                                                             </td>
                                                         </tr>
                                                     </tbody>
-
-                                                </table> -->
-                                            </div>
+                                                </table>
+                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -500,8 +560,17 @@
                                             <p>Holidays help us to be more accurate when calculating leave for your employees.</p>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-                                            <button type="button" class="btn btn-primary btnAddNewHoliday float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button>
-
+                                            <a href="#newHolidayModal" data-toggle="modal">
+                                                {{> vs1_button
+                                                    color='primary'
+                                                    classes='float-right btnAddNewHoliday'
+                                                    type='button'
+                                                    id="btnAddNewHoliday"
+                                                    iconName='plus'
+                                                    title='New Holiday'
+                                                }}
+                                            </a>
+                                            <!-- <button type="button" class="btn btn-primary btnAddNewHoliday float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button> -->
                                             <div class="modal fade" id="newHolidayModal" tabindex="-1" role="dialog" aria-labelledby="newHolidayLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -515,8 +584,16 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="">Name</label>
-                                                                        <input type="text" class="form-control" id="holidayname">
+                                                                        {{> default_input 
+                                                                            label="Name" 
+                                                                            classes="" 
+                                                                            id="holidayname" 
+                                                                            name="holidayname" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                        <!-- <label for="">Name</label>
+                                                                        <input type="text" class="form-control" id="holidayname"> -->
                                                                         <input type="hidden" id="holidayid" name="holidayid" value="0"/>
                                                                     </div>
                                                                 </div>
@@ -533,15 +610,41 @@
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="">Add to Group</label>
-                                                                        <input type="text" style="cursor: pointer;" class="form-control" id="holidaygroup">
+                                                                        {{> default_input 
+                                                                            label="Add to Group" 
+                                                                            classes="" 
+                                                                            id="holidaygroup" 
+                                                                            name="holidaygroup" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                        <!-- <label for="">Add to Group</label>
+                                                                        <input type="text" style="cursor: pointer;" class="form-control" id="holidaygroup"> -->
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-success addholiday"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                            {{> vs1_button
+                                                                color='success'
+                                                                classes='addholiday'
+                                                                type='button'
+                                                                id="addholiday"
+                                                                iconName='save'
+                                                                title='Save'
+                                                            }}
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='secondary'
+                                                                    classes=''
+                                                                    type='button'
+                                                                    id="btnCancel"
+                                                                    iconName='close'
+                                                                    title='Close'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button type="button" class="btn btn-success addholiday"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -557,7 +660,7 @@
                                                         <div class="card-body text-nowrap cardB customerListCard" id="customerListCard">
                                                             <div class="sideSearch">
                                                                 <div class="form-group">
-                                                                    <input type="search"  id="holidaygroup2" class="search form-control" placeholder="Filter by group">
+                                                                    <input type="search" id="holidaygroup2" class="search form-control" placeholder="Filter by group">
                                                                 </div>
                                                                 <span class="counter pull-right"></span>
                                                                 <table id="tblHolidayCategories" name="tblCustomerSideList" class="table table-hover table-bordered results tblHolidayCategories">
@@ -579,8 +682,26 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                            <button class="btn btn-primary filterholiday float-left" >Filter</button>
-                                                            <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button>
+                                                            {{> vs1_button
+                                                                color='primary'
+                                                                classes='float-right filterHoliday mb-2'
+                                                                type='button'
+                                                                id="filterHoliday"
+                                                                iconName='filter'
+                                                                title='Filter'
+                                                            }}
+                                                            <!-- <button class="btn btn-primary filterHoliday float-left" >Filter</button> -->
+                                                            <a href="#newGroupModal" data-toggle="modal">
+                                                                {{> vs1_button
+                                                                    color='primary'
+                                                                    classes='float-right btnNewGroup'
+                                                                    type='button'
+                                                                    id="btnNewGroup"
+                                                                    iconName='plus'
+                                                                    title='New Group'
+                                                                }}
+                                                            </a>
+                                                            <!-- <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button> -->
 
                                                             <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupLabel" aria-hidden="true">
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -595,22 +716,55 @@
                                                                             <div class="row">
                                                                                 <div class="col-12">
                                                                                     <div class="form-group">
-                                                                                        <label for="edtRateName">Name</label>
-                                                                                        <input type="text" class="form-control" id="edtGroupDescription" name="edtGroupDescription">
+                                                                                        {{> default_input 
+                                                                                            label="Name" 
+                                                                                            classes="" 
+                                                                                            id="edtGroupDescription" 
+                                                                                            name="edtGroupDescription" 
+                                                                                            defaultValue="" 
+                                                                                            type="text"
+                                                                                        }}
+                                                                                        <!-- <label for="edtRateName">Name</label>
+                                                                                        <input type="text" class="form-control" id="edtGroupDescription" name="edtGroupDescription"> -->
                                                                                     </div>
                                                                                 </div>
                                                                                 <div class="col-12">
                                                                                     <div class="form-group">
-                                                                                        <label for="edtRateName">Add existing holidays from group</label>
-                                                                                     
-                                                                                        <input type="text" style="cursor: pointer;" class="form-control" id="addexistgroup">
+                                                                                        {{> default_input 
+                                                                                            label="Add existing holidays from group" 
+                                                                                            classes="" 
+                                                                                            id="addexistgroup" 
+                                                                                            name="addexistgroup" 
+                                                                                            defaultValue="" 
+                                                                                            type="text"
+                                                                                        }}
+                                                                                        <!-- <label for="edtRateName">Add existing holidays from group</label>
+                                                                                        <input type="text" style="cursor: pointer;" class="form-control" id="addexistgroup"> -->
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-success btnSaveGroup"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                            {{> vs1_button
+                                                                                color='success'
+                                                                                classes='btnSaveGroup'
+                                                                                type='button'
+                                                                                id="btnSaveGroup"
+                                                                                iconName='save'
+                                                                                title='Save'
+                                                                            }}
+                                                                            <a data-dismiss="modal">
+                                                                                {{> vs1_button
+                                                                                    color='secondary'
+                                                                                    classes=''
+                                                                                    type='button'
+                                                                                    id="btnClose"
+                                                                                    iconName='close'
+                                                                                    title='Close'
+                                                                                }}
+                                                                            </a>
+                                                                            <!-- <button type="button" class="btn btn-success btnSaveGroup"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -619,19 +773,31 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-9">
-                                                    <div class="table-responsive">
+                                                    {{> datatablelist
+                                                        tablename="tblHolidays"
+                                                        apiName=apiFunction2
+                                                        indexeddbname='TPayrollHolidays'
+                                                        tableheaderrecords=tableheaderrecords2
+                                                        exportfilename='Holidays'
+                                                        apiParams=apiParams2
+                                                        datahandler=datahandler2
+                                                        service=service2
+                                                        lowercaseDataName='tpayrollholidays'
+                                                        exIndexDBName='tpayrollholidays'
+                                                        exdatahandler=exDataHandler2
+                                                        searchAPI=searchAPI2
+                                                    }}
+                                                    <!-- <div class="table-responsive">
                                                         <style>
                                                             .hiddenColumn {
                                                                 display: none;
                                                             }
-
                                                             .showColumn {
                                                                 display: table-cell;
                                                                 padding: .75rem;
                                                                 vertical-align: top;
                                                             }
                                                         </style>
-
                                                         <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                 <div class="modal-content">
@@ -652,8 +818,7 @@
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        {{> non_transactional_list tablename="tblHolidays"}}
-                                                        <!-- <table id="tblHolidays" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblHolidays">
+                                                        <table id="tblHolidays" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblHolidays">
                                                             <thead>
                                                                 <tr class="dnd-moved">
                                                                     <th class="th colHolidayID hiddenColumn" >ID</th>
@@ -674,9 +839,8 @@
                                                                     </td>
                                                                 </tr>
                                                             </tbody>
-
-                                                        </table> -->
-                                                    </div>
+                                                        </table>
+                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -690,9 +854,7 @@
                                             <p>We've set up some defaults - However, you can add your own custom Pay Items.</p>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-
-                                            <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newEarningsRateModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Earnings Rate</button> -->
-
+                                            <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newEarningsRateModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Earnings Rate</button>
                                             <div class="modal fade" id="newEarningsRateModal" tabindex="-1" role="dialog" aria-labelledby="newEarningsRateLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -735,7 +897,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
                                     <style>
@@ -753,19 +915,70 @@
                                     </style>
                                     <div class="row">
                                         <div class="col-12 col-md-2">
-                                            <button class="btn btn-primary btncollapse" type="button" id="btnAllowances">Allowance</button>
+                                            {{> vs1_button
+                                                color='primary'
+                                                classes='btncollapse pl-0 pr-0'
+                                                type='button'
+                                                id="btnAllowances"
+                                                iconName=''
+                                                title='Allowance'
+                                            }}
+                                            {{> vs1_button
+                                                color='primary'
+                                                classes='btncollapse pl-0 pr-0'
+                                                type='button'
+                                                id="btnDeductions"
+                                                iconName=''
+                                                title='Deductions'
+                                            }}
+                                            {{> vs1_button
+                                                color='primary'
+                                                classes='btncollapse pl-0 pr-0'
+                                                type='button'
+                                                id="btnEarnings"
+                                                iconName=''
+                                                title='Earnings'
+                                            }}
+                                            {{> vs1_button
+                                                color='primary'
+                                                classes='btncollapse pl-0 pr-0'
+                                                type='button'
+                                                id="btnLeave"
+                                                iconName=''
+                                                title='Leave'
+                                            }}
+                                            {{> vs1_button
+                                                color='primary'
+                                                classes='btncollapse pl-0 pr-0'
+                                                type='button'
+                                                id="btnReiumbursement"
+                                                iconName=''
+                                                title='Reimbursements'
+                                            }}
+                                            <!-- <button class="btn btn-primary btncollapse" type="button" id="btnAllowances">Allowance</button>
                                             <button class="btn btn-primary btncollapse" type="button" id="btnDeductions">Deductions</button>
                                             <button class="btn btn-primary btncollapse" type="button" id="btnEarnings">Earnings</button>
                                             <button class="btn btn-primary btncollapse" type="button" id="btnLeave">Leave</button>
-                                            <button class="btn btn-primary btncollapse" type="button" id="btnReiumbursement">Reimbursements</button>
+                                            <button class="btn btn-primary btncollapse" type="button" id="btnReiumbursement">Reimbursements</button> -->
                                         </div>
                                         <div class="col-12 col-md-10">
                                           <div class="" id="allowances" >
                                               <div class="row mb-2">
-                                                  <div class="col-6">
+                                                  <div class="col-12 col-md-8">
                                                       <h5 style="font-weight: 600;">Allowance</h5>
                                                   </div>
-
+                                                  <div class="col-12 col-md-4">
+                                                    <a href="#allowanceModal" data-toggle="modal">
+                                                        {{> vs1_button
+                                                            color='primary'
+                                                            classes='float-right btnAddNewAllowance'
+                                                            type='button'
+                                                            id="btnAddNewAllowance"
+                                                            iconName='plus'
+                                                            title='New Allowance'
+                                                        }}
+                                                    </a>
+                                                  </div>
                                               </div>
                                               <div class="modal fade" id="allowanceModal" tabindex="-1" role="dialog" aria-labelledby="allowanceLabel" aria-hidden="true">
                                                   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -784,34 +997,74 @@
                                                                   </div>
                                                                   <div class="col-12 mb-1">
                                                                       <div class="form-group mb-0">
-                                                                          <label for="edtAllowanceType">Type</label>
-                                                                          <input type="search" style="cursor: pointer;" class="form-control" id="edtAllowanceType" name="edtAllowanceType">
+                                                                        {{> default_input 
+                                                                            label="Type" 
+                                                                            classes="edtAllowanceType" 
+                                                                            id="edtAllowanceType" 
+                                                                            name="edtAllowanceType" 
+                                                                            defaultValue="" 
+                                                                            type="search"
+                                                                        }}
+                                                                          <!-- <label for="edtAllowanceType">Type</label>
+                                                                          <input type="search" style="cursor: pointer;" class="form-control" id="edtAllowanceType" name="edtAllowanceType"> -->
                                                                       </div>
                                                                       <span style="font-size: 12px;">Type is used to group allowances for reporting to the ATO</span>
                                                                   </div>
                                                                   <div class="col-12">
                                                                       <div class="form-group">
-                                                                          <label for="edtEarningsNameAllowance">Allowance Name</label>
-                                                                          <input type="text" class="form-control" id="edtEarningsNameAllowance" name="edtEarningsNameAllowance">
+                                                                        {{> default_input 
+                                                                            label="Allowance Name" 
+                                                                            classes="edtEarningsNameAllowance" 
+                                                                            id="edtEarningsNameAllowance" 
+                                                                            name="edtEarningsNameAllowance" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                          <!-- <label for="edtEarningsNameAllowance">Allowance Name</label>
+                                                                          <input type="text" class="form-control" id="edtEarningsNameAllowance" name="edtEarningsNameAllowance"> -->
                                                                           <input type="hidden" class="form-control" id="edtExpenseAccountID" name="edtExpenseAccountID">
                                                                       </div>
                                                                   </div>
                                                                   <div class="col-12">
                                                                       <div class="form-group">
-                                                                          <label for="edtDisplayNameAllowance">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                          <input type="text" class="form-control" id="edtDisplayNameAllowance" name="edtDisplayNameAllowance">
+                                                                        {{> default_input 
+                                                                            label="Display Name (optional)" 
+                                                                            classes="edtDisplayNameAllowance" 
+                                                                            id="edtDisplayNameAllowance" 
+                                                                            name="edtDisplayNameAllowance" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                          <!-- <label for="edtDisplayNameAllowance">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                          <input type="text" class="form-control" id="edtDisplayNameAllowance" name="edtDisplayNameAllowance"> -->
                                                                       </div>
                                                                   </div>
                                                                   <div class="col-12">
                                                                       <div class="form-group">
-                                                                          <label for="edtRateTypeAllowance">Amount</label>
-                                                                          <input type="text" class="form-control" id="edtAllowanceAmount" name="edtAllowanceAmount">
+                                                                        {{> default_input 
+                                                                            label="Amount" 
+                                                                            classes="edtAllowanceAmount" 
+                                                                            id="edtAllowanceAmount" 
+                                                                            name="edtAllowanceAmount" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                          <!-- <label for="edtRateTypeAllowance">Amount</label>
+                                                                          <input type="text" class="form-control" id="edtAllowanceAmount" name="edtAllowanceAmount"> -->
                                                                       </div>
                                                                   </div>
                                                                   <div class="col-12">
                                                                       <div class="form-group">
-                                                                          <label for="edtExpenseAccountAllowance">Expense Account</label>
-                                                                          <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountAllowance" name="edtExpenseAccountAllowance">
+                                                                        {{> default_input 
+                                                                            label="Expense Account" 
+                                                                            classes="edtExpenseAccountAllowance" 
+                                                                            id="edtExpenseAccountAllowance" 
+                                                                            name="edtExpenseAccountAllowance" 
+                                                                            defaultValue="" 
+                                                                            type="text"
+                                                                        }}
+                                                                          <!-- <label for="edtExpenseAccountAllowance">Expense Account</label>
+                                                                          <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountAllowance" name="edtExpenseAccountAllowance"> -->
                                                                       </div>
                                                                   </div>
                                                                   <div class="col-12">
@@ -849,14 +1102,46 @@
                                                               </div>
                                                           </div>
                                                           <div class="modal-footer">
-                                                              <button type="button" class="btn btn-success btnSaveAllowance"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                            {{> vs1_button
+                                                                color='success'
+                                                                classes='btnSaveAllowance'
+                                                                type='button'
+                                                                id="btnSaveAllowance"
+                                                                iconName='save'
+                                                                title='Save'
+                                                            }}
+                                                            <a data-dismiss="modal">
+                                                                {{> vs1_button
+                                                                    color='secondary'
+                                                                    classes='btnCancel'
+                                                                    type='button'
+                                                                    id="btnCancel"
+                                                                    iconName='close'
+                                                                    title='Close'
+                                                                }}
+                                                            </a>
+                                                              <!-- <button type="button" class="btn btn-success btnSaveAllowance"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                              <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                           </div>
                                                       </div>
                                                   </div>
                                               </div>
 
-                                              <div class="table-responsive">
+                                              {{> datatablelist
+                                                tablename="tblAlowances"
+                                                apiName=apiFunction3
+                                                indexeddbname='TAllowance'
+                                                tableheaderrecords=tableheaderrecords3
+                                                exportfilename='Allowances'
+                                                apiParams=apiParams3
+                                                datahandler=datahandler3
+                                                service=service3
+                                                lowercaseDataName='tallowance'
+                                                exIndexDBName='tallowance'
+                                                exdatahandler=exDataHandler3
+                                                searchAPI=searchAPI3
+                                                }}
+                                              <!-- <div class="table-responsive">
                                                   <table id="tblAlowances" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAlowances">
                                                       <thead>
                                                           <tr class="dnd-moved">
@@ -878,14 +1163,24 @@
                                                       </tbody>
 
                                                   </table>
-                                              </div>
+                                              </div> -->
                                           </div>
                                             <div class="" id="earnings" style="display: none;">
                                                 <div class="row mb-2">
-                                                    <div class="col-6">
+                                                    <div class="col-12 col-md-6">
                                                         <h5 style="font-weight: 600;">Earnings</h5>
                                                     </div>
-                                                    <!-- <div class="col-6">
+                                                    <div class="col-12 col-md-6">
+                                                        <!-- <a href="#ordinaryTimeEarningsModal" data-toggle="modal">
+                                                            {{> vs1_button
+                                                                color='primary'
+                                                                classes='float-right dropdownMenuButton'
+                                                                type='button'
+                                                                id="dropdownMenuButton"
+                                                                iconName='plus'
+                                                                title='New Earnings'
+                                                            }}
+                                                        </a> -->
                                                         <div class="dropdown float-right">
                                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 Add
@@ -900,10 +1195,10 @@
                                                                 <a class="dropdown-item pointer btnAdddirectorsFees" data-toggle="modal" data-target="#directorsFeesModal">Directors Fees</a>
                                                             </div>
                                                         </div>
-                                                    </div> -->
+                                                    </div>
                                                 </div>
 
-                                                <div class="modal fade" id="add-tblEarnings_modal" tabindex="-1" role="dialog" aria-labelledby="ordinaryTimeEarningsLabel" aria-hidden="true">
+                                                <div class="modal fade" id="ordinaryTimeEarningsModal" tabindex="-1" role="dialog" aria-labelledby="ordinaryTimeEarningsLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
@@ -916,34 +1211,73 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsName">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsName">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsName" 
+                                                                                id="edtEarningsName" 
+                                                                                name="edtEarningsName" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsName">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsName"> -->
                                                                             <input type="hidden" id="ordinaryTimeEarningsid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                        <label for="edtEarningType">Earnings Type</label>
-                                                                        <input type="search" style="cursor: pointer;" class="form-control " id="edtEarningType" name="edtEarningType" >
-                                                                       </div>
-
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="form-group">
-                                                                            <label for="edtDisplayName">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayName">
+                                                                            {{> default_input 
+                                                                                label="Earnings Type" 
+                                                                                classes="edtEarningType" 
+                                                                                id="edtEarningType" 
+                                                                                name="edtEarningType" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningType">Earnings Type</label>
+                                                                            <input type="search" style="cursor: pointer;" class="form-control " id="edtEarningType" name="edtEarningType" > -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateType">Rate Type</label>
-                                                                            <input type="search" style="cursor: pointer;" class="form-control" id="edtRateType" name="edtRateType">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayName" 
+                                                                                id="edtDisplayName" 
+                                                                                name="edtDisplayName" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayName">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayName"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccount">Expense Account</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtExpenseAccount" name="edtExpenseAccount">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateType" 
+                                                                                id="edtRateType" 
+                                                                                name="edtRateType" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateType">Rate Type</label>
+                                                                            <input type="search" style="cursor: pointer;" class="form-control" id="edtRateType" name="edtRateType"> -->
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccount" 
+                                                                                id="edtExpenseAccount" 
+                                                                                name="edtExpenseAccount" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccount">Expense Account</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtExpenseAccount" name="edtExpenseAccount"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -963,8 +1297,26 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveExemptReportable"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveExemptReportable'
+                                                                    type='button'
+                                                                    id="saveExemptReportable"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveExemptReportable"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -983,28 +1335,59 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsNameOvertime">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsNameOvertime">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsNameOvertime" 
+                                                                                id="edtEarningsNameOvertime" 
+                                                                                name="edtEarningsNameOvertime" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsNameOvertime">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsNameOvertime"> -->
                                                                             <input type="hidden" class="form-control" id="edtEarningsNameOvertimeid" value="0" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtDisplayNameOvertime">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayNameOvertime">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayNameOvertime" 
+                                                                                id="edtDisplayNameOvertime" 
+                                                                                name="edtDisplayNameOvertime" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayNameOvertime">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayNameOvertime"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateTypeOvertime">Rate Type</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeOvertime">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateTypeOvertime" 
+                                                                                id="edtRateTypeOvertime" 
+                                                                                name="edtRateTypeOvertime" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateTypeOvertime">Rate Type</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeOvertime"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccountOvertime">Expense Account</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountOvertime" name="edtExpenseAccountOvertime">
-
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccountOvertime" 
+                                                                                id="edtExpenseAccountOvertime" 
+                                                                                name="edtExpenseAccountOvertime" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccountOvertime">Expense Account</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountOvertime" name="edtExpenseAccountOvertime"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1024,8 +1407,26 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveExemptReportableOvertime"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveExemptReportableOvertime'
+                                                                    type='button'
+                                                                    id="saveExemptReportableOvertime"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveExemptReportableOvertime"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1044,28 +1445,59 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsNameTermnination">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsNameTermnination">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsNameTermnination" 
+                                                                                id="edtEarningsNameTermnination" 
+                                                                                name="edtEarningsNameTermnination" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsNameTermnination">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsNameTermnination"> -->
                                                                             <input type="hidden" class="form-control" id="edtemploymentTermninationid"  value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtDisplayNameTermnination">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayNameTermnination">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayNameTermnination" 
+                                                                                id="edtDisplayNameTermnination" 
+                                                                                name="edtDisplayNameTermnination" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayNameTermnination">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayNameTermnination"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateTypeTermnination">Rate Type</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeTermnination">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateTypeTermnination" 
+                                                                                id="edtRateTypeTermnination" 
+                                                                                name="edtRateTypeTermnination" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateTypeTermnination">Rate Type</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeTermnination"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccountTermnination">Expense Account</label>
-                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountTermnination" name="edtExpenseAccountTermnination">
-
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccountTermnination" 
+                                                                                id="edtExpenseAccountTermnination" 
+                                                                                name="edtExpenseAccountTermnination" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccountTermnination">Expense Account</label>
+                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountTermnination" name="edtExpenseAccountTermnination"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1085,8 +1517,26 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveExemptReportableTermnination"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveExemptReportableTermnination'
+                                                                    type='button'
+                                                                    id="saveExemptReportableTermnination"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveExemptReportableTermnination"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1105,28 +1555,59 @@
                                                                 <div class="row">
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsNameLumpSumE">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsNameLumpSumE">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsNameLumpSumE" 
+                                                                                id="edtEarningsNameLumpSumE" 
+                                                                                name="edtEarningsNameLumpSumE" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsNameLumpSumE">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsNameLumpSumE"> -->
                                                                             <input type="hidden" id="edtLumpSumid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtDisplayNameLumpSumE">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayNameLumpSumE">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayNameLumpSumE" 
+                                                                                id="edtDisplayNameLumpSumE" 
+                                                                                name="edtDisplayNameLumpSumE" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayNameLumpSumE">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayNameLumpSumE"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateTypeLumpSumE">Rate Type</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeLumpSumE">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateTypeLumpSumE" 
+                                                                                id="edtRateTypeLumpSumE" 
+                                                                                name="edtRateTypeLumpSumE" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateTypeLumpSumE">Rate Type</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeLumpSumE"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccountLumpSumE">Expense Account</label>
-                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountLumpSumE" name="edtExpenseAccountLumpSumE">
-
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccountLumpSumE" 
+                                                                                id="edtExpenseAccountLumpSumE" 
+                                                                                name="edtExpenseAccountLumpSumE" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccountLumpSumE">Expense Account</label>
+                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountLumpSumE" name="edtExpenseAccountLumpSumE"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1146,8 +1627,26 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveExemptReportableLumpSumE"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveExemptReportableLumpSumE'
+                                                                    type='button'
+                                                                    id="saveExemptReportableLumpSumE"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveExemptReportableLumpSumE"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1169,28 +1668,59 @@
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsNameBonusesCommissions">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsNameBonusesCommissions">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsNameBonusesCommissions" 
+                                                                                id="edtEarningsNameBonusesCommissions" 
+                                                                                name="edtEarningsNameBonusesCommissions" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsNameBonusesCommissions">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsNameBonusesCommissions"> -->
                                                                             <input type="hidden" id="edtEarningsNameBonusesCommissionid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtDisplayNameBonusesCommissions">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayNameBonusesCommissions">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayNameBonusesCommissions" 
+                                                                                id="edtDisplayNameBonusesCommissions" 
+                                                                                name="edtDisplayNameBonusesCommissions" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayNameBonusesCommissions">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayNameBonusesCommissions"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateTypeBonusesCommissions">Rate Type</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeBonusesCommissions">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateTypeBonusesCommissions" 
+                                                                                id="edtRateTypeBonusesCommissions" 
+                                                                                name="edtRateTypeBonusesCommissions" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateTypeBonusesCommissions">Rate Type</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeBonusesCommissions"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccountBonusesCommissions">Expense Account</label>
-                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountBonusesCommissions" name="edtExpenseAccountBonusesCommissions">
-
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccountBonusesCommissions" 
+                                                                                id="edtExpenseAccountBonusesCommissions" 
+                                                                                name="edtExpenseAccountBonusesCommissions" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccountBonusesCommissions">Expense Account</label>
+                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountBonusesCommissions" name="edtExpenseAccountBonusesCommissions"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1210,8 +1740,26 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveSuperannuationBonusesCommissions"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveSuperannuationBonusesCommissions'
+                                                                    type='button'
+                                                                    id="saveSuperannuationBonusesCommissions"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveSuperannuationBonusesCommissions"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1233,28 +1781,59 @@
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsNameLumpSumW">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsNameLumpSumW">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsNameLumpSumW" 
+                                                                                id="edtEarningsNameLumpSumW" 
+                                                                                name="edtEarningsNameLumpSumW" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsNameLumpSumW">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsNameLumpSumW"> -->
                                                                             <input type="hidden" id="edtEarningsNameLumpSumWid" value="0" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtDisplayNameLumpSumW">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayNameLumpSumW">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayNameLumpSumW" 
+                                                                                id="edtDisplayNameLumpSumW" 
+                                                                                name="edtDisplayNameLumpSumW" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayNameLumpSumW">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayNameLumpSumW"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateTypeLumpSumW">Rate Type</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeLumpSumW">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateTypeLumpSumW" 
+                                                                                id="edtRateTypeLumpSumW" 
+                                                                                name="edtRateTypeLumpSumW" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateTypeLumpSumW">Rate Type</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeLumpSumW"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccountLumpSumW">Expense Account</label>
-                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountLumpSumW" name="edtExpenseAccountLumpSumW">
-
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccountLumpSumW" 
+                                                                                id="edtExpenseAccountLumpSumW" 
+                                                                                name="edtExpenseAccountLumpSumW" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccountLumpSumW">Expense Account</label>
+                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountLumpSumW" name="edtExpenseAccountLumpSumW"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1274,8 +1853,26 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveLumpSumW"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveLumpSumW'
+                                                                    type='button'
+                                                                    id="saveLumpSumW"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveLumpSumW"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1297,28 +1894,59 @@
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtEarningsNameDirectorsFees">Earnings Name</label>
-                                                                            <input type="text" class="form-control" id="edtEarningsNameDirectorsFees">
+                                                                            {{> default_input 
+                                                                                label="Earnings Name" 
+                                                                                classes="edtEarningsNameDirectorsFees" 
+                                                                                id="edtEarningsNameDirectorsFees" 
+                                                                                name="edtEarningsNameDirectorsFees" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtEarningsNameDirectorsFees">Earnings Name</label>
+                                                                            <input type="text" class="form-control" id="edtEarningsNameDirectorsFees"> -->
                                                                             <input type="hidden" id="edtEarningsDirectorsFeesid" value="0"/>
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtDisplayNameDirectorsFees">Display Name <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtDisplayNameDirectorsFees">
+                                                                            {{> default_input 
+                                                                                label="Display Name (optional)" 
+                                                                                classes="edtDisplayNameDirectorsFees" 
+                                                                                id="edtDisplayNameDirectorsFees" 
+                                                                                name="edtDisplayNameDirectorsFees" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                            <!-- <label for="edtDisplayNameDirectorsFees">Display Name <span style="font-weight: 200;">(optional)</span></label>
+                                                                            <input type="text" class="form-control" id="edtDisplayNameDirectorsFees"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtRateTypeDirectorsFees">Rate Type</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeDirectorsFees">
+                                                                            {{> default_input 
+                                                                                label="Rate Type" 
+                                                                                classes="edtRateTypeDirectorsFees" 
+                                                                                id="edtRateTypeDirectorsFees" 
+                                                                                name="edtRateTypeDirectorsFees" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtRateTypeDirectorsFees">Rate Type</label>
+                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtRateTypeDirectorsFees"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            <label for="edtExpenseAccountDirectorsFees">Expense Account</label>
-                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountDirectorsFees" name="edtExpenseAccountDirectorsFees">
-
+                                                                            {{> default_input 
+                                                                                label="Expense Account" 
+                                                                                classes="edtExpenseAccountDirectorsFees" 
+                                                                                id="edtExpenseAccountDirectorsFees" 
+                                                                                name="edtExpenseAccountDirectorsFees" 
+                                                                                defaultValue="" 
+                                                                                type="search"
+                                                                            }}
+                                                                            <!-- <label for="edtExpenseAccountDirectorsFees">Expense Account</label>
+                                                                            <input type="text"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountDirectorsFees" name="edtExpenseAccountDirectorsFees"> -->
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1338,14 +1966,46 @@
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
-                                                                <button type="button" class="btn btn-success saveDirectorFee"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                                                                {{> vs1_button
+                                                                    color='success'
+                                                                    classes='saveDirectorFee'
+                                                                    type='button'
+                                                                    id="saveDirectorFee"
+                                                                    iconName='save'
+                                                                    title='Save'
+                                                                }}
+                                                                <a data-dismiss="modal">
+                                                                    {{> vs1_button
+                                                                        color='secondary'
+                                                                        classes=''
+                                                                        type='button'
+                                                                        id="btnCancel"
+                                                                        iconName='close'
+                                                                        title='Close'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button type="button" class="btn btn-success saveDirectorFee"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
 
-                                                <div class="table-responsive">
+                                                {{> datatablelist
+                                                    tablename="tblEarnings"
+                                                    apiName=apiFunction4
+                                                    indexeddbname='TEarnings'
+                                                    tableheaderrecords=tableheaderrecords4
+                                                    exportfilename='Earnings'
+                                                    apiParams=apiParams4
+                                                    datahandler=datahandler4
+                                                    service=service4
+                                                    lowercaseDataName='tearnings'
+                                                    exIndexDBName='tearnings'
+                                                    exdatahandler=exDataHandler4
+                                                    searchAPI=searchAPI4
+                                                }}
+                                                <!-- <div class="table-responsive">
                                                     <div class="modal fade" role="dialog" tabindex="-1" id="deleteEarningsModal">
                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                             <div class="modal-content">
@@ -1366,7 +2026,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <table id="tblEarnings" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblEarnings">
                                                         <thead>
                                                             <tr class="dnd-moved">
@@ -1415,7 +2074,7 @@
                                                         </tbody>
 
                                                     </table>
-                                                </div>
+                                                </div> -->
                                             </div>
                                             <div class="" id="deductions" style="display: none;">
                                                 <div class="row mb-2">
@@ -2226,8 +2885,22 @@
                         </div>
                         <div class="row no-gutters">
                             <div class="col">
-                                <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                <button class="btn btn-success float-right btnSaveDefaultTax" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                {{> vs1_button
+                                    color='secondary'
+                                    classes='float-right btnBack m-2'
+                                    type='button'
+                                    id="btnBack"
+                                    iconName='close'
+                                    title='Cancel'
+                                }}
+                                {{> vs1_button
+                                    color='success'
+                                    classes='float-right btnSaveDefaultTax m-2'
+                                    type='button'
+                                    id="btnSaveDefaultTax"
+                                    iconName='save'
+                                    title='Save'
+                                }}
                             </div>
                         </div>
                     </div>

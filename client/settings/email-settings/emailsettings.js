@@ -1669,6 +1669,8 @@ Template.emailsettings.onRendered(function () {
                     correspondences = await sideBarService.getCorrespondences();
                 }
 
+                addVS1Data('TCorrespondence', JSON.stringify(correspondences));
+
                 // Check if there is sms appointment in correspondences array and if no exist add new Correspondence
                 if (
                     !correspondences.tcorrespondence.find(
@@ -3237,6 +3239,7 @@ Template.emailsettings.onRendered(function () {
     $(document).on("click", "#tblCorrespondence tr", function (e) {
         let tempLabel = $(e.target).closest("tr").find(".colLabel").text();
         let tempSubject = $(e.target).closest("tr").find(".colSubject").text();
+        let tempAppointment = $(e.target).closest("tr").find(".colAppointment").text();
         let tempMemo = $(e.target).closest("tr").find(".colTemplateContent").text();
         let tempId = $(e.target).closest("tr").find(".colID").text();
         templateObject.isAdd.set(false);
@@ -3244,6 +3247,7 @@ Template.emailsettings.onRendered(function () {
         $("#addLetterTemplateModal").modal();
         $("#edtTemplateLbl").val(tempLabel);
         $("#edtTemplateSubject").val(tempSubject);
+        $("#edtTamplateAppointment").val(tempAppointment);
         // $("#edtTemplateContent").val(tempMemo);
         tinymce.get("edtTemplateContent").setContent(tempMemo);
     });
@@ -4191,17 +4195,42 @@ Template.emailsettings.events({
     },
 
     "click #edtTamplateAppointment": function (event) {
-        $("#appointmentListModal").modal();
-    },
-    // Click Appointment list table's recored
-    "click #tblAppointmentList tbody tr": function(e){
-        let id = e.currentTarget.children[0].innerText;
+        let temp = $("#usedon_id").val();
 
-        $("#edtTamplateAppointment").val(id);
-        $("#appointmentId").val(id);
+        if(temp){
 
-        $("#appointmentListModal").modal("hide");
+            const myModalEl = document.getElementById('myModalTransactionType')
+            myModalEl.addEventListener('hidden.bs.modal', event => {
+                let types = ',' + temp.trim() + ',';
+
+                $("#tblTransactionTypeCheckbox tr input.chkServiceCard").each(function () {
+                    let dpt = $(this).closest("tr").find(".colDeptName").text();
+
+                    if(types.indexOf(dpt) >= 0){
+                        this.checked = true;
+                    }
+                });
+            })
+        }
+
+        $("#myModalTransactionType").modal();
+
+        // $("#appointmentListModal").modal();
     },
+    "click #myModalTransactionType button.btnTransactionTypeSelect": function () {
+        let types = [];
+
+        $("#tblTransactionTypeCheckbox tr input.chkServiceCard").each(function () {
+            if ($(this).is(":checked")) {
+                let dpt = $(this).closest("tr").find(".colDeptName").text();
+                types.push(dpt);
+            }
+        });
+
+        $("#edtTamplateAppointment").val(types.join(',').trim());
+        $("#usedon_id").val(types.join(',').trim());
+    },
+
     "click #copy-correspondence": async function () {
         $("#copyTemplateModal").modal();
     },
@@ -4229,6 +4258,8 @@ Template.emailsettings.events({
         const templateObject = Template.instance();
         templateObject.isAdd.set(true);
 
+        $("#copyTemplateModal").modal("hide");
+
         $("#save-correspondence").click();
     },
     "click #save-correspondence": async function () {
@@ -4236,12 +4267,15 @@ Template.emailsettings.events({
         $(".fullScreenSpin").css("display", "inline-block");
         // let correspondenceData = localStorage.getItem('correspondence');
         let correspondenceTemp = templateObject.correspondences.get();
-        let appointmentId = $("#appointmentId").val();
+        let usedon_id = $("#usedon_id").val();
         let tempLabel = $("#edtTemplateLbl").val();
         let tempSubject = $("#edtTemplateSubject").val();
+
         let iframe = document.getElementById("edtTemplateContent_ifr");
-        var tempHtml = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
+        // var tempHtml = $(iframe.contentWindow.document.getElementsByTagName("body")[0]).html();
         // let tempHtml = $("#edtTemplateContent_ifr").val();
+
+        let tempHtml = tinymce.get("edtTemplateContent").getContent();
         let tempContent = tempHtml.replace(/<[^>]+>/g, ' ');
 
         const smsSetting = smsSettings.find(item => item.Ref_Type === tempLabel);
@@ -4265,73 +4299,78 @@ Template.emailsettings.events({
                     });
                     $(".fullScreenSpin").css("display", "none");
                 } else {
-                    sideBarService.getCorrespondences().then((dObject) => {
-                        let temp = {
-                            Active: true,
-                            EmployeeId: localStorage.getItem("mySessionEmployeeLoggedID"),
-                            Ref_Type: tempLabel,
-                            MessageAsString: tempContent,
-                            MessageFrom: "",
-                            MessageId: dObject.tcorrespondence.length.toString(),
-                            MessageTo: "",
-                            ReferenceTxt: tempSubject,
-                            Ref_Date: moment().format("YYYY-MM-DD"),
-                            Status: "",
-                            Appointment: appointmentId,
-                        };
-                        let objDetails = {
-                            type: "TCorrespondence",
-                            fields: temp,
-                        };
+                    try{
+                        getVS1Data("TCorrespondence").then(function (dataObject) {
+                            var messageId = 0;
+                            let saveData;
+                            let vt;
 
-                        // let array = [];
-                        // array.push(objDetails)
+                            if(dataObject.length > 0){
+                                vt = JSON.parse(dataObject[0].data);
+                                messageId = vt.tcorrespondence.length.toString();
+                            }
 
-                        sideBarService
-                            .saveCorrespondence(objDetails)
-                            .then((data) => {
-                                sideBarService
-                                    .getCorrespondences()
-                                    .then(function (dataUpdate) {
-                                        addVS1Data("TCorrespondence", JSON.stringify(dataUpdate))
-                                            .then(function () {
-                                                $(".fullScreenSpin").css("display", "none");
-                                                swal({
-                                                    title: "Success",
-                                                    text: "Template has been saved successfully ",
-                                                    type: "success",
-                                                    showCancelButton: false,
-                                                    confirmButtonText: "Continue",
-                                                }).then((result) => {
-                                                    if (result.value) {
-                                                        $("#addLetterTemplateModal").modal("toggle");
-                                                        templateObject.getCorrespondence();
-                                                    } else if (result.dismiss === "cancel") {
-                                                    }
-                                                });
-                                            })
-                                            .catch(function (err) {
-                                            });
-                                    })
-                                    .catch(function (err) {
+                            let temp = {
+                                Active: true,
+                                EmployeeId: localStorage.getItem("mySessionEmployeeLoggedID"),
+                                Ref_Type: tempLabel,
+                                MessageAsString: tempContent,
+                                MessageFrom: "",
+                                MessageId: messageId,
+                                MessageTo: "",
+                                ReferenceTxt: tempSubject,
+                                Ref_Date: moment().format("YYYY-MM-DD"),
+                                Status: "",
+                                // Appointment: usedon_id,
+                            };
+                            let objDetails = {
+                                type: "TCorrespondence",
+                                fields: temp,
+                            };
+
+                            if(dataObject.length > 0){
+                                vt.tcorrespondence.push(objDetails);
+                                saveData = vt;
+                            }else{
+                                saveData = {
+                                    tcorrespondence: objDetails
+                                };
+                            }
+
+                            addVS1Data("TCorrespondence", JSON.stringify(saveData))
+                                .then(function () {
+                                    $(".fullScreenSpin").css("display", "none");
+                                    swal({
+                                        title: "Success",
+                                        text: "Template has been saved successfully ",
+                                        type: "success",
+                                        showCancelButton: false,
+                                        confirmButtonText: "Continue",
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            $("#addLetterTemplateModal").modal("toggle");
+                                            templateObject.getCorrespondence();
+                                        } else if (result.dismiss === "cancel") {
+                                        }
                                     });
-                            })
-                            .catch(function (error) {
-                                swal({
-                                    title: "Oooops...",
-                                    text: "Something went wrong",
-                                    type: "error",
-                                    showCancelButton: false,
-                                    confirmButtonText: "Try Again",
-                                }).then((result) => {
-                                    if (result.value) {
-                                        $("#addLetterTemplateModal").modal("toggle");
-                                        $(".fullScreenSpin").css("display", "none");
-                                    } else if (result.dismiss === "cancel") {
-                                    }
+                                })
+                                .catch(function (err) {
                                 });
-                            });
-                    });
+                        });
+                    }catch{
+                        swal({
+                            title: "Oooops...",
+                            text: "There is already a template labeled " + tempLabel,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                        }).then((result) => {
+                            if (result.value) {
+                            } else if (result.dismiss === "cancel") {
+                            }
+                        });
+                        $(".fullScreenSpin").css("display", "none");
+                    }
                 }
             } else {
                 sideBarService.getCorrespondences().then((dObject) => {
@@ -4346,7 +4385,7 @@ Template.emailsettings.events({
                         ReferenceTxt: tempSubject,
                         Ref_Date: moment().format("YYYY-MM-DD"),
                         Status: "",
-                        Appointment: appointmentId,
+                        // Appointment: usedon_id,
                     };
                     let objDetails = {
                         type: "TCorrespondence",
@@ -4412,7 +4451,7 @@ Template.emailsettings.events({
                     objDetail.Ref_Type = tempLabel;
                     objDetail.ReferenceTxt = tempSubject;
                     objDetail.MessageAsString = tempContent;
-                    objDetail.Appointment = appointmentId;
+                    objDetail.Appointment = usedon_id;
                     let objectData = {
                         type: "TCorrespondence",
                         fields: objDetail,

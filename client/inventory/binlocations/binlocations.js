@@ -11,11 +11,12 @@ import { SideBarService } from '../../js/sidebar-service';
 import '../../lib/global/indexdbstorage.js';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {EditableService} from "../../editable-service";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
-
+let editableService = new EditableService();
 Template.binlocationslist.onCreated(function () {
   const templateObject = Template.instance();
 
@@ -34,6 +35,11 @@ Template.binlocationslist.onCreated(function () {
   templateObject.productdeptrecords = new ReactiveVar();
   templateObject.proddeptIDrecords = new ReactiveVar();
   templateObject.selectedFile = new ReactiveVar();
+  templateObject.bindept = new ReactiveVar();
+  templateObject.bindeptid = new ReactiveVar();
+  templateObject.binrecords = new ReactiveVar();
+  templateObject.binlocation = new ReactiveVar();
+  templateObject.binnumber = new ReactiveVar();
 });
 
 Template.binlocationslist.onRendered(function () {
@@ -66,20 +72,35 @@ Template.binlocationslist.onRendered(function () {
       if (dataObject.length == 0) {
         productService.getBins().then(async function (data) {
           await addVS1Data('TProductBin', JSON.stringify(data));
+          templateObject.setBinRecords(data);
         }).catch(function (err) {
 
         });
       } else {
         let data = JSON.parse(dataObject[0].data);
+        templateObject.setBinRecords(data);
       }
     }).catch(function (err) {
       productService.getBins().then(async function (data) {
         await addVS1Data('TProductBin', JSON.stringify(data));
+        templateObject.setBinRecords(data);
       }).catch(function (err) {
       });
     });
   }
-  templateObject.getProductBinData();
+  templateObject.setBinRecords = async function (data) {
+    let binrecords = [];
+    for (let i in data.tproductbin) {
+      let binrecordObj = {
+        binnumber: data.tproductbin[i].BinNumber || ' ',
+        binlocation: data.tproductbin[i].BinLocation || '',
+        binclass: data.tproductbin[i].BinClassName || ' ',
+      };
+      binrecords.push(binrecordObj);
+      templateObject.binrecords.set(binrecords);
+    }
+  }
+    templateObject.getProductBinData();
   // $('.tblInventory tbody').on( 'click', 'tr', function () {
   //   var listData = $(this).closest('tr').find('.colProductID').text();
   //   if(listData){
@@ -110,7 +131,6 @@ Template.binlocationslist.onRendered(function () {
           id: data.tdeptclass[i].Id || ' ',
           department: data.tdeptclass[i].DeptClassName || ' ',
         };
-
         deptrecords.push(deptrecordObj);
         templateObject.deptrecords.set(deptrecords);
       }
@@ -118,6 +138,41 @@ Template.binlocationslist.onRendered(function () {
   }
 
   templateObject.getDepartments();
+
+  templateObject.setEditableService = function(){
+    let clickDepartment = function(){
+      $("#myModalDepartment").modal("toggle");
+    }
+    $("#editBinDepartmentList").editableSelect();
+    $("#editBinDepartmentList").editableSelect().on("click.editable-select", clickDepartment);
+    $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
+      let table = $(this);
+      let deptName = table.find(".colDeptName").text();
+      let deptID = table.find(".colDeptID").text();
+      templateObject.bindept.set(deptName);
+      $('#editBinDepartmentList').val(deptName);
+      templateObject.bindeptid.set(deptID);
+      $("#myModalDepartment").modal("hide");
+    });
+
+    $("#sltDepartmentList").editableSelect();
+    $("#sltDepartmentList").editableSelect().on("click.editable-select", clickDepartment);
+    $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
+      let table = $(this);
+      let deptName = table.find(".colDeptName").text();
+      let deptID = table.find(".colDeptID").text();
+      templateObject.bindept.set(deptName);
+      $('#sltDepartmentList').val(deptName);
+      templateObject.bindeptid.set(deptID);
+      $("#myModalDepartment").modal("hide");
+    });
+
+    $('#editBinRack').on('change', function (e) {
+      var location = $("#editBinRack option:selected").val();
+      templateObject.binlocation.set(location);
+    });
+  }
+  templateObject.setEditableService();
 
   templateObject.getProductClassDeptData = function (deptname) {
     productService.getProductClassDataByDeptName(deptname).then(function (data) {
@@ -201,185 +256,186 @@ Template.binlocationslist.onRendered(function () {
   };
   // templateObject.getAccountNames();
   // templateObject.getAllTaxCodes();
-  exportInventoryToPdf = function () {
+});
+let exportInventoryToPdf = function () {
+  productService.getProductPrintList().then(function (data) {
+    let records = [];
+    let inventoryData = [];
+    for (let i = 0; i < data.tproductvs1.length; i++) {
+      var recentTranObject = {
+        productId: data.tproductvs1[i].fields.ID,
+        productName: data.tproductvs1[i].fields.ProductName,
+        productDescription: data.tproductvs1[i].fields.SalesDescription,
+        purchasesPrice: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1CostInc) || 0,
+        purchaseAccount: data.tproductvs1[i].fields.AssetAccount,
+        costOfGoodsSoldAccount: data.tproductvs1[i].fields.CogsAccount,
+        unitOfMeasure: data.tproductvs1[i].fields.UOMPurchases || ' ',
+        salesDescription: data.tproductvs1[i].fields.SalesDescription,
+        itemName: data.tproductvs1[i].fields.ProductName,
+        salesPrice: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1PriceInc) || 0,
+        salesAccount: data.tproductvs1[i].fields.IncomeAccount,
+        taxCodeSales: data.tproductvs1[i].fields.TaxCodeSales,
+      };
+      inventoryData.push(recentTranObject);
 
-    productService.getProductPrintList().then(function (data) {
-      let records = [];
-      let inventoryData = [];
-      for (let i = 0; i < data.tproductvs1.length; i++) {
-        var recentTranObject = {
-          productId: data.tproductvs1[i].fields.ID,
-          productName: data.tproductvs1[i].fields.ProductName,
-          productDescription: data.tproductvs1[i].fields.SalesDescription,
-          purchasesPrice: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1CostInc) || 0,
-          purchaseAccount: data.tproductvs1[i].fields.AssetAccount,
-          costOfGoodsSoldAccount: data.tproductvs1[i].fields.CogsAccount,
-          unitOfMeasure: data.tproductvs1[i].fields.UOMPurchases || ' ',
-          salesDescription: data.tproductvs1[i].fields.SalesDescription,
-          itemName: data.tproductvs1[i].fields.ProductName,
-          salesPrice: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1PriceInc) || 0,
-          salesAccount: data.tproductvs1[i].fields.IncomeAccount,
-          taxCodeSales: data.tproductvs1[i].fields.TaxCodeSales,
-        };
-        inventoryData.push(recentTranObject);
 
+      $('.fullScreenSpin').css('display', 'none');
+    }
 
-        $('.fullScreenSpin').css('display', 'none');
+    if (inventoryData) {
+      let doc = new jsPDF('landscape', 'mm', 'a3');
+      // let listId= tempObj2.productListID.get();
+      let inventoryDataList = inventoryData;
+      const totalPagesExp = "{total_pages_count_string}";
+      let xAxis = 15;
+      let yAxis = 70;
+      let tableTitle = ['Item Code',
+        'Item Name',
+        'Purchases\n' + 'Description',
+        'Purchases\n' + 'Price',
+        'Purchases\n' + 'Account',
+        'Cost of\n' + 'Goods Sold\n' + 'Account',
+        'Inventory\n' + 'Asset\n' + 'Account',
+        'Unit of\n' + 'measure',
+        'Sales\n' + 'Description',
+        'Sales Price',
+        'Sales\n' + 'Account',
+        'Tax\n' + 'Code(S)'
+      ];
+      doc.setFontSize(18);
+      doc.setTextColor(0, 123, 169);
+      // doc.setFontStyle('Roboto Mono');
+      doc.text(loggedCompany, 180, 40);
+      doc.text("As at " + moment().format('DD MMM YYYY'), 183, 50);
+      let totalPage = inventoryDataList.length;
+      let pageData = 0;
+      let printData = 8;
+
+      if (totalPage % 5 != 0) {
+        totalPage = (totalPage / 5) + 1;
+        totalPage = totalPage.toString().split(".")[0];
+      }
+      else {
+        totalPage = totalPage / 5;
       }
 
-      if (inventoryData) {
-        let doc = new jsPDF('landscape', 'mm', 'a3');
-        // let listId= tempObj2.productListID.get();
-        let inventoryDataList = inventoryData;
-        const totalPagesExp = "{total_pages_count_string}";
-        let xAxis = 15;
-        let yAxis = 70;
-        let tableTitle = ['Item Code',
-          'Item Name',
-          'Purchases\n' + 'Description',
-          'Purchases\n' + 'Price',
-          'Purchases\n' + 'Account',
-          'Cost of\n' + 'Goods Sold\n' + 'Account',
-          'Inventory\n' + 'Asset\n' + 'Account',
-          'Unit of\n' + 'measure',
-          'Sales\n' + 'Description',
-          'Sales Price',
-          'Sales\n' + 'Account',
-          'Tax\n' + 'Code(S)'
-        ];
-        doc.setFontSize(18);
-        doc.setTextColor(0, 123, 169);
+      for (let k = 1; k <= totalPage; k++) {
+        //HEADER
+        doc.setFontSize(22);
+        doc.setTextColor(30);
         // doc.setFontStyle('Roboto Mono');
-        doc.text(loggedCompany, 180, 40);
-        doc.text("As at " + moment().format('DD MMM YYYY'), 183, 50);
-        let totalPage = inventoryDataList.length;
-        let pageData = 0;
-        let printData = 8;
-
-        if (totalPage % 5 != 0) {
-          totalPage = (totalPage / 5) + 1;
-          totalPage = totalPage.toString().split(".")[0];
+        doc.text("Inventory", 16, 20);
+        doc.setDrawColor(0, 123, 169);
+        doc.setLineWidth(1);
+        doc.line(15, 25, 408, 25);
+        //TABLE HEAD
+        doc.setFontSize(12);
+        doc.setFontStyle('bold');
+        doc.setTextColor(0, 0, 0);
+        for (let m = 0; m < 12; m++) {
+          doc.text(tableTitle[m], xAxis, yAxis);
+          xAxis += 32;
         }
-        else {
-          totalPage = totalPage / 5;
-        }
-
-        for (let k = 1; k <= totalPage; k++) {
-          //HEADER
-          doc.setFontSize(22);
-          doc.setTextColor(30);
-          // doc.setFontStyle('Roboto Mono');
-          doc.text("Inventory", 16, 20);
-          doc.setDrawColor(0, 123, 169);
-          doc.setLineWidth(1);
-          doc.line(15, 25, 408, 25);
-          //TABLE HEAD
-          doc.setFontSize(12);
-          doc.setFontStyle('bold');
-          doc.setTextColor(0, 0, 0);
-          for (let m = 0; m < 12; m++) {
-            doc.text(tableTitle[m], xAxis, yAxis);
-            xAxis += 32;
+        doc.setDrawColor(179, 179, 179);
+        doc.setLineWidth(0.1);
+        doc.line(12, yAxis + 13, 390, yAxis + 13);
+        xAxis = 18;
+        yAxis += 20;
+        doc.setFontStyle('normal');
+        for (let i = pageData; i < printData; i++) {
+          let changeY = yAxis;
+          let itemY = yAxis;
+          const itmNme = inventoryDataList[i].itemName.split(" ");
+          for (let j = 0; j < itmNme.length; j++) {
+            doc.text('' + itmNme[j], xAxis, itemY);
+            doc.text('' + itmNme[j], xAxis + 32, itemY);
+            itemY += 5;
           }
-          doc.setDrawColor(179, 179, 179);
-          doc.setLineWidth(0.1);
-          doc.line(12, yAxis + 13, 390, yAxis + 13);
-          xAxis = 18;
-          yAxis += 20;
-          doc.setFontStyle('normal');
-          for (let i = pageData; i < printData; i++) {
-            let changeY = yAxis;
-            let itemY = yAxis;
-            const itmNme = inventoryDataList[i].itemName.split(" ");
-            for (let j = 0; j < itmNme.length; j++) {
-              doc.text('' + itmNme[j], xAxis, itemY);
-              doc.text('' + itmNme[j], xAxis + 32, itemY);
-              itemY += 5;
-            }
-            const prodescription = inventoryDataList[i].productDescription.split(" ");
-            for (let j = 0; j < prodescription.length; j++) {
-              doc.text('' + prodescription[j], xAxis + 64, changeY);
-              changeY += 5;
-            }
-            doc.text('' + inventoryDataList[i].purchasesPrice, xAxis + 96, yAxis);
-            doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 128, yAxis);
-            doc.text('' + inventoryDataList[i].costOfGoodsSoldAccount, xAxis + 160, yAxis);
-            doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 192, yAxis);
-            doc.text('' + inventoryDataList[i].unitOfMeasure, xAxis + 224, yAxis);
-            changeY = yAxis;
-            const saledescription = inventoryDataList[i].salesDescription.split(" ");
-            for (let j = 0; j < saledescription.length; j++) {
-              doc.text('' + saledescription[j], xAxis + 256, changeY);
-              changeY += 5;
-            }
-            doc.text('' + inventoryDataList[i].salesPrice, xAxis + 288, yAxis);
-            doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 320, yAxis);
-            doc.text('' + inventoryDataList[i].taxCodeSales, xAxis + 352, yAxis);
-            if (itmNme > changeY) {
-              yAxis = itmNme + 4;
-            }
-            else {
-              yAxis = changeY + 4;
-            }
-
-            yAxis += 5;
+          const prodescription = inventoryDataList[i].productDescription.split(" ");
+          for (let j = 0; j < prodescription.length; j++) {
+            doc.text('' + prodescription[j], xAxis + 64, changeY);
+            changeY += 5;
           }
-          let str = 'Inventory | ' + loggedCompany + ' | ' + moment().format('DD MMM YYYY');
-
-          let str1 = "Page " + k + " of " + totalPage;
-          doc.setDrawColor(0, 123, 169);
-          doc.setLineWidth(1);
-          doc.line(15, 280, 408, 280);
-          doc.setFontSize(10);
-          doc.text(str, 16, 285);
-          doc.text(str1, 390, 285);
-
-          if (k < totalPage) {
-            doc.addPage();
+          doc.text('' + inventoryDataList[i].purchasesPrice, xAxis + 96, yAxis);
+          doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 128, yAxis);
+          doc.text('' + inventoryDataList[i].costOfGoodsSoldAccount, xAxis + 160, yAxis);
+          doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 192, yAxis);
+          doc.text('' + inventoryDataList[i].unitOfMeasure, xAxis + 224, yAxis);
+          changeY = yAxis;
+          const saledescription = inventoryDataList[i].salesDescription.split(" ");
+          for (let j = 0; j < saledescription.length; j++) {
+            doc.text('' + saledescription[j], xAxis + 256, changeY);
+            changeY += 5;
           }
-          yAxis = 50;
-          let difference = inventoryDataList.length - printData;
-          pageData = pageData + 5;
-          if (difference < 5) {
-            printData = printData + difference;
+          doc.text('' + inventoryDataList[i].salesPrice, xAxis + 288, yAxis);
+          doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 320, yAxis);
+          doc.text('' + inventoryDataList[i].taxCodeSales, xAxis + 352, yAxis);
+          if (itmNme > changeY) {
+            yAxis = itmNme + 4;
           }
           else {
-            printData = printData + 5;
+            yAxis = changeY + 4;
           }
-        }
 
-        if (inventoryDataList.length != 0) {
-          doc.save(loggedCompany + '-inventory.pdf');
+          yAxis += 5;
+        }
+        let str = 'Inventory | ' + loggedCompany + ' | ' + moment().format('DD MMM YYYY');
+
+        let str1 = "Page " + k + " of " + totalPage;
+        doc.setDrawColor(0, 123, 169);
+        doc.setLineWidth(1);
+        doc.line(15, 280, 408, 280);
+        doc.setFontSize(10);
+        doc.text(str, 16, 285);
+        doc.text(str1, 390, 285);
+
+        if (k < totalPage) {
+          doc.addPage();
+        }
+        yAxis = 50;
+        let difference = inventoryDataList.length - printData;
+        pageData = pageData + 5;
+        if (difference < 5) {
+          printData = printData + difference;
+        }
+        else {
+          printData = printData + 5;
         }
       }
-      //localStorage.setItem('VS1ProductPrintList', JSON.stringify(inventoryData));
 
-    }).catch(function (err) {
-      // Bert.alert('<strong>' + err + '</strong> - Error Printing Product!', 'danger');
-      swal({
-        title: 'Error Printing Product!',
-        text: err,
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Try Again'
-      }).then((result) => {
-        if (result.value) {
-          // Meteor._reload.reload();
-        } else if (result.dismiss === 'cancel') {
+      if (inventoryDataList.length != 0) {
+        doc.save(loggedCompany + '-inventory.pdf');
+      }
+    }
+    //localStorage.setItem('VS1ProductPrintList', JSON.stringify(inventoryData));
 
-        }
-      });
-      $('.fullScreenSpin').css('display', 'none');
+  }).catch(function (err) {
+    // Bert.alert('<strong>' + err + '</strong> - Error Printing Product!', 'danger');
+    swal({
+      title: 'Error Printing Product!',
+      text: err,
+      type: 'error',
+      showCancelButton: false,
+      confirmButtonText: 'Try Again'
+    }).then((result) => {
+      if (result.value) {
+        // Meteor._reload.reload();
+      } else if (result.dismiss === 'cancel') {
+
+      }
     });
+    $('.fullScreenSpin').css('display', 'none');
+  });
 
 
 
 
-  };
-
-});
+};
 
 Template.binlocationslist.helpers({
+  bindept: () => {
+    return Template.instance().bindept.get();
+  },
   deptrecords: () => {
     return Template.instance().deptrecords.get();
   },
@@ -403,6 +459,47 @@ Template.binlocationslist.helpers({
   },
   salesaccountrecords: () => {
     return Template.instance().salesaccountrecords.get();
+  },
+  binarray: () =>{
+    let binData = Template.instance().binrecords.get().sort(function(a, b) {
+      if (a.binnumber == 'NA') {
+        return 1;
+      } else if (b.binnumber == 'NA') {
+        return -1;
+      }
+      return (a.binnumber > b.binnumber) ? 1 : -1;
+    });
+    let sortFunction = function(a, b) {
+      if (a.binnumber === b.binnumber) {
+        return 0;
+      } else {
+        return (a.binnumber - 0 < b.binnumber - 0) ? -1 : 1;
+      }
+    }
+    return binData.sort(sortFunction);
+  },
+  binlocationarray: () =>{
+    let binData = Template.instance().binrecords.get();
+    let usedData = {};
+    let locationarray = [];
+    binData.forEach(item =>{
+      if(usedData[item.binlocation + item.binclass] == undefined)
+        locationarray.push(item), usedData[item.binlocation + item.binclass] = true;
+    });
+    let sortFunction = function(a, b) {
+      if (a.binlocation === b.binlocation) {
+        return 0;
+      } else {
+        return (a.binlocation < b.binlocation) ? -1 : 1;
+      }
+    }
+    return locationarray.sort(sortFunction);
+  },
+  binlocation: () =>{
+    return Template.instance().binlocation.get();
+  },
+  binnumber: () =>{
+    return Template.instance().binnumber.get();
   }
 });
 
@@ -601,6 +698,9 @@ Template.binlocationslist.events({
     $("#editBinRack").val($(event.target).closest("tr").find(".Rack").text());
     $("#editBinNum").val($(event.target).closest("tr").find(".BinNumber").text());
     $("#editBinLocationModal").modal('show');
+    Template.instance().bindept.set($(event.target).closest("tr").find(".Department").text());
+    Template.instance().binnumber.set($(event.target).closest("tr").find(".BinNumber").text());
+    Template.instance().binlocation.set($(event.target).closest("tr").find(".Rack").text());
   },
 
   // Open Product Detail Link
@@ -779,7 +879,6 @@ Template.binlocationslist.events({
 
   'click #exportinv_pdf': async function () {
     $('.fullScreenSpin').css('display', 'inline-block');
-    exportInventoryToPdf();
   },
   'click #exportinv_csv': async function () {
     $('.fullScreenSpin').css('display', 'inline-block');
@@ -1044,7 +1143,8 @@ Template.binlocationslist.events({
     playPrintAudio();
     setTimeout(function () {
       $('.fullScreenSpin').css('display', 'inline-block');
-      jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
+      // jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
+      exportInventoryToPdf();
       $('.fullScreenSpin').css('display', 'none');
     }, delayTimeAfterSound);
   },
@@ -1147,7 +1247,7 @@ Template.binlocationslist.events({
         fields: {
             ID: binId,
             Active: false,
-            BinVolume: 0,
+            BinVolume: 1,
             ISEmpty: true,
             // BinLocation: editbinname|| '',
             // BinNumber: editbinnum|| ''
@@ -1157,13 +1257,22 @@ Template.binlocationslist.events({
       productService.saveBin(data).then(function (data) {
         productService.getBins().then(function (dataReload) {
           addVS1Data('TProductBin', JSON.stringify(dataReload)).then(function (datareturn) {
-            window.open('/binlocationslist','_self');
+            $('.fullScreenSpin').css('display','none');
+            swal('Success', 'Saved Successfully!', 'success').then(function() {
+              window.open('/binlocationslist', '_self');
+            });
           }).catch(function (err) {
-            window.open('/binlocationslist','_self');
+            $('.fullScreenSpin').css('display','none');
+            swal('Error', 'Error occured!', 'error').then(function() {
+              window.open('/binlocationslist', '_self');
+            });
           });
-      }).catch(function (err) {
-        window.open('/binlocationslist','_self');
-      });
+        }).catch(function (err) {
+          $('.fullScreenSpin').css('display','none');
+          swal('Error', 'Error occured!', 'error').then(function() {
+            window.open('/binlocationslist', '_self');
+          });
+        });
 
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
@@ -1191,7 +1300,7 @@ Template.binlocationslist.events({
             ISEmpty: true,
             BinLocation: editbinname|| '',
             BinNumber: editbinnum|| '',
-            BinVolume: 0,
+            BinVolume: 1,
             BinVolumeAvailable: 0,
             BinVolumeUsed: 0,
         }
@@ -1200,12 +1309,21 @@ Template.binlocationslist.events({
       productService.saveBin(data).then(function (data) {
         productService.getBins().then(function (dataReload) {
           addVS1Data('TProductBin', JSON.stringify(dataReload)).then(function (datareturn) {
-            window.open('/binlocationslist','_self');
+            $('.fullScreenSpin').css('display','none');
+            swal('Success', 'Saved Successfully!', 'success').then(function() {
+              window.open('/binlocationslist', '_self');
+            });
           }).catch(function (err) {
-            window.open('/binlocationslist','_self');
+            $('.fullScreenSpin').css('display','none');
+            swal('Error', 'Error occured!', 'error').then(function() {
+              window.open('/binlocationslist', '_self');
+            });
           });
       }).catch(function (err) {
-        window.open('/binlocationslist','_self');
+          $('.fullScreenSpin').css('display','none');
+          swal('Error', 'Error occured!', 'error').then(function() {
+            window.open('/binlocationslist', '_self');
+          });
       });
 
       }).catch(function (err) {
@@ -1232,12 +1350,20 @@ Template.binlocationslist.events({
         fields: {
             BinClassName: parentdept|| '',
             BinLocation: newbinname|| '',
-            BinNumber: newbinnum|| ''
+            BinNumber: newbinnum|| '',
+            BinVolume: 10,
+            BinVolumeAvailable: 0,
+            BinVolumeUsed: 0
         }
       };
 
       productService.saveBin(data).then(function (data) {
-        window.open('/binlocationslist','_self');
+        clearData('TProductBin').then(function(){
+          $('.fullScreenSpin').css('display','none');
+          swal('Success', 'Saved Successfully!', 'success').then(function(){
+            window.open('/binlocationslist','_self');
+          });
+        });
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });

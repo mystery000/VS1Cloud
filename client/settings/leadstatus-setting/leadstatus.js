@@ -53,7 +53,7 @@ Template.leadstatussettings.onCreated(function() {
         { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
         { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "400" },
         { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "180" },
-        { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: true, display: true, width: "250" },
+        { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: false, display: false, width: "250" },
         { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
@@ -784,7 +784,7 @@ Template.leadstatussettings.events({
                             };
                             if (results.data[i + 1][1]) {
                                 if (results.data[i + 1][1] !== "") {
-                                    contactService.contactService.saveLeadStatusData(objDetails).then(function(data) {
+                                    contactService.saveLeadStatusData(objDetails).then(function(data) {
                                         //$('.fullScreenSpin').css('display','none');
                                         //  Meteor._reload.reload();
                                     }).catch(function(err) {

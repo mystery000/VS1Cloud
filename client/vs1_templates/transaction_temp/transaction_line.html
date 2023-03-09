@@ -174,6 +174,8 @@
             text-align: center;
             margin-top: 20px;
         }
+
+
     </style>
 
     <div class="card-body rounded transTable" style="padding-bottom: 0px !important;padding-top: 0px !important;">
@@ -338,6 +340,11 @@
                 .convert-to-foreign.fx-enabled.hiddenColumn {
                     display: none;
                 }
+
+                .transactionLines th{
+                  overflow:hidden;
+                  white-space:nowrap;
+                }
             </style>
             {{#if displayfields}}
             <table id="{{tablename}}" name="{{tablename}}" style="width:100%"
@@ -429,7 +436,7 @@
                                 value="{{item.qtyshipped}}">
                         </td>
                         <td class="colBackOrder {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtybo}}"
+                                class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtyordered}}"
                                 readonly></td>
 
                         <td contenteditable="false"
@@ -549,7 +556,7 @@
                         <td contenteditable="true"
                             class="lineCustomField2 colCustomField2  {{#if displayfields.[23].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.CustomField2}}</td>
-                        <td><span class="table-remove btnRemove"><button type="button"
+                        <td style="text-align: center;"><span class="table-remove btnRemove"><button type="button"
                                     class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                         class="fa fa-remove"></i></button></span></td>
                     </tr>

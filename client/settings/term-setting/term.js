@@ -6,6 +6,7 @@ import "../../lib/global/indexdbstorage.js";
 import { Template } from 'meteor/templating';
 import "./term.html";
 import XLSX from "xlsx";
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 Template.termsettings.inheritsHooksFrom("non_transactional_list");
 
@@ -120,8 +121,8 @@ Template.termsettings.onCreated(function () {
     { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
     { index: 4, label: 'EOM Plus', class: 'colIsEOMPlus', active: true, display: true, width: "80" },
     { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "130" },
-    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "130" },
+    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "155" },
+    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "155" },
     { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     { index: 9, label: 'Is Progress Payment', class: 'colIsProgressPayment', active: false, display: true, width: "200" },
     { index: 10, label: 'Required', class: 'colRequired', active: false, display: true, width: "100" },
@@ -235,7 +236,7 @@ Template.termsettings.onRendered(function () {
       $('.btnActiveTerms').removeClass('d-none')
     } else {
       $('.btnActiveTerms').addClass('d-none')
-      $('.btnDeleteTerms').removeClass('d-none')      
+      $('.btnDeleteTerms').removeClass('d-none')
     }
   });
 });
@@ -283,7 +284,7 @@ Template.termsettings.events({
       .catch(function (err) {
         Meteor._reload.reload();
       });
-  },  
+  },
   "click .btnAddTerms": function () {
     let templateObject = Template.instance();
     $("#add-terms-title").text("Add New Term");
@@ -357,7 +358,7 @@ Template.termsettings.events({
     let rows = [];
     const filename = "SampleTermsSetting" + ".csv";
     rows[0] = [
-      "Term",
+      "Term Name",
       "Days",
       "EOM",
       "EOM+",
@@ -456,14 +457,14 @@ Template.termsettings.events({
       complete: function (results) {
         if (results.data.length > 0) {
           if (
-            results.data[0][0] == "Terms Name" &&
-            results.data[0][1] == "Description"
+            results.data[0][0] == "Term Name" &&
+            results.data[0][4] == "Description"
           ) {
             let dataLength = results.data.length * 500;
             setTimeout(function () {
               $(".importTemplateModal").hide();
               $(".modal-backdrop").hide();
-              FlowRouter.go("/departmentSettings?success=true");
+              FlowRouter.go("/termsettings?success=true");
               $(".fullScreenSpin").css("display", "none");
             }, parseInt(dataLength));
 
@@ -524,12 +525,12 @@ Template.termsettings.events({
                       }).then((result) => {
                         if (result.value) {
                           window.open(
-                            "/departmentSettings?success=true",
+                            "/termsettings?success=true",
                             "_self"
                           );
                         } else if (result.dismiss === "cancel") {
                           window.open(
-                            "/departmentSettings?success=false",
+                            "/termsettings?success=false",
                             "_self"
                           );
                         }

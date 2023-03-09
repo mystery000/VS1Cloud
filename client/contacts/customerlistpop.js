@@ -25,11 +25,81 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 Template.customerlistpop.onCreated(function () {
-    const templateObject = Template.instance();
-    templateObject.custdatatablerecords = new ReactiveVar([]);
-    templateObject.tableheaderrecords = new ReactiveVar([]);
+  const templateObject = Template.instance();
+  templateObject.custdatatablerecords = new ReactiveVar([]);
+  templateObject.datatablerecords = new ReactiveVar([]);
+  templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.selectedFile = new ReactiveVar();
+  templateObject.custdisplayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
 
-    templateObject.selectedFile = new ReactiveVar();
+  templateObject.getDataTableList = function(data) {
+      let mobile = contactService.changeMobileFormat(data.Mobile);
+      let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance)|| 0.00;
+      let creditBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
+      let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+      let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit)|| 0.00;
+      let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SOBalance)|| 0.00;
+      let dataList = [
+          data.ClientID || '',
+          data.Company || '-',
+          data.JobName || '',
+          data.Phone || '',
+          mobile || '',
+          arBalance || 0.00,
+          creditBalance || 0.00,
+          balance || 0.00,
+          creditLimit || 0.00,
+          salesOrderBalance || 0.00,
+          data.Street || '',
+          data.Street2 || data.Suburb || '',
+          data.State || '',
+          data.Postcode || '',
+          data.Country || '',
+          data.Email || '',
+          data.AccountNo || '',
+          data.ClientTypeName || 'Default',
+          data.Discount || 0,
+          data.TermsName || loggedTermsSales || 'COD',
+          data.FirstName || '',
+          data.LastName || '',
+          data.TaxCodeName || 'E',
+          data.ClientNo || '',
+          data.JobTitle || '',
+          data.Notes || ''
+      ];
+      return dataList;
+  }
+
+  let headerStructure = [
+      { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "40" },
+      { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "60" },
+      { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "60" },
+      { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "60" },
+      { index: 4, label: "Mobile", class: "colMobile", active: false, display: true, width: "60" },
+      { index: 5, label: "AR Balance", class: "colARBalance", active: true, display: true, width: "60" },
+      { index: 6, label: "Credit Balance", class: "colCreditBalance", active: true, display: true, width: "60" },
+      { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "60" },
+      { index: 8, label: "Credit Limit", class: "colCreditLimit", active: true, display: true, width: "60" },
+      { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "60" },
+      { index: 10, label: "Street Address", class: "colStreetAddress", active: false, display: true, width: "60" },
+      { index: 11, label: "City/Suburb", class: "colSuburb", active: true, display: true, width: "60" },
+      { index: 12, label: "State", class: "colState", active: false, display: true, width: "60" },
+      { index: 13, label: "Zip Code", class: "colZipCode", active: false, display: true, width: "60" },
+      { index: 14, label: "Country", class: "colCountry", active: true, display: true, width: "60" },
+      { index: 15, label: "Email", class: "colEmail", active: false, display: true, width: "60" },
+      { index: 16, label: "Account No", class: "colAccountNo", active: false, display: true, width: "60" },
+      { index: 17, label: "Customer Type", class: "colCustomerType", active: false, display: true, width: "60" },
+      { index: 18, label: "Discount", class: "colCustomerDiscount", active: false, display: true, width: "60" },
+      { index: 19, label: "Term Name", class: "colCustomerTermName", active: false, display: true, width: "60" },
+      { index: 20, label: "First Name", class: "colCustomerFirstName", active: false, display: true, width: "60" },
+      { index: 21, label: "Last Name", class: "colCustomerLastName", active: false, display: true, width: "60" },
+      { index: 22, label: "Tax Code", class: "colCustomerTaxCode", active: false, display: true, width: "60" },
+      { index: 23, label: "Custom Field 1", class: "colClientNo", active: false, display: true, width: "60" },
+      { index: 24, label: "Custom Field 2", class: "colJobTitle", active: false, display: true, width: "60" },
+      { index: 25, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.customerlistpop.onRendered(function () {
@@ -586,26 +656,72 @@ Template.customerlistpop.events({
 });
 
 Template.customerlistpop.helpers({
-    custdatatablerecords: () => {
-        return Template.instance().custdatatablerecords.get().sort(function (a, b) {
-            if (a.company == 'NA') {
-                return 1;
-            } else if (b.company == 'NA') {
-                return -1;
-            }
-            return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
-        });
+  custdatatablerecords: () => {
+      return Template.instance().custdatatablerecords.get().sort(function (a, b) {
+          if (a.company == 'NA') {
+              return 1;
+          } else if (b.company == 'NA') {
+              return -1;
+          }
+          return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
+      });
+  },
+  tableheaderrecords: () => {
+      return Template.instance().tableheaderrecords.get();
+  },
+  salesCloudPreferenceRec: () => {
+      return CloudPreference.findOne({
+          userid: localStorage.getItem('mycloudLogonID'),
+          PrefName: 'tblCustomerlist'
+      });
+  },
+  loggedCompany: () => {
+      return localStorage.getItem('mySession') || '';
+  },
+  showSetupFinishedAlert: () => {
+      let setupFinished = localStorage.getItem("IS_SETUP_FINISHED") || false;
+      if (setupFinished == true || setupFinished == "true") {
+          return false;
+      } else {
+          return true;
+      }
+  },
+  custdisplayfields: () => {
+    return Template.instance().custdisplayfields.get();
+  },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTCustomerList;
     },
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
+
+    searchAPI: function() {
+        return sideBarService.searchAllCustomersDataVS1ByName;
     },
-    salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({
-            userid: localStorage.getItem('mycloudLogonID'),
-            PrefName: 'tblCustomerlist'
-        });
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
     },
-    loggedCompany: () => {
-        return localStorage.getItem('mySession') || '';
-    }
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom'];
+    },
 });

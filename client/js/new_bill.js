@@ -113,7 +113,7 @@ Template.billcard.onRendered(() => {
 
     templateObject.setSupplierInfo = () => {
         if (!FlowRouter.current().queryParams.supplierid) {
-            $('#supplierListModal').modal('toggle');
+            // $('#supplierListModal').modal('toggle');
         }
         let utilityService = new UtilityService();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -3322,93 +3322,7 @@ Template.billcard.onRendered(() => {
         });
     });
 
-    $('#shipvia').editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var shipvianame = e.target.value || '';
-            $('#edtShipViaID').val('');
-            $('#newShipViaMethodName').text('Add Ship Via');
-            $('#edtShipVia').attr('readonly', false);
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#shipViaModal').modal('toggle');
-                setTimeout(function () {
-                    $('#tblShipViaPopList_filter .form-control-sm').focus();
-                    $('#tblShipViaPopList_filter .form-control-sm').val('');
-                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblShipViaPopList').DataTable();
-                    datatable.draw();
-                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                }, 500);
-            } else {
-                if (shipvianame.replace(/\s/g, '') != '') {
-                    $('#newShipViaMethodName').text('Edit Ship Via');
-                    setTimeout(function () {
-                        // $('#edtShipVia').attr('readonly', true);
-                    }, 100);
 
-                    getVS1Data('TShippingMethod').then(function (dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getShippingMethodData().then(function (data) {
-                                for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                    if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
-                                        $('#edtShipViaID').val(data.tshippingmethod[i].Id);
-                                        $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
-                                    }
-                                }
-                                setTimeout(function () {
-                                    LoadingOverlay.hide();
-                                    $('#newShipViaModal').modal('toggle');
-                                }, 200);
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tshippingmethod;
-                            for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                if (useData[i].ShippingMethod === shipvianame) {
-                                    $('#edtShipViaID').val(useData[i].Id);
-                                    $('#edtShipVia').val(useData[i].ShippingMethod);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#newShipViaModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getShippingMethodData().then(function (data) {
-                            for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
-                                    $('#edtShipViaID').val(data.tshippingmethod[i].Id);
-                                    $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#edtShipVia').attr('readonly', false);
-                                $('#newShipViaModal').modal('toggle');
-                            }, 200);
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
-                    });
-                } else {
-                    $('#shipViaModal').modal();
-                    setTimeout(function () {
-                        $('#tblShipViaPopList_filter .form-control-sm').focus();
-                        $('#tblShipViaPopList_filter .form-control-sm').val('');
-                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblShipViaPopList').DataTable();
-                        datatable.draw();
-                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
 
     $(document).on("click", "#tblShipViaPopList tbody tr", function (e) {
         $('#shipvia').val($(this).find(".colShipName ").text());
@@ -3766,7 +3680,7 @@ Template.billcard.onRendered(() => {
             LoadingOverlay.hide();
         }, 1000);
     });
-
+    $(document).ready(function() {
     $('#sltTerms').editableSelect()
         .on('click.editable-select', function (e, li) {
             var $earch = $(this);
@@ -3978,6 +3892,171 @@ Template.billcard.onRendered(() => {
             }
         });
 
+        $('#shipvia').editableSelect()
+            .on('click.editable-select', function (e, li) {
+                var $earch = $(this);
+                var offset = $earch.offset();
+                var shipvianame = e.target.value || '';
+                $('#edtShipViaID').val('');
+                $('#newShipViaMethodName').text('Add Ship Via');
+                $('#edtShipVia').attr('readonly', false);
+                if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                    $('#shipViaModal').modal('toggle');
+                    setTimeout(function () {
+                        $('#tblShipViaPopList_filter .form-control-sm').focus();
+                        $('#tblShipViaPopList_filter .form-control-sm').val('');
+                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblShipViaPopList').DataTable();
+                        datatable.draw();
+                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                    }, 500);
+                } else {
+                    if (shipvianame.replace(/\s/g, '') != '') {
+                        $('#newShipViaMethodName').text('Edit Ship Via');
+                        setTimeout(function () {
+                            // $('#edtShipVia').attr('readonly', true);
+                        }, 100);
+
+                        getVS1Data('TShippingMethod').then(function (dataObject) {
+                            if (dataObject.length == 0) {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                sideBarService.getShippingMethodData().then(function (data) {
+                                    for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                        if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
+                                            $('#edtShipViaID').val(data.tshippingmethod[i].Id);
+                                            $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
+                                        }
+                                    }
+                                    setTimeout(function () {
+                                        LoadingOverlay.hide();
+                                        $('#newShipViaModal').modal('toggle');
+                                    }, 200);
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.tshippingmethod;
+                                for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                    if (useData[i].ShippingMethod === shipvianame) {
+                                        $('#edtShipViaID').val(useData[i].Id);
+                                        $('#edtShipVia').val(useData[i].ShippingMethod);
+                                    }
+                                }
+                                setTimeout(function () {
+                                    LoadingOverlay.hide();
+                                    $('#newShipViaModal').modal('toggle');
+                                }, 200);
+                            }
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getShippingMethodData().then(function (data) {
+                                for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                    if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
+                                        $('#edtShipViaID').val(data.tshippingmethod[i].Id);
+                                        $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
+                                    }
+                                }
+                                setTimeout(function () {
+                                    LoadingOverlay.hide();
+                                    $('#edtShipVia').attr('readonly', false);
+                                    $('#newShipViaModal').modal('toggle');
+                                }, 200);
+                            }).catch(function (err) {
+                                LoadingOverlay.hide();
+                            });
+                        });
+                    } else {
+                        $('#shipViaModal').modal();
+                        setTimeout(function () {
+                            $('#tblShipViaPopList_filter .form-control-sm').focus();
+                            $('#tblShipViaPopList_filter .form-control-sm').val('');
+                            $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                            var datatable = $('#tblShipViaPopList').DataTable();
+                            datatable.draw();
+                            $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                        }, 500);
+                    }
+                }
+            });
+
+            $('#sltDept').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    var $earch = $(this);
+                    var offset = $earch.offset();
+                    var deptDataName = e.target.value || '';
+                    $('#edtDepartmentID').val('');
+                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                        $('#departmentModal').modal('toggle');
+                    } else {
+                        if (deptDataName.replace(/\s/g, '') != '') {
+                            $('#newDeptHeader').text('Edit Department');
+
+                            getVS1Data('TDeptClass').then(function (dataObject) {
+                                if (dataObject.length == 0) {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    sideBarService.getDepartment().then(function (data) {
+                                        for (let i = 0; i < data.tdeptclass.length; i++) {
+                                            if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                                $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                                $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                                $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                                $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                            }
+                                        }
+                                        setTimeout(function () {
+                                            LoadingOverlay.hide();
+                                            $('#newDepartmentModal').modal('toggle');
+                                        }, 200);
+                                    });
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.tdeptclass;
+                                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        }
+                                    }
+                                    setTimeout(function () {
+                                        LoadingOverlay.hide();
+                                        $('#newDepartmentModal').modal('toggle');
+                                    }, 200);
+                                }
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                sideBarService.getDepartment().then(function (data) {
+                                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        }
+                                    }
+                                    setTimeout(function () {
+                                        LoadingOverlay.hide();
+                                        $('#newDepartmentModal').modal('toggle');
+                                    }, 200);
+                                });
+                            });
+                        } else {
+                            $('#departmentModal').modal();
+                            setTimeout(function () {
+                                $('#departmentList_filter .form-control-sm').focus();
+                                $('#departmentList_filter .form-control-sm').val('');
+                                $('#departmentList_filter .form-control-sm').trigger("input");
+                                var datatable = $('#departmentList').DataTable();
+                                datatable.draw();
+                                $('#departmentList_filter .form-control-sm').trigger("input");
+                            }, 500);
+                        }
+                    }
+                });
+
+    });
     // $('#sltCurrency').editableSelect()
     //     .on('click.editable-select', function(e, li) {
     //         var $earch = $(this);
@@ -4076,81 +4155,7 @@ Template.billcard.onRendered(() => {
     //         }
     //     });
 
-    $('#sltDept').editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var deptDataName = e.target.value || '';
-            $('#edtDepartmentID').val('');
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#departmentModal').modal('toggle');
-            } else {
-                if (deptDataName.replace(/\s/g, '') != '') {
-                    $('#newDeptHeader').text('Edit Department');
 
-                    getVS1Data('TDeptClass').then(function (dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getDepartment().then(function (data) {
-                                for (let i = 0; i < data.tdeptclass.length; i++) {
-                                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                        $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                        $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                        $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                        $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                    }
-                                }
-                                setTimeout(function () {
-                                    LoadingOverlay.hide();
-                                    $('#newDepartmentModal').modal('toggle');
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tdeptclass;
-                            for (let i = 0; i < data.tdeptclass.length; i++) {
-                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#newDepartmentModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getDepartment().then(function (data) {
-                            for (let i = 0; i < data.tdeptclass.length; i++) {
-                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#newDepartmentModal').modal('toggle');
-                            }, 200);
-                        });
-                    });
-                } else {
-                    $('#departmentModal').modal();
-                    setTimeout(function () {
-                        $('#departmentList_filter .form-control-sm').focus();
-                        $('#departmentList_filter .form-control-sm').val('');
-                        $('#departmentList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#departmentList').DataTable();
-                        datatable.draw();
-                        $('#departmentList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
 
     // $('#edtSupplierName').editableSelect().on('click.editable-select', function(e, li) {
     //     var $earch = $(this);
@@ -5247,7 +5252,7 @@ Template.billcard.onRendered(() => {
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
         templateObject.setSupplierInfo();
-        $('#supplierListModal').modal('hide');
+        // $('#supplierListModal').modal('hide');
     });
 
 

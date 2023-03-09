@@ -12,7 +12,7 @@ import './js/vs1Login.js';
 import './js/appPopRelogin.js';
 import './Navigation/newsidenav.html';
 import './Navigation/header.html';
-import './popUps/supportpopup.html';
+import './popUps/supportpopup.js';
 import './vs1_templates/global_search/vs1_global_search_modal.html';
 
 import './js/newsidenav.js';
@@ -262,6 +262,8 @@ import './contacts/addCustomer.js';
 import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
+import './popUps/layoutpop.js';
+import './settings/service-checker/serviceChecker.js';
 
 /* Riley*/
 import './accounts/addApcaModal/addApcaModal.html';
@@ -336,6 +338,7 @@ import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
+import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -638,6 +641,10 @@ import './reports/exeprofitability/exeprofitability.js';
 /* Mainstar */
 import './inventory/binlocations/binlocations.js';
 /* Mainstar */
+
+/* Damien Begin */
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+/* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

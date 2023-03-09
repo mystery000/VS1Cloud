@@ -46,7 +46,7 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
   let ERPPassword = localStorage.getItem('EPassword');
   let ERPDatabase = localStorage.getItem('EDatabase');
   let ERPPort = localStorage.getItem('EPort');
-  const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID`; //,IsSetUpWizard
+  const apiUrl = `${URLRequest}${ERPIPAddress}:${ERPPort}/erpapi/TCompanyInfo?PropertyList=ID,IsSetUpWizard,Address3`; //,IsSetUpWizard
   const _headers = {
     database: ERPDatabase,
     username: ERPUsername,
@@ -59,10 +59,10 @@ export const handleSetupRedirection = (onSetupFinished = "/dashboard", onSetupUn
       if (result.data != undefined) {
         if (result.data.tcompanyinfo.length > 0) {
           let data = result.data.tcompanyinfo[0];
-          let cntConfirmedSteps = data.Address3 == "" ? 0 : parseInt(data.Address3);
+          let cntConfirmedSteps = data.IsSetUpWizard||false;
           let bSetupFinished = cntConfirmedSteps == confirmStepCount ? true : false;
           localStorage.setItem("IS_SETUP_FINISHED", bSetupFinished); //data.IsSetUpWizard
-          if (bSetupFinished == true) { // data.IsSetUpWizard
+          if (data.IsSetUpWizard == true) { // data.IsSetUpWizard
             window.open(onSetupFinished, '_self');
           } else {
             window.open(onSetupUnFinished, '_self');
@@ -280,17 +280,17 @@ Template.setup.onRendered(function () {
     let cntConfirmedSteps = arrConfirmedSteps.length;
     if (cntConfirmedSteps == confirmStepCount)
       allStepsConfirmed = true;
-    companyInfo.Address3 = cntConfirmedSteps.toString();
-
-    organisationService.saveOrganisationSetting({
+    companyInfo.IsSetUpWizard = await allStepsConfirmed;
+    //cntConfirmedSteps.toString();
+    await organisationService.saveOrganisationSetting({
       type: "TCompanyInfo",
       fields: companyInfo,
     });
 
     localStorage.setItem("IS_SETUP_FINISHED", allStepsConfirmed);
 
-    window.location.href = "/onloginsuccess";
-    // FlowRouter.go("onloginsuccess");
+    window.location.href = "/dashboard";
+    // FlowRouter.go("dashboard");
     LoadingOverlay.hide();
 
   };

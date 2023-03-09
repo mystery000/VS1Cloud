@@ -42,7 +42,7 @@ Template.addsupplierpop.onCreated(function() {
     templateObject.currentAttachLineID = new ReactiveVar();
 });
 
-Template.addsupplierpop.onRendered(function() {
+Template.addsupplierpop.onRendered(async function() {
     LoadingOverlay.show();
 
     let templateObject = Template.instance();
@@ -344,6 +344,88 @@ Template.addsupplierpop.onRendered(function() {
         custFld1: "",
         custFld2: "",
     };
+
+
+    async function getSupplierDetail(name) {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TSupplierVS1').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    contactService.getOneSupplierDataExByName(name).then(data=>{
+                        resolve(data.tsupplier[0])
+                    })
+                } else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tsuppliervs1;
+                    let added = false;
+                    for(let i=0; i<useData.length; i++) {
+                        if(useData[i].fields.ClientName == name) {
+                            added = true
+                            resolve(useData[i])
+                        }
+                    }
+                    if(added == false) {
+                        contactService.getOneSupplierDataExByName(name).then(data=>{
+                            resolve(data.tsupplier[0])
+                        })  
+                    }
+
+                }
+            }).catch(function(e) {
+                contactService.getOneSupplierDataExByName(name).then(data=>{
+                    resolve(data.tsupplier[0])
+                })
+            })
+        })
+    }
+    if(templateObject.data.name) {
+        let data = await getSupplierDetail(templateObject.data.name);
+        lineItemObj = {
+            id: data.fields.ID,
+            lid: 'Edit Supplier',
+            company: data.fields.ClientName || '',
+            email: data.fields.Email || '',
+            title: data.fields.Title || '',
+            firstname: data.fields.FirstName || '',
+            middlename: data.fields.CUSTFLD10 || '',
+            lastname: data.fields.LastName || '',
+            tfn: '' || '',
+            phone: data.fields.Phone || '',
+            mobile: data.fields.Mobile || '',
+            fax: data.fields.Faxnumber || '',
+            skype: data.fields.SkypeName || '',
+            website: data.fields.URL || '',
+            shippingaddress: data.fields.Street || '',
+            scity: data.fields.Street2 || '',
+            sstate: data.fields.State || '',
+            spostalcode: data.fields.Postcode || '',
+            scountry: data.fields.Country || LoggedCountry,
+            billingaddress: data.fields.BillStreet || '',
+            bcity: data.fields.BillStreet2 || '',
+            bstate: data.fields.BillState || '',
+            bpostalcode: data.fields.BillPostcode || '',
+            bcountry: data.fields.Billcountry || '',
+            custfield1: data.fields.CUSTFLD1 || '',
+            custfield2: data.fields.CUSTFLD2 || '',
+            custfield3: data.fields.CUSTFLD3 || '',
+            custfield4: data.fields.CUSTFLD4 || '',
+            notes: data.fields.Notes || '',
+            preferedpayment: data.fields.PaymentMethodName || '',
+            terms: data.fields.TermsName || '',
+            deliverymethod: data.fields.ShippingMethodName || '',
+            accountnumber: data.fields.ClientNo || 0.00,
+            isContractor: data.fields.Contractor || false,
+            issupplier: data.fields.IsSupplier || false,
+            iscustomer: data.fields.IsCustomer || false,
+            bankName: data.fields.BankName || '',
+            swiftCode: data.fields.SwiftCode || '',
+            routingNumber: data.fields.RoutingNumber || '',
+            bankAccountName: data.fields.BankAccountName || '',
+            bankAccountBSB: data.fields.BankAccountBSB || '',
+            bankAccountNo: data.fields.BankAccountNo || '',
+            foreignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
+        };
+
+    }
     templateObject.isSameAddress.set(true);
     templateObject.records.set(lineItemObj);
 
@@ -1157,7 +1239,8 @@ Template.addsupplierpop.events({
         }, delayTimeAfterSound);
     },
     "click .addsupplierpop .btnRefresh": function() {
-        Meteor._reload.reload();
+        //Meteor._reload.reload();
+        window.location.reload();
     },
 
     "click .addsupplierpop #formCheck-2": function() {

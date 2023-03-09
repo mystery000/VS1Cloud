@@ -419,9 +419,7 @@ Template.organisationsettings.onRendered(function () {
         var $earch = $(this);
         var offset = $earch.offset();
         $("#edtSupplierPOPID").val("");
-        var supplierDataName = e.target.value || "";
-        var supplierDataID =
-          $("#sltAccountant").attr("suppid").replace(/\s/g, "") || "";
+        var supplierDataName = e.target.value || "";        
         if (e.pageX > offset.left + $earch.width() - 8) {
           // X button 16px wide?
           $("#supplierListModal").modal();
@@ -994,12 +992,12 @@ Template.organisationsettings.onRendered(function () {
     $("#changeLogo").show();
   }
 
-  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-    const tableSupplier = $(this);
-    $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
-    $("#sltAccountant").attr("suppid", tableSupplier.find(".colID").text());
-    $("#supplierListModal").modal("toggle");
-  });
+  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+  //   const tableSupplier = $(this);
+  //   $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
+  //   $("#sltAccountant").attr("suppid", tableSupplier.find(".colID").text());
+  //   $("#supplierListModal").modal("toggle");
+  // });
 });
 
 Template.organisationsettings.helpers({

@@ -5662,37 +5662,37 @@ Template.creditcard.onRendered(() => {
     }
   })
 
-  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-    const tableSupplier = $(this);
-    $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
-    $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
-    $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
-    $("#edtSupplierEmail").attr(
-      "customerid",
-      tableSupplier.find(".colID").text()
-    );
-    $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
-    let postalAddress =
-      tableSupplier.find(".colCompany").text() +
-      "\n" +
-      tableSupplier.find(".colStreetAddress").text() +
-      "\n" +
-      tableSupplier.find(".colCity").text() +
-      " " +
-      tableSupplier.find(".colState").text() +
-      " " +
-      tableSupplier.find(".colZipCode").text() +
-      "\n" +
-      tableSupplier.find(".colCountry").text();
-    $("#txabillingAddress").val(postalAddress);
-    $("#pdfSupplierAddress").html(postalAddress);
-    $(".pdfSupplierAddress").text(postalAddress);
-    $("#txaShipingInfo").val(postalAddress);
-    $("#sltTerms").val(
-      tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms
-    );
-    setSupplierInfo();
-  });
+  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+  //   const tableSupplier = $(this);
+  //   $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
+  //   $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
+  //   $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
+  //   $("#edtSupplierEmail").attr(
+  //     "customerid",
+  //     tableSupplier.find(".colID").text()
+  //   );
+  //   $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
+  //   let postalAddress =
+  //     tableSupplier.find(".colCompany").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colStreetAddress").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colCity").text() +
+  //     " " +
+  //     tableSupplier.find(".colState").text() +
+  //     " " +
+  //     tableSupplier.find(".colZipCode").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colCountry").text();
+  //   $("#txabillingAddress").val(postalAddress);
+  //   $("#pdfSupplierAddress").html(postalAddress);
+  //   $(".pdfSupplierAddress").text(postalAddress);
+  //   $("#txaShipingInfo").val(postalAddress);
+  //   $("#sltTerms").val(
+  //     tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms
+  //   );
+  //   setSupplierInfo();
+  // });
 
   function setSupplierInfo() {
     if (!FlowRouter.current().queryParams.supplierid) {

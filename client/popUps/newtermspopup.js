@@ -38,9 +38,10 @@ Template.newtermspop.onCreated(function() {
     templateObject.includePurchaseDefault = new ReactiveVar();
     templateObject.includePurchaseDefault.set(false);
 
+    templateObject.record = new ReactiveVar()
 });
 
-Template.newtermspop.onRendered(function() {
+Template.newtermspop.onRendered(async function() {
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -486,6 +487,63 @@ Template.newtermspop.onRendered(function() {
         }
 
     });
+
+    templateObject.getRecord = async function() {
+        return new Promise(async(resolve, reject)=>{
+            let name = templateObject.data.name
+                getVS1Data('TTermsVS1List').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        sideBarService.getOneTermsByTermName(name).then(data=> {
+                            resolve(data.ttermsvs1list[0])
+                        })
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.ttermsvs1list;
+                        let added = false;
+                        for(let i = 0; i< useData.length; i++) {
+                            if (useData[i].Terms == name) {
+                                added = true
+                                resolve(useData[i])
+                            }
+                        }
+                        if(added == false) {
+                            sideBarService.getOneTermsByTermName(name).then(data=> {
+                                resolve(data.ttermsvs1list[0])
+                            })  
+                        }
+                    }
+                }).catch(function(err) {
+                    sideBarService.getOneTermsByTermName(name).then(data=> {
+                        resolve(data.ttermsvs1list[0])
+                    })
+                })
+        })
+    }
+
+    if(templateObject.data.name) {
+        let detail = await templateObject.getRecord();
+        let record = {
+            days: detail.EarlyPaymentDiscount || 0,
+            termname: templateObject.data.name,
+            description: detail.Description,
+            isEOM: detail.IsEOM,
+            isEOMPlus: detail.IsEOMPlus,
+            customerDefault: detail.IsSalesDefault,
+            supplierDefault: detail.IsPurchaseDefault
+        }
+        templateObject.record.set(record)
+    } else {
+        let record = {
+            days: '',
+            termname: '',
+            description:'',
+            isEOM: false,
+            isEOMPlus: false,
+            customerDefault: false,
+            supplierDefault: false,
+        }
+        templateObject.record.set(record)
+    }
 });
 
 
@@ -962,9 +1020,11 @@ Template.newtermspop.events({
             event.keyCode == 46 || event.keyCode == 190) {} else {
             event.preventDefault();
         }
+    },
+
+    'blur #edtCustomerCreditLimit, blur #edtSupplierCreditLimit': function(event) {
+        if ($(event.currentTarget).val().indexOf(Currency) !== 0) $(event.currentTarget).val(Currency + $(event.currentTarget).val())
     }
-
-
 });
 
 Template.newtermspop.helpers({
@@ -1020,6 +1080,9 @@ Template.newtermspop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+    record: ()=> {
+        return Template.instance().record.get()
     }
 });
 

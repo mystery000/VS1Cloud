@@ -158,6 +158,21 @@
             <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
         </button>
     </div>
+    <div class="row no-gutters justify-content-end">
+        <div class="form-group float-right" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+            <label style="margin-top: 8px; margin-right: 16px;">From</label>
+            <div class="input-group date" style="width: 160px;">
+                <input type="text" class="form-control" id="dateFrom_charts" name="dateFrom_charts">
+            </div>
+        </div>
+        <div class="form-group float-right" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+            <label style="margin-top: 8px; margin-right: 16px;">To</label>
+            <div class="input-group date" style="width: 160px;">
+                <input type="text" class="form-control" id="dateTo_charts" name="dateTo_charts" >
+            </div>
+        </div>
+    </div>  
+
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart"
         data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
         <!-- New Charts -->
@@ -169,7 +184,7 @@
 
         {{#if is_available_chart currentTemplate "monthlyprofitandloss"}}
         {{> monthlyprofitandloss
-        md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss"}}
+        md=8 defaultPosition=2 key="dashboard__monthyl_profit_and_loss" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "mytaskswidgetchart"}}
@@ -195,12 +210,12 @@
 
         {{#if is_available_chart currentTemplate "quotedsalesorderinvoicedamounts"}}
         {{> quotedsalesorderinvoicedamounts
-        md=4 defaultPosition=1 key="sales__sales_overview" }}
+        md=4 defaultPosition=1 key="sales__sales_overview" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "accountrevenuestreams"}}
         {{> accountrevenuestreams
-        md=8 defaultPosition=2 key="accounts__revenue_streams"}}
+        md=8 defaultPosition=2 key="accounts__revenue_streams" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "profitandlosschart"}}
@@ -233,7 +248,7 @@
 
         {{#if is_available_chart currentTemplate "expenseschart"}}
         {{> expenseschart
-        md=8 defaultPosition=14 key="dashboard__expenses" }}
+        md=8 defaultPosition=14 key="dashboard__expenses" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "monthlyearnings"}}
@@ -263,12 +278,12 @@
 
         {{#if is_available_chart currentTemplate "monthllyexpenses"}}
         {{> monthllyexpenses
-        md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
+        md=8 defaultPosition=21 key="purchases__monthly_expenses" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "expensebreakdown"}}
         {{> expensebreakdown
-        md=4 defaultPosition=22 key="purchases__expenses_breakdown" }}
+        md=4 defaultPosition=22 key="purchases__expenses_breakdown" updateChart=updateChart}}
         {{/if}}
 
         {{#if is_available_chart currentTemplate "absenteeRate"}}
