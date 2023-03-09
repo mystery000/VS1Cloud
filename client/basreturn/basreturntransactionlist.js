@@ -7,6 +7,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './basreturntransactionlist.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let reportService = new ReportService();
 let utilityService = new UtilityService();
@@ -29,6 +30,27 @@ Template.basreturntransactionlist.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: "BAS Number", class: "colBasNumber", width: "80", active: true, display: true },
+        { index: 1, label: "Description", class: "colBasName", width: "250", active: true, display: true },
+        { index: 2, label: "GST\nPeriod", class: "t1Period", width: "100", active: true, display: true },
+        { index: 3, label: "GST\nFrom", class: "t1From", width: "120", active: true, display: true },
+        { index: 4, label: "GST\nTo", class: "t1To", width: "120", active: true, display: true },
+        { index: 5, label: "Withheld\nPeriod", class: "t2Period", width: "100", active: true, display: true },
+        { index: 6, label: "Withheld\nFrom", class: "t2From", width: "120", active: true, display: true },
+        { index: 7, label: "Withheld\nTo", class: "t2To", width: "120", active: true, display: true },
+        { index: 8, label: "instalment\nPeriod", class: "t3Period", width: "100", active: true, display: true },
+        { index: 9, label: "instalment\nFrom", class: "t3From", width: "120", active: true, display: true },
+        { index: 10, label: "instalment\nTo", class: "t3To", width: "120", active: true, display: true },
+        { index: 11, label: "Active", class: "colStatus", width: "60", active: true, display: true },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.basreturntransactionlist.onRendered(function() {
