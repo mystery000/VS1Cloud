@@ -88,7 +88,7 @@ Template.binlocationslist.onRendered(function () {
       });
     });
   }
-  templateObject.setBinRecords = async function (data) {console.log(data);
+  templateObject.setBinRecords = async function (data) {
     let binrecords = [];
     for (let i in data.tproductbin) {
       let binrecordObj = {
@@ -488,7 +488,6 @@ Template.binlocationslist.helpers({
         return (a.binnumber - 0 < b.binnumber - 0) ? -1 : 1;
       }
     }
-    console.log(binData);
     return binData.sort(sortFunction);
   },
   binlocationarray: () =>{
