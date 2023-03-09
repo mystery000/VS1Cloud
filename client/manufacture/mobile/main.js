@@ -741,9 +741,8 @@ Template.mobileapp.events({
         Template.instance().isSelectEmployeeNumber.set(false);
 
         let jobNumber = Template.instance().jobNumber.get();
-        alert(jobNumber);
-
         let templateObject = Template.instance();
+        
         $('.fullScreenSpin').css('display', 'inline-block');
         
         templateObject.getAllWorkorders = async function() {
@@ -778,16 +777,10 @@ Template.mobileapp.events({
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
                
                 $('.fullScreenSpin').css('display', 'none')
-                swal('Process Completed', '', 'success');
+                swal('Work Order state is updated', '', 'success');
             })
         }
-
-        
-
-
-
-
-
+   
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
         $("#btnClockIn").prop('disabled',true);
@@ -805,6 +798,7 @@ Template.mobileapp.events({
         $(".mobile-main-input").val(" ");
 
     },
+
     'change #breakCheck': function(e, instance) {
 
         if($('#breakCheck').is(":checked") == true){
