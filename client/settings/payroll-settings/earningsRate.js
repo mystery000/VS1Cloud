@@ -145,7 +145,7 @@ Template.earningRateSettings.onRendered(function() {
 
 
 
-        // const resp = await getVS1Data(erpObject.TEarningData);
+        // const resp = await getVS1Data(erpObject.TEarnings);
         // let data = resp.length > 0 ? JSON.parse(resp[0].data) : [];
         const response  = data.response;
 
