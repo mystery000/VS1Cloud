@@ -253,8 +253,18 @@ Template.frmappointmentpop.onRendered(function() {
                 custFld13: getAppointmentInfo.fields.CUSTFLD13 || "",
                 custFld11: getAppointmentInfo.fields.CUSTFLD11 || "",
             };
-            var getEmployeeInfo = await contactService.getOneEmployeeDataByName(appointment.employeename);
-            templateObject.empID.set(getEmployeeInfo.temployee[0].fields.ID);
+            getVS1Data("TEmployee")
+            .then(async function(dataObject) {
+                if(dataObject.length == 0){
+                    let getEmployeeInfo = await contactService.getOneEmployeeDataByName(appointment.employeename);
+                    templateObject.empID.set(getEmployeeInfo?.temployee[0]?.fields?.ID);
+                }else{
+                    let data = JSON.parse(dataObject[0].data)
+                    let useData = data.temployee;
+                    let getEmployeeInfo = useData.filter((item) => item?.fields?.EmployeeName == appointment.employeename)
+                    templateObject.empID.set(getEmployeeInfo[0]?.fields?.ID);
+                }
+            })
 
             datalist.push(appointment);
             templateObject.productFees.set(appointment.extraProducts);
