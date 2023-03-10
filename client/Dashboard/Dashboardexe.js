@@ -1405,6 +1405,7 @@ Template.dashboardexe.events({
         chartsEditor.enable();
         const templateObject = Template.instance();
         templateObject.showChartElements();
+        $(".card-visibility").removeClass('hideelement');
     },
     "click #btnReset2": async(event) => {
         event.preventDefault();
@@ -1466,6 +1467,7 @@ Template.dashboardexe.events({
             chartsEditor.disable();
             await templateObject.hideChartElements();     
             await templateObject.checkChartToDisplay();
+            $(".card-visibility").addClass('hideelement');
             $(".fullScreenSpin").css("display", "none");
             //templateObject.deactivateDraggable();
         }, delayTimeAfterSound);
@@ -1482,6 +1484,12 @@ Template.dashboardexe.events({
             // Save Into local indexDB
             await ChartHandler.saveChartsInLocalDB();
             await templateObject.checkChartToDisplay();
+
+            let cards = $(".card-visibility");
+            $.each(cards, function (i, card) {
+                if ($(card).attr("card-active") == 'false') $(card).addClass("hideelement");
+            });
+
             $(".fullScreenSpin").css("display", "none");
 
             localStorage.setItem("arrChartActive", JSON.stringify(curChartActive));
