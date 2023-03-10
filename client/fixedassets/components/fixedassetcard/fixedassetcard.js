@@ -31,6 +31,7 @@ Template.fixedassetcard.onCreated(function () {
   templateObject.edtDepreciationExpenseAccount2 = new ReactiveVar(0);
 
   templateObject.edtSupplierId = new ReactiveVar(0);
+  templateObject.edtDepartmentId = new ReactiveVar(0);
   templateObject.edtInsuranceById = new ReactiveVar(0);
 
   templateObject.chkEnterAmount = new ReactiveVar(true);
@@ -111,6 +112,11 @@ Template.fixedassetcard.onRendered(function () {
   $('#edtSupplierName').editableSelect().on('click.editable-select', function (e, li) {
     $('#supplierListModal').modal('show');
     $('input#edtSupplierType').val('supplier');
+  });
+
+  $('#edtDepartmentName').editableSelect();
+  $('#edtDepartmentName').editableSelect().on('click.editable-select', function (e, li) {
+    $('#departmentModal').modal('show');
   });
 
   $('#edtInsuranceByName').editableSelect();
@@ -217,6 +223,12 @@ Template.fixedassetcard.onRendered(function () {
     $('#supplierListModal').modal('hide');
   });
 
+  $(document).on("click", "#departmentList tbody tr", function(e) {
+    $('input#edtDepartmentName').val($(this).find('td.colDeptName').html());
+    templateObject.edtDepartmentId.set(parseInt($(this).attr('id').html()));
+    $('div#departmentModal').modal('hide');
+  });
+
   $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
     const accountName = $(this).find('td.colAccountName').html();
     const accountId = parseInt($(this).find('td.colAccountId').html());
@@ -266,6 +278,8 @@ Template.fixedassetcard.onRendered(function () {
     $("#edtDateofPurchase").val(getDatePickerForm(assetInfo.PurchDate));
     $("#edtDepreciationStartDate").val(getDatePickerForm(assetInfo.DepreciationStartDate)); // Depeciation Start Date
     templateObject.edtSupplierId.set(assetInfo.SupplierID);
+    templateObject.edtDepartmentId.set(assetInfo.PARTSID);
+    $("#edtDepartmentName").val(assetInfo.PARTNAME);
     // -----------------
     $("#edtLastTestDate").val(getDatePickerForm(assetInfo.LastTestDate));
     $("#edtNextTestDate").val(getDatePickerForm(assetInfo.NextTestDate));
@@ -384,6 +398,8 @@ Template.fixedassetcard.events({
         DepreciationStartDate: templateObject.getDateStr($("#edtDepreciationStartDate").datepicker("getDate")),
         PurchDate: templateObject.getDateStr($("#edtDateofPurchase").datepicker("getDate")),
         SupplierID: templateObject.edtSupplierId.get(),
+        PARTSID: templateObject.edtDepartmentId.get(),
+        PARTNAME: $('input#edtDepartmentName').val(),
         //
         LastTestDate: templateObject.getDateStr($("#edtLastTestDate").datepicker("getDate")),
         NextTestDate: templateObject.getDateStr($("#edtNextTestDate").datepicker("getDate")),

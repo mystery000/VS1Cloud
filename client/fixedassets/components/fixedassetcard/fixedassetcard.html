@@ -306,7 +306,7 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Department</label>
-                        <select type="search" class="form-control" id="" name=""
+                        <select type="search" class="form-control" id="edtDepartmentName" name="edtDepartmentName" suppid=" "
                           style="background-color:rgb(255, 255, 255); cursor: pointer;">
                         </select>
                       </div>
@@ -1001,6 +1001,9 @@
   {{> vs1_attachments }}
   <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
     {{> accountlistpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+    {{> departmentpop}}
   </div>
 
 </template>
