@@ -13798,7 +13798,7 @@ Template.purchaseordercard.events({
                 });
             }
         });
-        if (!existProduct) {
+        // if (!existProduct) {
             if (selectedProductName == '') {
                 $('.fullScreenSpin').css('display', 'none');
                 swal('You have to select Product.', '', 'info');
@@ -13910,7 +13910,7 @@ Template.purchaseordercard.events({
                     }
                 });
             }
-        }
+        // }
         localStorage.setItem('productname', selectedProductName);
         let selectedunit = $(target).closest('tr').find('.lineOrdered').val();
         localStorage.setItem('productItem', selectedunit);

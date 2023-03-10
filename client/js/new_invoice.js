@@ -11195,7 +11195,7 @@ Template.new_invoice.events({
           existProduct = true;
         }
       });
-      if (!existProduct) {
+      // if (!existProduct) {
         if (selectedProductName == "") {
           swal("You have to select Product.", "", "info");
           event.preventDefault();
@@ -11365,7 +11365,7 @@ Template.new_invoice.events({
             });
           });
         }
-      }
+      // }
     }
   },
   "click .btnSnLotmodal": function (event) {
@@ -11386,7 +11386,7 @@ Template.new_invoice.events({
           existProduct = true;
         }
       });
-      if (!existProduct) {
+      // if (!existProduct) {
         if (selectedProductName == "") {
           swal("You have to select Product.", "", "info");
           event.preventDefault();
@@ -11921,7 +11921,7 @@ Template.new_invoice.events({
             });
           });
         }
-      }
+      // }
     }
   },
   "click .btnSNCreate": function (event) {

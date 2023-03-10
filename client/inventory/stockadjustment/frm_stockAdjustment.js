@@ -3642,7 +3642,7 @@ Template.stockadjustmentcard.events({
         let productService = new ProductService();
         const templateObject = Template.instance();
         let existProduct = false;
-        if(parseInt($(target).val()) > 0){
+        if(parseInt($(target).val()) != 0 && parseInt($(target).val()) != ""){
             if (selectedProductName == "") {
                 swal("You have to select Product.", "", "info");
                 event.preventDefault();
@@ -3823,7 +3823,7 @@ Template.stockadjustmentcard.events({
         let productService = new ProductService();
 
         const templateObject = Template.instance();
-        if(parseInt(selectedunit) > 0){
+        if(parseInt(selectedunit) != 0 && parseInt(selectedunit) != ""){
             if (selectedProductName == "") {
                 swal("You have to select Product.", "", "info");
                 event.preventDefault();
