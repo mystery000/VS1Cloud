@@ -10189,6 +10189,7 @@ Template.employeescard.helpers({
       })
       temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
     }
+    temp.dashboardOptions = "All";
     return temp;
   },
   employeePayInfo: () => {
