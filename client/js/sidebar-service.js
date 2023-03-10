@@ -2970,11 +2970,12 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TDeptClassList, options);
   }
 
-  getTripGroup() {
+  getTripGroup(limitfrom, limitcount, deleteFilter) {
     let options = {
       PropertyList:"ID,TripName,Description,Active",
       select: "[Active]=true",
     };
+    if(deleteFilter) options.select = "";
     return this.getList(this.ERPObjects.TTripGroup, options);
   }
 

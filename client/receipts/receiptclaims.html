@@ -1623,28 +1623,43 @@
                 <div class="modal-body">
                     <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
                     <div class="card-body p-1 rounded" >
-                        <div class="table-responsive">
-                            <style>
-                                .thTripName {
-                                    width: 40% !important;
-                                }
-                                .thDescription {
-                                    width: 60% !important;
-                                }
-                            </style>
-                            <table id="tblTripGroup" style="width:100%" class="table table-striped table-bordered tblTripGroup">
-                                <thead>
-                                <tr class="dnd-moved">
-                                    <th class="thTripName">Trip Name</th>
-                                    <th class="thDescription">Description</th>
-                                    <th class="thTripGroupID hiddenColumn">Trip Group ID</th>
-                                </tr>
-                                </thead>
-                                <tbody>
+                        {{>datatablelist
+                                tablename="tblTripGroup"
+                                apiName= apiFunction_TripGroup
+                                indexeddbname = 'TTripGroup'
+                                tableheaderrecords = tableheaderrecords_TripGroup
+                                exportfilename = 'Trip Group List'
+                                istransaction = false
+                                apiParams= apiParams_TripGroup
+                                datahandler = datahandler_TripGroup
+                                service=service_TripGroup
+                                lowercaseDataName='ttripgroup'
+                                exIndexDBName = 'ttripgroup'
+                                exdatahandler = exDataHandler_TripGroup
+                                searchAPI = searchAPI_TripGroup
+                        }}
+<!--                        <div class="table-responsive">-->
+<!--                            <style>-->
+<!--                                .thTripName {-->
+<!--                                    width: 40% !important;-->
+<!--                                }-->
+<!--                                .thDescription {-->
+<!--                                    width: 60% !important;-->
+<!--                                }-->
+<!--                            </style>-->
+<!--                            <table id="tblTripGroup" style="width:100%" class="table table-striped table-bordered tblTripGroup">-->
+<!--                                <thead>-->
+<!--                                <tr class="dnd-moved">-->
+<!--                                    <th class="thTripName">Trip Name</th>-->
+<!--                                    <th class="thDescription">Description</th>-->
+<!--                                    <th class="thTripGroupID hiddenColumn">Trip Group ID</th>-->
+<!--                                </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
 
-                                </tbody>
-                            </table>
-                        </div>
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
                     </div>
                 </div>
                 <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
