@@ -1750,12 +1750,12 @@ Template.supplierscard.events({
         let supplierSaveID = objDetails.fields.ID;
         if (supplierSaveID) {
           organisationService.getOrganisationDetail().then(function(data) {
-            if (data && data.tcompanyinfo && data.tcompanyinfo[0])
+            if (!data || !data.tcompanyinfo || !data.tcompanyinfo[0]) return
             data.tcompanyinfo[0] = {...data.tcompanyinfo[0], Contact: company}         
             let organisationSettings = {type: "TCompanyInfo", fields: data.tcompanyinfo[0]}
             organisationService
               .saveOrganisationSetting(organisationSettings)
-              .then(function (data) {
+              .then(function () {
                   localStorage.setItem("VS1Accountant", company);
                   addVS1Data('TCompanyInfo', JSON.stringify(data));
                   swal("Organisation details successfully updated!", "", "success")
