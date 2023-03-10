@@ -42,7 +42,6 @@ Template.payrollleave.onCreated(()=>{
 
   templateObject.tableLeaveRequestheaderrecords = new ReactiveVar([]);
   templateObject.getDataTableList = function(data) {
-    console.log('data=================:',data)
     dataList = [
       data.fields.ID || '',
       data.fields.Description || '',
@@ -56,35 +55,13 @@ Template.payrollleave.onCreated(()=>{
 
   let headerStructure = [
     { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
-    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
+    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "500" },
     { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
     { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
     { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
     { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
   ];
   templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
-  templateObject.saveLeaveRequestLocalDB = async ()=> {
-    const employeePayrolApis = new EmployeePayrollApi();
-    // now we have to make the post request to save the data in database
-    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-      employeePayrolApis.collectionNames.TLeavRequest
-    );
-
-    employeePayrolEndpoint.url.searchParams.append(
-      "ListType",
-      "'Detail'"
-    );
-    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
-    if (employeePayrolEndpointResponse.ok == true) {
-      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-      if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
-        await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
-      }
-      return employeePayrolEndpointJsonResponse
-    }
-    return [];
-  };
 });
 
 function MakeNegative() {}
@@ -451,6 +428,28 @@ Template.payrollleave.onRendered(function() {
       $("#newLeaveRequestModal").find(".modal-title.new-leave-title").addClass("hide");
       $("#newLeaveRequestModal").find(".modal-title.edit-leave-title").removeClass("hide");
     }
+    templateObject.saveLeaveRequestLocalDB = async ()=> {
+      const employeePayrolApis = new EmployeePayrollApi();
+      // now we have to make the post request to save the data in database
+      const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+        employeePayrolApis.collectionNames.TLeavRequest
+      );
+  
+      employeePayrolEndpoint.url.searchParams.append(
+        "ListType",
+        "'Detail'"
+      );
+      const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+  
+      if (employeePayrolEndpointResponse.ok == true) {
+        const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+        if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
+          await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+        }
+        return employeePayrolEndpointJsonResponse
+      }
+      return [];
+    };
   };
 
   templateObject.saveLeave = async (leaveId = null) => {
@@ -801,6 +800,9 @@ Template.payrollleave.helpers({
   leaveRequestFiltered: () => {
     return Template.instance().leaveRequestFiltered.get();
   },
+  tableLeaveRequestheaderrecords: () => {
+      return Template.instance().tableLeaveRequestheaderrecords.get();
+  },
   formatDate: date => moment(date).format("Do MMM YYYY"),
   leaveTypes: () => Template.instance().leaveTypes.get(),
   apiFunction:async()=> {
@@ -813,26 +815,14 @@ Template.payrollleave.helpers({
   },
   datahandler: function () {
     let templateObject = Template.instance();
-    console.log('datahandler')
-  //   return [
-  //     13,
-  //     "Leave",
-  //     "Weekly",
-  //     "Long Service Leave",
-  //     "Approved",
-  //     "<button type=\"button\" class=\"btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn\" data-id=\"13\" autocomplete=\"off\"><i class=\"fa fa-remove\"></i></button>"
-  // ]
     return function(data) {
-      console.log('data:',data)
         let dataReturn =  templateObject.getDataTableList(data)
         return dataReturn
     }
   },
   exDataHandler: function() {
     let templateObject = Template.instance();
-    console.log('exDataHandler')
     return function(data) {
-      console.log('exDataHandler-data:',data)
         let dataReturn =  templateObject.getDataTableList(data)
         return dataReturn
     }
