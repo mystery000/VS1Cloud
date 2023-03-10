@@ -513,27 +513,40 @@ Template.fixedassetcard.events({
   },
   "click input#edtCostAssetAccount": function() {
     $('#accountListModal').modal('show');
-    $('#accountListModal button#btnRefreshList').hide();
-    $('#accountListModal button#btnViewDeleted').hide();
     $('input#edtAccountType').val('edtCostAssetAccount');
   },
   "click input#editBankAccount": function() {
     $('#accountListModal').modal('show');
-    $('#accountListModal button#btnRefreshList').hide();
-    $('#accountListModal button#btnViewDeleted').hide();
     $('input#edtAccountType').val('editBankAccount');
   },
   "click input#edtDepreciationAssetAccount": function() {
     $('#accountListModal').modal('show');
-    $('#accountListModal button#btnRefreshList').hide();
-    $('#accountListModal button#btnViewDeleted').hide();
     $('input#edtAccountType').val('edtDepreciationAssetAccount');
   },
   "click input#edtDepreciationExpenseAccount": function() {
     $('#accountListModal').modal('show');
-    $('#accountListModal button#btnRefreshList').hide();
-    $('#accountListModal button#btnViewDeleted').hide();
     $('input#edtAccountType').val('edtDepreciationExpenseAccount');
+  },
+
+  "click input#edtCostAssetAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtCostAssetAccount2');
+  },
+  "click input#editBankAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('editBankAccount2');
+  },
+  "click input#edtDepreciationAssetAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtDepreciationAssetAccount2');
+  },
+  "click input#edtDepreciationExpenseAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtDepreciationExpenseAccount2');
+  },
+
+  "click button#btnAddAttachment": function() {
+    $('#myModalAttachment').modal('show');
   },
   // 'change select#edtCostAssetAccount': function(event) {
   //   Template.instance().edtCostAssetAccount.set(event.target.value);

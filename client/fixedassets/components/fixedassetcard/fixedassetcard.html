@@ -828,7 +828,7 @@
               <div class="tab-pane border rounded-0 tab-disposal" role="tabpanel" id="tab-disposal">
                 <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
-                    <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkDisposalAsset" name="chkDisposalAsset" style="cursor: pointer;" additionalqty="1" checked="{{#if chkDisposalAsset}}checked{{/if}}" />
+                    <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkDisposalAsset" name="chkDisposalAsset" style="cursor: pointer;" additionalqty="1" />
                     <label class="custom-control-label" for="chkDisposalAsset" style="cursor: pointer;">Disposal of Asset</label> 
                   </div>
 
@@ -998,7 +998,7 @@
         </div>
     </div>
   </div>
-
+  {{> vs1_attachments }}
   <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
     {{> accountlistpop}}
   </div>
