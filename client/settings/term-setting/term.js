@@ -7,6 +7,8 @@ import { Template } from 'meteor/templating';
 import "./term.html";
 import XLSX from "xlsx";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from 'moment';
+
 let sideBarService = new SideBarService();
 Template.termsettings.inheritsHooksFrom("non_transactional_list");
 
@@ -109,7 +111,7 @@ Template.termsettings.onCreated(function () {
       data.ProgressPaymentType || "",
       data.ProgressPaymentDuration || 0.00,
       data.ProgressPaymentInstallments || 0.00,
-      data.ProgressPaymentfirstPayonSaleDate || 0.00,
+      moment(data.ProgressPaymentfirstPayonSaleDate).format("DD/MM/YYYY") || 0.00,
     ];
     return dataList;
   }
