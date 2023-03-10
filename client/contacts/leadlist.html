@@ -42,7 +42,22 @@
             </div>
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0 16px;">
-                    {{> non_transactional_list tablename="tblLeadlist"}}
+<!--                    {{> non_transactional_list tablename="tblLeadlist"}}-->
+                    {{>datatablelist
+                            tablename="tblLeadlist"
+                            apiName= apiFunction
+                            indexeddbname = 'TProspectList'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Lead List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tprospectlist'
+                            exIndexDBName = 'tprospectlist'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                 </div>
             </div>
         </div>

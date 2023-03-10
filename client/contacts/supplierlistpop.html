@@ -16,6 +16,21 @@
                     <!-- {{> refreshbutton}} -->
                 </div>
             </div>
+            {{>datatablelist
+                    tablename="tblSupplierlist"
+                    apiName= apiFunction
+                    indexeddbname = 'TSupplierVS1List'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Supplier VS1 List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tsuppliervs1list'
+                    exIndexDBName = 'tsuppliervs1list'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
 <!--            <div class="d-xl-flex justify-content-xl-end">-->
 <!--                <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">-->
 <!--                    <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">-->
@@ -106,22 +121,6 @@
 <!--                </div>-->
 <!--            </div>-->
             <!-- End -->
-
-            {{>datatablelist
-                    tablename="tblSupplierlist"
-                    apiName= apiFunction
-                    indexeddbname = 'TSupplierVS1'
-                    tableheaderrecords = tableheaderrecords
-                    exportfilename = 'Supplier VS1 List'
-                    istransaction = false
-                    apiParams= apiParams
-                    datahandler = datahandler
-                    service=service
-                    lowercaseDataName='tsuppliervs1'
-                    exIndexDBName = 'tsuppliervs1'
-                    exdatahandler = exDataHandler
-                    searchAPI = searchAPI
-            }}
 <!--            <div class="table-responsive">-->
 <!--                <style>-->
 <!--                    th {-->
