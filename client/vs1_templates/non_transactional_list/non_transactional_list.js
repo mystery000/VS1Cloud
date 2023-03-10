@@ -2788,6 +2788,9 @@ Template.non_transactional_list.onRendered(function() {
                         targets: 0,
                         className: "colCompany",
                         width: "200px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
                     },
                     {
                         targets: 1,
