@@ -32,16 +32,17 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 const contactService = new ContactService();
 
-Template.payrollleave.onCreated(function () {
+Template.payrollleave.onCreated(()=>{
   const templateObject = Template.instance();
-  this.leaveRequests = new ReactiveVar([]);
-  this.leaveRequestFiltered = new ReactiveVar([]);
-  this.employees = new ReactiveVar([]);
+  templateObject.leaveRequests = new ReactiveVar([]);
+  templateObject.leaveRequestFiltered = new ReactiveVar([]);
+  templateObject.employees = new ReactiveVar([]);
 
-  this.leaveTypes = new ReactiveVar([]);
+  templateObject.leaveTypes = new ReactiveVar([]);
 
-  this.tableLeaveRequestheaderrecords = new ReactiveVar([]);
-  this.getDataTableList = function(data) {
+  templateObject.tableLeaveRequestheaderrecords = new ReactiveVar([]);
+  templateObject.getDataTableList = function(data) {
+    console.log('data=================:',data)
     dataList = [
       data.fields.ID || '',
       data.fields.Description || '',
@@ -61,15 +62,37 @@ Template.payrollleave.onCreated(function () {
     { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
     { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
   ];
-  this.tableLeaveRequestheaderrecords.set(headerStructure);
+  templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
+  templateObject.saveLeaveRequestLocalDB = async ()=> {
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+      employeePayrolApis.collectionNames.TLeavRequest
+    );
+
+    employeePayrolEndpoint.url.searchParams.append(
+      "ListType",
+      "'Detail'"
+    );
+    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+    if (employeePayrolEndpointResponse.ok == true) {
+      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+      if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
+        await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+      }
+      return employeePayrolEndpointJsonResponse
+    }
+    return [];
+  };
 });
 
 function MakeNegative() {}
 
-Template.payrollleave.onRendered(function () {
+Template.payrollleave.onRendered(function() {
   const templateObject = Template.instance();
-  this.loadLeaves = async (refresh = false) => {
-    const employees = await this.employees.get();
+  templateObject.loadLeaves = async (refresh = false) => {
+    const employees = await templateObject.employees.get();
     let data = await CachedHttp.get("TLeavRequest", async () => {
       const employeePayrolApis = new EmployeePayrollApi();
       // now we have to make the post request to save the data in database
@@ -104,51 +127,51 @@ Template.payrollleave.onRendered(function () {
       };
     });
 
-    this.leaveRequests.set(leaves);
+    templateObject.leaveRequests.set(leaves);
   };
 
-  this.loadLeavesHistory = async (refreshTable = false) => {
-    const leaves = await this.leaveRequests.get();
+  templateObject.loadLeavesHistory = async (refreshTable = false) => {
+    const leaves = await templateObject.leaveRequests.get();
     const currentDate = moment();
 
     let allPassedLeaves = leaves.filter(leave => moment(leave.StartDate).isBefore(currentDate));
-    await this.leaveRequestFiltered.set(allPassedLeaves);
+    await templateObject.leaveRequestFiltered.set(allPassedLeaves);
     if (refreshTable) {
-      this.dataTableSetup(refreshTable);
+      templateObject.dataTableSetup(refreshTable);
     }
   };
 
-  this.loadLeavesToReview = async (refreshTable = false) => {
-    const leaves = this.leaveRequests.get();
+  templateObject.loadLeavesToReview = async (refreshTable = false) => {
+    const leaves = templateObject.leaveRequests.get();
     const currentDate = moment();
 
     let allFutureLeaves = leaves.filter(leave => moment(leave.StartDate).isAfter(currentDate));
     let toReview = allFutureLeaves.filter(leave => leave.Status != "Approved");
-    await this.leaveRequestFiltered.set(toReview);
+    await templateObject.leaveRequestFiltered.set(toReview);
     if (refreshTable) {
-      this.dataTableSetup(refreshTable);
+      templateObject.dataTableSetup(refreshTable);
     }
   };
 
-  this.loadUpComingLeaves = async (refreshTable = false) => {
-    const leaves = await this.leaveRequests.get();
+  templateObject.loadUpComingLeaves = async (refreshTable = false) => {
+    const leaves = await templateObject.leaveRequests.get();
     const currentDate = moment();
 
     let allFutureLeaves = leaves.filter(leave => moment(leave.StartDate).isAfter(currentDate));
     let upComingLeaves = allFutureLeaves; // allFutureLeaves.filter(leave => leave.Status == "Approved");
-    await this.leaveRequestFiltered.set(upComingLeaves);
+    await templateObject.leaveRequestFiltered.set(upComingLeaves);
 
     if (refreshTable) {
-      this.dataTableSetup(refreshTable);
+      templateObject.dataTableSetup(refreshTable);
     }
   };
 
-  this.loadDefaultScreen = async (refresh = false) => {
-    await this.loadLeavesToReview(refresh);
+  templateObject.loadDefaultScreen = async (refresh = false) => {
+    await templateObject.loadLeavesToReview(refresh);
   };
 
-  this.loadEmployees = async (refresh = false) => {
-    await this.employees.set([]);
+  templateObject.loadEmployees = async (refresh = false) => {
+    await templateObject.employees.set([]);
     let data = await CachedHttp.get(erpObject.TEmployee, async () => {
       return await contactService.getAllEmployees();
     }, {
@@ -166,10 +189,10 @@ Template.payrollleave.onRendered(function () {
       ? data.temployee.map(e => e.fields)
       : data.temployee;
 
-    await this.employees.set(employees);
+    await templateObject.employees.set(employees);
   };
 
-  this.dataTableSetup = (destroy = false) => {
+  templateObject.dataTableSetup = (destroy = false) => {
     if (destroy) {
       $("#tblPayleaveToReview").DataTable().destroy();
     }
@@ -327,7 +350,7 @@ Template.payrollleave.onRendered(function () {
             $(".paginate_button.page-item.next").addClass("disabled");
           }
 
-          $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
+          $(".paginate_button.next:not(.disabled)", templateObject.api().table().container()).on("click", function () {
             LoadingOverlay.show();
 
             var splashArrayAssignLeaveListDupp = new Array();
@@ -409,11 +432,11 @@ Template.payrollleave.onRendered(function () {
     }, 100);
   };
 
-  this.pasteLeaveToModal = async leaveId => {
+  templateObject.pasteLeaveToModal = async leaveId => {
     if (!leaveId) 
       leaveId = $("#newLeaveRequestModal #btnSaveLeaveRequest").attr("leave-id");
     if (leaveId) {
-      const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+      const selectedLeave = templateObject.leaveRequests.get().find(leave => leave.ID == leaveId);
       $("#newLeaveRequestModal").find("#edtLeaveDescription").val(selectedLeave.Description);
       $("#newLeaveRequestModal").find("#edtLeaveTypeofRequest").val(selectedLeave.LeaveMethod);
       $("#newLeaveRequestModal").find("#edtLeaveStartDate").val(moment(selectedLeave.StartDate).format("DD/MM/YYYY"));
@@ -430,12 +453,12 @@ Template.payrollleave.onRendered(function () {
     }
   };
 
-  this.saveLeave = async (leaveId = null) => {
+  templateObject.saveLeave = async (leaveId = null) => {
     if (!leaveId) 
       return;
     LoadingOverlay.show();
 
-    const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+    const selectedLeave = templateObject.leaveRequests.get().find(leave => leave.ID == leaveId);
 
     let ID = selectedLeave.ID;
     let TypeofRequest = $("#edtLeaveTypeofRequestID").val();
@@ -507,7 +530,7 @@ Template.payrollleave.onRendered(function () {
           const result = await swal({title: "Leave request added successfully", text: "", type: "success", showCancelButton: false, confirmButtonText: "OK"});
 
           if(result.value) {
-            await this.initPage(true);
+            await templateObject.initPage(true);
 
           }
 
@@ -526,12 +549,12 @@ Template.payrollleave.onRendered(function () {
     }
   };
 
-  this.approveLeave = async leaveId => {
+  templateObject.approveLeave = async leaveId => {
     if (!leaveId) 
       return;
     LoadingOverlay.show();
 
-    const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+    const selectedLeave = templateObject.leaveRequests.get().find(leave => leave.ID == leaveId);
 
     const finalLeave = new LeaveRequest({
       type: "TLeavRequest",
@@ -569,7 +592,7 @@ Template.payrollleave.onRendered(function () {
         });
 
         if (result.value) {
-          await this.initPage(true);
+          await templateObject.initPage(true);
         } else if (result.dismiss === "cancel") {}
       } else {
         throw response.status;
@@ -586,19 +609,19 @@ Template.payrollleave.onRendered(function () {
       });
 
       if (result.value) {
-        await this.approveLeave(leaveId);
+        await templateObject.approveLeave(leaveId);
       } else if (result.dismiss === "cancel") {}
     }
 
     LoadingOverlay.hide();
   };
 
-  this.rejectLeave = async leaveId => {
+  templateObject.rejectLeave = async leaveId => {
     if (!leaveId) 
       return;
     LoadingOverlay.show();
 
-    const selectedLeave = this.leaveRequests.get().find(leave => leave.ID == leaveId);
+    const selectedLeave = templateObject.leaveRequests.get().find(leave => leave.ID == leaveId);
 
     const finalLeave = new LeaveRequest({
       type: "TLeavRequest",
@@ -636,7 +659,7 @@ Template.payrollleave.onRendered(function () {
         });
 
         if (result.value) {
-          await this.initPage(true);
+          await templateObject.initPage(true);
         } else if (result.dismiss === "cancel") {}
       } else {
         throw response.status;
@@ -653,15 +676,15 @@ Template.payrollleave.onRendered(function () {
       });
 
       if (result.value) {
-        this.rejectLeave(leaveId);
+        templateObject.rejectLeave(leaveId);
       } else if (result.dismiss === "cancel") {}
     }
 
     LoadingOverlay.hide();
   };
 
-  this.loadLeaveTypes = async (refresh = false) => {
-    await this.leaveTypes.set([]);
+  templateObject.loadLeaveTypes = async (refresh = false) => {
+    await templateObject.leaveTypes.set([]);
 
     let cachedRequest = await CachedHttp.get(erpObject.TAssignLeaveType, async () => {
       const employeePayrolApis = new EmployeePayrollApi();
@@ -687,47 +710,25 @@ Template.payrollleave.onRendered(function () {
     let response = cachedRequest.response;
     let leaveTypes = response.tassignleavetype.map(l => l.fields);
 
-     await this.leaveTypes.set(leaveTypes);
+     await templateObject.leaveTypes.set(leaveTypes);
   };
 
-  this.saveLeaveRequestLocalDB = async function () {
-    const employeePayrolApis = new EmployeePayrollApi();
-    // now we have to make the post request to save the data in database
-    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-      employeePayrolApis.collectionNames.TLeavRequest
-    );
+  
 
-    employeePayrolEndpoint.url.searchParams.append(
-      "ListType",
-      "'Detail'"
-    );
-    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-
-    if (employeePayrolEndpointResponse.ok == true) {
-      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-      if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
-        await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
-      }
-      return employeePayrolEndpointJsonResponse
-    }
-    return '';
-  };
-
-  this.initPage = async (refresh = false) => {
+  templateObject.initPage = async (refresh = false) => {
     LoadingOverlay.show();
 
-    await this.loadEmployees(refresh);
-    await this.loadLeaveTypes(refresh);
-    await this.loadLeaves(refresh);
-    await this.loadDefaultScreen(refresh);
+    await templateObject.loadEmployees(refresh);
+    await templateObject.loadLeaveTypes(refresh);
+    await templateObject.loadLeaves(refresh);
+    await templateObject.loadDefaultScreen(refresh);
 
-    this.dataTableSetup(refresh);
+    templateObject.dataTableSetup(refresh);
     if(!refresh) Datehandler.defaultDatePicker();
     LoadingOverlay.hide();
   };
 
-  this.initPage();
-
+  templateObject.initPage();
 });
 
 Template.payrollleave.events({
@@ -802,22 +803,37 @@ Template.payrollleave.helpers({
   },
   formatDate: date => moment(date).format("Do MMM YYYY"),
   leaveTypes: () => Template.instance().leaveTypes.get(),
-  apiFunction:async function() {
-    let data = await this.saveLeaveRequestLocalDB();
+  apiFunction:async()=> {
+    let templateObject = Template.instance();
+    let data = await templateObject.saveLeaveRequestLocalDB();
     return data;
   },
   apiParams: function() {
     return ['ignoredate', 'limitCount', 'limitFrom'];
   },
   datahandler: function () {
+    let templateObject = Template.instance();
+    console.log('datahandler')
+  //   return [
+  //     13,
+  //     "Leave",
+  //     "Weekly",
+  //     "Long Service Leave",
+  //     "Approved",
+  //     "<button type=\"button\" class=\"btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn\" data-id=\"13\" autocomplete=\"off\"><i class=\"fa fa-remove\"></i></button>"
+  // ]
     return function(data) {
-        let dataReturn =  this.getDataTableList(data)
+      console.log('data:',data)
+        let dataReturn =  templateObject.getDataTableList(data)
         return dataReturn
     }
   },
   exDataHandler: function() {
+    let templateObject = Template.instance();
+    console.log('exDataHandler')
     return function(data) {
-        let dataReturn =  this.getDataTableList(data)
+      console.log('exDataHandler-data:',data)
+        let dataReturn =  templateObject.getDataTableList(data)
         return dataReturn
     }
   },
