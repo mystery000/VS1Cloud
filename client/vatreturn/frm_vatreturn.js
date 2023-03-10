@@ -3244,7 +3244,7 @@ Template.vatreturn.events({
                         let hasTab5 = $("#vatreturnCategory5").prop('checked');
 
                         if (description === '') {
-                            // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
+                            // Bert.alert('<strong>WARNING:</strong> VAT Return Description cannot be blank!', 'warning');
                             swal('VAT Return Description cannot be blank!', '', 'warning');
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
@@ -3698,7 +3698,7 @@ Template.vatreturn.events({
             let hasTab5 = $("#vatreturnCategory5").prop('checked');
 
             if (description === '') {
-                // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
+                // Bert.alert('<strong>WARNING:</strong> VAT Return Description cannot be blank!', 'warning');
                 swal('VAT Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
             } else {
