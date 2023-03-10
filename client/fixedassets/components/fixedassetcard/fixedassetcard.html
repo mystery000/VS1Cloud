@@ -51,7 +51,7 @@
     #fixedAssetCardContainer .input-tab {
       margin: 5px;
       padding: 10px;
-      border: 2px solid grey;
+      border: 1px solid #958f8f5c;
       border-radius: 5px;
       height: 100%;
     }
@@ -126,7 +126,7 @@
         </div>
     </header> -->
 
-    <div class="row">
+    <div class="row d-flex justify-content-center">
       <div class="col-12 col-md-8" id="fixedAssetCardContainer" style="padding: 20px;">
         <div class="card shadow cardSizing">
           <div class="card-header d-flex justify-content-between align-items-xl-center">
@@ -137,18 +137,11 @@
                 New FixedAsset
               {{/if}}
             </h6>
-            <form class="form-inline d-none d-sm-inline-block mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" action=" ">
-              <div class="input-group">
-                  <input class="bg-light form-control border-2 small txtGlobalSearch alerts-border" type="text" placeholder="Search Global...">
-                  <div class="input-group-append">
-                      <button class="btn btn-primary py-0 btnGlobalSearch" type="button" style="background-color: rgb(0,163,211); border-color: rgb(0,163,211);border-top-right-radius: 0.35rem; border-bottom-right-radius: 0.35rem; height:34px;"><i
-                              class="fas fa-search"></i></button>
-                  </div>
-                  <a class="btn btn-primary scanBarcodeHeadTop" href="" id="scanBarcodeHeadTop" role="button" style="margin-left: 8px; height:34px;padding-top:4px;"><i class="fas fa-camera"></i></a>
-                  <button type="button" class="btn btn-primary" id="mobileBarcodeScan" data-toggle="modal" data-target="#scanBarcodeModalHeader" style="margin-left: 8px;height:34px; display: none;"><i class="fas fa-camera"></i></button>
-                  <button type="button" class="btn btn-primary" id="btnSearchGuide" style="margin-left: 8px;height:34px;padding-top: 4px;"><i class="far fa-question-circle"></i></button>
-              </div>
-            </form>
+            <h6 class="text-right float-right flex-grow-1 font-weight-bold m-0 customerInfo" style="color: #00A3D3; font-size: 28px;">
+              {{#if assetID}}
+                FA {{assetID}}
+              {{/if}}
+            </h6>
           </div>
           <div class="card-body text-nowrap">
             <ul class="nav nav-tabs nav-fill">
@@ -835,7 +828,7 @@
               <div class="tab-pane border rounded-0 tab-disposal" role="tabpanel" id="tab-disposal">
                 <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
-                    <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkDisposalAsset" name="chkDisposalAsset" style="cursor: pointer;" additionalqty="1" autocomplete="off">
+                    <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkDisposalAsset" name="chkDisposalAsset" style="cursor: pointer;" additionalqty="1" checked="{{#if chkDisposalAsset}}checked{{/if}}" />
                     <label class="custom-control-label" for="chkDisposalAsset" style="cursor: pointer;">Disposal of Asset</label> 
                   </div>
 

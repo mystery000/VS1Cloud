@@ -6,7 +6,6 @@ import { AccountService } from "../../../accounts/account-service";
 import { FixedAssetService } from '../../fixedasset-service';
 import './fixedassetcard.html';
 import { Template } from 'meteor/templating';
-import { template } from 'lodash';
 
 let sideBarService = new SideBarService();
 let accountService = new AccountService();
@@ -113,7 +112,7 @@ Template.fixedassetcard.onRendered(function () {
     $('#supplierListModal').modal('show');
     $('input#edtSupplierType').val('supplier');
   });
-  
+
   $('#edtInsuranceByName').editableSelect();
   $('#edtInsuranceByName').editableSelect().on('click.editable-select', function (e, li) {
     $('#supplierListModal').modal('show');
@@ -196,8 +195,8 @@ Template.fixedassetcard.onRendered(function () {
         $(".fullScreenSpin").css("display", "none");
       });;
     });
-    
-     
+
+
   }
 
   $(document).on("click", "#tblFixedAssetType tbody tr", function(e) {
@@ -274,8 +273,8 @@ Template.fixedassetcard.onRendered(function () {
     $("#edtWarrantyExpiresDate").val(getDatePickerForm(assetInfo.WarrantyExpiresDate));
     $("#edtDisposalDate").val(getDatePickerForm(assetInfo.DisposalDate));
     $("#edtDisposalDate2").val(getDatePickerForm(assetInfo.DisposalDate2));
-    
-    templateObject.chkDisposalAsset.set(assetInfo.Disposal);
+
+    // templateObject.chkDisposalAsset.set();
 
     Object.keys(templateObject.inputFieldAry.get()).map((fieldName) => {
       $("div#fixedAssetCardContainer #edt" + fieldName).val(assetInfo[fieldName]);
@@ -385,7 +384,7 @@ Template.fixedassetcard.events({
         DepreciationStartDate: templateObject.getDateStr($("#edtDepreciationStartDate").datepicker("getDate")),
         PurchDate: templateObject.getDateStr($("#edtDateofPurchase").datepicker("getDate")),
         SupplierID: templateObject.edtSupplierId.get(),
-        // 
+        //
         LastTestDate: templateObject.getDateStr($("#edtLastTestDate").datepicker("getDate")),
         NextTestDate: templateObject.getDateStr($("#edtNextTestDate").datepicker("getDate")),
 
@@ -440,7 +439,7 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetlist');
       })
       .catch((err) => {
-        console.log(err);
+
       });
     } else {
       newFixedAsset.fields['ID'] = templateObject.currentAssetID.get();
@@ -453,7 +452,7 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetlist');
       })
       .catch((err) => {
-        console.log(err);
+
       });
     }
   },
@@ -554,7 +553,7 @@ Template.fixedassetcard.events({
     templateObject.chkEnterAmount.set(!status);
   },
 
-    'change input#chkDisposalAsset': function(e) {
+  'change input#chkDisposalAsset': function(e) {
     const templateObject = Template.instance();
     const status = templateObject.chkDisposalAsset.get();
     templateObject.chkDisposalAsset.set(!status);
