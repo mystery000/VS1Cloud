@@ -2235,7 +2235,10 @@ Template.chequecard.onRendered(() => {
     let utilityService = new UtilityService();
     let $tblrows = $("#tblChequeLine tbody tr");
     let $printrows = $(".cheque_print tbody tr");
-
+    if (table.find(".colIsHeader").text() == "true") {
+      swal('WARNING', "You cannot save this transaction as a Header Account has been selected. Please change the Account Name and save", 'warning')
+      return
+    }
     if (selectLineID) {
       let lineProductName = table.find(".colAccountName").text();
       let lineProductDesc = table.find(".colDescription").text();
@@ -4739,9 +4742,9 @@ $(document).ready(function () {
                   $(".fullScreenSpin").css("display", "none");
                 });
             });
-        } else {
-          $("#supplierListModal").modal();
+        } else {          
           setTimeout(function () {
+            $("#supplierListModal").modal();
             $("#tblSupplierlist_filter .form-control-sm").focus();
             $("#tblSupplierlist_filter .form-control-sm").val("");
             $("#tblSupplierlist_filter .form-control-sm").trigger("input");
