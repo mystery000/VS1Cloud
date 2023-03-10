@@ -8,13 +8,48 @@ import { Template } from 'meteor/templating';
 import './receiptcategory.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { EditableService } from "../editable-service";
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let editableService = new EditableService();
+let receiptService = new ReceiptService();
 Template.receiptcategory.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.receiptcategoryrecords = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let mobile = "";
+        let linestatus = "";
+        let currentData = data;
+
+        if (currentData.Active == true) {
+            linestatus = "";
+        } else if (currentData.Active == false) {
+            linestatus = "In-Active";
+        }
+
+        //let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
+
+        var dataList = [
+            currentData.Id || "",
+            currentData.CategoryName || "",
+            currentData.CategoryDesc || "",
+            currentData.CategoryPostAccount || "",
+            currentData.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#Id', class: 'colId', active: false, display: true, width: "30" },
+        { index: 1, label: 'Category Name', class: 'colName', active: true, display: true, width: "180" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+        { index: 3, label: 'Post Account', class: 'colPostAccount', active: true, display: true, width: "100" },
+        { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" }
+    ];
+
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.receiptcategory.onRendered(function() {
@@ -29,24 +64,24 @@ Template.receiptcategory.onRendered(function() {
     let needAddTravel = true;
     let needAddVehicle = true;
 
-    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'receiptCategoryList', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-                }
-            }
-        }
-    });
+    // Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'receiptCategoryList', function(error, result){
+    //     if(error){
+    //
+    //     }else{
+    //         if(result){
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //                 $("th."+columnClass+"").html(columData);
+    //                 $("th."+columnClass+"").css('width',""+columnWidth+"px");
+    //             }
+    //         }
+    //     }
+    // });
 
     templateObject.getReceiptCategoryList = function(){
         getVS1Data('TReceiptCategory').then(function (dataObject) {
@@ -94,7 +129,7 @@ Template.receiptcategory.onRendered(function() {
         templateObject.receiptcategoryrecords.set(receiptCategoryList);
         $('.fullScreenSpin').css('display','none');
     }
-    templateObject.getReceiptCategoryList();
+    //templateObject.getReceiptCategoryList();
     function addDefaultValue() {
         let needAddDefault = true;
         if (!needAddMaterials && !needAddMealsEntertainment && !needAddOfficeSupplies && !needAddTravel && !needAddVehicle ) {
@@ -267,7 +302,7 @@ Template.receiptcategory.onRendered(function() {
     });
 
     $('#tblReceiptCategoryList tbody').on( 'click', 'tr .colName, tr .colDescription', function (event) {
-        let ID = $(this).closest('tr').attr('id');
+        let ID = $(this).closest('tr').find(".colId").text();
         if (ID) {
             $('#add-receiptcategory-title').text('Edit Receipt Category');
             if (ID !== '') {
@@ -293,52 +328,52 @@ Template.receiptcategory.onRendered(function() {
 });
 
 Template.receiptcategory.events({
-    'click .chkDatatable' : function(event){
-        const columns = $('#tblReceiptCategoryList th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-        $.each(columns, function(i,v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-            if(v.innerText == columnDataValue){
-                if($(event.target).is(':checked')){
-                    $("."+replaceClass+"").css('display','table-cell');
-                    $("."+replaceClass+"").css('padding','.75rem');
-                    $("."+replaceClass+"").css('vertical-align','top');
-                }else{
-                    $("."+replaceClass+"").css('display','none');
-                }
-            }
-        });
-    },
-    'click .btnOpenSettings' : function(event){
-        let templateObject = Template.instance();
-        const columns = $('#tblReceiptCategoryList th');
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden == false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    // 'click .chkDatatable' : function(event){
+    //     const columns = $('#tblReceiptCategoryList th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //     $.each(columns, function(i,v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //         if(v.innerText == columnDataValue){
+    //             if($(event.target).is(':checked')){
+    //                 $("."+replaceClass+"").css('display','table-cell');
+    //                 $("."+replaceClass+"").css('padding','.75rem');
+    //                 $("."+replaceClass+"").css('vertical-align','top');
+    //             }else{
+    //                 $("."+replaceClass+"").css('display','none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .btnOpenSettings' : function(event){
+    //     let templateObject = Template.instance();
+    //     const columns = $('#tblReceiptCategoryList th');
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i,v) {
+    //         if(v.hidden == false){
+    //             columVisible =  true;
+    //         }
+    //         if((v.className.includes("hiddenColumn"))){
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || '',
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
         sideBarService.getReceiptCategory().then(function(dataReload) {
@@ -511,5 +546,40 @@ Template.receiptcategory.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+    apiFunction:function() {
+        let receiptService = new ReceiptService();
+        return receiptService.getAllReceiptCategorys;
+    },
+
+    searchAPI: function() {
+        return receiptService.getOneReceiptCategoryDataExByName;
+    },
+
+    service: ()=>{
+        let receiptService = new ReceiptService();
+        return receiptService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

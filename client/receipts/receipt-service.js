@@ -25,11 +25,14 @@ export class ReceiptService extends BaseService {
         return this.POST(this.ERPObjects.TTripGroup, data);
     }
 
-    getAllReceiptCategorys() {
+    getAllReceiptCategorys(limitcount, limitfrom, deleteFilter) {
         let options = {
             PropertyList: "ID,CategoryName,CategoryDesc",
-            select: "[active]=true"
+            select: "[active]=true",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
         };
+        if(deleteFilter) options.select = "";
         return this.getList(this.ERPObjects.TReceiptCategory, options);
     }
 
