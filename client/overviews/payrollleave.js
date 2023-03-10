@@ -62,6 +62,28 @@ Template.payrollleave.onCreated(()=>{
     { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
   ];
   templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
+  templateObject.saveLeaveRequestLocalDB = async ()=> {
+    const employeePayrolApis = new EmployeePayrollApi();
+    // now we have to make the post request to save the data in database
+    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+      employeePayrolApis.collectionNames.TLeavRequest
+    );
+
+    employeePayrolEndpoint.url.searchParams.append(
+      "ListType",
+      "'Detail'"
+    );
+    const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+    if (employeePayrolEndpointResponse.ok == true) {
+      const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+      if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
+        await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+      }
+      return employeePayrolEndpointJsonResponse
+    }
+    return [];
+  };
 });
 
 function MakeNegative() {}
@@ -428,30 +450,8 @@ Template.payrollleave.onRendered(function() {
       $("#newLeaveRequestModal").find(".modal-title.new-leave-title").addClass("hide");
       $("#newLeaveRequestModal").find(".modal-title.edit-leave-title").removeClass("hide");
     }
-    templateObject.saveLeaveRequestLocalDB = async ()=> {
-      const employeePayrolApis = new EmployeePayrollApi();
-      // now we have to make the post request to save the data in database
-      const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-        employeePayrolApis.collectionNames.TLeavRequest
-      );
-  
-      employeePayrolEndpoint.url.searchParams.append(
-        "ListType",
-        "'Detail'"
-      );
-      const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
-  
-      if (employeePayrolEndpointResponse.ok == true) {
-        const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
-        if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
-          await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
-        }
-        return employeePayrolEndpointJsonResponse
-      }
-      return [];
-    };
   };
-
+  
   templateObject.saveLeave = async (leaveId = null) => {
     if (!leaveId) 
       return;
@@ -790,7 +790,38 @@ Template.payrollleave.events({
   },
   "click .btnRefresh": (e, ui) => {
     ui.initPage(true);
-  }
+  },
+  'click .btnOpenSettings': function(event) {
+    let templateObject = Template.instance();
+    var columns = $('#tblPayleaveToReview th');
+    const tableHeaderList = [];
+    let sTible = "";
+    let sWidth = "";
+    let sIndex = "";
+    let sVisible = "";
+    let columVisible = false;
+    let sClass = "";
+    $.each(columns, function(i, v) {
+        if (v.hidden == false) {
+            columVisible = true;
+        }
+        if ((v.className.includes("hiddenColumn"))) {
+            columVisible = false;
+        }
+        sWidth = v.style.width.replace('px', "");
+
+        let datatablerecordObj = {
+            sTitle: v.innerText || '',
+            sWidth: sWidth || '',
+            sIndex: v.cellIndex || 0,
+            sVisible: columVisible || false,
+            sClass: v.className || ''
+        };
+        tableHeaderList.push(datatablerecordObj);
+    });
+
+    templateObject.tableLeaveRequestheaderrecords.set(tableHeaderList);
+},
 });
 
 Template.payrollleave.helpers({
