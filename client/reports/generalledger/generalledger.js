@@ -675,14 +675,14 @@ Template.generalledger.onRendered(() => {
     let reset_data = [];
     reset_data = [
       // { index: 1, label: 'Account ID', class: 'colAccountID', active: true, display: true, width: "85" },
-      { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
-      { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "" },
-      { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
-      { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "180" },
-      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "" },
-      { index: 6, label: 'Debits', class: 'colDebitsEx', active: true, display: true, width: "" },
-      { index: 7, label: 'Credits', class: 'colCreditEx', active: true, display: true, width: "" },
-      { index: 8, label: 'Amount', class: 'colAmountEx', active: true, display: true, width: "" },
+      { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "245" },
+      { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "105" },
+      { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "120" },
+      { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "220" },
+      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "200" },
+      { index: 6, label: 'Debits', class: 'colDebitsEx text-right', active: true, display: true, width: "130" },
+      { index: 7, label: 'Credits', class: 'colCreditEx text-right', active: true, display: true, width: "130" },
+      { index: 8, label: 'Amount', class: 'colAmountEx text-right', active: true, display: true, width: "130" },
 
       // { index: 4, label: 'Accounts', class: 'colAccounts', active: false, display: true, width: "85" },
       // { index: 7, label: 'Cheque Number', class: 'colChequeNumber', active: false, display: true, width: "85" },
@@ -799,9 +799,9 @@ Template.generalledger.onRendered(() => {
       if(start != splashArrayBalanceSheetReport[i][0]) {
         creditSum += (credit - 0), debitSum += (debit - 0), totalSum += (total - 0);
         start = splashArrayBalanceSheetReport[i][0];
-        credit = credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "text-danger text-bold");
-        debit = debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "text-danger text-bold");
-        total = total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold");
+        credit = credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "text-danger text-bold", "text-right");
+        debit = debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "text-danger text-bold", "text-right");
+        total = total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold", "text-right");
         balanceSheetReport.push([
           GlobalFunctions.generateSpan('Total' + T_AccountName, "table-cells text-bold"),
           "",
@@ -838,39 +838,39 @@ Template.generalledger.onRendered(() => {
         let tmp;
         tmp = splashArrayBalanceSheetReport[i][5] - 0;
         credit += tmp; //credit
-        splashArrayBalanceSheetReport[i][5] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger");
+        splashArrayBalanceSheetReport[i][5] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
 
         tmp = splashArrayBalanceSheetReport[i][6] - 0;
         debit += tmp; //debit
-        splashArrayBalanceSheetReport[i][6] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger");
+        splashArrayBalanceSheetReport[i][6] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
 
         tmp = splashArrayBalanceSheetReport[i][7] - 0;
         total += tmp; //total
-        splashArrayBalanceSheetReport[i][7] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger");
+        splashArrayBalanceSheetReport[i][7] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
         balanceSheetReport.push(splashArrayBalanceSheetReport[i]);
       }
     }
     balanceSheetReport.push([
-      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells"),
+      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
       "",
       "",
       "",
       "",
-      credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "text-danger text-bold"),
-      debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "text-danger text-bold"),
-      total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold"),
+      credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "text-danger text-bold", "text-right"),
+      debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "text-danger text-bold", "text-right"),
+      total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold", "text-right"),
     ]);
     creditSum += (credit - 0), debitSum += (debit - 0);
     totalSum = (creditSum - debitSum);
     balanceSheetReport.push([
-      GlobalFunctions.generateSpan(`Grand Total`, "table-cells"),
+      GlobalFunctions.generateSpan(`Grand Total`, "table-cells text-bold"),
       "",
       "",
       "",
       "",
-      creditSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "text-danger text-bold"),
-      debitSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "text-danger text-bold"),
-      totalSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "text-danger text-bold"),
+      creditSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "text-danger text-bold", "text-right"),
+      debitSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "text-danger text-bold", "text-right"),
+      totalSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "text-danger text-bold", "text-right"),
     ]);
     templateObject.transactiondatatablerecords.set(balanceSheetReport);
     if (templateObject.transactiondatatablerecords.get()) {

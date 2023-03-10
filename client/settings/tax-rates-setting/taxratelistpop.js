@@ -33,10 +33,10 @@ Template.taxratelistpop.onCreated(function () {
     }
 
     let headerStructure = [
-        {index: 0, label: "ID", class: "thID", width: "50", active: true, display: true},
-        {index: 1, label: "Name", class: "taxName", width: "80", active: true, display: true},
-        {index: 2, label: "Description", class: "colDescription", width: "180", active: true, display: true},
-        {index: 3, label: "Rate", class: "taxRate", width: "100", active: true, display: true},
+        {index: 0, label: "ID", class: "colID", width: "50", active: true, display: true},
+        {index: 1, label: "Name", class: "colName taxName", width: "80", active: true, display: true},
+        {index: 2, label: "Description", class: "colDescription", width: "", active: true, display: true},
+        {index: 3, label: "Rate", class: "colRate taxRate", width: "100", active: true, display: true},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });

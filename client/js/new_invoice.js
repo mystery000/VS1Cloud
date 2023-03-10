@@ -1417,6 +1417,11 @@ Template.new_invoice.onCreated(function () {
     $("#tblInvoiceLine > tbody > tr").each(function () {
       const tdproduct = $(this).find(".lineProductName").val();
       const tddescription = $(this).find('.lineProductDesc').text();
+      let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
+      if(tdpqa){
+          tddescription += " " + tdpqa;
+      }
+
       const tdQty = $(this).find('.lineQty').val();
       const tdunitprice = $(this).find('.colUnitPriceExChange').val();
       const tdtaxrate = $(this).find(".lineTaxRate").val();
@@ -11195,7 +11200,7 @@ Template.new_invoice.events({
           event.preventDefault();
           return false;
         } else {
-          getVS1Data("TProductList").then(function (dataObject) {
+          getVS1Data("TProductQtyList").then(function (dataObject) {
             if (dataObject.length == 0) {
               productService.getProductStatus(selectedProductName).then(async function (data) {
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
@@ -11237,11 +11242,11 @@ Template.new_invoice.events({
             }
             else{
               let data = JSON.parse(dataObject[0].data);
-              for (let i = 0; i < data.tproductlist.length; i++) {
-                if(data.tproductlist[i].PARTNAME == selectedProductName){
-                  if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+              for (let i = 0; i < data.tproductqtylist.length; i++) {
+                if(data.tproductqtylist[i].ProductName == selectedProductName){
+                  if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                     return false;
-                  } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                  } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
                     let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
                     if(selectedLot != undefined && selectedLot != ""){
                       shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
@@ -11254,7 +11259,7 @@ Template.new_invoice.events({
                       $("#availableLotNumberModal").attr("data-row", row + 1);
                       $("#availableLotNumberModal").modal("show");
                     }, 200);
-                  } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                  } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
                     let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
                     if(selectedSN != undefined && selectedSN != ""){
                       shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
@@ -11266,7 +11271,7 @@ Template.new_invoice.events({
                       var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                       $("#availableSerialNumberModal").attr("data-row", row + 1);
                       $('#availableSerialNumberModal').modal('show');
-                      if(data.tproductlist[i].CUSTFLD13 == 'true'){
+                      if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
                         $("#availableSerialNumberModal .btnSNCreate").show();
                       }
                       else{
@@ -11344,7 +11349,7 @@ Template.new_invoice.events({
           event.preventDefault();
           return false;
         } else {
-          getVS1Data("TProductList").then(function (dataObject) {
+          getVS1Data("TProductQtyList").then(function (dataObject) {
             if (dataObject.length == 0) {
               productService.getProductStatus(selectedProductName).then(async function (data) {
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
@@ -11363,7 +11368,7 @@ Template.new_invoice.events({
                         objDetails = {
                           type: "TProductVS1",
                           fields: {
-                            ID: parseInt(data.tproductlist[i].PARTSID),
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
                             Active: true,
                             SNTracking: "true",
                             Batch: "false",
@@ -11374,7 +11379,7 @@ Template.new_invoice.events({
                         .then(async function (objDetails) {
                           sideBarService.getProductListVS1("All", 0)
                             .then(async function (dataReload) {
-                              await addVS1Data("TProductList", JSON.stringify(dataReload));
+                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                               swal.close();
                               $(target).click();
                             })
@@ -11401,7 +11406,7 @@ Template.new_invoice.events({
                         objDetails = {
                           type: "TProductVS1",
                           fields: {
-                            ID: parseInt(data.tproductlist[i].PARTSID),
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
                             Active: true,
                             SNTracking: "false",
                             Batch: "true",
@@ -11412,7 +11417,7 @@ Template.new_invoice.events({
                         .then(async function (objDetails) {
                           sideBarService.getProductListVS1("All", 0)
                             .then(async function (dataReload) {
-                              await addVS1Data("TProductList", JSON.stringify(dataReload));
+                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                               swal.close();
                               $(target).click();
                             })
@@ -11476,9 +11481,9 @@ Template.new_invoice.events({
             }
             else{
               let data = JSON.parse(dataObject[0].data);
-              for (let i = 0; i < data.tproductlist.length; i++) {
-                if(data.tproductlist[i].PARTNAME == selectedProductName){
-                  if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+              for (let i = 0; i < data.tproductqtylist.length; i++) {
+                if(data.tproductqtylist[i].ProductName == selectedProductName){
+                  if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                     var buttons = $("<div>")
                     .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
                     .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
@@ -11494,7 +11499,7 @@ Template.new_invoice.events({
                           objDetails = {
                             type: "TProductVS1",
                             fields: {
-                              ID: parseInt(data.tproductlist[i].PARTSID),
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
                               Active: true,
                               SNTracking: "true",
                               Batch: "false",
@@ -11505,7 +11510,7 @@ Template.new_invoice.events({
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
                               .then(async function (dataReload) {
-                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                 swal.close();
                                 $(target).click();
                               })
@@ -11532,7 +11537,7 @@ Template.new_invoice.events({
                           objDetails = {
                             type: "TProductVS1",
                             fields: {
-                              ID: parseInt(data.tproductlist[i].PARTSID),
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
                               Active: true,
                               SNTracking: "false",
                               Batch: "true",
@@ -11543,7 +11548,7 @@ Template.new_invoice.events({
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
                               .then(async function (dataReload) {
-                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                 swal.close();
                                 $(target).click();
                               })
@@ -11570,7 +11575,7 @@ Template.new_invoice.events({
                         });
                       }
                     });
-                  } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                  } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
                     let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
                     if(selectedLot != undefined && selectedLot != ""){
                       shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
@@ -11583,7 +11588,7 @@ Template.new_invoice.events({
                       $("#availableLotNumberModal").attr("data-row", row + 1);
                       $("#availableLotNumberModal").modal("show");
                     }, 200);
-                  } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                  } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
                     let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
                     if(selectedSN != undefined && selectedSN != ""){
                       shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
@@ -11595,7 +11600,7 @@ Template.new_invoice.events({
                       var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                       $("#availableSerialNumberModal").attr("data-row", row + 1);
                       $('#availableSerialNumberModal').modal('show');
-                      if(data.tproductlist[i].CUSTFLD13 == 'true'){
+                      if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
                         $("#availableSerialNumberModal .btnSNCreate").show();
                       }
                       else{
@@ -11624,7 +11629,7 @@ Template.new_invoice.events({
                       objDetails = {
                         type: "TProductVS1",
                         fields: {
-                          ID: parseInt(data.tproductlist[i].PARTSID),
+                          ID: parseInt(data.tproductqtylist[i].PARTSID),
                           Active: true,
                           SNTracking: "true",
                           Batch: "false",
@@ -11635,7 +11640,7 @@ Template.new_invoice.events({
                       .then(async function (objDetails) {
                         sideBarService.getProductListVS1("All", 0)
                           .then(async function (dataReload) {
-                            await addVS1Data("TProductList", JSON.stringify(dataReload));
+                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                             swal.close();
                             $(target).click();
                           })
@@ -11662,7 +11667,7 @@ Template.new_invoice.events({
                       objDetails = {
                         type: "TProductVS1",
                         fields: {
-                          ID: parseInt(data.tproductlist[i].PARTSID),
+                          ID: parseInt(data.tproductqtylist[i].PARTSID),
                           Active: true,
                           SNTracking: "false",
                           Batch: "true",
@@ -11673,7 +11678,7 @@ Template.new_invoice.events({
                       .then(async function (objDetails) {
                         sideBarService.getProductListVS1("All", 0)
                           .then(async function (dataReload) {
-                            await addVS1Data("TProductList", JSON.stringify(dataReload));
+                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                             swal.close();
                             $(target).click();
                           })

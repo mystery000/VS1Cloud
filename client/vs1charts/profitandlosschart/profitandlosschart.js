@@ -35,15 +35,6 @@ Template.profitandlosschart.onRendered(()=>{
 
 
   let checkStatus = localStorage.getItem("profitloss") || true;
-  // setTimeout(function(){
-  // if(checkStatus == false || checkStatus == "false") {
-  //   $("#profitlossstatus").addClass('hideelement')
-  //   $('#profitloss1hide').text("Show");
-  // } else {
-  //   $("#profitlossstatus").removeClass('hideelement')
-  //   $('#profitloss1hide').text("Hide");
-  // }
-  //   },1000);
 
   if((currentDate.getMonth()+1) < 10){
     fromDateMonth = "0" + (currentDate.getMonth()+1);
@@ -211,13 +202,8 @@ Template.profitandlosschart.onRendered(()=>{
               templateObject.expenseperc.set(totalExpensePerc);
             }
           }, 0)
-
-
         }
-
      }
-
-
   });
 
   Template.profitandlosschart.events({
@@ -233,14 +219,6 @@ Template.profitandlosschart.onRendered(()=>{
     'click .btnRefresh': function () {
       Meteor._reload.reload();
     },
-   //  'click #profitloss1hide': function () {
-   //  let check = localStorage.getItem("profitloss") || true;
-   //  if(check == "true" || check == true) {
-   //     $("#profitloss1hide").text("Show");
-   //  } else {
-   //     $("#profitloss1hide").text("Hide");
-   //  }
-   // },
     'click .btnPrintReport':function (event) {
       playPrintAudio();
       setTimeout(function(){

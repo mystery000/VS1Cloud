@@ -145,7 +145,1176 @@ Template.appointmentlist.onCreated(function() {
 });
 
 Template.appointmentlist.onRendered(async function() {
+    const templateObject = Template.instance();
+    const dataTableList = [];
+    // Get SMS settings
+    templateObject.getSMSSettings = function() {
+        return new Promise((resolve, reject) => {
+            const smsSettings = {
+                twilioAccountId: "",
+                twilioAccountToken: "",
+                twilioTelephoneNumber: "",
+            }
 
+            getVS1Data('TERPPreference').then(function(dataObject) {
+                if (dataObject.length == 0) {
+                    smsService.getSMSSettings().then((result) => {
+                        if (result.terppreference.length > 0) {
+                            for (let i = 0; i < result.terppreference.length; i++) {
+                                switch (result.terppreference[i].PrefName) {
+                                    case "VS1SMSID":
+                                        smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                                        break;
+                                    case "VS1SMSToken":
+                                        smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+                                        break;
+                                    case "VS1SMSPhone":
+                                        smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
+                                        break;
+                                }
+                            }
+                        }
+                        templateObject.smsSettings.set(smsSettings);
+                        resolve(true);
+                    });
+                } else {
+                    let result = JSON.parse(dataObject[0].data);
+                    if (result.terppreference.length > 0) {
+                        for (let i = 0; i < result.terppreference.length; i++) {
+                            if (result.terppreference[i].PrefName == "VS1SMSID" || result.terppreference[i].PrefName == "VS1SMSToken" ||
+                                result.terppreference[i].PrefName == "VS1SMSPhone" || result.terppreference[i].PrefName == "VS1SAVESMSMSG" ||
+                                result.terppreference[i].PrefName == "VS1STARTSMSMSG" || result.terppreference[i].PrefName == "VS1STOPSMSMSG") {
+
+                                switch (result.terppreference[i].PrefName) {
+                                    case "VS1SMSID":
+                                        smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                                        break;
+                                    case "VS1SMSToken":
+                                        smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+                                        break;
+                                    case "VS1SMSPhone":
+                                        smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
+                                        break;
+                                }
+                            }
+                        }
+                    }
+                    templateObject.smsSettings.set(smsSettings);
+                    resolve(true);
+                }
+            }).catch(function(err) {
+                smsService.getSMSSettings().then((result) => {
+                    if (result.terppreference.length > 0) {
+                        for (let i = 0; i < result.terppreference.length; i++) {
+                            switch (result.terppreference[i].PrefName) {
+                                case "VS1SMSID":
+                                    smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                                    break;
+                                case "VS1SMSToken":
+                                    smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+                                    break;
+                                case "VS1SMSPhone":
+                                    smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
+                                    break;
+                            }
+                        }
+                    }
+                    templateObject.smsSettings.set(smsSettings);
+                    resolve(true);
+                });
+            });
+
+        });
+    }
+
+    // Get SMS Messaging Logs
+    templateObject.smsMessagingLogs = async function() {
+        return new Promise((resolve, reject) => {
+            const smsSettings = templateObject.smsSettings.get();
+            $.ajax({
+                method: 'GET',
+                url: 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + `/SMS/Messages.json?PageSize=1000`,
+                dataType: 'json',
+                contentType: 'application/json', // !
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("Authorization",
+                        "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken) // !
+                    );
+                },
+                success: function(data) {
+                    resolve(data);
+                },
+                error: function(e) {
+                    resolve('');
+                    //reject(e.message);
+                }
+            })
+        });
+    }
+
+    templateObject.getAllAppointmentListData = async function() {
+        ///if(!localStorage.getItem('VS1TReconcilationList')){
+        var currentBeginDate = new Date();
+        var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+        let fromDateMonth = (currentBeginDate.getMonth() + 1);
+        let fromDateDay = currentBeginDate.getDate();
+        if ((currentBeginDate.getMonth() + 1) < 10) {
+            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+        } else {
+            fromDateMonth = (currentBeginDate.getMonth() + 1);
+        }
+
+        if (currentBeginDate.getDate() < 10) {
+            fromDateDay = "0" + currentBeginDate.getDate();
+        }
+        var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+        let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+        await templateObject.getSMSSettings();
+        const recentSMSLogs = await templateObject.smsMessagingLogs() || '';
+        const accessLevel = localStorage.getItem('CloudApptSMS');
+
+        getVS1Data('TAppointmentList').then(async function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getTAppointmentListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function(data) {
+                    // localStorage.setItem('VS1TReconcilationList', JSON.stringify(data)||'');
+                    addVS1Data('TAppointmentList', JSON.stringify(data));
+                    let lineItems = [];
+                    let lineItemObj = {};
+                    let appointmentList = [];
+                    let color = "";
+                    let appStatus = "";
+                    if (data.Params.IgnoreDates == true) {
+                        $('#dateFrom').attr('readonly', true);
+                        $('#dateTo').attr('readonly', true);
+                        //FlowRouter.go('/appointmentlist?ignoredate=true');
+                    } else {
+                        $('#dateFrom').attr('readonly', false);
+                        $('#dateTo').attr('readonly', false);
+                        $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                        $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                    }
+
+                    $('.fullScreenSpin').css('display', 'none');
+                    getVS1Data('TAppointment').then(async function(dataObject2) {
+                        if (dataObject2.length == 0) {
+                            sideBarService
+                            .getAllAppointmentList(initialDataLoad, 0)
+                            .then(function(data_) {
+                                addVS1Data("TAppointment", JSON.stringify(data_));
+                                for (let i = 0; i < data_.tappointmentex.length; i++) {
+                                    var appointment = {
+                                        id: data_.tappointmentex[i].fields.ID || "",
+                                        sortdate: data_.tappointmentex[i].fields.CreationDate ?
+                                            moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                                "YYYY/MM/DD"
+                                            ) : "",
+                                        appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
+                                            moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                                "DD/MM/YYYY"
+                                            ) : "",
+                                        accountname: data_.tappointmentex[i].fields.ClientName || "",
+                                        statementno: data_.tappointmentex[i].fields.TrainerName || "",
+                                        employeename: data_.tappointmentex[i].fields.TrainerName || "",
+                                        department: data_.tappointmentex[i].fields.DeptClassName || "",
+                                        phone: data_.tappointmentex[i].fields.Phone || "",
+                                        mobile: data_.tappointmentex[i].fields.Mobile || "",
+                                        suburb: data_.tappointmentex[i].fields.Suburb || "",
+                                        street: data_.tappointmentex[i].fields.Street || "",
+                                        state: data_.tappointmentex[i].fields.State || "",
+                                        country: data_.tappointmentex[i].fields.Country || "",
+                                        zip: data_.tappointmentex[i].fields.Postcode || "",
+                                        timelog: data_.tappointmentex[i].fields.AppointmentsTimeLog || "",
+                                        startTime: data_.tappointmentex[i].fields.StartTime.split(" ")[1] || "",
+                                        totalHours: data_.tappointmentex[i].fields.TotalHours || 0,
+                                        endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
+                                        startDate: data_.tappointmentex[i].fields.StartTime || "",
+                                        endDate: data_.tappointmentex[i].fields.EndTime || "",
+                                        fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
+                                            moment(
+                                                data_.tappointmentex[i].fields.Actual_EndTime
+                                            ).format("DD/MM/YYYY") : "",
+                                        openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
+                                        aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                            " "
+                                        )[1] || "",
+                                        aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                            " "
+                                        )[1] || "",
+                                        aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                            " "
+                                        )[0] || "",
+                                        aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                            " "
+                                        )[0] || "",
+                                        actualHours: "",
+                                        closebalance: "",
+                                        rate: data_.tappointmentex[i].fields.Rate || 1,
+                                        product: data_.tappointmentex[i].fields.ProductDesc || "",
+                                        extraProducts: data_.tappointmentex[i].fields.ExtraProducts || "",
+                                        finished: data_.tappointmentex[i].fields.Status || "",
+                                        //employee: data.tappointmentex[i].EndTime != '' ? moment(data.tappointmentex[i].EndTime).format("DD/MM/YYYY") : data.tappointmentex[i].EndTime,
+                                        notes: data_.tappointmentex[i].fields.Notes || "",
+                                        attachments: data_.tappointmentex[i].fields.Attachments || "",
+                                        isPaused: data_.tappointmentex[i].fields.Othertxt || "",
+                                        msRef: data_.tappointmentex[i].fields.MsRef || "",
+                                        custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
+                                        custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
+                                    };
+        
+                                    appointmentList.push(appointment);
+                                }
+        
+                                for (let i = 0; i < data.tappointmentlist.length; i++) {
+                                    appStatus = data.tappointmentlist[i].Status || '';
+                                    var apmt__ = appointmentList.filter((apmt) => {
+                                        return apmt.id == data.tappointmentlist[i].AppointID;
+                                    });
+        
+                                    // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
+                                    // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
+                                    if (data.tappointmentlist[i].Active == true) {
+                                        if (data.tappointmentlist[i].Status == "Converted" || data.tappointmentlist[i].Status == "Completed") {
+                                            color = "#1cc88a";
+                                        } else {
+                                            color = "#f6c23e";
+                                        }
+                                    } else {
+                                        appStatus = "Deleted";
+                                        color = "#e74a3b";
+                                    }
+                                    var dataList = {
+                                        id: data.tappointmentlist[i].AppointID || '',
+                                        sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
+                                        appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
+                                        accountname: data.tappointmentlist[i].ClientName || '',
+                                        statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                        employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                        department: data.tappointmentlist[i].DeptClassName || '',
+                                        phone: data.tappointmentlist[i].Phone || '',
+                                        mobile: data.tappointmentlist[i].ClientMobile || '',
+                                        suburb: data.tappointmentlist[i].Suburb || '',
+                                        street: data.tappointmentlist[i].Street || '',
+                                        state: data.tappointmentlist[i].State || '',
+                                        country: data.tappointmentlist[i].Country || '',
+                                        zip: data.tappointmentlist[i].Postcode || '',
+                                        startTime: data.tappointmentlist[i].STARTTIME.split(' ')[1] || '',
+                                        timeStart: moment(data.tappointmentlist[i].STARTTIME).format('h:mm a'),
+                                        timeEnd: moment(data.tappointmentlist[i].ENDTIME).format('h:mm a'),
+                                        totalHours: data.tappointmentlist[i].TotalHours || 0,
+                                        endTime: data.tappointmentlist[i].ENDTIME.split(' ')[1] || '',
+                                        startDate: data.tappointmentlist[i].STARTTIME || '',
+                                        endDate: data.tappointmentlist[i].ENDTIME || '',
+                                        frmDate: moment(data.tappointmentlist[i].STARTTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].STARTTIME).format('DD'),
+                                        toDate: moment(data.tappointmentlist[i].ENDTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].ENDTIME).format('DD'),
+                                        fromDate: data.tappointmentlist[i].Actual_Endtime != '' ? moment(data.tappointmentlist[i].Actual_Endtime).format("DD/MM/YYYY") : data.tappointmentlist[i].Actual_Endtime,
+                                        openbalance: data.tappointmentlist[i].Actual_Endtime || '',
+                                        aStartTime: data.tappointmentlist[i].Actual_Starttime.split(' ')[1] || '',
+                                        aEndTime: data.tappointmentlist[i].Actual_Endtime.split(' ')[1] || '',
+                                        actualHours: '',
+                                        closebalance: '',
+                                        product: data.tappointmentlist[i].ProductDesc || '',
+                                        finished: appStatus || '',
+                                        notes: data.tappointmentlist[i].Notes || '',
+                                        color: color,
+                                        actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                                        actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                                        actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                                        actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
+                                        booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                                        booked_endtime: data.tappointmentlist[i].ENDTIME || '',
+                                        custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                                        custFld13: data.tappointmentlist[i].CUSTFLD13 || '',
+                                        extraProducts: data.tappointmentlist[i].ExtraProducts || "",
+                                        attachments: data.tappointmentlist[i].Attachments || "",
+                                    };
+        
+                                    if (apmt__.length > 0) {
+                                        dataList.statementno = apmt__[0].employeename || "";
+                                    }
+        
+                                    if (accessLevel) {
+                                        if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
+                                            // Get SMS Confimation Info
+                                            const smsSettings = templateObject.smsSettings.get();
+                                            if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
+                                                const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                                    message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                                const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                                    message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                                let currentSentSMSDate = null;
+                                                let nextSentSMSDate = null;
+                                                if (sentSMSs.length > 0) {
+                                                    for (let j = 0; j < sentSMSs.length; j++) {
+                                                        if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
+                                                            currentSentSMSDate = sentSMSs[j].date_sent;
+                                                            nextSentSMSDate = j - 1 >= 0 ? sentSMSs[j - 1].date_sent : null;
+                                                            break;
+                                                        }
+                                                    }
+                                                    if (currentSentSMSDate) {
+                                                        for (let j = 0; j < receiveSMSs.length; j++) {
+                                                            const receiveSMSDate = moment(receiveSMSs[j].date_sent);
+                                                            if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
+                                                                const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
+                                                                if (replyText.includes('yes')) {
+                                                                    appointmentService.saveAppointment({
+                                                                        type: "TAppointmentEx",
+                                                                        fields: {
+                                                                            Id: data.tappointmentlist[i].AppointID,
+                                                                            CUSTFLD11: "Yes"
+                                                                        }
+                                                                    }).then(function(data) {
+                                                                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                            addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                        });
+                                                                    }).catch(e => {
+        
+                                                                    });
+                                                                    dataList.custFld11 = "Yes";
+                                                                    break;
+                                                                } else if (replyText.includes('no')) {
+                                                                    appointmentService.saveAppointment({
+                                                                        type: "TAppointmentEx",
+                                                                        fields: {
+                                                                            Id: data.tappointmentlist[i].AppointID,
+                                                                            CUSTFLD11: "No"
+                                                                        }
+                                                                    }).then(function(data) {
+                                                                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                            addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                        });
+                                                                    }).catch(e => {
+        
+                                                                    });
+                                                                    dataList.custFld11 = "No";
+                                                                    break;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    dataTableList.push(dataList);
+                                }
+                                templateObject.datatablerecords.set(dataTableList);
+                            })
+                            .catch(function(err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                        }else{
+                            let data_ = JSON.parse(dataObject2[0].data);
+                            for (let i = 0; i < data_.tappointmentex.length; i++) {
+                                var appointment = {
+                                    id: data_.tappointmentex[i].fields.ID || "",
+                                    sortdate: data_.tappointmentex[i].fields.CreationDate ?
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "YYYY/MM/DD"
+                                        ) : "",
+                                    appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "DD/MM/YYYY"
+                                        ) : "",
+                                    accountname: data_.tappointmentex[i].fields.ClientName || "",
+                                    statementno: data_.tappointmentex[i].fields.TrainerName || "",
+                                    employeename: data_.tappointmentex[i].fields.TrainerName || "",
+                                    department: data_.tappointmentex[i].fields.DeptClassName || "",
+                                    phone: data_.tappointmentex[i].fields.Phone || "",
+                                    mobile: data_.tappointmentex[i].fields.Mobile || "",
+                                    suburb: data_.tappointmentex[i].fields.Suburb || "",
+                                    street: data_.tappointmentex[i].fields.Street || "",
+                                    state: data_.tappointmentex[i].fields.State || "",
+                                    country: data_.tappointmentex[i].fields.Country || "",
+                                    zip: data_.tappointmentex[i].fields.Postcode || "",
+                                    timelog: data_.tappointmentex[i].fields.AppointmentsTimeLog || "",
+                                    startTime: data_.tappointmentex[i].fields.StartTime.split(" ")[1] || "",
+                                    totalHours: data_.tappointmentex[i].fields.TotalHours || 0,
+                                    endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
+                                    startDate: data_.tappointmentex[i].fields.StartTime || "",
+                                    endDate: data_.tappointmentex[i].fields.EndTime || "",
+                                    fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
+                                        moment(
+                                            data_.tappointmentex[i].fields.Actual_EndTime
+                                        ).format("DD/MM/YYYY") : "",
+                                    openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
+                                    aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                        " "
+                                    )[1] || "",
+                                    aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                        " "
+                                    )[1] || "",
+                                    aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                        " "
+                                    )[0] || "",
+                                    aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                        " "
+                                    )[0] || "",
+                                    actualHours: "",
+                                    closebalance: "",
+                                    rate: data_.tappointmentex[i].fields.Rate || 1,
+                                    product: data_.tappointmentex[i].fields.ProductDesc || "",
+                                    extraProducts: data_.tappointmentex[i].fields.ExtraProducts || "",
+                                    finished: data_.tappointmentex[i].fields.Status || "",
+                                    //employee: data.tappointmentex[i].EndTime != '' ? moment(data.tappointmentex[i].EndTime).format("DD/MM/YYYY") : data.tappointmentex[i].EndTime,
+                                    notes: data_.tappointmentex[i].fields.Notes || "",
+                                    attachments: data_.tappointmentex[i].fields.Attachments || "",
+                                    isPaused: data_.tappointmentex[i].fields.Othertxt || "",
+                                    msRef: data_.tappointmentex[i].fields.MsRef || "",
+                                    custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
+                                    custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
+                                };
+    
+                                appointmentList.push(appointment);
+                            }
+    
+                            for (let i = 0; i < data.tappointmentlist.length; i++) {
+                                appStatus = data.tappointmentlist[i].Status || '';
+                                var apmt__ = appointmentList.filter((apmt) => {
+                                    return apmt.id == data.tappointmentlist[i].AppointID;
+                                });
+    
+                                // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
+                                // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
+                                if (data.tappointmentlist[i].Active == true) {
+                                    if (data.tappointmentlist[i].Status == "Converted" || data.tappointmentlist[i].Status == "Completed") {
+                                        color = "#1cc88a";
+                                    } else {
+                                        color = "#f6c23e";
+                                    }
+                                } else {
+                                    appStatus = "Deleted";
+                                    color = "#e74a3b";
+                                }
+                                var dataList = {
+                                    id: data.tappointmentlist[i].AppointID || '',
+                                    sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
+                                    appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
+                                    accountname: data.tappointmentlist[i].ClientName || '',
+                                    statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                    employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                    department: data.tappointmentlist[i].DeptClassName || '',
+                                    phone: data.tappointmentlist[i].Phone || '',
+                                    mobile: data.tappointmentlist[i].ClientMobile || '',
+                                    suburb: data.tappointmentlist[i].Suburb || '',
+                                    street: data.tappointmentlist[i].Street || '',
+                                    state: data.tappointmentlist[i].State || '',
+                                    country: data.tappointmentlist[i].Country || '',
+                                    zip: data.tappointmentlist[i].Postcode || '',
+                                    startTime: data.tappointmentlist[i].STARTTIME.split(' ')[1] || '',
+                                    timeStart: moment(data.tappointmentlist[i].STARTTIME).format('h:mm a'),
+                                    timeEnd: moment(data.tappointmentlist[i].ENDTIME).format('h:mm a'),
+                                    totalHours: data.tappointmentlist[i].TotalHours || 0,
+                                    endTime: data.tappointmentlist[i].ENDTIME.split(' ')[1] || '',
+                                    startDate: data.tappointmentlist[i].STARTTIME || '',
+                                    endDate: data.tappointmentlist[i].ENDTIME || '',
+                                    frmDate: moment(data.tappointmentlist[i].STARTTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].STARTTIME).format('DD'),
+                                    toDate: moment(data.tappointmentlist[i].ENDTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].ENDTIME).format('DD'),
+                                    fromDate: data.tappointmentlist[i].Actual_Endtime != '' ? moment(data.tappointmentlist[i].Actual_Endtime).format("DD/MM/YYYY") : data.tappointmentlist[i].Actual_Endtime,
+                                    openbalance: data.tappointmentlist[i].Actual_Endtime || '',
+                                    aStartTime: data.tappointmentlist[i].Actual_Starttime.split(' ')[1] || '',
+                                    aEndTime: data.tappointmentlist[i].Actual_Endtime.split(' ')[1] || '',
+                                    actualHours: '',
+                                    closebalance: '',
+                                    product: data.tappointmentlist[i].ProductDesc || '',
+                                    finished: appStatus || '',
+                                    notes: data.tappointmentlist[i].Notes || '',
+                                    color: color,
+                                    actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                                    actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                                    actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                                    actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
+                                    booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                                    booked_endtime: data.tappointmentlist[i].ENDTIME || '',
+                                    custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                                    custFld13: data.tappointmentlist[i].CUSTFLD13 || '',
+                                    extraProducts: data.tappointmentlist[i].ExtraProducts || "",
+                                    attachments: data.tappointmentlist[i].Attachments || "",
+                                };
+    
+                                if (apmt__.length > 0) {
+                                    dataList.statementno = apmt__[0].employeename || "";
+                                }
+    
+                                if (accessLevel) {
+                                    if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
+                                        // Get SMS Confimation Info
+                                        const smsSettings = templateObject.smsSettings.get();
+                                        if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
+                                            const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                                message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                            const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                                message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                            let currentSentSMSDate = null;
+                                            let nextSentSMSDate = null;
+                                            if (sentSMSs.length > 0) {
+                                                for (let j = 0; j < sentSMSs.length; j++) {
+                                                    if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
+                                                        currentSentSMSDate = sentSMSs[j].date_sent;
+                                                        nextSentSMSDate = j - 1 >= 0 ? sentSMSs[j - 1].date_sent : null;
+                                                        break;
+                                                    }
+                                                }
+                                                if (currentSentSMSDate) {
+                                                    for (let j = 0; j < receiveSMSs.length; j++) {
+                                                        const receiveSMSDate = moment(receiveSMSs[j].date_sent);
+                                                        if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
+                                                            const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
+                                                            if (replyText.includes('yes')) {
+                                                                appointmentService.saveAppointment({
+                                                                    type: "TAppointmentEx",
+                                                                    fields: {
+                                                                        Id: data.tappointmentlist[i].AppointID,
+                                                                        CUSTFLD11: "Yes"
+                                                                    }
+                                                                }).then(function(data) {
+                                                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                    });
+                                                                }).catch(e => {
+    
+                                                                });
+                                                                dataList.custFld11 = "Yes";
+                                                                break;
+                                                            } else if (replyText.includes('no')) {
+                                                                appointmentService.saveAppointment({
+                                                                    type: "TAppointmentEx",
+                                                                    fields: {
+                                                                        Id: data.tappointmentlist[i].AppointID,
+                                                                        CUSTFLD11: "No"
+                                                                    }
+                                                                }).then(function(data) {
+                                                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                    });
+                                                                }).catch(e => {
+    
+                                                                });
+                                                                dataList.custFld11 = "No";
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                dataTableList.push(dataList);
+                            }
+                            templateObject.datatablerecords.set(dataTableList);
+                        } 
+                    })
+                   
+                }).catch(function(err) {
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                let lineItems = [];
+                let lineItemObj = {};
+                let appointmentList = [];
+                let color = "";
+                let appStatus = "";
+                if (data.Params.IgnoreDates == true) {
+                    $('#dateFrom').attr('readonly', true);
+                    $('#dateTo').attr('readonly', true);
+                } else {
+                    $('#dateFrom').attr('readonly', false);
+                    $('#dateTo').attr('readonly', false);
+                    $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                    $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+                }
+                $('.fullScreenSpin').css('display', 'none');
+                getVS1Data('TAppointment').then(async function(dataObject2) {
+                    if (dataObject2.length == 0) {
+                        sideBarService
+                        .getAllAppointmentList(initialDataLoad, 0)
+                        .then(function(data_) {
+                            addVS1Data("TAppointment", JSON.stringify(data_));
+                            for (let i = 0; i < data_.tappointmentex.length; i++) {
+                                var appointment = {
+                                    id: data_.tappointmentex[i].fields.ID || "",
+                                    sortdate: data_.tappointmentex[i].fields.CreationDate ?
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "YYYY/MM/DD"
+                                        ) : "",
+                                    appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "DD/MM/YYYY"
+                                        ) : "",
+                                    accountname: data_.tappointmentex[i].fields.ClientName || "",
+                                    statementno: data_.tappointmentex[i].fields.TrainerName || "",
+                                    employeename: data_.tappointmentex[i].fields.TrainerName || "",
+                                    department: data_.tappointmentex[i].fields.DeptClassName || "",
+                                    phone: data_.tappointmentex[i].fields.Phone || "",
+                                    mobile: data_.tappointmentex[i].fields.Mobile || "",
+                                    suburb: data_.tappointmentex[i].fields.Suburb || "",
+                                    street: data_.tappointmentex[i].fields.Street || "",
+                                    state: data_.tappointmentex[i].fields.State || "",
+                                    country: data_.tappointmentex[i].fields.Country || "",
+                                    zip: data_.tappointmentex[i].fields.Postcode || "",
+                                    timelog: data_.tappointmentex[i].fields.AppointmentsTimeLog || "",
+                                    startTime: data_.tappointmentex[i].fields.StartTime.split(" ")[1] || "",
+                                    totalHours: data_.tappointmentex[i].fields.TotalHours || 0,
+                                    endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
+                                    startDate: data_.tappointmentex[i].fields.StartTime || "",
+                                    endDate: data_.tappointmentex[i].fields.EndTime || "",
+                                    fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
+                                        moment(
+                                            data_.tappointmentex[i].fields.Actual_EndTime
+                                        ).format("DD/MM/YYYY") : "",
+                                    openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
+                                    aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                        " "
+                                    )[1] || "",
+                                    aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                        " "
+                                    )[1] || "",
+                                    aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                        " "
+                                    )[0] || "",
+                                    aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                        " "
+                                    )[0] || "",
+                                    actualHours: "",
+                                    closebalance: "",
+                                    rate: data_.tappointmentex[i].fields.Rate || 1,
+                                    product: data_.tappointmentex[i].fields.ProductDesc || "",
+                                    extraProducts: data_.tappointmentex[i].fields.ExtraProducts || "",
+                                    finished: data_.tappointmentex[i].fields.Status || "",
+                                    //employee: data.tappointmentex[i].EndTime != '' ? moment(data.tappointmentex[i].EndTime).format("DD/MM/YYYY") : data.tappointmentex[i].EndTime,
+                                    notes: data_.tappointmentex[i].fields.Notes || "",
+                                    attachments: data_.tappointmentex[i].fields.Attachments || "",
+                                    isPaused: data_.tappointmentex[i].fields.Othertxt || "",
+                                    msRef: data_.tappointmentex[i].fields.MsRef || "",
+                                    custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
+                                    custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
+                                };
+    
+                                appointmentList.push(appointment);
+                            }
+    
+                            for (let i = 0; i < data.tappointmentlist.length; i++) {
+                                appStatus = data.tappointmentlist[i].Status || '';
+                                var apmt__ = appointmentList.filter((apmt) => {
+                                    return apmt.id == data.tappointmentlist[i].AppointID;
+                                });
+    
+                                // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
+                                // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
+                                if (data.tappointmentlist[i].Active == true) {
+                                    if (data.tappointmentlist[i].Status == "Converted" || data.tappointmentlist[i].Status == "Completed") {
+                                        color = "#1cc88a";
+                                    } else {
+                                        color = "#f6c23e";
+                                    }
+                                } else {
+                                    appStatus = "Deleted";
+                                    color = "#e74a3b";
+                                }
+                                var dataList = {
+                                    id: data.tappointmentlist[i].AppointID || '',
+                                    sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
+                                    appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
+                                    accountname: data.tappointmentlist[i].ClientName || '',
+                                    statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                    employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                    department: data.tappointmentlist[i].DeptClassName || '',
+                                    phone: data.tappointmentlist[i].Phone || '',
+                                    mobile: data.tappointmentlist[i].ClientMobile || '',
+                                    suburb: data.tappointmentlist[i].Suburb || '',
+                                    street: data.tappointmentlist[i].Street || '',
+                                    state: data.tappointmentlist[i].State || '',
+                                    country: data.tappointmentlist[i].Country || '',
+                                    zip: data.tappointmentlist[i].Postcode || '',
+                                    startTime: data.tappointmentlist[i].STARTTIME.split(' ')[1] || '',
+                                    timeStart: moment(data.tappointmentlist[i].STARTTIME).format('h:mm a'),
+                                    timeEnd: moment(data.tappointmentlist[i].ENDTIME).format('h:mm a'),
+                                    totalHours: data.tappointmentlist[i].TotalHours || 0,
+                                    endTime: data.tappointmentlist[i].ENDTIME.split(' ')[1] || '',
+                                    startDate: data.tappointmentlist[i].STARTTIME || '',
+                                    endDate: data.tappointmentlist[i].ENDTIME || '',
+                                    frmDate: moment(data.tappointmentlist[i].STARTTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].STARTTIME).format('DD'),
+                                    toDate: moment(data.tappointmentlist[i].ENDTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].ENDTIME).format('DD'),
+                                    fromDate: data.tappointmentlist[i].Actual_Endtime != '' ? moment(data.tappointmentlist[i].Actual_Endtime).format("DD/MM/YYYY") : data.tappointmentlist[i].Actual_Endtime,
+                                    openbalance: data.tappointmentlist[i].Actual_Endtime || '',
+                                    aStartTime: data.tappointmentlist[i].Actual_Starttime.split(' ')[1] || '',
+                                    aEndTime: data.tappointmentlist[i].Actual_Endtime.split(' ')[1] || '',
+                                    actualHours: '',
+                                    closebalance: '',
+                                    product: data.tappointmentlist[i].ProductDesc || '',
+                                    finished: appStatus || '',
+                                    notes: data.tappointmentlist[i].Notes || '',
+                                    color: color,
+                                    actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                                    actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                                    actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                                    actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
+                                    booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                                    booked_endtime: data.tappointmentlist[i].ENDTIME || '',
+                                    custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                                    custFld13: data.tappointmentlist[i].CUSTFLD13 || '',
+                                    extraProducts: data.tappointmentlist[i].ExtraProducts || "",
+                                    attachments: data.tappointmentlist[i].Attachments || "",
+                                };
+    
+                                if (apmt__.length > 0) {
+                                    dataList.statementno = apmt__[0].employeename || "";
+                                }
+    
+                                if (accessLevel) {
+                                    if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
+                                        // Get SMS Confimation Info
+                                        const smsSettings = templateObject.smsSettings.get();
+                                        if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
+                                            const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                                message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                            const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                                message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                            let currentSentSMSDate = null;
+                                            let nextSentSMSDate = null;
+                                            if (sentSMSs.length > 0) {
+                                                for (let j = 0; j < sentSMSs.length; j++) {
+                                                    if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
+                                                        currentSentSMSDate = sentSMSs[j].date_sent;
+                                                        nextSentSMSDate = j - 1 >= 0 ? sentSMSs[j - 1].date_sent : null;
+                                                        break;
+                                                    }
+                                                }
+                                                if (currentSentSMSDate) {
+                                                    for (let j = 0; j < receiveSMSs.length; j++) {
+                                                        const receiveSMSDate = moment(receiveSMSs[j].date_sent);
+                                                        if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
+                                                            const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
+                                                            if (replyText.includes('yes')) {
+                                                                appointmentService.saveAppointment({
+                                                                    type: "TAppointmentEx",
+                                                                    fields: {
+                                                                        Id: data.tappointmentlist[i].AppointID,
+                                                                        CUSTFLD11: "Yes"
+                                                                    }
+                                                                }).then(function(data) {
+                                                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                    });
+                                                                }).catch(e => {
+    
+                                                                });
+                                                                dataList.custFld11 = "Yes";
+                                                                break;
+                                                            } else if (replyText.includes('no')) {
+                                                                appointmentService.saveAppointment({
+                                                                    type: "TAppointmentEx",
+                                                                    fields: {
+                                                                        Id: data.tappointmentlist[i].AppointID,
+                                                                        CUSTFLD11: "No"
+                                                                    }
+                                                                }).then(function(data) {
+                                                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                        addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                    });
+                                                                }).catch(e => {
+    
+                                                                });
+                                                                dataList.custFld11 = "No";
+                                                                break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                dataTableList.push(dataList);
+                            }
+                            templateObject.datatablerecords.set(dataTableList);
+                        })
+                        .catch(function(err) {
+                            $(".fullScreenSpin").css("display", "none");
+                        });
+                    }else{
+                        let data_ = JSON.parse(dataObject2[0].data);
+                        for (let i = 0; i < data_.tappointmentex.length; i++) {
+                            var appointment = {
+                                id: data_.tappointmentex[i].fields.ID || "",
+                                sortdate: data_.tappointmentex[i].fields.CreationDate ?
+                                    moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                        "YYYY/MM/DD"
+                                    ) : "",
+                                appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
+                                    moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                        "DD/MM/YYYY"
+                                    ) : "",
+                                accountname: data_.tappointmentex[i].fields.ClientName || "",
+                                statementno: data_.tappointmentex[i].fields.TrainerName || "",
+                                employeename: data_.tappointmentex[i].fields.TrainerName || "",
+                                department: data_.tappointmentex[i].fields.DeptClassName || "",
+                                phone: data_.tappointmentex[i].fields.Phone || "",
+                                mobile: data_.tappointmentex[i].fields.Mobile || "",
+                                suburb: data_.tappointmentex[i].fields.Suburb || "",
+                                street: data_.tappointmentex[i].fields.Street || "",
+                                state: data_.tappointmentex[i].fields.State || "",
+                                country: data_.tappointmentex[i].fields.Country || "",
+                                zip: data_.tappointmentex[i].fields.Postcode || "",
+                                timelog: data_.tappointmentex[i].fields.AppointmentsTimeLog || "",
+                                startTime: data_.tappointmentex[i].fields.StartTime.split(" ")[1] || "",
+                                totalHours: data_.tappointmentex[i].fields.TotalHours || 0,
+                                endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
+                                startDate: data_.tappointmentex[i].fields.StartTime || "",
+                                endDate: data_.tappointmentex[i].fields.EndTime || "",
+                                fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
+                                    moment(
+                                        data_.tappointmentex[i].fields.Actual_EndTime
+                                    ).format("DD/MM/YYYY") : "",
+                                openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
+                                aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                    " "
+                                )[1] || "",
+                                aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                    " "
+                                )[1] || "",
+                                aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                    " "
+                                )[0] || "",
+                                aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                    " "
+                                )[0] || "",
+                                actualHours: "",
+                                closebalance: "",
+                                rate: data_.tappointmentex[i].fields.Rate || 1,
+                                product: data_.tappointmentex[i].fields.ProductDesc || "",
+                                extraProducts: data_.tappointmentex[i].fields.ExtraProducts || "",
+                                finished: data_.tappointmentex[i].fields.Status || "",
+                                //employee: data.tappointmentex[i].EndTime != '' ? moment(data.tappointmentex[i].EndTime).format("DD/MM/YYYY") : data.tappointmentex[i].EndTime,
+                                notes: data_.tappointmentex[i].fields.Notes || "",
+                                attachments: data_.tappointmentex[i].fields.Attachments || "",
+                                isPaused: data_.tappointmentex[i].fields.Othertxt || "",
+                                msRef: data_.tappointmentex[i].fields.MsRef || "",
+                                custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
+                                custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
+                            };
+
+                            appointmentList.push(appointment);
+                        }
+
+                        for (let i = 0; i < data.tappointmentlist.length; i++) {
+                            appStatus = data.tappointmentlist[i].Status || '';
+                            var apmt__ = appointmentList.filter((apmt) => {
+                                return apmt.id == data.tappointmentlist[i].AppointID;
+                            });
+
+                            // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
+                            // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
+                            if (data.tappointmentlist[i].Active == true) {
+                                if (data.tappointmentlist[i].Status == "Converted" || data.tappointmentlist[i].Status == "Completed") {
+                                    color = "#1cc88a";
+                                } else {
+                                    color = "#f6c23e";
+                                }
+                            } else {
+                                appStatus = "Deleted";
+                                color = "#e74a3b";
+                            }
+                            var dataList = {
+                                id: data.tappointmentlist[i].AppointID || '',
+                                sortdate: data.tappointmentlist[i].CreationDate != '' ? moment(data.tappointmentlist[i].CreationDate).format("YYYY/MM/DD") : data.tappointmentlist[i].CreationDate,
+                                appointmentdate: data.tappointmentlist[i].STARTTIME != '' ? moment(data.tappointmentlist[i].STARTTIME).format("DD/MM/YYYY") : data.tappointmentlist[i].STARTTIME,
+                                accountname: data.tappointmentlist[i].ClientName || '',
+                                statementno: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                employeename: data.tappointmentlist[i].EnteredByEmployeeName || '',
+                                department: data.tappointmentlist[i].DeptClassName || '',
+                                phone: data.tappointmentlist[i].Phone || '',
+                                mobile: data.tappointmentlist[i].ClientMobile || '',
+                                suburb: data.tappointmentlist[i].Suburb || '',
+                                street: data.tappointmentlist[i].Street || '',
+                                state: data.tappointmentlist[i].State || '',
+                                country: data.tappointmentlist[i].Country || '',
+                                zip: data.tappointmentlist[i].Postcode || '',
+                                startTime: data.tappointmentlist[i].STARTTIME.split(' ')[1] || '',
+                                timeStart: moment(data.tappointmentlist[i].STARTTIME).format('h:mm a'),
+                                timeEnd: moment(data.tappointmentlist[i].ENDTIME).format('h:mm a'),
+                                totalHours: data.tappointmentlist[i].TotalHours || 0,
+                                endTime: data.tappointmentlist[i].ENDTIME.split(' ')[1] || '',
+                                startDate: data.tappointmentlist[i].STARTTIME || '',
+                                endDate: data.tappointmentlist[i].ENDTIME || '',
+                                frmDate: moment(data.tappointmentlist[i].STARTTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].STARTTIME).format('DD'),
+                                toDate: moment(data.tappointmentlist[i].ENDTIME).format('dddd') + ', ' + moment(data.tappointmentlist[i].ENDTIME).format('DD'),
+                                fromDate: data.tappointmentlist[i].Actual_Endtime != '' ? moment(data.tappointmentlist[i].Actual_Endtime).format("DD/MM/YYYY") : data.tappointmentlist[i].Actual_Endtime,
+                                openbalance: data.tappointmentlist[i].Actual_Endtime || '',
+                                aStartTime: data.tappointmentlist[i].Actual_Starttime.split(' ')[1] || '',
+                                aEndTime: data.tappointmentlist[i].Actual_Endtime.split(' ')[1] || '',
+                                actualHours: '',
+                                closebalance: '',
+                                product: data.tappointmentlist[i].ProductDesc || '',
+                                finished: appStatus || '',
+                                notes: data.tappointmentlist[i].Notes || '',
+                                color: color,
+                                actual_starttime: data.tappointmentlist[i].Actual_Starttime || '',
+                                actual_endtime: data.tappointmentlist[i].Actual_Endtime || '',
+                                actual_start_time: data.tappointmentlist[i].Actual_Start_time || '',
+                                actual_end_time: data.tappointmentlist[i].Actual_End_time || '',
+                                booked_starttime: data.tappointmentlist[i].STARTTIME || '',
+                                booked_endtime: data.tappointmentlist[i].ENDTIME || '',
+                                custFld11: data.tappointmentlist[i].CUSTFLD11 || '',
+                                custFld13: data.tappointmentlist[i].CUSTFLD13 || '',
+                                extraProducts: data.tappointmentlist[i].ExtraProducts || "",
+                                attachments: data.tappointmentlist[i].Attachments || "",
+                            };
+
+                            if (apmt__.length > 0) {
+                                dataList.statementno = apmt__[0].employeename || "";
+                            }
+
+                            if (accessLevel) {
+                                if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
+                                    // Get SMS Confimation Info
+                                    const smsSettings = templateObject.smsSettings.get();
+                                    if (smsSettings.twilioAccountId !== "" && smsSettings.twilioAccountToken !== "" && smsSettings.twilioTelephoneNumber !== "") {
+                                        const sentSMSs = recentSMSLogs.sms_messages.filter(message => message.from === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                            message.to === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                        const receiveSMSs = recentSMSLogs.sms_messages.filter(message => message.to === "+" + smsSettings.twilioTelephoneNumber.replace('+', '') &&
+                                            message.from === "+" + data.tappointmentlist[i].Mobile.replace('+', '')) || '';
+                                        let currentSentSMSDate = null;
+                                        let nextSentSMSDate = null;
+                                        if (sentSMSs.length > 0) {
+                                            for (let j = 0; j < sentSMSs.length; j++) {
+                                                if (data.tappointmentlist[i].CUSTFLD12 === sentSMSs[j].sid) {
+                                                    currentSentSMSDate = sentSMSs[j].date_sent;
+                                                    nextSentSMSDate = j - 1 >= 0 ? sentSMSs[j - 1].date_sent : null;
+                                                    break;
+                                                }
+                                            }
+                                            if (currentSentSMSDate) {
+                                                for (let j = 0; j < receiveSMSs.length; j++) {
+                                                    const receiveSMSDate = moment(receiveSMSs[j].date_sent);
+                                                    if (receiveSMSDate >= moment(currentSentSMSDate) && (!nextSentSMSDate || (nextSentSMSDate && receiveSMSDate <= moment(nextSentSMSDate)))) {
+                                                        const replyText = receiveSMSs[j].body ? receiveSMSs[j].body.toLowerCase() : "";
+                                                        if (replyText.includes('yes')) {
+                                                            appointmentService.saveAppointment({
+                                                                type: "TAppointmentEx",
+                                                                fields: {
+                                                                    Id: data.tappointmentlist[i].AppointID,
+                                                                    CUSTFLD11: "Yes"
+                                                                }
+                                                            }).then(function(data) {
+                                                                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                    addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                });
+                                                            }).catch(e => {
+
+                                                            });
+                                                            dataList.custFld11 = "Yes";
+                                                            break;
+                                                        } else if (replyText.includes('no')) {
+                                                            appointmentService.saveAppointment({
+                                                                type: "TAppointmentEx",
+                                                                fields: {
+                                                                    Id: data.tappointmentlist[i].AppointID,
+                                                                    CUSTFLD11: "No"
+                                                                }
+                                                            }).then(function(data) {
+                                                                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                                                                    addVS1Data('TAppointment', JSON.stringify(dataUpdate));
+                                                                });
+                                                            }).catch(e => {
+
+                                                            });
+                                                            dataList.custFld11 = "No";
+                                                            break;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            dataTableList.push(dataList);
+                        }
+                        templateObject.datatablerecords.set(dataTableList);
+                    } 
+                })
+            }
+        })
+    }
+
+    templateObject.getAllAppointmentListData();
+
+    $('#tblappointmentlist tbody').on('click', 'tr td:not(:first-child)', function() {
+        var id = $(this).closest('tr').find('.colID').text() || '';
+        var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+        if (checkDeleted == "Deleted") {
+            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+        } else {
+            $("#frmAppointment")[0].reset();
+            $("#btnHold").prop("disabled", false);
+            $("#btnStartAppointment").prop("disabled", false);
+            $("#btnStopAppointment").prop("disabled", false);
+            $("#startTime").prop("disabled", false);
+            $("#endTime").prop("disabled", false);
+            $("#tActualStartTime").prop("disabled", false);
+            $("#tActualEndTime").prop("disabled", false);
+            $("#txtActualHoursSpent").prop("disabled", false);
+            var hours = "0";
+            var appointmentData = templateObject.datatablerecords.get();
+            var result = appointmentData.filter((apmt) => {
+                return apmt.id == id;
+            });
+            if (result.length > 0) {
+                $("#frmAppointment")[0].reset();
+                $("#btnHold").prop("disabled", false);
+                $("#btnStartAppointment").prop("disabled", false);
+                $("#btnStopAppointment").prop("disabled", false);
+                $("#startTime").prop("disabled", false);
+                $("#endTime").prop("disabled", false);
+                $("#tActualStartTime").prop("disabled", false);
+                $("#tActualEndTime").prop("disabled", false);
+                $("#txtActualHoursSpent").prop("disabled", false);
+                var hours = "0";
+                // templateObject.getAllProductData();
+                if (result[0].isPaused == "Paused") {
+                    $(".paused").show();
+                    $("#btnHold").prop("disabled", true);
+                } else {
+                    $(".paused").hide();
+                    $("#btnHold").prop("disabled", false);
+                }
+
+                if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
+                    $("#btnHold").prop("disabled", true);
+                    $("#btnStartAppointment").prop("disabled", true);
+                    $("#btnStopAppointment").prop("disabled", true);
+                    $("#startTime").prop("disabled", true);
+                    $("#endTime").prop("disabled", true);
+                    $("#tActualStartTime").prop("disabled", true);
+                    $("#tActualEndTime").prop("disabled", true);
+                    $("#txtActualHoursSpent").prop("disabled", true);
+                }
+                if (result[0].aStartTime != "" && result[0].aEndTime != "") {
+                    var startTime = moment(
+                        result[0].startDate.split(" ")[0] + " " + result[0].aStartTime
+                    );
+                    var endTime = moment(
+                        result[0].endDate.split(" ")[0] + " " + result[0].aEndTime
+                    );
+                    var duration = moment.duration(
+                        moment(endTime).diff(moment(startTime))
+                    );
+                    hours = duration.asHours();
+                }
+
+                document.getElementById("updateID").value = result[0].id || 0;
+                document.getElementById("appID").value = result[0].id;
+                document.getElementById("customer").value = result[0].accountname;
+                document.getElementById("phone").value = result[0].phone;
+                document.getElementById("mobile").value =
+                    result[0].mobile.replace("+", "") ||
+                    result[0].phone.replace("+", "") ||
+                    "";
+                document.getElementById("state").value = result[0].state;
+                document.getElementById("address").value = result[0].street;
+                if (localStorage.getItem("CloudAppointmentNotes") == true) {
+                    document.getElementById("txtNotes").value = result[0].notes;
+                    document.getElementById("txtNotes-1").value = result[0].notes;
+                }
+                document.getElementById("suburb").value = result[0].suburb;
+                document.getElementById("zip").value = result[0].zip;
+                document.getElementById("country").value = result[0].country;
+
+                document.getElementById("product-list").value =
+                    result[0].product || "";
+                document.getElementById("product-list-1").value =
+                    result[0].product || "";
+                document.getElementById("employee_name").value =
+                    result[0].employeename;
+                document.getElementById("dtSODate").value = moment(
+                    result[0].startDate.split(" ")[0]
+                ).format("DD/MM/YYYY");
+                document.getElementById("dtSODate2").value = moment(
+                    result[0].endDate.split(" ")[0]
+                ).format("DD/MM/YYYY");
+                document.getElementById("startTime").value = result[0].startTime;
+                document.getElementById("endTime").value = result[0].endTime;
+                document.getElementById("txtBookedHoursSpent").value =
+                    result[0].totalHours;
+                document.getElementById("tActualStartTime").value =
+                    result[0].aStartTime;
+                document.getElementById("tActualEndTime").value =
+                    result[0].aEndTime;
+                document.getElementById("txtActualHoursSpent").value =
+                    parseFloat(hours).toFixed(2) || "";
+
+                if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none"))
+                    $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
+                if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none"))
+                    $("#smsConfirmedFlag i.fa-close").addClass("d-none");
+                if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none"))
+                    $("#smsConfirmedFlag i.fa-question").addClass("d-none");
+                if (!$("#smsConfirmedFlag i.fa-minus-circle").hasClass("d-none"))
+                    $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
+                if (result[0].custFld13 === "Yes") {
+                    if (result[0].custFld11 === "Yes") {
+                        $("#smsConfirmedFlag i.fa-check-circle").removeClass(
+                            "d-none"
+                        );
+                    } else {
+                        if (result[0].custFld11 === "No") {
+                            $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
+                        } else {
+                            $("#smsConfirmedFlag i.fa-question").removeClass("d-none");
+                        }
+                    }
+                } else {
+                    $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
+                }
+
+                $("#attachmentCount").html("");
+                if (result[0].attachments) {
+                    $("#attachmentCount").html(result[0].attachments.length);
+                }
+
+                $("#event-modal").modal("toggle");
+                if (result[0].extraProducts != "") {
+                    let extraProducts = result[0].extraProducts.split(":");
+                    let extraProductFees = [];
+                    productService.getNewProductServiceListVS1()
+                        .then(function(products) {
+                            extraProducts.forEach((item) => {
+                                $("#productCheck-" + item).prop("checked", true);
+                                products.tproductvs1.forEach((product) => {
+                                    if (product.Id == item) {
+                                        extraProductFees.push(product);
+                                    }
+                                    $("#productCheck-" + item).prop("checked", true);
+                                });
+                            });
+                            templateObject.extraProductFees.set(extraProductFees);
+                            $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+                        })
+                        .catch(function(err) {
+                        });
+                }
+
+                setTimeout(() => {
+                    if (localStorage.getItem("smsCustomerAppt") == "false") {
+                        $("#chkSMSCustomer").prop("checked", false);
+                    }
+                    if (localStorage.getItem("smsUserAppt") == "false") {
+                        $("#chkSMSUser").prop("checked", false);
+                    }
+                    if (localStorage.getItem("emailCustomerAppt") == "false") {
+                        $("#customerEmail").prop("checked", false);
+                    }
+                    if (localStorage.getItem("emailUserAppt") == "false") {
+                        $("#userEmail").prop("checked", false);
+                    }
+                }, 100);
+            }
+        }
+    });
 });
 
 Template.appointmentlist.events({

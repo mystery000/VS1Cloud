@@ -35,11 +35,11 @@ Template.payrollhistoryreport.onRendered(() => {
   let reset_data = [
     { index: 1, label: 'Employee', class: 'colLastName', active: true, display: true, width: "150" },
     { index: 2, label: 'Date', class: 'colFirstName', active: true, display: true, width: "150" },
-    { index: 3, label: 'Wages', class: 'colGL', active: true, display: true, width: "150" },
-    { index: 4, label: 'Tax', class: 'colDatePaid', active: true, display: true, width: "150" },
-    { index: 5, label: 'Super', class: 'colGross', active: true, display: true, width: "150" },
-    { index: 6, label: 'Gross', class: 'colTax', active: true, display: true, width: "150" },
-    { index: 7, label: 'Net Pay', class: 'colWages', active: true, display: true, width: "150" },
+    { index: 3, label: 'Wages', class: 'colGL text-right', active: true, display: true, width: "150" },
+    { index: 4, label: 'Tax', class: 'colDatePaid text-right', active: true, display: true, width: "150" },
+    { index: 5, label: 'Super', class: 'colGross text-right', active: true, display: true, width: "150" },
+    { index: 6, label: 'Gross', class: 'colTax text-right', active: true, display: true, width: "150" },
+    { index: 7, label: 'Net Pay', class: 'colWages text-right', active: true, display: true, width: "150" },
     // { index: 8, label: 'Commission', class: 'colCommission', active: true, display: true, width: "100" },
     // { index: 9, label: 'Deductions', class: 'colDeductions', active: true, display: true, width: "100" },
     // { index: 10, label: 'Allowances', class: 'colAllowances', active: true, display: true, width: "80" },
@@ -113,11 +113,34 @@ Template.payrollhistoryreport.onRendered(() => {
   //   await templateObject.reportOptions.set(defaultOptions);
   //   await templateObject.getPayHistory( defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate );
   // };
+
+  templateObject.getPayHistoryData= async (dateFrom, dateTo, ignoreDate = false) => {
+    getVS1Data('TPayHistory').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        templateObject.getPayHistory(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('TPayHistory', JSON.stringify(data));
+          templateObject.displayPayHistoryData(data);
+        }).catch(function (err) {
+
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayPayHistoryData(data);
+      }
+    }).catch(function (err) {
+      templateObject.getPayHistory(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('TPayHistory', JSON.stringify(data));
+        templateObject.displayPayHistoryData(data);
+      }).catch(function (err) {
+
+      });
+    });
+  }
   templateObject.getPayHistory = async (dateFrom, dateTo, ignoreDate = false) => {
     LoadingOverlay.show();
-    templateObject.setDateAs( dateFrom );
+    templateObject.setDateAs(dateFrom);
     let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
-      return await reportService.getPayHistory( dateFrom, dateTo, ignoreDate);
+      return await reportService.getPayHistory(dateFrom, dateTo, ignoreDate);
     }, {
       requestParams: {
         DateFrom: dateFrom,
@@ -127,10 +150,10 @@ Template.payrollhistoryreport.onRendered(() => {
       useIndexDb: true,
       useLocalStorage: false,
       validate: (cachedResponse) => {
-        if(cachedResponse.response.Params) {
+        if (cachedResponse.response.Params) {
           if (GlobalFunctions.isSameDay(cachedResponse.response.Params.DateFrom, dateFrom)
-          && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
-          && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
+              && GlobalFunctions.isSameDay(cachedResponse.response.Params.DateTo, dateTo)
+              && cachedResponse.response.Params.IgnoreDates == ignoreDate) {
             return true;
           }
           return false;
@@ -138,56 +161,58 @@ Template.payrollhistoryreport.onRendered(() => {
         return false;
       }
     })
-
+    return data.response;
+  };
+  templateObject.displayPayHistoryData = function(data){
     let paySlipReport = [];
-    data = data.response;
+
     if( data.tpayhistory.length > 0 ){
-        let employeeGroups = [];
-        // employeeGroups = await objectGrouping(data.tpayhistory, "Employeeid");
-        for (const item of data.tpayhistory) {
+      let employeeGroups = [];
+      // employeeGroups = await objectGrouping(data.tpayhistory, "Employeeid");
+      for (const item of data.tpayhistory) {
 
-            let employeeExist = employeeGroups.filter((subitem) => {
-                if( subitem.ID == item.fields.Employeeid ){
-                  subitem.SubAccounts.push(item)
-                  return subitem
-                }
-            });
-
-            if( employeeExist.length == 0 ){
-
-                employeeGroups.push({
-                  ID: item.fields.Employeeid,
-                  EmpName: item.fields.Empname,
-                  TotalWages: item.fields.Wages,
-                  TotalTax: item.fields.Tax,
-                  TotalSuperannuation: item.fields.Superannuation,
-                  TotalGross: item.fields.Gross,
-                  TotalNet: item.fields.Net,
-                  SubAccounts: [item]
-                });
+          let employeeExist = employeeGroups.filter((subitem) => {
+              if( subitem.ID == item.fields.Employeeid ){
+                subitem.SubAccounts.push(item)
+                return subitem
               }
-        }
+          });
 
-        paySlipReport = employeeGroups.filter((item) => {
-            let TotalWages = 0;
-            let TotalTax = 0;
-            let TotalSuperannuation = 0;
-            let TotalGross = 0;
-            let TotalNet = 0;
-            item.SubAccounts.map((subitem) => {
-                TotalWages += subitem.fields.Wages,
-                TotalTax += subitem.fields.Tax,
-                TotalSuperannuation += subitem.fields.Superannuation,
-                TotalGross += subitem.fields.Gross,
-                TotalNet += subitem.fields.Net
-            });
-            item.TotalWages += TotalWages;
-            item.TotalTax = TotalTax;
-            item.TotalSuperannuation += TotalSuperannuation;
-            item.TotalGross += TotalGross;
-            item.TotalNet += TotalNet;
-            return item;
-        });
+          if( employeeExist.length == 0 ){
+
+              employeeGroups.push({
+                ID: item.fields.Employeeid,
+                EmpName: item.fields.Empname,
+                TotalWages: item.fields.Wages,
+                TotalTax: item.fields.Tax,
+                TotalSuperannuation: item.fields.Superannuation,
+                TotalGross: item.fields.Gross,
+                TotalNet: item.fields.Net,
+                SubAccounts: [item]
+              });
+            }
+      }
+
+      paySlipReport = employeeGroups.filter((item) => {
+          let TotalWages = 0;
+          let TotalTax = 0;
+          let TotalSuperannuation = 0;
+          let TotalGross = 0;
+          let TotalNet = 0;
+          item.SubAccounts.map((subitem) => {
+              TotalWages += subitem.fields.Wages,
+              TotalTax += subitem.fields.Tax,
+              TotalSuperannuation += subitem.fields.Superannuation,
+              TotalGross += subitem.fields.Gross,
+              TotalNet += subitem.fields.Net
+          });
+          item.TotalWages += TotalWages;
+          item.TotalTax = TotalTax;
+          item.TotalSuperannuation += TotalSuperannuation;
+          item.TotalGross += TotalGross;
+          item.TotalNet += TotalNet;
+          return item;
+      });
 
     }
 
@@ -198,7 +223,7 @@ Template.payrollhistoryreport.onRendered(() => {
 
   templateObject.initDate();
   templateObject.initUploadedImage();
-  templateObject.getPayHistory(
+  templateObject.getPayHistoryData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
@@ -358,20 +383,25 @@ Template.payrollhistoryreport.events({
   "click #ignoreDate":  (e, templateObject) => {
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
-    templateObject.getPayHistory(
-      null,
-      null,
-      true
-    )
+    clearData("TPayHistory").then(function () {
+      templateObject.getPayHistoryData(
+          null,
+          null,
+          true
+      )
+    })
   },
   "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
     localStorage.setItem("VS1PayrollHistory_Report", "");
-    templateObject.getPayHistory(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-    )
+    clearData("TPayHistory").then(function () {
+      templateObject.getPayHistoryData(
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          false
+      )
+    })
+
   },
   ...Datehandler.getDateRangeEvents(),
     // CURRENCY MODULE //

@@ -645,7 +645,23 @@ Template.supplierscard.onCreated(function () {
   }
 
   templateObject.getDataTableList = function(data) {
+    let taskDescription = data.TaskDescription || '';
+    taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
 
+    const dataList = [
+      data.ID || 0,
+      // data.priority || 0,
+      data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+      data.ProjectID || '',
+      data.TaskName || '',
+      //data.ProjectName || '',
+      taskDescription,
+      //JSON.stringify(taskLabelArray),
+      //category: 'Task',
+      data.Completed ? "Completed" : "In-Completed",
+        data.Active ? "" : "In-Active",
+      data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+    ];
     return dataList;
   }
 
@@ -656,7 +672,8 @@ Template.supplierscard.onCreated(function () {
     { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
     { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
     { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-    { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    { index: 7, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 
@@ -1959,7 +1976,8 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnRefresh': function () {
-    Meteor._reload.reload();
+    //Meteor._reload.reload();
+    window.location.reload()
   },
 
   'click .btnRefreshCrm': function () {
@@ -2712,16 +2730,16 @@ Template.supplierscard.helpers({
 
   apiFunction:function() {
     let crmService = new CRMService();
-    return crmService.getAllTasksByContactName;
+    return crmService.getAllTasksList;
   },
 
   searchAPI: function() {
-    return sideBarService.searchAllBankAccountDetails;
+    return crmService.getAllTasksByName;
   },
 
   service: ()=>{
-    let sideBarService = new SideBarService();
-    return sideBarService;
+    let crmService = new CRMService();
+    return crmService;
 
   },
 
@@ -2742,7 +2760,7 @@ Template.supplierscard.helpers({
   },
 
   apiParams: function() {
-    return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+    return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
   },
 });
 

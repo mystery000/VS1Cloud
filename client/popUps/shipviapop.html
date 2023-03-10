@@ -8,24 +8,32 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
-                    <div class="table-responsive">
                         <style>
                         </style>
-                        <table id="tblShipViaPopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblShipViaPopList">
+                        <!-- <table id="tblShipViaPopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblShipViaPopList">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th colStatusName" style="">Ship Via Name</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- {{#each item in shipviarecords}}
-                                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: default;">
-                                        <td contenteditable="false" class="colShipName" style="width: 20% !important;">{{item.shippingmethod}}</td>
-                                    </tr>
-                                {{/each}} -->
                             </tbody>
-                        </table>
-                    </div>
+                        </table> -->
+                        {{>datatablelist 
+                            tablename="tblShipViaPopList"
+                            apiName= apiFunction
+                            service = service
+                            indexeddbname = 'TShippingMethod'
+                            datahandler = datahandler
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Ship Via Methods'
+                            istransaction = false
+                            apiParams=apiParams
+                            lowercaseDataName='tshippingmethod'
+                            exIndexDBName = 'tshippingmethod'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                        }}
                 </div>
             </div>
             <div class="modal-footer">

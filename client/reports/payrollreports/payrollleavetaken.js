@@ -40,7 +40,7 @@ Template.payrollleavetaken.onRendered(() => {
     { index: 3, label: 'End Date', class: 'colDateTaken', active: true, display: true, width: "120" },
     { index: 4, label: 'Units', class: 'colLeaveType', active: true, display: true, width: "120" },
     { index: 5, label: 'Amount Used', class: 'colHours', active: true, display: true, width: "80" },
-    { index: 6, label: 'Balance', class: 'colIsCertified', active: true, display: true, width: "110" },
+    { index: 6, label: 'Balance', class: 'colIsCertified text-right', active: true, display: true, width: "110" },
   ]
   templateObject.leavetakenth.set(reset_data);
 

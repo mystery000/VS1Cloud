@@ -57,7 +57,7 @@ Template.basreturnlist.onCreated(function() {
         //
         // let sort_date = data.fields.MsTimeStamp == "" ? "1770-01-01" : data.fields.MsTimeStamp;
         // sort_date = new Date(sort_date);
-        // var dataList;
+        var dataList;
         // //if (sort_date >= fromDate && sort_date <= toDate )
         {
             let tab1startDate = "";
@@ -359,9 +359,7 @@ Template.basreturnlist.helpers({
             //         -1;
             // });
     },
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
-    },
+
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblJournalList" });
     },
@@ -507,6 +505,9 @@ Template.basreturnlist.helpers({
         return Currency;
     },
 
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
     apiFunction:function() {
         let reportService = new ReportService();
         return reportService.getAllBASReturn;

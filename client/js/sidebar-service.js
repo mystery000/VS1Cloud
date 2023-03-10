@@ -77,7 +77,7 @@ export class SideBarService extends BaseService {
       };
     }
     if (!deleteFilter) options.Search = "Active = true"
-    return this.getList(this.ERPObjects.TProductList, options);
+    return this.getList(this.ERPObjects.TProductQtyList, options);
   }
 
 
@@ -428,9 +428,9 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       OrderBy: '"PARTSID desc"',
       LimitCount: parseInt(initialReportLoad),
-      search: 'PARTNAME="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
+      search: 'ProductName="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
     };
-    return this.getList(this.ERPObjects.TProductList, options);
+    return this.getList(this.ERPObjects.TProductQtyList, options);
   }
 
   getNewInvoiceByNameOrID(dataSearchName) {
@@ -1332,6 +1332,15 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCustomerVS1List, options);
   }
 
+  searchAllCustomersDataVS1ByName(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: '"PrintName asc"',
+      Search: 'ClientName f7like "' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TCustomerVS1List, options);
+  }
+
 
   getClientVS1(limitcount, limitfrom) {
     let options = "";
@@ -2118,7 +2127,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillEx, options);
   }
 
-  getAllBillListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getAllBillListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2142,6 +2151,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "IsBill = true and IsCheque != true";
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
@@ -3046,6 +3056,15 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TTermsVS1List, options);
   }
 
+  getOneTermsByTermName(keyword) {
+    let options={
+      ListType:'Detail',
+      select:"[Terms] f7like '"+keyword+"'",
+      Search: "Active = true",
+    }
+    return this.getList(this.ERPObjects.TTermsVS1List, options);
+  }
+
   getDefaultCustomerTerms() {
     let options = {
       PropertyList:"ID,TermsName",
@@ -3169,6 +3188,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLeadStatusType, options);
   }
 
+  getLeadStatusByName(keyword) {
+    let options = {
+      PropertyList: "ID,TypeCode,TypeName,Name,Description,IsDefault,EQPM",
+      select: "[Active]=true and [TypeName]='"+keyword+"'",
+    }
+    return this.getList(this.ERPObjects.TLeadStatusType, options);
+  }
+
   getLeadStatusDataList(limitcount, limitfrom, deleteFilter) {
     let options = "";
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
@@ -3210,6 +3237,48 @@ export class SideBarService extends BaseService {
     let options = {
       PropertyList: "ID,ShippingMethod",
       select: "[Active]=true",
+    };
+    return this.getList(this.ERPObjects.TShippingMethod, options);
+  }
+
+
+  getShippingMethodList(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
+      if (limitcount == "All") {
+        options = {
+            PropertyList: "ID,ShippingMethod",
+            Search: "Active = true",
+        };
+      } else {
+        options = {
+          PropertyList: "ID,ShippingMethod",
+          Search: "Active = true",
+          LimitCount: parseInt(limitcount),
+          LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }else{
+      if (limitcount == "All") {
+        options = {
+            PropertyList: "ID,ShippingMethod",
+        };
+      } else {
+        options = {
+            PropertyList: "ID,ShippingMethod",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+      }
+    }
+
+    return this.getList(this.ERPObjects.TShippingMethod, options);
+  }
+
+  getOneShippingMethod(keyword) {
+    let options = {
+      PropertyList: "ID,ShippingMethod",
+      select: "[Active]=true and [ShippingMethod] f7like '"+ keyword + "'",
     };
     return this.getList(this.ERPObjects.TShippingMethod, options);
   }
@@ -3572,15 +3641,13 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TReconciliation, options);
   }
 
-  getAllTReconcilationListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTReconcilationListData(dateFrom,dateTo,ignoreDate, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
         OrderBy: "ReconciliationID desc",
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
         Search: "Deleted != true",
       };
     } else {
@@ -3589,11 +3656,10 @@ export class SideBarService extends BaseService {
         OrderBy: "ReconciliationID desc",
         DateFrom: '"' + dateFrom + '"',
         DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(limitcount),
-        LimitFrom: parseInt(limitfrom),
         Search: "Deleted != true",
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TReconciliationList, options);
   }
 

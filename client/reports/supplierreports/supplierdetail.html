@@ -1,15 +1,15 @@
 <template name="supplierdetail">
     {{# vs1_report_template tabledisplayname="Supplier Detail Report" tablename="supplierdetail"  dateAsAt=dateAsAt sheetname="Supplier Detail Report Result"}}
         <div class="table-responsive">
-            <table class="table tableExportDetailDiv table-sm dataTable table-striped table-bordered" id="tableExport" name="tableExport">
+            <table class="table table-sm" id="tableExport" name="tableExport">
                 <thead>
-                    <tr class="table-active customDoubleTableHeading">
+                    <tr class="table-active">
                         {{#each c in supplierdetailth}}
                         {{#if c.display}}
                         <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}"
                             data-col-active="{{ c.active}}"
                             class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                            style="text-align: left!important; width:{{c.width}}px">
+                            style="text-align: left; width:{{c.width}}px">
                             {{c.label}}
                         </th>
                         {{/if}}
@@ -29,7 +29,7 @@
                     {{/each}}
                 {{else}}
                     <tr class="odd" style="text-align: center;">
-                        <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                        <td valign="top" colspan="15" class="dataTables_empty text-left">No data available in table</td>
                     </tr>
                 {{/if}}
                 </tbody>

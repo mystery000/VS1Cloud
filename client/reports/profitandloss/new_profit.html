@@ -16,7 +16,7 @@
             @media only screen and (max-width:370px) {
                 .periodSelector {
                     margin: 8px !important;
-                }
+                }tota
 
                 .nplSecondHead .btnExportReportProfit,
                 .nplSecondHead .btnPrintReport,
@@ -125,13 +125,17 @@
             }
             .customProfitLossTable .table-sm td,
             .customProfitLossTable .table-sm th {
-                padding: 7px 15px !important;
                 border-bottom: 1px solid #e3e6f0 !important;
                 border-top: 1px solid #e3e6f0 !important;
                 /* color: #858796; */
                 white-space: nowrap;
             }
-
+            .customProfitLossTable .table-sm td{
+                padding: 7px 15px !important;
+            }
+            .customProfitLossTable .table-sm th {
+                padding: 0px 15px !important;
+            }
             .pnlTable td {
                 border-top: unset;
             }
@@ -311,7 +315,7 @@
             <table class="table table-hover table-sm textCenterAlign pnlTable dragTable" id="tableExport" name="tableExport" style="display: none;">
                 <thead class="tblAvoid">
 
-                    <tr class="table-active tblAvoid customDoubleTableHeading">
+                    <tr class="tblAvoid customDoubleTableHeading">
                         <th class="textLeftTxt" rowspan="2"></th>
                         <!-- <th class="text-left" rowspan="2"></th> -->
                         {{#if reportOptions.threcords}}
@@ -846,6 +850,9 @@
                         }
                         #tblDepartmentCheckbox .chkBox{
                             margin: 0px!important
+                        }
+                        #myModalDepartment .table-responsive{
+                            overflow-x: hidden!important
                         }
                     </style>
                     {{> internal_transaction_list_with_switchbox tablename="tblDepartmentCheckbox" }}
@@ -1494,4 +1501,60 @@
         {{> npladdgroupscreen profitlosslayoutrecords=profitlosslayoutrecords}}
     </div>
     <!--End New Profit and Loss, Group Selected Accounts modal -->
+
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="layoutModal">
+        {{> layoutpop}}
+    </div> -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="layoutModal">
+        <style>
+            #modalview1 {
+                left: calc(50vw - 600px);
+                top: 5vh;
+                margin: 0;
+            }
+        </style>
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document" style="max-width: 1200px;" id="modalview1">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Layouts</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <style>
+                        #tblLayoutsList .colID{
+                            width: 10%!important
+                        }
+                        #tblLayoutsList .colLayoutName{
+                            width: 40%!important
+                        }
+                        #tblLayoutsList .colLayoutDescription{
+                            width: 40%!important
+                        }
+                        #tblLayoutsList .table-responsive{
+                            overflow-x: hidden!important
+                        }
+                    </style>
+                    <!-- {{> non_transactional_list tablename="tblLeadStatusList"}} -->
+                    {{>datatablelist
+                            tablename="tblLayoutsList"
+                            apiName= apiFunction
+                            indexeddbname = 'TPNLLayout'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Layout List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tpnllayout'
+                            exIndexDBName = 'tpnllayout'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
+                </div>
+                <div class="modal-footer">
+                    <!-- <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button> -->
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
