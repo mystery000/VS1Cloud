@@ -766,8 +766,8 @@
                       <div class="row input-tab">
                         <div class="col-12">
                           <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
-                            <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
-                            <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label> 
+                            <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount2" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
+                            <label class="custom-control-label" for="chkEnterAmount2" style="cursor: pointer;">Enter Amount</label> 
                           </div>
                         </div>
 
@@ -775,14 +775,14 @@
                           <div class="form-group" style="margin: 4px;">
                             <label>Accumulated Depreciation</label>
                               <input type="text" class="form-control" id="edtAccumulatedDepreciation2" name="edtAccumulatedDepreciation2" 
-                              disabled="{{#if chkEnterAmount}}true{{/if}}">
+                              disabled="{{#if chkEnterAmount2}}true{{/if}}">
                           </div>
                         </div>
 
                         <div class="col-12 col-md-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>For Year Ending</label>
-                            <input type="text" class="form-control" id="edtForYearEnding2" name="edtForYearEnding2" disabled="{{#if chkEnterAmount}}true{{/if}}">
+                            <input type="text" class="form-control" id="edtForYearEnding2" name="edtForYearEnding2" disabled="{{#if chkEnterAmount2}}true{{/if}}">
                           </div>
                         </div>
                       </div>
@@ -803,7 +803,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            {{#each history in deprecitationPlans}}
+                            {{#each history in deprecitationPlans2}}
                               <tr>
                                 <td>{{history.year}}</td>
                                 <td> - ${{history.depreciation}}</td>
@@ -817,7 +817,7 @@
                     </div>
                     
                     <div class="col-12">
-                      <button class="btn btn-success btnCalculate" type="button" style="margin: 14px 0; width: 100px; float: right;">
+                      <button class="btn btn-success btnCalculate2" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
                       </button>
                     </div>
@@ -904,7 +904,7 @@
                             color='success'
                             classes='btn-depreciation1-calculate'
                             type='button'
-                            id="btnCalculateDepreciation1"
+                            id="btnCalculateDepreciation2"
                             iconName='refresh'
                             title='Calculate'
                             disabled='{{chkDisposalAsset}}'

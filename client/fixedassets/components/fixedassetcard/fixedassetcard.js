@@ -35,9 +35,11 @@ Template.fixedassetcard.onCreated(function () {
   templateObject.edtInsuranceById = new ReactiveVar(0);
 
   templateObject.chkEnterAmount = new ReactiveVar(true);
+  templateObject.chkEnterAmount2 = new ReactiveVar(true);
   templateObject.chkDisposalAsset = new ReactiveVar(true);
 
   templateObject.deprecitationPlans = new ReactiveVar([]);
+  templateObject.deprecitationPlans2 = new ReactiveVar([]);
 
   templateObject.getAllAccountss = function() {
     getVS1Data('TAccountVS1').then(function(dataObject) {
@@ -546,6 +548,76 @@ Template.fixedassetcard.events({
         break;
     }
   },
+  "click button.btnCalculate2": function () {
+    const templateObject = Template.instance();
+    const depreciationType = templateObject.edtDepreciationType2.get();
+
+    const accumulateDepVal = parseInt($('input#edtAccumulatedDepreciation2').val()) || 0;
+    const yearEnding = parseInt($('input#edtForYearEnding2').val()) || 0;
+    
+
+    const salvage = parseInt($('input#edtSalvage2').val()) || 0;
+    
+    const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
+    let startYear = startDate.getFullYear();
+
+    const life = parseInt($('input#edtLife2').val()) || 1;
+    const businessPercent = parseInt($('input#edtBusinessUsePercent2').val()) || 100;
+
+    const enterAmountFlag = templateObject.chkEnterAmount2.get();
+    const totalDepreciationVal = enterAmountFlag ? (salvage * businessPercent / 100) : accumulateDepVal;
+    if (totalDepreciationVal == 0) {
+      Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
+      templateObject.deprecitationPlans2.set([]);
+      return;
+    }
+    if (!enterAmountFlag && yearEnding !== 0 && (yearEnding - startYear - life + 1) < 0) {
+      Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
+      templateObject.deprecitationPlans2.set([]);
+      return;
+    }
+    if (!enterAmountFlag && yearEnding !== 0) {
+      startYear = yearEnding - life + 1;
+    }
+
+    let accValue = 0, plan = [];
+    switch (depreciationType) {
+      case 0: //No Depreciation
+        templateObject.deprecitationPlans2.set([]);
+        break;
+      case 1: //Straight Line Depreciation
+        const yearDepreciation = totalDepreciationVal / life;
+        for (let i = 0; i < life; i++) {
+          accValue += yearDepreciation;
+          const yearPlan = {
+            year: startYear + i,
+            depreciation: yearDepreciation,
+            accDepreciation: accValue,
+            bookValue: accValue
+          };
+          plan.push(yearPlan);
+        }
+        templateObject.deprecitationPlans2.set(plan);
+        break;
+      case 2: //Decling Balance
+        let initalAmount = enterAmountFlag ? parseInt($('input#edtPurchCost').val() || 0) : accumulateDepVal;
+        if (initalAmount !== 0) {
+          for (let i = 0; i < life; i++) {
+            accValue += initalAmount / salvage * 100;
+            const yearPlan = {
+              year: startYear + i,
+              depreciation: initalAmount / salvage * 100,
+              accDepreciation: accValue,
+              bookValue: accValue
+            };
+            plan.push(yearPlan);
+            initalAmount = initalAmount / salvage * 100;
+          }
+        }
+        templateObject.deprecitationPlans2.set(plan);
+        break;
+    }
+  },
   "click input#edtCostAssetAccount": function() {
     $('#accountListModal').modal('show');
     $('input#edtAccountType').val('edtCostAssetAccount');
@@ -601,6 +673,12 @@ Template.fixedassetcard.events({
     templateObject.chkEnterAmount.set(!status);
   },
 
+  'change input#chkEnterAmount2': function(e) {
+    const templateObject = Template.instance();
+    const status = templateObject.chkEnterAmount2.get();
+    templateObject.chkEnterAmount2.set(!status);
+  },
+
   'change input#chkDisposalAsset': function(e) {
     const templateObject = Template.instance();
     const status = templateObject.chkDisposalAsset.get();
@@ -611,6 +689,9 @@ Template.fixedassetcard.events({
 Template.fixedassetcard.helpers({
   chkEnterAmount: () => {
     return Template.instance().chkEnterAmount.get();
+  },
+  chkEnterAmount2: () => {
+    return Template.instance().chkEnterAmount2.get();
   },
   chkDisposalAsset: () => {
     return Template.instance().chkDisposalAsset.get();
