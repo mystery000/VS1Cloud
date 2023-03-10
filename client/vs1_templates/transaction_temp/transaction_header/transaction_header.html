@@ -234,14 +234,14 @@
               </div>
               {{#if data.isCompleted}}
               <div class="col-12 col-md-6 col-lg-6 col-xl-3" >
-                <div style="color:red; font-size: 20px; padding-top: 30px; padding-left:50px;">
+                <div style="color:red; font-size: 20px; padding-top: 30px; padding-left:30px;">
                   Completed <span style ="color:grey" > - (Read Only)</span>
                 </div>
               </div>
               {{/if}}
 
           {{else}}
-            <div class="col-12 col-md-6 col-lg-6 col-xl-3">
+            <div class="col-12 col-md-6 col-lg-6 col-xl-3" >
               {{> customer_selector
                 label=getUserLabel
                 id=getCustomerID

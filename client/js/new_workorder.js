@@ -170,9 +170,14 @@ Template.new_workorder.onRendered(async function(){
            
 
             let isCompleted = false
+            
             if(workorder.fields.IsCompleted == true) {
                 isCompleted = true;
+               
+                templateObject.isCompleted.set(true);
+                
             }
+
             templateObject.salesOrderId.set(workorder.fields.SaleID)
             let customerData = await templateObject.getCustomerData(workorder.fields.Customer);
             let record = {
@@ -519,10 +524,16 @@ Template.new_workorder.onRendered(async function(){
 
     }
 
+    if(templateObject.isCompleted.get()) {
+     
+        $("#workorder-detail :input").prop("disabled", true);  
+
+        
+    }
+
 })
 
 Template.new_workorder.events({
-
 
     'click .btnSave': function(event) {
         event.stopPropagation();
