@@ -553,6 +553,7 @@ openDb = function (dbName) {
       db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
       db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
 
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
