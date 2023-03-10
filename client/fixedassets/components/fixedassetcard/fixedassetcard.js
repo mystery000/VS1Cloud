@@ -146,6 +146,7 @@ Template.fixedassetcard.onRendered(function () {
             $('select#edtSalvageType').val(1);
             break;
           case 2:
+            $('input#edtSalvage').val(100);
             $('select#edtSalvageType').val(2);
             break;
         }
@@ -478,15 +479,33 @@ Template.fixedassetcard.events({
   "click button.btnCalculate": function () {
     const templateObject = Template.instance();
     const depreciationType = templateObject.edtDepreciationType.get();
+
+    const accumulateDepVal = parseInt($('input#edtAccumulatedDepreciation').val()) || 0;
+    const yearEnding = parseInt($('input#edtForYearEnding').val()) || 0;
+    
+
     const salvage = parseInt($('input#edtSalvage').val()) || 0;
+    
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
-    const startYear = startDate.getFullYear();
+    let startYear = startDate.getFullYear();
+
     const life = parseInt($('input#edtLife').val()) || 1;
     const businessPercent = parseInt($('input#edtBusinessUsePercent').val()) || 100;
-    if (salvage * businessPercent == 0) {
-      Bert.alert( '<strong>WARNING:</strong>Salvage is zero ', 'danger','fixed-top', 'fa-frown-o' );
+
+    const enterAmountFlag = templateObject.chkEnterAmount.get();
+    const totalDepreciationVal = enterAmountFlag ? (salvage * businessPercent / 100) : accumulateDepVal;
+    if (totalDepreciationVal == 0) {
+      Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans.set([]);
       return;
+    }
+    if (!enterAmountFlag && yearEnding !== 0 && (yearEnding - startYear - life + 1) < 0) {
+      Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
+      templateObject.deprecitationPlans.set([]);
+      return;
+    }
+    if (!enterAmountFlag && yearEnding !== 0) {
+      startYear = yearEnding - life + 1;
     }
 
     let accValue = 0, plan = [];
@@ -495,7 +514,7 @@ Template.fixedassetcard.events({
         templateObject.deprecitationPlans.set([]);
         break;
       case 1: //Straight Line Depreciation
-        const yearDepreciation = salvage * businessPercent / 100 / life;
+        const yearDepreciation = totalDepreciationVal / life;
         for (let i = 0; i < life; i++) {
           accValue += yearDepreciation;
           const yearPlan = {
@@ -509,7 +528,7 @@ Template.fixedassetcard.events({
         templateObject.deprecitationPlans.set(plan);
         break;
       case 2: //Decling Balance
-        let initalAmount = parseInt($('input#edtPurchCost').val() || 0);
+        let initalAmount = enterAmountFlag ? parseInt($('input#edtPurchCost').val() || 0) : accumulateDepVal;
         if (initalAmount !== 0) {
           for (let i = 0; i < life; i++) {
             accValue += initalAmount / salvage * 100;
