@@ -12,6 +12,7 @@ import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './accountlistpop.html';
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -85,7 +86,7 @@ Template.accountlistpop.onCreated(() => {
             data.BSB || '',
             data.BankAccountNumber || "",
             data.CarNumber || "",
-            data.ExpiryDate || "",
+            moment(data.ExpiryDate).format("DD/MM/YYYY") || "",
             data.CVC || "",
             data.Extra || "",
             data.BankNumber || "",

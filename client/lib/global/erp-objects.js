@@ -308,8 +308,8 @@ const erpObject = {
     TPNLLayout: "TPNLLayout",
     VS1_PNLGetLayout: "VS1_PNLGetLayout",
     VS1_PNLAddGroup: "VS1_PNLAddGroup",
-    TSupplierVS1List: "TSupplierVS1List",
-    TleaveAccruals: "TleaveAccruals",
+    // TSupplierVS1List: "TSupplierVS1List",
+    // TleaveAccruals: "TleaveAccruals",
     TProspectList: "TProspectList",
     TABADetailRecord: "TABADetailRecord",
     TABADescriptiveRecord: "TABADescriptiveRecord",
@@ -322,7 +322,7 @@ const erpObject = {
     BuildProfitabilityReport: "BuildProfitabilityReport",
     ProductionWorksheetReport: "ProductionWorksheetReport",
     WorkOrderReport: "WorkOrderReport",
-    TProductQtyList:"TProductQtyList"
+    //TProductQtyList:"TProductQtyList"
 };
 
 export default erpObject;
