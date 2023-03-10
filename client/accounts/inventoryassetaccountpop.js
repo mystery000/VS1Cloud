@@ -9,6 +9,7 @@ import 'jquery-editable-select';
 import {Template} from 'meteor/templating';
 import './inventoryassetaccountpop.html';
 import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
+import moment from 'moment';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -82,7 +83,7 @@ Template.inventorassetaccountspop.onCreated(function (e) {
             data.BSB || '',
             data.BankAccountNumber || "",
             data.CarNumber || "",
-            data.ExpiryDate || "",
+            moment(data.ExpiryDate).format("DD/MM/YYYY") || "",
             data.CVC || "",
             data.Extra || "",
             data.BankNumber || "",
