@@ -24,11 +24,11 @@ tr.open .tt-details-control .expander::after {
   -webkit-transform: translate(-18%, -50%) rotate(0);
   transform: translate(-18%, -50%) rotate(0); }
 
-tr:not(.has-child) .tt-details-control .expander::after {
-  content: '-';
+/* tr:not(.has-child) .tt-details-control .expander::after {
+  content: '';
   font-weight: bold;
   color: #000;
-  border: 0; }
+  border: 0; } */
 
 tr.level-1 .tt-details-control .expander::after {
   margin-left: 10px; }

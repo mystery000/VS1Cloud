@@ -4800,8 +4800,8 @@ Template.new_quote.onRendered(() => {
     }, 200);
   }
 
-  $('#edtCustomerName').editableSelect().on('click.editable-select', function (e, li) {
-
+  // $('#edtCustomerName').editableSelect().on('click.editable-select', function (e, li) {
+    $(document).on('click', '#edtCustomerName', function(e, li) {
     const $each = $(this);
     const offset = $each.offset();
     $('#edtCustomerPOPID').val('');
@@ -4959,7 +4959,7 @@ Template.new_quote.onRendered(() => {
     }, 200);
   }
   function setInitCustomer() {
-    $('#customerListModal').modal();
+    $('#customerListModal').modal('show');
     setTimeout(function () {
       $('#tblCustomerlist_filter .form-control-sm').focus();
       $('#tblCustomerlist_filter .form-control-sm').val('');
