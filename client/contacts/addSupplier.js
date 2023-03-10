@@ -16,6 +16,7 @@ const utilityService = new UtilityService();
 const contactService = new ContactService();
 const countryService = new CountryService();
 const crmService = new CRMService();
+let primaryAccountantName = localStorage.getItem('VS1Accountant');
 
 function MakeNegative() {
   $('td').each(function () {
