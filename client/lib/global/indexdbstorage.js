@@ -393,8 +393,6 @@ openDb = function (dbName) {
       db.createObjectStore("TCurrencyRateHistory", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TXeCurrencySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTripGroup", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TLeaveData", { keyPath: "EmployeeEmail" });
-      // db.createObjectStore('TEarnings', { keyPath: "EmployeeEmail" });
       db.createObjectStore("TReportsAccountantsCategory", {
         keyPath: "EmployeeEmail",
       });
