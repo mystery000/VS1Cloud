@@ -9,7 +9,10 @@ let sideBarService = new SideBarService();
 import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './leadlist.html';
+import moment from "moment";
+import {CRMService} from "../crm/crm-service";
 
+let utilityService = new UtilityService();
 Template.leadlist.inheritsHooksFrom('non_transactional_list');
 Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
@@ -19,6 +22,71 @@ Template.leadlist.onCreated(function(){
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        let larBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let lcreditBalance = utilityService.modifynegativeCurrencyFormat(data.ExcessAmount) || 0.00;
+        let lbalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let lcreditLimit = utilityService.modifynegativeCurrencyFormat(data.SupplierCreditLimit) || 0.00;
+        let lsalesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
+        var dataList = [
+            data.ClientID || '',
+            data.Company || '',
+            data.Phone || '',
+            larBalance || 0.00,
+            lcreditBalance || 0.00,
+            lbalance || 0.00,
+            lcreditLimit || 0.00,
+            lsalesOrderBalance || 0.00,
+            data.Email || '',
+            data.AccountNo || '',
+            data.ClientNo || '',
+            data.JobTitle || '',
+            data.CUSTFLD1 || '',
+            data.CUSTFLD2 || '',
+            data.Street || '',
+            data.Suburb || '',
+            data.POState || '',
+            data.Postcode || '',
+            data.Country || '',
+            linestatus,
+            data.Notes || '',
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class: 'colLeadId', active: false, display: false, width: "10" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "90" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+        { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "200" },
+        { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "200" },
+        { index: 10, label: 'Client Number', class: 'colClientNo', active: false, display: true, width: "120" },
+        { index: 11, label: 'Job Title', class: 'colJobTitle', active: false, display: true, width: "120" },
+        { index: 12, label: 'Custom Field 1', class: 'colCustomField1', active: false, display: true, width: "120" },
+        { index: 13, label: 'Custom Field 2', class: 'colCustomField2', active: false, display: true, width: "120" },
+        { index: 14, label: 'Address', class: 'colAddress', active: true, display: true, width: "80" },
+        { index: 15, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
+        { index: 16, label: 'State', class: 'colState', active: false, display: true, width: "120" },
+        { index: 17, label: 'Post Code', class: 'colPostcode', active: false, display: true, width: "80" },
+        { index: 18, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
+        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 20, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.leadlist.onRendered(function() {
@@ -35,7 +103,7 @@ Template.leadlist.onRendered(function() {
     }
 
     $('#tblLeadlist tbody').on( 'click', 'tr', function () {
-        const listData = $(this).closest('tr').attr('id');
+        const listData = $(this).closest('tr').find('.colLeadId').text();
         if(listData){
             FlowRouter.go('/leadscard?id=' + listData);
         }
@@ -370,6 +438,41 @@ Template.leadlist.helpers({
     },
     isSetupFinished: () => {
         return Template.instance().setupFinished.get();
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllLeadDataList;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getNewLeadByNameOrID;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["limitCount", "limitFrom", "deleteFilter"];
     },
 });
 
