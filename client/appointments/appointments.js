@@ -3204,9 +3204,7 @@ Template.appointments.onRendered(function() {
         //$('#product-list').editableSelect('clear');
         getVS1Data("TRepServices").then(function(dataObject){
             if (dataObject.length == 0) {
-            sideBarService
-            .getSelectedProducts(employeeID)
-            .then(function(data) {
+            sideBarService.getSelectedProducts(employeeID).then(function(data) {
                 addVS1Data("TRepServices", JSON.stringify(data));
                 var dataList = {};
                 let getallinvproducts = templateObject.allnoninvproducts.get();

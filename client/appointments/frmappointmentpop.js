@@ -1723,11 +1723,62 @@ Template.frmappointmentpop.onRendered(function() {
         var splashArrayProductServiceList = new Array();
         var splashArrayProductServiceListGet = [];
         //$('#product-list').editableSelect('clear');
-        sideBarService
-            .getSelectedProducts(employeeID)
-            .then(function(data) {
+        getVS1Data("TRepServices").then(function(dataObject){
+            if (dataObject.length == 0) {
+                sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                    var dataList = {};
+    
+                    let getallinvproducts = templateObject.allnoninvproducts.get();
+                    if (data.trepservices.length > 0) {
+                        for (let i = 0; i < data.trepservices.length; i++) {
+                            dataList = {
+                                id: data.trepservices[i].Id || "",
+                                productname: data.trepservices[i].ServiceDesc || "",
+                                productcost: data.trepservices[i].Rate || 0.0,
+                            };
+                            let checkServiceArray =
+                                getallinvproducts.filter(function(prodData) {
+                                    if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                                        var prodservicedataList = [
+                                            prodData[0],
+                                            prodData[1] || "-",
+                                            prodData[2] || "",
+                                            prodData[3] || "",
+                                            prodData[4],
+                                            prodData[5],
+                                            prodData[6],
+                                            prodData[7] || "",
+                                            prodData[8] || "",
+                                            prodData[9] || null,
+                                            prodData[10],
+                                        ];
+                                        splashArrayProductServiceListGet.push(prodservicedataList);
+                                        //splashArrayProductServiceListGet.push(prodservicedataList);
+                                        return prodservicedataList || "";
+                                    }
+                                }) || "";
+    
+                            productlist.push(dataList);
+                        }
+                        if (splashArrayProductServiceListGet) {
+                            let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
+                            var datatable = $("#tblInventoryPayrollService").DataTable();
+                            datatable.clear();
+                            datatable.rows.add(uniqueChars);
+                            datatable.draw(false);
+                        }
+    
+                        templateObject.datatablerecords.set(productlist);
+                    } else {
+                        templateObject.getAllProductData();
+                    }
+                })
+            .catch(function(err) {
+                templateObject.getAllProductData();
+            });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
                 var dataList = {};
-
                 let getallinvproducts = templateObject.allnoninvproducts.get();
                 if (data.trepservices.length > 0) {
                     for (let i = 0; i < data.trepservices.length; i++) {
@@ -1772,10 +1823,9 @@ Template.frmappointmentpop.onRendered(function() {
                 } else {
                     templateObject.getAllProductData();
                 }
-            })
-            .catch(function(err) {
-                templateObject.getAllProductData();
-            });
+            }
+        })
+        
     };
 
     getVS1Data("TAppointmentPreferences")
