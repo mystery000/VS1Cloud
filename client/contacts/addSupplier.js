@@ -400,7 +400,10 @@ Template.supplierscard.onCreated(function () {
       if (primaryAccountantName === lineItemObj.company) {
         $('#chkSameAsPrimary').prop('checked', true)
         $('.active-password-wrapper').removeClass('d-none')
+        $('.vs1-login-nav').removeClass('d-none')        
       }
+      $('#primaryAccountantUsername').val(lineItemObj.email)
+      $('#primaryAccountantPassword').val(`${lineItemObj.firstname}@123`)
     }, 1000)
     $('.fullScreenSpin').css('display', 'none');
   }
@@ -1302,6 +1305,18 @@ Template.supplierscard.onRendered(function () {
       $(".btnTask").attr("disabled", false);
     }
   });
+
+  
+  $(document).on('click', ".toggle-password", function (ev) {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var passwordSecret = $($(this).data('toggle'));
+    if (passwordSecret.attr("type") == "password") {
+      passwordSecret.attr("type", "text");
+    } else {
+      passwordSecret.attr("type", "password");
+    }
+  });
+                                
 });
 
 Template.supplierscard.events({
@@ -1432,6 +1447,17 @@ Template.supplierscard.events({
         swal('Supplier Name should not be blank!', '', 'warning');
         e.preventDefault();
         return false;
+      }
+
+      if ($('#chkSameAsPrimary').prop('checked')) {
+        if ($('#edtActivePrimaryPassword').val() !== "VS1Cloud@123") {
+          swal('Activate primary password is incorrect!', '', 'error');
+          return
+        }
+        if (!$('#primaryAccountantUsername').val() || !$('#primaryAccountantPassword').val()) {
+          swal('VS1 User Login should not be empty!', '', 'error');
+          return
+        }
       }
       $('.fullScreenSpin').css('display', 'inline-block');
 
@@ -2646,10 +2672,20 @@ Template.supplierscard.events({
         }
       }
       $('.active-password-wrapper').removeClass('d-none')
+      $('.vs1-login-nav').removeClass('d-none')
     } else {
       $('.active-password-wrapper').addClass('d-none')
+      $('.vs1-login-nav').addClass('d-none')
     }
-  }
+  },
+
+  // "change #edtSupplierFirstName": async function (event) {
+  //   $('#primaryAccountantPassword').val(`${$(event.target).val()}@123`)
+  // },
+
+  // "change #edtSupplierCompanyEmail": async function (event) {
+  //   $('#primaryAccountantUsername').val($(event.target).val())
+  // },
 });
 
 Template.supplierscard.helpers({

@@ -396,7 +396,10 @@
                         <div class="col-6 col-md-2 d-none active-password-wrapper">
                           <div class="form-group" style="padding: 0px 8px;">
                             <label class="text-nowrap">Password</label>
-                            <input type="password" class="form-control" id="edtActivePrimaryPassword" name="edtActivePrimaryPassword">
+                            <span data-toggle="#edtActivePrimaryPassword"
+                              class="fa fa-fw fa-eye field-icon toggle-password"
+                              style="color: #00a3d3; margin-top: 42px; margin-left: 4px;"></span>                          
+                            <input type="password" class="form-control" id="edtActivePrimaryPassword" name="edtActivePrimaryPassword" style="width: calc(100% - 40px);">
                           </div>
                         </div>
                       </div>
@@ -483,6 +486,8 @@
                                   id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li>
                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab"
                                 data-toggle="tab" data-target="#tab-9">Custom Fields</a></li>
+                            <li class="nav-item d-none vs1-login-nav" style="cursor: pointer;"><a class="nav-link" role="tab"
+                                data-toggle="tab" data-target="#tab-11">VS1 User Login</a></li>
                           </ul>
                           <div class="tab-content">
                             <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
@@ -1139,6 +1144,33 @@
                                     </div>
                                   </div>
                                 </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-11"
+                              style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; ">
+                              <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start"
+                                style="margin: 12px;">
+                                <div class="col d-xl-flex align-items-xl-start" style="width: 50%;">
+                                  <div class="form-group flex-grow-1" style="margin: 4px;padding-right:4px;">
+                                    <label>Username or Email</label>                                    
+                                    <input type="text" class="form-control" name="primaryAccountantUsername"
+                                      id="primaryAccountantUsername">
+                                  </div>
+                                  <div class="form-group flex-grow-1" style="margin: 4px;">
+                                    <label>Password</label>
+                                    <div style="width: 100%">
+                                      <div style="width: 85%; float: left;">                                        
+                                        <input type="password" class="form-control" id="primaryAccountantPassword"
+                                          name="primaryAccountantPassword" autocomplete="new-password">
+                                      </div>
+                                      <div style="width: 15%; float: left;">
+                                        <span data-toggle="#primaryAccountantPassword"
+                                          class="fa fa-fw fa-eye field-icon toggle-password"
+                                          style="color: #00a3d3; margin-top: 10px; margin-left: 4px;"></span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>                                
                               </div>
                             </div>
                           </div>
