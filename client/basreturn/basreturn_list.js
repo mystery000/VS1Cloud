@@ -10,7 +10,7 @@ import LoadingOverlay from '../LoadingOverlay';
 import GlobalFunctions from '../GlobalFunctions';
 import { TaxRateService } from '../settings/settings-service';
 import FxGlobalFunctions from '../packages/currency/FxGlobalFunctions';
-
+import moment from 'moment';
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './basreturn_list.html';
@@ -97,14 +97,14 @@ Template.basreturnlist.onCreated(function() {
                     data.fields.ID || '',
                     data.fields.BasSheetDesc || '',
                     data.fields.Tab1_Type,
-                    tab1startDate,
-                    tab1endDate,
+                    moment(tab1startDate).format("DD/MM/YYYY"),
+                    moment(tab1endDate).format("DD/MM/YYYY"),
                     (tab2startDate != "" && tab2endDate != "") ? data.fields.Tab2_Type : "",
-                    tab2startDate,
-                    tab2endDate,
+                    moment(tab2startDate).format("DD/MM/YYYY"),
+                    moment(tab2endDate).format("DD/MM/YYYY"),
                     (tab3startDate != "" && tab3endDate != "") ? data.fields.Tab3_Type : "",
-                    tab3startDate,
-                    tab3endDate,
+                    moment(tab3startDate).format("DD/MM/YYYY"),
+                    moment(tab3endDate).format("DD/MM/YYYY"),
                     // (tab4startDate != "" && tab4endDate != "") ? data.fields.Tab4_Type : "",
                     // tab4startDate,
                     // tab4endDate,

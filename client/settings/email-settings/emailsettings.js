@@ -3252,8 +3252,65 @@ Template.emailsettings.onRendered(function () {
         tinymce.get("edtTemplateContent").setContent(tempMemo);
     });
 
-    $(document).on("click", "#tblCorrespondence tr .btn-remove-raw", function (e) {
-
+    $(document).on("click", "#tblCorrespondence tr .btn-remove-raw", function (
+        e
+    ) {
+        e.preventDefault();
+        e.stopPropagation();
+        $(".fullScreenSpin").css("display", "inline-block");
+        let tempId = $(e.target).closest("tr").find(".colID").text();
+        let correspondenceTemp = templateObject.correspondences.get();
+        let index = correspondenceTemp.findIndex((item) => {
+            return item.MessageId == tempId;
+        });
+        if (index > -1) {
+            let objDetail = correspondenceTemp[index];
+            objDetail.Active = false;
+            let objectData = {
+                type: "TCorrespondence",
+                fields: objDetail,
+            };
+            sideBarService
+                .saveCorrespondence(objectData)
+                .then(function () {
+                    sideBarService.getCorrespondences().then(function (dataUpdate) {
+                        addVS1Data("TCorrespondence", JSON.stringify(dataUpdate))
+                            .then(function () {
+                                $(".fullScreenSpin").css("display", "none");
+                                swal({
+                                    title: "Success",
+                                    text: "Template has been removed successfully ",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonText: "Continue",
+                                }).then((result) => {
+                                    if (result.value) {
+                                        templateObject.getCorrespondence();
+                                    } else if (result.dismiss === "cancel") {
+                                    }
+                                });
+                            })
+                            .catch(function (err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                    });
+                })
+                .catch(function (error) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                        title: "Ooops",
+                        text: "Template has not been removed",
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Continue",
+                    }).then((result) => {
+                        if (result.value) {
+                            templateObject.getCorrespondence();
+                        } else if (result.dismiss === "cancel") {
+                        }
+                    });
+                });
+        }
     });
 });
 

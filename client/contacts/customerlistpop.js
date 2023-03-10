@@ -66,7 +66,8 @@ Template.customerlistpop.onCreated(function () {
           data.TaxCodeName || 'E',
           data.ClientNo || '',
           data.JobTitle || '',
-          data.Notes || ''
+          data.Notes || '',
+          data.Active ? "" : "In-Active",
       ];
       return dataList;
   }
@@ -98,6 +99,7 @@ Template.customerlistpop.onCreated(function () {
       { index: 23, label: "Custom Field 1", class: "colClientNo", active: false, display: true, width: "60" },
       { index: 24, label: "Custom Field 2", class: "colJobTitle", active: false, display: true, width: "60" },
       { index: 25, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
+      { index: 26, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
