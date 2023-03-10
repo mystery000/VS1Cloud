@@ -75,7 +75,7 @@ Template.chequelist.onCreated(function() {
             totalAmount || 0.00,
             totalPaid || 0.00,
             totalOutstanding || 0.00,
-            orderstatus || '',
+            data.Deleted ? "Deleted" : "",
             '' || '',
             '' || '',
             data.Employee || '',
