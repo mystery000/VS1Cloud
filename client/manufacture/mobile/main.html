@@ -385,16 +385,20 @@
 			
 		</div>
 	</div>
-	{{#if showBOMModal}}
-	<div class="modal fade" role="dialog" tabindex="-1" id="BOMSetupModal">
+	<style>
+		
+			
+		
+	</style>
+	<div class="modal fade" role="dialog" tabindex="-1" id="WastageModal">
 		<div class="modal-dialog modal-xl modal-centered" role="document">
 			<div class="modal-content" >
 				<div class="modal-header" >
-					<h4 class="title-header" >BOM Set up</h4>
+					<h4 class="title-header" >Wastage Form</h4>
 					<button type="button" class="close" id="closeBOMSetupModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 				</div>
 				<div class="modal-body">
-					{{>bom_template}}
+					{{>wastage_form_template }}
 				</div>
 				<div class="modal-footer d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
 					<button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
@@ -404,5 +408,5 @@
 			</div>
 		</div>
 	</div>
-	{{/if}}
+	
 </template>

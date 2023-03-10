@@ -3,6 +3,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './layout/header.html'
 import './main.html';
 import './container/startbreak.html';
+import '../wastage_form_temp.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ManufacturingService } from "../manufacturing-service";
 import { ContactService } from "../../contacts/contact-service";
@@ -24,6 +25,7 @@ Template.mobileapp.onCreated(function() {
     templateObject.employeeName = new ReactiveVar();
     templateObject.breakMessage = new ReactiveVar();
 
+    templateObject.showBOMModal = new ReactiveVar(false);
 
     templateObject.isEnterJobNumber = new ReactiveVar();
     templateObject.isEnterJobNumber.set(true);
@@ -43,7 +45,60 @@ Template.mobileapp.onCreated(function() {
     templateObject.breakState = new ReactiveVar();
     templateObject.breakState.set(false);
 
+    templateObject.workOrderRecords = new ReactiveVar([]);
+    templateObject.bomProducts = new ReactiveVar([]);
+
+    templateObject.bomStructure = new ReactiveVar([]);
+    
+
 })
+
+Template.mobileapp.onRendered(async function() {
+    const templateObject = Template.instance();
+    templateObject.getAllBOMProducts = async()=>{
+        return new Promise(async(resolve, reject)=> {
+            getVS1Data('TProcTree').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                        templateObject.bomProducts.set(data.tproctree);
+                        resolve();
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    templateObject.bomProducts.set(data.tproctree);
+                    resolve();
+                }
+            }).catch(function(e) {
+                productService.getAllBOMProducts(initialBaseDataLoad, 0).then(function(data) {
+                    templateObject.bomProducts.set(data.tproctree);
+                    resolve()
+                })
+            })
+        })
+    }
+    //get all bom products
+    let temp_bom = await templateObject.getAllBOMProducts();
+    templateObject.bomProducts.set(temp_bom);
+    
+    //get all work orders
+    templateObject.getAllWorkorders = async function() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TVS1Workorder').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    resolve ([]);
+                }else  {
+                    let data = JSON.parse(dataObject[0].data);
+                    resolve(data.tvs1workorder)
+                }
+            })
+        })
+    }
+    let temp = await templateObject.getAllWorkorders()
+    templateObject.workOrderRecords.set(temp);
+
+
+
+});
 
 Template.mobileapp.events({
     // table tr click
@@ -590,6 +645,7 @@ Template.mobileapp.events({
             Template.instance().isEnterJobProcess.set(true);
             Template.instance().isClockin.set(false);
 
+           
         }
 
         if (isEnterJobProcess) {
@@ -743,7 +799,7 @@ Template.mobileapp.events({
         let jobNumber = Template.instance().jobNumber.get();
         let templateObject = Template.instance();
         
-        $('.fullScreenSpin').css('display', 'inline-block');
+        // $('.fullScreenSpin').css('display', 'inline-block');
         
         templateObject.getAllWorkorders = async function() {
             return new Promise(async(resolve, reject)=>{
@@ -768,20 +824,31 @@ Template.mobileapp.events({
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
+            console.log(currentworkorder.fields.BOMStructure);
+            
+            // Set bom Structure for current workorder
+            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
+
             let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
                
-                $('.fullScreenSpin').css('display', 'none')
-                swal('Work Order state is updated', '', 'success');
+             //   $('.fullScreenSpin').css('display', 'none')
+             //   swal('Work Order state is updated', '', 'success');
             })
+
+            
+
         }
 
         // modal bom product modal
-            e.preventDefault();
-            e.stopPropagation();
-            $('#BOMSetupModal').modal('toggle')
+        templateObject.showBOMModal.set(true);
+        e.preventDefault();
+        e.stopPropagation();
+        alert("bom setup modal");
+        $('#WastageModal').modal('toggle');
+
    
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
@@ -835,4 +902,14 @@ Template.mobileapp.events({
             $(".mobile-left-btn-containner").css('display', 'block');
         }      
     }
+});
+
+Template.mobileapp.helpers(function() {
+    
+    showBOMModal: ()=> {
+        return Template.instance().showBOMModal.get();
+    }
+   
+
+
 });
