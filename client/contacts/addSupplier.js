@@ -397,6 +397,10 @@ Template.supplierscard.onCreated(function () {
       const rowCount = $('.results tbody tr').length;
       $('.counter').text(rowCount + 'items');
       setTab();
+      if (primaryAccountantName === lineItemObj.company) {
+        $('#chkSameAsPrimary').prop('checked', true)
+        $('.active-password-wrapper').removeClass('d-none')
+      }
     }, 1000)
     $('.fullScreenSpin').css('display', 'none');
   }
@@ -688,7 +692,6 @@ Template.supplierscard.onRendered(function () {
 
   templateObject.fillBankInfoFromUrl();
   templateObject.getCountryData();
-
 
   $(document).on("click", "#tblBankName tbody tr", function (e) {
     var table = $(this);
@@ -2627,22 +2630,24 @@ Template.supplierscard.events({
     event.preventDefault();
   },
 
-  "change #chkSameAsPrimary": function (event) {
+  "change #chkSameAsPrimary": async function (event) {
     if ($("#chkSameAsPrimary").prop('checked')) {
-      swal({
-        title: 'Warning',
-        text: 'supplier name is already Your primary accountant, do you wish to switch?',
-        type: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        if (result.value) {
-          
-        } else if (result.dismiss === 'cancel') {
+      if (primaryAccountantName !== $('#edtSupplierCompany').val()) {
+        let result = await swal({
+          title: 'Warning',
+          text: 'supplier name is already Your primary accountant, do you wish to switch?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+        })        
+        if (result.dismiss === 'cancel') {
           $("#chkSameAsPrimary").prop('checked', false)
         }
-      });  
+      }
+      $('.active-password-wrapper').removeClass('d-none')
+    } else {
+      $('.active-password-wrapper').addClass('d-none')
     }
   }
 });
