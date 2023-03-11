@@ -177,7 +177,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let targetRows = [];
         let jsonText = localStorage.getItem("colnames_" + (currenttablename.split("_")[1] || ""))
         var colnames = []
-        if(jsonText != '') colnames = JSON.parse(jsonText)
+        if(jsonText) colnames = JSON.parse(jsonText)
         if(currenttablename == "tblAvailableSNCheckbox"){
             colnames.forEach(itemName => {
                 let index = currentTableData.findIndex(item => item[2] == itemName);
