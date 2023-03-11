@@ -123,9 +123,9 @@ Template.accountrevenuestreams.onRendered(() => {
         ("0" + (dateFrom.getMonth() + 1)).slice(-2) +
         "-" +
         ("0" + dateFrom.getDate()).slice(-2);
-      $("#profitloss2").attr(
+      $("#earnings").attr(
         "href",
-        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
+        `/newprofitandloss?dateFrom=${dateFrom}&dateTo=${getLoadDate}`
       );
       let currentMonth = moment().format("MMMM").substring(0, 3);
       let prevMonth = moment()
@@ -437,15 +437,10 @@ Template.accountrevenuestreams.onRendered(() => {
         ("0" + (dateFrom.getMonth() + 1)).slice(-2) +
         "-" +
         ("0" + dateFrom.getDate()).slice(-2);
-      $("#profitloss2").attr(
-        "href",
-        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
-      );
-      let report_date_from = moment(data[0].fields.DateFrom_1).format("YYYY-MM-DD");
-      let report_date_to = moment(data[0].fields.DateTo_7).format("YYYY-MM-DD");
+
       $("#earnings").attr(
         "href",
-        "/newprofitandloss?dateFrom=" + report_date_from + "&dateTo=" + report_date_to
+        `/newprofitandloss?dateFrom=${dateFrom}&dateTo=${getLoadDate}`
       );
       let month_1 = data[0].fields.DateDesc_1 || "";
       let month_2 = data[0].fields.DateDesc_2 || "";
@@ -685,9 +680,9 @@ Template.accountrevenuestreams.onRendered(() => {
   templateObject.updateChart = function(dateFrom, dateTo) {
     setTimeout(function () {
       let data = JSON.parse(localStorage.getItem("VS1PNLPeriodReport_dash"));
-      $("#profitloss2").attr(
+      $("#earnings").attr(
         "href",
-        "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + dateTo
+        `/newprofitandloss?dateFrom=${dateFrom}&dateTo=${dateTo}`
       );
       let month_1 = data[0].fields.DateDesc_1 || "";
       let month_2 = data[0].fields.DateDesc_2 || "";
