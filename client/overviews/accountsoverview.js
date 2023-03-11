@@ -1841,7 +1841,9 @@ Template.accountsoverview.onRendered(function() {
                     $("#edtBankAccountNo").val(bankacountno);
                     $("#swiftCode").val(swiftCode);
                     $("#routingNo").val(routingNo);
-                    $("#edtBankName").val(bankname);
+                    $("#edtBankName").val(bankname);                    
+                    $('#eftBankName').val(bankname);                                        
+                    $('#eftDescription').val($("#tblBankName").find(`td:contains(${bankname})`).next().text());                    
                     $("#edtSubAccount1").val(level1);
                     $("#edtSubAccount2").val(level2);
                     $("#edtSubAccount3").val(level3);
