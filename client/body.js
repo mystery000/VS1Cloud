@@ -340,6 +340,7 @@ import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
+import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
