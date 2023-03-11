@@ -339,6 +339,7 @@ import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
+import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -505,7 +506,7 @@ import './settings/tax-rates-setting/tax-rates.js';
 import './settings/tax-rates-setting/subtaxes.js';
 import './settings/tax-rates-setting/DeleteLineModal.html';
 import './overviews/paymentoverview.js';
-import './payments/customerAwaitingPayments.js';
+import './payments/customerAwaitingPayments.js'
 import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
@@ -515,6 +516,8 @@ import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
+import './popUps/editServiceCheckerModal.js';
+import './client/js/new_wastage_form.js';
 /* Roverto */
 
 /* Kelvin More */
