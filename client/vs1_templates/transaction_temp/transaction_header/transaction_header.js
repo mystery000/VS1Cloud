@@ -11,6 +11,19 @@ import "./transaction_stocktransfer_header.html"
 import "./transaction_stockadjustment_header.html"
 import "./transaction_header.html"
 
+Template.transaction_header.onCreated(function() {
+
+})
+
+Template.transaction_header.onRendered(function() {
+
+  let isCompleted = Template.instance().data.showCompleted;
+  if (isCompleted) {
+    $("#workorder-detail :input").prop("disabled", true);
+  } 
+})
+
+
 Template.transaction_header.helpers({
   getUserLabel: () => {
     const cardType = Template.instance().data.cardType.toLowerCase();

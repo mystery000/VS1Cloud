@@ -21,7 +21,35 @@ Template.leaveTypeSettings.onCreated(function() {
     templateObject.imageFileData=new ReactiveVar();
     templateObject.currentDrpDownID = new ReactiveVar();
     templateObject.leaveRequestInfos = new ReactiveVar();
+    templateObject.tableheaderrecords7 = new ReactiveVar([]);
 
+    templateObject.getDataTableList7 = function(data){
+        let dataList = [
+            data.fields.ID || '',
+            data.fields.LeavePaidName || '',
+            data.fields.LeavePaidUnits || '',
+            data.fields.LeavePaidNormalEntitlement || '',
+            data.fields.LeavePaidLeaveLoadingRate || '',
+            'Paid Leave',
+            data.fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
+            data.fields.LeavePaidActive == true ? '' : 'In-Active',
+           '<td contenteditable="false" class="colDeletepaidrem"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        // let dataList = [];
+        return dataList;
+    }
+    let headerStructure7  = [
+        { index: 0, label: 'ID', class: 'colLeaveID', active: false, display: true, width: "" },
+        { index: 1, label: 'Leave Name', class: 'colLeaveName', active: true, display: true, width: "100" },
+        { index: 2, label: 'Units', class: 'colLeaveUnits', active: true, display: true, width: "80" },
+        { index: 3, label: 'Normal Entitlement', class: 'colLeaveNormalEntitlement', active: true, display: true, width: "50" },
+        { index: 4, label: 'Leave Loading Rate', class: 'colLeaveLeaveLoadingRate', active: true, display: true, width: "50" },
+        { index: 5, label: 'Leave Type', class: 'colLeavePaidLeave', active: true, display: true, width: "50" },
+        { index: 6, label: 'Shown On Payslip', class: 'colLeaveShownOnPayslip', active: true, display: true, width: "50" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 8, label: '', class: 'colDeletepaidrem', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords7.set(headerStructure7);
 
    // templateObject.Accounts = new ReactiveVar([]);
 });
@@ -333,7 +361,7 @@ Template.leaveTypeSettings.onRendered(function() {
     };
 
 
-    templateObject.getLeaves();
+    // templateObject.getLeaves();
 
     $(document).ready(function(){
         $('#leaveTypeSelect').editableSelect();
@@ -714,4 +742,40 @@ Template.leaveTypeSettings.events({
             }
         });
       },
+});
+
+Template.leaveTypeSettings.helpers({
+    datatablerecords: () => {
+        return Template.instance().datatablerecords.get();
+    },
+
+    tableheaderrecords7: () => {
+        return Template.instance().tableheaderrecords7.get();
+    },
+    apiFunction7:function() {
+        return sideBarService.getPaidLeave;
+    },
+    searchAPI7: function() {
+        return sideBarService.getPaidLeaveByName;
+    },
+    service7: ()=>{
+        return sideBarService;
+    },
+    datahandler7: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList7(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler7: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList7(data);
+            return dataReturn;
+        }
+    },
+    apiParams7: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    }
 });
