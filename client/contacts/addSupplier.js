@@ -1262,7 +1262,7 @@ Template.supplierscard.onRendered(function () {
 
       $(document).on("click", "#termsList tbody tr", function (e) {
         $('#sltTerms').val($(this).find(".colName").text());
-        $('#termsListModal').modal('toggle');
+        $('#termsListModal').modal('hide');
       });
 
       $(document).on("click", "#tblTitleList tbody tr", function (e) {
@@ -2238,8 +2238,11 @@ Template.supplierscard.events({
       let currentId = FlowRouter.current().queryParams;
       let objDetails = '';
 
-      if (!isNaN(currentId.id)) {
+      if (!isNaN(currentId.id) || templateObject.data.record) {
         let currentSupplier = parseInt(currentId.id);
+        if(isNaN(currentId.id)) {
+          currentSupplier = templateObject.data.record.id
+        }
         objDetails = {
           type: "TSupplierEx",
           fields: {
@@ -2270,9 +2273,10 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnTask': function (event) {
+    let templateObject = Template.instance();
     // $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
-    if (!isNaN(currentId.id)) {
+    if (!isNaN(currentId.id) || templateObject.data.record ) {
       let supplierID = parseInt(currentId.id);
       // FlowRouter.go('/crmoverview?supplierid=' + supplierID);
       $("#btnAddLine").trigger("click");
@@ -2281,11 +2285,12 @@ Template.supplierscard.events({
     }
   },
   'click .btnEmail': function (event) {
+    let templateObject = Template.instance();
     playEmailAudio();
     setTimeout(function () {
       $('.fullScreenSpin').css('display', 'inline-block');
       let currentId = FlowRouter.current().queryParams;
-      if (!isNaN(currentId.id)) {
+      if (!isNaN(currentId.id) ||  templateObject.data.record ) {
         let supplierID = parseInt(currentId.id);
         // FlowRouter.go('/crmoverview?supplierid=' + supplierID);
         $('#referenceLetterModal').modal('toggle');
@@ -2296,43 +2301,63 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnAppointment': function (event) {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/appointments?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('.edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/appointments?supplierid=' + suppID);
+      }
     }
   },
   'click .btnBill': function (event) {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/billcard?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('.edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/billcard?supplierid=' + suppID);
+      }
     }
   },
   'click .btnCredit': function (event) {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/creditcard?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('.edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/creditcard?supplierid=' + suppID);
+      }
     }
   },
   'click .btnPurchaseOrder': function (event) {
+    let templateObject = Template.instance()
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/purchaseordercard?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/purchaseordercard?supplierid=' + suppID);
+      }
     }
   },
 
