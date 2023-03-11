@@ -323,7 +323,7 @@ Template.accountsoverview.onRendered(function() {
                 data.taccountvs1list[i].AccountType || "",
                 accBalance || '',
                 data.taccountvs1list[i].TaxCode || '',
-                data.taccountvs1list[i].BankName || '',
+                data.taccountvs1list[i].BankCode || '',
                 data.taccountvs1list[i].BankAccountName || '',
                 data.taccountvs1list[i].BSB || '',
                 data.taccountvs1list[i].BankAccountNumber || "",

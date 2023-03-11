@@ -18,7 +18,7 @@ Template.transactionDescriptionModal.onRendered(function () {
     // "aaSorting": [],
     // "orderMulti": true,
     columnDefs: [
-      { className: "productName", "targets": [0] },
+      { className: "productName hiddenColumn", "targets": [0] },
       { className: "transactionDescription", "targets": [1] },
     ],
     select: true,
@@ -28,6 +28,7 @@ Template.transactionDescriptionModal.onRendered(function () {
     lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
     info: true,
     responsive: true,
+    language: { search: "", searchPlaceholder: "Search List..." },
     "fnInitComplete": function () {
       $("<button class='btn btn-primary btnAddNewTransactionDescription' data-dismiss='modal' data-toggle='modal' data-target='#addTransactionDescriptionModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTransactionDescription_filter");
       $("<button class='btn btn-primary btnRefreshTransactionDescription' type='button' id='btnRefreshTransactionDescription' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTransactionDescription_filter");
