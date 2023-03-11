@@ -7,6 +7,7 @@ import './eft.html';
 
 let accountService = new AccountService();
 let eftService = new EftService();
+let selectLineId
 
 Template.eft_export.onCreated(function () {
     let templateObject = Template.instance();
@@ -305,31 +306,16 @@ Template.eft_export.onRendered(function () {
         $('#sltTransactionDescription').val(transactionDescription);
     });
 
-    $('#sltTransactionCode').editableSelect();
-    $('#sltTransactionCode')
-        .editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var bankName = e.target.value || '';
-
-            if (e.pageX > offset.left + $earch.width() - 8) {
-                // $("#transactionCodeModal").modal();
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                if (bankName.replace(/\s/g, '') != '') {
-                    // $("#transactionCodeModal").modal("toggle");
-                } else {
-                    // $("#transactionCodeModal").modal();
-                }
-            }
-        });
+    $(document).on('click', '#tblEftExportCheckbox input.sltTransactionCode', function(e) {
+        selectLineId = $(this).closest('tr').attr('id')
+        $('#transactionCodeModal').modal('show');
+    })
 
     $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.transactionDescription').text();
+        let transactionDescription = table.find('.transactionCode').text();        
+        $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
-        $('#sltTransactionCode').val(transactionDescription);
     });
 });
 
@@ -354,7 +340,7 @@ Template.eft_export.events({
         let tokenid = Random.id();
 
         let transactionCodes = `
-      <select class="form-control pointer sltTranslactionCode">
+      <select class="form-control pointer sltTransactionCode">
         <option value=""></option>
         <option value="">Debit Items</option>
         <option value="">Credit Items</option>

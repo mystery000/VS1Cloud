@@ -417,6 +417,8 @@ import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 import './settings/inventory-setting/inventorySettings.js';
 import './settings/UOM-Settings/adduompop.js';
+
+import './eft/transactionCodeModal/transactionCodeModal.js';
 /* Martin */
 
 /* AlexV */

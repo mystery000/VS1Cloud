@@ -394,7 +394,7 @@ Template.eftExportModal.events({
         let tokenid = Random.id();
 
         let transactionCodes = `
-      <select class="form-control pointer sltTranslactionCode">
+      <select class="form-control pointer sltTransactionCode">
         <option value=""></option>
         <option value="">Debit Items</option>
         <option value="">Credit Items</option>
