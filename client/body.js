@@ -518,7 +518,7 @@ import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
 import './popUps/editServiceCheckerModal.js';
-import './client/js/new_wastage_form.js';
+import './js/new_wastage_form.js';
 /* Roverto */
 
 /* Kelvin More */
