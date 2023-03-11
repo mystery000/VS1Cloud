@@ -47,7 +47,7 @@ Template.shipviapop.onCreated(function() {
     }
 
     let headerStructure  = [
-        { index: 0, label: '#ID', class: 'colID', active: false, display: true, width: "10" },
+        { index: 0, label: '#ID', class: 'colID', active: false, display: false, width: "10" },
         { index: 1, label: 'Shipping Method', class: 'colShipName', active: true, display: true, width: "500" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);

@@ -214,7 +214,7 @@ Template.fixedassetcard.onRendered(function () {
   });
 
   $(document).on("click", "#tblSupplierlist tbody tr", function(e) {
-    const callType = $('input#edtSupplierType').val();
+    const callType = $('input#edtSupplierType').find('.colID').text();
     if (callType === 'supplier') {
       $('input#edtSupplierName').val($(this).find('td.colCompany').html());
       templateObject.edtSupplierId.set(parseInt($(this).find('td.colID').html()));
