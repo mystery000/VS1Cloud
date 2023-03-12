@@ -95,6 +95,28 @@ Template.new_invoice.onCreated(function () {
   templateObject.customer = new ReactiveVar();
 
   templateObject.customerRecord = new ReactiveVar();
+  templateObject.headerfields = new ReactiveVar();
+  templateObject.headerbuttons = new ReactiveVar();
+
+  function formatDate (date) {
+    return moment(date).format('DD/MM/YYYY'); 
+  }
+  let transactionheaderfields = [
+      {label: "Sales Date", type:"date", readonly: false, value: formatDate(new Date())},
+      {label: "P.O.Number", type:'default', id: 'ponumber', value: '', readonly: false},
+      {label: 'Terms', type: 'search', id: 'sltTerms', listModalId:'termsList_modal', listModalTemp: 'termlistpop', colName: 'colName', editModalId: 'newTerms_modal', editModalTemp:'newtermspop', editable: true},
+      {label: 'Status', type: 'search', id: 'sltStatus', listModalId:'statusPop_modal', listModalTemp: 'statuspop', colName: 'colStatusName', editModalId: 'newStatusPop_modal', editModalTemp:'newstatuspop', editable: true},
+      {label: 'Reference', type: 'defailt', id:'edtRef', value: '', readonly: false},
+      {label: 'Department', type: 'search', id: 'sltDept', listModalId:'department_modal', listModalTemp: 'departmentpop', colName: 'colDeptName', editModalId: 'newDepartment_modal', editModalTemp:'newdepartmentpop', editable: true},
+  ]
+  templateObject.headerfields.set(transactionheaderfields);
+
+  let transactionheaderbuttons = [
+      {label: "Pay Now", class:'btnTransaction payNow', id:'btnPayNow', bsColor:'success', icon:'dollar-sign'},
+      {label: "Payment", class:'btnTransaction btnMakePayment', id:'btnPayment', bsColor:'primary'},
+      {label: "Copy Invoice", class:'btnTransaction copyInvoice', id:'btnCopyInvoice', bsColor:'primary'}
+  ]
+  templateObject.headerbuttons.set(transactionheaderbuttons)
 
   templateObject.getDayNumber = function (day) {
     day = day.toLowerCase();
@@ -836,294 +858,261 @@ Template.new_invoice.onCreated(function () {
     }
   }
 
-  templateObject.setCustomerInfo = function(selectedTaxCodeName) {
-    if (!FlowRouter.current().queryParams.customerid) {
-      $("#customerListModal").modal("toggle");
-    }
-    let taxcodeList = templateObject.taxraterecords.get();
-    let customers = templateObject.clientrecords.get();
-    const clientList = templateObject.clientrecords.get();
-    let $tblrows = $("#tblInvoiceLine tbody tr");
-    let $printrows = $(".invoice_print tbody tr");
-    let selectedCustomer = $("#edtCustomerName").val();
-    if (clientList) {
-      for (var i = 0; i < clientList.length; i++) {
-        if (clientList[i].customername == selectedCustomer) {
-          $("#edtCustomerEmail").val(clientList[i].customeremail);
-          $("#edtCustomerEmail").attr("customerid", clientList[i].customerid);
-          $("#edtCustomerName").attr("custid", clientList[i].customerid);
-          $("#edtCustomerEmail").attr(
-            "customerfirstname",
-            clientList[i].firstname
-          );
-          $("#edtCustomerEmail").attr(
-            "customerlastname",
-            clientList[i].lastname
-          );
-          $("#customerType").text(clientList[i].clienttypename || "Default");
-          $("#customerDiscount").text(clientList[i].discount + "%" || 0 + "%");
-          $("#edtCustomerUseType").val(
-            clientList[i].clienttypename || "Default"
-          );
-          $("#edtCustomerUseDiscount").val(clientList[i].discount || 0);
-          let postalAddress =
-            clientList[i].customername +
-            "\n" +
-            clientList[i].street +
-            "\n" +
-            clientList[i].street2 +
-            " " +
-            clientList[i].statecode +
-            "\n" +
-            clientList[i].country;
-          $("#txabillingAddress").val(postalAddress);
-          $("#pdfCustomerAddress").html(postalAddress);
-          $(".pdfCustomerAddress").text(postalAddress);
-          $("#txaShipingInfo").val(postalAddress);
-          $("#sltTerms").val(clientList[i].termsName || "");
-          break;
-        }
-      }
-    }
-    let taxRate = "";
-    if (selectedCustomer !== "") {
-      getCustDetails = customers.filter((customer) => {
-        return customer.customername == selectedCustomer;
-      });
-      taxRate = taxcodeList.filter((taxrate) => {
-        return taxrate.codename == selectedTaxCodeName;
-      });
+  // templateObject.setCustomerInfo = function(selectedTaxCodeName) {
+  //   if (!FlowRouter.current().queryParams.customerid) {
+  //     $("#customerListModal").modal("toggle");
+  //   }
+  //   let taxcodeList = templateObject.taxraterecords.get();
+  //   let customers = templateObject.clientrecords.get();
+  //   const clientList = templateObject.clientrecords.get();
+  //   let $tblrows = $("#tblInvoiceLine tbody tr");
+  //   let $printrows = $(".invoice_print tbody tr");
+  //   let selectedCustomer = $("#edtCustomerName").val();
+  //   if (clientList) {
+  //     for (var i = 0; i < clientList.length; i++) {
+  //       if (clientList[i].customername == selectedCustomer) {
+  //         $("#edtCustomerEmail").val(clientList[i].customeremail);
+  //         $("#edtCustomerEmail").attr("customerid", clientList[i].customerid);
+  //         $("#edtCustomerName").attr("custid", clientList[i].customerid);
+  //         $("#edtCustomerEmail").attr(
+  //           "customerfirstname",
+  //           clientList[i].firstname
+  //         );
+  //         $("#edtCustomerEmail").attr(
+  //           "customerlastname",
+  //           clientList[i].lastname
+  //         );
+  //         $("#customerType").text(clientList[i].clienttypename || "Default");
+  //         $("#customerDiscount").text(clientList[i].discount + "%" || 0 + "%");
+  //         $("#edtCustomerUseType").val(
+  //           clientList[i].clienttypename || "Default"
+  //         );
+  //         $("#edtCustomerUseDiscount").val(clientList[i].discount || 0);
+  //         let postalAddress =
+  //           clientList[i].customername +
+  //           "\n" +
+  //           clientList[i].street +
+  //           "\n" +
+  //           clientList[i].street2 +
+  //           " " +
+  //           clientList[i].statecode +
+  //           "\n" +
+  //           clientList[i].country;
+  //         $("#txabillingAddress").val(postalAddress);
+  //         $("#pdfCustomerAddress").html(postalAddress);
+  //         $(".pdfCustomerAddress").text(postalAddress);
+  //         $("#txaShipingInfo").val(postalAddress);
+  //         $("#sltTerms").val(clientList[i].termsName || "");
+  //         break;
+  //       }
+  //     }
+  //   }
+  //   let taxRate = "";
+  //   if (selectedCustomer !== "") {
+  //     getCustDetails = customers.filter((customer) => {
+  //       return customer.customername == selectedCustomer;
+  //     });
+  //     taxRate = taxcodeList.filter((taxrate) => {
+  //       return taxrate.codename == selectedTaxCodeName;
+  //     });
 
-      if (taxRate.length > 0) {
-        let rate = taxRate[0].coderate;
-        let code = selectedTaxCodeName || "E";
-        if (code == "NT") {
-          code = "E";
-        }
-        let taxcodeList = templateObject.taxraterecords.get();
+  //     if (taxRate.length > 0) {
+  //       let rate = taxRate[0].coderate;
+  //       let code = selectedTaxCodeName || "E";
+  //       if (code == "NT") {
+  //         code = "E";
+  //       }
+  //       let taxcodeList = templateObject.taxraterecords.get();
 
-        let subGrandTotal = 0;
-        let taxGrandTotal = 0;
-        let subDiscountTotal = 0; // New Discount
-        let taxGrandTotalPrint = 0;
-        let subGrandTotalNet = 0;
-        let taxGrandTotalNet = 0;
-        $tblrows.each(function (index) {
-          var $tblrow = $(this);
-          var qty = $tblrow.find(".lineQty").val() || 0;
-          var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-          var taxRate = $tblrow.find(".lineTaxCode").val();
-          if ($tblrow.find(".lineProductName").val() == "") {
-            $tblrow.find(".colProductName").addClass("boldtablealertsborder");
-          }
-          var taxrateamount = 0;
-          if (taxcodeList) {
-            for (var i = 0; i < taxcodeList.length; i++) {
-              if (taxcodeList[i].codename == taxRate) {
-                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-              }
-            }
-          }
-          var subTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-          var taxTotal =
-            parseFloat(qty, 10) *
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
-          var lineDiscountPerc =
-            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
-          let lineTotalAmount = subTotal + taxTotal;
-          let lineDiscountTotal = lineDiscountPerc / 100;
-          var discountTotal = lineTotalAmount * lineDiscountTotal;
-          var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-          var subTotalWithDiscountTotalLine =
-            subTotal - subTotalWithDiscount || 0;
-          var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-          var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-          if (!isNaN(discountTotal)) {
-            subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-            document.getElementById("subtotal_discount").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-          }
-          $tblrow
-            .find(".lineTaxAmount")
-            .text(
-              utilityService.modifynegativeCurrencyFormat(
-                taxTotalWithDiscountTotalLine
-              )
-            );
-          let unitPriceIncCalc =
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount) || 0;
-          let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-          let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
-          $tblrow
-            .find(".colUnitPriceExChange")
-            .val(
-              utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
-            );
-          $tblrow
-            .find(".colUnitPriceIncChange")
-            .val(
-              utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-            );
-          if (!isNaN(subTotal)) {
-            $tblrow
-              .find(".colAmountEx")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-            $tblrow
-              .find(".colAmountInc")
-              .text(
-                utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
-              );
-            subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-              0 :
-              subTotalWithDiscountTotalLine;
-            subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-            document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-          }
-          if (!isNaN(taxTotal)) {
-            taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-              0 :
-              taxTotalWithDiscountTotalLine;
-            taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-            document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-          }
-          if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-            let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-            let GrandTotalNet =
-              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
-            document.getElementById("subtotal_nett").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-            document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            document.getElementById("balanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            document.getElementById("totalBalanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
-          }
-        });
-        $printrows.each(function (index) {
-          var $printrows = $(this);
-          var qty = $printrows.find("#lineQty").text() || 0;
-          var price = $printrows.find("#lineUnitPrice").text() || "0";
-          var taxcode = code;
-          $printrows.find("#lineTaxCode").text(code);
-          $printrows.find("#lineTaxRate").text(rate);
-          var taxrateamount = 0;
-          if (taxcodeList) {
-            for (var i = 0; i < taxcodeList.length; i++) {
-              if (taxcodeList[i].codename == taxcode) {
-                taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-              }
-            }
-          }
-          var subTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-          var taxTotal =
-            parseFloat(qty, 10) *
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
-          $printrows
-            .find("#lineTaxAmount")
-            .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-          if (!isNaN(subTotal)) {
-            $printrows
-              .find("#lineAmt")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-            subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-            document.getElementById("subtotal_totalPrint").innerHTML =
-              $("#subtotal_total").text();
-          }
+  //       let subGrandTotal = 0;
+  //       let taxGrandTotal = 0;
+  //       let subDiscountTotal = 0; // New Discount
+  //       let taxGrandTotalPrint = 0;
+  //       let subGrandTotalNet = 0;
+  //       let taxGrandTotalNet = 0;
+  //       $tblrows.each(function (index) {
+  //         var $tblrow = $(this);
+  //         var qty = $tblrow.find(".lineQty").val() || 0;
+  //         var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+  //         var taxRate = $tblrow.find(".lineTaxCode").val();
+  //         if ($tblrow.find(".lineProductName").val() == "") {
+  //           $tblrow.find(".colProductName").addClass("boldtablealertsborder");
+  //         }
+  //         var taxrateamount = 0;
+  //         if (taxcodeList) {
+  //           for (var i = 0; i < taxcodeList.length; i++) {
+  //             if (taxcodeList[i].codename == taxRate) {
+  //               taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+  //             }
+  //           }
+  //         }
+  //         var subTotal =
+  //           parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+  //         var taxTotal =
+  //           parseFloat(qty, 10) *
+  //           Number(price.replace(/[^0-9.-]+/g, "")) *
+  //           parseFloat(taxrateamount);
+  //         var lineDiscountPerc =
+  //           parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+  //         let lineTotalAmount = subTotal + taxTotal;
+  //         let lineDiscountTotal = lineDiscountPerc / 100;
+  //         var discountTotal = lineTotalAmount * lineDiscountTotal;
+  //         var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+  //         var subTotalWithDiscountTotalLine =
+  //           subTotal - subTotalWithDiscount || 0;
+  //         var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+  //         var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+  //         if (!isNaN(discountTotal)) {
+  //           subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+  //           document.getElementById("subtotal_discount").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+  //         }
+  //         $tblrow
+  //           .find(".lineTaxAmount")
+  //           .text(
+  //             utilityService.modifynegativeCurrencyFormat(
+  //               taxTotalWithDiscountTotalLine
+  //             )
+  //           );
+  //         let unitPriceIncCalc =
+  //           Number(price.replace(/[^0-9.-]+/g, "")) *
+  //           parseFloat(taxrateamount) || 0;
+  //         let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+  //         let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
+  //         $tblrow
+  //           .find(".colUnitPriceExChange")
+  //           .val(
+  //             utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
+  //           );
+  //         $tblrow
+  //           .find(".colUnitPriceIncChange")
+  //           .val(
+  //             utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+  //           );
+  //         if (!isNaN(subTotal)) {
+  //           $tblrow
+  //             .find(".colAmountEx")
+  //             .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+  //           $tblrow
+  //             .find(".colAmountInc")
+  //             .text(
+  //               utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
+  //             );
+  //           subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
+  //             0 :
+  //             subTotalWithDiscountTotalLine;
+  //           subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+  //           document.getElementById("subtotal_total").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+  //         }
+  //         if (!isNaN(taxTotal)) {
+  //           taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
+  //             0 :
+  //             taxTotalWithDiscountTotalLine;
+  //           taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+  //           document.getElementById("subtotal_tax").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+  //         }
+  //         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+  //           let GrandTotal =
+  //             parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+  //           let GrandTotalNet =
+  //             parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+  //           document.getElementById("subtotal_nett").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+  //           document.getElementById("grandTotal").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(GrandTotal);
+  //           document.getElementById("balanceDue").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(GrandTotal);
+  //           document.getElementById("totalBalanceDue").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(GrandTotal);
+  //         }
+  //       });
+  //       $printrows.each(function (index) {
+  //         var $printrows = $(this);
+  //         var qty = $printrows.find("#lineQty").text() || 0;
+  //         var price = $printrows.find("#lineUnitPrice").text() || "0";
+  //         var taxcode = code;
+  //         $printrows.find("#lineTaxCode").text(code);
+  //         $printrows.find("#lineTaxRate").text(rate);
+  //         var taxrateamount = 0;
+  //         if (taxcodeList) {
+  //           for (var i = 0; i < taxcodeList.length; i++) {
+  //             if (taxcodeList[i].codename == taxcode) {
+  //               taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+  //             }
+  //           }
+  //         }
+  //         var subTotal =
+  //           parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+  //         var taxTotal =
+  //           parseFloat(qty, 10) *
+  //           Number(price.replace(/[^0-9.-]+/g, "")) *
+  //           parseFloat(taxrateamount);
+  //         $printrows
+  //           .find("#lineTaxAmount")
+  //           .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+  //         if (!isNaN(subTotal)) {
+  //           $printrows
+  //             .find("#lineAmt")
+  //             .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+  //           subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+  //           document.getElementById("subtotal_totalPrint").innerHTML =
+  //             $("#subtotal_total").text();
+  //         }
 
-          if (!isNaN(taxTotal)) {
-            taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-            document.getElementById("totalTax_totalPrint").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-          }
-          if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-            document.getElementById("grandTotalPrint").innerHTML =
-              $("#grandTotal").text();
-            document.getElementById("totalBalanceDuePrint").innerHTML =
-              $("#totalBalanceDue").text();
-          }
-        });
-      }
-    }
-    $("#tblCustomerlist_filter .form-control-sm").val("");
-    $(".fullScreenSpin").css("display", "none");
-  }
-  templateObject.getCustomerData = function (customerID) {
-    getVS1Data("TCustomerVS1")
-      .then(function (dataObject) {
-        if (dataObject.length === 0) {
-          contactService.getOneCustomerDataEx(customerID).then(function (data) {
-            templateObject.setCustomerByID(data);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tcustomervs1;
-          let added = false;
-          for (let i = 0; i < useData.length; i++) {
-            if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
-              added = true;
-              templateObject.setCustomerByID(useData[i]);
-            }
-          }
-          if (!added) {
-            contactService
-              .getOneCustomerDataEx(customerID)
-              .then(function (data) {
-                templateObject.setCustomerByID(data);
-              });
-          }
-        }
-      })
-      .catch(function (err) {
-        contactService.getOneCustomerDataEx(customerID).then(function (data) {
-          $(".fullScreenSpin").css("display", "none");
-          templateObject.setCustomerByID(data);
-        });
-      });
-  }
+  //         if (!isNaN(taxTotal)) {
+  //           taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+  //           document.getElementById("totalTax_totalPrint").innerHTML =
+  //             utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+  //         }
+  //         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+  //           document.getElementById("grandTotalPrint").innerHTML =
+  //             $("#grandTotal").text();
+  //           document.getElementById("totalBalanceDuePrint").innerHTML =
+  //             $("#totalBalanceDue").text();
+  //         }
+  //       });
+  //     }
+  //   }
+  //   $("#tblCustomerlist_filter .form-control-sm").val("");
+  //   $(".fullScreenSpin").css("display", "none");
+  // }
+  // templateObject.getCustomerData = function (customerID) {
+  //   getVS1Data("TCustomerVS1")
+  //     .then(function (dataObject) {
+  //       if (dataObject.length === 0) {
+  //         contactService.getOneCustomerDataEx(customerID).then(function (data) {
+  //           templateObject.setCustomerByID(data);
+  //         });
+  //       } else {
+  //         let data = JSON.parse(dataObject[0].data);
+  //         let useData = data.tcustomervs1;
+  //         let added = false;
+  //         for (let i = 0; i < useData.length; i++) {
+  //           if (parseInt(useData[i].fields.ID) === parseInt(customerID)) {
+  //             added = true;
+  //             templateObject.setCustomerByID(useData[i]);
+  //           }
+  //         }
+  //         if (!added) {
+  //           contactService
+  //             .getOneCustomerDataEx(customerID)
+  //             .then(function (data) {
+  //               templateObject.setCustomerByID(data);
+  //             });
+  //         }
+  //       }
+  //     })
+  //     .catch(function (err) {
+  //       contactService.getOneCustomerDataEx(customerID).then(function (data) {
+  //         $(".fullScreenSpin").css("display", "none");
+  //         templateObject.setCustomerByID(data);
+  //       });
+  //     });
+  // }
 
-  templateObject.setCustomerByID = function(data) {
-    $("#edtCustomerName").val(data.fields.ClientName);
-    $("#edtCustomerName").attr("custid", data.fields.ID);
-    $("#edtCustomerEmail").val(data.fields.Email);
-    $("#edtCustomerEmail").attr("customerid", data.fields.ID);
-    $("#edtCustomerName").attr("custid", data.fields.ID);
-    $("#edtCustomerEmail").attr("customerfirstname", data.fields.FirstName);
-    $("#edtCustomerEmail").attr("customerlastname", data.fields.LastName);
-    $("#customerType").text(data.fields.ClientTypeName || "Default");
-    $("#customerDiscount").text(data.fields.Discount + "%" || 0 + "%");
-    $("#edtCustomerUseType").val(data.fields.ClientTypeName || "Default");
-    $("#edtCustomerUseDiscount").val(data.fields.Discount || 0);
-    let postalAddress =
-      data.fields.Companyname +
-      "\n" +
-      data.fields.Street +
-      "\n" +
-      data.fields.Street2 +
-      " " +
-      data.fields.State +
-      " " +
-      data.fields.Postcode +
-      "\n" +
-      data.fields.Country;
-    $("#txabillingAddress").val(postalAddress);
-    $("#pdfCustomerAddress").html(postalAddress);
-    $(".pdfCustomerAddress").text(postalAddress);
-    $("#txaShipingInfo").val(postalAddress);
-    $("#sltTerms").val(
-      data.fields.TermsName || templateObject.defaultsaleterm.get() || ""
-    );
-    let selectedTaxCodeName = data.fields.TaxCodeName || "E";
-    templateObject.setCustomerInfo(selectedTaxCodeName);
-  }
+  
 
 
   function loadTemplateBody1(object_invoce) {
@@ -3262,7 +3251,7 @@ Template.new_invoice.onRendered(function () {
 
   templateObject.initPage();
 
-  templateObject.getAllTaxCodes();
+  // templateObject.getAllTaxCodes();
   templateObject.getSubTaxCodes();
 
   templateObject.getAllClients();
@@ -3446,7 +3435,7 @@ Template.new_invoice.onRendered(function () {
       isPartialPaid: false,
     };
     if (FlowRouter.current().queryParams.customerid) {
-      templateObject.getCustomerData(FlowRouter.current().queryParams.customerid);
+      // templateObject.getCustomerData(FlowRouter.current().queryParams.customerid);
     } else {
       $("#edtCustomerName").val("");
     }
@@ -3625,23 +3614,23 @@ Template.new_invoice.onRendered(function () {
     }
   });
 
-  $(document).on("click", "#departmentList tbody tr", function (e) {
-    $("#sltDept").val($(this).find(".colDeptName").text());
-    $("#departmentModal").modal("toggle");
-  });
-  $(document).on("click", "#termsList tbody tr", function (e) {
-    $("#sltTerms").val($(this).find(".colName").text());
-    $("#termsListModal").modal("toggle");
-  });
-  $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
-    $("#sltStatus").val($(this).find(".colStatusName").text());
-    $("#statusPopModal").modal("toggle");
+  // $(document).on("click", "#departmentList tbody tr", function (e) {
+  //   $("#sltDept").val($(this).find(".colDeptName").text());
+  //   $("#departmentModal").modal("toggle");
+  // });
+  // $(document).on("click", "#termsList tbody tr", function (e) {
+  //   $("#sltTerms").val($(this).find(".colName").text());
+  //   $("#termsListModal").modal("hide");
+  // });
+  // $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
+  //   $("#sltStatus").val($(this).find(".colStatusName").text());
+  //   $("#statusPopModal").modal("toggle");
 
-    $("#tblStatusPopList_filter .form-control-sm").val("");
-    setTimeout(function () {
-      $(".fullScreenSpin").css("display", "none");
-    }, 1000);
-  });
+  //   $("#tblStatusPopList_filter .form-control-sm").val("");
+  //   setTimeout(function () {
+  //     $(".fullScreenSpin").css("display", "none");
+  //   }, 1000);
+  // });
   $(document).on("click", "#custListType tbody tr", function (e) {
     if (clickedInput == "one") {
       $("#edtSaleCustField1").val($(this).find(".colFieldName").text());
@@ -3654,53 +3643,56 @@ Template.new_invoice.onRendered(function () {
 
   });
   /* On click Customer List */
-  $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
-    const tableCustomer = $(this);
-    $("#edtCustomerName").val(tableCustomer.find(".colCompany").text());
-    $("#edtCustomerName").attr("custid", tableCustomer.find(".colID").text());
-    $("#customerListModal").modal("toggle");
-    $("#edtCustomerEmail").val(tableCustomer.find(".colEmail").text());
-    $("#edtCustomerEmail").attr("customerid", tableCustomer.find(".colID").text()
-    );
-    $("#edtCustomerName").attr("custid", tableCustomer.find(".colID").text());
-    $("#edtCustomerEmail").attr("customerfirstname", tableCustomer.find(".colCustomerFirstName").text()
-    );
-    $("#edtCustomerEmail").attr("customerlastname", tableCustomer.find(".colCustomerLastName").text()
-    );
-    $("#customerType").text( tableCustomer.find(".colCustomerType").text() || "Default");
-    $("#customerDiscount").text( tableCustomer.find(".colCustomerDiscount").text() + "%" || 0 + "%" );
-    $("#edtCustomerUseType").val(tableCustomer.find(".colCustomerType").text() || "Default" );
-    $("#edtCustomerUseDiscount").val( tableCustomer.find(".colCustomerDiscount").text() || 0 );
-    let postalAddress =
-      tableCustomer.find(".colCompany").text() +
-      "\n" +
-      tableCustomer.find(".colStreetAddress").text() +
-      "\n" +
-      tableCustomer.find(".colCity").text() +
-      " " +
-      tableCustomer.find(".colState").text() +
-      " " +
-      tableCustomer.find(".colZipCode").text() +
-      "\n" +
-      tableCustomer.find(".colCountry").text();
-    $("#txabillingAddress").val(postalAddress);
-    $("#pdfCustomerAddress").html(postalAddress);
-    $(".pdfCustomerAddress").text(postalAddress);
-    $("#txaShipingInfo").val(postalAddress);
-    $("#sltTerms").val(
-      tableCustomer.find(".colCustomerTermName").text() ||
-      templateObject.termrecords.get() ||
-      ""
-    );
-    let selectedTaxCodeName = tableCustomer.find(".colCustomerTaxCode").text() || "E";
-    templateObject.setCustomerInfo(selectedTaxCodeName);
-  });
+  // $(document).on("click", "#tblCustomerlist tbody tr", function (e) {
+  //   const tableCustomer = $(this);
+  //   $("#edtCustomerName").val(tableCustomer.find(".colCompany").text());
+  //   $("#edtCustomerName").attr("custid", tableCustomer.find(".colID").text());
+  //   $("#customerListModal").modal("toggle");
+  //   $("#edtCustomerEmail").val(tableCustomer.find(".colEmail").text());
+  //   $("#edtCustomerEmail").attr("customerid", tableCustomer.find(".colID").text()
+  //   );
+  //   $("#edtCustomerName").attr("custid", tableCustomer.find(".colID").text());
+  //   $("#edtCustomerEmail").attr("customerfirstname", tableCustomer.find(".colCustomerFirstName").text()
+  //   );
+  //   $("#edtCustomerEmail").attr("customerlastname", tableCustomer.find(".colCustomerLastName").text()
+  //   );
+  //   $("#customerType").text( tableCustomer.find(".colCustomerType").text() || "Default");
+  //   $("#customerDiscount").text( tableCustomer.find(".colCustomerDiscount").text() + "%" || 0 + "%" );
+  //   $("#edtCustomerUseType").val(tableCustomer.find(".colCustomerType").text() || "Default" );
+  //   $("#edtCustomerUseDiscount").val( tableCustomer.find(".colCustomerDiscount").text() || 0 );
+  //   let postalAddress =
+  //     tableCustomer.find(".colCompany").text() +
+  //     "\n" +
+  //     tableCustomer.find(".colStreetAddress").text() +
+  //     "\n" +
+  //     tableCustomer.find(".colCity").text() +
+  //     " " +
+  //     tableCustomer.find(".colState").text() +
+  //     " " +
+  //     tableCustomer.find(".colZipCode").text() +
+  //     "\n" +
+  //     tableCustomer.find(".colCountry").text();
+  //   $("#txabillingAddress").val(postalAddress);
+  //   $("#pdfCustomerAddress").html(postalAddress);
+  //   $(".pdfCustomerAddress").text(postalAddress);
+  //   $("#txaShipingInfo").val(postalAddress);
+  //   $("#sltTerms").val(
+  //     tableCustomer.find(".colCustomerTermName").text() ||
+  //     templateObject.termrecords.get() ||
+  //     ""
+  //   );
+  //   let selectedTaxCodeName = tableCustomer.find(".colCustomerTaxCode").text() || "E";
+  //   templateObject.setCustomerInfo(selectedTaxCodeName);
+  // });
 
   $(document).ready(function () {
-    $("#edtCustomerName").editableSelect();
-    $("#sltTerms").editableSelect();
-    $("#sltDept").editableSelect();
-    $("#sltStatus").editableSelect();
+    // $("#edtCustomerName").editableSelect();
+    // $("#sltTerms").editableSelect();
+    // $('.sltTerms').each(function(i, obj) {
+    //   $(obj).editableSelect();
+    // })
+    // $("#sltDept").editableSelect();
+    // $("#sltStatus").editableSelect();
 
     $(document).on("click", "#tblUOMList tbody tr", function (e) {
       let table = $(this);
@@ -3710,827 +3702,827 @@ Template.new_invoice.onRendered(function () {
     });
 
 
-  $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      var termsDataName = e.target.value || "";
-      $("#edtTermsID").val("");
-      if (e.pageX > offset.left + $earch.width() - 8) {
-        // X button 16px wide?
-        $("#termsListModal").modal("toggle");
-      } else {
-        if (termsDataName.replace(/\s/g, "") != "") {
-          $("#termModalHeader").text("Edit Terms");
-          getVS1Data("TTermsVS1")
-            .then(function (dataObject) {
-              //edit to test indexdb
-              if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
-                sideBarService.getTermsVS1().then(function (data) {
-                  for (let i in data.ttermsvs1) {
-                    if (data.ttermsvs1[i].TermsName === termsDataName) {
-                      $("#edtTermsID").val(data.ttermsvs1[i].Id);
-                      $("#edtDays").val(data.ttermsvs1[i].Days);
-                      $("#edtName").val(data.ttermsvs1[i].TermsName);
-                      $("#edtDesc").val(data.ttermsvs1[i].Description);
-                      if (data.ttermsvs1[i].IsEOM === true) {
-                        $("#isEOM").prop("checked", true);
-                      } else {
-                        $("#isEOM").prop("checked", false);
-                      }
-                      if (data.ttermsvs1[i].IsEOMPlus === true) {
-                        $("#isEOMPlus").prop("checked", true);
-                      } else {
-                        $("#isEOMPlus").prop("checked", false);
-                      }
-                      if (data.ttermsvs1[i].isSalesdefault === true) {
-                        $("#chkCustomerDef").prop("checked", true);
-                      } else {
-                        $("#chkCustomerDef").prop("checked", false);
-                      }
-                      if (data.ttermsvs1[i].isPurchasedefault === true) {
-                        $("#chkSupplierDef").prop("checked", true);
-                      } else {
-                        $("#chkSupplierDef").prop("checked", false);
-                      }
+  // $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     var termsDataName = e.target.value || "";
+  //     $("#edtTermsID").val("");
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       // X button 16px wide?
+  //       $("#termsListModal").modal("show");
+  //     } else {
+  //       if (termsDataName.replace(/\s/g, "") != "") {
+  //         $("#termModalHeader").text("Edit Terms");
+  //         getVS1Data("TTermsVS1")
+  //           .then(function (dataObject) {
+  //             //edit to test indexdb
+  //             if (dataObject.length == 0) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService.getTermsVS1().then(function (data) {
+  //                 for (let i in data.ttermsvs1) {
+  //                   if (data.ttermsvs1[i].TermsName === termsDataName) {
+  //                     $("#edtTermsID").val(data.ttermsvs1[i].Id);
+  //                     $("#edtDays").val(data.ttermsvs1[i].Days);
+  //                     $("#edtName").val(data.ttermsvs1[i].TermsName);
+  //                     $("#edtDesc").val(data.ttermsvs1[i].Description);
+  //                     if (data.ttermsvs1[i].IsEOM === true) {
+  //                       $("#isEOM").prop("checked", true);
+  //                     } else {
+  //                       $("#isEOM").prop("checked", false);
+  //                     }
+  //                     if (data.ttermsvs1[i].IsEOMPlus === true) {
+  //                       $("#isEOMPlus").prop("checked", true);
+  //                     } else {
+  //                       $("#isEOMPlus").prop("checked", false);
+  //                     }
+  //                     if (data.ttermsvs1[i].isSalesdefault === true) {
+  //                       $("#chkCustomerDef").prop("checked", true);
+  //                     } else {
+  //                       $("#chkCustomerDef").prop("checked", false);
+  //                     }
+  //                     if (data.ttermsvs1[i].isPurchasedefault === true) {
+  //                       $("#chkSupplierDef").prop("checked", true);
+  //                     } else {
+  //                       $("#chkSupplierDef").prop("checked", false);
+  //                     }
 
-                      break;
-                    }
-                  }
-                  $(".fullScreenSpin").css("display", "none");
-                  $("#newTermsModal").modal("toggle");
-                });
-              } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.ttermsvs1;
-                for (let i in useData) {
-                  if (useData[i].TermsName === termsDataName) {
-                    $("#edtTermsID").val(useData[i].Id);
-                    $("#edtDays").val(useData[i].Days);
-                    $("#edtName").val(useData[i].TermsName);
-                    $("#edtDesc").val(useData[i].Description);
-                    if (useData[i].IsEOM === true) {
-                      $("#isEOM").prop("checked", true);
-                    } else {
-                      $("#isEOM").prop("checked", false);
-                    }
-                    if (useData[i].IsEOMPlus === true) {
-                      $("#isEOMPlus").prop("checked", true);
-                    } else {
-                      $("#isEOMPlus").prop("checked", false);
-                    }
-                    if (useData[i].isSalesdefault === true) {
-                      $("#chkCustomerDef").prop("checked", true);
-                    } else {
-                      $("#chkCustomerDef").prop("checked", false);
-                    }
-                    if (useData[i].isPurchasedefault === true) {
-                      $("#chkSupplierDef").prop("checked", true);
-                    } else {
-                      $("#chkSupplierDef").prop("checked", false);
-                    }
+  //                     break;
+  //                   }
+  //                 }
+  //                 $(".fullScreenSpin").css("display", "none");
+  //                 $("#newTermsModal").modal("show");
+  //               });
+  //             } else {
+  //               let data = JSON.parse(dataObject[0].data);
+  //               let useData = data.ttermsvs1;
+  //               for (let i in useData) {
+  //                 if (useData[i].TermsName === termsDataName) {
+  //                   $("#edtTermsID").val(useData[i].Id);
+  //                   $("#edtDays").val(useData[i].Days);
+  //                   $("#edtName").val(useData[i].TermsName);
+  //                   $("#edtDesc").val(useData[i].Description);
+  //                   if (useData[i].IsEOM === true) {
+  //                     $("#isEOM").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOM").prop("checked", false);
+  //                   }
+  //                   if (useData[i].IsEOMPlus === true) {
+  //                     $("#isEOMPlus").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOMPlus").prop("checked", false);
+  //                   }
+  //                   if (useData[i].isSalesdefault === true) {
+  //                     $("#chkCustomerDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkCustomerDef").prop("checked", false);
+  //                   }
+  //                   if (useData[i].isPurchasedefault === true) {
+  //                     $("#chkSupplierDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkSupplierDef").prop("checked", false);
+  //                   }
 
-                    break;
-                  }
-                }
-                $(".fullScreenSpin").css("display", "none");
-                $("#newTermsModal").modal("toggle");
-              }
-            })
-            .catch(function (err) {
-              $(".fullScreenSpin").css("display", "inline-block");
-              sideBarService.getTermsVS1().then(function (data) {
-                for (let i in data.ttermsvs1) {
-                  if (data.ttermsvs1[i].TermsName === termsDataName) {
-                    $("#edtTermsID").val(data.ttermsvs1[i].Id);
-                    $("#edtDays").val(data.ttermsvs1[i].Days);
-                    $("#edtName").val(data.ttermsvs1[i].TermsName);
-                    $("#edtDesc").val(data.ttermsvs1[i].Description);
-                    if (data.ttermsvs1[i].IsEOM === true) {
-                      $("#isEOM").prop("checked", true);
-                    } else {
-                      $("#isEOM").prop("checked", false);
-                    }
-                    if (data.ttermsvs1[i].IsEOMPlus === true) {
-                      $("#isEOMPlus").prop("checked", true);
-                    } else {
-                      $("#isEOMPlus").prop("checked", false);
-                    }
-                    if (data.ttermsvs1[i].isSalesdefault === true) {
-                      $("#chkCustomerDef").prop("checked", true);
-                    } else {
-                      $("#chkCustomerDef").prop("checked", false);
-                    }
-                    if (data.ttermsvs1[i].isPurchasedefault === true) {
-                      $("#chkSupplierDef").prop("checked", true);
-                    } else {
-                      $("#chkSupplierDef").prop("checked", false);
-                    }
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newTermsModal").modal("show");
+  //             }
+  //           })
+  //           .catch(function (err) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService.getTermsVS1().then(function (data) {
+  //               for (let i in data.ttermsvs1) {
+  //                 if (data.ttermsvs1[i].TermsName === termsDataName) {
+  //                   $("#edtTermsID").val(data.ttermsvs1[i].Id);
+  //                   $("#edtDays").val(data.ttermsvs1[i].Days);
+  //                   $("#edtName").val(data.ttermsvs1[i].TermsName);
+  //                   $("#edtDesc").val(data.ttermsvs1[i].Description);
+  //                   if (data.ttermsvs1[i].IsEOM === true) {
+  //                     $("#isEOM").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOM").prop("checked", false);
+  //                   }
+  //                   if (data.ttermsvs1[i].IsEOMPlus === true) {
+  //                     $("#isEOMPlus").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOMPlus").prop("checked", false);
+  //                   }
+  //                   if (data.ttermsvs1[i].isSalesdefault === true) {
+  //                     $("#chkCustomerDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkCustomerDef").prop("checked", false);
+  //                   }
+  //                   if (data.ttermsvs1[i].isPurchasedefault === true) {
+  //                     $("#chkSupplierDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkSupplierDef").prop("checked", false);
+  //                   }
 
-                    break;
-                  }
-                }
-                $(".fullScreenSpin").css("display", "none");
-                $("#newTermsModal").modal("toggle");
-              });
-            });
-        } else {
-          $("#termsListModal").modal();
-          $("#termsList_filter .form-control-sm").focus();
-          $("#termsList_filter .form-control-sm").val("");
-          $("#termsList_filter .form-control-sm").trigger("input");
-          var datatable = $("#termsList").DataTable();
-          datatable.draw();
-          $("#termsList_filter .form-control-sm").trigger("input");
-        }
-      }
-    });
-  $("#sltDept")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      var deptDataName = e.target.value || "";
-      $("#edtDepartmentID").val("");
-      if (e.pageX > offset.left + $earch.width() - 8) {
-        // X button 16px wide?
-        $("#departmentModal").modal("toggle");
-      } else {
-        if (deptDataName.replace(/\s/g, "") != "") {
-          $("#newDeptHeader").text("Edit Department");
-          getVS1Data("TDeptClass")
-            .then(function (dataObject) {
-              if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
-                sideBarService.getDepartment().then(function (data) {
-                  for (let i = 0; i < data.tdeptclass.length; i++) {
-                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                      $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-                      $("#edtNewDeptName").val(
-                        data.tdeptclass[i].DeptClassName
-                      );
-                      $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
-                      $("#edtDeptDesc").val(data.tdeptclass[i].Description);
-                    }
-                  }
-                  setTimeout(function () {
-                    $(".fullScreenSpin").css("display", "none");
-                    $("#newDepartmentModal").modal("toggle");
-                  }, 200);
-                });
-              } else {
-                let data = JSON.parse(dataObject[0].data);
-                for (let i = 0; i < data.tdeptclass.length; i++) {
-                  if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                    $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-                    $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
-                    $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
-                    $("#edtDeptDesc").val(data.tdeptclass[i].Description);
-                  }
-                  break;
-                }
-                $(".fullScreenSpin").css("display", "none");
-                $("#newDepartmentModal").modal("toggle");
-              }
-            })
-            .catch(function (err) {
-              $(".fullScreenSpin").css("display", "inline-block");
-              sideBarService.getDepartment().then(function (data) {
-                for (let i = 0; i < data.tdeptclass.length; i++) {
-                  if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                    $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-                    $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
-                    $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
-                    $("#edtDeptDesc").val(data.tdeptclass[i].Description);
-                  }
-                  break;
-                }
-                $(".fullScreenSpin").css("display", "none");
-                $("#newDepartmentModal").modal("toggle");
-              });
-            });
-        } else {
-          $("#departmentModal").modal();
-          setTimeout(function () {
-            $("#departmentList_filter .form-control-sm").focus();
-            $("#departmentList_filter .form-control-sm").val("");
-            $("#departmentList_filter .form-control-sm").trigger("input");
-            var datatable = $("#departmentList").DataTable();
-            datatable.draw();
-            $("#departmentList_filter .form-control-sm").trigger("input");
-          }, 500);
-        }
-      }
-    });
-  $("#sltStatus")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      $("#statusId").val("");
-      var statusDataName = e.target.value || "";
-      if (e.pageX > offset.left + $earch.width() - 8) {
-        // X button 16px wide?
-        $("#statusPopModal").modal("toggle");
-      } else {
-        if (statusDataName.replace(/\s/g, "") != "") {
-          $("#newStatusHeader").text("Edit Status");
-          $("#newStatus").val(statusDataName);
-          getVS1Data("TLeadStatusType")
-            .then(function (dataObject) {
-              if (dataObject.length == 0) {
-                $(".fullScreenSpin").css("display", "inline-block");
-                sideBarService.getAllLeadStatus().then(function (data) {
-                  for (let i in data.tleadstatustype) {
-                    if (data.tleadstatustype[i].TypeName === statusDataName) {
-                      $("#statusId").val(data.tleadstatustype[i].Id);
-                      break;
-                    }
-                  }
-                  $(".fullScreenSpin").css("display", "none");
-                  $("#newStatusPopModal").modal("toggle");
-                });
-              } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tleadstatustype;
-                for (let i in useData) {
-                  if (useData[i].TypeName === statusDataName) {
-                    $("#statusId").val(useData[i].Id);
-                    break;
-                  }
-                }
-                $(".fullScreenSpin").css("display", "none");
-                $("#newStatusPopModal").modal("toggle");
-              }
-            })
-            .catch(function (err) {
-              $(".fullScreenSpin").css("display", "inline-block");
-              sideBarService.getAllLeadStatus().then(function (data) {
-                for (let i in data.tleadstatustype) {
-                  if (data.tleadstatustype[i].TypeName === statusDataName) {
-                    $("#statusId").val(data.tleadstatustype[i].Id);
-                    break;
-                  }
-                }
-                $(".fullScreenSpin").css("display", "none");
-                $("#newStatusPopModal").modal("toggle");
-              });
-            });
-          $(".fullScreenSpin").css("display", "none");
-          $("#newStatusPopModal").modal("toggle");
-        } else {
-          $("#statusPopModal").modal();
-          $("#tblStatusPopList_filter .form-control-sm").focus();
-          $("#tblStatusPopList_filter .form-control-sm").val("");
-          $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-          var datatable = $("#tblStatusPopList").DataTable();
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newTermsModal").modal("show");
+  //             });
+  //           });
+  //       } else {
+  //         $("#termsListModal").modal('show');
+  //         $("#termsList_filter .form-control-sm").focus();
+  //         $("#termsList_filter .form-control-sm").val("");
+  //         $("#termsList_filter .form-control-sm").trigger("input");
+  //         var datatable = $("#termsList").DataTable();
+  //         datatable.draw();
+  //         $("#termsList_filter .form-control-sm").trigger("input");
+  //       }
+  //     }
+  //   });
+  // $("#sltDept")
+  //   .editableSelect()
+  //   .on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     var deptDataName = e.target.value || "";
+  //     $("#edtDepartmentID").val("");
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       // X button 16px wide?
+  //       $("#departmentModal").modal("toggle");
+  //     } else {
+  //       if (deptDataName.replace(/\s/g, "") != "") {
+  //         $("#newDeptHeader").text("Edit Department");
+  //         getVS1Data("TDeptClass")
+  //           .then(function (dataObject) {
+  //             if (dataObject.length == 0) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService.getDepartment().then(function (data) {
+  //                 for (let i = 0; i < data.tdeptclass.length; i++) {
+  //                   if (data.tdeptclass[i].DeptClassName === deptDataName) {
+  //                     $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+  //                     $("#edtNewDeptName").val(
+  //                       data.tdeptclass[i].DeptClassName
+  //                     );
+  //                     $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+  //                     $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+  //                   }
+  //                 }
+  //                 setTimeout(function () {
+  //                   $(".fullScreenSpin").css("display", "none");
+  //                   $("#newDepartmentModal").modal("toggle");
+  //                 }, 200);
+  //               });
+  //             } else {
+  //               let data = JSON.parse(dataObject[0].data);
+  //               for (let i = 0; i < data.tdeptclass.length; i++) {
+  //                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
+  //                   $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+  //                   $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
+  //                   $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+  //                   $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+  //                 }
+  //                 break;
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newDepartmentModal").modal("toggle");
+  //             }
+  //           })
+  //           .catch(function (err) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService.getDepartment().then(function (data) {
+  //               for (let i = 0; i < data.tdeptclass.length; i++) {
+  //                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
+  //                   $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+  //                   $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
+  //                   $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+  //                   $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+  //                 }
+  //                 break;
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newDepartmentModal").modal("toggle");
+  //             });
+  //           });
+  //       } else {
+  //         $("#departmentModal").modal();
+  //         setTimeout(function () {
+  //           $("#departmentList_filter .form-control-sm").focus();
+  //           $("#departmentList_filter .form-control-sm").val("");
+  //           $("#departmentList_filter .form-control-sm").trigger("input");
+  //           var datatable = $("#departmentList").DataTable();
+  //           datatable.draw();
+  //           $("#departmentList_filter .form-control-sm").trigger("input");
+  //         }, 500);
+  //       }
+  //     }
+  //   });
+  // $("#sltStatus")
+  //   .editableSelect()
+  //   .on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     $("#statusId").val("");
+  //     var statusDataName = e.target.value || "";
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       // X button 16px wide?
+  //       $("#statusPopModal").modal("toggle");
+  //     } else {
+  //       if (statusDataName.replace(/\s/g, "") != "") {
+  //         $("#newStatusHeader").text("Edit Status");
+  //         $("#newStatus").val(statusDataName);
+  //         getVS1Data("TLeadStatusType")
+  //           .then(function (dataObject) {
+  //             if (dataObject.length == 0) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService.getAllLeadStatus().then(function (data) {
+  //                 for (let i in data.tleadstatustype) {
+  //                   if (data.tleadstatustype[i].TypeName === statusDataName) {
+  //                     $("#statusId").val(data.tleadstatustype[i].Id);
+  //                     break;
+  //                   }
+  //                 }
+  //                 $(".fullScreenSpin").css("display", "none");
+  //                 $("#newStatusPopModal").modal("toggle");
+  //               });
+  //             } else {
+  //               let data = JSON.parse(dataObject[0].data);
+  //               let useData = data.tleadstatustype;
+  //               for (let i in useData) {
+  //                 if (useData[i].TypeName === statusDataName) {
+  //                   $("#statusId").val(useData[i].Id);
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newStatusPopModal").modal("toggle");
+  //             }
+  //           })
+  //           .catch(function (err) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService.getAllLeadStatus().then(function (data) {
+  //               for (let i in data.tleadstatustype) {
+  //                 if (data.tleadstatustype[i].TypeName === statusDataName) {
+  //                   $("#statusId").val(data.tleadstatustype[i].Id);
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newStatusPopModal").modal("toggle");
+  //             });
+  //           });
+  //         $(".fullScreenSpin").css("display", "none");
+  //         $("#newStatusPopModal").modal("toggle");
+  //       } else {
+  //         $("#statusPopModal").modal();
+  //         $("#tblStatusPopList_filter .form-control-sm").focus();
+  //         $("#tblStatusPopList_filter .form-control-sm").val("");
+  //         $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+  //         var datatable = $("#tblStatusPopList").DataTable();
 
-          datatable.draw();
-          $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-        }
-      }
-    });
+  //         datatable.draw();
+  //         $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+  //       }
+  //     }
+  //   });
   });
 
-  $(document).on('click', '#edtCustomerName', function(e, li) {
-    var $earch = $(this);
-    var offset = $earch.offset();
-    $("#edtCustomerPOPID").val("");
-    var customerDataName = e.target.value || "";
-    if (e.pageX > offset.left + $earch.width() - 8) {
-      // X button 16px wide?
-      $("#customerListModal").modal();
-      $("#tblCustomerlist_filter .form-control-sm").focus();
-      $("#tblCustomerlist_filter .form-control-sm").val("");
-      $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-      var datatable = $("#tblCustomerlist").DataTable();
-      datatable.draw();
-      $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-    } else {
-      if (customerDataName.replace(/\s/g, "") != "") {
-        $("#edtCustomerPOPID").val("");
-        getVS1Data("TCustomerVS1")
-          .then(function (dataObject) {
-            if (dataObject.length == 0) {
-              $(".fullScreenSpin").css("display", "inline-block");
-              sideBarService
-                .getOneCustomerDataExByName(customerDataName)
-                .then(function (data) {
-                  $(".fullScreenSpin").css("display", "none");
-                  $("#add-customer-title").text("Edit Customer");
-                  let popCustomerID = data.tcustomer[0].fields.ID || "";
-                  let popCustomerName = data.tcustomer[0].fields.ClientName || "";
-                  let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-                  let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-                  let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
-                  let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
-                  let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
-                  let popCustomertfn = "" || "";
-                  let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-                  let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-                  let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
-                  let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
-                  let popCustomerURL = data.tcustomer[0].fields.URL || "";
-                  let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-                  let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
-                  let popCustomerState = data.tcustomer[0].fields.State || "";
-                  let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
-                  let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                  let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
-                  let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
-                  let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
-                  let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
-                  let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
-                  let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
-                  let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
-                  let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
-                  let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-                  let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
-                  let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
-                  let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
-                  let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                  let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
-                  $("#edtCustomerCompany").val(popCustomerName);
-                  $("#edtCustomerPOPID").val(popCustomerID);
-                  $("#edtCustomerPOPEmail").val(popCustomerEmail);
-                  $("#edtTitle").val(popCustomerTitle);
-                  $("#edtFirstName").val(popCustomerFirstName);
-                  $("#edtMiddleName").val(popCustomerMiddleName);
-                  $("#edtLastName").val(popCustomerLastName);
-                  $("#edtCustomerPhone").val(popCustomerPhone);
-                  $("#edtCustomerMobile").val(popCustomerMobile);
-                  $("#edtCustomerFax").val(popCustomerFaxnumber);
-                  $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-                  $("#edtCustomerWebsite").val(popCustomerURL);
-                  $("#edtCustomerShippingAddress").val(popCustomerStreet);
-                  $("#edtCustomerShippingCity").val(popCustomerStreet2);
-                  $("#edtCustomerShippingState").val(popCustomerState);
-                  $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-                  $("#sedtCountry").val(popCustomerCountry);
-                  $("#txaNotes").val(popCustomernotes);
-                  $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-                  $("#sltTermsPOP").val(popCustomerterms);
-                  $("#sltCustomerType").val(popCustomerType);
-                  $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-                  $("#edtCustomeField1").val(popCustomercustfield1);
-                  $("#edtCustomeField2").val(popCustomercustfield2);
-                  $("#edtCustomeField3").val(popCustomercustfield3);
-                  $("#edtCustomeField4").val(popCustomercustfield4);
-                  $("#sltTaxCode").val(popCustomerTaxCode);
-                  if (
-                    data.tcustomer[0].fields.Street ==
-                    data.tcustomer[0].fields.BillStreet &&
-                    data.tcustomer[0].fields.Street2 ==
-                    data.tcustomer[0].fields.BillStreet2 &&
-                    data.tcustomer[0].fields.State ==
-                    data.tcustomer[0].fields.BillState &&
-                    data.tcustomer[0].fields.Postcode ==
-                    data.tcustomer[0].fields.BillPostcode &&
-                    data.tcustomer[0].fields.Country ==
-                    data.tcustomer[0].fields.Billcountry
-                  ) {
-                    $("#chkSameAsShipping2").attr("checked", "checked");
-                  }
+  // $(document).on('click', '#edtCustomerName', function(e, li) {
+  //   var $earch = $(this);
+  //   var offset = $earch.offset();
+  //   $("#edtCustomerPOPID").val("");
+  //   var customerDataName = e.target.value || "";
+  //   if (e.pageX > offset.left + $earch.width() - 8) {
+  //     // X button 16px wide?
+  //     $("#customerListModal").modal();
+  //     $("#tblCustomerlist_filter .form-control-sm").focus();
+  //     $("#tblCustomerlist_filter .form-control-sm").val("");
+  //     $("#tblCustomerlist_filter .form-control-sm").trigger("input");
+  //     var datatable = $("#tblCustomerlist").DataTable();
+  //     datatable.draw();
+  //     $("#tblCustomerlist_filter .form-control-sm").trigger("input");
+  //   } else {
+  //     if (customerDataName.replace(/\s/g, "") != "") {
+  //       $("#edtCustomerPOPID").val("");
+  //       getVS1Data("TCustomerVS1")
+  //         .then(function (dataObject) {
+  //           if (dataObject.length == 0) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService
+  //               .getOneCustomerDataExByName(customerDataName)
+  //               .then(function (data) {
+  //                 $(".fullScreenSpin").css("display", "none");
+  //                 $("#add-customer-title").text("Edit Customer");
+  //                 let popCustomerID = data.tcustomer[0].fields.ID || "";
+  //                 let popCustomerName = data.tcustomer[0].fields.ClientName || "";
+  //                 let popCustomerEmail = data.tcustomer[0].fields.Email || "";
+  //                 let popCustomerTitle = data.tcustomer[0].fields.Title || "";
+  //                 let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
+  //                 let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
+  //                 let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
+  //                 let popCustomertfn = "" || "";
+  //                 let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
+  //                 let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
+  //                 let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
+  //                 let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
+  //                 let popCustomerURL = data.tcustomer[0].fields.URL || "";
+  //                 let popCustomerStreet = data.tcustomer[0].fields.Street || "";
+  //                 let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
+  //                 let popCustomerState = data.tcustomer[0].fields.State || "";
+  //                 let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
+  //                 let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+  //                 let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
+  //                 let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
+  //                 let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
+  //                 let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
+  //                 let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
+  //                 let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
+  //                 let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
+  //                 let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
+  //                 let popCustomernotes = data.tcustomer[0].fields.Notes || "";
+  //                 let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
+  //                 let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
+  //                 let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
+  //                 let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+  //                 let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
+  //                 $("#edtCustomerCompany").val(popCustomerName);
+  //                 $("#edtCustomerPOPID").val(popCustomerID);
+  //                 $("#edtCustomerPOPEmail").val(popCustomerEmail);
+  //                 $("#edtTitle").val(popCustomerTitle);
+  //                 $("#edtFirstName").val(popCustomerFirstName);
+  //                 $("#edtMiddleName").val(popCustomerMiddleName);
+  //                 $("#edtLastName").val(popCustomerLastName);
+  //                 $("#edtCustomerPhone").val(popCustomerPhone);
+  //                 $("#edtCustomerMobile").val(popCustomerMobile);
+  //                 $("#edtCustomerFax").val(popCustomerFaxnumber);
+  //                 $("#edtCustomerSkypeID").val(popCustomerSkypeName);
+  //                 $("#edtCustomerWebsite").val(popCustomerURL);
+  //                 $("#edtCustomerShippingAddress").val(popCustomerStreet);
+  //                 $("#edtCustomerShippingCity").val(popCustomerStreet2);
+  //                 $("#edtCustomerShippingState").val(popCustomerState);
+  //                 $("#edtCustomerShippingZIP").val(popCustomerPostcode);
+  //                 $("#sedtCountry").val(popCustomerCountry);
+  //                 $("#txaNotes").val(popCustomernotes);
+  //                 $("#sltPreferedPayment").val(popCustomerpreferedpayment);
+  //                 $("#sltTermsPOP").val(popCustomerterms);
+  //                 $("#sltCustomerType").val(popCustomerType);
+  //                 $("#edtCustomerCardDiscount").val(popCustomerDiscount);
+  //                 $("#edtCustomeField1").val(popCustomercustfield1);
+  //                 $("#edtCustomeField2").val(popCustomercustfield2);
+  //                 $("#edtCustomeField3").val(popCustomercustfield3);
+  //                 $("#edtCustomeField4").val(popCustomercustfield4);
+  //                 $("#sltTaxCode").val(popCustomerTaxCode);
+  //                 if (
+  //                   data.tcustomer[0].fields.Street ==
+  //                   data.tcustomer[0].fields.BillStreet &&
+  //                   data.tcustomer[0].fields.Street2 ==
+  //                   data.tcustomer[0].fields.BillStreet2 &&
+  //                   data.tcustomer[0].fields.State ==
+  //                   data.tcustomer[0].fields.BillState &&
+  //                   data.tcustomer[0].fields.Postcode ==
+  //                   data.tcustomer[0].fields.BillPostcode &&
+  //                   data.tcustomer[0].fields.Country ==
+  //                   data.tcustomer[0].fields.Billcountry
+  //                 ) {
+  //                   $("#chkSameAsShipping2").attr("checked", "checked");
+  //                 }
 
-                  if (data.tcustomer[0].fields.IsSupplier == true) {
-                    $("#chkSameAsSupplier").attr("checked", "checked");
-                  } else {
-                    $("#chkSameAsSupplier").removeAttr("checked");
-                  }
+  //                 if (data.tcustomer[0].fields.IsSupplier == true) {
+  //                   $("#chkSameAsSupplier").attr("checked", "checked");
+  //                 } else {
+  //                   $("#chkSameAsSupplier").removeAttr("checked");
+  //                 }
 
-                  let customerRecord = {
-                    id: popCustomerID,
-                    phone: popCustomerPhone,
-                    firstname: popCustomerFirstName,
-                    middlename: popCustomerMiddleName,
-                    lastname: popCustomerLastName,
-                    company: data.tcustomer[0].fields.Companyname || '',
-                    email: popCustomerEmail,
-                    title: popCustomerTitle,
-                    tfn: popCustomertfn,
-                    mobile: popCustomerMobile,
-                    fax: popCustomerFaxnumber,
-                    shippingaddress: popCustomerStreet,
-                    scity: popCustomerStreet2,
-                    sstate: popCustomerCountry,
-                    terms: '',
-                    spostalcode: popCustomerPostcode,
-                    scountry: popCustomerState,
-                    billingaddress: popCustomerbillingaddress,
-                    bcity: popCustomerbcity,
-                    bstate: popCustomerbstate,
-                    bpostalcode: popCustomerbpostalcode,
-                    bcountry: popCustomerCountry,
-                    custFld1: popCustomercustfield1,
-                    custFld2: popCustomercustfield2,
-                    jobbcountry: '',
-                    jobscountry: '',
-                    discount: 0
-                  }
-                  templateObject.customerRecord.set(customerRecord);
-                  setTimeout(function() {
-                    $('#addCustomerModal').modal('show');
-                  }, 200);
-                })
-                .catch(function (err) {
-                  $(".fullScreenSpin").css("display", "none");
-                });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-              var added = false;
-              for (let i = 0; i < data.tcustomervs1.length; i++) {
-                if ( data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                  added = true;
-                  $(".fullScreenSpin").css("display", "none");
-                  $("#add-customer-title").text("Edit Customer");
-                  let popCustomerID = data.tcustomervs1[i].fields.ID || "";
-                  let popCustomerName = data.tcustomervs1[i].fields.ClientName || "";
-                  let popCustomerEmail = data.tcustomervs1[i].fields.Email || "";
-                  let popCustomerTitle = data.tcustomervs1[i].fields.Title || "";
-                  let popCustomerFirstName = data.tcustomervs1[i].fields.FirstName || "";
-                  let popCustomerMiddleName = data.tcustomervs1[i].fields.CUSTFLD10 || "";
-                  let popCustomerLastName = data.tcustomervs1[i].fields.LastName || "";
-                  let popCustomertfn = "" || "";
-                  let popCustomerPhone = data.tcustomervs1[i].fields.Phone || "";
-                  let popCustomerMobile = data.tcustomervs1[i].fields.Mobile || "";
-                  let popCustomerFaxnumber = data.tcustomervs1[i].fields.Faxnumber || "";
-                  let popCustomerSkypeName = data.tcustomervs1[i].fields.SkypeName || "";
-                  let popCustomerURL = data.tcustomervs1[i].fields.URL || "";
-                  let popCustomerStreet = data.tcustomervs1[i].fields.Street || "";
-                  let popCustomerStreet2 = data.tcustomervs1[i].fields.Street2 || "";
-                  let popCustomerState = data.tcustomervs1[i].fields.State || "";
-                  let popCustomerPostcode = data.tcustomervs1[i].fields.Postcode || "";
-                  let popCustomerCountry = data.tcustomervs1[i].fields.Country || LoggedCountry;
-                  let popCustomerbillingaddress = data.tcustomervs1[i].fields.BillStreet || "";
-                  let popCustomerbcity = data.tcustomervs1[i].fields.BillStreet2 || "";
-                  let popCustomerbstate = data.tcustomervs1[i].fields.BillState || "";
-                  let popCustomerbpostalcode = data.tcustomervs1[i].fields.BillPostcode || "";
-                  let popCustomercustfield1 =
-                    data.tcustomervs1[i].fields.CUSTFLD1 || "";
-                  let popCustomercustfield2 =
-                    data.tcustomervs1[i].fields.CUSTFLD2 || "";
-                  let popCustomercustfield3 =
-                    data.tcustomervs1[i].fields.CUSTFLD3 || "";
-                  let popCustomercustfield4 =
-                    data.tcustomervs1[i].fields.CUSTFLD4 || "";
-                  let popCustomernotes =
-                    data.tcustomervs1[i].fields.Notes || "";
-                  let popCustomerpreferedpayment =
-                    data.tcustomervs1[i].fields.PaymentMethodName || "";
-                  let popCustomerterms =
-                    data.tcustomervs1[i].fields.TermsName || "";
-                  let popCustomerTaxCode =
-                    data.tcustomervs1[i].fields.TaxCodeName || "";
-                  let popCustomerDiscount =
-                    data.tcustomervs1[i].fields.Discount || 0;
-                  let popCustomerType =
-                    data.tcustomervs1[i].fields.ClientTypeName || "";
-                  $("#edtCustomerCompany").val(popCustomerName);
-                  $("#edtCustomerPOPID").val(popCustomerID);
-                  $("#edtCustomerPOPEmail").val(popCustomerEmail);
-                  $("#edtTitle").val(popCustomerTitle);
-                  $("#edtFirstName").val(popCustomerFirstName);
-                  $("#edtMiddleName").val(popCustomerMiddleName);
-                  $("#edtLastName").val(popCustomerLastName);
-                  $("#edtCustomerPhone").val(popCustomerPhone);
-                  $("#edtCustomerMobile").val(popCustomerMobile);
-                  $("#edtCustomerFax").val(popCustomerFaxnumber);
-                  $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-                  $("#edtCustomerWebsite").val(popCustomerURL);
-                  $("#edtCustomerShippingAddress").val(popCustomerStreet);
-                  $("#edtCustomerShippingCity").val(popCustomerStreet2);
-                  $("#edtCustomerShippingState").val(popCustomerState);
-                  $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-                  $("#sedtCountry").val(popCustomerCountry);
-                  $("#txaNotes").val(popCustomernotes);
-                  $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-                  $("#sltTermsPOP").val(popCustomerterms);
-                  $("#sltCustomerType").val(popCustomerType);
-                  $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-                  $("#edtCustomeField1").val(popCustomercustfield1);
-                  $("#edtCustomeField2").val(popCustomercustfield2);
-                  $("#edtCustomeField3").val(popCustomercustfield3);
-                  $("#edtCustomeField4").val(popCustomercustfield4);
-                  $("#sltTaxCode").val(popCustomerTaxCode);
-                  if (
-                    data.tcustomervs1[i].fields.Street ==
-                    data.tcustomervs1[i].fields.BillStreet &&
-                    data.tcustomervs1[i].fields.Street2 ==
-                    data.tcustomervs1[i].fields.BillStreet2 &&
-                    data.tcustomervs1[i].fields.State ==
-                    data.tcustomervs1[i].fields.BillState &&
-                    data.tcustomervs1[i].fields.Postcode ==
-                    data.tcustomervs1[i].fields.BillPostcode &&
-                    data.tcustomervs1[i].fields.Country ==
-                    data.tcustomervs1[i].fields.Billcountry
-                  ) {
-                    $("#chkSameAsShipping2").attr("checked", "checked");
-                  }
+  //                 let customerRecord = {
+  //                   id: popCustomerID,
+  //                   phone: popCustomerPhone,
+  //                   firstname: popCustomerFirstName,
+  //                   middlename: popCustomerMiddleName,
+  //                   lastname: popCustomerLastName,
+  //                   company: data.tcustomer[0].fields.Companyname || '',
+  //                   email: popCustomerEmail,
+  //                   title: popCustomerTitle,
+  //                   tfn: popCustomertfn,
+  //                   mobile: popCustomerMobile,
+  //                   fax: popCustomerFaxnumber,
+  //                   shippingaddress: popCustomerStreet,
+  //                   scity: popCustomerStreet2,
+  //                   sstate: popCustomerCountry,
+  //                   terms: '',
+  //                   spostalcode: popCustomerPostcode,
+  //                   scountry: popCustomerState,
+  //                   billingaddress: popCustomerbillingaddress,
+  //                   bcity: popCustomerbcity,
+  //                   bstate: popCustomerbstate,
+  //                   bpostalcode: popCustomerbpostalcode,
+  //                   bcountry: popCustomerCountry,
+  //                   custFld1: popCustomercustfield1,
+  //                   custFld2: popCustomercustfield2,
+  //                   jobbcountry: '',
+  //                   jobscountry: '',
+  //                   discount: 0
+  //                 }
+  //                 templateObject.customerRecord.set(customerRecord);
+  //                 setTimeout(function() {
+  //                   $('#addCustomerModal').modal('show');
+  //                 }, 200);
+  //               })
+  //               .catch(function (err) {
+  //                 $(".fullScreenSpin").css("display", "none");
+  //               });
+  //           } else {
+  //             let data = JSON.parse(dataObject[0].data);
+  //             var added = false;
+  //             for (let i = 0; i < data.tcustomervs1.length; i++) {
+  //               if ( data.tcustomervs1[i].fields.ClientName === customerDataName) {
+  //                 added = true;
+  //                 $(".fullScreenSpin").css("display", "none");
+  //                 $("#add-customer-title").text("Edit Customer");
+  //                 let popCustomerID = data.tcustomervs1[i].fields.ID || "";
+  //                 let popCustomerName = data.tcustomervs1[i].fields.ClientName || "";
+  //                 let popCustomerEmail = data.tcustomervs1[i].fields.Email || "";
+  //                 let popCustomerTitle = data.tcustomervs1[i].fields.Title || "";
+  //                 let popCustomerFirstName = data.tcustomervs1[i].fields.FirstName || "";
+  //                 let popCustomerMiddleName = data.tcustomervs1[i].fields.CUSTFLD10 || "";
+  //                 let popCustomerLastName = data.tcustomervs1[i].fields.LastName || "";
+  //                 let popCustomertfn = "" || "";
+  //                 let popCustomerPhone = data.tcustomervs1[i].fields.Phone || "";
+  //                 let popCustomerMobile = data.tcustomervs1[i].fields.Mobile || "";
+  //                 let popCustomerFaxnumber = data.tcustomervs1[i].fields.Faxnumber || "";
+  //                 let popCustomerSkypeName = data.tcustomervs1[i].fields.SkypeName || "";
+  //                 let popCustomerURL = data.tcustomervs1[i].fields.URL || "";
+  //                 let popCustomerStreet = data.tcustomervs1[i].fields.Street || "";
+  //                 let popCustomerStreet2 = data.tcustomervs1[i].fields.Street2 || "";
+  //                 let popCustomerState = data.tcustomervs1[i].fields.State || "";
+  //                 let popCustomerPostcode = data.tcustomervs1[i].fields.Postcode || "";
+  //                 let popCustomerCountry = data.tcustomervs1[i].fields.Country || LoggedCountry;
+  //                 let popCustomerbillingaddress = data.tcustomervs1[i].fields.BillStreet || "";
+  //                 let popCustomerbcity = data.tcustomervs1[i].fields.BillStreet2 || "";
+  //                 let popCustomerbstate = data.tcustomervs1[i].fields.BillState || "";
+  //                 let popCustomerbpostalcode = data.tcustomervs1[i].fields.BillPostcode || "";
+  //                 let popCustomercustfield1 =
+  //                   data.tcustomervs1[i].fields.CUSTFLD1 || "";
+  //                 let popCustomercustfield2 =
+  //                   data.tcustomervs1[i].fields.CUSTFLD2 || "";
+  //                 let popCustomercustfield3 =
+  //                   data.tcustomervs1[i].fields.CUSTFLD3 || "";
+  //                 let popCustomercustfield4 =
+  //                   data.tcustomervs1[i].fields.CUSTFLD4 || "";
+  //                 let popCustomernotes =
+  //                   data.tcustomervs1[i].fields.Notes || "";
+  //                 let popCustomerpreferedpayment =
+  //                   data.tcustomervs1[i].fields.PaymentMethodName || "";
+  //                 let popCustomerterms =
+  //                   data.tcustomervs1[i].fields.TermsName || "";
+  //                 let popCustomerTaxCode =
+  //                   data.tcustomervs1[i].fields.TaxCodeName || "";
+  //                 let popCustomerDiscount =
+  //                   data.tcustomervs1[i].fields.Discount || 0;
+  //                 let popCustomerType =
+  //                   data.tcustomervs1[i].fields.ClientTypeName || "";
+  //                 $("#edtCustomerCompany").val(popCustomerName);
+  //                 $("#edtCustomerPOPID").val(popCustomerID);
+  //                 $("#edtCustomerPOPEmail").val(popCustomerEmail);
+  //                 $("#edtTitle").val(popCustomerTitle);
+  //                 $("#edtFirstName").val(popCustomerFirstName);
+  //                 $("#edtMiddleName").val(popCustomerMiddleName);
+  //                 $("#edtLastName").val(popCustomerLastName);
+  //                 $("#edtCustomerPhone").val(popCustomerPhone);
+  //                 $("#edtCustomerMobile").val(popCustomerMobile);
+  //                 $("#edtCustomerFax").val(popCustomerFaxnumber);
+  //                 $("#edtCustomerSkypeID").val(popCustomerSkypeName);
+  //                 $("#edtCustomerWebsite").val(popCustomerURL);
+  //                 $("#edtCustomerShippingAddress").val(popCustomerStreet);
+  //                 $("#edtCustomerShippingCity").val(popCustomerStreet2);
+  //                 $("#edtCustomerShippingState").val(popCustomerState);
+  //                 $("#edtCustomerShippingZIP").val(popCustomerPostcode);
+  //                 $("#sedtCountry").val(popCustomerCountry);
+  //                 $("#txaNotes").val(popCustomernotes);
+  //                 $("#sltPreferedPayment").val(popCustomerpreferedpayment);
+  //                 $("#sltTermsPOP").val(popCustomerterms);
+  //                 $("#sltCustomerType").val(popCustomerType);
+  //                 $("#edtCustomerCardDiscount").val(popCustomerDiscount);
+  //                 $("#edtCustomeField1").val(popCustomercustfield1);
+  //                 $("#edtCustomeField2").val(popCustomercustfield2);
+  //                 $("#edtCustomeField3").val(popCustomercustfield3);
+  //                 $("#edtCustomeField4").val(popCustomercustfield4);
+  //                 $("#sltTaxCode").val(popCustomerTaxCode);
+  //                 if (
+  //                   data.tcustomervs1[i].fields.Street ==
+  //                   data.tcustomervs1[i].fields.BillStreet &&
+  //                   data.tcustomervs1[i].fields.Street2 ==
+  //                   data.tcustomervs1[i].fields.BillStreet2 &&
+  //                   data.tcustomervs1[i].fields.State ==
+  //                   data.tcustomervs1[i].fields.BillState &&
+  //                   data.tcustomervs1[i].fields.Postcode ==
+  //                   data.tcustomervs1[i].fields.BillPostcode &&
+  //                   data.tcustomervs1[i].fields.Country ==
+  //                   data.tcustomervs1[i].fields.Billcountry
+  //                 ) {
+  //                   $("#chkSameAsShipping2").attr("checked", "checked");
+  //                 }
 
-                  if (data.tcustomervs1[i].fields.IsSupplier == true) {
-                    $("#chkSameAsSupplier").attr("checked", "checked");
-                  } else {
-                    $("#chkSameAsSupplier").removeAttr("checked");
-                  }
+  //                 if (data.tcustomervs1[i].fields.IsSupplier == true) {
+  //                   $("#chkSameAsSupplier").attr("checked", "checked");
+  //                 } else {
+  //                   $("#chkSameAsSupplier").removeAttr("checked");
+  //                 }
 
-                  let customerRecord = {
-                    id: popCustomerID,
-                    phone: popCustomerPhone,
-                    firstname: popCustomerFirstName,
-                    middlename: popCustomerMiddleName,
-                    lastname: popCustomerLastName,
-                    company: data.tcustomervs1[i].fields.Companyname || '',
-                    email: popCustomerEmail,
-                    title: popCustomerTitle,
-                    tfn: popCustomertfn,
-                    mobile: popCustomerMobile,
-                    fax: popCustomerFaxnumber,
-                    shippingaddress: popCustomerStreet,
-                    scity: popCustomerStreet2,
-                    sstate: popCustomerCountry,
-                    terms: '',
-                    spostalcode: popCustomerPostcode,
-                    scountry: popCustomerState,
-                    billingaddress: popCustomerbillingaddress,
-                    bcity: popCustomerbcity,
-                    bstate: popCustomerbstate,
-                    bpostalcode: popCustomerbpostalcode,
-                    bcountry: popCustomerCountry,
-                    custFld1: popCustomercustfield1,
-                    custFld2: popCustomercustfield2,
-                    jobbcountry: '',
-                    jobscountry: '',
-                    discount: 0
-                  }
-                  templateObject.customerRecord.set(customerRecord);
-                  setTimeout(function() {
-                    $('#addCustomerModal').modal('show');
-                  }, 200);
-                }
-              }
-              if (!added) {
-                $(".fullScreenSpin").css("display", "inline-block");
-                sideBarService
-                  .getOneCustomerDataExByName(customerDataName)
-                  .then(function (data) {
-                    $(".fullScreenSpin").css("display", "none");
-                    $("#add-customer-title").text("Edit Customer");
-                    let popCustomerID = data.tcustomer[0].fields.ID || "";
-                    let popCustomerName = data.tcustomer[0].fields.ClientName || "";
-                    let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-                    let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-                    let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
-                    let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
-                    let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
-                    let popCustomertfn = "" || "";
-                    let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-                    let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-                    let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
-                    let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
-                    let popCustomerURL = data.tcustomer[0].fields.URL || "";
-                    let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-                    let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
-                    let popCustomerState = data.tcustomer[0].fields.State || "";
-                    let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
-                    let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                    let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
-                    let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
-                    let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
-                    let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
-                    let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
-                    let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
-                    let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
-                    let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
-                    let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-                    let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
-                    let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
-                    let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
-                    let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                    let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
-                    $("#edtCustomerCompany").val(popCustomerName);
-                    $("#edtCustomerPOPID").val(popCustomerID);
-                    $("#edtCustomerPOPEmail").val(popCustomerEmail);
-                    $("#edtTitle").val(popCustomerTitle);
-                    $("#edtFirstName").val(popCustomerFirstName);
-                    $("#edtMiddleName").val(popCustomerMiddleName);
-                    $("#edtLastName").val(popCustomerLastName);
-                    $("#edtCustomerPhone").val(popCustomerPhone);
-                    $("#edtCustomerMobile").val(popCustomerMobile);
-                    $("#edtCustomerFax").val(popCustomerFaxnumber);
-                    $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-                    $("#edtCustomerWebsite").val(popCustomerURL);
-                    $("#edtCustomerShippingAddress").val(popCustomerStreet);
-                    $("#edtCustomerShippingCity").val(popCustomerStreet2);
-                    $("#edtCustomerShippingState").val(popCustomerState);
-                    $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-                    $("#sedtCountry").val(popCustomerCountry);
-                    $("#txaNotes").val(popCustomernotes);
-                    $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-                    $("#sltTermsPOP").val(popCustomerterms);
-                    $("#sltCustomerType").val(popCustomerType);
-                    $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-                    $("#edtCustomeField1").val(popCustomercustfield1);
-                    $("#edtCustomeField2").val(popCustomercustfield2);
-                    $("#edtCustomeField3").val(popCustomercustfield3);
-                    $("#edtCustomeField4").val(popCustomercustfield4);
+  //                 let customerRecord = {
+  //                   id: popCustomerID,
+  //                   phone: popCustomerPhone,
+  //                   firstname: popCustomerFirstName,
+  //                   middlename: popCustomerMiddleName,
+  //                   lastname: popCustomerLastName,
+  //                   company: data.tcustomervs1[i].fields.Companyname || '',
+  //                   email: popCustomerEmail,
+  //                   title: popCustomerTitle,
+  //                   tfn: popCustomertfn,
+  //                   mobile: popCustomerMobile,
+  //                   fax: popCustomerFaxnumber,
+  //                   shippingaddress: popCustomerStreet,
+  //                   scity: popCustomerStreet2,
+  //                   sstate: popCustomerCountry,
+  //                   terms: '',
+  //                   spostalcode: popCustomerPostcode,
+  //                   scountry: popCustomerState,
+  //                   billingaddress: popCustomerbillingaddress,
+  //                   bcity: popCustomerbcity,
+  //                   bstate: popCustomerbstate,
+  //                   bpostalcode: popCustomerbpostalcode,
+  //                   bcountry: popCustomerCountry,
+  //                   custFld1: popCustomercustfield1,
+  //                   custFld2: popCustomercustfield2,
+  //                   jobbcountry: '',
+  //                   jobscountry: '',
+  //                   discount: 0
+  //                 }
+  //                 templateObject.customerRecord.set(customerRecord);
+  //                 setTimeout(function() {
+  //                   $('#addCustomerModal').modal('show');
+  //                 }, 200);
+  //               }
+  //             }
+  //             if (!added) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService
+  //                 .getOneCustomerDataExByName(customerDataName)
+  //                 .then(function (data) {
+  //                   $(".fullScreenSpin").css("display", "none");
+  //                   $("#add-customer-title").text("Edit Customer");
+  //                   let popCustomerID = data.tcustomer[0].fields.ID || "";
+  //                   let popCustomerName = data.tcustomer[0].fields.ClientName || "";
+  //                   let popCustomerEmail = data.tcustomer[0].fields.Email || "";
+  //                   let popCustomerTitle = data.tcustomer[0].fields.Title || "";
+  //                   let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
+  //                   let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
+  //                   let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
+  //                   let popCustomertfn = "" || "";
+  //                   let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
+  //                   let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
+  //                   let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
+  //                   let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
+  //                   let popCustomerURL = data.tcustomer[0].fields.URL || "";
+  //                   let popCustomerStreet = data.tcustomer[0].fields.Street || "";
+  //                   let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
+  //                   let popCustomerState = data.tcustomer[0].fields.State || "";
+  //                   let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
+  //                   let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+  //                   let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
+  //                   let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
+  //                   let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
+  //                   let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
+  //                   let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
+  //                   let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
+  //                   let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
+  //                   let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
+  //                   let popCustomernotes = data.tcustomer[0].fields.Notes || "";
+  //                   let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
+  //                   let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
+  //                   let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
+  //                   let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+  //                   let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
+  //                   $("#edtCustomerCompany").val(popCustomerName);
+  //                   $("#edtCustomerPOPID").val(popCustomerID);
+  //                   $("#edtCustomerPOPEmail").val(popCustomerEmail);
+  //                   $("#edtTitle").val(popCustomerTitle);
+  //                   $("#edtFirstName").val(popCustomerFirstName);
+  //                   $("#edtMiddleName").val(popCustomerMiddleName);
+  //                   $("#edtLastName").val(popCustomerLastName);
+  //                   $("#edtCustomerPhone").val(popCustomerPhone);
+  //                   $("#edtCustomerMobile").val(popCustomerMobile);
+  //                   $("#edtCustomerFax").val(popCustomerFaxnumber);
+  //                   $("#edtCustomerSkypeID").val(popCustomerSkypeName);
+  //                   $("#edtCustomerWebsite").val(popCustomerURL);
+  //                   $("#edtCustomerShippingAddress").val(popCustomerStreet);
+  //                   $("#edtCustomerShippingCity").val(popCustomerStreet2);
+  //                   $("#edtCustomerShippingState").val(popCustomerState);
+  //                   $("#edtCustomerShippingZIP").val(popCustomerPostcode);
+  //                   $("#sedtCountry").val(popCustomerCountry);
+  //                   $("#txaNotes").val(popCustomernotes);
+  //                   $("#sltPreferedPayment").val(popCustomerpreferedpayment);
+  //                   $("#sltTermsPOP").val(popCustomerterms);
+  //                   $("#sltCustomerType").val(popCustomerType);
+  //                   $("#edtCustomerCardDiscount").val(popCustomerDiscount);
+  //                   $("#edtCustomeField1").val(popCustomercustfield1);
+  //                   $("#edtCustomeField2").val(popCustomercustfield2);
+  //                   $("#edtCustomeField3").val(popCustomercustfield3);
+  //                   $("#edtCustomeField4").val(popCustomercustfield4);
 
-                    $("#sltTaxCode").val(popCustomerTaxCode);
-                    if (
-                      data.tcustomer[0].fields.Street ==
-                      data.tcustomer[0].fields.BillStreet &&
-                      data.tcustomer[0].fields.Street2 ==
-                      data.tcustomer[0].fields.BillStreet2 &&
-                      data.tcustomer[0].fields.State ==
-                      data.tcustomer[0].fields.BillState &&
-                      data.tcustomer[0].fields.Postcode ==
-                      data.tcustomer[0].fields.BillPostcode &&
-                      data.tcustomer[0].fields.Country ==
-                      data.tcustomer[0].fields.Billcountry
-                    ) {
-                      $("#chkSameAsShipping2").attr("checked", "checked");
-                    }
+  //                   $("#sltTaxCode").val(popCustomerTaxCode);
+  //                   if (
+  //                     data.tcustomer[0].fields.Street ==
+  //                     data.tcustomer[0].fields.BillStreet &&
+  //                     data.tcustomer[0].fields.Street2 ==
+  //                     data.tcustomer[0].fields.BillStreet2 &&
+  //                     data.tcustomer[0].fields.State ==
+  //                     data.tcustomer[0].fields.BillState &&
+  //                     data.tcustomer[0].fields.Postcode ==
+  //                     data.tcustomer[0].fields.BillPostcode &&
+  //                     data.tcustomer[0].fields.Country ==
+  //                     data.tcustomer[0].fields.Billcountry
+  //                   ) {
+  //                     $("#chkSameAsShipping2").attr("checked", "checked");
+  //                   }
 
-                    if (data.tcustomer[0].fields.IsSupplier == true) {
-                      $("#chkSameAsSupplier").attr("checked", "checked");
-                    } else {
-                      $("#chkSameAsSupplier").removeAttr("checked");
-                    }
+  //                   if (data.tcustomer[0].fields.IsSupplier == true) {
+  //                     $("#chkSameAsSupplier").attr("checked", "checked");
+  //                   } else {
+  //                     $("#chkSameAsSupplier").removeAttr("checked");
+  //                   }
 
-                    let customerRecord = {
-                      id: popCustomerID,
-                      phone: popCustomerPhone,
-                      firstname: popCustomerFirstName,
-                      middlename: popCustomerMiddleName,
-                      lastname: popCustomerLastName,
-                      company: data.tcustomer[0].fields.Companyname || '',
-                      email: popCustomerEmail,
-                      title: popCustomerTitle,
-                      tfn: popCustomertfn,
-                      mobile: popCustomerMobile,
-                      fax: popCustomerFaxnumber,
-                      shippingaddress: popCustomerStreet,
-                      scity: popCustomerStreet2,
-                      sstate: popCustomerCountry,
-                      terms: '',
-                      spostalcode: popCustomerPostcode,
-                      scountry: popCustomerState,
-                      billingaddress: popCustomerbillingaddress,
-                      bcity: popCustomerbcity,
-                      bstate: popCustomerbstate,
-                      bpostalcode: popCustomerbpostalcode,
-                      bcountry: popCustomerCountry,
-                      custFld1: popCustomercustfield1,
-                      custFld2: popCustomercustfield2,
-                      jobbcountry: '',
-                      jobscountry: '',
-                      discount: 0
-                    }
-                    templateObject.customerRecord.set(customerRecord);
-                    setTimeout(function() {
-                      $('#addCustomerModal').modal('show');
-                    }, 200);
-                  })
-                  .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
-                  });
-              }
-            }
-          })
-          .catch(function (err) {
-            sideBarService
-              .getOneCustomerDataExByName(customerDataName)
-              .then(function (data) {
-                $(".fullScreenSpin").css("display", "none");
-                $("#add-customer-title").text("Edit Customer");
-                let popCustomerID = data.tcustomer[0].fields.ID || "";
-                let popCustomerName = data.tcustomer[0].fields.ClientName || "";
-                let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-                let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-                let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
-                let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
-                let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
-                let popCustomertfn = "" || "";
-                let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-                let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-                let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
-                let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
-                let popCustomerURL = data.tcustomer[0].fields.URL || "";
-                let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-                let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
-                let popCustomerState = data.tcustomer[0].fields.State || "";
-                let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
-                let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
-                let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
-                let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
-                let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
-                let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
-                let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
-                let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
-                let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
-                let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-                let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
-                let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
-                let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
-                let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
-                $("#edtCustomerCompany").val(popCustomerName);
-                $("#edtCustomerPOPID").val(popCustomerID);
-                $("#edtCustomerPOPEmail").val(popCustomerEmail);
-                $("#edtTitle").val(popCustomerTitle);
-                $("#edtFirstName").val(popCustomerFirstName);
-                $("#edtMiddleName").val(popCustomerMiddleName);
-                $("#edtLastName").val(popCustomerLastName);
-                $("#edtCustomerPhone").val(popCustomerPhone);
-                $("#edtCustomerMobile").val(popCustomerMobile);
-                $("#edtCustomerFax").val(popCustomerFaxnumber);
-                $("#edtCustomerSkypeID").val(popCustomerSkypeName);
-                $("#edtCustomerWebsite").val(popCustomerURL);
-                $("#edtCustomerShippingAddress").val(popCustomerStreet);
-                $("#edtCustomerShippingCity").val(popCustomerStreet2);
-                $("#edtCustomerShippingState").val(popCustomerState);
-                $("#edtCustomerShippingZIP").val(popCustomerPostcode);
-                $("#sedtCountry").val(popCustomerCountry);
-                $("#txaNotes").val(popCustomernotes);
-                $("#sltPreferedPayment").val(popCustomerpreferedpayment);
-                $("#sltTermsPOP").val(popCustomerterms);
-                $("#sltCustomerType").val(popCustomerType);
-                $("#edtCustomerCardDiscount").val(popCustomerDiscount);
-                $("#edtCustomeField1").val(popCustomercustfield1);
-                $("#edtCustomeField2").val(popCustomercustfield2);
-                $("#edtCustomeField3").val(popCustomercustfield3);
-                $("#edtCustomeField4").val(popCustomercustfield4);
+  //                   let customerRecord = {
+  //                     id: popCustomerID,
+  //                     phone: popCustomerPhone,
+  //                     firstname: popCustomerFirstName,
+  //                     middlename: popCustomerMiddleName,
+  //                     lastname: popCustomerLastName,
+  //                     company: data.tcustomer[0].fields.Companyname || '',
+  //                     email: popCustomerEmail,
+  //                     title: popCustomerTitle,
+  //                     tfn: popCustomertfn,
+  //                     mobile: popCustomerMobile,
+  //                     fax: popCustomerFaxnumber,
+  //                     shippingaddress: popCustomerStreet,
+  //                     scity: popCustomerStreet2,
+  //                     sstate: popCustomerCountry,
+  //                     terms: '',
+  //                     spostalcode: popCustomerPostcode,
+  //                     scountry: popCustomerState,
+  //                     billingaddress: popCustomerbillingaddress,
+  //                     bcity: popCustomerbcity,
+  //                     bstate: popCustomerbstate,
+  //                     bpostalcode: popCustomerbpostalcode,
+  //                     bcountry: popCustomerCountry,
+  //                     custFld1: popCustomercustfield1,
+  //                     custFld2: popCustomercustfield2,
+  //                     jobbcountry: '',
+  //                     jobscountry: '',
+  //                     discount: 0
+  //                   }
+  //                   templateObject.customerRecord.set(customerRecord);
+  //                   setTimeout(function() {
+  //                     $('#addCustomerModal').modal('show');
+  //                   }, 200);
+  //                 })
+  //                 .catch(function (err) {
+  //                   $(".fullScreenSpin").css("display", "none");
+  //                 });
+  //             }
+  //           }
+  //         })
+  //         .catch(function (err) {
+  //           sideBarService
+  //             .getOneCustomerDataExByName(customerDataName)
+  //             .then(function (data) {
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#add-customer-title").text("Edit Customer");
+  //               let popCustomerID = data.tcustomer[0].fields.ID || "";
+  //               let popCustomerName = data.tcustomer[0].fields.ClientName || "";
+  //               let popCustomerEmail = data.tcustomer[0].fields.Email || "";
+  //               let popCustomerTitle = data.tcustomer[0].fields.Title || "";
+  //               let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
+  //               let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
+  //               let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
+  //               let popCustomertfn = "" || "";
+  //               let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
+  //               let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
+  //               let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
+  //               let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
+  //               let popCustomerURL = data.tcustomer[0].fields.URL || "";
+  //               let popCustomerStreet = data.tcustomer[0].fields.Street || "";
+  //               let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
+  //               let popCustomerState = data.tcustomer[0].fields.State || "";
+  //               let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
+  //               let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+  //               let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
+  //               let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
+  //               let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
+  //               let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
+  //               let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
+  //               let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
+  //               let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
+  //               let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
+  //               let popCustomernotes = data.tcustomer[0].fields.Notes || "";
+  //               let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
+  //               let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
+  //               let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
+  //               let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+  //               let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
+  //               $("#edtCustomerCompany").val(popCustomerName);
+  //               $("#edtCustomerPOPID").val(popCustomerID);
+  //               $("#edtCustomerPOPEmail").val(popCustomerEmail);
+  //               $("#edtTitle").val(popCustomerTitle);
+  //               $("#edtFirstName").val(popCustomerFirstName);
+  //               $("#edtMiddleName").val(popCustomerMiddleName);
+  //               $("#edtLastName").val(popCustomerLastName);
+  //               $("#edtCustomerPhone").val(popCustomerPhone);
+  //               $("#edtCustomerMobile").val(popCustomerMobile);
+  //               $("#edtCustomerFax").val(popCustomerFaxnumber);
+  //               $("#edtCustomerSkypeID").val(popCustomerSkypeName);
+  //               $("#edtCustomerWebsite").val(popCustomerURL);
+  //               $("#edtCustomerShippingAddress").val(popCustomerStreet);
+  //               $("#edtCustomerShippingCity").val(popCustomerStreet2);
+  //               $("#edtCustomerShippingState").val(popCustomerState);
+  //               $("#edtCustomerShippingZIP").val(popCustomerPostcode);
+  //               $("#sedtCountry").val(popCustomerCountry);
+  //               $("#txaNotes").val(popCustomernotes);
+  //               $("#sltPreferedPayment").val(popCustomerpreferedpayment);
+  //               $("#sltTermsPOP").val(popCustomerterms);
+  //               $("#sltCustomerType").val(popCustomerType);
+  //               $("#edtCustomerCardDiscount").val(popCustomerDiscount);
+  //               $("#edtCustomeField1").val(popCustomercustfield1);
+  //               $("#edtCustomeField2").val(popCustomercustfield2);
+  //               $("#edtCustomeField3").val(popCustomercustfield3);
+  //               $("#edtCustomeField4").val(popCustomercustfield4);
 
-                $("#sltTaxCode").val(popCustomerTaxCode);
+  //               $("#sltTaxCode").val(popCustomerTaxCode);
 
-                if (
-                  data.tcustomer[0].fields.Street ==
-                  data.tcustomer[0].fields.BillStreet &&
-                  data.tcustomer[0].fields.Street2 ==
-                  data.tcustomer[0].fields.BillStreet2 &&
-                  data.tcustomer[0].fields.State ==
-                  data.tcustomer[0].fields.BillState &&
-                  data.tcustomer[0].fields.Postcode ==
-                  data.tcustomer[0].fields.BillPostcode &&
-                  data.tcustomer[0].fields.Country ==
-                  data.tcustomer[0].fields.Billcountry
-                ) {
-                  $("#chkSameAsShipping2").attr("checked", "checked");
-                }
-                if (data.tcustomer[0].fields.IsSupplier == true) {
-                  $("#chkSameAsSupplier").attr("checked", "checked");
-                } else {
-                  $("#chkSameAsSupplier").removeAttr("checked");
-                }
-                let customerRecord = {
-                  id: popCustomerID,
-                  phone: popCustomerPhone,
-                  firstname: popCustomerFirstName,
-                  middlename: popCustomerMiddleName,
-                  lastname: popCustomerLastName,
-                  company: data.tcustomer[0].fields.Companyname || '',
-                  email: popCustomerEmail,
-                  title: popCustomerTitle,
-                  tfn: popCustomertfn,
-                  mobile: popCustomerMobile,
-                  fax: popCustomerFaxnumber,
-                  shippingaddress: popCustomerStreet,
-                  scity: popCustomerStreet2,
-                  sstate: popCustomerCountry,
-                  terms: '',
-                  spostalcode: popCustomerPostcode,
-                  scountry: popCustomerState,
-                  billingaddress: popCustomerbillingaddress,
-                  bcity: popCustomerbcity,
-                  bstate: popCustomerbstate,
-                  bpostalcode: popCustomerbpostalcode,
-                  bcountry: popCustomerCountry,
-                  custFld1: popCustomercustfield1,
-                  custFld2: popCustomercustfield2,
-                  jobbcountry: '',
-                  jobscountry: '',
-                  discount: 0
-                }
-                templateObject.customerRecord.set(customerRecord);
-                setTimeout(function() {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
-              })
-              .catch(function (err) {
-                $(".fullScreenSpin").css("display", "none");
-              });
-          });
-      } else {
-        $("#customerListModal").modal();
-        $("#tblCustomerlist_filter .form-control-sm").focus();
-        $("#tblCustomerlist_filter .form-control-sm").val("");
-        $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-        var datatable = $("#tblCustomerlist").DataTable();
-        datatable.draw();
-        $("#tblCustomerlist_filter .form-control-sm").trigger("input");
-      }
-    }
-  })
+  //               if (
+  //                 data.tcustomer[0].fields.Street ==
+  //                 data.tcustomer[0].fields.BillStreet &&
+  //                 data.tcustomer[0].fields.Street2 ==
+  //                 data.tcustomer[0].fields.BillStreet2 &&
+  //                 data.tcustomer[0].fields.State ==
+  //                 data.tcustomer[0].fields.BillState &&
+  //                 data.tcustomer[0].fields.Postcode ==
+  //                 data.tcustomer[0].fields.BillPostcode &&
+  //                 data.tcustomer[0].fields.Country ==
+  //                 data.tcustomer[0].fields.Billcountry
+  //               ) {
+  //                 $("#chkSameAsShipping2").attr("checked", "checked");
+  //               }
+  //               if (data.tcustomer[0].fields.IsSupplier == true) {
+  //                 $("#chkSameAsSupplier").attr("checked", "checked");
+  //               } else {
+  //                 $("#chkSameAsSupplier").removeAttr("checked");
+  //               }
+  //               let customerRecord = {
+  //                 id: popCustomerID,
+  //                 phone: popCustomerPhone,
+  //                 firstname: popCustomerFirstName,
+  //                 middlename: popCustomerMiddleName,
+  //                 lastname: popCustomerLastName,
+  //                 company: data.tcustomer[0].fields.Companyname || '',
+  //                 email: popCustomerEmail,
+  //                 title: popCustomerTitle,
+  //                 tfn: popCustomertfn,
+  //                 mobile: popCustomerMobile,
+  //                 fax: popCustomerFaxnumber,
+  //                 shippingaddress: popCustomerStreet,
+  //                 scity: popCustomerStreet2,
+  //                 sstate: popCustomerCountry,
+  //                 terms: '',
+  //                 spostalcode: popCustomerPostcode,
+  //                 scountry: popCustomerState,
+  //                 billingaddress: popCustomerbillingaddress,
+  //                 bcity: popCustomerbcity,
+  //                 bstate: popCustomerbstate,
+  //                 bpostalcode: popCustomerbpostalcode,
+  //                 bcountry: popCustomerCountry,
+  //                 custFld1: popCustomercustfield1,
+  //                 custFld2: popCustomercustfield2,
+  //                 jobbcountry: '',
+  //                 jobscountry: '',
+  //                 discount: 0
+  //               }
+  //               templateObject.customerRecord.set(customerRecord);
+  //               setTimeout(function() {
+  //                 $('#addCustomerModal').modal('show');
+  //               }, 200);
+  //             })
+  //             .catch(function (err) {
+  //               $(".fullScreenSpin").css("display", "none");
+  //             });
+  //         });
+  //     } else {
+  //       $("#customerListModal").modal();
+  //       $("#tblCustomerlist_filter .form-control-sm").focus();
+  //       $("#tblCustomerlist_filter .form-control-sm").val("");
+  //       $("#tblCustomerlist_filter .form-control-sm").trigger("input");
+  //       var datatable = $("#tblCustomerlist").DataTable();
+  //       datatable.draw();
+  //       $("#tblCustomerlist_filter .form-control-sm").trigger("input");
+  //     }
+  //   }
+  // })
 
     $(document).on("click", "#tblInventory tbody tr", async function (e) {
       $(".colProductName").removeClass("boldtablealertsborder");
@@ -5081,6 +5073,14 @@ Template.new_invoice.helpers({
     return defaultCurrencyCode;
   },
 
+  headerfields: () => {
+    return Template.instance().headerfields.get()
+  },
+
+  headerbuttons:()=>{
+    return Template.instance().headerbuttons.get()
+  },
+
 
   isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
 });
@@ -5176,10 +5176,10 @@ Template.new_invoice.events({
     clickedInput = "three";
     $("#clickedControl").val(clickedInput);
   },
-  "click #edtCustomerName": function (event) {
-    $("#edtCustomerName").select();
-    $("#edtCustomerName").editableSelect();
-  },
+  // "click #edtCustomerName": function (event) {
+  //   $("#edtCustomerName").select();
+  //   $("#edtCustomerName").editableSelect();
+  // },
   "change #sltStatus": function () {
     let status = $("#sltStatus").find(":selected").val();
     if (status == "newstatus") {

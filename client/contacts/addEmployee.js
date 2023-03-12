@@ -93,6 +93,7 @@ Template.employeescard.onCreated(function () {
   templateObject.recentTrasactions = new ReactiveVar([]);
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.tableLeaveRequestheaderrecords = new ReactiveVar([]);
   templateObject.isCloudUserPass = new ReactiveVar();
   templateObject.isCloudUserPass.set(false);
   templateObject.selectedproducts = new ReactiveVar([]);
@@ -126,6 +127,34 @@ Template.employeescard.onCreated(function () {
   templateObject.TRepServices = new ReactiveVar([]);
   templateObject.taskrecords = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
+
+  templateObject.getDataTableList = function(data) {
+    let currentId = FlowRouter.current().queryParams;
+    let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
+    let dataList = [];
+    if(parseInt(data.fields.EmployeeID) == parseInt(employeeID)){
+      dataList = [
+        data.fields.ID || '',
+        data.fields.Description || '',
+        data.fields.PayPeriod || '',
+        data.fields.LeaveMethod || '',
+        data.fields.Status || '',
+        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
+      ];
+    }
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
+    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
+    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
+    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
+    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
+    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+];
+templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
+
 });
 
 Template.employeescard.onRendered(function () {
@@ -1449,12 +1478,10 @@ Template.employeescard.onRendered(function () {
       custfield14: data.fields.CustFld14 || '',
       website: '',
       notes: data.fields.Notes || '',
+      dashboardOptions: data.fields.CustFld11 || '',
       salesQuota: data.fields.CustFld12 || '',
       isEmployee: true,
-      loginDefault: data.fields.LoginDefault,
-      dashboardOptions: data.fields.DashboardOption || '',
     };
-
     templateObject.getEmployeeProfileImageData(data.fields.EmployeeName);
 
     templateObject.records.set(lineItemObj);
@@ -2284,151 +2311,151 @@ Template.employeescard.onRendered(function () {
       }
     }
 
-    setTimeout(function () {
-      $('#tblLeaveRequests').DataTable({
-        data: splashArrayList,
-        "sDom": "Rlfrtip",
-        columnDefs: [
+    // setTimeout(function () {
+    //   $('#tblLeaveRequests').DataTable({
+    //     data: splashArrayList,
+    //     "sDom": "Rlfrtip",
+    //     columnDefs: [
 
-          {
-            className: "colLRID colLeaveRequest hiddenColumn",
-            "targets": [0]
-          },
-          {
-            className: "colLeaveRequest colLRDescription",
-            "targets": [1]
-          },
-          {
-            className: "colLeaveRequest colLRLeavePeriod",
-            "targets": [2]
-          },
-          {
-            className: "colLeaveRequest colLRLeaveType",
-            "targets": [3]
-          },
-          {
-            className: "colLeaveRequest colLRStatus",
-            "targets": [4]
-          },
-          {
-            className: "colLRAction",
-            "targets": [5]
-          }
-        ],
-        select: true,
-        destroy: true,
-        colReorder: true,
-        pageLength: initialDatatableLoad,
-        lengthMenu: [
-          [initialDatatableLoad, -1],
-          [initialDatatableLoad, "All"]
-        ],
-        info: true,
-        responsive: true,
-        "order": [
-          [0, "asc"]
-        ],
-        action: function () {
-          $('#tblLeaveRequests').DataTable().ajax.reload();
-        },
-        "fnDrawCallback": function (oSettings) {
-          $('.paginate_button.page-item').removeClass('disabled');
-          $('#tblLeaveRequests_ellipsis').addClass('disabled');
-          if (oSettings._iDisplayLength == -1) {
-            if (oSettings.fnRecordsDisplay() > 150) {
+    //       {
+    //         className: "colLRID colLeaveRequest hiddenColumn",
+    //         "targets": [0]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRDescription",
+    //         "targets": [1]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRLeavePeriod",
+    //         "targets": [2]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRLeaveType",
+    //         "targets": [3]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRStatus",
+    //         "targets": [4]
+    //       },
+    //       {
+    //         className: "colLRAction",
+    //         "targets": [5]
+    //       }
+    //     ],
+    //     select: true,
+    //     destroy: true,
+    //     colReorder: true,
+    //     pageLength: initialDatatableLoad,
+    //     lengthMenu: [
+    //       [initialDatatableLoad, -1],
+    //       [initialDatatableLoad, "All"]
+    //     ],
+    //     info: true,
+    //     responsive: true,
+    //     "order": [
+    //       [0, "asc"]
+    //     ],
+    //     action: function () {
+    //       $('#tblLeaveRequests').DataTable().ajax.reload();
+    //     },
+    //     "fnDrawCallback": function (oSettings) {
+    //       $('.paginate_button.page-item').removeClass('disabled');
+    //       $('#tblLeaveRequests_ellipsis').addClass('disabled');
+    //       if (oSettings._iDisplayLength == -1) {
+    //         if (oSettings.fnRecordsDisplay() > 150) {
 
-            }
-          } else {
+    //         }
+    //       } else {
 
-          }
-          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            $('.paginate_button.page-item.next').addClass('disabled');
-          }
+    //       }
+    //       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //         $('.paginate_button.page-item.next').addClass('disabled');
+    //       }
 
-          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-            .on('click', function () {
-              LoadingOverlay.show();
+    //       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //         .on('click', function () {
+    //           LoadingOverlay.show();
 
-              var splashArrayList = new Array();
-              let dataLenght = oSettings._iDisplayLength;
-              let customerSearch = $('#tblLeaveRequests_filter input').val();
+    //           var splashArrayList = new Array();
+    //           let dataLenght = oSettings._iDisplayLength;
+    //           let customerSearch = $('#tblLeaveRequests_filter input').val();
 
-              sideBarService.getLeaveRequestList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
-                for (let i = 0; i < useData.length; i++) {
-                  let dataListAllowance = [
-                    useData[i].fields.ID || '',
-                    useData[i].fields.Description || '',
-                    useData[i].fields.PayPeriod || '',
-                    useData[i].fields.LeaveMethod || '',
-                    useData[i].fields.Status || '',
-                    (useData[i].fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
-                  ];
-                  splashArrayList.push(dataListAllowance);
-                }
+    //           sideBarService.getLeaveRequestList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
+    //             for (let i = 0; i < useData.length; i++) {
+    //               let dataListAllowance = [
+    //                 useData[i].fields.ID || '',
+    //                 useData[i].fields.Description || '',
+    //                 useData[i].fields.PayPeriod || '',
+    //                 useData[i].fields.LeaveMethod || '',
+    //                 useData[i].fields.Status || '',
+    //                 (useData[i].fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
+    //               ];
+    //               splashArrayList.push(dataListAllowance);
+    //             }
 
-                let uniqueChars = [...new Set(splashArrayList)];
-                var datatable = $('#tblLeaveRequests').DataTable();
-                datatable.clear();
-                datatable.rows.add(uniqueChars);
-                datatable.draw(false);
-                setTimeout(function () {
-                  $("#tblLeaveRequests").dataTable().fnPageChange('last');
-                }, 400);
+    //             let uniqueChars = [...new Set(splashArrayList)];
+    //             var datatable = $('#tblLeaveRequests').DataTable();
+    //             datatable.clear();
+    //             datatable.rows.add(uniqueChars);
+    //             datatable.draw(false);
+    //             setTimeout(function () {
+    //               $("#tblLeaveRequests").dataTable().fnPageChange('last');
+    //             }, 400);
 
-                $('.fullScreenSpin').css('display', 'none');
+    //             $('.fullScreenSpin').css('display', 'none');
 
 
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
+    //           }).catch(function (err) {
+    //             $('.fullScreenSpin').css('display', 'none');
+    //           });
 
-            });
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        },
-        "fnInitComplete": function () {
-          $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
-          $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
-        }
+    //         });
+    //       setTimeout(function () {
+    //         MakeNegative();
+    //       }, 100);
+    //     },
+    //     "fnInitComplete": function () {
+    //       $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
+    //       $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
+    //     }
 
-      }).on('page', function () {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
+    //   }).on('page', function () {
+    //     setTimeout(function () {
+    //       MakeNegative();
+    //     }, 100);
 
-      }).on('column-reorder', function () {
+    //   }).on('column-reorder', function () {
 
-      }).on('length.dt', function (e, settings, len) {
-        //LoadingOverlay.show();
+    //   }).on('length.dt', function (e, settings, len) {
+    //     //LoadingOverlay.show();
 
-        let dataLenght = settings._iDisplayLength;
-        let splashArrayPayNotesList = [];
-        if (dataLenght == -1) {
-          $('.fullScreenSpin').css('display', 'none');
+    //     let dataLenght = settings._iDisplayLength;
+    //     let splashArrayPayNotesList = [];
+    //     if (dataLenght == -1) {
+    //       $('.fullScreenSpin').css('display', 'none');
 
-        } else {
-          if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-            $('.fullScreenSpin').css('display', 'none');
-          } else {
-            sideBarService.getLeaveRequestList(dataLenght, 0).then(function (dataNonBo) {
+    //     } else {
+    //       if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //         $('.fullScreenSpin').css('display', 'none');
+    //       } else {
+    //         sideBarService.getLeaveRequestList(dataLenght, 0).then(function (dataNonBo) {
 
-              addVS1Data('TLeavRequest', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                // templateObject.resetData(dataNonBo);
-                $('.fullScreenSpin').css('display', 'none');
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
-            }).catch(function (err) {
-              $('.fullScreenSpin').css('display', 'none');
-            });
-          }
-        }
-        setTimeout(function () {
-          MakeNegative();
-        }, 1000);
-      });
-    }, 1000);
+    //           addVS1Data('TLeavRequest', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //             // templateObject.resetData(dataNonBo);
+    //             $('.fullScreenSpin').css('display', 'none');
+    //           }).catch(function (err) {
+    //             $('.fullScreenSpin').css('display', 'none');
+    //           });
+    //         }).catch(function (err) {
+    //           $('.fullScreenSpin').css('display', 'none');
+    //         });
+    //       }
+    //     }
+    //     setTimeout(function () {
+    //       MakeNegative();
+    //     }, 1000);
+    //   });
+    // }, 1000);
   };
   templateObject.getLeaveRequests();
 
@@ -4747,22 +4774,6 @@ Template.employeescard.events({
       let utilityService = new UtilityService();
       let edtSalesQuota = $('#edtSalesQuota').val() || '';
       edtSalesQuota = utilityService.removeCurrency(edtSalesQuota);
-      // Get dashboard options
-      const $dashboardOptionsTable = $("#tblDashboardOptions tbody");
-      const updatedDashboardOptions = [];
-      $dashboardOptionsTable.find("tr").map((index, tr) => {
-          $tr = $(tr);
-          const id = $tr.attr('id');
-          const optionName = $tr.find('td.colOptionsName').text();
-          const isdefaultlogin = $tr.find('td.colLogginDef input[type=radio]').is(":checked");
-          const isshowdefault = $tr.find('td.colShowDef input[type=checkbox]').is(':checked');
-          updatedDashboardOptions.push([
-            id,
-            isdefaultlogin ? 1 : 0,
-            isshowdefault ? 1 : 0
-          ])
-      });
-      // end dashboard options
       if (!isNaN(currentId.id)) {
         currentEmployee = parseInt(currentId.id);
         objDetails = {
@@ -4799,9 +4810,8 @@ Template.employeescard.events({
             CustFld14: overrideGlobalCalendarSet,
             CustFld7: useProductCostaspayRate,
             CustFld8: includeAllProducts,
-            CustFld12: edtSalesQuota, // tempcode,
-            LoginDefault: edtDashboardOptions,
-            DashboardOption: JSON.stringify(updatedDashboardOptions)
+            CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
+            CustFld12: edtSalesQuota // tempcode
           }
         };
       } else {
@@ -4839,9 +4849,8 @@ Template.employeescard.events({
             CustFld7: useProductCostaspayRate,
             CustFld8: includeAllProducts,
             CustFld11: edtDashboardOptions, // tempcode until the fields are added in backend
-            CustFld12: edtSalesQuota, // tempcode
-            LoginDefault: edtDashboardOptions,
-            DashboardOption: JSON.stringify(updatedDashboardOptions)
+            CustFld12: edtSalesQuota // tempcode
+
           }
         };
       }
@@ -10180,7 +10189,7 @@ Template.employeescard.helpers({
       })
       temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
     }
-
+    temp.dashboardOptions = "All";
     return temp;
   },
   employeePayInfo: () => {
@@ -10313,6 +10322,9 @@ Template.employeescard.helpers({
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
+  tableLeaveRequestheaderrecords: () => {
+    return Template.instance().tableLeaveRequestheaderrecords.get();
+  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
       userid: localStorage.getItem('mycloudLogonID'),
@@ -10393,6 +10405,32 @@ Template.employeescard.helpers({
     return Template.instance().earningLines.get();
   },
   formatPrice: (price) => GlobalFunctions.formatPrice(price),
+  apiFunction:async function() {
+    let templateObject = Template.instance();
+    let data = await templateObject.saveLeaveRequestLocalDB();
+    return data;
+  },
+  apiParams: function() {
+    return ['ignoredate', 'limitCount', 'limitFrom'];
+  },
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+  },
 });
 
 function openEditTaskModals(id, type) {
