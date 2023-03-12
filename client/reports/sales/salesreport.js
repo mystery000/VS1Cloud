@@ -453,6 +453,19 @@ Template.salesreport.onRendered(() => {
   // templateObject.getAllProductData();
   templateObject.getDepartments();
 
+  if (url.indexOf("?dateFrom") > 0) {
+    url = new URL(window.location.href);
+    var getDateFrom = url.searchParams.get("dateFrom");
+    var getLoadDate = url.searchParams.get("dateTo");
+    if( typeof getDateFrom === undefined || getDateFrom == "" || getDateFrom === null){
+      let currentUrl = FlowRouter.current().queryParams;
+      getDateFrom = currentUrl.dateFrom
+      getLoadDate = currentUrl.dateTo
+    }
+    $("#dateFrom").datepicker('setDate', moment(getDateFrom).format('DD/MM/YYYY'));
+    $("#dateTo").datepicker('setDate', moment(getLoadDate).format('DD/MM/YYYY'));
+  }
+
   templateObject.getSalesReports(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),

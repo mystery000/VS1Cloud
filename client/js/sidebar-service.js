@@ -1009,7 +1009,7 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       select: '[AccountName] f7like "' + dataSearchName + '"',
     };
-    return this.getList(this.ERPObjects.TAccountVS1, options);
+    return this.getList(this.ERPObjects.TAccountVS1List, options);
   }
 
   getAllSuppliersDataVS1ByName(dataSearchName) {
@@ -1467,7 +1467,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLeads, options);
   }
 
-  getAllEmployeesDataVS1(limitcount, limitfrom) {
+  getAllEmployeesDataVS1(limitcount, limitfrom, deleteFilter) {
     let options = "";
     if (limitcount == "All") {
       options = {
@@ -1663,7 +1663,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TChequeEx, options);
   }
 
-  getAllChequeListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getAllChequeListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -1685,6 +1685,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TChequeList, options);
   }
 
