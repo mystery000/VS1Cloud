@@ -1,19 +1,22 @@
 import { BaseService } from "../js/base-service.js";
 export class FixedAssetService extends BaseService {
-  getTFixedAssetsList() {
+  getTFixedAssetsList(limitcount, limitfrom, deleteFilter) {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true"
+      Search: "Active=true",
+      LimitCount: parseInt(limitcount),
+      LimitFrom: parseInt(limitfrom),
     };
-    return this.getList(this.ERPObjects.TFixedAssets, options);
+    if(deleteFilter) options.Search = "";
+    return this.getList(this.ERPObjects.TFixedAssetsList, options);
   }
 
   getTFixedAssetByNameOrID(dataSearchName) {
     let options = {
       ListType: "Detail",
-      select: '[AssetName] f7like "' + dataSearchName + '" OR [ID] f7like "' + dataSearchName + '"',
+      Search: 'AssetName like "' + dataSearchName + '" OR AssetID like "' + dataSearchName + '"',
     };
-    return this.getList(this.ERPObjects.TFixedAssets, options);
+    return this.getList(this.ERPObjects.TFixedAssetsList, options);
   }
 
   getTFixedAssetDetail(id) {
