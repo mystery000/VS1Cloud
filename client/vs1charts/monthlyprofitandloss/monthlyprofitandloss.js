@@ -140,7 +140,7 @@ Template.monthlyprofitandloss.onRendered(() => {
         ("0" + (dateFrom.getMonth() + 1)).slice(-2) +
         "-" +
         ("0" + dateFrom.getDate()).slice(-2);
-      $("#profitloss").attr(
+      $("#minHeight100 #earnings").attr(
         "href",
         "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
       );
@@ -516,7 +516,7 @@ Template.monthlyprofitandloss.onRendered(() => {
       ("0" + (dateFrom.getMonth() + 1)).slice(-2) +
       "-" +
       ("0" + dateFrom.getDate()).slice(-2);
-    $("#profitloss").attr(
+    $("#minHeight100 #earnings").attr(
       "href",
       "/newprofitandloss?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate
     );
@@ -789,6 +789,11 @@ Template.monthlyprofitandloss.onRendered(() => {
     }, 0)
   }
   templateObject.updateChart = function(dateFrom, dateTo) {
+
+    $("#minHeight100 #earnings").attr(
+      "href",
+      `/newprofitandloss?dateFrom=${dateFrom}&dateTo=${dateTo}`
+    );
     let data = JSON.parse(localStorage.getItem("VS1PNLPeriodReport_dash"));
     
     let month_1 = data[0].fields.DateDesc_1 || "";

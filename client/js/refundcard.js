@@ -4525,23 +4525,23 @@ Template.refundcard.onRendered(() => {
       });
     }
   });
-  $(document).on("click", "#tblCurrencyPopList tbody tr", function (e) {
-    $("#sltCurrency").val($(this).find(".colCode").text());
-    $("#currencyModal").modal("toggle");
+  // $(document).on("click", "#tblCurrencyPopList tbody tr", function (e) {
+  //   $("#sltCurrency").val($(this).find(".colCode").text());
+  //   $("#currencyModal").modal("toggle");
 
-    $("#tblCurrencyPopList_filter .form-control-sm").val("");
-    setTimeout(function () {
-      $(".btnRefreshCurrency").trigger("click");
-      LoadingOverlay.hide();
-    }, 1000);
-  });
+  //   $("#tblCurrencyPopList_filter .form-control-sm").val("");
+  //   setTimeout(function () {
+  //     $(".btnRefreshCurrency").trigger("click");
+  //     LoadingOverlay.hide();
+  //   }, 1000);
+  // });
   $(document).on("click", "#departmentList tbody tr", function (e) {
     $("#sltDept").val($(this).find(".colDeptName").text());
     $("#departmentModal").modal("toggle");
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
     $("#sltTerms").val($(this).find(".colName").text());
-    $("#termsListModal").modal("toggle");
+    $("#termsListModal").modal("hide");
   });
   $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
     $("#sltStatus").val($(this).find(".colStatusName").text());
@@ -5157,95 +5157,95 @@ $(document).ready(function () {
         }
       });
 
-  $("#sltCurrency")
-      .editableSelect()
-      .on("click.editable-select", function (e, li) {
-        var $earch = $(this);
-        var offset = $earch.offset();
-        var currencyDataName = e.target.value || "";
-        $("#edtCurrencyID").val("");
-        if (e.pageX > offset.left + $earch.width() - 8) {
-          // X button 16px wide?
-          $("#currencyModal").modal("toggle");
-        } else {
-          if (currencyDataName.replace(/\s/g, "") != "") {
-            $("#add-currency-title").text("Edit Currency");
-            $("#sedtCountry").prop("readonly", true);
-            getVS1Data("TCurrency")
-                .then(function (dataObject) {
-                  if (dataObject.length == 0) {
-                    LoadingOverlay.show();
-                    sideBarService.getCurrencies().then(function (data) {
-                      for (let i in data.tcurrency) {
-                        if (data.tcurrency[i].Code === currencyDataName) {
-                          $("#edtCurrencyID").val(data.tcurrency[i].Id);
-                          $("#sedtCountry").val(data.tcurrency[i].Country);
-                          $("#currencyCode").val(currencyDataName);
-                          $("#currencySymbol").val(
-                              data.tcurrency[i].CurrencySymbol
-                          );
-                          $("#edtCurrencyName").val(data.tcurrency[i].Currency);
-                          $("#edtCurrencyDesc").val(data.tcurrency[i].CurrencyDesc);
-                          $("#edtBuyRate").val(data.tcurrency[i].BuyRate);
-                          $("#edtSellRate").val(data.tcurrency[i].SellRate);
-                          break;
-                        }
-                      }
-                      LoadingOverlay.hide();
-                      $("#newCurrencyModal").modal("toggle");
-                      $("#sedtCountry").attr("readonly", true);
-                    });
-                  } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tcurrency.length; i++) {
-                      if (data.tcurrency[i].Code === currencyDataName) {
-                        $("#edtCurrencyID").val(data.tcurrency[i].Id);
-                        $("#sedtCountry").val(data.tcurrency[i].Country);
-                        $("#currencyCode").val(currencyDataName);
-                        $("#currencySymbol").val(data.tcurrency[i].CurrencySymbol);
-                        $("#edtCurrencyName").val(data.tcurrency[i].Currency);
-                        $("#edtCurrencyDesc").val(data.tcurrency[i].CurrencyDesc);
-                        $("#edtBuyRate").val(data.tcurrency[i].BuyRate);
-                        $("#edtSellRate").val(data.tcurrency[i].SellRate);
-                        break;
-                      }
-                    }
-                    LoadingOverlay.hide();
-                    $("#newCurrencyModal").modal("toggle");
-                  }
-                })
-                .catch(function (err) {
-                  LoadingOverlay.show();
-                  sideBarService.getCurrencies().then(function (data) {
-                    for (let i in data.tcurrency) {
-                      if (data.tcurrency[i].Code === currencyDataName) {
-                        $("#edtCurrencyID").val(data.tcurrency[i].Id);
-                        $("#sedtCountry").val(data.tcurrency[i].Country);
-                        $("#currencyCode").val(currencyDataName);
-                        $("#currencySymbol").val(data.tcurrency[i].CurrencySymbol);
-                        $("#edtCurrencyName").val(data.tcurrency[i].Currency);
-                        $("#edtCurrencyDesc").val(data.tcurrency[i].CurrencyDesc);
-                        $("#edtBuyRate").val(data.tcurrency[i].BuyRate);
-                        $("#edtSellRate").val(data.tcurrency[i].SellRate);
-                        break;
-                      }
-                    }
-                    LoadingOverlay.hide();
-                    $("#newCurrencyModal").modal("toggle");
-                    $("#sedtCountry").attr("readonly", true);
-                  });
-                });
-          } else {
-            $("#currencyModal").modal();
-            $("#tblCurrencyPopList_filter .form-control-sm").focus();
-            $("#tblCurrencyPopList_filter .form-control-sm").val("");
-            $("#tblCurrencyPopList_filter .form-control-sm").trigger("input");
-            var datatable = $("#tblCurrencyPopList").DataTable();
-            datatable.draw();
-            $("#tblCurrencyPopList_filter .form-control-sm").trigger("input");
-          }
-        }
-      });
+  // $("#sltCurrency")
+  //     .editableSelect()
+  //     .on("click.editable-select", function (e, li) {
+  //       var $earch = $(this);
+  //       var offset = $earch.offset();
+  //       var currencyDataName = e.target.value || "";
+  //       $("#edtCurrencyID").val("");
+  //       if (e.pageX > offset.left + $earch.width() - 8) {
+  //         // X button 16px wide?
+  //         $("#currencyModal").modal("toggle");
+  //       } else {
+  //         if (currencyDataName.replace(/\s/g, "") != "") {
+  //           $("#add-currency-title").text("Edit Currency");
+  //           $("#sedtCountry").prop("readonly", true);
+  //           getVS1Data("TCurrency")
+  //               .then(function (dataObject) {
+  //                 if (dataObject.length == 0) {
+  //                   LoadingOverlay.show();
+  //                   sideBarService.getCurrencies().then(function (data) {
+  //                     for (let i in data.tcurrency) {
+  //                       if (data.tcurrency[i].Code === currencyDataName) {
+  //                         $("#edtCurrencyID").val(data.tcurrency[i].Id);
+  //                         $("#sedtCountry").val(data.tcurrency[i].Country);
+  //                         $("#currencyCode").val(currencyDataName);
+  //                         $("#currencySymbol").val(
+  //                             data.tcurrency[i].CurrencySymbol
+  //                         );
+  //                         $("#edtCurrencyName").val(data.tcurrency[i].Currency);
+  //                         $("#edtCurrencyDesc").val(data.tcurrency[i].CurrencyDesc);
+  //                         $("#edtBuyRate").val(data.tcurrency[i].BuyRate);
+  //                         $("#edtSellRate").val(data.tcurrency[i].SellRate);
+  //                         break;
+  //                       }
+  //                     }
+  //                     LoadingOverlay.hide();
+  //                     $("#newCurrencyModal").modal("toggle");
+  //                     $("#sedtCountry").attr("readonly", true);
+  //                   });
+  //                 } else {
+  //                   let data = JSON.parse(dataObject[0].data);
+  //                   for (let i = 0; i < data.tcurrency.length; i++) {
+  //                     if (data.tcurrency[i].Code === currencyDataName) {
+  //                       $("#edtCurrencyID").val(data.tcurrency[i].Id);
+  //                       $("#sedtCountry").val(data.tcurrency[i].Country);
+  //                       $("#currencyCode").val(currencyDataName);
+  //                       $("#currencySymbol").val(data.tcurrency[i].CurrencySymbol);
+  //                       $("#edtCurrencyName").val(data.tcurrency[i].Currency);
+  //                       $("#edtCurrencyDesc").val(data.tcurrency[i].CurrencyDesc);
+  //                       $("#edtBuyRate").val(data.tcurrency[i].BuyRate);
+  //                       $("#edtSellRate").val(data.tcurrency[i].SellRate);
+  //                       break;
+  //                     }
+  //                   }
+  //                   LoadingOverlay.hide();
+  //                   $("#newCurrencyModal").modal("toggle");
+  //                 }
+  //               })
+  //               .catch(function (err) {
+  //                 LoadingOverlay.show();
+  //                 sideBarService.getCurrencies().then(function (data) {
+  //                   for (let i in data.tcurrency) {
+  //                     if (data.tcurrency[i].Code === currencyDataName) {
+  //                       $("#edtCurrencyID").val(data.tcurrency[i].Id);
+  //                       $("#sedtCountry").val(data.tcurrency[i].Country);
+  //                       $("#currencyCode").val(currencyDataName);
+  //                       $("#currencySymbol").val(data.tcurrency[i].CurrencySymbol);
+  //                       $("#edtCurrencyName").val(data.tcurrency[i].Currency);
+  //                       $("#edtCurrencyDesc").val(data.tcurrency[i].CurrencyDesc);
+  //                       $("#edtBuyRate").val(data.tcurrency[i].BuyRate);
+  //                       $("#edtSellRate").val(data.tcurrency[i].SellRate);
+  //                       break;
+  //                     }
+  //                   }
+  //                   LoadingOverlay.hide();
+  //                   $("#newCurrencyModal").modal("toggle");
+  //                   $("#sedtCountry").attr("readonly", true);
+  //                 });
+  //               });
+  //         } else {
+  //           $("#currencyModal").modal();
+  //           $("#tblCurrencyPopList_filter .form-control-sm").focus();
+  //           $("#tblCurrencyPopList_filter .form-control-sm").val("");
+  //           $("#tblCurrencyPopList_filter .form-control-sm").trigger("input");
+  //           var datatable = $("#tblCurrencyPopList").DataTable();
+  //           datatable.draw();
+  //           $("#tblCurrencyPopList_filter .form-control-sm").trigger("input");
+  //         }
+  //       }
+  //     });
 
       $("#sltPaymentMethod")
           .editableSelect()

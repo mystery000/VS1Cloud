@@ -24,7 +24,7 @@ Template.clienttypemodal.onCreated(function () {
 Template.clienttypemodal.onRendered(function () {
     $(document).on("click", "#termsList tbody tr", function (e) {        
         $('#edtClientTypeTerms').val($(this).find(".colName").text());
-        $('#termsListModal').modal('toggle');
+        $('#termsListModal').modal('hide');
     });
 });
 

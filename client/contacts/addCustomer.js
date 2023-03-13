@@ -1552,7 +1552,7 @@ Template.customerscard.onRendered(function () {
     $(document).on("click", "#termsList tbody tr", function (e) {
         let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
         $('#' + selectedTermsDropdownID + '').val($(this).find(".colName").text());
-        $('#termsListModal').modal('toggle');
+        $('#termsListModal').modal('hide');
     });
     $(document).on("click", "#paymentmethodList tbody tr", function (e) {
         let selectedDropdownID = $('#selectPaymentMethodLineID').val() || 'sltPreferredPayment';
