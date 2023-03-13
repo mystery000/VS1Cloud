@@ -11,20 +11,17 @@
           </div>
           <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
           <div class="col-12 col-md-4">
-              {{#if showCustomFields}}
-                  <a
-                          class="btn btnSettings"
-                          role="button"
-                          data-toggle="modal"
-                          href="#myModal4"
-                          style="float: right;">
-                      <i class="icon ion-android-more-horizontal"></i>
-                  </a>
-              {{/if}}
-              {{#if equals data.isReconciled true}}
-                  <h3 style="float: right; color: #e02d1b; font-weight: 600;">Reconciled</h3>
-              {{/if}}
+            <a
+                    class="btn btnSettings"
+                    role="button"
+                    data-toggle="modal"
+                    href="#myModal4"
+                    style="float: right;">
+                <i class="icon ion-android-more-horizontal"></i>
+            </a>
               <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+                {{> customfieldDroppop}}
+                {{> customfieldpop}}
           </div>
       </div>
       <div class="row align-items-center justify-content-between">
@@ -32,7 +29,7 @@
             {{#if includeClient}}
                 <div class="row">
                         <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
-                            {{> customer_selector
+                            {{> customerselector
                                 label=clientType
                                 id=getCustomerID
                                 value=data.CustomerID
@@ -45,6 +42,8 @@
                                 is_editable=true
                                 colNameForValue='colCompany'
                                 modal_title=getModalTitle
+                                lineTableId=gridTableId
+                                printTableId=printTableId
                               }}
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
@@ -62,7 +61,7 @@
                         row="5"
                         id="txabillingAddress"
                         name="txabillingAddress"
-                        }}45{{/vs1_textarea}}
+                        }}{{/vs1_textarea}}
                     </div>
                 {{/if}}
                 {{#if includeAccount}}
@@ -131,13 +130,33 @@
                             {{#if currency}}
                                 {{#if equals clientType 'Customer'}}
                                     {{> CurrencyWidget rate="sell" trans="true"}}
-                                {{/if}}
-                                {{#if equals clientType 'Supplier'}}
+                                {{else}}
                                     {{> CurrencyWidget rate="buy" row="true"}}
                                 {{/if}}
                             {{/if}}
                         </div>
+                        {{> custom_fields
+                            containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+                            salesCloudPreferenceRec=salesCloudPreferenceRec
+                            custfields=custfields
+                            data=data
+                          }}
                     </div>
+                </div>
+            </div>
+            <div class="row" style="margin: 16px 16px 0px 16px;">
+                <div class="col-12 mb-3">
+                  <a class="btn btn-link" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notes"
+                    href="#collapse-notes" role="button">+ Shipping Information</a>
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                      <div class="collapse" id="collapse-notes" style="margin-top: 8px;">
+                        {{# vs1_textarea label="Shipping Address" row="3" id="txaShipingInfo"
+                        name="txaShipingInfo"}}{{data.shipToDesc}}{{/vs1_textarea}}
+                      </div>
+                    </div>
+                  </div>
+        
                 </div>
             </div>
         </div>
