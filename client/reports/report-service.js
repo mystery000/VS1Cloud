@@ -897,8 +897,8 @@ export class ReportService extends BaseService {
                 IgnoreDates: true,
                 Search: "",
                 OrderBy: "ID desc",
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
                 ListType: "Detail",
             };
         } else {
@@ -906,10 +906,10 @@ export class ReportService extends BaseService {
                 OrderBy: "ID desc",
                 IgnoreDates: false,
                 Search: "",
-                DateFrom: '"' + dateFrom + '"',
-                DateTo: '"' + dateTo + '"',
-                LimitCount: parseInt(limitcount),
-                LimitFrom: parseInt(limitfrom),
+                // DateFrom: '"' + dateFrom + '"',
+                // DateTo: '"' + dateTo + '"',
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
                 ListType: "Detail",
             };
         }
@@ -929,13 +929,33 @@ export class ReportService extends BaseService {
         return this.POST(this.ERPObjects.TVATReturn, data);
     }
 
-    getAllVATReturn(data) {
-        let options = {
-            OrderBy: "ID desc",
-            ListType: "Detail",
-        };
+    getAllVATReturn(limitcount, limitfrom, deleteFilter, dateFrom, dateTo, ignoreDate) {
+        let options = "";
+
+        if (ignoreDate == true) {
+            options = {
+                IgnoreDates: true,
+                Search: "",
+                OrderBy: "ID desc",
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        } else {
+            options = {
+                OrderBy: "ID desc",
+                IgnoreDates: false,
+                Search: "",
+                // DateFrom: '"' + dateFrom + '"',
+                // DateTo: '"' + dateTo + '"',
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        }
+        if (deleteFilter) options.Search = "Active != true"
         return this.getList(this.ERPObjects.TVATReturn, options);
-    }
+    };
 
     getOneVATReturn(id) {
         let options = {

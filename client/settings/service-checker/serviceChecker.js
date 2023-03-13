@@ -57,6 +57,90 @@ Template.serviceChecker.onRendered(function() {
 });
 
 Template.serviceChecker.events({
+    'click .btnServiceEdit': function(event) {
+        $("#edtMachineName").val("Machine-1");
+        $("#edtMachineDescription").val("Machine-1");
+        $("#edtMachineDescription").val("Machine-1");
+        $("#edtIPAddress").val("100.100.100.100");
+        $("#edtPort").val("80");
+        $("#edtStatus").val("on");
+        $("#edtServiceName").val("API service");
+        $("#editServiceChecker").modal("toggle");
+    },
+    'click .btnMachineSummary': function(event) {
+        $("#machineSummaryList").modal("toggle");
+    },
+    'click .btnMachineDetail': function(event) {
+        $("#machineDetailList").modal("toggle");
+    },
+    'click .btnMachineFrequency': function(event) {
+        playCopyAudio();
+        setTimeout(async function() {
+            $("#basedOnFrequency").prop('checked', true);
+            $('#edtFrequencyDetail').css('display', 'flex');
+            $('#dailySettings #basic-addon2').text('Minutes');
+            $(".ofMonthList input[type=checkbox]").each(function() {
+                $(this).prop('checked', false);
+            });
+            $(".selectDays input[type=checkbox]").each(function() {
+                $(this).prop('checked', false);
+            });
+            $("#copyFrequencyModal").modal("toggle");
+        }, delayTimeAfterSound);
+    },
+    'click input[name="frequencyRadio"]': function(event) {
+        if (event.target.id == "frequencyMonthly") {
+            document.getElementById("monthlySettings").style.display = "block";
+            document.getElementById("weeklySettings").style.display = "none";
+            document.getElementById("dailySettings").style.display = "none";
+            document.getElementById("oneTimeOnlySettings").style.display = "none";
+        } else if (event.target.id == "frequencyWeekly") {
+            document.getElementById("weeklySettings").style.display = "block";
+            document.getElementById("monthlySettings").style.display = "none";
+            document.getElementById("dailySettings").style.display = "none";
+            document.getElementById("oneTimeOnlySettings").style.display = "none";
+        } else if (event.target.id == "frequencyDaily") {
+            document.getElementById("dailySettings").style.display = "block";
+            document.getElementById("monthlySettings").style.display = "none";
+            document.getElementById("weeklySettings").style.display = "none";
+            document.getElementById("oneTimeOnlySettings").style.display = "none";
+        } else if (event.target.id == "frequencyOnetimeonly") {
+            document.getElementById("oneTimeOnlySettings").style.display = "block";
+            document.getElementById("monthlySettings").style.display = "none";
+            document.getElementById("weeklySettings").style.display = "none";
+            document.getElementById("dailySettings").style.display = "none";
+        } else {
+            $("#copyFrequencyModal").modal('toggle');
+        }
+    },
+    'click input[name="settingsMonthlyRadio"]': function(event) {
+        if (event.target.id == "settingsMonthlyEvery") {
+            $('.settingsMonthlyEveryOccurence').attr('disabled', false);
+            $('.settingsMonthlyDayOfWeek').attr('disabled', false);
+            $('.settingsMonthlySpecDay').attr('disabled', true);
+        } else if (event.target.id == "settingsMonthlyDay") {
+            $('.settingsMonthlySpecDay').attr('disabled', false);
+            $('.settingsMonthlyEveryOccurence').attr('disabled', true);
+            $('.settingsMonthlyDayOfWeek').attr('disabled', true);
+        } else {
+            $("#frequencyModal").modal('toggle');
+        }
+    },
+    'click input[name="dailyRadio"]': function(event) {
+        if (event.target.id == "dailyEveryDay") {
+            $('.dailyEveryXDays').attr('disabled', true);
+        } else if (event.target.id == "dailyWeekdays") {
+            $('.dailyEveryXDays').attr('disabled', true);
+        } else if (event.target.id == "dailyEvery") {
+            $('.dailyEveryXDays').attr('disabled', false);
+        } else {
+            $("#frequencyModal").modal('toggle');
+        }
+    },
+    'click .btnAdmin': function(event) {
+        $("#adminService").modal("toggle");
+    },
+    
     // 'click .btnRefresh': function() {
     //     $('.fullScreenSpin').css('display', 'inline-block');
     //     stockTransferService.getAllSerialNumber(initialDataLoad, 0).then(function(data) {
