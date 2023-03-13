@@ -1665,7 +1665,7 @@ Template.calender.onRendered(function() {
                             });
                             sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
                                 addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    // window.open("/appointments", '_self');
+                                    window.open("/appointments", '_self');
                                 }).catch(function(err) {
                                     window.open("/appointments", '_self');
                                 });
