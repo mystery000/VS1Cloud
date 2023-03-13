@@ -32,7 +32,6 @@ const sendEnvelope = async (args) => {
     });
     let envelopeId = results.envelopeId;
 
-    console.log(`Envelope was created. EnvelopeId ${envelopeId}`);
     return { envelopeId: envelopeId };
 };
 

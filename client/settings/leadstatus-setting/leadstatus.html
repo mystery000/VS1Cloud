@@ -41,6 +41,12 @@
                                         </div>
                                     </div>
 <!--                                    {{> non_transactional_list tablename="tblLeadStatusList"}}-->
+
+                                    <style>
+                                        td.colQuantity{
+                                            text-align: right !important;
+                                        }
+                                    </style>
                                     {{>datatablelist
                                             tablename="tblLeadStatusList"
                                             apiName= apiFunction
