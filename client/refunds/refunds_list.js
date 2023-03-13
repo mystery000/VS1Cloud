@@ -9,6 +9,7 @@ import { AccountService } from "../accounts/account-service";
 import { Template } from 'meteor/templating';
 import './refunds_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -19,6 +20,59 @@ Template.refundlist.onCreated(function () {
     templateObject.custfields = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.TotalAmount) || 0.00;
+        let totalTax = utilityService.modifynegativeCurrencyFormat(data.TotalTax) || 0.00;
+        // Currency+''+data.trefundsale[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+        let totalAmount = utilityService.modifynegativeCurrencyFormat(data.TotalAmountInc) || 0.00;
+        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.Payment) || 0.00;
+        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let salestatus = data.QuoteStatus || '';
+        if(data.Deleted == true){
+            salestatus = "Deleted";
+        }else if(data.CustomerName == ''){
+            salestatus = "Deleted";
+        };
+        var dataList = [
+            data.SaleDate != '' ? moment(data.SaleDate).format("YYYY/MM/DD") : data.SaleDate,
+            data.SaleDate != '' ? moment(data.SaleDate).format("DD/MM/YYYY") : data.SaleDate,
+            data.SaleID || '',
+            data.DueDate != '' ? moment(data.DueDate).format("DD/MM/YYYY") : data.DueDate,
+            data.CustomerName || '',
+            totalAmountEx || 0.00,
+            totalTax || 0.00,
+            totalAmount || 0.00,
+            totalPaid || 0.00,
+            totalOutstanding || 0.00,
+            data.Deleted ? 'Deleted' : "",
+            data.EmployeeName || '',
+            data.Comments || '',
+            // data.SaleCustField1 || '',
+            // data.SaleCustField2 || '',
+            // data.SaleCustField3 || '',
+            // shipdate:data.trefundsale[i].fields.ShipDate !=''? moment(data.trefundsale[i].fields.ShipDate).format("DD/MM/YYYY"): data.trefundsale[i].fields.ShipDate,
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: false, width: "30" },
+        { index: 1, label: "Sale Date", class: "colSaleDate", active: true, display: true, width: "100" },
+        { index: 2, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "50" },
+        { index: 3, label: "Due Date", class: "colDueDate", active: true, display: true, width: "100" },
+        { index: 4, label: "Customer", class: "colCustomer", active: true, display: true, width: "100" },
+        { index: 5, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "80" },
+        { index: 6, label: "Tax", class: "colTax", active: true, display: true, width: "80" },
+        { index: 7, label: "Amount (Inc)", class: "colAmount", active: true, display: true, width: "80" },
+        { index: 8, label: "Paid", class: "colPaid", active: true, display: true, width: "80" },
+        { index: 9, label: "Outstanding", class: "colBalanceOutstanding", active: false, display: true, width: "120" },
+        { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
+        { index: 11, label: "Employee", class: "colEmployee", active: true, display: true, width: "80" },
+        { index: 12, label: "#Comments", class: "colComments", active: false, display: true, width: "60" },
+    ];
+
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.refundlist.onRendered(function () {
@@ -152,26 +206,26 @@ Template.refundlist.onRendered(function () {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblRefundlist', function (error, result) {
-        if (error) {}
-        else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
+    // Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblRefundlist', function (error, result) {
+    //     if (error) {}
+    //     else {
+    //         if (result) {
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //                 // let columnindex = customcolumn[i].index + 1;
+    //                 $("th." + columnClass + "").html(columData);
+    //                 $("th." + columnClass + "").css('width', "" + columnWidth + "px");
+    //
+    //             }
+    //         }
+    //
+    //     }
+    // });
 
     function MakeNegative() {
         $('td').each(function () {
@@ -565,7 +619,7 @@ Template.refundlist.onRendered(function () {
                     // templateObject.tableheaderrecords.set(tableHeaderList);
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
                     $('#tblRefundlist tbody').on('click', 'tr', function () {
-                        var listData = $(this).closest('tr').attr('id');
+                        var listData = $(this).closest('tr').find(".colSalesNo").text();
                         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
                         if (listData) {
                           if(checkDeleted == "Deleted"){
@@ -1223,7 +1277,7 @@ Template.refundlist.onRendered(function () {
         });
     }
 
-    templateObject.getAllRefundData();
+    //templateObject.getAllRefundData();
 
     templateObject.getAllFilterRefundData = function(fromDate, toDate, ignoreDate) {
         sideBarService.getAllTRefundSaleListData(fromDate, toDate, ignoreDate,initialReportLoad,0).then(function(data) {
@@ -1258,7 +1312,7 @@ Template.refundlist.onRendered(function () {
       
       LoadingOverlay.hide();
     }
-    templateObject.initPage();
+    //templateObject.initPage();
 });
 
 Template.refundlist.events({
@@ -1392,115 +1446,115 @@ Template.refundlist.events({
     'click #btnRefundBOList': function (event) {
         //FlowRouter.go('/invoicelistBO');
     },
-    'click .chkDatatable': function (event) {
-        var columns = $('#tblRefundlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function (i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-
-    // custom field displaysettings
-    'click .resetTable' : function(event) {
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display);
-
-      $(".displaySettings").each(function (index) {
-        let $tblrow = $(this);
-        $tblrow.find(".divcolumn").text(reset_data[index].label);
-        $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
-
-        let title = $("#tblRefundlist").find("th").eq(index+1);
-        $(title).html(reset_data[index].label);
-
-        if (reset_data[index].active) {
-          $('.col' + reset_data[index].class).addClass('showColumn');
-          $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-        } else {
-          $('.col' + reset_data[index].class).addClass('hiddenColumn');
-          $('.col' + reset_data[index].class).removeClass('showColumn');
-        }
-        $(".rngRange" + reset_data[index].class).val('');
-      });
-    },
-
-    // custom field displaysettings
-    'click .saveTable' : async function(event){
-      let lineItems = [];
-      $(".fullScreenSpin").css("display", "inline-block");
-
-      $(".displaySettings").each(function (index) {
-        var $tblrow = $(this);
-        var fieldID = $tblrow.attr("custid") || 0;
-        var colTitle = $tblrow.find(".divcolumn").text() || "";
-        var colWidth = $tblrow.find(".custom-range").val() || 0;
-        var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-        var colHidden = false;
-        if ($tblrow.find(".custom-control-input").is(":checked")) {
-          colHidden = true;
-        } else {
-          colHidden = false;
-        }
-        let lineItemObj = {
-          index: parseInt(fieldID),
-          label: colTitle,
-          active: colHidden,
-          width: parseInt(colWidth),
-          class: colthClass,
-          display: true
-        };
-
-        lineItems.push(lineItemObj);
-      });
-
-      let templateObject = Template.instance();
-      let reset_data = templateObject.reset_data.get();
-      reset_data = reset_data.filter(redata => redata.display == false);
-      lineItems.push(...reset_data);
-      lineItems.sort((a,b) => a.index - b.index);
-
-      try {
-        let erpGet = erpDb();
-        let tableName = "tblRefundlist";
-        let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
-        let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-        $(".fullScreenSpin").css("display", "none");
-        if(added) {
-          sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-              addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-          });
-            swal({
-              title: 'SUCCESS',
-              text: "Display settings is updated!",
-              type: 'success',
-              showCancelButton: false,
-              confirmButtonText: 'OK'
-            }).then((result) => {
-                if (result.value) {
-                  $('#myModal2').modal('hide');
-                }
-            });
-        } else {
-          swal("Something went wrong!", "", "error");
-        }
-      } catch (error) {
-        $(".fullScreenSpin").css("display", "none");
-        swal("Something went wrong!", "", "error");
-      }
-    },
+    // 'click .chkDatatable': function (event) {
+    //     var columns = $('#tblRefundlist th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function (i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    //
+    // // custom field displaysettings
+    // 'click .resetTable' : function(event) {
+    //   let templateObject = Template.instance();
+    //   let reset_data = templateObject.reset_data.get();
+    //   reset_data = reset_data.filter(redata => redata.display);
+    //
+    //   $(".displaySettings").each(function (index) {
+    //     let $tblrow = $(this);
+    //     $tblrow.find(".divcolumn").text(reset_data[index].label);
+    //     $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+    //
+    //     let title = $("#tblRefundlist").find("th").eq(index+1);
+    //     $(title).html(reset_data[index].label);
+    //
+    //     if (reset_data[index].active) {
+    //       $('.col' + reset_data[index].class).addClass('showColumn');
+    //       $('.col' + reset_data[index].class).removeClass('hiddenColumn');
+    //     } else {
+    //       $('.col' + reset_data[index].class).addClass('hiddenColumn');
+    //       $('.col' + reset_data[index].class).removeClass('showColumn');
+    //     }
+    //     $(".rngRange" + reset_data[index].class).val('');
+    //   });
+    // },
+    //
+    // // custom field displaysettings
+    // 'click .saveTable' : async function(event){
+    //   let lineItems = [];
+    //   $(".fullScreenSpin").css("display", "inline-block");
+    //
+    //   $(".displaySettings").each(function (index) {
+    //     var $tblrow = $(this);
+    //     var fieldID = $tblrow.attr("custid") || 0;
+    //     var colTitle = $tblrow.find(".divcolumn").text() || "";
+    //     var colWidth = $tblrow.find(".custom-range").val() || 0;
+    //     var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+    //     var colHidden = false;
+    //     if ($tblrow.find(".custom-control-input").is(":checked")) {
+    //       colHidden = true;
+    //     } else {
+    //       colHidden = false;
+    //     }
+    //     let lineItemObj = {
+    //       index: parseInt(fieldID),
+    //       label: colTitle,
+    //       active: colHidden,
+    //       width: parseInt(colWidth),
+    //       class: colthClass,
+    //       display: true
+    //     };
+    //
+    //     lineItems.push(lineItemObj);
+    //   });
+    //
+    //   let templateObject = Template.instance();
+    //   let reset_data = templateObject.reset_data.get();
+    //   reset_data = reset_data.filter(redata => redata.display == false);
+    //   lineItems.push(...reset_data);
+    //   lineItems.sort((a,b) => a.index - b.index);
+    //
+    //   try {
+    //     let erpGet = erpDb();
+    //     let tableName = "tblRefundlist";
+    //     let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
+    //     let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+    //     $(".fullScreenSpin").css("display", "none");
+    //     if(added) {
+    //       sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
+    //           addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
+    //       });
+    //         swal({
+    //           title: 'SUCCESS',
+    //           text: "Display settings is updated!",
+    //           type: 'success',
+    //           showCancelButton: false,
+    //           confirmButtonText: 'OK'
+    //         }).then((result) => {
+    //             if (result.value) {
+    //               $('#myModal2').modal('hide');
+    //             }
+    //         });
+    //     } else {
+    //       swal("Something went wrong!", "", "error");
+    //     }
+    //   } catch (error) {
+    //     $(".fullScreenSpin").css("display", "none");
+    //     swal("Something went wrong!", "", "error");
+    //   }
+    // },
 
     // 'blur .divcolumn': function (event) {
     //     let columData = $(event.target).text();
@@ -2119,5 +2173,40 @@ Template.refundlist.helpers({
     // custom fields displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTRefundSaleListData;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getNewRefundByNameOrID;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["dateFrom","dateTo","ignoredate","limitCount","limitFrom", 'deleteFilter'];
     },
 });

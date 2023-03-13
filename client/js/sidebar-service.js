@@ -3974,7 +3974,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TRefundSale, options);
   }
 
-  getAllTRefundSaleListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTRefundSaleListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -3996,6 +3996,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TRefundSaleList, options);
   }
 
