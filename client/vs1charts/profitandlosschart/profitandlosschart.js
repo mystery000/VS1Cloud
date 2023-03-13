@@ -22,7 +22,6 @@ templateObject.netincomeperc = new ReactiveVar();
 });
 
 Template.profitandlosschart.onRendered(()=>{
-
   const templateObject = Template.instance();
   let utilityService = new UtilityService();
   let salesOrderTable;
@@ -35,15 +34,6 @@ Template.profitandlosschart.onRendered(()=>{
 
 
   let checkStatus = localStorage.getItem("profitloss") || true;
-  // setTimeout(function(){
-  // if(checkStatus == false || checkStatus == "false") {
-  //   $("#profitlossstatus").addClass('hideelement')
-  //   $('#profitloss1hide').text("Show");
-  // } else {
-  //   $("#profitlossstatus").removeClass('hideelement')
-  //   $('#profitloss1hide').text("Hide");
-  // }
-  //   },1000);
 
   if((currentDate.getMonth()+1) < 10){
     fromDateMonth = "0" + (currentDate.getMonth()+1);
@@ -55,12 +45,12 @@ Template.profitandlosschart.onRendered(()=>{
   var fromDate =fromDateDay + "/" +(fromDateMonth) + "/" + currentDate.getFullYear();
 
   templateObject.dateAsAt.set(begunDate);
- const dataTableList = [];
- const deptrecords = [];
- if ((!localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash'))) {
+  const dataTableList = [];
+  const deptrecords = [];
+  if ((!localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash'))) {
     templateObject.getProfitandLossReports = function (dateFrom, dateTo, ignoreDate) {
         vs1chartService.getProfitandLoss(dateFrom, dateTo, ignoreDate).then(function (data) {
-          let records = [];
+        let records = [];
         if(data.profitandlossreport){
           let totalNetAssets = 0;
           let GrandTotalLiability = 0;
@@ -157,67 +147,59 @@ Template.profitandlosschart.onRendered(()=>{
 
         });
     };
-
     var currentDate2 = new Date();
     var dateFrom = new Date();
     var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     let getDateFrom = Math.floor(currentDate2.getFullYear() -1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate();
     dateFrom.setMonth(dateFrom.getMonth()-6);
     dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-    $("#profitloss1").attr("href", "/newprofitandloss?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
+    $("#profitandlosschartparent #earnings").attr("href", `/newprofitandloss?dateFrom=${dateFrom}&dateTo=${getLoadDate}`);
+    templateObject.getProfitandLossReports(getDateFrom,getLoadDate,false);
+  }else{
+    var currentDate2 = new Date();
+    var dateFrom = new Date();
+    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+    let getDateFrom = Math.floor(currentDate2.getFullYear() -1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate();
+    dateFrom.setMonth(dateFrom.getMonth()-6);
+    dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
+    $("#profitandlosschartparent #earnings").attr("href", `/newprofitandloss?dateFrom=${dateFrom}&dateTo=${getLoadDate}`);
+    let totalExpense = localStorage.getItem('VS1ProfitandLoss_ExpEx_dash') || 0;
+    let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
+    let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;
+    let totalNetIncome = localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash') || 0;
+    let totalSalesPerc = 0;
+
+    let totalnetIncome = 0;
+    let totalSumProfitLoss = 0;
+    let sumTotalExpense = (Number(totalExpense) + Number(totalCOGS)) || 0;
+
+    $('.spnTotalSales').html(utilityService.modifynegativeCurrencyFormat(totalSales));
+    $('.spnTotalnetincome').html(utilityService.modifynegativeCurrencyFormat(totalNetIncome));
+    $('.spnTotalExpense').html(utilityService.modifynegativeCurrencyFormat(Math.abs(sumTotalExpense)));
 
 
-       templateObject.getProfitandLossReports(getDateFrom,getLoadDate,false);
-     }else{
-      var currentDate2 = new Date();
-      var dateFrom = new Date();
-      var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-      let getDateFrom = Math.floor(currentDate2.getFullYear() -1) + "-" + Math.floor(currentDate2.getMonth() +1) + "-" + currentDate2.getDate();
-      dateFrom.setMonth(dateFrom.getMonth()-6);
-      dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-      $("#profitloss1").attr("href", "/newprofitandloss?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
-       let totalExpense = localStorage.getItem('VS1ProfitandLoss_ExpEx_dash') || 0;
-       let totalCOGS = localStorage.getItem('VS1ProfitandLoss_COGSEx_dash') || 0;
-       let totalSales = localStorage.getItem('VS1ProfitandLoss_IncomeEx_dash') || 0;
-       let totalNetIncome = localStorage.getItem('VS1ProfitandLoss_netIncomeEx_dash') || 0;
-       let totalSalesPerc = 0;
+    if((!isNaN(sumTotalExpense))&&(!isNaN(totalSales))){
+      setTimeout(function  (){
+        totalSumProfitLoss =  (Number(totalSales) + Math.abs(sumTotalExpense)) || 0;
 
-       let totalnetIncome = 0;
-       let totalSumProfitLoss = 0;
-       let sumTotalExpense = (Number(totalExpense) + Number(totalCOGS)) || 0;
+        totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
+        totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
+        let totalNetIncomePerc = (totalNetIncome / totalSumProfitLoss) * 100;
+        templateObject.netincomeperc.set(Math.abs(totalNetIncomePerc));
+        templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
+        templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
 
-       $('.spnTotalSales').html(utilityService.modifynegativeCurrencyFormat(totalSales));
-       $('.spnTotalnetincome').html(utilityService.modifynegativeCurrencyFormat(totalNetIncome));
-       $('.spnTotalExpense').html(utilityService.modifynegativeCurrencyFormat(Math.abs(sumTotalExpense)));
-
-
-        if((!isNaN(sumTotalExpense))&&(!isNaN(totalSales))){
-          setTimeout(function  (){
-            totalSumProfitLoss =  (Number(totalSales) + Math.abs(sumTotalExpense)) || 0;
-
-            totalExpensePerc = (sumTotalExpense / totalSumProfitLoss) * 100;
-            totalSalesPerc = (totalSales / totalSumProfitLoss) * 100;
-            let totalNetIncomePerc = (totalNetIncome / totalSumProfitLoss) * 100;
-            templateObject.netincomeperc.set(Math.abs(totalNetIncomePerc));
-            templateObject.salespercTotal.set(utilityService.modifynegativeCurrencyFormat(totalSalesPerc));
-            templateObject.expensepercTotal.set(utilityService.modifynegativeCurrencyFormat(totalExpensePerc));
-
-            templateObject.salesperc.set(totalSalesPerc);
-            if(totalExpensePerc < 0 ){
-              templateObject.expenseperc.set(Math.abs(totalExpensePerc));
-              $('.cssExpense').addClass('bg-danger');
-              $('.cssExpense').removeClass('bg-success');
-            }else{
-              templateObject.expenseperc.set(totalExpensePerc);
-            }
-          }, 0)
-
-
+        templateObject.salesperc.set(totalSalesPerc);
+        if(totalExpensePerc < 0 ){
+          templateObject.expenseperc.set(Math.abs(totalExpensePerc));
+          $('.cssExpense').addClass('bg-danger');
+          $('.cssExpense').removeClass('bg-success');
+        }else{
+          templateObject.expenseperc.set(totalExpensePerc);
         }
-
-     }
-
-
+      }, 0)
+    }
+    }
   });
 
   Template.profitandlosschart.events({
@@ -233,14 +215,6 @@ Template.profitandlosschart.onRendered(()=>{
     'click .btnRefresh': function () {
       Meteor._reload.reload();
     },
-   //  'click #profitloss1hide': function () {
-   //  let check = localStorage.getItem("profitloss") || true;
-   //  if(check == "true" || check == true) {
-   //     $("#profitloss1hide").text("Show");
-   //  } else {
-   //     $("#profitloss1hide").text("Hide");
-   //  }
-   // },
     'click .btnPrintReport':function (event) {
       playPrintAudio();
       setTimeout(function(){

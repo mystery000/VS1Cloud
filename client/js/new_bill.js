@@ -5252,7 +5252,7 @@ Template.billcard.onRendered(() => {
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
         templateObject.setSupplierInfo();
-        // $('#supplierListModal').modal('hide');
+        $('#supplierListModal').modal('hide');
     });
 
 

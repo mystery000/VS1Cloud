@@ -188,18 +188,18 @@ Template.productTable.onRendered(function() {
                 let dataLenght = oSettings._iDisplayLength;
                 let customerSearch = $("#tblInventoryOverview_filter input").val();
                 sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                  getVS1Data("TProductList").then(function (dataObjectold) {
+                  getVS1Data("TProductQtyList").then(function (dataObjectold) {
                       if (dataObjectold.length == 0) {
                       } else {
                         let dataOld = JSON.parse(dataObjectold[0].data);
 
-                        var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                        var thirdaryData = $.merge($.merge([],dataObjectnew.tproductqtylist),dataOld.tproductqtylist);
                         let objCombineData = {
                           Params: dataOld.Params,
-                          tproductlist: thirdaryData,
+                          tproductqtylist: thirdaryData,
                         };
 
-                        addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                        addVS1Data("TProductQtyList",JSON.stringify(objCombineData)).then(function (datareturn) {
                             templateObject.resetData(objCombineData);
                             $(".fullScreenSpin").css("display", "none");
                           }).catch(function (err) {

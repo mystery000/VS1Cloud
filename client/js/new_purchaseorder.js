@@ -13636,7 +13636,7 @@ Template.purchaseordercard.events({
                                 objDetails = {
                                 type: "TProductVS1",
                                 fields: {
-                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
                                     Active: true,
                                     SNTracking: "true",
                                     Batch: "false",
@@ -13647,7 +13647,7 @@ Template.purchaseordercard.events({
                                 .then(async function (objDetails) {
                                 sideBarService.getProductListVS1("All", 0)
                                     .then(async function (dataReload) {
-                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                     swal.close();
                                     $(target).click();
                                     })
@@ -13674,7 +13674,7 @@ Template.purchaseordercard.events({
                                 objDetails = {
                                 type: "TProductVS1",
                                 fields: {
-                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
                                     Active: true,
                                     SNTracking: "false",
                                     Batch: "true",
@@ -13685,7 +13685,7 @@ Template.purchaseordercard.events({
                                 .then(async function (objDetails) {
                                 sideBarService.getProductListVS1("All", 0)
                                     .then(async function (dataReload) {
-                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                     swal.close();
                                     $(target).click();
                                     })
@@ -13823,7 +13823,7 @@ Template.purchaseordercard.events({
                                 objDetails = {
                                 type: "TProductVS1",
                                 fields: {
-                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
                                     Active: true,
                                     SNTracking: "true",
                                     Batch: "false",
@@ -13834,7 +13834,7 @@ Template.purchaseordercard.events({
                                 .then(async function (objDetails) {
                                 sideBarService.getProductListVS1("All", 0)
                                     .then(async function (dataReload) {
-                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                     swal.close();
                                     $(target).click();
                                     })
@@ -13861,7 +13861,7 @@ Template.purchaseordercard.events({
                                 objDetails = {
                                 type: "TProductVS1",
                                 fields: {
-                                    ID: parseInt(data.tproductlist[i].PARTSID),
+                                    ID: parseInt(data.tproductqtylist[i].PARTSID),
                                     Active: true,
                                     SNTracking: "false",
                                     Batch: "true",
@@ -13872,7 +13872,7 @@ Template.purchaseordercard.events({
                                 .then(async function (objDetails) {
                                 sideBarService.getProductListVS1("All", 0)
                                     .then(async function (dataReload) {
-                                    await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                     swal.close();
                                     $(target).click();
                                     })

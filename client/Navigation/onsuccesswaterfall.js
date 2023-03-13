@@ -511,7 +511,7 @@ Template.onsuccesswaterfall.onRendered(function () {
         $('.checkmarkwrapper').removeClass("hide");
         templateObject.dashboardRedirectOnLogin();
       }
-      addVS1Data('TProductList', JSON.stringify(data));
+      addVS1Data('TProductQtyList', JSON.stringify(data));
       $("<span class='process'>Product List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
 

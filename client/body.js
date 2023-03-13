@@ -338,6 +338,7 @@ import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
+import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -559,6 +560,7 @@ import '../public/js/cdnjs/split.min.js';
 import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
 import './vs1_templates/title_list_pop/title_list_pop.js';
+import './expenseclaim/expenseclaims.html';
 /* Stefan */
 
 /* Arthlo */

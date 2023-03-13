@@ -590,7 +590,7 @@ Template.crmoverview.onRendered(function() {
     $(document).on("click", "#tblProjectsDatatablePop tbody tr", function(e) {
         var table = $(this);
         let colProjectName = table.find(".colProjectName").text();
-        let colID = parseInt(table.attr("data-id"));
+        let colID = parseInt(table.find(".colProjectID"));
 
         $('#projectListModal').modal('toggle');
 
