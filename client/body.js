@@ -507,7 +507,7 @@ import './settings/tax-rates-setting/tax-rates.js';
 import './settings/tax-rates-setting/subtaxes.js';
 import './settings/tax-rates-setting/DeleteLineModal.html';
 import './overviews/paymentoverview.js';
-import './payments/customerAwaitingPayments.js'
+import './payments/customerAwaitingPayments.js';
 import './payments/customerpayment.js';
 import './payments/supplierpayment.js';
 import './payments/supplierAwaitingPurchaseOrder.js';
