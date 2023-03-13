@@ -2897,9 +2897,9 @@ Template.onsuccesswaterfall.onRendered(function () {
       const employeeCorrespondences = data.tcorrespondence.filter(
           (item) =>
               item.fields.EmployeeId == localStorage.getItem("mySessionEmployeeLoggedID") && item.fields.MessageTo == ""
-      );
+      ).map(item => item);
 
-      employeeCorrespondences.sort((a, b) => a.Ref_Type.localeCompare(b.Ref_Type));
+      employeeCorrespondences.sort((a, b) => a.fields.Ref_Type.localeCompare(b.fields.Ref_Type));
 
       data.tcorrespondence = employeeCorrespondences;
 

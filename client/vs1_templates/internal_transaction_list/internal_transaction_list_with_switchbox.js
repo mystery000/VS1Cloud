@@ -1102,7 +1102,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         targets: 0,
                         className: "colChkBox pointer",
                         orderable: false,
-                        width: "15px",
+                        width: "20px",
                     },
                     {
                         targets: 1,
@@ -1115,7 +1115,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     {
                         targets: 2,
                         className: "colDeptName",
-                        width: "200px",
                     },
                 ],
                 select: true,

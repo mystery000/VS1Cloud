@@ -241,8 +241,8 @@ Template.emailsettings.onCreated(function () {
         { index: 2, label: 'Subject', class: 'colSubject', active: true, display: true, width: "84" },
         { index: 3, label: 'Recipient', class: 'colRecipient', active: true, display: true, width: "84" },
         { index: 4, label: 'Used on', class: 'colUsedOn', active: true, display: true, width: "84" },
-        { index: 5, label: 'Memo', class: 'colTemplateContent', active: true, display: true, width: "" },
-        { index: 6, label: '', class: 'colDelete', active: true, display: true, width: "60" }
+        { index: 5, label: 'Memo', class: 'colTemplateContent', active: true, display: true, width: "300" },
+        { index: 6, label: '', class: 'colDelete', active: true, display: true, width: "40" }
     ];
 
     this.tableheaderrecords.set(headerStructure);

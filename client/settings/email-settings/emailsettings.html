@@ -158,6 +158,8 @@
             .colDelete {
                 width: 60px !important;
             }
+
+            #tblCorrespondence, #tblTransactionTypeCheckbox{width: 100% !important;}
         </style>
         <div class="row">
             <div class="col-12 col-md-4">
@@ -1735,13 +1737,13 @@
                                         </button>
                                     </div>
 
-                                    {{>datatablelist
+                                    {{> datatablelist
                                             tablename="tblCorrespondence"
                                             apiName= apiFunction1
                                             indexeddbname = 'TCorrespondence'
                                             tableheaderrecords = tableheaderrecords1
                                             exportfilename = 'Correspondence List'
-                                            istransaction = true
+                                            istransaction = false
                                             apiParams= apiParams1
                                             datahandler = datahandler1
                                             service=service
