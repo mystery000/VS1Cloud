@@ -32,65 +32,58 @@ Template.supplierlistpop.onCreated(function () {
     templateObject.selectedFile = new ReactiveVar();
 
     templateObject.getDataTableList = function(data) {
-        let arBalance = utilityService.modifynegativeCurrencyFormat(data.fields.APBalance) || 0.00;
-        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.fields.ExcessAmount) || 0.00;
-        let balance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance) || 0.00;
-        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.fields.SupplierCreditLimit) || 0.00;
-        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance) || 0.00;
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.ExcessAmount) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.SupplierCreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
         var dataList = [
-            data.fields.ClientName || '-',
-            data.fields.JobName || '',
-            data.fields.Phone || '',
+            data.Company || '',
+            data.Phone || '',
             arBalance || 0.00,
             creditBalance || 0.00,
             balance || 0.00,
             creditLimit || 0.00,
             salesOrderBalance || 0.00,
-            data.fields.Country || '',
-            data.fields.State || '',
-            data.fields.Street2 || '',
-            data.fields.Street || '',
-            data.fields.Postcode || '',
-            data.fields.Email || '',
-            data.fields.AccountNo || '',
-            data.fields.ClientNo || '',
-            data.fields.JobTitle || '',
-            data.fields.Notes || '',
-            data.fields.ID || '',
-            data.fields.ClientTypeName || 'Default',
-            data.fields.Discount || 0,
-            data.fields.TermsName || loggedTermsPurchase || 'COD',
-            data.fields.FirstName || '',
-            data.fields.LastName || ''
+            data.Suburb || '',
+            data.Country || '',
+            data.Notes || '',
+            data.ClientID || '',
+            data.Active ? "" : "In-Active",
+            // data.Email || '',
+            // data.AccountNo || '',
+            // data.ClientNo || '',
+            // data.JobTitle || '',
+            // data.CUSTFLD1 || '',
+            // data.CUSTFLD2 || '',
+            // data.POState || '',
+            // data.Postcode || '',
+            // linestatus,
         ];
         return dataList;
     }
 
     let headerStructure = [
-        {index: 0, label: "Company", class: "colCompany", width: "60", active: true, display: true},
-        {index: 1, label: "#Job", class: "colJob", width: "60", active: false, display: true},
-        {index: 2, label: "Phone", class: "colPhone", width: "60", active: true, display: true},
-        {index: 3, label: "#AR Balance", class: "colARBalance", width: "60", active: false, display: true},
-        {index: 4, label: "#Credit Balance", class: "colCreditBalance", width: "60", active: false, display: true},
-        {index: 5, label: "Balance", class: "colBalance", width: "60", active: true, display: true},
-        {index: 6, label: "#Credit Limit", class: "colCreditLimit", width: "60", active: false, display: true},
-        {index: 7, label: "Order Balance", class: "colSalesOrderBalance", width: "60", active: true, display: true},
-        {index: 8, label: "Country", class: "colCountry", width: "60", active: true, display: true},
-        {index: 9, label: "#State", class: "colState", width: "60", active: false, display: true},
-        {index: 10, label: "#City", class: "colCity", width: "60", active: false, display: true},
-        {index: 11, label: "#Street Address", class: "colStreetAddress", width: "60", active: false, display: true},
-        {index: 12, label: "#Zip Code", class: "colZipCode", width: "60", active: false, display: true},
-        {index: 13, label: "#Email", class: "colEmail", width: "60", active: false, display: true},
-        {index: 14, label: "#Account No", class: "colAccountNo", width: "60", active: false, display: true},
-        {index: 15, label: "#Custom Field 1", class: "colClientNo", width: "60", active: false, display: true},
-        {index: 16, label: "#Custom Field 2", class: "colJobTitle", width: "60", active: false, display: true},
-        {index: 17, label: "Notes", class: "colNotes", width: "60", active: true, display: true},
-        {index: 18, label: "#ID", class: "colID", width: "60", active: false, display: true},
-        {index: 19, label: "#Supplier Type", class: "colSupplierType", width: "60", active: false, display: true},
-        {index: 20, label: "#Discount", class: "colSupplierDiscount", width: "60", active: false, display: true},
-        {index: 21, label: "#Term Name", class: "colSupplierTermName", width: "60", active: false, display: true},
-        {index: 22, label: "#First Name", class: "colSupplierFirstName", width: "60", active: false, display: true},
-        {index: 22, label: "#Last Name", class: "colSupplierLastName", width: "60", active: false, display: true},
+        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+        { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+        { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+        { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+        { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "60" },
+        { index: 10, label: '#ID', class: 'colID', active: false, display: false, width: "20" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -2041,7 +2034,7 @@ Template.supplierlistpop.helpers({
 
     apiFunction:function() {
         let sideBarService = new SideBarService();
-        return sideBarService.getAllSuppliersDataVS1;
+        return sideBarService.getAllSuppliersDataVS1List;
     },
 
     searchAPI: function() {
@@ -2071,6 +2064,6 @@ Template.supplierlistpop.helpers({
     },
 
     apiParams: function() {
-        return ['limitCount', 'limitFrom'];
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 });

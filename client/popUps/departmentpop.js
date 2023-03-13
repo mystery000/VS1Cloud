@@ -17,6 +17,39 @@ Template.departmentpop.onCreated(function(){
     templateObject.roomrecords = new ReactiveVar([]);
 
     templateObject.departlist = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        var dataList = [
+            data.ClassID || "",
+            data.ClassName || "",
+            data.Description || "",
+            data.ClassGroup || "",
+            data.ClassName,
+            data.Level1 || "",
+            data.SiteCode || "",
+            linestatus
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class: 'colDeptID', active: false, display: false, width: "10" },
+        { index: 1, label: 'Department Name', class: 'colDeptName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+        { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.departmentpop.onRendered(function() {
@@ -109,7 +142,7 @@ Template.departmentpop.onRendered(function() {
 
 
     };
-    templateObject.getAllEmployees();
+//    templateObject.getAllEmployees();
 
     templateObject.getRooms = function () {
 
@@ -129,7 +162,7 @@ Template.departmentpop.onRendered(function() {
             templateObject.roomrecords.set(binList);
         });
     };
-    templateObject.getRooms();
+//    templateObject.getRooms();
 
     templateObject.getDeptList = function () {
       getVS1Data('TDeptClass').then(function (dataObject) {
@@ -189,7 +222,7 @@ Template.departmentpop.onRendered(function() {
       });
 
     };
-    templateObject.getDeptList();
+//    templateObject.getDeptList();
 
     templateObject.getTaxRates = function () {
       getVS1Data('TDeptClass').then(function (dataObject) {
@@ -723,7 +756,7 @@ Template.departmentpop.onRendered(function() {
       });
 
     }
-    templateObject.getTaxRates();
+//    templateObject.getTaxRates();
 
     templateObject.getDepartments = function(){
       getVS1Data('TDeptClass').then(function (dataObject) {
@@ -775,7 +808,7 @@ Template.departmentpop.onRendered(function() {
 
 
     }
-    templateObject.getDepartments();
+//    templateObject.getDepartments();
 
     $(document).on('click', '.table-remove', function() {
         event.stopPropagation();
@@ -794,7 +827,7 @@ Template.departmentpop.onRendered(function() {
     });
 
     $('#departmentList tbody').on( 'click', 'tr .colDeptID, tr .colHeadDept, tr .colDeptName, tr .colStatus, tr .colDescription, tr .colSiteCode', function () {
-        var listData = $(this).closest('tr').attr('id');
+        var listData = $(this).closest('tr').find('.colDeptID').text();
         if(listData){
             $('#add-dept-title').text('Edit Department');
             if (listData !== '') {
@@ -1400,5 +1433,40 @@ Template.departmentpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getDepartmentDataList;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getDepartmentDataList;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });
