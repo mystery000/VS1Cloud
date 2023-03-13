@@ -31,21 +31,21 @@ Template.bankaccountschart.onCreated(() => {
         var dataList = [
             data.ReconciliationID,
             data.AccountName,
-            data.OpenBalance,
-            data.Deleted,
+            "$" + data.OpenBalance,
+            data.OnHold ? "On-Hold" : "Not Reconciled",
+            moment(data.ReconciliationDate).format("DD/MM/YYYY"),
             data.Deleted ? "In-Active" : "",
-            data.ReconciliationDate,
         ];
         return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: "#ID", class: "colReconId", width: "80", active: false, display: true },
-        { index: 1, label: "Account Name", class: "colReconAccountName", width: "80", active: true, display: true },
-        { index: 2, label: "Balance", class: "colReconBalance", width: "80", active: true, display: true },
-        { index: 3, label: "Not Reconciled", class: "colNotReconcilied", width: "140", active: true, display: true },
-        { index: 4, label: "Status", class: "colStatus", width: "60", active: true, display: true },
-        { index: 5, label: "Last Reconciled", class: "colReconDate", width: "140", active: true, display: true },
+        { index: 0, label: "#ID", class: "colReconId", width: "50", active: false, display: true },
+        { index: 1, label: "Account Name", class: "colReconAccountName", width: "100", active: true, display: true },
+        { index: 2, label: "Balance", class: "colReconBalance", width: "100", active: true, display: true },
+        { index: 3, label: "Not Reconciled", class: "colStatus", width: "140", active: true, display: true },
+        { index: 4, label: "Last Reconciled", class: "colReconDate", width: "140", active: true, display: true },
+        { index: 5, label: "Status", class: "colStatus", width: "80", active: true, display: true },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -60,7 +60,15 @@ Template.bankaccountschart.onRendered(() => {
   // setTimeout(function() {
   //   $(".bankaccountschart .portlet").removeClass("ui-widget ui-widget-content");
   // }, 500);
-
+    $(document).on("click", "#tblBankAccountChartList tbody tr", function (e) {
+        const table = $(this);
+        let accountname = table.find(".colAccountName").text();
+        let accountId = table.find(".colReconId").text();
+        // $("#bankAccountListModal").modal("toggle");
+        // $("#bankAccountName").val(accountname);
+        // $("#bankAccountID").val(accountId);
+        // $("#tblAccount_filter .form-control-sm").val("");
+  });
 
     // templateObject.setReconciliationListData = function(data) {
     //
@@ -184,11 +192,11 @@ Template.bankaccountschart.helpers({
     },
     apiFunction:function() {
         let sideBarService = new SideBarService();
-        return sideBarService.getAllTReconcilationListData;
+        return sideBarService.getAllTReconcilationListDataForBankAccountChart;
     },
 
     searchAPI: function() {
-        return sideBarService.getAllTReconcilationListData;
+        return sideBarService.getAllTReconcilationByNameForBankAccountChart;
     },
 
     service: ()=>{

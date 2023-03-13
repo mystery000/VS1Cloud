@@ -37,7 +37,6 @@ export class ReceiptService extends BaseService {
         //     PropertyList: "ID,CategoryName,CategoryDesc",
         //     select: "[active]=true"
         // };
-        if(deleteFilter) options.Search = "";
         return this.getList(this.ERPObjects.TReceiptCategory, options);
     }
 

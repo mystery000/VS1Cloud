@@ -26,6 +26,11 @@
         editModalID="editDashboardModal"
     }}
         <div>
+            <style>
+                td.colReconBalance{
+                    text-align: right !important;
+                }
+            </style>
             {{>datatablelist
                     tablename="tblBankAccountChartList"
                     apiName= apiFunction

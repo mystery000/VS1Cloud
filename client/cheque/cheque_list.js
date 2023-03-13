@@ -61,7 +61,7 @@ Template.chequelist.onCreated(function() {
             orderstatus = "Deleted";
         }
         const dataList = [
-            data.OrderDate != '' ? moment(data.OrderDate).format("YYYY/MM/DD") : data.OrderDate,
+            //data.OrderDate != '' ? moment(data.OrderDate).format("YYYY/MM/DD") : data.OrderDate,
             `<span style="display:none;">{{item.sortdate}}</span>${data.OrderDate != '' ? moment(data.OrderDate).format("DD/MM/YYYY") : data.OrderDate}`,
             data.PurchaseOrderID || '',
             data.Account || '',
@@ -85,25 +85,25 @@ Template.chequelist.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 0, label: 'ID', class:'colID', active: false, display: false, width: "0" },
-        { index: 1, label: "Order Date", class: "colOrderDate", active: true, display: true, width: "100" },
-        { index: 2, label: "#ID", class: "colChequeID", active: true, display: true, width: "100" },
-        { index: 3, label: "Bank Account", class: "colBankAccount", active: true, display: true, width: "100" },
-        { index: 4, label: "PurchaseNo", class: "colPurchaseNo", active: true, display: true, width: "100" },
-        { index: 5, label: "Supplier", class: "colSupplier", active: true, display: true, width: "100" },
-        { index: 6, label: "Reference", class: "colReference", active: true, display: true, width: "100" },
-        { index: 7, label: "Via", class: "colVia", active: true, display: true, width: "100" },
-        { index: 8, label: "Currency", class: "colCurrency", active: true, display: true, width: "100" },
-        { index: 9, label: "AmountEx", class: "colAmountEx", active: true, display: true, width: "100" },
-        { index: 10, label: "Tax", class: "colTax", active: true, display: true, width: "100" },
-        { index: 11, label: "Amount", class: "colAmount", active: true, display: true, width: "100" },
-        { index: 12, label: "Paid", class: "colPaid", active: true, display: true, width: "100" },
-        { index: 13, label: "Outstanding", class: "colOutstanding", active: true, display: true, width: "100" },
-        { index: 14, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
-        { index: 15, label: "PurchaseCustField1", class: "colPurchaseCustField1", active: false, display: true, width: "100" },
-        { index: 16, label: "PurchaseCustField2", class: "colPurchaseCustField2", active: false, display: true, width: "100" },
-        { index: 17, label: "Employee", class: "colEmployee", active: false, display: true, width: "100" },
-        { index: 18, label: "Comments", class: "colComments", active: true, display: true, width: "100" },
+        //{ index: , label: 'ID', class:'colID', active: false, display: false, width: "0" },
+        { index: 0, label: "Order Date", class: "colOrderDate", active: true, display: true, width: "100" },
+        { index: 1, label: "ID", class: "colChequeID", active: true, display: true, width: "100" },
+        { index: 2, label: "Bank Account", class: "colBankAccount", active: true, display: true, width: "100" },
+        { index: 3, label: "PurchaseNo", class: "colPurchaseNo", active: true, display: true, width: "100" },
+        { index: 4, label: "Supplier", class: "colSupplier", active: true, display: true, width: "100" },
+        { index: 5, label: "Reference", class: "colReference", active: true, display: true, width: "100" },
+        { index: 6, label: "Via", class: "colVia", active: true, display: true, width: "100" },
+        { index: 7, label: "Currency", class: "colCurrency", active: true, display: true, width: "100" },
+        { index: 8, label: "AmountEx", class: "colAmountEx", active: true, display: true, width: "100" },
+        { index: 9, label: "Tax", class: "colTax", active: true, display: true, width: "100" },
+        { index: 10, label: "Amount", class: "colAmount", active: true, display: true, width: "100" },
+        { index: 11, label: "Paid", class: "colPaid", active: true, display: true, width: "100" },
+        { index: 12, label: "Outstanding", class: "colOutstanding", active: true, display: true, width: "100" },
+        { index: 13, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+        { index: 14, label: "PurchaseCustField1", class: "colPurchaseCustField1", active: false, display: true, width: "100" },
+        { index: 15, label: "PurchaseCustField2", class: "colPurchaseCustField2", active: false, display: true, width: "100" },
+        { index: 16, label: "Employee", class: "colEmployee", active: false, display: true, width: "100" },
+        { index: 17, label: "Comments", class: "colComments", active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });

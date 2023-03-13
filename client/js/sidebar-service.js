@@ -3644,7 +3644,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TReconciliation, options);
   }
 
-    getAllTReconcilationListDataForBankAccountChart(limitFrom,limitCount, deleteFilter) {
+    getAllTReconcilationListDataForBankAccountChart(limitfrom,limitcount, deleteFilter) {
         let options = "";
 
         options = {
@@ -3656,6 +3656,17 @@ export class SideBarService extends BaseService {
         };
 
         if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TReconciliationList, options);
+    }
+    getAllTReconcilationByNameForBankAccountChart(accountName) {
+        let options = {
+            ListType: "Detail",
+            Search: 'AccountName="' + accountName + '"',
+            // IgnoreDates: false,
+            // AccountName: accountName,
+            // DateFrom: '"' + dateFrom + '"',
+            // DateTo: '"' + dateTo + '"'
+        };
         return this.getList(this.ERPObjects.TReconciliationList, options);
     }
 
