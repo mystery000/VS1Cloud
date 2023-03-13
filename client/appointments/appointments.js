@@ -15936,8 +15936,6 @@ Template.appointments.events({
             $("#chkSMSUser").prop("checked", false);
             let emailCustomer = $("#customerEmail").is(":checked");
             let emailUser = $("#userEmail").is(":checked");
-            $("#saveAppointmentModal").modal("hide");
-            $("#event-modal").modal("hide");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
                 // $("#frmAppointment").trigger("submit");
@@ -18377,12 +18375,12 @@ Template.appointments.events({
                                                                                         "TTimeSheet",
                                                                                         JSON.stringify(data)
                                                                                     );
-                                                                                    // setTimeout(function() {
-                                                                                    //     window.open(
-                                                                                    //         "/appointments",
-                                                                                    //         "_self"
-                                                                                    //     );
-                                                                                    // }, 500);
+                                                                                    setTimeout(function() {
+                                                                                        window.open(
+                                                                                            "/appointments",
+                                                                                            "_self"
+                                                                                        );
+                                                                                    }, 500);
                                                                                 });
                                                                         })
                                                                         .catch(function(err) {
@@ -18466,13 +18464,13 @@ Template.appointments.events({
                                                                                 "TTimeSheet",
                                                                                 JSON.stringify(data)
                                                                             );
-                                                                            // setTimeout(function() {
-                                                                            //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                                            //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                                            //     } else {
-                                                                            //         window.open("/appointments", "_self");
-                                                                            //     }
-                                                                            // }, 500);
+                                                                            setTimeout(function() {
+                                                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                                                } else {
+                                                                                    window.open("/appointments", "_self");
+                                                                                }
+                                                                            }, 500);
                                                                         });
                                                                 })
                                                                 .catch(function(err) {
@@ -18505,13 +18503,13 @@ Template.appointments.events({
                                             .then(function(data) {
                                                 addVS1Data("TAppointment", JSON.stringify(data))
                                                     .then(function(datareturn) {
-                                                        // setTimeout(function() {
-                                                        //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                        //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                        //     } else {
-                                                        //         window.open("/appointments", "_self");
-                                                        //     }
-                                                        // }, 500);
+                                                        setTimeout(function() {
+                                                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                                window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                            } else {
+                                                                window.open("/appointments", "_self");
+                                                            }
+                                                        }, 500);
                                                     })
                                                     .catch(function(err) {
                                                         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
@@ -18544,13 +18542,13 @@ Template.appointments.events({
                                 .then(function(data) {
                                     addVS1Data("TAppointment", JSON.stringify(data))
                                         .then(function(datareturn) {
-                                            // setTimeout(function() {
-                                            //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                            //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                            //     } else {
-                                            //         window.open("/appointments", "_self");
-                                            //     }
-                                            // }, 500);
+                                            setTimeout(function() {
+                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                } else {
+                                                    window.open("/appointments", "_self");
+                                                }
+                                            }, 500);
                                         })
                                         .catch(function(err) {
                                             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
@@ -18714,13 +18712,13 @@ Template.appointments.events({
                                                                 "TTimeSheet",
                                                                 JSON.stringify(data)
                                                             );
-                                                            // setTimeout(function() {
-                                                            //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                            //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                            //     } else {
-                                                            //         window.open("/appointments", "_self");
-                                                            //     }
-                                                            // }, 500);
+                                                            setTimeout(function() {
+                                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                                } else {
+                                                                    window.open("/appointments", "_self");
+                                                                }
+                                                            }, 500);
                                                         });
                                                 })
                                                 .catch(function(err) {
@@ -18731,11 +18729,11 @@ Template.appointments.events({
                                                     }
                                                 });
                                         } else {
-                                            // if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                            //     window.open(localStorage.getItem("appt_historypage"), "_self");
-                                            // } else {
-                                            //     window.open("/appointments", "_self");
-                                            // }
+                                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                window.open(localStorage.getItem("appt_historypage"), "_self");
+                                            } else {
+                                                window.open("/appointments", "_self");
+                                            }
                                         }
                                     })
                                     .catch(function(err) {
@@ -18861,13 +18859,13 @@ Template.appointments.events({
                                                                                         "TTimeSheet",
                                                                                         JSON.stringify(data)
                                                                                     );
-                                                                                    // setTimeout(function() {
-                                                                                    //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                                                    //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                                                    //     } else {
-                                                                                    //         window.open("/appointments", "_self");
-                                                                                    //     }
-                                                                                    // }, 500);
+                                                                                    setTimeout(function() {
+                                                                                        if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                                                            window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                                                        } else {
+                                                                                            window.open("/appointments", "_self");
+                                                                                        }
+                                                                                    }, 500);
                                                                                 });
                                                                         })
                                                                         .catch(function(err) {
@@ -18951,13 +18949,13 @@ Template.appointments.events({
                                                                                 "TTimeSheet",
                                                                                 JSON.stringify(data)
                                                                             );
-                                                                            // setTimeout(function() {
-                                                                            //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                                            //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                                            //     } else {
-                                                                            //         window.open("/appointments", "_self");
-                                                                            //     }
-                                                                            // }, 500);
+                                                                            setTimeout(function() {
+                                                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                                                } else {
+                                                                                    window.open("/appointments", "_self");
+                                                                                }
+                                                                            }, 500);
                                                                         });
                                                                 })
                                                                 .catch(function(err) {
@@ -18990,13 +18988,13 @@ Template.appointments.events({
                                             .then(function(data) {
                                                 addVS1Data("TAppointment", JSON.stringify(data))
                                                     .then(function(datareturn) {
-                                                        // setTimeout(function() {
-                                                        //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                        //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                        //     } else {
-                                                        //         window.open("/appointments", "_self");
-                                                        //     }
-                                                        // }, 500);
+                                                        setTimeout(function() {
+                                                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                                window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                            } else {
+                                                                window.open("/appointments", "_self");
+                                                            }
+                                                        }, 500);
                                                     })
                                                     .catch(function(err) {
                                                         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
@@ -19030,13 +19028,13 @@ Template.appointments.events({
                                     // addVS1Data('TAppointmentList', JSON.stringify(data));
                                     addVS1Data("TAppointment", JSON.stringify(data))
                                         .then(function(datareturn) {
-                                            // setTimeout(function() {
-                                            //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                            //         window.open(localStorage.getItem("appt_historypage"), "_self");
-                                            //     } else {
-                                            //         window.open("/appointments", "_self");
-                                            //     }
-                                            // }, 500);
+                                            setTimeout(function() {
+                                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                                } else {
+                                                    window.open("/appointments", "_self");
+                                                }
+                                            }, 500);
                                         })
                                         .catch(function(err) {
                                             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
