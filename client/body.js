@@ -339,8 +339,6 @@ import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
-import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
-import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -517,8 +515,6 @@ import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
-// import './popUps/editServiceCheckerModal.js';
-import './js/new_wastage_form.js';
 /* Roverto */
 
 /* Kelvin More */
