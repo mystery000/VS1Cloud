@@ -3,7 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './layout/header.html'
 import './main.html';
 import './container/startbreak.html';
-import '../wastage_form_temp.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ManufacturingService } from "../manufacturing-service";
 import { ContactService } from "../../contacts/contact-service";
@@ -140,7 +139,8 @@ Template.mobileapp.events({
             getVS1Data('TVS1Workorder').then(function (dataObject) {
                 $(".mobile-left-workorder-list").css('display', 'block');
                 let workOrderData = JSON.parse(dataObject[0].data);
-                
+
+                                
                 let table = $("#tblWorkOrderList").DataTable({
                     data: workOrderData.tvs1workorder,
                     paging: false,
@@ -824,10 +824,11 @@ Template.mobileapp.events({
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
-            console.log(currentworkorder.fields.BOMStructure);
-            
+                        
             // Set bom Structure for current workorder
-            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
+            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));                 
+
+            
 
             let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
@@ -837,8 +838,78 @@ Template.mobileapp.events({
              //   $('.fullScreenSpin').css('display', 'none')
              //   swal('Work Order state is updated', '', 'success');
             })
-
             
+            let BomDataList = [];        
+
+            let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
+            console.log(bomStructureData);
+
+            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo:"0", wastage:"0" };
+
+            BomDataList.push(tempBomData);    
+                
+
+            let bomDetailData = JSON.parse(bomStructureData.Details);
+            
+            for (let i = 0; i < bomDetailData.length; i++) {
+                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo:"0",wastage:"0" };
+                BomDataList.push(tempBomData);  
+            }
+
+        
+            let wastage_table = $("#tblWastageForm").DataTable({
+                data: BomDataList,
+                paging: true,
+                searching: false,
+                destroy:true,
+                dom: 't',
+                ordering: false,
+                editable:true,
+                columns: [
+                    { title: 'Item', mData: 'item' },
+                    { title: 'UOM', mData: 'uom' },
+                    { title: 'Total', mData: 'total' },
+                    { title: 'Change To', mData: 'changeTo', className: 'editable' },
+                    { title: 'Item', mData: 'wastage' }
+
+                ]
+            })
+
+            $('#tblWastageForm').on( 'click', 'tbody td.editable', function () {
+                $(this).attr('contenteditable', 'true');
+                var el = $(this);
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
+                
+                // wastage_table.cell(rowIndex, colIndex-1).data("change");
+                
+            } );
+
+            $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
+                
+                var colIndex = wastage_table.cell(this).index().column;
+                var rowIndex = wastage_table.cell(this).index().row;
+
+                var changeto = 3 ;
+                var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
+                var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
+                var total_new = total - changeto;
+                var wastage_new = wastage + changeto;
+
+                wastage_table.cell(rowIndex, colIndex-1).data(total_new);
+                wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
+
+                console.log(total_new);
+
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
+                // console.log(colIndex);  
+                           
+            } );
+
+
+
+           
 
         }
 
@@ -846,7 +917,11 @@ Template.mobileapp.events({
         templateObject.showBOMModal.set(true);
         e.preventDefault();
         e.stopPropagation();
-        alert("bom setup modal");
+        
+        
+
+
+
         $('#WastageModal').modal('toggle');
 
    
@@ -866,6 +941,10 @@ Template.mobileapp.events({
 
         $(".mobile-main-input").val(" ");
 
+    },
+
+    'click #tblWastageForm tbody td:not(:first-child)': function (e, instance) {
+         //console.log(this);
     },
 
     'change #breakCheck': function(e, instance) {
@@ -904,12 +983,13 @@ Template.mobileapp.events({
     }
 });
 
-Template.mobileapp.helpers(function() {
+Template.mobileapp.helpers({
     
     showBOMModal: ()=> {
         return Template.instance().showBOMModal.get();
+    },
+
+    bomRecord: ()=> {
+        return Template.instance().bomStructure.get();
     }
-   
-
-
 });
