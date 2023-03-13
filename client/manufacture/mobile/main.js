@@ -892,7 +892,7 @@ Template.mobileapp.events({
                 wastage_table.cell(rowIndex, colIndex-1).data(total_new);
                 wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
 
-                console.log(total_new);
+                
 
                 // var colIndex = wastage_table.cell(this).index().column;
                 // var rowIndex = wastage_table.cell(this).index().row;
