@@ -1630,6 +1630,28 @@ Template.calender.onRendered(function() {
                             '</div>' + "" +
                             '</div>';
                         let day = moment(startDate).format("dddd").toLowerCase();
+                        // getVS1Data("TAppointment").then(function(dataObject) {
+                        //     let data = JSON.parse(dataObject[0].data);
+                        //     let prevAppointmentsData = data.tappointmentex;
+                        //     prevAppointmentsData.push(objectData)
+                        //     let dataUpdate = {
+                        //         tappointmentex:prevAppointmentsData
+                        //     }
+                        //     addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn){
+                        //         appointmentService.saveAppointment(objectData).then(function(data) {
+                        //         appointmentData[index].startDate = startDate + " " + startTime;
+                        //         appointmentData[index].endDate = endDate + " " + endTime;
+                        //         templateObject.appointmentrecords.set(appointmentData);
+                        //         $(".droppable #" + eventDropID).remove();
+                        //         $("#" + nameid + " ." + day + " .droppable").append(job);
+                        //         $("#allocationTable tbody tr").each(function() {
+                        //             if (this.id == nameid) {
+                        //                 $(this).attr("id", $(this).attr("id").replace("-", " "));
+                        //             }
+                        //         });
+                        //         })
+                        //     })
+                        // })
                         appointmentService.saveAppointment(objectData).then(function(data) {
                             appointmentData[index].startDate = startDate + " " + startTime;
                             appointmentData[index].endDate = endDate + " " + endTime;
@@ -1643,7 +1665,7 @@ Template.calender.onRendered(function() {
                             });
                             sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
                                 addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    window.open("/appointments", '_self');
+                                    // window.open("/appointments", '_self');
                                 }).catch(function(err) {
                                     window.open("/appointments", '_self');
                                 });
