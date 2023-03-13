@@ -9,6 +9,7 @@ import { Template } from 'meteor/templating';
 import './deposit_list.html';
 import './frm_deposit.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
@@ -19,6 +20,35 @@ Template.depositlist.onCreated(function(){
     templateObject.custfields = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        var dataList = [
+            data.DepositID || '',
+            data.DepositDate !=''? moment(data.DepositDate).format("DD/MM/YYYY"): data.DepositDate,
+            data.AccountName || '',
+            data.DepositClassName || '',
+            data.DepositID || '',
+            utilityService.modifynegativeCurrencyFormat(data.Deposit) || 0.00,
+            data.EmployeeName || '',
+            data.Notes || '',
+            data.Deleted ? "Deleted" : "",
+            //employee:data.EmployeeName || '',
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class:'colID', active: false, display: false, width: "0" },
+        { index: 1, label: "Deposit Date", class: "colDepositDate", active: true, display: true, width: "80" },
+        { index: 2, label: "Account Name", class: "colAccountName", active: true, display: true, width: "150" },
+        { index: 3, label: "Department", class: "colDepartment", active: true, display: true, width: "100" },
+        { index: 4, label: "Entry No", class: "colEntryNo", active: true, display: true, width: "50" },
+        { index: 5, label: "Amount", class: "colAmount", active: true, display: true, width: "150" },
+        { index: 6, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
+        { index: 7, label: "Reference No", class: "colReferenceNo", active: true, display: true, width: "200" },
+        { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "60" }
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.depositlist.onRendered(function() {
@@ -98,7 +128,7 @@ Template.depositlist.onRendered(function() {
         }
         templateObject.displayfields.set(custFields);
     }
-    templateObject.initCustomFieldDisplaySettings("", "tblDepositList");
+    //templateObject.initCustomFieldDisplaySettings("", "tblDepositList");
 
     let accountService = new AccountService();
     const customerList = [];
@@ -148,26 +178,26 @@ Template.depositlist.onRendered(function() {
     $("#dateFrom").val(fromDate);
     $("#dateTo").val(begunDate);
 
-    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositList', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
+    // Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblDepositList', function(error, result){
+    //     if(error){
+    //
+    //     }else{
+    //         if(result){
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //                 $("th."+columnClass+"").html(columData);
+    //                 $("th."+columnClass+"").css('width',""+columnWidth+"px");
+    //
+    //             }
+    //         }
+    //
+    //     }
+    // });
 
     function MakeNegative() {
 
@@ -482,7 +512,7 @@ Template.depositlist.onRendered(function() {
                   templateObject.tableheaderrecords.set(tableHeaderList);
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
                   $('#tblDepositList tbody').on( 'click', 'tr', function () {
-                      var listData = $(this).closest('tr').attr('id');
+                      var listData = $(this).closest('tr').find('.colID').text();
                       if(listData){
                           FlowRouter.go('/depositcard?id=' + listData);
                       }
@@ -776,7 +806,7 @@ Template.depositlist.onRendered(function() {
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 $('#tblDepositList tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
+                    var listData = $(this).closest('tr').find('.colID').text();
                     if(listData){
                         FlowRouter.go('/depositcard?id=' + listData);
                     }
@@ -1067,7 +1097,7 @@ Template.depositlist.onRendered(function() {
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
                 $('#tblDepositList tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
+                    var listData = $(this).closest('tr').find('.colID').text();
                     if(listData){
                         FlowRouter.go('/depositcard?id=' + listData);
                     }
@@ -1081,7 +1111,7 @@ Template.depositlist.onRendered(function() {
         });
     }
 
-    templateObject.getAllBankDepositData();
+    // templateObject.getAllBankDepositData();
     templateObject.getAllFilterbankingData = function (fromDate,toDate, ignoreDate) {
       sideBarService.getAllTBankDepositListData(fromDate,toDate, ignoreDate,initialReportLoad,0).then(function(data) {
 
@@ -1113,6 +1143,12 @@ Template.depositlist.onRendered(function() {
       }
     }
     tableResize();
+    $('#tblDepositList tbody').on( 'click', 'tr', function () {
+        var listData = $(this).closest('tr').find('.colID').text();
+        if(listData){
+            FlowRouter.go('/depositcard?id=' + listData);
+        }
+    });
 });
 
 Template.depositlist.events({
@@ -1378,25 +1414,25 @@ Template.depositlist.events({
     'click .btnNewDepositEnrty' : function(event){
         FlowRouter.go('/depositcard');
     },
-    'click .chkDatatable' : function(event){
-        var columns = $('#tblDepositList th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i,v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if(v.innerText === columnDataValue){
-                if($(event.target).is(':checked')){
-                    $("."+replaceClass+"").css('display','table-cell');
-                    $("."+replaceClass+"").css('padding','.75rem');
-                    $("."+replaceClass+"").css('vertical-align','top');
-                }else{
-                    $("."+replaceClass+"").css('display','none');
-                }
-            }
-        });
-    },
+    // 'click .chkDatatable' : function(event){
+    //     var columns = $('#tblDepositList th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function(i,v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if(v.innerText === columnDataValue){
+    //             if($(event.target).is(':checked')){
+    //                 $("."+replaceClass+"").css('display','table-cell');
+    //                 $("."+replaceClass+"").css('padding','.75rem');
+    //                 $("."+replaceClass+"").css('vertical-align','top');
+    //             }else{
+    //                 $("."+replaceClass+"").css('display','none');
+    //             }
+    //         }
+    //     });
+    // },
     'keyup #tblDepositList_filter input': function (event) {
           if($(event.target).val() !== ''){
             $(".btnRefreshDeposits").addClass('btnSearchAlert');
@@ -1410,150 +1446,150 @@ Template.depositlist.events({
         'click .btnRefreshDeposits':function(event){
         $(".btnRefresh").trigger("click");
     },
-    'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblDepositList'});
-                if (checkPrefDetails) {
-                    CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-                        if (err) {
-
-                        }else{
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
-    'click .saveTable' : function(event){
-        let lineItems = [];
-        //let datatable =$('#tblDepositList').DataTable();
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text()||'';
-            var colWidth = $tblrow.find(".custom-range").val()||0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
-            var colHidden = false;
-            if($tblrow.find(".custom-control-input").is(':checked')){
-                colHidden = false;
-            }else{
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-        //datatable.state.save();
-        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblDepositList'});
-                if (checkPrefDetails) {
-                    CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                               PrefGroup:'salesform',PrefName:'tblDepositList',published:true,
-                                                                               customFields:lineItems,
-                                                                               updatedAt: new Date() }}, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                }else{
-                    CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                            PrefGroup:'salesform',PrefName:'tblDepositList',published:true,
-                                            customFields:lineItems,
-                                            createdAt: new Date() }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-        //Meteor._reload.reload();
-    },
-    'blur .divcolumn' : function(event){
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-
-        var datable = $('#tblDepositList').DataTable();
-        var title = datable.column( columnDatanIndex ).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange' : function(event){
-        let range = $(event.target).val();
-        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
-        // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblDepositList th');
-        $.each(datable, function(i,v) {
-
-            if(v.innerText == columnDataValue){
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("."+replaceClass+"").css('width',range+'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings' : function(event){
-        let templateObject = Template.instance();
-        var columns = $('#tblDepositList th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden == false){
-                columVisible =  true;
-            }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    // 'click .resetTable' : function(event){
+    //     var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
+    //     if(getcurrentCloudDetails){
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblDepositList'});
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
+    //                     if (err) {
+    //
+    //                     }else{
+    //                         Meteor._reload.reload();
+    //                     }
+    //                 });
+    //
+    //             }
+    //         }
+    //     }
+    // },
+    // 'click .saveTable' : function(event){
+    //     let lineItems = [];
+    //     //let datatable =$('#tblDepositList').DataTable();
+    //     $('.columnSettings').each(function (index) {
+    //         var $tblrow = $(this);
+    //         var colTitle = $tblrow.find(".divcolumn").text()||'';
+    //         var colWidth = $tblrow.find(".custom-range").val()||0;
+    //         var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
+    //         var colHidden = false;
+    //         if($tblrow.find(".custom-control-input").is(':checked')){
+    //             colHidden = false;
+    //         }else{
+    //             colHidden = true;
+    //         }
+    //         let lineItemObj = {
+    //             index: index,
+    //             label: colTitle,
+    //             hidden: colHidden,
+    //             width: colWidth,
+    //             thclass: colthClass
+    //         }
+    //
+    //         lineItems.push(lineItemObj);
+    //     });
+    //     //datatable.state.save();
+    //     var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
+    //     if(getcurrentCloudDetails){
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblDepositList'});
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
+    //                                                                            PrefGroup:'salesform',PrefName:'tblDepositList',published:true,
+    //                                                                            customFields:lineItems,
+    //                                                                            updatedAt: new Date() }}, function(err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
+    //                     }
+    //                 });
+    //
+    //             }else{
+    //                 CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
+    //                                         PrefGroup:'salesform',PrefName:'tblDepositList',published:true,
+    //                                         customFields:lineItems,
+    //                                         createdAt: new Date() }, function(err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
+    //
+    //                     }
+    //                 });
+    //
+    //             }
+    //         }
+    //     }
+    //     $('#myModal2').modal('toggle');
+    //     //Meteor._reload.reload();
+    // },
+    // 'blur .divcolumn' : function(event){
+    //     let columData = $(event.target).text();
+    //
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+    //
+    //     var datable = $('#tblDepositList').DataTable();
+    //     var title = datable.column( columnDatanIndex ).header();
+    //     $(title).html(columData);
+    //
+    // },
+    // 'change .rngRange' : function(event){
+    //     let range = $(event.target).val();
+    //     // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
+    //
+    //     // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     var datable = $('#tblDepositList th');
+    //     $.each(datable, function(i,v) {
+    //
+    //         if(v.innerText == columnDataValue){
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("."+replaceClass+"").css('width',range+'px');
+    //
+    //         }
+    //     });
+    //
+    // },
+    // 'click .btnOpenSettings' : function(event){
+    //     let templateObject = Template.instance();
+    //     var columns = $('#tblDepositList th');
+    //
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i,v) {
+    //         if(v.hidden == false){
+    //             columVisible =  true;
+    //         }
+    //         if((v.className.includes("hiddenColumn"))){
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || 0,
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click #exportbtn': function () {
 
         $('.fullScreenSpin').css('display','inline-block');
@@ -1607,5 +1643,40 @@ Template.depositlist.helpers({
     // custom fields displaysettings
     displayfields: () => {
         return Template.instance().displayfields.get();
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTBankDepositListData;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllTBankDepositListData;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
     },
 });
