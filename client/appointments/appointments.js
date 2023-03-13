@@ -405,19 +405,39 @@ Template.appointments.onRendered(function() {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var apptData = await appointmentService.getOneAppointmentdataEx(currentInvoice);
-            let apptIds = await appointmentService.getAllAppointmentListCount();
-            let apptIdList = apptIds.tappointmentex;
-            let cnt = 0;
-            for (let i = 0; i < apptIdList.length; i++) {
-                if (apptIdList[i].Id > apptData.fields.ID) {
-                    cnt++;
+            getVS1Data("TAppointment").then(async function(dataObject) {
+                if(dataObject.length == 0){
+                    let appointmentService = new AppointmentService();
+                    let apptIds = await appointmentService.getAllAppointmentListCount();
+                    let apptIdList = apptIds.tappointmentex;
+                    let cnt = 0;
+                    for (let i = 0; i < apptIdList.length; i++) {
+                        if (apptIdList[i].Id > apptData.fields.ID) {
+                            cnt++;
+                        }
+                    }
+                    if (cnt > 1) {
+                        $("#btn_follow2").css("display", "inline-block");
+                    } else {
+                        $("#btn_follow2").css("display", "none");
+                    }
+                }else{
+                    let apptIds = JSON.parse(dataObject[0].data);
+                    let apptIdList = apptIds.tappointmentex;
+                    let cnt = 0;
+                    for (let i = 0; i < apptIdList.length; i++) {
+                        if (apptIdList[i].Id > apptData.fields.ID) {
+                            cnt++;
+                        }
+                    }
+                    if (cnt > 1) {
+                        $("#btn_follow2").css("display", "inline-block");
+                    } else {
+                        $("#btn_follow2").css("display", "none");
+                    }
                 }
-            }
-            if (cnt > 1) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
+            })
+           
         }
     }
     templateObject.hasFollowings();
@@ -734,7 +754,6 @@ Template.appointments.onRendered(function() {
                     $("#hoursTo").val(globalSet.apptEndTime);
                 }
                 templateObject.globalSettings.set(globalSet);
-
                 if (globalSet.productID != "") {
                     getVS1Data("TERPPreferenceExtra")
                         .then(function(dataObjectExtra) {
@@ -2135,7 +2154,6 @@ Template.appointments.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-               
                 if (info.event._def.publicId != "") {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let appointmentData = templateObject.appointmentrecords.get();
@@ -3184,11 +3202,11 @@ Template.appointments.onRendered(function() {
         var splashArrayProductServiceList = new Array();
         var splashArrayProductServiceListGet = [];
         //$('#product-list').editableSelect('clear');
-        sideBarService
-            .getSelectedProducts(employeeID)
-            .then(function(data) {
+        getVS1Data("TRepServices").then(function(dataObject){
+            if (dataObject.length == 0) {
+            sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                addVS1Data("TRepServices", JSON.stringify(data));
                 var dataList = {};
-
                 let getallinvproducts = templateObject.allnoninvproducts.get();
                 if (data.trepservices.length > 0) {
                     for (let i = 0; i < data.trepservices.length; i++) {
@@ -3237,6 +3255,108 @@ Template.appointments.onRendered(function() {
             .catch(function(err) {
                 templateObject.getAllProductData();
             });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                var dataList = {};
+                let getallinvproducts = templateObject.allnoninvproducts.get();
+                if (data.trepservices.length > 0) {
+                    for (let i = 0; i < data.trepservices.length; i++) {
+                        dataList = {
+                            id: data.trepservices[i].Id || "",
+                            productname: data.trepservices[i].ServiceDesc || "",
+                            productcost: data.trepservices[i].Rate || 0.0,
+                        };
+                        let checkServiceArray =
+                            getallinvproducts.filter(function(prodData) {
+                                if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                                    var prodservicedataList = [
+                                        prodData[0],
+                                        prodData[1] || "-",
+                                        prodData[2] || "",
+                                        prodData[3] || "",
+                                        prodData[4],
+                                        prodData[5],
+                                        prodData[6],
+                                        prodData[7] || "",
+                                        prodData[8] || "",
+                                        prodData[9] || null,
+                                        prodData[10],
+                                    ];
+                                    splashArrayProductServiceListGet.push(prodservicedataList);
+                                    //splashArrayProductServiceListGet.push(prodservicedataList);
+                                    return prodservicedataList || "";
+                                }
+                            }) || "";
+
+                        productlist.push(dataList);
+                    }
+                    if (splashArrayProductServiceListGet) {
+                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
+                        var datatable = $("#tblInventoryPayrollService").DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                    }
+
+                    templateObject.datatablerecords.set(productlist);
+                } else {
+                    templateObject.getAllProductData();
+                }
+            }
+        }).catch(function(err) {
+            sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                addVS1Data("TRepServices", JSON.stringify(data));
+                var dataList = {};
+                let getallinvproducts = templateObject.allnoninvproducts.get();
+                if (data.trepservices.length > 0) {
+                    for (let i = 0; i < data.trepservices.length; i++) {
+                        dataList = {
+                            id: data.trepservices[i].Id || "",
+                            productname: data.trepservices[i].ServiceDesc || "",
+                            productcost: data.trepservices[i].Rate || 0.0,
+                        };
+                        let checkServiceArray =
+                            getallinvproducts.filter(function(prodData) {
+                                if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                                    var prodservicedataList = [
+                                        prodData[0],
+                                        prodData[1] || "-",
+                                        prodData[2] || "",
+                                        prodData[3] || "",
+                                        prodData[4],
+                                        prodData[5],
+                                        prodData[6],
+                                        prodData[7] || "",
+                                        prodData[8] || "",
+                                        prodData[9] || null,
+                                        prodData[10],
+                                    ];
+                                    splashArrayProductServiceListGet.push(prodservicedataList);
+                                    //splashArrayProductServiceListGet.push(prodservicedataList);
+                                    return prodservicedataList || "";
+                                }
+                            }) || "";
+
+                        productlist.push(dataList);
+                    }
+                    if (splashArrayProductServiceListGet) {
+                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
+                        var datatable = $("#tblInventoryPayrollService").DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                    }
+
+                    templateObject.datatablerecords.set(productlist);
+                } else {
+                    templateObject.getAllProductData();
+                }
+            })
+            .catch(function(err) {
+                templateObject.getAllProductData();
+            });
+        })
+        
     };
 
     templateObject.getAllProductData = function() {
@@ -3764,7 +3884,7 @@ Template.appointments.onRendered(function() {
                 .catch(function(err) {});
         });
 
-    templateObject.getAllAppointmentListData = function(refresh = true) {
+    templateObject.getAllAppointmentListData = function(refresh = false) {
         getVS1Data("TAppointment").then(function(dataObject) {
                 if (dataObject.length == 0 || refresh) {
                     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
@@ -10212,20 +10332,38 @@ Template.appointments.onRendered(function() {
             document.getElementById("suburb").value = $(this).find(".colCity").text();
             document.getElementById("zip").value = $(this).find(".colZipCode").text();
             if ($("#updateID").val() == "") {
-                let appointmentService = new AppointmentService();
-                appointmentService.getAllAppointmentListCount().then(function(data) {
-                    if (data.tappointmentex.length > 0) {
-                        let max = 1;
-                        for (let i = 0; i < data.tappointmentex.length; i++) {
-                            if (data.tappointmentex[i].Id > max) {
-                                max = data.tappointmentex[i].Id;
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
                             }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
                         }
-                        document.getElementById("appID").value = max + 1;
-                    } else {
-                        document.getElementById("appID").value = 1;
                     }
-                });
+                })
+               
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
@@ -11423,44 +11561,84 @@ Template.appointments.onRendered(function() {
         saveAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] confirming that we are booked in to be at [Full Address] at [Booked Time] to do the following service [Product/Service]. Please reply with Yes to confirm this booking or No if you wish to cancel it.",
         stopAppointmentSMSMessage: "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
     };
-    smsService
-        .getSMSSettings()
-        .then((result) => {
-            if (result.terppreference.length > 0) {
-                for (let i = 0; i < result.terppreference.length; i++) {
-                    switch (result.terppreference[i].PrefName) {
+    getVS1Data("TERPPreference").then(function(dataObject) {
+        if(dataObject.length == 0){
+            smsService
+            .getSMSSettings()
+            .then((result) => {
+                if (result.terppreference.length > 0) {
+                    for (let i = 0; i < result.terppreference.length; i++) {
+                        switch (result.terppreference[i].PrefName) {
+                            case "VS1SMSID":
+                                smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1SMSToken":
+                                smsSettings.twilioAccountToken =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1SMSPhone":
+                                smsSettings.twilioTelephoneNumber =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1HEADERSMSMSG":
+                                smsSettings.headerAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1SAVESMSMSG":
+                                smsSettings.saveAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1STARTSMSMSG":
+                                smsSettings.startAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                                break;
+                            case "VS1STOPSMSMSG":
+                                smsSettings.stopAppointmentSMSMessage =
+                                    result.terppreference[i].Fieldvalue;
+                        }
+                    }
+                    templateObject.defaultSMSSettings.set(smsSettings);
+                }
+            })
+            .catch((error) => {});
+        }else{
+            let data = JSON.parse(dataObject[0].data);
+            if (data.terppreference.length > 0) {
+                for (let i = 0; i < data.terppreference.length; i++) {
+                    switch (data.terppreference[i].PrefName) {
                         case "VS1SMSID":
-                            smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+                            smsSettings.twilioAccountId = data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1SMSToken":
                             smsSettings.twilioAccountToken =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1SMSPhone":
                             smsSettings.twilioTelephoneNumber =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1HEADERSMSMSG":
                             smsSettings.headerAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1SAVESMSMSG":
                             smsSettings.saveAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1STARTSMSMSG":
                             smsSettings.startAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                             break;
                         case "VS1STOPSMSMSG":
                             smsSettings.stopAppointmentSMSMessage =
-                                result.terppreference[i].Fieldvalue;
+                                data.terppreference[i].Fieldvalue;
                     }
                 }
                 templateObject.defaultSMSSettings.set(smsSettings);
             }
-        })
-        .catch((error) => {});
+        }
+    })
+    
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
@@ -19262,21 +19440,37 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             }
             if ($("#updateID").val() == "") {
                 let appointmentService = new AppointmentService();
-                appointmentService
-                    .getAllAppointmentListCount()
-                    .then(function(dataObj) {
-                        if (dataObj.tappointmentex.length > 0) {
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
+                            }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
                             let max = 1;
-                            for (let i = 0; i < dataObj.tappointmentex.length; i++) {
-                                if (dataObj.tappointmentex[i].Id > max) {
-                                    max = dataObj.tappointmentex[i].Id;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
                                 }
                             }
                             document.getElementById("appID").value = max + 1;
                         } else {
                             document.getElementById("appID").value = 1;
                         }
-                    });
+                    }
+                })
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
@@ -19358,22 +19552,37 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
-                let appointmentService = new AppointmentService();
-                appointmentService
-                    .getAllAppointmentListCount()
-                    .then(function(dataObj) {
-                        if (dataObj.tappointmentex.length > 0) {
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
+                            }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
                             let max = 1;
-                            for (let i = 0; i < dataObj.tappointmentex.length; i++) {
-                                if (dataObj.tappointmentex[i].Id > max) {
-                                    max = dataObj.tappointmentex[i].Id;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
                                 }
                             }
                             document.getElementById("appID").value = max + 1;
                         } else {
                             document.getElementById("appID").value = 1;
                         }
-                    });
+                    }
+                })
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
@@ -19455,22 +19664,37 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
-                let appointmentService = new AppointmentService();
-                appointmentService
-                    .getAllAppointmentListCount()
-                    .then(function(dataObj) {
-                        if (dataObj.tappointmentex.length > 0) {
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
+                            }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
                             let max = 1;
-                            for (let i = 0; i < dataObj.tappointmentex.length; i++) {
-                                if (dataObj.tappointmentex[i].Id > max) {
-                                    max = dataObj.tappointmentex[i].Id;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
                                 }
                             }
                             document.getElementById("appID").value = max + 1;
                         } else {
                             document.getElementById("appID").value = 1;
                         }
-                    });
+                    }
+                })
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
