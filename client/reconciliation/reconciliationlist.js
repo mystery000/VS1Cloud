@@ -152,28 +152,6 @@ Template.reconciliationlist.onRendered(function() {
         }
         templateObject.initCustomFieldDisplaySettings("", "tblreconciliationlist");
 
-    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblreconciliationlist', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
-
     function MakeNegative() {
         $('td').each(function(){
             if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
@@ -527,12 +505,7 @@ Template.reconciliationlist.onRendered(function() {
                   });
                   templateObject.tableheaderrecords.set(tableHeaderList);
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                  $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
-                      var listData = $(this).closest('tr').attr('id');
-                      if(listData){
-                          window.open('/bankrecon?id=' + listData,'_self');
-                      }
-                  });
+
 
               }).catch(function (err) {
                   // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -826,13 +799,7 @@ Template.reconciliationlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if(listData){
-                        FlowRouter.go('/bankrecon?id=' + listData);
-                        //window.open('/bankrecon?id=' + listData,'_self');
-                    }
-                });
+
 
             }
         }).catch(function (err) {
@@ -1120,12 +1087,7 @@ Template.reconciliationlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if(listData){
-                        window.open('/bankrecon?id=' + listData,'_self');
-                    }
-                });
+
 
             }).catch(function (err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -1167,8 +1129,13 @@ Template.reconciliationlist.onRendered(function() {
       }
     }
 
-    tableResize();
-
+    // tableResize();
+    $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
+        var listData = $(this).closest('tr').find('.colRecon').text()||'';
+        if(listData){
+            window.open('/bankrecon?id=' + listData,'_self');
+        }
+    });
 });
 
 Template.reconciliationlist.events({

@@ -316,6 +316,8 @@ import './js/packagerenewal.js';
 import './Navigation/onsuccesswaterfall.js';
 import './Help_Form/help_advisor.js';
 import './js/Table/TableHandler.js';
+import "./vs1_templates/vs1filteroptions/customfiltersdropdownbutton.js";
+import "./vs1_templates/vs1filteroptions/customfiltersmodal.js";
 /* Rasheed */
 
 /* Jeyhun */
@@ -518,7 +520,6 @@ import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
 // import './popUps/editServiceCheckerModal.js';
-import './js/new_wastage_form.js';
 /* Roverto */
 
 /* Kelvin More */

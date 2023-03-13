@@ -1,0 +1,12 @@
+<template name="customfiltersdropdownbutton">
+
+  <div class="btn-group divDropdownFilter {{templatename}}" style="margin: 14px;">
+      <button type="button" class="btn btn-primary {{templatename}} btnDropdownFilter" id="btnDropdownFilter" name="btnDropdownFilter" ><i class="fas fa-list-ul" style="margin-right: 5px;"></i>Filter</button>
+      <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+      <div class="dropdown-menu">
+          <a class="dropdown-item btnFilterOption1 pointer" id="">{{templateDisplayName}} Filter 1</a>
+          <a class="dropdown-item btnFilterOption2 pointer" id="">{{templateDisplayName}} Filter 2</a>
+      </div>
+  </div>
+
+</template>
