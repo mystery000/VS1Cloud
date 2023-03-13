@@ -171,7 +171,11 @@
             <div>
 
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
-
+                    <style>
+                        td.colOpening, td.colClosing{
+                            text-align: right !important;
+                        }
+                    </style>
                     {{>datatablelist
                             tablename="tblreconciliationlist"
                             apiName= apiFunction
