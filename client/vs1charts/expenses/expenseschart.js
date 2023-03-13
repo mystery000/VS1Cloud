@@ -45,7 +45,7 @@ Template.expenseschart.onRendered(()=>{
     var dateFrom = new Date();
     dateFrom.setMonth(dateFrom.getMonth()-6);
     dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-    $("#expenses").attr("href", "/agedpayables?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
+    $("#expensechart #earnings").attr("href", "/agedpayables?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
     getInvSales(function (data) {
 
       let currentDate = new Date();
@@ -449,7 +449,7 @@ Template.expenseschart.onRendered(()=>{
       var dateFrom = new Date();
       dateFrom.setMonth(dateFrom.getMonth()-6);
       dateFrom = dateFrom.getFullYear() +'-'+ ("0"+ (dateFrom.getMonth()+1)).slice(-2) + '-' + ("0"+ (dateFrom.getDate())).slice(-2);
-      $("#expenses").attr("href", "/agedpayables?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
+      $("#expensechart #earnings").attr("href", "/agedpayables?dateFrom="+dateFrom+"&dateTo="+getLoadDate);
       let month_1 = data[0].fields.DateDesc_1||'';
       let month_2 = data[0].fields.DateDesc_2||'';
       let month_3 = data[0].fields.DateDesc_3||'';
@@ -623,7 +623,7 @@ Template.expenseschart.onRendered(()=>{
   templateObject.updateChart = function(dateFrom, dateTo) {
     setTimeout(function () {
       let data = JSON.parse(localStorage.getItem('VS1PNLPeriodReport_dash'));
-      $("#expenses").attr("href", "/agedpayables?dateFrom="+dateFrom+"&dateTo="+dateTo);
+      $("#expensechart #earnings").attr("href", "/agedpayables?dateFrom="+dateFrom+"&dateTo="+dateTo);
       let month_1 = data[0].fields.DateDesc_1||'';
       let month_2 = data[0].fields.DateDesc_2||'';
       let month_3 = data[0].fields.DateDesc_3||'';
