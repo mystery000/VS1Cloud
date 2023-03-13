@@ -1497,7 +1497,7 @@ Template.calender.onRendered(function() {
                     document.getElementById("product-list").value = result[0].product || "";
                     document.getElementById("product-list-1").value = result[0].product || "";
                     
-                    if (result[0].extraProducts != "") {
+                    if (result[0].extraProducts && result[0].extraProducts != "") {
                         let extraProducts = result[0].extraProducts.split(":");
                         let extraProductFees = [];
                         productService.getNewProductServiceListVS1()
