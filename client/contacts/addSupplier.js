@@ -2758,9 +2758,6 @@ Template.supplierscard.helpers({
       return (a.orderdate.toUpperCase() > b.orderdate.toUpperCase()) ? 1 : -1;
     });
   },
-  tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
-  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSalesOverview' });
   },
@@ -2805,6 +2802,9 @@ Template.supplierscard.helpers({
     return isMobile;
   },
 
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
   apiFunction:function() {
     let crmService = new CRMService();
     return crmService.getAllTasksList;

@@ -32,40 +32,52 @@ Template.employeelistpop.onCreated(function () {
     templateObject.selectedFile = new ReactiveVar();
     templateObject.tablename = new ReactiveVar();
 
-    templateObject.getDataTableList = function(data) {
-        let mobile = contactService.changeMobileFormat(data.fields.Mobile);
+    templateObject.getDataTableList = function (data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        }
+        ;
         var dataList = [
-            data.fields.EmployeeName || '-',
-            data.fields.FirstName || '',
-            data.fields.LastName || '',
-            data.fields.Phone || '',
-            mobile || '',
-            data.fields.Email || '',
-            data.fields.DefaultClassName || '',
-            data.fields.Country || '',
-            data.fields.State || '',
-            data.fields.Street2 || '',
-            data.fields.Street || '',
-            data.fields.Postcode || '',
-            data.fields.ID || ''
+            data.EmployeeID || "",
+            data.EmployeeName || "",
+            data.FirstName || "",
+            data.LastName || "",
+            data.Phone || "",
+            data.Mobile || '',
+            data.Email || '',
+            data.DefaultClassName || '',
+            data.CustFld1 || '',
+            data.CustFld2 || '',
+            linestatus,
+            data.Street || "",
+            data.Street2 || "",
+            data.State || "",
+            data.Postcode || "",
+            data.Country || "",
         ];
         return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "10" },
-        { index: 1, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "50" },
-        { index: 2, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100" },
-        { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "100" },
-        { index: 4, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "100" },
-        { index: 5, label: 'Email', class: 'colEmail', active: true, display: true, width: "100" },
-        { index: 6, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
-        { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
-        { index: 8, label: '#State', class: 'colState', active: false, display: true, width: "100" },
-        { index: 9, label: '#Street2', class: 'colCity', active: false, display: true, width: "100" },
-        { index: 10, label: '#Street', class: 'colStreetAddress', active: false, display: true, width: "100" },
-        { index: 11, label: '#PostCode', class: 'colZipCode', active: false, display: true, width: "100" },
-        { index: 12, label: '#Custom Field 2', class: 'colID', active: false, display: true, width: "100" },
+        {index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10"},
+        {index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200"},
+        {index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100"},
+        {index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100"},
+        {index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+        {index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "95"},
+        {index: 6, label: 'Email', class: 'colEmail', active: true, display: true, width: "200"},
+        {index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "80"},
+        {index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120"},
+        {index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120"},
+        {index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+        {index: 11, label: 'Address', class: 'colAddress', active: true, display: true, width: ""},
+        {index: 12, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120"},
+        {index: 13, label: 'State', class: 'colState', active: false, display: true, width: "120"},
+        {index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80"},
+        {index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200"},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -2074,7 +2086,7 @@ Template.employeelistpop.helpers({
 
     apiFunction:function() {
         let sideBarService = new SideBarService();
-        return sideBarService.getAllEmployeesDataVS1;
+        return sideBarService.getAllTEmployeeList;
     },
 
     searchAPI: function() {

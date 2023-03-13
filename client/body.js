@@ -560,6 +560,7 @@ import '../public/js/cdnjs/split.min.js';
 import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
 import './vs1_templates/title_list_pop/title_list_pop.js';
+import './expenseclaim/expenseclaims.html';
 /* Stefan */
 
 /* Arthlo */

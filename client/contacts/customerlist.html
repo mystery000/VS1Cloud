@@ -153,7 +153,22 @@
             </div>
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
-                    {{> non_transactional_list tablename="tblCustomerlist"}}
+<!--                    {{> non_transactional_list tablename="tblCustomerlist"}}-->
+                    {{>datatablelist
+                            tablename="tblCustomerlist"
+                            apiName= apiFunction
+                            indexeddbname = 'TCustomerVS1List'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Customer VS1 List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tcustomervs1list'
+                            exIndexDBName = 'tcustomervs1list'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                     <!-- <div class="table-responsive">
                         {{> global_customerlist}}
                     </div> -->

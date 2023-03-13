@@ -119,7 +119,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
                         var dateFrom = new Date();
                         dateFrom.setMonth(dateFrom.getMonth() - 6);
                         dateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-                        $("#sales").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
+                        $("#quotedsalesorderinvoicedamounts #earnings").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
                         for (let l = 0; l < initialData.length; l++) {
 
                             let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
@@ -351,7 +351,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
                     var dateFrom = new Date();
                     dateFrom.setMonth(dateFrom.getMonth() - 6);
                     dateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-                    $("#sales").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
+                    $("#quotedsalesorderinvoicedamounts #earnings").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
                     for (let l = 0; l < initialData.length; l++) {
 
                         let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
@@ -844,7 +844,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
 
                 let graphData = _.orderBy(filterData, 'SaleDate');
                 let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
-                $("#sales").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + dateTo);
+                $("#quotedsalesorderinvoicedamounts #earnings").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + dateTo);
                 for (let l = 0; l < initialData.length; l++) {
 
                     let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
