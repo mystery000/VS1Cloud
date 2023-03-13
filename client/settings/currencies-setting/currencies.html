@@ -160,6 +160,12 @@
                                             </div>
                                         </div>
 <!--                                        {{> non_transactional_list tablename="tblCurrencyList"}}-->
+
+                                        <style>
+                                            td.colCurrencySymbol, td.colBuyRate, td.colSellRate, td.colUpperVariation, td.colLowerVariation{
+                                                text-align: right !important;
+                                            }
+                                        </style>
                                         {{>datatablelist
                                                 tablename="tblCurrencyList"
                                                 apiName= apiFunction
