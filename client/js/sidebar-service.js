@@ -4379,6 +4379,30 @@ export class SideBarService extends BaseService {
 
     return this.getList(this.ERPObjects.VS1_Customize, options);
   }
+  getLeaveRequest() {
+    let options = {
+      ListType: "Detail",
+    };
+    return this.getList(this.ERPObjects.TLeavRequest, options);
+  }
+
+  getAssignLeaveType(limitcount, limitfrom) {
+    let options = '';
+    if(limitcount == 'All'){
+        options = {
+            ListType: "Detail"
+            //select: '[Active]=true'
+        };
+    }else{
+        options = {
+            ListType: "Detail",
+            //select: '[Active]=true',
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+    };
+    return this.getList(this.ERPObjects.TAssignLeaveType, options);
+  }
 
   saveNewCustomFields(erpGet, tableName, employeeId, columns)
   {

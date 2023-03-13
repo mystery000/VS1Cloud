@@ -2100,6 +2100,7 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.getAllSelectedProducts = function(employeeID) {
+        console.log("OKK")
         let productlist = [];
         templateObject.datatablerecords.set([]);
         const splashArrayProductServiceListGet = [];
@@ -2107,6 +2108,8 @@ Template.calender.onRendered(function() {
         getVS1Data("TRepServices").then(function(dataObject){
             if (dataObject.length == 0) {
                 sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                    console.log('data:',data)
+                    addVS1Data("TRepServices", JSON.stringify(data));
                     let dataList = {};
                     let getallinvproducts = templateObject.allnoninvproducts.get();
                     if (data.trepservices.length > 0) {
