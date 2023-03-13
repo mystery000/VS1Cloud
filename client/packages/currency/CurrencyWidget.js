@@ -40,7 +40,7 @@ Template.CurrencyWidget.onRendered(function () {
 
 Template.CurrencyWidget.events({
   "click #sltCurrency": event => {
-    $("#currencyModal").modal("toggle");
+    $("#currencyModal").modal("show");
   },
   "click #tblCurrencyPopList tbody tr": e => {
     const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
@@ -57,7 +57,7 @@ Template.CurrencyWidget.events({
     $("#sltCurrency").trigger("change");
     $("#exchange_rate").val(currencyRate);
     $("#exchange_rate").trigger("change");
-    $("#currencyModal").modal("toggle");
+    $("#currencyModal").modal("hide");
 
     $("#tblCurrencyPopList_filter .form-control-sm").val("");
 

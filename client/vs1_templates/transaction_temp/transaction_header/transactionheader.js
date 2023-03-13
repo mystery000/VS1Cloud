@@ -54,7 +54,7 @@ Template.transactionheader.helpers({
             return 'addcustomerpop'
         }
     },
-    getModalTitlte: function() {
+    getModalTitle: function() {
         let templateObject = Template.instance();
         if (templateObject.data.clientType == 'Supplier') {
             return 'Supplier List'
