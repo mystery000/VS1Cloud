@@ -707,7 +707,7 @@ Template.non_transactional_list.onRendered(function() {
           ];
         } else if(currenttablename === "tblFixedAssetList"){
           reset_data = [
-            { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "0" },
+            { index: 0, label: 'ID', class: 'FixedID', active: false, display: true, width: "0" },
             { index: 1, label: 'Asset Name', class: 'AssetName', active: true, display: true, width: "" },
             { index: 2, label: 'Colour', class: 'Color', active: true, display: true, width: "" },
             { index: 3, label: 'Brand Name', class: 'BrandName', active: true, display: true, width: "" },
@@ -749,7 +749,7 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblFixedAssetType") {
             reset_data = [
-                { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
+                { index: 0, label: 'ID', class: 'FixedID', active: false, display: true, width: "0" },
                 { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "300" },
                 { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "300" },
                 { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "300" },
@@ -13341,15 +13341,15 @@ Template.non_transactional_list.onRendered(function() {
       if( displayfields.length > 0 ){
           displayfields.forEach(function( item ){
             if (item.id == 0) {
-              columnData.push({
-                className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
-                targets: item.id,
-                width: "10px",
-                createdCell: function(td, cellData, rowData, row, col) {
-                  $(td).closest("tr").attr("id", rowData[0]);
-                }
-              })
-            }
+                columnData.push({
+                  className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                  targets: item.id,
+                  width: "10px",
+                  createdCell: function(td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }
+                })
+              }
             else {
               columnData.push({
                   className: ( item.active )? item.class : `col${item.class} hiddenColumn`,

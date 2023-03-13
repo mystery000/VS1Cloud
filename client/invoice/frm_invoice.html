@@ -115,7 +115,7 @@
 
     {{#if invoicerecord}}
     <form>
-      {{> transaction_header
+      <!-- {{> transaction_header
         cardType="Invoice"
         data=invoicerecord
         uploadedFile=uploadedFile
@@ -139,7 +139,24 @@
         showCopyTransaction=true
         showCopyToInvoice=false
         showCopyToOrder=false
-      }}
+      }} -->
+
+      {{>transactionheader 
+        includeClient=true 
+        includeAddress=true 
+        Category='invoice' 
+        TranascationType='Invoice' 
+        clientType='Customer' 
+        payment=true 
+        headerfields=headerfields 
+        headerbuttons=headerbuttons 
+        currency=true
+        balanceDue=invoicerecord.balanceDue
+        isPaid=invoicerecord.ispaid
+        data=invoicerecord
+        gridTableId='tblInvoiceLine'
+        printTableId='invoice_print'
+       }}
 
       {{> transaction_line
       tablename="tblInvoiceLine"
@@ -1078,7 +1095,7 @@
   <div id="elementH"></div>
 
   <!-- This a template with all VS1 POP Modal used for Transactions -->
-  {{> all_transaction_modals customerRecord=customerRecord}}
+  <!-- {{> all_transaction_modals customerRecord=customerRecord}} -->
   <!-- {{> deletepop itemName1="Invoice" itemName2="invoice" itemName3="Invoice" button1="btnDeleteInvoice"
   button2="btnDeleteFollowingInvoices"}} -->
   <script>

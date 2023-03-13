@@ -250,7 +250,7 @@ Template.newproductpop.onRendered(function () {
           for (let i = 0; i < useData.length; i++) {
             clientType.push(useData[i].fields.TypeName);
           }
-          clientType = _.sortBy(clientType);
+          // clientType = _.sortBy(clientType);
           templateObject.clienttypeList.set(clientType);
           //$('.customerTypeSelect option:first').prop('selected', false);
           $(".customerTypeSelect").attr("selectedIndex", 0);
