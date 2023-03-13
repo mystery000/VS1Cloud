@@ -517,7 +517,7 @@ import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
-import './popUps/editServiceCheckerModal.js';
+// import './popUps/editServiceCheckerModal.js';
 import './js/new_wastage_form.js';
 /* Roverto */
 
