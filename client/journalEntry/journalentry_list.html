@@ -180,6 +180,7 @@
                         <style>
                             th {
                                 background-color: #ededed;
+                                white-space: nowrap;
                             }
                             .table-striped tbody tr:nth-of-type(odd) {
                                 background-color: white !important;
@@ -317,7 +318,7 @@
                                     <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
                                         <td contenteditable="false" class=" {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}} colTransactionDate">{{item.transactiondate}}</td>
                                         <!--                                    <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colEntryNo" ><span style="display:none;">{{item.sortdate}}</span>{{item.transactiondate}}</td>-->
-                                        <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colEntryNo" style="text-align: right!important;">{{item.entryno}}</td>
+                                        <td contenteditable="false" class=" {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}} colEntryNo text-right" style="text-align: right!important;">{{item.entryno}}</td>
                                         <td contenteditable="false" class=" {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}} colAccountName">{{item.accountname}}</td>
                                         <td contenteditable="false" class=" {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}} colDepartment">{{item.department}}</td>
 
@@ -345,9 +346,9 @@
 
                                             {{/if}}
                                         {{else}}
-                                            <td contenteditable="false" class="{{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colDebitAmount" style="text-align: right!important;">{{item.debitamount}}</td>
-                                            <td contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colCreditAmount" style="text-align: right!important;">{{item.creditamount}}</td>
-                                            <td contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colTaxAmount" style="text-align: right!important;">{{item.taxamount}}</td>
+                                            <td contenteditable="false" class="{{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}} colDebitAmount text-right" style="text-align: right!important;">{{item.debitamount}}</td>
+                                            <td contenteditable="false" class="{{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}} colCreditAmount text-right" style="text-align: right!important;">{{item.creditamount}}</td>
+                                            <td contenteditable="false" class="{{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}} colTaxAmount text-right" style="text-align: right!important;">{{item.taxamount}}</td>
 
 
                                         {{/if}}
