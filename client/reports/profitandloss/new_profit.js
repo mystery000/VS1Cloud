@@ -1093,7 +1093,7 @@ Template.newprofitandloss.onRendered(function () {
                       if(data.ProcessLog.PNLLayout.Lines[k].ID == data.ProcessLog.PNLLayout.Lines[m].Parent){
                         let jsonObj3 = {
                           ID: data.ProcessLog.PNLLayout.Lines[m].ID,
-                          AccountName: data.ProcessLog.PNLLayout.Lines[m].Level2,
+                          AccountName: data.ProcessLog.PNLLayout.Lines[m].Level4,
                           Pos: data.ProcessLog.PNLLayout.Lines[m].Pos,
                         }
                         subAccounts2.push(jsonObj3);
@@ -1101,7 +1101,7 @@ Template.newprofitandloss.onRendered(function () {
                     }
                     let jsonObj2 = {
                       ID: data.ProcessLog.PNLLayout.Lines[k].ID,
-                      AccountName: data.ProcessLog.PNLLayout.Lines[k].Level2,
+                      AccountName: data.ProcessLog.PNLLayout.Lines[k].Level3,
                       Pos: data.ProcessLog.PNLLayout.Lines[k].Pos,
                       subAccounts: subAccounts2
                     }
@@ -1140,7 +1140,7 @@ Template.newprofitandloss.onRendered(function () {
               </div>
               <ol class="groupedListNew" parent="${newprofitLossLayouts[i].Level0Order}">`;
               for(var j=0; j<newprofitLossLayouts[i].subAccounts.length; j++){
-                  if(newprofitLossLayouts[i].subAccounts[j].ID > 1){
+                  if(newprofitLossLayouts[i].subAccounts[j].subAccounts.length < 1){
                     sortablelisthtml += `<li class="subChild cSortItems" data-group="${newprofitLossLayouts[i].subAccounts[j].AccountName}" plid="${newprofitLossLayouts[i].subAccounts[j].ID}" key="layoutFields-${newprofitLossLayouts[i].subAccounts[j].ID}" position="${newprofitLossLayouts[i].subAccounts[j].Level1Order}">
                         <span class="childInner">
                             <span class="collepsDiv fas"></span>${newprofitLossLayouts[i].subAccounts[j].AccountName}
@@ -1149,9 +1149,12 @@ Template.newprofitandloss.onRendered(function () {
                   }
                   else{
                     sortablelisthtml += `<li class="subChild noDrag cSortItems" plid="${newprofitLossLayouts[i].subAccounts[j].ID}" data-group="${newprofitLossLayouts[i].subAccounts[j].AccountName}" key="layoutFields-${newprofitLossLayouts[i].subAccounts[j].ID}" position="${newprofitLossLayouts[i].subAccounts[j].Level1Order}">
+                      <span class="childInner">
+                          <span class="collepsDiv fas"></span><strong>${newprofitLossLayouts[i].subAccounts[j].AccountName}</strong>
+                      </span>
                       <ol class="ddllkk" parent="${newprofitLossLayouts[i].subAccounts[j].Level1Order}">`;
                       for(var k=0; k<newprofitLossLayouts[i].subAccounts[j].subAccounts.length; k++){
-                        if(newprofitLossLayouts[i].subAccounts[j].subAccounts[k].ID > 1){
+                        if(newprofitLossLayouts[i].subAccounts[j].subAccounts[k].subAccounts.length < 1){
                           sortablelisthtml += `<li class="subChild scSortItems" plid="${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].ID}" data-group="${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].AccountName}" key="layoutFields-${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].ID}" position="${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].Level2Order}">
                               <span class="childInner">
                                   <span class="collepsDiv fas"></span>${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].AccountName}
@@ -1160,17 +1163,14 @@ Template.newprofitandloss.onRendered(function () {
                         }
                         else{
                           sortablelisthtml += `<li class="subChild noDrag scSortItems" plid="${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].ID}" data-group="${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].AccountName}" key="layoutFields-${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].ID}" position="${newprofitLossLayouts[i].subAccounts[j].subAccounts[k].Level2Order}">
-                              <ol class="ddllkk"></ol>
                               <span class="childInner">
                                   <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
                               </span>
+                              <ol class="ddllkk"></ol>
                           </li>`;
                         }
                       }
                     sortablelisthtml += `</ol>
-                        <span class="childInner">
-                            <span class="collepsDiv fas"></span><strong>${newprofitLossLayouts[i].subAccounts[j].AccountName}</strong>
-                        </span>
                     </li>`;
                   }
               }
@@ -1244,14 +1244,25 @@ Template.newprofitandloss.onRendered(function () {
         $(".collepsDiv").click(function () {
           $(this).parents(".mainHeadingDiv").toggleClass("collapsTogls");
         });
-        $(".childInner, .mainHeadingDiv").mousedown(function () {
-          $(this)
+        $(".childInner, .mainHeadingDiv").mousedown(function (e) {
+          if (e.ctrlKey || e.metaKey) {
+            let layoutgroupid = templateObject.layoutgroupid.get();
+            layoutgroupid += (layoutgroupid == "") ? $(this).parent().attr("plid") : ","+$(this).parent().attr("plid")
+            templateObject.layoutgroupid.set(layoutgroupid);
+            $(".groupSection1").hide();
+            $(".groupSection2").show();
+          }
+          else{
+            $(this)
             .parents(".vertical")
             .find(".selected")
             .removeClass("selected");
+            templateObject.layoutgroupid.set($(this).parent().attr("plid"));
+            $(".groupSection1").show();
+            $(".groupSection2").hide();
+          }
           $(this).parents(".vertical").find(".selected").removeClass("dragged");
           $(this).parent().addClass("selected");
-          templateObject.layoutgroupid.set($(this).parent().attr("plid"));
         });
         // $('.fullScreenSpin').css('display', 'none');
       }, 1000);
@@ -1472,6 +1483,10 @@ $('.tblAvoid').each(function(){
 });
 
 Template.newprofitandloss.events({
+  "click .btnAddGroup": function (event) {
+    let templateObject = Template.instance();
+    templateObject.layoutgroupid.set("");
+  },
   "click .deleteProfitLossLayouts": async function () {
     let templateObject = Template.instance();
     if($("#nplLayoutID").val() != ""){
@@ -2975,10 +2990,77 @@ Template.newprofitandloss.events({
       // var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
       // var dateTo = new Date($("#dateTo").datepicker("getDate"));
       // templateObject.setReportOptions(3, dateFrom, dateTo);
-      templateObject.getProfitLossLayout();
-      setTimeout(function () {
-        $('.fullScreenSpin').css('display', 'none');
-      }, 2000);
+      if(templateObject.layoutgroupid.get() != ""){
+        let layoutID = parseInt($("#nplLayoutID").val());
+        reportService.getProfitLossLayout(layoutID).then(function(data){
+          let newprofitLossLayouts = [];
+          if(data.ProcessLog.PNLLayout.Lines != undefined){
+            let pnlLayout = data.ProcessLog.PNLLayout.Lines.sort(function(a, b) {
+                return (a.ID > b.ID) ? -1 : 1;
+            });
+          // _.sortBy(data.ProcessLog.PNLLayout.Lines, 'ID');
+            let layoutgroupid = [];
+            layoutgroupid = templateObject.layoutgroupid.get().split(",");
+            for(var i=0; i<layoutgroupid.length; i++){
+              let groupID = parseInt(layoutgroupid[i]);
+              let containerID = parseInt(pnlLayout[0].ID) || 0;
+              let jsonObj = {
+                "Name": "VS1_PNLMoveAccount",
+                "Params":{
+                  "LayoutID": layoutID,
+                  "Selected": groupID,
+                  "Destination": containerID,
+                }
+              }
+              if(i == (layoutgroupid.length-1)){
+                reportService.movePNLGroup(jsonObj).then(function(res){
+                    templateObject.getProfitLossLayout();
+                    setTimeout(function () {
+                      $('.fullScreenSpin').css('display', 'none');
+                    }, 3000);
+                }).catch(function(err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            // Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {}
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+              }
+              else{
+                reportService.movePNLGroup(jsonObj).then(function(res){
+                }).catch(function(err) {
+                    swal({
+                        title: 'Oooops...',
+                        text: err,
+                        type: 'error',
+                        showCancelButton: false,
+                        confirmButtonText: 'Try Again'
+                    }).then((result) => {
+                        if (result.value) {
+                            // Meteor._reload.reload();
+                        } else if (result.dismiss === 'cancel') {}
+                    });
+                    $('.fullScreenSpin').css('display', 'none');
+                });
+              }
+            }
+          }
+          // $('.fullScreenSpin').css('display', 'none');
+        });
+      }
+      else{
+        templateObject.getProfitLossLayout();
+        setTimeout(function () {
+          $('.fullScreenSpin').css('display', 'none');
+        }, 3000);
+      }
     }).catch(function(err) {
         swal({
             title: 'Oooops...',
