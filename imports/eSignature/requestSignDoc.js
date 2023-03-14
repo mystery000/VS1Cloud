@@ -17,9 +17,6 @@ function getConsent() {
         `scope=${urlScopes}&client_id=${docuSignConfig.dsJWTClientId}&` +
         `redirect_uri=${redirectUri}`;
 
-    console.log("Open the following URL in your browser to grant consent to the application:");
-    console.log(consentUrl);
-    console.log("Consent granted? \n 1)Yes \n 2)No");
     let consentGranted = prompt("");
     if (consentGranted == "1") {
         return true;
@@ -47,7 +44,6 @@ async function authenticate() {
         // use the default account
         let userInfo = userInfoResults.accounts.find(account =>
             account.isDefault === "true");
-        console.log('authentication success!');
 
         return {
             accessToken: results.body.access_token,
@@ -55,7 +51,6 @@ async function authenticate() {
             basePath: `${userInfo.baseUri}/restapi`
         };
     } catch (e) {
-        console.log(e);
         let body = e.response && e.response.body;
         // Determine the source of the error
         if (body) {

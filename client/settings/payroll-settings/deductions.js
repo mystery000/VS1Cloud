@@ -21,6 +21,41 @@ Template.deductionSettings.onCreated(function() {
   templateObject.imageFileData=new ReactiveVar();
   templateObject.currentDrpDownID = new ReactiveVar();
   // templateObject.Accounts = new ReactiveVar([]);
+  templateObject.tableheaderrecords5 = new ReactiveVar([]);
+
+  templateObject.getDataTableList5 = function(data){
+    let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.fields.Amount) || 0.00;
+    let dataList = [
+        data.fields.ID || 0,
+        data.fields.Description || '-',
+        data.fields.DeductionType,
+        data.fields.Displayin || '',
+        deductionAmount || 0.00,
+        data.fields.Accountname || '',
+        data.fields.Accountid || 0,
+        data.fields.Taxexempt || false,
+        data.fields.SuperInc || false,
+        data.fields.WorkCoverExempt || false,
+        data.fields.Active == true ? '' : 'In-Active',
+        '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    ];
+    return dataList;
+  }
+  let headerStructure5  = [
+    { index: 0, label: 'ID', class: 'colDeductionsID', active: false, display: true, width: "" },
+    { index: 1, label: 'Deduction Name', class: 'colDeductionsNames', active: true, display: true, width: "100" },
+    { index: 2, label: 'Deduction Type', class: 'colDeductionsType', active: true, display: true, width: "80" },
+    { index: 3, label: 'Display Name', class: 'colDeductionsDisplayName', active: true, display: true, width: "50" },
+    { index: 4, label: 'Amount', class: 'colDeductionsAmount', active: true, display: true, width: "50" },
+    { index: 5, label: 'Account', class: 'colDeductionsAccounts', active: true, display: true, width: "50" },
+    { index: 6, label: 'Account ID', class: 'colDeductionsAccountsID', active: false, display: true, width: "" },
+    { index: 7, label: 'Reduces PAYG Withholding', class: 'colDeductionsPAYG', active: false, display: true, width: "" },
+    { index: 8, label: 'Reduces Superannuation Guarantee Contribution', class: 'colDeductionsSuperannuation', active: false, display: true, width: "" },
+    { index: 9, label: 'Excluded from W1 on Activity Statement', class: 'colDeductionsReportableasW1', active: false, display: true, width: "" },
+    { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+    { index: 11, label: '', class: 'colDeleteDeductions', active: true, display: true, width: "20" }
+  ];
+  templateObject.tableheaderrecords5.set(headerStructure5);
 });
 
 Template.deductionSettings.onRendered(function() {
@@ -266,7 +301,7 @@ Template.deductionSettings.onRendered(function() {
     };
 
 
-    templateObject.getDeductions();
+    // templateObject.getDeductions();
 
     $('.deductionLineDropDown').editableSelect();
     $('.deductionLineDropDown').editableSelect()
@@ -560,5 +595,35 @@ Template.deductionSettings.events({
 Template.deductionSettings.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get();
-    }
+    },
+
+    tableheaderrecords5: () => {
+        return Template.instance().tableheaderrecords5.get();
+    },
+    apiFunction5:function() {
+        return sideBarService.getDeduction;
+    },
+    searchAPI5: function() {
+        return sideBarService.getDeductionByName;
+    },
+    service5: ()=>{
+        return sideBarService;
+    },
+    datahandler5: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList5(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler5: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList5(data);
+            return dataReturn;
+        }
+    },
+    apiParams5: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

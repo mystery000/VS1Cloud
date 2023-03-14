@@ -10,58 +10,73 @@
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectCurrencyLineID" name="selectCurrencyLineID" readonly="readonly">
         <div class="card-body p-1 rounded">
-          <div class="table-responsive">
-            <style>
-              .colSymbol {
-                width: 5%;
-              }
+            {{>datatablelist
+                    tablename="tblCurrencyPopList"
+                    apiName= apiFunction
+                    indexeddbname = 'TCurrencyList'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Currency List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tcurrencylist'
+                    exIndexDBName = 'tcurrencylist'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
+<!--          <div class="table-responsive">-->
+<!--            <style>-->
+<!--              .colSymbol {-->
+<!--                width: 5%;-->
+<!--              }-->
 
-              .colCode {
-                width: 5%;
-              }
+<!--              .colCode {-->
+<!--                width: 5%;-->
+<!--              }-->
 
-              .colCurrency {
-                width: 5%;
-              }
+<!--              .colCurrency {-->
+<!--                width: 5%;-->
+<!--              }-->
 
-              .colBuyRate {
-                width: 8%;
-              }
+<!--              .colBuyRate {-->
+<!--                width: 8%;-->
+<!--              }-->
 
-              .colSellRate {
-                width: 8%;
-              }
-            </style>
-            <table id="tblCurrencyPopList" name="tblCurrencyPopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblCurrencyPopList">
-              <thead>
-                <tr class="dnd-moved">
-                  <th class="th colCode">Code</th>
-                  <th class="th colCurrency">Currency</th>
-                  <th class="th colSymbol">Symbol</th>
-                  <th class="th colBuyRate">Buy Rate</th>
-                  <th class="th colSellRate">Sell Rate</th>
-                  <th class="th colCountry">Country</th>
-                  <th class="th colDescription">Description</th>
-                </tr>
-              </thead>
-              <tbody>
-                {{#if datatablerecordscurrencypop}}
-                  {{#each item in datatablerecordscurrencypop}}
-                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                      <td contenteditable="false" class="colCode">{{item.code}}</td>
-                      <td contenteditable="false" class="colCurrency">{{item.currency}}</td>
-                      <td contenteditable="false" class="colSymbol">{{item.symbol}}</td>
-                      <td contenteditable="false" class="colBuyRate text-right">{{item.buyrate}}</td>
-                      <td contenteditable="false" class="colSellRate text-right">{{item.sellrate}}</td>
-                      <td contenteditable="false" class="colCountry">{{item.country}}</td>
-                      <!-- <td contenteditable="false" class="colRateLastModified hiddenColumn">{{item.ratelastmodified}}</td> -->
-                      <td contenteditable="false" class="colDescription">{{item.description}}</td>
-                    </tr>
-                  {{/each}}
-                {{/if}}
-              </tbody>
-            </table>
-          </div>
+<!--              .colSellRate {-->
+<!--                width: 8%;-->
+<!--              }-->
+<!--            </style>-->
+<!--            <table id="tblCurrencyPopList" name="tblCurrencyPopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblCurrencyPopList">-->
+<!--              <thead>-->
+<!--                <tr class="dnd-moved">-->
+<!--                  <th class="th colCode">Code</th>-->
+<!--                  <th class="th colCurrency">Currency</th>-->
+<!--                  <th class="th colSymbol">Symbol</th>-->
+<!--                  <th class="th colBuyRate">Buy Rate</th>-->
+<!--                  <th class="th colSellRate">Sell Rate</th>-->
+<!--                  <th class="th colCountry">Country</th>-->
+<!--                  <th class="th colDescription">Description</th>-->
+<!--                </tr>-->
+<!--              </thead>-->
+<!--              <tbody>-->
+<!--                {{#if datatablerecordscurrencypop}}-->
+<!--                  {{#each item in datatablerecordscurrencypop}}-->
+<!--                    <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">-->
+<!--                      <td contenteditable="false" class="colCode">{{item.code}}</td>-->
+<!--                      <td contenteditable="false" class="colCurrency">{{item.currency}}</td>-->
+<!--                      <td contenteditable="false" class="colSymbol">{{item.symbol}}</td>-->
+<!--                      <td contenteditable="false" class="colBuyRate text-right">{{item.buyrate}}</td>-->
+<!--                      <td contenteditable="false" class="colSellRate text-right">{{item.sellrate}}</td>-->
+<!--                      <td contenteditable="false" class="colCountry">{{item.country}}</td>-->
+<!--                      &lt;!&ndash; <td contenteditable="false" class="colRateLastModified hiddenColumn">{{item.ratelastmodified}}</td> &ndash;&gt;-->
+<!--                      <td contenteditable="false" class="colDescription">{{item.description}}</td>-->
+<!--                    </tr>-->
+<!--                  {{/each}}-->
+<!--                {{/if}}-->
+<!--              </tbody>-->
+<!--            </table>-->
+<!--          </div>-->
         </div>
       </div>
       <div class="modal-footer">
