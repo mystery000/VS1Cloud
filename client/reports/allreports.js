@@ -650,12 +650,12 @@ Template.allreports.onRendered(() => {
     let isProfitabilityReport;
     getVS1Data("ProfitabilityReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ProfitabilityReport', JSON.stringify(false));
             isProfitabilityReport = false;
         } else {
-            isProfitabilityReport = JSON.parse(dataObject[0].data);
+            isProfitabilityReport = dataObject[0].data === "true";
+            templateObject.isProfitabilityReport.set(isProfitabilityReport)
         }
-    });
+    })
     // let isPerformanceReport = localStorage.getItem('cloudPerformanceReport');
     let isPerformanceReport;
     getVS1Data("PerformanceReport").then(function (dataObject) {
@@ -1831,11 +1831,11 @@ Template.allreports.events({
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
             // localStorage.setItem('cloudProfitabilityReport', true);
-            //addVS1Data('ProfitabilityReport', JSON.stringify(true));
+            addVS1Data('ProfitabilityReport', JSON.stringify(true));
             templateObject.isProfitabilityReport.set(true);
         } else {
             // localStorage.setItem('cloudProfitabilityReport', false);
-            //addVS1Data('ProfitabilityReport', JSON.stringify(false));
+            addVS1Data('ProfitabilityReport', JSON.stringify(false));
             templateObject.isProfitabilityReport.set(false);
         }
     },
@@ -2213,15 +2213,15 @@ Template.allreports.helpers({
         let isIncomeReport = Template.instance().isIncomeReport.get();
         let isPositionReport = Template.instance().isPositionReport.get();
         let isBuildProfitability = Template.instance().isBuildProfitability.get();
-        // let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
-        // let isWorkOrder = Template.instance().isWorkOrder.get();
+        let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
+        let isWorkOrder = Template.instance().isWorkOrder.get();
 
-        // let isShowFavorite = false;
+        let isShowFavorite = false;
 
-        // if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
-        //     isShowFavorite = true;
-        // }
-        return true;
+        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
+            isShowFavorite = true;
+        }
+        return isShowFavorite;
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
