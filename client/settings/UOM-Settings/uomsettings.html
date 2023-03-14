@@ -48,6 +48,12 @@
               </div>
             </div>
 <!--            {{> non_transactional_list tablename="tblUOMList"}}-->
+
+              <style>
+                  td.colUOMMultiplier, td.colUOMWeight, td.colUOMNoOfBoxes, td.colUOMHeight, td.colUOMWidth, td.colUOMLength, td.colUOMBaseUnitID, td.colUOMPartID, td.colUOMVolume{
+                      text-align: right !important;
+                  }
+              </style>
               {{>datatablelist
                       tablename="tblUOMList"
                       apiName= apiFunction

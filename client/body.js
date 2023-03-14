@@ -316,6 +316,8 @@ import './js/packagerenewal.js';
 import './Navigation/onsuccesswaterfall.js';
 import './Help_Form/help_advisor.js';
 import './js/Table/TableHandler.js';
+import "./vs1_templates/vs1filteroptions/customfiltersdropdownbutton.js";
+import "./vs1_templates/vs1filteroptions/customfiltersmodal.js";
 /* Rasheed */
 
 /* Jeyhun */
@@ -339,6 +341,7 @@ import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
+import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -515,6 +518,9 @@ import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
+import './popUps/editServiceCheckerModal.js';
+import './js/new_wastage_form.js';
+import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
 /* Roverto */
 
 /* Kelvin More */

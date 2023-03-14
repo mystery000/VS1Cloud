@@ -351,6 +351,12 @@
 
                     {{> DeleteLineModal}}
 <!--                    {{> non_transactional_list tablename='taxRatesList'}}-->
+
+                      <style>
+                          td.colTaxRatePurchaseDefault, td.colTaxRateSalesDefault{
+                              text-align: center !important;
+                          }
+                      </style>
                       {{>datatablelist
                               tablename="taxRatesList"
                               apiName= apiFunction

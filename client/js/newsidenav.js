@@ -1665,9 +1665,32 @@ Template.newsidenav.events({
     templateObject.getSetSideNavFocus();
   },
   'click #sidenavreconciliation': function (event) {
-
     event.preventDefault();
     FlowRouter.go('/reconciliationlist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavReconMacthingRulesList': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/reconrulelist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavNewReconMatchingRule': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/newreconrule');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavStatementImportRulesList': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/bankrulelist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click #sidenavNewStatementImportRule': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/newbankrule');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
