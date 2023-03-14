@@ -835,8 +835,7 @@ Template.mobileapp.events({
             let BomDataList = [];        
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
-            console.log(bomStructureData);
-
+            
             let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo:"0", wastage:"0" };
 
             BomDataList.push(tempBomData);    
@@ -870,12 +869,7 @@ Template.mobileapp.events({
 
             $('#tblWastageForm').on( 'click', 'tbody td.editable', function () {
                 $(this).attr('contenteditable', 'true');
-                var el = $(this);
-                // var colIndex = wastage_table.cell(this).index().column;
-                // var rowIndex = wastage_table.cell(this).index().row;
-                
-                // wastage_table.cell(rowIndex, colIndex-1).data("change");
-                
+                              
             } );
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
@@ -883,7 +877,7 @@ Template.mobileapp.events({
                 var colIndex = wastage_table.cell(this).index().column;
                 var rowIndex = wastage_table.cell(this).index().row;
 
-                var changeto = 3 ;
+                var changeto =$(this).val();
                 var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
                 var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
                 var total_new = total - changeto;
@@ -892,29 +886,20 @@ Template.mobileapp.events({
                 wastage_table.cell(rowIndex, colIndex-1).data(total_new);
                 wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
 
-                
+                console.log(changeto);
 
                 // var colIndex = wastage_table.cell(this).index().column;
                 // var rowIndex = wastage_table.cell(this).index().row;
                 // console.log(colIndex);  
                            
             } );
-
-
-
            
 
         }
 
-        // modal bom product modal
-        templateObject.showBOMModal.set(true);
+        // wastage form modal       
         e.preventDefault();
         e.stopPropagation();
-        
-        
-
-
-
         $('#WastageModal').modal('toggle');
 
    
@@ -936,9 +921,10 @@ Template.mobileapp.events({
 
     },
 
-    'click #tblWastageForm tbody td:not(:first-child)': function (e, instance) {
-         //console.log(this);
-    },
+    // 'click #tblWastageForm tbody td.editable': function (e, instance) {
+    //     $(this).attr('contenteditable', 'true');
+         
+    // },
 
     'change #breakCheck': function(e, instance) {
 
@@ -974,6 +960,21 @@ Template.mobileapp.events({
             $(".mobile-left-btn-containner").css('display', 'block');
         }      
     }
+    , 
+    'click .btn-save-wastage': function(e,instance) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('.fullScreenSpin').css('display', 'none')
+        swal('The wastage is saved', '', 'success');
+        $('#WastageModal').modal('toggle');
+
+    } 
+    ,
+    'click .btn-cancel-wastage': function(e,instance) {
+        
+        $('#WastageModal').modal('toggle');
+
+    } 
+
 });
 
 Template.mobileapp.helpers({
