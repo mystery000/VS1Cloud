@@ -44,17 +44,17 @@ Template.reconciliationlist.onCreated(function(){
     }
 
     let headerStructure = [
-        { index: 0, label: "Date", class: "colDate", active: true, display: true, width: "80" },
-        { index: 1, label: "Account Name", class: "colAccountName", active: true, display: true, width: "80" },
-        { index: 2, label: "Statment No.", class: "colStatmentNo", active: true, display: true, width: "60" },
-        { index: 3, label: "#Recon", class: "colRecon", active: false, display: true, width: "80" },
-        { index: 4, label: "Department", class: "colDepartment", active: true, display: true, width: "60" },
-        { index: 5, label: "Opening", class: "colOpening", active: true, display: true, width: "60" },
-        { index: 6, label: "Closing", class: "colClosing", active: true, display: true, width: "60" },
-        { index: 7, label: "Employee", class: "colEmployee", active: true, display: true, width: "80" },
-        { index: 8, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
-        { index: 9, label: "Finished", class: "colFinished", active: true, display: true, width: "60" },
-        { index: 9, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
+        { index: 0, label: "Date", class: "colDate", active: true, display: true, width: "9%" },
+        { index: 1, label: "Account Name", class: "colAccountName", active: true, display: true, width: "12%" },
+        { index: 2, label: "Statment No.", class: "colStatmentNo", active: true, display: true, width: "9" },
+        { index: 3, label: "#Recon", class: "colRecon", active: false, display: true, width: "7%" },
+        { index: 4, label: "Department", class: "colDepartment", active: true, display: true, width: "8%" },
+        { index: 5, label: "Opening", class: "colOpening", active: true, display: true, width: "10%" },
+        { index: 6, label: "Closing", class: "colClosing", active: true, display: true, width: "10" },
+        { index: 7, label: "Employee", class: "colEmployee", active: true, display: true, width: "9%" },
+        { index: 8, label: "Notes", class: "colNotes", active: true, display: true, width: "10%" },
+        { index: 9, label: "Finished", class: "colStatus", active: true, display: true, width: "8%" },
+        { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "8%" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });

@@ -43,7 +43,7 @@ Template.clienttypesettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
+    { index: 0, label: 'ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
     { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
     { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
     { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "200" },
