@@ -941,21 +941,6 @@ Template.generalledger.onRendered(() => {
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
         },
-        fnDrawCallback: function (oSettings) {
-          $(".paginate_button.page-item").removeClass("disabled");
-          if (oSettings._iDisplayLength == -1) {
-            if (oSettings.fnRecordsDisplay() > 150) {
-            }
-          } else {
-          }
-          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            $(".paginate_button.page-item.next").addClass("disabled");
-          }
-
-          $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
-            // $(".fullScreenSpin").css("display", "inline-block");
-          });
-        }
       }).on('page', function () {
         setTimeout(function () {
           // MakeNegative();
@@ -1152,7 +1137,7 @@ Template.generalledger.events({
       );
     })
   },
-  "change #dateTo, change #dateFrom": (e) => {
+  "change #dateTo, change #dateFrom": (e) => {alert();
     let templateObject = Template.instance();
     $(".fullScreenSpin").css("display", "inline-block");
     clearData('TGeneralLedgerReport').then(function() {

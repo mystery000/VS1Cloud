@@ -1067,7 +1067,7 @@ Template.newprofitandloss.onRendered(function () {
   //templateObject.getDepartments();
 
   TemplateInjector.addDepartments(templateObject);
-
+/*
   templateObject.getProfitLossLayout = async function () {
     // const profitLossLayoutApi = new ProfitLossLayoutApi();
 
@@ -1209,7 +1209,7 @@ Template.newprofitandloss.onRendered(function () {
             let groupID = parseInt($item.attr("plid"));
             let containerID = parseInt(container.el.parent().attr("plid")) || 0;
             let containerName = container.el.parent().attr("data-group") || "";
-            
+
             $('.fullScreenSpin').css('display', 'inline-block');
             let jsonObj = {
               "Name": "VS1_PNLMoveAccount",
@@ -1238,7 +1238,7 @@ Template.newprofitandloss.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
-          }          
+          }
         });
 
         $(".collepsDiv").click(function () {
@@ -1382,7 +1382,7 @@ Template.newprofitandloss.onRendered(function () {
     //   // }, 1000);
     // }
   };
-
+  */
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
 
