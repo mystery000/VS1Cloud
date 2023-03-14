@@ -44,17 +44,17 @@ Template.reconciliationlist.onCreated(function(){
     }
 
     let headerStructure = [
-        { index: 0, label: "Date", class: "colDate", active: true, display: true, width: "80" },
-        { index: 1, label: "Account Name", class: "colAccountName", active: true, display: true, width: "80" },
-        { index: 2, label: "Statment No.", class: "colStatmentNo", active: true, display: true, width: "60" },
-        { index: 3, label: "#Recon", class: "colRecon", active: false, display: true, width: "80" },
-        { index: 4, label: "Department", class: "colDepartment", active: true, display: true, width: "60" },
-        { index: 5, label: "Opening", class: "colOpening", active: true, display: true, width: "60" },
-        { index: 6, label: "Closing", class: "colClosing", active: true, display: true, width: "60" },
-        { index: 7, label: "Employee", class: "colEmployee", active: true, display: true, width: "80" },
-        { index: 8, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
-        { index: 9, label: "Finished", class: "colFinished", active: true, display: true, width: "60" },
-        { index: 9, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
+        { index: 0, label: "Date", class: "colDate", active: true, display: true, width: "9%" },
+        { index: 1, label: "Account Name", class: "colAccountName", active: true, display: true, width: "12%" },
+        { index: 2, label: "Statment No.", class: "colStatmentNo", active: true, display: true, width: "9" },
+        { index: 3, label: "#Recon", class: "colRecon", active: false, display: true, width: "7%" },
+        { index: 4, label: "Department", class: "colDepartment", active: true, display: true, width: "8%" },
+        { index: 5, label: "Opening", class: "colOpening", active: true, display: true, width: "10%" },
+        { index: 6, label: "Closing", class: "colClosing", active: true, display: true, width: "10" },
+        { index: 7, label: "Employee", class: "colEmployee", active: true, display: true, width: "9%" },
+        { index: 8, label: "Notes", class: "colNotes", active: true, display: true, width: "10%" },
+        { index: 9, label: "Finished", class: "colStatus", active: true, display: true, width: "8%" },
+        { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "8%" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -151,28 +151,6 @@ Template.reconciliationlist.onRendered(function() {
             templateObject.displayfields.set(custFields);
         }
         templateObject.initCustomFieldDisplaySettings("", "tblreconciliationlist");
-
-    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblreconciliationlist', function(error, result){
-        if(error){
-
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-                }
-            }
-
-        }
-    });
 
     function MakeNegative() {
         $('td').each(function(){
@@ -527,12 +505,7 @@ Template.reconciliationlist.onRendered(function() {
                   });
                   templateObject.tableheaderrecords.set(tableHeaderList);
                   $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                  $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
-                      var listData = $(this).closest('tr').attr('id');
-                      if(listData){
-                          window.open('/bankrecon?id=' + listData,'_self');
-                      }
-                  });
+
 
               }).catch(function (err) {
                   // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -826,13 +799,7 @@ Template.reconciliationlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if(listData){
-                        FlowRouter.go('/bankrecon?id=' + listData);
-                        //window.open('/bankrecon?id=' + listData,'_self');
-                    }
-                });
+
 
             }
         }).catch(function (err) {
@@ -1120,12 +1087,7 @@ Template.reconciliationlist.onRendered(function() {
                 });
                 templateObject.tableheaderrecords.set(tableHeaderList);
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    if(listData){
-                        window.open('/bankrecon?id=' + listData,'_self');
-                    }
-                });
+
 
             }).catch(function (err) {
                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
@@ -1167,8 +1129,13 @@ Template.reconciliationlist.onRendered(function() {
       }
     }
 
-    tableResize();
-
+    // tableResize();
+    $('#tblreconciliationlist tbody').on( 'click', 'tr', function () {
+        var listData = $(this).closest('tr').find('.colRecon').text()||'';
+        if(listData){
+            window.open('/bankrecon?id=' + listData,'_self');
+        }
+    });
 });
 
 Template.reconciliationlist.events({

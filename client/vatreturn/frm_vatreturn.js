@@ -654,7 +654,7 @@ Template.vatreturn.onRendered(function() {
         }).catch(function(err) {
             let taxRateList = templateObject.taxRateList.get();
 
-            reportService.getAllBASReturn().then(function(data) {
+            reportService.getAllVATReturn().then(function(data) {
                 let accountingmethodflag = false;
                 for (let i = 0; i < data.tvatreturns.length; i++) {
                     if (getid == "") {
@@ -2731,7 +2731,7 @@ Template.vatreturn.helpers({
     years: () => {
         let currentDate = new Date();
         let years = [];
-        for (var i = currentDate.getFullYear(); i >= 2020; i--) {
+        for (var i = currentDate.getFullYear(); i >= 2010; i--) {
             years.push(i);
         }
         return years;
@@ -3244,7 +3244,7 @@ Template.vatreturn.events({
                         let hasTab5 = $("#vatreturnCategory5").prop('checked');
 
                         if (description === '') {
-                            // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
+                            // Bert.alert('<strong>WARNING:</strong> VAT Return Description cannot be blank!', 'warning');
                             swal('VAT Return Description cannot be blank!', '', 'warning');
                             $('.fullScreenSpin').css('display', 'none');
                         } else {
@@ -3698,7 +3698,7 @@ Template.vatreturn.events({
             let hasTab5 = $("#vatreturnCategory5").prop('checked');
 
             if (description === '') {
-                // Bert.alert('<strong>WARNING:</strong> BAS Return Description cannot be blank!', 'warning');
+                // Bert.alert('<strong>WARNING:</strong> VAT Return Description cannot be blank!', 'warning');
                 swal('VAT Return Description cannot be blank!', '', 'warning');
                 $('.fullScreenSpin').css('display', 'none');
             } else {

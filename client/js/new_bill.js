@@ -3668,7 +3668,7 @@ Template.billcard.onRendered(() => {
     });
     $(document).on("click", "#termsList tbody tr", function (e) {
         $('#sltTerms').val($(this).find(".colName").text());
-        $('#termsListModal').modal('toggle');
+        $('#termsListModal').modal('hide');
     });
     $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
         $('#sltStatus').val($(this).find(".colStatusName").text());

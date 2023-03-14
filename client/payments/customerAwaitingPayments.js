@@ -1164,6 +1164,9 @@ Template.customerawaitingpayments.events({
             }
         });
     },
+    'click .btnDropdownFilter': function (event) {
+        $('#customFilterModal').modal('toggle');
+    },
     'keyup #tblcustomerAwaitingPayment_filter input': function (event) {
           if($(event.target).val() != ''){
             $(".btnRefreshCustomerAwaiting").addClass('btnSearchAlert');

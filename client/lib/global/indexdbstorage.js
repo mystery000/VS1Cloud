@@ -393,8 +393,6 @@ openDb = function (dbName) {
       db.createObjectStore("TCurrencyRateHistory", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TXeCurrencySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTripGroup", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TLeaveData", { keyPath: "EmployeeEmail" });
-      // db.createObjectStore('TEarnings', { keyPath: "EmployeeEmail" });
       db.createObjectStore("TReportsAccountantsCategory", {
         keyPath: "EmployeeEmail",
       });
@@ -555,6 +553,10 @@ openDb = function (dbName) {
       db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
       db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTransactionDescription", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
+
 
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));

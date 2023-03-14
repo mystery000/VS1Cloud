@@ -11,6 +11,7 @@ import "../lib/global/indexdbstorage.js";
 
 import { Template } from "meteor/templating";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -53,6 +54,66 @@ Template.inventorylist.onCreated(function () {
   templateObject.columnData = new ReactiveVar();
   templateObject.productID = new ReactiveVar();
   templateObject.transtype = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let checkIfSerialorLot, onBOOrder;
+    let availableQty = data.AvailableQty||0;
+    if(data.SNTracking == true){
+      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
+    }else if(data.batch == true){
+      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
+    }else{
+      checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
+    }
+
+    onBOOrder = data.TotalQtyInStock - availableQty;
+    var dataList = [
+      data.PARTSID || "",
+      data.ProductName || "-",
+      data.SalesDescription || "",
+      availableQty,
+      data.AllocatedSO||0,
+      data.AllocatedBO||0,
+      data.InStock,
+      data.OnOrder,
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.CostExA * 100) / 100),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.CostIncA * 100) /100),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.PriceExA * 100) / 100),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.PriceIncA * 100) /100),
+      checkIfSerialorLot||'',
+      data.BARCODE || "",
+      "All",
+      data.PurchaseDescription || "",
+      data.CUSTFLD1 || "",
+      data.CUSTFLD2 || "",
+      data.Active ? "" : "In-Active"
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: "#ID", class: "colProductID", width: "10", active: false, display: true },
+    { index: 1, label: "Product Name", class: "colProductName", width: "150", active: true, display: true },
+    { index: 2, label: "Sales Description", class: "colSalesDescription", width: "300", active: true, display: true },
+    { index: 3, label: "Available", class: "colAvailable", width: "80", active: true, display: true },
+    { index: 4, label: "On SO", class: "colOnSO", width: "80", active: true, display: true },
+    { index: 5, label: "On BO", class: "colOnBO", width: "80", active: true, display: true },
+    { index: 6, label: "In Stock", class: "colInStock", width: "80", active: true, display: true },
+    { index: 7, label: "On Order", class: "colOnOrder", width: "80", active: true, display: true },
+    { index: 8, label: "#Cost Price (Ex)", class: "colCostPrice", width: "135", active: false, display: true },
+    { index: 9, label: "Cost Price (Inc)", class: "colCostPriceInc", width: "135", active: true, display: true },
+    { index: 10, label: "#Sale Price (Ex)", class: "colSalePrice", width: "135", active: false, display: true },
+    { index: 11, label: "Sale Price (Inc)", class: "colSalePriceInc", width: "135", active: true, display: true },
+    { index: 12, label: "#Serial/Lot No", class: "colSerialNo", width: "124", active: false, display: true },
+    { index: 13, label: "#Barcode", class: "colBarcode", width: "80", active: false, display: true },
+    { index: 14, label: "#Department", class: "colDepartmentth", width: "100", active: false, display: true },
+    { index: 15, label: "#Purchase Description", class: "colPurchaseDescription", width: "80", active: false, display: true },
+    { index: 16, label: "#Custom Field 1", class: "colProdCustField1", width: "80", active: false, display: true },
+    { index: 17, label: "#Custom Field 2", class: "colProdCustField2", width: "80", active: false, display: true },
+    { index: 18, label: "Status", class: "colStatus", width: "60", active: true, display: true },
+  ];
+
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.inventorylist.onRendered(function () {
@@ -103,6 +164,10 @@ Template.inventorylist.onRendered(function () {
   if (localStorage.getItem("vs1cloudlicenselevel") == "PLUS") {
     templateObject.isSNTrackchecked.set(true);
   }
+
+  $(document).on("click", "#myModalDepartment .btnDepartmentSelect", function(e) {
+      $("#myModalDepartment").modal("toggle");
+  });
 });
 
 Template.inventorylist.helpers({
@@ -201,262 +266,297 @@ Template.inventorylist.helpers({
   transtype: () => {
     return Template.instance().transtype.get();
   },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getProductListVS1;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getProductListVS1BySearch;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
 });
 
 Template.inventorylist.events({
-  "click .chkDatatable": function (event) {
-    var columns = $("#tblInventoryOverview th");
-    let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-    $.each(columns, function (i, v) {
-      let className = v.classList;
-      let replaceClass = className[1];
-
-      if (v.innerText == columnDataValue) {
-        if ($(event.target).is(":checked")) {
-          $("." + replaceClass + "").css("display", "table-cell");
-          $("." + replaceClass + "").css("padding", ".75rem");
-          $("." + replaceClass + "").css("vertical-align", "top");
-        } else {
-          $("." + replaceClass + "").css("display", "none");
-        }
-      }
-    });
-  },
-  "click .resetTable": function (event) {
-    let templateObject = Template.instance();
-    let reset_data = templateObject.reset_data.get();
-    let isSNTrackchecked = localStorage.getItem("vs1cloudlicenselevel") == "PLUS" || false;
-    if (isSNTrackchecked) {
-      reset_data[12].display = true;
-    } else {
-      reset_data[12].display = false;
-    }
-    reset_data = reset_data.filter((redata) => redata.display);
-
-    $(".displaySettings").each(function (index) {
-      let $tblrow = $(this);
-      $tblrow.find(".divcolumn").text(reset_data[index].label);
-      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
-
-      let title = $("#tblInventoryOverview").find("th").eq(index);
-      if (reset_data[index].class === "CostPrice" || reset_data[index].class === "SalePrice") {
-        $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
-      } else if (reset_data[index].class === "CostPriceInc" || reset_data[index].class === "SalePriceInc") {
-        $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
-      } else {
-        $(title).html(reset_data[index].label);
-      }
-
-      if (reset_data[index].active) {
-        $(".col" + reset_data[index].class).addClass("showColumn");
-        $(".col" + reset_data[index].class).removeClass("hiddenColumn");
-      } else {
-        $(".col" + reset_data[index].class).addClass("hiddenColumn");
-        $(".col" + reset_data[index].class).removeClass("showColumn");
-      }
-      $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-      $(".col" + reset_data[index].class).css("width", reset_data[index].width);
-    });
-  },
-  "click .saveTable": async function (event) {
-    let lineItems = [];
-    $(".fullScreenSpin").css("display", "inline-block");
-
-    $(".displaySettings").each(function (index) {
-      var $tblrow = $(this);
-      var fieldID = $tblrow.attr("custid") || 0;
-      var colTitle = $tblrow.find(".divcolumn").text() || "";
-      var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-      var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = true;
-      } else {
-        colHidden = false;
-      }
-      let lineItemObj = {
-        index: parseInt(fieldID),
-        label: colTitle,
-        active: colHidden,
-        width: parseInt(colWidth),
-        class: colthClass,
-        display: true,
-      };
-
-      lineItems.push(lineItemObj);
-    });
-
-    let templateObject = Template.instance();
-    let reset_data = templateObject.reset_data.get();
-    reset_data = reset_data.filter((redata) => redata.display == false);
-    lineItems.push(...reset_data);
-    lineItems.sort((a, b) => a.index - b.index);
-
-    try {
-      let erpGet = erpDb();
-      let tableName = "tblInventoryOverview";
-      let employeeId = parseInt(localStorage.getItem("mySessionEmployeeLoggedID")) || 0;
-      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-      if (added) {
-        sideBarService
-          .getNewCustomFieldsWithQuery(parseInt(localStorage.getItem("mySessionEmployeeLoggedID")), "")
-          .then(function (dataCustomize) {
-            $(".fullScreenSpin").css("display", "none");
-            addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
-            swal({
-              title: "SUCCESS",
-              text: "Display settings is updated!",
-              type: "success",
-              showCancelButton: false,
-              confirmButtonText: "OK",
-            }).then((result) => {
-              if (result.value) {
-                $("#myInventoryModal").modal("hide");
-                Meteor._reload.reload();
-              }
-            });
-          });
-      } else {
-        swal("Something went wrong!", "", "error");
-      }
-    } catch (error) {
-      $(".fullScreenSpin").css("display", "none");
-      swal("Something went wrong!", "", "error");
-    }
-  },
-  "blur .divcolumn": function (event) {
-    let columData = $(event.target).html();
-    let columHeaderUpdate = $(event.target).attr("valueupdate");
-    $("th.col" + columHeaderUpdate + "").html(columData);
-  },
-
-  "click .chkProductID": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colProductID").addClass("showColumn");
-      $(".colProductID").removeClass("hiddenColumn");
-    } else {
-      $(".colProductID").addClass("hiddenColumn");
-      $(".colProductID").removeClass("showColumn");
-    }
-  },
-  "click .chkProductName": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colProductName").addClass("showColumn");
-      $(".colProductName").removeClass("hiddenColumn");
-    } else {
-      $(".colProductName").addClass("hiddenColumn");
-      $(".colProductName").removeClass("showColumn");
-    }
-  },
-  "click .chkSalesDescription": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colSalesDescription").addClass("showColumn");
-      $(".colSalesDescription").removeClass("hiddenColumn");
-    } else {
-      $(".colSalesDescription").addClass("hiddenColumn");
-      $(".colSalesDescription").removeClass("showColumn");
-    }
-  },
-  "click .chkAvailable": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colAvailable").addClass("showColumn");
-      $(".colAvailable").removeClass("hiddenColumn");
-    } else {
-      $(".colAvailable").addClass("hiddenColumn");
-      $(".colAvailable").removeClass("showColumn");
-    }
-  },
-  "click .chkOnSO": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colOnSO").addClass("showColumn");
-      $(".colOnSO").removeClass("hiddenColumn");
-    } else {
-      $(".colOnSO").addClass("hiddenColumn");
-      $(".colOnSO").removeClass("showColumn");
-    }
-  },
-  "click .chkOnBO": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colOnBO").addClass("showColumn");
-      $(".colOnBO").removeClass("hiddenColumn");
-    } else {
-      $(".colOnBO").addClass("hiddenColumn");
-      $(".colOnBO").removeClass("showColumn");
-    }
-  },
-  "click .chkInStock": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colInStock").addClass("showColumn");
-      $(".colInStock").removeClass("hiddenColumn");
-    } else {
-      $(".colInStock").addClass("hiddenColumn");
-      $(".colInStock").removeClass("showColumn");
-    }
-  },
-  "click .chkOnOrder": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colOnOrder").addClass("showColumn");
-      $(".colOnOrder").removeClass("hiddenColumn");
-    } else {
-      $(".colOnOrder").addClass("hiddenColumn");
-      $(".colOnOrder").removeClass("showColumn");
-    }
-  },
-  "click .chkSerialNo": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colSerialNo").addClass("showColumn");
-      $(".colSerialNo").removeClass("hiddenColumn");
-    } else {
-      $(".colSerialNo").addClass("hiddenColumn");
-      $(".colSerialNo").removeClass("showColumn");
-    }
-  },
-  "click .chkBarcode": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colBarcode").addClass("showColumn");
-      $(".colBarcode").removeClass("hiddenColumn");
-    } else {
-      $(".colBarcode").addClass("hiddenColumn");
-      $(".colBarcode").removeClass("showColumn");
-    }
-  },
-  "click .chkDepartmentth": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colDepartmentth").addClass("showColumn");
-      $(".colDepartmentth").removeClass("hiddenColumn");
-    } else {
-      $(".colDepartmentth").addClass("hiddenColumn");
-      $(".colDepartmentth").removeClass("showColumn");
-    }
-  },
-  "click .chkPurchaseDescription": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colPurchaseDescription").addClass("showColumn");
-      $(".colPurchaseDescription").removeClass("hiddenColumn");
-    } else {
-      $(".colPurchaseDescription").addClass("hiddenColumn");
-      $(".colPurchaseDescription").removeClass("showColumn");
-    }
-  },
-  "click .chkProdCustField1": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colProdCustField1").addClass("showColumn");
-      $(".colProdCustField1").removeClass("hiddenColumn");
-    } else {
-      $(".colProdCustField1").addClass("hiddenColumn");
-      $(".colProdCustField1").removeClass("showColumn");
-    }
-  },
-  "click .chkProdCustField2": function (event) {
-    if ($(event.target).is(":checked")) {
-      $(".colProdCustField2").addClass("showColumn");
-      $(".colProdCustField2").removeClass("hiddenColumn");
-    } else {
-      $(".colProdCustField2").addClass("hiddenColumn");
-      $(".colProdCustField2").removeClass("showColumn");
-    }
-  },
+  // "click .chkDatatable": function (event) {
+  //   var columns = $("#tblInventoryOverview th");
+  //   let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+  //
+  //   $.each(columns, function (i, v) {
+  //     let className = v.classList;
+  //     let replaceClass = className[1];
+  //
+  //     if (v.innerText == columnDataValue) {
+  //       if ($(event.target).is(":checked")) {
+  //         $("." + replaceClass + "").css("display", "table-cell");
+  //         $("." + replaceClass + "").css("padding", ".75rem");
+  //         $("." + replaceClass + "").css("vertical-align", "top");
+  //       } else {
+  //         $("." + replaceClass + "").css("display", "none");
+  //       }
+  //     }
+  //   });
+  // },
+  // "click .resetTable": function (event) {
+  //   let templateObject = Template.instance();
+  //   let reset_data = templateObject.reset_data.get();
+  //   let isSNTrackchecked = localStorage.getItem("vs1cloudlicenselevel") == "PLUS" || false;
+  //   if (isSNTrackchecked) {
+  //     reset_data[12].display = true;
+  //   } else {
+  //     reset_data[12].display = false;
+  //   }
+  //   reset_data = reset_data.filter((redata) => redata.display);
+  //
+  //   $(".displaySettings").each(function (index) {
+  //     let $tblrow = $(this);
+  //     $tblrow.find(".divcolumn").text(reset_data[index].label);
+  //     $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
+  //
+  //     let title = $("#tblInventoryOverview").find("th").eq(index);
+  //     if (reset_data[index].class === "CostPrice" || reset_data[index].class === "SalePrice") {
+  //       $(title).html(reset_data[index].label + `<i class="fas fa-random fa-trans"></i>`);
+  //     } else if (reset_data[index].class === "CostPriceInc" || reset_data[index].class === "SalePriceInc") {
+  //       $(title).html(reset_data[index].label + `<i class="fas fa-random"></i>`);
+  //     } else {
+  //       $(title).html(reset_data[index].label);
+  //     }
+  //
+  //     if (reset_data[index].active) {
+  //       $(".col" + reset_data[index].class).addClass("showColumn");
+  //       $(".col" + reset_data[index].class).removeClass("hiddenColumn");
+  //     } else {
+  //       $(".col" + reset_data[index].class).addClass("hiddenColumn");
+  //       $(".col" + reset_data[index].class).removeClass("showColumn");
+  //     }
+  //     $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
+  //     $(".col" + reset_data[index].class).css("width", reset_data[index].width);
+  //   });
+  // },
+  // "click .saveTable": async function (event) {
+  //   let lineItems = [];
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //
+  //   $(".displaySettings").each(function (index) {
+  //     var $tblrow = $(this);
+  //     var fieldID = $tblrow.attr("custid") || 0;
+  //     var colTitle = $tblrow.find(".divcolumn").text() || "";
+  //     var colWidth = $tblrow.find(".custom-range").val() || 0;
+  //     var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
+  //     var colHidden = false;
+  //     if ($tblrow.find(".custom-control-input").is(":checked")) {
+  //       colHidden = true;
+  //     } else {
+  //       colHidden = false;
+  //     }
+  //     let lineItemObj = {
+  //       index: parseInt(fieldID),
+  //       label: colTitle,
+  //       active: colHidden,
+  //       width: parseInt(colWidth),
+  //       class: colthClass,
+  //       display: true,
+  //     };
+  //
+  //     lineItems.push(lineItemObj);
+  //   });
+  //
+  //   let templateObject = Template.instance();
+  //   let reset_data = templateObject.reset_data.get();
+  //   reset_data = reset_data.filter((redata) => redata.display == false);
+  //   lineItems.push(...reset_data);
+  //   lineItems.sort((a, b) => a.index - b.index);
+  //
+  //   try {
+  //     let erpGet = erpDb();
+  //     let tableName = "tblInventoryOverview";
+  //     let employeeId = parseInt(localStorage.getItem("mySessionEmployeeLoggedID")) || 0;
+  //     let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+  //     if (added) {
+  //       sideBarService
+  //         .getNewCustomFieldsWithQuery(parseInt(localStorage.getItem("mySessionEmployeeLoggedID")), "")
+  //         .then(function (dataCustomize) {
+  //           $(".fullScreenSpin").css("display", "none");
+  //           addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
+  //           swal({
+  //             title: "SUCCESS",
+  //             text: "Display settings is updated!",
+  //             type: "success",
+  //             showCancelButton: false,
+  //             confirmButtonText: "OK",
+  //           }).then((result) => {
+  //             if (result.value) {
+  //               $("#myInventoryModal").modal("hide");
+  //               Meteor._reload.reload();
+  //             }
+  //           });
+  //         });
+  //     } else {
+  //       swal("Something went wrong!", "", "error");
+  //     }
+  //   } catch (error) {
+  //     $(".fullScreenSpin").css("display", "none");
+  //     swal("Something went wrong!", "", "error");
+  //   }
+  // },
+  // "blur .divcolumn": function (event) {
+  //   let columData = $(event.target).html();
+  //   let columHeaderUpdate = $(event.target).attr("valueupdate");
+  //   $("th.col" + columHeaderUpdate + "").html(columData);
+  // },
+  //
+  // "click .chkProductID": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colProductID").addClass("showColumn");
+  //     $(".colProductID").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colProductID").addClass("hiddenColumn");
+  //     $(".colProductID").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkProductName": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colProductName").addClass("showColumn");
+  //     $(".colProductName").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colProductName").addClass("hiddenColumn");
+  //     $(".colProductName").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkSalesDescription": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colSalesDescription").addClass("showColumn");
+  //     $(".colSalesDescription").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colSalesDescription").addClass("hiddenColumn");
+  //     $(".colSalesDescription").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkAvailable": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colAvailable").addClass("showColumn");
+  //     $(".colAvailable").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colAvailable").addClass("hiddenColumn");
+  //     $(".colAvailable").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkOnSO": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colOnSO").addClass("showColumn");
+  //     $(".colOnSO").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colOnSO").addClass("hiddenColumn");
+  //     $(".colOnSO").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkOnBO": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colOnBO").addClass("showColumn");
+  //     $(".colOnBO").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colOnBO").addClass("hiddenColumn");
+  //     $(".colOnBO").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkInStock": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colInStock").addClass("showColumn");
+  //     $(".colInStock").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colInStock").addClass("hiddenColumn");
+  //     $(".colInStock").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkOnOrder": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colOnOrder").addClass("showColumn");
+  //     $(".colOnOrder").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colOnOrder").addClass("hiddenColumn");
+  //     $(".colOnOrder").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkSerialNo": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colSerialNo").addClass("showColumn");
+  //     $(".colSerialNo").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colSerialNo").addClass("hiddenColumn");
+  //     $(".colSerialNo").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkBarcode": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colBarcode").addClass("showColumn");
+  //     $(".colBarcode").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colBarcode").addClass("hiddenColumn");
+  //     $(".colBarcode").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkDepartmentth": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colDepartmentth").addClass("showColumn");
+  //     $(".colDepartmentth").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colDepartmentth").addClass("hiddenColumn");
+  //     $(".colDepartmentth").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkPurchaseDescription": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colPurchaseDescription").addClass("showColumn");
+  //     $(".colPurchaseDescription").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colPurchaseDescription").addClass("hiddenColumn");
+  //     $(".colPurchaseDescription").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkProdCustField1": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colProdCustField1").addClass("showColumn");
+  //     $(".colProdCustField1").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colProdCustField1").addClass("hiddenColumn");
+  //     $(".colProdCustField1").removeClass("showColumn");
+  //   }
+  // },
+  // "click .chkProdCustField2": function (event) {
+  //   if ($(event.target).is(":checked")) {
+  //     $(".colProdCustField2").addClass("showColumn");
+  //     $(".colProdCustField2").removeClass("hiddenColumn");
+  //   } else {
+  //     $(".colProdCustField2").addClass("hiddenColumn");
+  //     $(".colProdCustField2").removeClass("showColumn");
+  //   }
+  // },
 
   //   'click .chkCostPrice': function (event) {
   //     if ($(event.target).is(':checked')) {
@@ -538,70 +638,70 @@ Template.inventorylist.events({
   //   },
   // display settings
 
-  "change .rngRangeProductID": function (event) {
-    let range = $(event.target).val();
-    $(".colProductID").css("width", range);
-  },
-  "change .rngRangeProductName": function (event) {
-    let range = $(event.target).val();
-    $(".colProductName").css("width", range);
-  },
-  "change .rngRangeSalesDescription": function (event) {
-    let range = $(event.target).val();
-    $(".colSalesDescription").css("width", range);
-  },
-  "change .rngRangeAvailable": function (event) {
-    let range = $(event.target).val();
-    $(".colAvailable").css("width", range);
-  },
-  "change .rngRangeOnSO": function (event) {
-    let range = $(event.target).val();
-    $(".colOnSO").css("width", range);
-  },
-  "change .rngRangeOnBO": function (event) {
-    let range = $(event.target).val();
-    $(".colOnBO").css("width", range);
-  },
-  "change .rngRangeInStock": function (event) {
-    let range = $(event.target).val();
-    $(".colInStock").css("width", range);
-  },
-  "change .rngRangeOnOrder": function (event) {
-    let range = $(event.target).val();
-    $(".colOnOrder").css("width", range);
-  },
-  "change .rngRangeSerialNo": function (event) {
-    let range = $(event.target).val();
-    $(".colSerialNo").css("width", range);
-  },
-  "change .rngRangeBarcode": function (event) {
-    let range = $(event.target).val();
-    $(".colBarcode").css("width", range);
-  },
-  "change .rngRangeDepartment": function (event) {
-    let range = $(event.target).val();
-    $(".colDepartment").css("width", range);
-  },
-  "change .rngRangePurchaseDescription": function (event) {
-    let range = $(event.target).val();
-    $(".colPurchaseDescription").css("width", range);
-  },
-  "change .rngRangeCostPrice": function (event) {
-    let range = $(event.target).val();
-    $(".colCostPrice").css("width", range);
-  },
-  "change .rngRangeCostPriceInc": function (event) {
-    let range = $(event.target).val();
-    $(".colCostPriceInc").css("width", range);
-  },
-  "change .rngRangeSalePrice": function (event) {
-    let range = $(event.target).val();
-    $(".colSalePrice").css("width", range);
-  },
-  "change .rngRangeSalePriceInc": function (event) {
-    let range = $(event.target).val();
-    $(".colSalePriceInc").css("width", range);
-  },
+  // "change .rngRangeProductID": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colProductID").css("width", range);
+  // },
+  // "change .rngRangeProductName": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colProductName").css("width", range);
+  // },
+  // "change .rngRangeSalesDescription": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colSalesDescription").css("width", range);
+  // },
+  // "change .rngRangeAvailable": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colAvailable").css("width", range);
+  // },
+  // "change .rngRangeOnSO": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colOnSO").css("width", range);
+  // },
+  // "change .rngRangeOnBO": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colOnBO").css("width", range);
+  // },
+  // "change .rngRangeInStock": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colInStock").css("width", range);
+  // },
+  // "change .rngRangeOnOrder": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colOnOrder").css("width", range);
+  // },
+  // "change .rngRangeSerialNo": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colSerialNo").css("width", range);
+  // },
+  // "change .rngRangeBarcode": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colBarcode").css("width", range);
+  // },
+  // "change .rngRangeDepartment": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colDepartment").css("width", range);
+  // },
+  // "change .rngRangePurchaseDescription": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colPurchaseDescription").css("width", range);
+  // },
+  // "change .rngRangeCostPrice": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colCostPrice").css("width", range);
+  // },
+  // "change .rngRangeCostPriceInc": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colCostPriceInc").css("width", range);
+  // },
+  // "change .rngRangeSalePrice": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colSalePrice").css("width", range);
+  // },
+  // "change .rngRangeSalePriceInc": function (event) {
+  //   let range = $(event.target).val();
+  //   $(".colSalePriceInc").css("width", range);
+  // },
 
   //     'click .th.colCostPrice': function(event) {
   //       $('.colCostPrice').addClass('hiddenColumn');
@@ -645,55 +745,55 @@ Template.inventorylist.events({
 
   //   },
 
-  "change .rngRange": function (event) {
-    let range = $(event.target).val();
-    $(event.target)
-      .closest("div.divColWidth")
-      .find(".spWidth")
-      .html(range + "px");
-
-    let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-    let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-    var datable = $("#tblInventoryOverview th");
-    $.each(datable, function (i, v) {
-      if (v.innerText == columnDataValue) {
-        let className = v.className;
-        let replaceClass = className.replace(/ /g, ".");
-        $("." + replaceClass + "").css("width", range + "px");
-      }
-    });
-  },
-  "click .btnOpenSettings": function (event) {
-    let templateObject = Template.instance();
-    var columns = $("#tblInventoryOverview th");
-
-    const tableHeaderList = [];
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
-
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecords.set(tableHeaderList);
-  },
+  // "change .rngRange": function (event) {
+  //   let range = $(event.target).val();
+  //   $(event.target)
+  //     .closest("div.divColWidth")
+  //     .find(".spWidth")
+  //     .html(range + "px");
+  //
+  //   let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+  //   let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+  //   var datable = $("#tblInventoryOverview th");
+  //   $.each(datable, function (i, v) {
+  //     if (v.innerText == columnDataValue) {
+  //       let className = v.className;
+  //       let replaceClass = className.replace(/ /g, ".");
+  //       $("." + replaceClass + "").css("width", range + "px");
+  //     }
+  //   });
+  // },
+  // "click .btnOpenSettings": function (event) {
+  //   let templateObject = Template.instance();
+  //   var columns = $("#tblInventoryOverview th");
+  //
+  //   const tableHeaderList = [];
+  //   let sTible = "";
+  //   let sWidth = "";
+  //   let sIndex = "";
+  //   let sVisible = "";
+  //   let columVisible = false;
+  //   let sClass = "";
+  //   $.each(columns, function (i, v) {
+  //     if (v.hidden == false) {
+  //       columVisible = true;
+  //     }
+  //     if (v.className.includes("hiddenColumn")) {
+  //       columVisible = false;
+  //     }
+  //     sWidth = v.style.width.replace("px", "");
+  //
+  //     let datatablerecordObj = {
+  //       sTitle: v.innerText || "",
+  //       sWidth: sWidth || "",
+  //       sIndex: v.cellIndex || "",
+  //       sVisible: columVisible || false,
+  //       sClass: v.className || "",
+  //     };
+  //     tableHeaderList.push(datatablerecordObj);
+  //   });
+  //   templateObject.tableheaderrecords.set(tableHeaderList);
+  // },
   // "keyup #tblInventoryOverview_filter input": function(event) {
   //     if ($(event.target).val() != "") {
   //         $(".btnRefreshProduct").addClass("btnSearchAlert");
