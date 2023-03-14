@@ -100,7 +100,7 @@ export default class TableHandler {
         index: parseInt(fieldID),
         label: colTitle,
         active: showCol,
-        width: parseInt(colWidth),
+        width: parseFloat(colWidth),
         class: colthClass,
         display: true
       };

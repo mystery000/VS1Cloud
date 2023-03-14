@@ -1404,8 +1404,9 @@ Template.new_invoice.onCreated(function () {
     var po = $("#ponumber").val() || ".";
 
     $("#tblInvoiceLine > tbody > tr").each(function () {
+      var lineID = this.id;
       const tdproduct = $(this).find(".lineProductName").val();
-      const tddescription = $(this).find('.lineProductDesc').text();
+      let tddescription = $(this).find('.lineProductDesc').text();
       let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
       if(tdpqa){
           tddescription += " " + tdpqa;
@@ -3133,486 +3134,7 @@ Template.new_invoice.onCreated(function () {
       ).val();
       var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
       let emid = localStorage.getItem("mySessionEmployeeLoggedID");
-      sideBarService
-        .getTemplateNameandEmployeId("Invoices", emid, 1)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoices",
-              GlobalRef: "Invoices",
-              Description: $('input[name="Invoices_1"]').val(),
-              Template: "1",
-              Active: invoices == 1 ? true : false,
-            },
-          };
 
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoices",
-              Description: $('input[name="Invoices_1"]').val(),
-              Template: "1",
-              Active: invoices == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Invoices", emid, 2)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoices",
-              GlobalRef: "Invoices",
-              Description: $('input[name="Invoices_2"]').val(),
-              Template: "2",
-              Active: invoices == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoices",
-              Description: $('input[name="Invoices_2"]').val(),
-              Template: "2",
-              Active: invoices == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Invoices", emid, 3)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoices",
-              GlobalRef: "Invoices",
-              Description: $('input[name="Invoices_3"]').val(),
-              Template: "3",
-              Active: invoices == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoices",
-              Description: $('input[name="Invoices_3"]').val(),
-              Template: "3",
-              Active: invoices == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      // Invoice Back Orders Template Section
-
-      sideBarService
-        .getTemplateNameandEmployeId("Invoice Back Orders", emid, 1)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoice Back Orders",
-              GlobalRef: "Invoice Back Orders",
-              Description: $('input[name="Invoice Back Orders_1"]').val(),
-              Template: "1",
-              Active: invoices_back_order == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoice Back Orders",
-              Description: $('input[name="Invoice Back Orders_1"]').val(),
-              Template: "1",
-              Active: invoices_back_order == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Invoice Back Orders", emid, 2)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoice Back Orders",
-              GlobalRef: "Invoice Back Orders",
-              Description: $('input[name="Invoice Back Orders_2"]').val(),
-              Template: "2",
-              Active: invoices_back_order == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoice Back Orders",
-              Description: $('input[name="Invoice Back Orders_2"]').val(),
-              Template: "2",
-              Active: invoices_back_order == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Invoice Back Orders", emid, 3)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoice Back Orders",
-              GlobalRef: "Invoice Back Orders",
-              Description: $('input[name="Invoice Back Orders_3"]').val(),
-              Template: "3",
-              Active: invoices_back_order == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Invoice Back Orders",
-              Description: $('input[name="Invoice Back Orders_3"]').val(),
-              Template: "3",
-              Active: invoices_back_order == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Delivery Docket", emid, 1)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Delivery Docket",
-              GlobalRef: "Delivery Docket",
-              Description: $('input[name="Delivery Docket_1"]').val(),
-              Template: "1",
-              Active: delivery_docket == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Delivery Docket",
-              Description: $('input[name="Delivery Docket_1"]').val(),
-              Template: "1",
-              Active: delivery_docket == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Delivery Docket", emid, 2)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Delivery Docket",
-              GlobalRef: "Delivery Docket",
-              Description: $('input[name="Delivery Docket_2"]').val(),
-              Template: "2",
-              Active: delivery_docket == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Delivery Docket",
-              Description: $('input[name="Delivery Docket_2"]').val(),
-              Template: "2",
-              Active: delivery_docket == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Delivery Docket", emid, 3)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Delivery Docket",
-              GlobalRef: "Delivery Docket",
-              Description: $('input[name="Delivery Docket_3"]').val(),
-              Template: "3",
-              Active: delivery_docket == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {
-              $(".fullScreenSpin").css("display", "none");
-            });
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Delivery Docket",
-              Description: $('input[name="Delivery Docket_3"]').val(),
-              Template: "3",
-              Active: delivery_docket == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) { });
-        });
       if(_template !== ''){
         const _templateNumber = $(`input[name="${_template}"]:checked`).val();
         await templateObject.exportSalesToPdf(_template, _templateNumber);
@@ -11194,7 +10716,7 @@ Template.new_invoice.events({
           existProduct = true;
         }
       });
-      if (!existProduct) {
+      // if (!existProduct) {
         if (selectedProductName == "") {
           swal("You have to select Product.", "", "info");
           event.preventDefault();
@@ -11242,8 +10764,10 @@ Template.new_invoice.events({
             }
             else{
               let data = JSON.parse(dataObject[0].data);
+              let existProductInfo = false;
               for (let i = 0; i < data.tproductqtylist.length; i++) {
                 if(data.tproductqtylist[i].ProductName == selectedProductName){
+                  existProductInfo = true;
                   if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                     return false;
                   } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
@@ -11280,6 +10804,46 @@ Template.new_invoice.events({
                     }, 200);
                   }
                 }
+              }
+
+              if (!existProductInfo) {
+                productService.getProductStatus(selectedProductName).then(async function (data) {
+                  if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    return false;
+                  } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                });
               }
             }
           }).catch(function (err) {
@@ -11322,7 +10886,7 @@ Template.new_invoice.events({
             });
           });
         }
-      }
+      // }
     }
   },
   "click .btnSnLotmodal": function (event) {
@@ -11343,15 +10907,17 @@ Template.new_invoice.events({
           existProduct = true;
         }
       });
-      if (!existProduct) {
+      // if (!existProduct) {
         if (selectedProductName == "") {
           swal("You have to select Product.", "", "info");
           event.preventDefault();
           return false;
         } else {
+          $(".fullScreenSpin").css("display", "inline-block");
           getVS1Data("TProductQtyList").then(function (dataObject) {
             if (dataObject.length == 0) {
               productService.getProductStatus(selectedProductName).then(async function (data) {
+                $(".fullScreenSpin").css("display", "none");
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                   var buttons = $("<div>")
                   .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
@@ -11481,8 +11047,11 @@ Template.new_invoice.events({
             }
             else{
               let data = JSON.parse(dataObject[0].data);
+              let existProductInfo = false;
               for (let i = 0; i < data.tproductqtylist.length; i++) {
                 if(data.tproductqtylist[i].ProductName == selectedProductName){
+                  $(".fullScreenSpin").css("display", "none");
+                  existProductInfo = true;
                   if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                     var buttons = $("<div>")
                     .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
@@ -11610,9 +11179,141 @@ Template.new_invoice.events({
                   }
                 }
               }
+
+              if(!existProductInfo){
+                productService.getProductStatus(selectedProductName).then(async function (data) {
+                  $(".fullScreenSpin").css("display", "none");
+                  if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    var buttons = $("<div>")
+                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                    swal({
+                      title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                      type: "warning",
+                      showCancelButton: false,
+                      showConfirmButton: false,
+                      html: buttons,
+                      onOpen: function (dObj) {
+                        $('#trackSN').on('click',function () {
+                          objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
+                              Active: true,
+                              SNTracking: "true",
+                              Batch: "false",
+                            },
+                          };
+  
+                          productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                        });
+                        $('#trackLN').on('click',function () {
+                          swal.close();
+                          objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
+                              Active: true,
+                              SNTracking: "false",
+                              Batch: "true",
+                            },
+                          };
+  
+                          productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                        });
+                        $('#trackCancel').on('click',function () {
+                            swal.close();
+                        });
+                      }
+                    });
+                  } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                });
+              }
             }
           }).catch(function (err) {
             productService.getProductStatus(selectedProductName).then(async function (data) {
+              $(".fullScreenSpin").css("display", "none");
               if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                 var buttons = $("<div>")
                 .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
@@ -11741,7 +11442,7 @@ Template.new_invoice.events({
             });
           });
         }
-      }
+      // }
     }
   },
   "click .btnSNCreate": function (event) {

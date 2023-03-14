@@ -347,7 +347,7 @@
                 }
             }
 
-            .menu-item-secondary {
+            .top .menu-item-secondary {
                 padding-left: 20px;
             }
             .border-bottom-line {
@@ -395,6 +395,11 @@
                                     <i class="fas fa-plus"></i> New Journal Entry
                                 </a>
                             </li>
+                            <li class="">
+                                <a id="sidenavnewaccountsoverview" name="sidenavnewaccountsoverview" class="text-left">
+                                    <i class="fas fa-book"></i> Accounts Overview
+                                </a>
+                            </li>
                             <li class="menu-item-secondary">
                                 <a id="sidenavnewaccounts" name="sidenavnewaccounts" class="text-left"><i class="fas fa-plus"></i> New Account</a>
                             </li>
@@ -416,7 +421,7 @@
                         <a href="#appointmentsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader appointmentsLiHeader"><i class="fa fa-calendar faHeader"></i> Appointments</a>
                         <div class="submenuItem collapse" id="appointmentsSubmenu">
                             <ul class="list-unstyled">
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavallocation" name="sidenavallocation" class="text-left"><i class="far fa-list-alt"></i> Allocation</a>
                                 </li>
                                 <li>
@@ -475,20 +480,20 @@
                                 <a id="sidenavbankreconciliation" name="sidenavbankreconciliation" class="text-left"><i class="fas fa-plus"></i> New Reconciliation</a>
                             </li>
                             <li data-toggle="tooltip" data-bs-tooltip="" title="You can Manually Import a Bank Statement from any Bank In the World By Creating a Statement Import Rule for that Bank. Once the Statement is Imported the Reconciliation Matching Rules will match transaction on the statement automatically to transactions within VS1Cloud">
-                                <a id="" name="" class="text-left">
+                                <a id="sidenavReconMacthingRulesList" name="sidenavReconMacthingRulesList" class="text-left">
                                     <i class="fas fa-list-ul"></i> Recon Matching Rules List
                                 </a>
                             </li>
                             <li class="menu-item-secondary border-bottom-line" data-toggle="tooltip" data-bs-tooltip="" title="You can Manually Import a Bank Statement from any Bank In the World By Creating a Statement Import Rule for that Bank. Once the Statement is Imported the Reconciliation Matching Rules will match transaction on the statement automatically to transactions within VS1Cloud">
-                                <a id="" name="" class="text-left"><i class="fas fa-plus"></i> New Recon Matching Rule</a>
+                                <a id="sidenavNewReconMatchingRule" name="sidenavNewReconMatchingRule" class="text-left"><i class="fas fa-plus"></i> New Recon Matching Rule</a>
                             </li>
                             <li data-toggle="tooltip" data-bs-tooltip="" title="You can Manually Import a Bank Statement from any Bank In the World By Creating a Statement Import Rule for that Bank. Once the Statement is Imported the Reconciliation Matching Rules will match transaction on the statement automatically to transactions within VS1Cloud">
-                                <a id="" name="" class="text-left">
+                                <a id="sidenavStatementImportRulesList" name="sidenavStatementImportRulesList" class="text-left">
                                     <i class="fas fa-list-ul"></i> Statement Import Rules List
                                 </a>
                             </li>
                             <li class="menu-item-secondary" data-toggle="tooltip" data-bs-tooltip="" title="You can Manually Import a Bank Statement from any Bank In the World By Creating a Statement Import Rule for that Bank. Once the Statement is Imported the Reconciliation Matching Rules will match transaction on the statement automatically to transactions within VS1Cloud">
-                                <a id="" name="" class="text-left"><i class="fas fa-plus"></i> New Statement Import Rule</a>
+                                <a id="sidenavNewStatementImportRule" name="sidenavNewStatementImportRule" class="text-left"><i class="fas fa-plus"></i> New Statement Import Rule</a>
                             </li>
                         </ul>
                     </div>
@@ -508,7 +513,7 @@
                                     <i class="fas fa-plus"></i> New Customer
                                 </a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavemployees" name="sidenavemployees" class="text-left"><i class="fas fa-user-tie"></i> Employee List</a>
                             </li>
                             <li class="menu-item-secondary border-bottom-line">
@@ -516,7 +521,7 @@
                                     <i class="fas fa-plus"></i> New Employee
                                 </a>
                             </li>
-                            <li>
+                            <li >
                                 <a id="sidenavjobs" name="sidenavjobs" class="text-left"><i class="fas fa-briefcase"></i> Job List</a>
                             </li>
                             <li>
@@ -544,13 +549,13 @@
                     <a href="#crmSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader crmLiHeader"><i class="fas fa-tasks faHeader"></i> CRM</a>
                     <div class="submenuItem collapse" id="crmSubmenu">
                         <ul class="list-unstyled">
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidecampaignlist" name="sidecampaignlist" class="text-left"><i class="fas fa-user-tie"></i> Campaign List</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a class="sidenavleads text-left" id="sidenavleads" name="sidenavleads"><i class="fas fa-user-friends"></i> Lead List</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavprojects" name="sidenavprojects" class="text-left"><i class="fas fa-user-tie"></i> Project List</a>
                             </li>
                             <li>
@@ -564,9 +569,11 @@
                 <li class="dashboardLi" id="sidenavdashbaord">
                     <a class="liHeader sidenavdashbaord text-left"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Accounts</a>
                 </li>
+                {{#if showExective}}
                 <li class="dashboardLiExe" id="sidenavdashbaordexe">
                     <a class="liHeader sidenavdashbaord text-left"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br> Executive</a>
                 </li>
+                {{/if}}
                 <li class="dashboardLiSalesManager" id="sidenavdashbaordsalesmanager">
                     <a class="liHeader sidenavdashbaord text-left"><i class="fas fa-tachometer-alt faHeader"></i> Dashboard - <br>  Sales Manager</a>
                 </li>
@@ -586,7 +593,7 @@
                 <a href="#fixedAssetsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader fixedAssetsLiHeader"><i class="fas fa-home faHeader"></i> Fixed Asset</a>
                 <div class="submenuItem collapse" id="fixedAssetsSubmenu">
                     <ul class="list-unstyled">
-                        <li>
+                        <li class="border-bottom-line">
                             <a class="sidenavfixedassets text-left" id="sidenavfixedassets" name="sidenavfixedassets"><i class="fas fa-user-friends"></i> Fixed Assets</a>
                         </li>
                         <li>
@@ -603,12 +610,12 @@
                     <div class="submenuItem collapse" id="inventorySubmenu">
                         <ul class="list-unstyled">
                             {{#if isSNTrackChecked}}
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavbinlocationlist" name="sidenavbinlocationlist" class="text-left">
                                     <i class="fas fa-box"></i> Bin Location List
                                 </a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavelotnumberlist" name="sidenavelotnumberlist" class="text-left"><i class="fa fa-list-ul"></i> Lot Number List</a>
                             </li>
                             {{/if}}
@@ -623,7 +630,7 @@
                             </li>
                             {{/if}}
                             {{#if equals isSNTrackChecked true}}
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenaveserialnumberlist" name="sidenaveserialnumberlist" class="text-left"><i class="fa fa-list-alt"></i> Serial Number List</a>
                             </li>
                             {{/if}}
@@ -667,24 +674,24 @@
                 </a>
                 <div class="submenuItem collapse" id="manufacturingSubmenu">
                     <ul class="list-unstyled">
-                        <li>
+                        <li class="border-bottom-line">
                             <a id="sidenavbomList" name="sidenavbomList" class="text-left"><i class="fas fa-industry"></i> Bill&nbsp;of Materials-BOM
                             </a>
                         </li>
-                        <li>
+                        <li class="border-bottom-line">
                             <a id="sidenavmobileapp" name="sidenavmobileapp" class="text-left">
                                 <i class="fas fa-mobile"></i> Mobile App
                             </a>
                         </li>
-                        <li>
+                        <li class="border-bottom-line">
                             <a id="sidenavprocesses" name="sidenavprocesses" class="text-left"><i class="fas fa-microchip"></i> Processes</a>
                         </li>
-                        <li>
+                        <li class="border-bottom-line">
                             <a id="sidenavproductionplanner" name="sidenavproductionplanner" class="text-left">
                                 <i class="fas fa-marker"></i> Production Planner
                             </a>
                         </li>
-                        <li>
+                        <li class="border-bottom-line">
                             <a id="sidenavnewworkorderlist" name="sidenavnewworkorderlist" class="text-left">
                                 <i class="fas fa-list"></i> Work&nbsp;Order List
                             </a>
@@ -706,7 +713,7 @@
                     <a href="#paymentsSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader paymentsLiHeader"><i class="fa fa-dollar faHeader"></i> Payments</a>
                     <div class="submenuItem collapse" id="paymentsSubmenu">
                         <ul class="list-unstyled">
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavawaitingSPPO" name="sidenavawaitingSPPO" class="text-left">
                                     <i class="far fa-clock"></i> All Outstanding Expenses
                                 </a>
@@ -720,12 +727,12 @@
                                 <a id="sidenavnewcustomerP" name="sidenavnewcustomerP"  class="text-left"><i class="fas fa-plus"></i> New Customer Payment
                                 </a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavawaitingCP" name="sidenavawaitingCP" class="text-left">
                                     <i class="fas fa-user-clock"></i> Outstanding Invoices
                                 </a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavstatementlist2" name="sidenavstatementlist2" class="text-left"><i class="fa fa-print"></i> Statements</a>
                             </li>
                             <li>
@@ -748,11 +755,11 @@
                     <div class="submenuItem collapse" id="payrollSubmenu">
                         <ul class="list-unstyled">
                             {{#if includeClockOnOff}}
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavtimeclock" name="sidenavtimeclock" class="text-left"><i class="fas fa-hourglass-half"></i> Clock On/Off</a>
                                 </li>
                             {{/if}}
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavPayEmployees" name="sidenavPayEmployees" class="text-left"><i class="fas fa-hand-holding-usd"></i> Pay Employees
                                 </a>
                             </li>
@@ -811,14 +818,15 @@
                                 <a id="sidenavPurchaseOrder" name="sidenavPurchaseOrder" class="text-left"><i class="fas fa-cash-register"></i> Purchase Order List
                                 </a>
                             </li>
+                            <li class="menu-item-secondary border-bottom-line">
+                                <a id="sidenavnewPO" name="sidenavnewPO" class="text-left"><i class="fas fa-plus"></i> New Purchase Order
+                                </a>
+                            </li>
                             <li>
                                 <a id="sidenavPurchaseOrderBO" name="sidenavPurchaseOrderBO" class="text-left"><i class="fas fa-receipt"></i> Purchase Order List Back Order
                                 </a>
                             </li>
-                            <li class="menu-item-secondary">
-                                <a id="sidenavnewPO" name="sidenavnewPO" class="text-left"><i class="fas fa-plus"></i> New Purchase Order
-                                </a>
-                            </li>
+                            
                         </ul>
                     </div>
                 </li>
@@ -837,7 +845,7 @@
                         <div class="submenuItem collapse" id="reportsSubmenu">
                             <ul class="list-unstyled">
                                 {{#if is1099Transaction}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenav1099report" name="sidenav1099report" class="text-left">
                                             <i class="fas fa-chart-bar"></i> 1099 Contractor Report
                                         </a>
@@ -845,7 +853,7 @@
                                 {{/if}}
 
                                 {{#if isAgedPayables}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavagedpayables" name="sidenavagedpayables" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Aged Payables
                                         </a>
@@ -853,7 +861,7 @@
                                 {{/if}}
 
                                 {{#if isAgedPayablesSummary}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavagedpayablessummary" name="sidenavagedpayablessummary" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Aged Payables Summary
                                         </a>
@@ -861,7 +869,7 @@
                                 {{/if}}
 
                                 {{#if isAgedReceivables}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavagedreceivables" name="sidenavagedreceivables" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Aged Receivables
                                         </a>
@@ -869,7 +877,7 @@
                                 {{/if}}
 
                                 {{#if isAgedReceivablesSummary}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavagedreceivablessummary" name="sidenavagedreceivablessummary" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Aged Receivables Summary
                                         </a>
@@ -877,13 +885,13 @@
                                 {{/if}}
 
                                 {{#if isBalanceSheet}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavbalancesheetreport" name="sidenavbalancesheetreport" class="text-left"><i class="fas fa-chart-bar"></i> Balance Sheet</a>
                                     </li>
                                 {{/if}}
 
                                 {{#if isGeneralLedger}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavgeneralledger" name="sidenavgeneralledger" class="text-left">
                                             <i class="fas fa-chart-bar"></i> General Ledger
                                         </a>
@@ -891,7 +899,7 @@
                                 {{/if}}
 
                                 {{#if isPrintStatement}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavstatementlist" name="sidenavstatementlist" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Print Statement
                                         </a>
@@ -899,7 +907,7 @@
                                 {{/if}}
 
                                 {{#if isProfitLoss}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavprofitlossreport" name="sidenavprofitlossreport" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Profit and Loss
                                         </a>
@@ -907,7 +915,7 @@
                                 {{/if}}
 
                                 {{#if isPurchaseReport}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavpurchasesreport" name="sidenavpurchasesreport" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Purchase Report
                                         </a>
@@ -915,7 +923,7 @@
                                 {{/if}}
 
                                 {{#if isPurchaseSummaryReport}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavpurchasesummaryreport" name="sidenavpurchasesummaryreport" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Purchase Summary Report
                                         </a>
@@ -923,7 +931,7 @@
                                 {{/if}}
 
                                 {{#if isProductSalesReport}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavproductsalesreport" name="sidenavproductsalesreport" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Product Sales Report
                                         </a>
@@ -931,13 +939,13 @@
                                 {{/if}}
 
                                 {{#if isSalesReport}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavsalesreport" name="sidenavsalesreport" class="text-left"><i class="fas fa-chart-bar"></i> Sales Report</a>
                                     </li>
                                 {{/if}}
 
                                 {{#if isSalesSummaryReport}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavsalessummaryreport" name="sidenavsalessummaryreport" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Sales Summary Report
                                         </a>
@@ -945,7 +953,7 @@
                                 {{/if}}
 
                                 {{#if isTaxSummaryReport}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavtaxsummaryreport" name="sidenavtaxsummaryreport" class="text-left">
                                             <i class="fas fa-chart-bar"></i> Tax Summary Report
                                         </a>
@@ -972,7 +980,7 @@
                     <a href="#salesSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader salesLiHeader"><i class="fa fa-credit-card faHeader"></i> Sales</a>
                     <div class="submenuItem collapse" id="salesSubmenu">
                         <ul class="list-unstyled">
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavInvoiceEmail" name="sidenavInvoiceEmail"><i class="fas fa-envelope"></i> Email Invoices</a>
                             </li>
                             <li>
@@ -981,11 +989,11 @@
                             <li class="menu-item-secondary border-bottom-line">
                                 <a id="sidenavnewInvoice" name="sidenavnewInvoice"><i class="fas fa-plus"></i> New Invoice</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a id="sidenavInvoiceBO" name="sidenavInvoiceBO" class="text-left"><i class="fas fa-receipt"></i> Invoice List Back Order
                                 </a>
                             </li>
-                            <li>
+                            <li class="">
                                 <a id="sidenavQuote" name="sidenavQuote"><i class="fas fa-quote-right"></i> Quote List</a>
                             </li>
                             <li class="menu-item-secondary border-bottom-line">
@@ -1015,19 +1023,19 @@
                     <a href="#seedToSaleSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle liHeader seedtosaleLiHeader"><i class="fas fa-cannabis faHeader"></i> Seed to Sale</a>
                     <div class="submenuItem collapse" id="seedToSaleSubmenu">
                         <ul class="list-unstyled">
-                            <li>
+                            <li class="border-bottom-line">
                                 <a href="/stsplants" id="sidenavPlants" name="sidenavPlants"><i class="fas fa-tractor"></i> Plants</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a href="/stsharvests" id="sidenavHarvest" name="sidenavHarvest"><i class="fas fa-tractor"></i> Harvest</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a href="/stspackages" id="sidenavPackages" name="sidenavPackages"><i class="fas fa-box-open"></i> Packages</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a href="/ststransfers" id="sidenavTransfers" name="sidenavTransfers"><i class="fas fa-exchange-alt"></i> Transfers</a>
                             </li>
-                            <li>
+                            <li class="border-bottom-line">
                                 <a href="/stsoverviews" id="sidenavOverviews" name="sidenavOverviews"><i class="fas fa-chart-area"></i> Overviews</a>
                             </li>
                             <li>
@@ -1044,104 +1052,104 @@
                     <div class="submenuItem collapse" id="settingsSubmenu">
                         <ul class="list-unstyled">
                             {{#if equals isGreenTrack true}}
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavcompanyappsettings" name="sidenavcompanyappsettings"><i class="fas fa-cog"></i> VS1 Modules</a>
                                 </li>
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavaccesslevel" name="sidenavaccesslevel" class="text-left">
                                         <i class="fas fa-cog"></i> Employee Settings
                                     </a>
                                 </li>
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavorganisationsettings" name="sidenavorganisationsettings" class="text-left">
                                         <i class="fas fa-cog"></i> Organization Settings
                                     </a>
                                 </li>
                             {{else}}
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="organisationsettings" name="organisationsettings" class="text-left"><i class="fas fa-cog"></i> Organization Details</a>
                                 </li>
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavcompanyappsettings" name="sidenavcompanyappsettings" class="text-left"><i class="fas fa-cog"></i> VS1 Modules</a>
                                 </li>
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="backuprestore" name="backuprestore" class="text-left"><i class="fas fa-cog"></i> Backup and Restore</a>
                                 </li>
                                 {{#if checkFXCurrency}}
-                                    <li>
+                                    <li class="border-bottom-line">
                                         <a id="sidenavcurrenciesSettings" name="sidenavcurrenciesSettings" class="text-left">
                                             <i class="fas fa-cog"></i> Currencies
                                         </a>
                                     </li>
                                 {{/if}}
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="clienttypesettings" name="clienttypesettings" class="text-left"><i class="fas fa-cog"></i> Customer Type</a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavdepartmentSettings" name="sidenavdepartmentSettings" class="text-left">
                                         <i class="fas fa-cog"></i> Department
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="edIntegrations" name="edi-integrations" class="text-left">
                                         <i class="fas fa-cog"></i> EDI and Integrations
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="emailsettings" name="emailsettings" class="text-left">
                                         <i class="fas fa-cog"></i> Email Settings
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavInventorySettings" name="sidenavInventorySettings" class="text-left">
                                         <i class="fas fa-cog"></i> Inventory Settings
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="leadstatussettings" name="leadstatussettings" class="text-left"><i class="fas fa-cog"></i> Lead Status</a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavpaymentmethodSettings" name="sidenavpaymentmethodSettings" class="text-left">
                                         <i class="fas fa-cog"></i> Payment Method
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="payrollrules" name="payrollrules" class="text-left">
                                         <i class="fas fa-cog"></i> Payroll Settings
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="templatesettings" name="templatesettings" class="text-left">
                                         <i class="fas fa-cog"></i> Print Options
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="setup" name="setup" class="text-left">
                                         <i class="fas fa-cog"></i> Setup Wizards
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="subscriptionSettings" name="subscriptionSettings" class="text-left">
                                         <i class="fas fa-cog"></i> Subscription
                                     </a>
                                 </li>
 
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavtaxratesettings" name="sidenavtaxratesettings" class="text-left">
                                         <i class="fas fa-cog"></i> Tax Rate Settings
                                     </a>
                                 </li>
-                                <li>
+                                <li class="border-bottom-line">
                                     <a id="sidenavtermsettings" name="sidenavtermsettings" class="text-left">
                                         <i class="fas fa-cog"></i> Terms Settings
                                     </a>

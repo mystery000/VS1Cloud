@@ -177,9 +177,7 @@ Template.mobileapp.events({
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                  
                         addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
-                                                                            console.log("TprocessStep data is inserted to server database.");
                                                                         }).catch(function(err){
-                                                                            console.log("TprocessStep data inserting to database is failed.")
                                                                         });
 
                         $(".mobile-left-jobprocess-list").css('display', 'block');
@@ -238,12 +236,8 @@ Template.mobileapp.events({
 
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                         addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
-                            console.log("TprocessStep data is inserted to server database.");
                         }).catch(function(err){
-                            console.log("TprocessStep data inserting to database is failed.")
                         });
-                        
-                        //console.log(data);
 
                         $(".mobile-left-jobprocess-list").css('display', 'block');
                         let processData = JSON.parse(data);
@@ -823,8 +817,6 @@ Template.mobileapp.events({
 
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
-
-            console.log(currentworkorder.fields.BOMStructure);
             
             // Set bom Structure for current workorder
             templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));

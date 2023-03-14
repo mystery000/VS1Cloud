@@ -91,6 +91,12 @@
 
 
 <!--                                    {{> non_transactional_list tablename="tblTermsList"}}-->
+
+                                    <style>
+                                        td.colTermsAmount, td.colEarlyPayDiscount, td.colSellRate{
+                                            text-align: right !important;
+                                        }
+                                    </style>
                                     {{>datatablelist
                                             tablename="tblTermsList"
                                             apiName= apiFunction
