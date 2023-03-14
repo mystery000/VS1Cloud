@@ -122,48 +122,60 @@ Template.binlocationslist.onRendered(function () {
       FlowRouter.go('/productview?id=' + listData + '&instock=true');
     }
   });
+  templateObject.setDeptData = function(data){
+    for (let i in data.tdeptclass) {
 
+      let deptrecordObj = {
+        id: data.tdeptclass[i].Id || ' ',
+        department: data.tdeptclass[i].DeptClassName || ' ',
+      };
+      deptrecords.push(deptrecordObj);
+      templateObject.deptrecords.set(deptrecords);
+    }
+  };
   templateObject.getDepartments = function () {
-    productService.getDepartment().then(function (data) {
-      for (let i in data.tdeptclass) {
+    getVS1Data('TDeptClass').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        productService.getDepartment().then(async function (data) {
+          await addVS1Data('TDeptClass', JSON.stringify(data));
+          templateObject.setDeptData(data);
+        }).catch(function (err) {
 
-        let deptrecordObj = {
-          id: data.tdeptclass[i].Id || ' ',
-          department: data.tdeptclass[i].DeptClassName || ' ',
-        };
-        deptrecords.push(deptrecordObj);
-        templateObject.deptrecords.set(deptrecords);
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.setDeptData(data);
       }
+    }).catch(function (err) {
+      productService.getDepartment().then(async function (data) {
+        await addVS1Data('TDeptClass', JSON.stringify(data));
+        templateObject.setDeptData(data);
+      }).catch(function (err) {
+      });
     });
   }
 
   templateObject.getDepartments();
 
   templateObject.setEditableService = function(){
-    let clickDepartment = function(){
-      $("#myModalDepartment").modal("toggle");
-    }
+
     $("#editBinDepartmentList").editableSelect();
-    $("#editBinDepartmentList").editableSelect().on("click.editable-select", clickDepartment);
+    $("#editBinDepartmentList").editableSelect().on("click.editable-select", editableService.clickDepartment);
     $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
       let table = $(this);
       let deptName = table.find(".colDeptName").text();
-      let deptID = table.find(".colDeptID").text();
       templateObject.bindept.set(deptName);
       $('#editBinDepartmentList').val(deptName);
-      templateObject.bindeptid.set(deptID);
       $("#myModalDepartment").modal("hide");
     });
 
     $("#sltDepartmentList").editableSelect();
-    $("#sltDepartmentList").editableSelect().on("click.editable-select", clickDepartment);
-    $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
+    $("#sltDepartmentList").editableSelect().on("click.editable-select", editableService.clickDepartment);
+    $(document).on("click", "#departmentList tbody tr", function (e) {
       let table = $(this);
       let deptName = table.find(".colDeptName").text();
-      let deptID = table.find(".colDeptID").text();
       templateObject.bindept.set(deptName);
       $('#sltDepartmentList').val(deptName);
-      templateObject.bindeptid.set(deptID);
       $("#myModalDepartment").modal("hide");
     });
 
@@ -762,7 +774,7 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
   },
-
+  
   // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
@@ -792,7 +804,7 @@ Template.binlocationslist.events({
             splashArrayProductList.push(dataList);
           }
 
-
+          
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
@@ -1170,7 +1182,7 @@ Template.binlocationslist.events({
     window.location.href = 'sample_imports/SampleProduct.xlsx';
   },
   'change #attachment-upload': function (e) {
-    let templateObj = Template.instance();
+    c
     var filename = $('#attachment-upload')[0].files[0]['name'];
     var fileExtension = filename.split('.').pop().toLowerCase();
     var validExtensions = ["csv", "txt", "xlsx"];
@@ -1284,13 +1296,14 @@ Template.binlocationslist.events({
   'click .btnSaveEditBin': function () {
     playSaveAudio();
     let productService = new ProductService();
+    let templateObject = Template.instance();
     setTimeout(function(){
       $('.fullScreenSpin').css('display','inline-block');
 
       var binId = $('#editBinId').val();
       var editbinname = $('#editBinRack').val();
       var editbinnum = $('#editBinNum').val();
-
+      var editdepartment = $('#editBinDepartmentList').val();
       let data = '';
 
       data = {
@@ -1303,31 +1316,40 @@ Template.binlocationslist.events({
             BinVolume: 1,
             BinVolumeAvailable: 0,
             BinVolumeUsed: 0,
+            BinClassName: editdepartment
         }
       };
 
       productService.saveBin(data).then(function (data) {
-        productService.getBins().then(function (dataReload) {
-          addVS1Data('TProductBin', JSON.stringify(dataReload)).then(function (datareturn) {
-            $('.fullScreenSpin').css('display','none');
-            swal('Success', 'Saved Successfully!', 'success').then(function() {
-              window.open('/binlocationslist', '_self');
-            });
-          }).catch(function (err) {
-            $('.fullScreenSpin').css('display','none');
-            swal('Error', 'Error occured!', 'error').then(function() {
-              window.open('/binlocationslist', '_self');
-            });
+        $('.fullScreenSpin').css('display','none');
+        swal('Success', 'Saved Successfully!', 'success').then(function(data){
+          getVS1Data('TProductBin').then(function (dataObject) {
+            let data = JSON.parse(dataObject[0].data);
+            if(data.tproductbin.length > 0) {
+              for (let i = 0; i < data.tproductbin.length; i++) {
+                if(data.tproductbin[i].Id == binId) {
+                  data.tproductbin[i].BinLocation = editbinname;
+                  data.tproductbin[i].BinNumber = editbinnum;
+                  data.tproductbin[i].BinClassName = editdepartment;
+                  clearData('TProductBin').then(function(){
+                    addVS1Data('TProductBin', JSON.stringify(data)).then(function(){
+                      // templateObject.getProductBinData();
+                      getVS1Data('TProductBin').then(function(kk){
+                        window.open('/binlocationslist', '_self');
+                      });
+                    })
+                  })
+                  return;
+                }
+              }
+            }
+          }).catch(function (err){
           });
-      }).catch(function (err) {
-          $('.fullScreenSpin').css('display','none');
-          swal('Error', 'Error occured!', 'error').then(function() {
-            window.open('/binlocationslist', '_self');
-          });
-      });
+        })
 
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
+        swal('Error', 'Error occured!', 'error');
       });
     }, delayTimeAfterSound);
   },
@@ -1342,6 +1364,7 @@ Template.binlocationslist.events({
       var parentdept = $('#sltDepartmentList').val();
       var newbinname = $('#newBinRack').val();
       var newbinnum = $('#newBinNum').val();
+      var newdepartment = $('#sltDepartmentList').val();
 
       let data = '';
 
@@ -1358,12 +1381,27 @@ Template.binlocationslist.events({
       };
 
       productService.saveBin(data).then(function (data) {
-        clearData('TProductBin').then(function(){
-          $('.fullScreenSpin').css('display','none');
-          swal('Success', 'Saved Successfully!', 'success').then(function(){
-            window.open('/binlocationslist','_self');
+        $('.fullScreenSpin').css('display','none');
+        swal('Success', 'Saved Successfully!', 'success').then(function(){
+
+          getVS1Data('TProductBin').then(function (dataObject) {
+            let data = JSON.parse(dataObject[0].data);
+            if(data.tproductbin.length > 0) {
+              let dataArray = {
+                BinLocation: editbinname,
+                BinNumber: editbinnum,
+                BinClassName: editdepartment,
+              }
+              data.tproductbin.push(dataArray);
+              clearData('TProductBin').then(function(){
+                addVS1Data('TProductBin', JSON.stringify(data)).then(function(){
+                  window.open('/binlocationslist', '_self');
+                })
+              })
+            }
+          }).catch(function (err){
           });
-        });
+        })
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
       });
@@ -1460,6 +1498,22 @@ Template.binlocationslist.events({
 
       }
     });
+  },
+
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+
+  'click .btnPrint': () => {
+    $('#importModal').modal('toggle');
   }
 });
 
