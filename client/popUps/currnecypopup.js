@@ -8,6 +8,7 @@ import { currencySymbolEmpty } from "../packages/currency/CurrencyGlobals";
 import FxGlobalFunctions from "../packages/currency/FxGlobalFunctions";
 import { Template } from 'meteor/templating';
 import './currnecypopup.html';
+import moment from "moment";
 let sideBarService = new SideBarService();
 
 export function setCurrentCurrencySymbol(symbol = "N/A") {
@@ -31,6 +32,53 @@ Template.currencypop.onCreated(function () {
   templateObject.datatablerecordscurrencypop = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.countryData = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    }
+    var dataList = [
+      data.CurrencyID || "",
+      data.Code || "",
+      data.Currency || "",
+      data.CurrencySymbol || "",
+      data.BuyRate || 0.00,
+      data.SellRate || 0.00,
+      data.Country || "",
+      moment(data.RateLastModified).format("DD/MM/YYYY") || "",
+      data.CurrencyDesc || "",
+      linestatus,
+      data.FixedRate || 0.00,
+      data.UpperVariation || 0.00,
+      data.LowerVariation || 0.00,
+      data.TriggerPriceVariation || 0.00,
+      data.CountryID || ""
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
+    { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
+    { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
+    { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100" },
+    { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
+    { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
+    { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+    { index: 7, label: '#Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
+    { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
+    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 10, label: '#Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
+    { index: 11, label: '#Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
+    { index: 12, label: '#Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150" },
+    { index: 13, label: '#Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250" },
+    { index: 14, label: '#Country ID', class: 'colCountryID', active: false, display: true, width: "100" },
+  ];
+
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.currencypop.onRendered(function () {
@@ -128,7 +176,6 @@ Template.currencypop.onRendered(function () {
         ],
         select: true,
         destroy: true,
-        colReorder: true,
         colReorder: {
           fixedColumnsRight: 1
         },
@@ -295,7 +342,6 @@ Template.currencypop.onRendered(function () {
               ],
               select: true,
               destroy: true,
-              colReorder: true,
               colReorder: {
                 fixedColumnsRight: 1
               },
@@ -434,7 +480,6 @@ Template.currencypop.onRendered(function () {
             ],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
               fixedColumnsRight: 1
             },
@@ -606,7 +651,6 @@ Template.currencypop.onRendered(function () {
             ],
             select: true,
             destroy: true,
-            colReorder: true,
             colReorder: {
               fixedColumnsRight: 1
             },
@@ -685,7 +729,7 @@ Template.currencypop.onRendered(function () {
   };
 
   //templateObject.getTaxRates();
-  templateObject.loadCurrencies();
+  //templateObject.loadCurrencies();
 
   templateObject.getCountryData = function () {
     getVS1Data("TCountries").then(function (dataObject) {
@@ -716,7 +760,7 @@ Template.currencypop.onRendered(function () {
       });
     });
   };
-  templateObject.getCountryData();
+  //templateObject.getCountryData();
 
   $(document).on("click", ".table-remove", function () {
     event.stopPropagation();
@@ -727,7 +771,7 @@ Template.currencypop.onRendered(function () {
   });
 
   $("#tblCurrencyPopList tbody").on("click", "tr .colCode, tr .colCurrency, tr .colSymbol, tr .colBuyRate, tr .colSellRate, tr .colCountry, tr .colRateLastModified, tr .colDescription", function () {
-    var listData = $(this).closest("tr").attr("id");
+    var listData = $(this).closest("tr").find(".colCurrencyID").text();
     if (listData) {
       $("#add-currency-title").text("Edit Currency");
       $("#sedtCountry").prop("readonly", true);
@@ -1152,5 +1196,40 @@ Template.currencypop.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
-  }
+  },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getCurrencyDataList;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getCurrencyDataList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
 });

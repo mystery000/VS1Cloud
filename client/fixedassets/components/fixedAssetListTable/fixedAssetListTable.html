@@ -156,7 +156,27 @@
         </div>
 
         <div class="card-body">
-          {{> non_transactional_list tablename = "tblFixedAssetList"}}
+            <style>
+                td.colReplacementCost, td.colPurchCost, td.colQty, td.colEstimatedValue, td.colBusinessUse{
+                    text-align: right !important;
+                }
+            </style>
+            {{>datatablelist
+                    tablename="tblFixedAssetList"
+                    apiName= apiFunction
+                    indexeddbname = 'TFixedAssetsList'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Fixed Assets List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tfixedassetslist'
+                    exIndexDBName = 'tfixedassetslist'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
+<!--          {{> non_transactional_list tablename = "tblFixedAssetList"}}-->
         </div>
       </div>
     </div>

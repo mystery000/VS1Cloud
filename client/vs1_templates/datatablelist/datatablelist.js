@@ -86,6 +86,7 @@ Template.datatablelist.onRendered(async function () {
             if ($(this).text() == "Converted") $(this).addClass("text-converted");
             if ($(this).text() == "Completed") $(this).addClass("text-completed");
             if ($(this).text() == "Not Converted") $(this).addClass("text-deleted");
+            if ($(this).text() == "On-Hold") $(this).addClass("text-Yellow");
         });
     };
 

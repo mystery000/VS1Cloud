@@ -133,7 +133,23 @@
 
 
                                     <div class="receiptCategoryCard">
-                                        {{> non_transactional_list tablename="tblReceiptCategoryList"}}
+                                        {{>datatablelist
+                                                tablename="tblReceiptCategoryList"
+                                                apiName= apiFunction
+                                                indexeddbname = 'TReceiptCategory'
+                                                tableheaderrecords = tableheaderrecords
+                                                exportfilename = 'Receipt Category List'
+                                                istransaction = false
+                                                apiParams= apiParams
+                                                datahandler = datahandler
+                                                service=service
+                                                lowercaseDataName='treceiptcategory'
+                                                exIndexDBName = 'treceiptcategory'
+                                                exdatahandler = exDataHandler
+                                                searchAPI = searchAPI
+                                        }}
+<!--                                        {{> non_transactional_list tablename="tblReceiptCategoryList"}}-->
+
                                         <!-- <table id="receiptCategoryList" style="width:100%" class="dataTable table table-hover table-striped table-bordered receiptCategoryList">
                                             <thead>
                                             <tr class="dnd-moved">
