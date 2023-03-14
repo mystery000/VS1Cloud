@@ -14692,7 +14692,7 @@ Template.non_transactional_list.onRendered(function() {
                     }
                 }
                 else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
-                    qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    qty += "<span class=\"spliter\"></span><label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
                     if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
                         transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
                     }
@@ -17123,7 +17123,7 @@ Template.non_transactional_list.onRendered(function() {
         //     let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
         //     let status = data.tserialnumberlistcurrentreport[i].AllocType;
         //     let date = data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate;
-            
+
 
         //     var dataTimeSheetList = [
         //         serialnumber,
@@ -17133,8 +17133,8 @@ Template.non_transactional_list.onRendered(function() {
         //         qty,
         //         date,
         //         cssclass
-        //     ];            
-            
+        //     ];
+
         //     splashArrayTimeSheetList.push(dataTimeSheetList);
         // }
 
@@ -17148,8 +17148,8 @@ Template.non_transactional_list.onRendered(function() {
             "<button class='btn btn-danger btnServiceRestart' type='button'>Restarts</button>",
             "<button class='btn btn-success btnServiceEdit' type='button'>Edit</button>",
             cssclass
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         cssclass = "bgcolor-red";
@@ -17161,8 +17161,8 @@ Template.non_transactional_list.onRendered(function() {
             "<button class='btn btn-danger btnServiceRestart' type='button'>Restarts</button>",
             "<button class='btn btn-success btnServiceEdit' type='button'>Edit</button>",
             cssclass
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
@@ -17219,7 +17219,7 @@ Template.non_transactional_list.onRendered(function() {
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).addClass("td-button");
                         }
-                    },                    
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -17326,7 +17326,7 @@ Template.non_transactional_list.onRendered(function() {
         }, 0);
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
-    
+
     templateObject.getMachineSummaryList = function(deleteFilter=false){
         getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -17358,16 +17358,16 @@ Template.non_transactional_list.onRendered(function() {
         var dataTimeSheetList = [
             "06/03/2023 20:30:30",
             1,
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         cssclass = "bgcolor-red";
         var dataTimeSheetList = [
             "04/03/2023 10:30:30",
-            2,            
-        ];            
-        
+            2,
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
@@ -17391,7 +17391,7 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colCountOfStatus",
                         targets: 1,
                         width:'8%',
-                    },                    
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -17530,16 +17530,16 @@ Template.non_transactional_list.onRendered(function() {
         var dataTimeSheetList = [
             "20:30:30",
             "on",
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         cssclass = "bgcolor-red";
         var dataTimeSheetList = [
             "10:30:30",
             "off",
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
@@ -17563,7 +17563,7 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colStatus",
                         targets: 1,
                         width:'8%',
-                    },                    
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -17703,8 +17703,8 @@ Template.non_transactional_list.onRendered(function() {
             "dene@vs1cloud.com",
             "dene@123",
             "3222838495",
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         cssclass = "bgcolor-red";
@@ -17712,8 +17712,8 @@ Template.non_transactional_list.onRendered(function() {
             "sales@vs1cloud.com",
             "sales@123",
             "3222838495",
-        ];            
-        
+        ];
+
         splashArrayTimeSheetList.push(dataTimeSheetList);
 
         templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
@@ -17737,7 +17737,7 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colStatus",
                         targets: 1,
                         width:'8%',
-                    },                    
+                    },
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
