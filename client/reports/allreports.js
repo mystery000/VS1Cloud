@@ -1,148 +1,81 @@
 import {ReactiveVar} from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import "./reports.html"
-
 import { TaxRateService } from "../settings/settings-service"; 
-import { template } from 'lodash';
 
 Template.allreports.onCreated(function() {
     const templateObject = Template.instance();
-    templateObject.isBalanceSheet = new ReactiveVar();
-    templateObject.isBalanceSheet.set(false);
-    templateObject.isProfitLoss = new ReactiveVar();
-    templateObject.isProfitLoss.set(false);
-    templateObject.isPLMonthly = new ReactiveVar();
-    templateObject.isPLMonthly.set(false);
-    templateObject.isPLQuarterly = new ReactiveVar();
-    templateObject.isPLQuarterly.set(false);
-    templateObject.isPLYearly = new ReactiveVar();
-    templateObject.isPLYearly.set(false);
-    templateObject.isPLYTD = new ReactiveVar();
-    templateObject.isPLYTD.set(false);
-    templateObject.isJobSalesSummary = new ReactiveVar();
-    templateObject.isJobSalesSummary.set(false);
-    templateObject.isAgedReceivables = new ReactiveVar();
-    templateObject.isAgedReceivables.set(false);
-    templateObject.isAgedReceivablesSummary = new ReactiveVar();
-    templateObject.isAgedReceivablesSummary.set(false);
-    templateObject.isProductSalesReport = new ReactiveVar();
-    templateObject.isProductSalesReport.set(false);
-    templateObject.isSalesReport = new ReactiveVar();
-    templateObject.isSalesReport.set(false);
-    templateObject.isJobProfitReport = new ReactiveVar();
-    templateObject.isJobProfitReport.set(false);
-    templateObject.isSupplierDetails = new ReactiveVar();
-    templateObject.isSupplierDetails.set(false);
-    templateObject.isSupplierProduct = new ReactiveVar();
-    templateObject.isSupplierProduct.set(false);
-    templateObject.isCustomerDetails = new ReactiveVar();
-    templateObject.isCustomerDetails.set(false);
-    templateObject.isCustomerSummary = new ReactiveVar();
-    templateObject.isCustomerSummary.set(false);
-    templateObject.isLotReport = new ReactiveVar();
-    templateObject.isLotReport.set(false);
-    templateObject.isStockValue = new ReactiveVar();
-    templateObject.isStockValue.set(false);
-    templateObject.isStockQuantity = new ReactiveVar();
-    templateObject.isStockQuantity.set(false);
-    templateObject.isStockMovementReport = new ReactiveVar();
-    templateObject.isStockMovementReport.set(false);
-    templateObject.isPayrollHistoryReport = new ReactiveVar();
-    templateObject.isPayrollHistoryReport.set(false);
-    templateObject.isForeignExchangeHistoryList = new ReactiveVar();
-    templateObject.isForeignExchangeHistoryList.set(false);
-    templateObject.isForeignExchangeList = new ReactiveVar();
-    templateObject.isForeignExchangeList.set(false);
-    templateObject.isSalesSummaryReport = new ReactiveVar();
-    templateObject.isSalesSummaryReport.set(false);
-    templateObject.isGeneralLedger = new ReactiveVar();
-    templateObject.isGeneralLedger.set(false);
-    templateObject.isTaxSummaryReport = new ReactiveVar();
-    templateObject.isTaxSummaryReport.set(false);
-    templateObject.isTrialBalance = new ReactiveVar();
-    templateObject.isTrialBalance.set(false);
-    templateObject.isTimeSheetSummary = new ReactiveVar();
-    templateObject.isTimeSheetSummary.set(false);
-    templateObject.isPayrollLeaveAccrued = new ReactiveVar();
-    templateObject.isPayrollLeaveAccrued.set(false);
-    templateObject.isPayrollLeaveTaken = new ReactiveVar();
-    templateObject.isPayrollLeaveTaken.set(false);
-    templateObject.isSerialNumberReport = new ReactiveVar();
-    templateObject.isSerialNumberReport.set(false);
-    templateObject.is1099Transaction = new ReactiveVar();
-    templateObject.is1099Transaction.set(false);
-    templateObject.isAccountsLists = new ReactiveVar();
-    templateObject.isAccountsLists.set(false);
-    templateObject.isBinLocations = new ReactiveVar();
-    templateObject.isBinLocations.set(false);
-    templateObject.isTransactionJournal = new ReactiveVar();
-    templateObject.isTransactionJournal.set(false);
-    templateObject.isUnpaidBills = new ReactiveVar();
-    templateObject.isUnpaidBills.set(false);
-    templateObject.isUnpaidPO = new ReactiveVar();
-    templateObject.isUnpaidPO.set(false);
-    templateObject.isBackOrderedPO = new ReactiveVar();
-    templateObject.isBackOrderedPO.set(false);
-    templateObject.isSalesOrderConverted = new ReactiveVar();
-    templateObject.isSalesOrderConverted.set(false);
-    templateObject.isSalesOrderUnconverted = new ReactiveVar();
-    templateObject.isSalesOrderUnconverted.set(false);
-    templateObject.isPaymentMethodsList = new ReactiveVar();
-    templateObject.isPaymentMethodsList.set(false);
-    templateObject.isBackOrderedInvoices = new ReactiveVar();
-    templateObject.isBackOrderedInvoices.set(false);
-    templateObject.isQuotesConverted = new ReactiveVar();
-    templateObject.isQuotesConverted.set(false);
-    templateObject.isQuotesUnconverted = new ReactiveVar();
-    templateObject.isQuotesUnconverted.set(false);
-    templateObject.isInvoicesPaid = new ReactiveVar();
-    templateObject.isInvoicesPaid.set(false);
-    templateObject.isInvoicesUnpaid = new ReactiveVar();
-    templateObject.isInvoicesUnpaid.set(false);
-    templateObject.isTimeSheetDetails = new ReactiveVar();
-    templateObject.isTimeSheetDetails.set(false);
-    templateObject.isChequeList = new ReactiveVar();
-    templateObject.isChequeList.set(false);
-    templateObject.isJournalEntryList = new ReactiveVar();
-    templateObject.isJournalEntryList.set(false);
-    templateObject.isStockAdjustmentList = new ReactiveVar();
-    templateObject.isStockAdjustmentList.set(false);
-    templateObject.isAgedPayables = new ReactiveVar();
-    templateObject.isAgedPayables.set(false);
-    templateObject.isAgedPayablesSummary = new ReactiveVar();
-    templateObject.isAgedPayablesSummary.set(false);
-    templateObject.isPurchaseReport = new ReactiveVar();
-    templateObject.isPurchaseReport.set(false);
-    templateObject.isPurchaseSummaryReport = new ReactiveVar();
-    templateObject.isPurchaseSummaryReport.set(false);
-    templateObject.isPrintStatement = new ReactiveVar();
-    templateObject.isPrintStatement.set(false);
-    templateObject.isExecutiveSummary = new ReactiveVar();
-    templateObject.isExecutiveSummary.set(false);
-    templateObject.isCashReport = new ReactiveVar();
-    templateObject.isCashReport.set(false);
-    templateObject.isProfitabilityReport = new ReactiveVar();
-    templateObject.isProfitabilityReport.set(false);
-    templateObject.isPerformanceReport = new ReactiveVar();
-    templateObject.isPerformanceReport.set(false);
-    templateObject.isBalanceSheetReport = new ReactiveVar();
-    templateObject.isBalanceSheetReport.set(false);
-    templateObject.isIncomeReport = new ReactiveVar();
-    templateObject.isIncomeReport.set(false);
-    templateObject.isPositionReport = new ReactiveVar();
-    templateObject.isPositionReport.set(false);
+    templateObject.isBalanceSheet = new ReactiveVar(false);
+    templateObject.isProfitLoss = new ReactiveVar(false);
+    templateObject.isPLMonthly = new ReactiveVar(false);
+    templateObject.isPLQuarterly = new ReactiveVar(false);
+    templateObject.isPLYearly = new ReactiveVar(false);
+    templateObject.isPLYTD = new ReactiveVar(false);
+    templateObject.isJobSalesSummary = new ReactiveVar(false);
+    templateObject.isAgedReceivables = new ReactiveVar(false);
+    templateObject.isAgedReceivablesSummary = new ReactiveVar(false);
+    templateObject.isProductSalesReport = new ReactiveVar(false);
+    templateObject.isSalesReport = new ReactiveVar(false);
+    templateObject.isJobProfitReport = new ReactiveVar(false);
+    templateObject.isSupplierDetails = new ReactiveVar(false);
+    templateObject.isSupplierProduct = new ReactiveVar(false);
+    templateObject.isCustomerDetails = new ReactiveVar(false);
+    templateObject.isCustomerSummary = new ReactiveVar(false);
+    templateObject.isLotReport = new ReactiveVar(false);
+    templateObject.isStockValue = new ReactiveVar(false);
+    templateObject.isStockQuantity = new ReactiveVar(false);
+    templateObject.isStockMovementReport = new ReactiveVar(false);
+    templateObject.isPayrollHistoryReport = new ReactiveVar(false);
+    templateObject.isForeignExchangeHistoryList = new ReactiveVar(false);
+    templateObject.isForeignExchangeList = new ReactiveVar(false);
+    templateObject.isSalesSummaryReport = new ReactiveVar(false);
+    templateObject.isGeneralLedger = new ReactiveVar(false);
+    templateObject.isTaxSummaryReport = new ReactiveVar(false);
+    templateObject.isTrialBalance = new ReactiveVar(false);
+    templateObject.isTimeSheetSummary = new ReactiveVar(false);
+    templateObject.isPayrollLeaveAccrued = new ReactiveVar(false);
+    templateObject.isPayrollLeaveTaken = new ReactiveVar(false);
+    templateObject.isSerialNumberReport = new ReactiveVar(false);
+    templateObject.is1099Transaction = new ReactiveVar(false);
+    templateObject.isAccountsLists = new ReactiveVar(false);
+    templateObject.isBinLocations = new ReactiveVar(false);
+    templateObject.isTransactionJournal = new ReactiveVar(false);
+    templateObject.isUnpaidBills = new ReactiveVar(false);
+    templateObject.isUnpaidPO = new ReactiveVar(false);
+    templateObject.isBackOrderedPO = new ReactiveVar(false);
+    templateObject.isSalesOrderConverted = new ReactiveVar(false);
+    templateObject.isSalesOrderUnconverted = new ReactiveVar(false);
+    templateObject.isPaymentMethodsList = new ReactiveVar(false);
+    templateObject.isBackOrderedInvoices = new ReactiveVar(false);
+    templateObject.isQuotesConverted = new ReactiveVar(false);
+    templateObject.isQuotesUnconverted = new ReactiveVar(false);
+    templateObject.isInvoicesPaid = new ReactiveVar(false);
+    templateObject.isInvoicesUnpaid = new ReactiveVar(false);
+    templateObject.isTimeSheetDetails = new ReactiveVar(false);
+    templateObject.isChequeList = new ReactiveVar(false);
+    templateObject.isJournalEntryList = new ReactiveVar(false);
+    templateObject.isStockAdjustmentList = new ReactiveVar(false);
+    templateObject.isAgedPayables = new ReactiveVar(false);
+    templateObject.isAgedPayablesSummary = new ReactiveVar(false);
+    templateObject.isPurchaseReport = new ReactiveVar(false);
+    templateObject.isPurchaseSummaryReport = new ReactiveVar(false);
+    templateObject.isPrintStatement = new ReactiveVar(false);
+    templateObject.isExecutiveSummary = new ReactiveVar(false);
+    templateObject.isCashReport = new ReactiveVar(false);
+    templateObject.isProfitabilityReport = new ReactiveVar(false);
+    templateObject.isPerformanceReport = new ReactiveVar(false);
+    templateObject.isBalanceSheetReport = new ReactiveVar(false);
+    templateObject.isIncomeReport = new ReactiveVar(false);
+    templateObject.isPositionReport = new ReactiveVar(false);
     templateObject.accountantList = new ReactiveVar([]);
 
-    templateObject.isBuildProfitability = new ReactiveVar();
-    templateObject.isBuildProfitability.set(false);
-    templateObject.isProductionWorksheet = new ReactiveVar();
-    templateObject.isProductionWorksheet.set(false);
-    templateObject.isWorkOrder = new ReactiveVar();
-    templateObject.isWorkOrder.set(false);
-    
+    templateObject.isBuildProfitability = new ReactiveVar(false);
+    templateObject.isProductionWorkSheet = new ReactiveVar(false);
+    templateObject.isWorkOrder = new ReactiveVar(false);
 });
 Template.allreports.onRendered(() => {
     let templateObject = Template.instance();
+
     // let isBalanceSheet = localStorage.getItem('cloudBalanceSheet');
     let isBalanceSheet;
     getVS1Data("BalanceSheetReport").then(function (dataObject) {
@@ -2213,7 +2146,7 @@ Template.allreports.helpers({
     },
 
     isWorkOrder:function() {
-        return template.instance().isWorkOrder.get();
+        return Template.instance().isWorkOrder.get();
     },
 
     isFavorite: function() {
@@ -2280,15 +2213,15 @@ Template.allreports.helpers({
         let isIncomeReport = Template.instance().isIncomeReport.get();
         let isPositionReport = Template.instance().isPositionReport.get();
         let isBuildProfitability = Template.instance().isBuildProfitability.get();
-        let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
-        let isWorkOrder = Template.instance().isWorkOrder.get();
+        // let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
+        // let isWorkOrder = Template.instance().isWorkOrder.get();
 
-        let isShowFavorite = false;
+        // let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
-            isShowFavorite = true;
-        }
-        return isShowFavorite;
+        // if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
+        //     isShowFavorite = true;
+        // }
+        return true;
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
