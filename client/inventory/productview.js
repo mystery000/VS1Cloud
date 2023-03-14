@@ -322,13 +322,11 @@ Template.productview.onRendered(function () {
         $("#UOMListModal").modal("toggle");
       });
 
-      $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
+      $(document).on("click", "#departmentList tbody tr", function (e) {
         let table = $(this);
         let deptName = table.find(".colDeptName").text();
-        let deptID = table.find(".colDeptID").text();
         templateObject.bindept.set(deptName);
         $('#sltdepartment').val(deptName);
-        templateObject.bindeptid.set(deptID);
         $("#myModalDepartment").modal("hide");
       });
 
@@ -877,6 +875,7 @@ Template.productview.onRendered(function () {
       templateObject.getBinLocations();
       templateObject.bindept.set('Default');
       templateObject.bindeptid.set('1');
+
         //templateObject.getClientTypeData();
     }, 1000);
 
@@ -1277,7 +1276,6 @@ Template.productview.onRendered(function () {
                 }
                 $("#sltsalesacount").val(useData[i].fields.IncomeAccount);
                 $("#sltcogsaccount").val(useData[i].fields.CogsAccount);
-
                 templateObject.records.set(productrecord);
                 templateObject.isShowBOMModal.set(true);
               }
@@ -1462,7 +1460,7 @@ Template.productview.onRendered(function () {
                 });
             }
           }
-        }).catch(function (err) {
+        }).catch(function (err) {ss
           productService
             .getOneProductdata(currentProductID)
             .then(function (data) {
@@ -3825,7 +3823,7 @@ Template.productview.events({
             },
           };
         }
-
+        let productClassObj;
         let checkTracked = templateObject.isTrackChecked.get();
         if(checkTracked == true){
           // let productClassData = templateObject.records.get();
@@ -3839,7 +3837,7 @@ Template.productview.events({
           let ProductDept = templateObject.bindeptid.get();
           let ProductDeptName = $("#sltdepartment").val();
 
-          let productClassObj = {
+          productClassObj = {
               type: "TProductClass",
               fields: {
                 ID: productClassData.productclass.ID,
@@ -3875,26 +3873,28 @@ Template.productview.events({
               };
               productService.saveProductService(objServiceDetails).then(function (objServiceDetails) {});
             }
-            sideBarService
-              .getNewProductListVS1(initialBaseDataLoad, 0)
-              .then(function (dataReload) {
-                addVS1Data("TProductVS1", JSON.stringify(dataReload))
-                  .then(function (datareturn) {
-                    $(".fullScreenSpin").css("display", "none");
-                    swal('Success', 'Saved Successfully!', 'success');
-                    FlowRouter.go("/inventorylist?success=true");
+            $(".fullScreenSpin").css("display", "none");
+            swal('Success', 'Saved Successfully!', 'success').then(function(){
+              getVS1Data('TProductVS1').then(function(dataObject){
+                var currentProductID = FlowRouter.current().queryParams.id;
+                let data = JSON.parse(dataObject[0].data);
+                let useData = data.tproductvs1;
+                for (let i = 0; i < useData.length; i++) {
+                  if (parseInt(useData[i].fields.ID) == currentProductID) {
+                    useData[i].fields.ProductClass[0] = productClassObj;
+                    break;
+                  }
+                }
+                data.tproductvs1 = useData;
+                clearData('TProductVS1').then(function(){
+                  addVS1Data('TProductVS1', JSON.stringify(data)).then(function(){
+                    FlowRouter.go("/productlist");
                   })
-                  .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
-                    swal('Success', 'Saved Successfully!', 'success');
-                    FlowRouter.go("/inventorylist?success=true");
-                  });
+                })
+
+              }).catch(function(err){
               })
-              .catch(function (err) {
-                $(".fullScreenSpin").css("display", "none");
-                swal('Success', 'Saved Successfully!', 'success');
-                FlowRouter.go("/inventorylist?success=true");
-              });
+            });
           })
           .catch(function (err) {
             swal({
