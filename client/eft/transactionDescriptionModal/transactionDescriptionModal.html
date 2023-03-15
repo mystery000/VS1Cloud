@@ -8,22 +8,38 @@
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectBankNameID" name="selectBankNameID" readonly>
         <div class="card-body p-1 rounded">
+            {{>datatablelist
+                    tablename="tblTransactionDescription"
+                    apiName= apiFunction
+                    indexeddbname = 'TTransactionDescription'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Transaction Description List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='ttransactiondescription'
+                    exIndexDBName = 'ttransactiondescription'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
           <div class="table-responsive">
-            <style>
-              .thTransactionDescription {
-                width: 100% !important;
-              }
-            </style>
-            <table id="tblTransactionDescription" style="width:100%" class="table table-striped table-bordered tblTransactionDescription">
-              <thead>
-                <tr class="dnd-moved">
-                  <th class="hiddenColumn" style="width: 30px;">ID</th>
-                  <th class="thTransactionDescription">Transaction Description</th>
-                </tr>
-              </thead>
-              <tbody> 
-              </tbody>
-            </table>
+<!--            <style>-->
+<!--              .thTransactionDescription {-->
+<!--                width: 100% !important;-->
+<!--              }-->
+<!--            </style>-->
+
+<!--            <table id="tblTransactionDescription" style="width:100%" class="table table-striped table-bordered tblTransactionDescription">-->
+<!--              <thead>-->
+<!--                <tr class="dnd-moved">-->
+<!--                  <th style="width: 30px;">ID</th>-->
+<!--                  <th class="thTransactionDescription">Transaction Description</th>-->
+<!--                </tr>-->
+<!--              </thead>-->
+<!--              <tbody> -->
+<!--              </tbody>-->
+<!--            </table>-->
           </div>
         </div>
       </div>

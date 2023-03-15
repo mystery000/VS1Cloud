@@ -340,7 +340,7 @@ Template.eftExportModal.onRendered(function () {
 
     $(document).on('click', '#tblTransactionDescription tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.transactionDescription').text();
+        let transactionDescription = table.find('.colTransactionDescription').text();
         $('#transactionDescriptionModal').modal('toggle');
         $('#sltTransactionDescription').val(transactionDescription);
     });
@@ -367,9 +367,9 @@ Template.eftExportModal.onRendered(function () {
 
     $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.transactionDescription').text();
+        let transactionCode = table.find('.coltransactionCode').text();
         $('#transactionCodeModal').modal('toggle');
-        $('#sltTransactionCode').val(transactionDescription);
+        $('#sltTransactionCode').val(transactionCode);
     });
 });
 

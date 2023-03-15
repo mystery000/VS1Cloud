@@ -8,23 +8,39 @@
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectTransactionCodeID" name="selectTransactionCodeID" readonly>
         <div class="card-body p-1 rounded">
-          <div class="table-responsive">
-            <style>
-              .thTransactionCode {
-                width: 100% !important;
-              }
-            </style>
-            <table id="tblTransactionCode" style="width:100%" class="table table-striped table-bordered tblTransactionCode">
-              <thead>
-                <tr class="dnd-moved">
-                  <th class="hiddenColumn" style="width: 30px;">ID</th>
-                  <th class="thTransactionCode">Transaction Code</th>
-                </tr>
-              </thead>
-              <tbody> 
-              </tbody>
-            </table>
-          </div>
+            {{>datatablelist
+                    tablename="tblTransactionCode"
+                    apiName= apiFunction
+                    indexeddbname = 'TTransactionCode'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Transaction Code List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='ttransactioncode'
+                    exIndexDBName = 'ttransactioncode'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
+<!--          <div class="table-responsive">-->
+<!--            <style>-->
+<!--              .thTransactionCode {-->
+<!--                width: 100% !important;-->
+<!--              }-->
+<!--            </style>-->
+
+<!--            <table id="tblTransactionCode" style="width:100%" class="table table-striped table-bordered tblTransactionCode">-->
+<!--              <thead>-->
+<!--                <tr class="dnd-moved">-->
+<!--                  <th style="width: 30px;">ID</th>-->
+<!--                  <th class="thTransactionCode">Transaction Code</th>-->
+<!--                </tr>-->
+<!--              </thead>-->
+<!--              <tbody> -->
+<!--              </tbody>-->
+<!--            </table>-->
+<!--          </div>-->
         </div>
       </div>
       <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>

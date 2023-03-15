@@ -59,7 +59,7 @@ Template.eft_export.onRendered(function () {
             });
             $(".eftProcessingDate").val(currentDate);
             $('#accountListModal').modal('show');
-        }, 1000);
+        }, 3000);
     })
 
     templateObject.loadTabaDescriptiveRecord = () => {
@@ -301,7 +301,7 @@ Template.eft_export.onRendered(function () {
 
     $(document).on('click', '#tblTransactionDescription tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.transactionDescription').text();
+        let transactionDescription = table.find('.colTransactionDescription').text();
         $('#transactionDescriptionModal').modal('toggle');
         $('#sltTransactionDescription').val(transactionDescription);
     });
@@ -313,7 +313,7 @@ Template.eft_export.onRendered(function () {
 
     $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.transactionCode').text();        
+        let transactionDescription = table.find('.colTransactionCode').text();        
         $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
     });

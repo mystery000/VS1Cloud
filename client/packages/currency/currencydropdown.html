@@ -1,13 +1,26 @@
 <template name="currencydropdown">
     {{#if isCurrencyEnable}}
     <div class="form-group currency-container">
-        <label>Currency</label>
+        <!-- <label>Currency</label> -->
         <!-- <select type="search" class="form-control" id="sltCurrency" name="sltCurrency"
             style="background-color:rgb(255, 255, 255); cursor: pointer;">
         </select> -->
-        <input type="search" class="form-control es-input" id="sltCurrency" name="sltCurrency"
-            style="background-color:rgb(255, 255, 255); cursor: pointer;" value={{CurrentForeignExchangeCode}} />
-
+        <!-- <input type="search" class="form-control es-input" id="sltCurrency" name="sltCurrency"
+            style="background-color:rgb(255, 255, 255); cursor: pointer;" value={{CurrentForeignExchangeCode}} /> -->
+        {{> vs1___dropdown
+            type='search'
+            id='sltCurrency'
+            name='sltCurrency'
+            modalId= 'currencyModal'
+            list_template_name='currencypop'
+            modal_title='Currency List'
+            label = 'Currency'
+            colNameForValue = 'colCode'
+            target_modal_id= 'edtCurrency_modal'
+            target_template_id='newcurrencypop'
+            is_editable=item.editable
+            innerModal=true
+        }}
     </div>
 
 

@@ -600,6 +600,11 @@ td.td-input {
     color: #fff;
 }
 
+.text-Processed {
+    background-color: #1cc88a !important;
+    color: #fff;
+}
+
 @media only screen and (min-width: 768px) and (max-width: 1024px) {
     .chart-visibility {
         width: 50% !important;
@@ -671,11 +676,11 @@ div.dataTables_wrapper .row button{
  width: 210px;
 }
 
-/* .table-responsive{
+.table-responsive:not(.divTemplate) {
 overflow-x: auto!important;
 overflow-y: hidden!important;
 }
- */
+
 
  .table-responsive table:not(.dtTemplate) {
      max-width: 99.7% !important;
