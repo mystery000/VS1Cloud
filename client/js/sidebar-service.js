@@ -2357,6 +2357,19 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
+  getTCorrespondenceListDataByName(dataSearchName) {
+    let options = "";
+
+      options = {
+          OrderBy: "Ref_Type asc",
+          IgnoreDates: true,
+          IsDetailReport: false,
+          Search: 'Ref_Type = "' + dataSearchName + '" OR MessageAsString = "' + dataSearchName + '"',
+      };
+
+    return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
   getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,isDeleted) {
     let options = "";
     if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
@@ -2788,6 +2801,28 @@ export class SideBarService extends BaseService {
     }
 
     return this.getList(this.ERPObjects.TAppointment, options);
+  }
+
+  getAllCorrespondenceList(limitcount, limitfrom) {
+    let options = "";
+
+    if (limitcount == "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+      };
+    } else {
+      options = {
+        // orderby: '"AppointID desc"',
+        OrderBy: "Ref_Type asc",
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    }
+
+    return this.getList(this.ERPObjects.TCorrespondence, options);
   }
 
   getAllAppointmentPredList(data) {
@@ -4408,6 +4443,30 @@ export class SideBarService extends BaseService {
     }
 
     return this.getList(this.ERPObjects.VS1_Customize, options);
+  }
+  getLeaveRequest() {
+    let options = {
+      ListType: "Detail",
+    };
+    return this.getList(this.ERPObjects.TLeavRequest, options);
+  }
+
+  getAssignLeaveType(limitcount, limitfrom) {
+    let options = '';
+    if(limitcount == 'All'){
+        options = {
+            ListType: "Detail"
+            //select: '[Active]=true'
+        };
+    }else{
+        options = {
+            ListType: "Detail",
+            //select: '[Active]=true',
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+    };
+    return this.getList(this.ERPObjects.TAssignLeaveType, options);
   }
 
   saveNewCustomFields(erpGet, tableName, employeeId, columns)

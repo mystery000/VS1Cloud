@@ -64,7 +64,7 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure  = [
         { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
-        { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "100" },
+        { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "150" },
         { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
         { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "150" },
         { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "150" },
@@ -85,8 +85,8 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure2  = [
         { index: 0, label: 'ID', class: 'colHolidayID', active: false, display: true, width: "" },
-        { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "100" },
-        { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "100" },
+        { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "150" },
         { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "150" },
         { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" }
     ];
@@ -112,16 +112,16 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure3  = [
         { index: 0, label: 'ID', class: 'colAlowancesID', active: false, display: true, width: "" },
-        { index: 1, label: 'Allowance Name', class: 'colAlowancesNames', active: true, display: true, width: "100" },
+        { index: 1, label: 'Allowance Name', class: 'colAlowancesNames', active: true, display: true, width: "200" },
         { index: 2, label: 'Allowance Type', class: 'colAllowancesType', active: true, display: true, width: "80" },
-        { index: 3, label: 'Display Name', class: 'colAllowancesDisplayName', active: true, display: true, width: "50" },
-        { index: 4, label: 'Amount', class: 'colAllowancesAmount', active: true, display: true, width: "50" },
-        { index: 5, label: 'Account', class: 'colAllowancesAccounts', active: true, display: true, width: "50" },
+        { index: 3, label: 'Display Name', class: 'colAllowancesDisplayName', active: true, display: true, width: "200" },
+        { index: 4, label: 'Amount', class: 'colAllowancesAmount', active: true, display: true, width: "100" },
+        { index: 5, label: 'Account', class: 'colAllowancesAccounts', active: true, display: true, width: "100" },
         { index: 6, label: 'Account ID', class: 'colAllowancesAccountsID', active: false, display: true, width: "" },
         { index: 7, label: 'PAYG withholding', class: 'colAllowancesPAYG', active: false, display: true, width: "" },
         { index: 8, label: 'Superannuation Guarantee Contribution', class: 'colAllowancesSuperannuation', active: false, display: true, width: "" },
         { index: 9, label: 'Reportable as W1', class: 'colAllowancesReportableasW1', active: false, display: true, width: "" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 11, label: '', class: 'colDeleteAllowances', active: true, display: true, width: "20" }
     ];
     templateObject.tableheaderrecords3.set(headerStructure3);
@@ -146,17 +146,17 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure4  = [
         { index: 0, label: 'ID', class: 'colEarningsID', active: false, display: true, width: "" },
-        { index: 1, label: 'Earnings Name', class: 'colEarningsNames', active: true, display: true, width: "100" },
+        { index: 1, label: 'Earnings Name', class: 'colEarningsNames', active: true, display: true, width: "200" },
         { index: 2, label: 'Earnings Type', class: 'colEarningsType', active: true, display: true, width: "80" },
-        { index: 3, label: 'Display Name', class: 'colEarningsDisplayName', active: true, display: true, width: "50" },
-        { index: 4, label: 'Rate Type', class: 'colEarningsratetype', active: true, display: true, width: "50" },
-        { index: 5, label: 'Amount', class: 'colEarningsAmount', active: true, display: true, width: "50" },
-        { index: 6, label: 'Account', class: 'colEarningsAccounts', active: true, display: true, width: "50" },
+        { index: 3, label: 'Display Name', class: 'colEarningsDisplayName', active: true, display: true, width: "200" },
+        { index: 4, label: 'Rate Type', class: 'colEarningsratetype', active: true, display: true, width: "100" },
+        { index: 5, label: 'Amount', class: 'colEarningsAmount', active: true, display: true, width: "100" },
+        { index: 6, label: 'Account', class: 'colEarningsAccounts', active: true, display: true, width: "100" },
         { index: 7, label: 'Account ID', class: 'colEarningsAccountsID', active: false, display: true, width: "" },
         { index: 8, label: 'PAYG withholding', class: 'colEarningsPAYG', active: false, display: true, width: "" },
         { index: 9, label: 'Superannuation Guarantee Contribution', class: 'colEarningsSuperannuation', active: false, display: true, width: "" },
         { index: 10, label: 'Reportable as W1', class: 'colEarningsReportableasW1', active: false, display: true, width: "" },
-        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 12, label: '', class: 'colDeleteEarnings', active: true, display: true, width: "20" }
     ];
     templateObject.tableheaderrecords4.set(headerStructure4);
@@ -181,16 +181,16 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure5  = [
         { index: 0, label: 'ID', class: 'colDeductionsID', active: false, display: true, width: "" },
-        { index: 1, label: 'Deduction Name', class: 'colDeductionsNames', active: true, display: true, width: "100" },
+        { index: 1, label: 'Deduction Name', class: 'colDeductionsNames', active: true, display: true, width: "200" },
         { index: 2, label: 'Deduction Type', class: 'colDeductionsType', active: true, display: true, width: "80" },
-        { index: 3, label: 'Display Name', class: 'colDeductionsDisplayName', active: true, display: true, width: "50" },
-        { index: 4, label: 'Amount', class: 'colDeductionsAmount', active: true, display: true, width: "50" },
-        { index: 5, label: 'Account', class: 'colDeductionsAccounts', active: true, display: true, width: "50" },
+        { index: 3, label: 'Display Name', class: 'colDeductionsDisplayName', active: true, display: true, width: "200" },
+        { index: 4, label: 'Amount', class: 'colDeductionsAmount', active: true, display: true, width: "100" },
+        { index: 5, label: 'Account', class: 'colDeductionsAccounts', active: true, display: true, width: "100" },
         { index: 6, label: 'Account ID', class: 'colDeductionsAccountsID', active: false, display: true, width: "" },
         { index: 7, label: 'Reduces PAYG Withholding', class: 'colDeductionsPAYG', active: false, display: true, width: "" },
         { index: 8, label: 'Reduces Superannuation Guarantee Contribution', class: 'colDeductionsSuperannuation', active: false, display: true, width: "" },
         { index: 9, label: 'Excluded from W1 on Activity Statement', class: 'colDeductionsReportableasW1', active: false, display: true, width: "" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 11, label: '', class: 'colDeleteDeductions', active: true, display: true, width: "20" }
     ];
     templateObject.tableheaderrecords5.set(headerStructure5);
@@ -207,9 +207,9 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure6  = [
         { index: 0, label: 'ID', class: 'colReimbursementID', active: false, display: true, width: "" },
-        { index: 1, label: 'Reimbursement Name', class: 'colReimbursementName', active: true, display: true, width: "100" },
-        { index: 2, label: 'Account', class: 'colReimbursementAccount', active: true, display: true, width: "50" },
-        { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 1, label: 'Reimbursement Name', class: 'colReimbursementName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Account', class: 'colReimbursementAccount', active: true, display: true, width: "100" },
+        { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 4, label: '', class: 'colDeleterei', active: true, display: true, width: "20" }
     ];
     templateObject.tableheaderrecords6.set(headerStructure6);
@@ -231,13 +231,13 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure7  = [
         { index: 0, label: 'ID', class: 'colLeaveID', active: false, display: true, width: "" },
-        { index: 1, label: 'Leave Name', class: 'colLeaveName', active: true, display: true, width: "100" },
+        { index: 1, label: 'Leave Name', class: 'colLeaveName', active: true, display: true, width: "200" },
         { index: 2, label: 'Units', class: 'colLeaveUnits', active: true, display: true, width: "80" },
-        { index: 3, label: 'Normal Entitlement', class: 'colLeaveNormalEntitlement', active: true, display: true, width: "50" },
-        { index: 4, label: 'Leave Loading Rate', class: 'colLeaveLeaveLoadingRate', active: true, display: true, width: "50" },
-        { index: 5, label: 'Leave Type', class: 'colLeavePaidLeave', active: true, display: true, width: "50" },
-        { index: 6, label: 'Shown On Payslip', class: 'colLeaveShownOnPayslip', active: true, display: true, width: "50" },
-        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 3, label: 'Normal Entitlement', class: 'colLeaveNormalEntitlement', active: true, display: true, width: "100" },
+        { index: 4, label: 'Leave Loading Rate', class: 'colLeaveLeaveLoadingRate', active: true, display: true, width: "100" },
+        { index: 5, label: 'Leave Type', class: 'colLeavePaidLeave', active: true, display: true, width: "100" },
+        { index: 6, label: 'Shown On Payslip', class: 'colLeaveShownOnPayslip', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 8, label: '', class: 'colDeletepaidrem', active: true, display: true, width: "20" }
     ];
     templateObject.tableheaderrecords7.set(headerStructure7);
@@ -261,16 +261,16 @@ Template.payrollrules.onCreated(function() {
     }
     let headerStructure8  = [
         { index: 0, label: 'ID', class: 'colSuperannuationID', active: false, display: true, width: "" },
-        { index: 1, label: 'Name', class: 'colSuperannuationName', active: true, display: true, width: "100" },
+        { index: 1, label: 'Name', class: 'colSuperannuationName', active: true, display: true, width: "200" },
         { index: 2, label: 'Type', class: 'colSuperannuationType', active: true, display: true, width: "80" },
-        { index: 3, label: 'Employer Number', class: 'colEmployerNum', active: true, display: true, width: "50" },
+        { index: 3, label: 'Employer Number', class: 'colEmployerNum', active: true, display: true, width: "100" },
         { index: 4, label: 'ABN', class: 'colabn', active: false, display: true, width: "" },
         { index: 5, label: 'Electronics Service Address Alias', class: 'colservicealias', active: false, display: true, width: "" },
-        { index: 6, label: 'BSB', class: 'colbsb', active: true, display: true, width: "50" },
+        { index: 6, label: 'BSB', class: 'colbsb', active: true, display: true, width: "100" },
         { index: 7, label: 'Account Number', class: 'colaccountnumber', active: false, display: true, width: "" },
-        { index: 8, label: 'Account Name', class: 'colaccountname', active: true, display: true, width: "50" },
+        { index: 8, label: 'Account Name', class: 'colaccountname', active: true, display: true, width: "100" },
         { index: 9, label: 'fundid', class: 'colSuperannuationTypeid', active: false, display: true, width: "" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 11, label: '', class: 'colDeletesup', active: true, display: true, width: "20" }
     ];
     templateObject.tableheaderrecords8.set(headerStructure8);
@@ -6406,13 +6406,15 @@ Template.payrollrules.onRendered(function() {
     });
 
      $('#editbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('editbankaccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -6789,13 +6791,15 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editpaygbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('editpaygbankaccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -7172,13 +7176,15 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtReimbursementAccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('edtReimbursementAccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -7556,13 +7562,15 @@ Template.payrollrules.onRendered(function() {
 
 
      $('#editwagesexpbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('editwagesexpbankaccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -7939,13 +7947,15 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editwagespaybankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('editwagespaybankaccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -8320,13 +8330,15 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('editsuperliabbankaccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -8703,13 +8715,15 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editsuperexpbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('editsuperexpbankaccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -9086,13 +9100,15 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#edtExpenseAccountAllowance').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
       var $earch = $(this);
       var offset = $earch.offset();
       let accountService = new AccountService();
       const accountTypeList = [];
       var accountDataName = e.target.value ||'';
 
-      if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+      if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
          $('#selectLineID').val('edtExpenseAccountAllowance');
         $('#accountListModal').modal();
         setTimeout(function () {
@@ -9469,13 +9485,15 @@ Template.payrollrules.onRendered(function() {
      });
 
     $('#edtExpenseAccountDirectorsFees').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
            $('#selectLineID').val('edtExpenseAccountDirectorsFees');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -9852,13 +9870,15 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountTermnination').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
            $('#selectLineID').val('edtExpenseAccountTermnination');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -10235,13 +10255,15 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('edtExpenseAccount');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -10618,13 +10640,15 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountOvertime').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('edtExpenseAccountOvertime');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -11004,13 +11028,15 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountLumpSumE').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('edtExpenseAccountLumpSumE');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -11387,13 +11413,15 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#edtExpenseAccountBonusesCommissions').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('edtExpenseAccountBonusesCommissions');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -11770,13 +11798,15 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountLumpSumW').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var   accountDataName = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectLineID').val('edtExpenseAccountLumpSumW');
           $('#accountListModal').modal();
           setTimeout(function () {
@@ -12154,13 +12184,15 @@ Template.payrollrules.onRendered(function() {
 
 
      $('#edtDeductionAccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-        if(e.clientX > offset.left + $earch.width() - 8) {
+        if(e.pageX > offset.left + $earch.width() - 8) {
            $('#selectLineID').val('edtDeductionAccount');
            $('#accountListModal').modal();
            setTimeout(function () {
@@ -12550,14 +12582,15 @@ Template.payrollrules.onRendered(function() {
      });
 
     $('#edtRateTypeOvertime').editableSelect().on('click.editable-select', function (e, li) {
-
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let ratetypeService = new RateTypeService();
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectRateLineID').val('edtRateTypeOvertime');
           $('#rateTypeListModel').modal();
           $('#tblratetypelist_filter .form-control-sm').focus();
@@ -12740,7 +12773,7 @@ Template.payrollrules.onRendered(function() {
     //     const ratetypelist = [];
     //      var  Description = e.target.value ||'';
 
-    //     if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
     //       $('#selectRateLineID').val('edtRateType');
     //       $('#rateTypeListModel').modal();
     //       $('#tblratetypelist_filter .form-control-sm').focus();
@@ -12917,6 +12950,8 @@ Template.payrollrules.onRendered(function() {
 
 
     $('#holidaygroup').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -12924,7 +12959,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectGroupLineID').val('edtGroupType');
           $('#groupTypeListModel').modal();
           $('#tblgrouptypelist_filter .form-control-sm').focus();
@@ -13103,6 +13138,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#addexistgroup').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13110,7 +13147,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectGroupLineID').val('edtGroupType');
           $('#groupTypeListModel').modal();
           $('#tblgrouptypelist_filter .form-control-sm').focus();
@@ -13289,6 +13326,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#holidaygroup2').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13296,7 +13335,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectGroupLineID').val('edtGroupType');
           $('#groupTypeListModel').modal();
           $('#tblgrouptypelist_filter .form-control-sm').focus();
@@ -13477,6 +13516,8 @@ Template.payrollrules.onRendered(function() {
 
 
     $('#edtFundType').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13484,7 +13525,7 @@ Template.payrollrules.onRendered(function() {
         const fundtypelist = [];
         var Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectFundLineID').val('edtFundType');
           $('#fundTypeListModel').modal();
           $('#tblfundtypelist_filter .form-control-sm').focus();
@@ -13663,6 +13704,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#edtRateTypeTermnination').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13670,7 +13713,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectRateLineID').val('edtRateTypeTermnination');
           $('#rateTypeListModel').modal();
           $('#tblratetypelist_filter .form-control-sm').focus();
@@ -13846,6 +13889,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeLumpSumE').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13853,7 +13898,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectRateLineID').val('edtRateTypeLumpSumE');
           $('#rateTypeListModel').modal();
           $('#tblratetypelist_filter .form-control-sm').focus();
@@ -14030,6 +14075,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeBonusesCommissions').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -14037,7 +14084,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectRateLineID').val('edtRateTypeBonusesCommissions');
           $('#rateTypeListModel').modal();
           $('#tblratetypelist_filter .form-control-sm').focus();
@@ -14214,6 +14261,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeDirectorsFees').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -14221,7 +14270,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectRateLineID').val('edtRateTypeDirectorsFees');
           $('#rateTypeListModel').modal();
           $('#tblratetypelist_filter .form-control-sm').focus();
@@ -14398,6 +14447,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeLumpSumW').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -14405,7 +14456,7 @@ Template.payrollrules.onRendered(function() {
         const ratetypelist = [];
          var  Description = e.target.value ||'';
 
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
           $('#selectRateLineID').val('edtRateTypeLumpSumW');
           $('#rateTypeListModel').modal();
           $('#tblratetypelist_filter .form-control-sm').focus();
@@ -15204,18 +15255,22 @@ Template.payrollrules.onRendered(function() {
     });
 
     $(document).on('click', '#rateList', function(e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         const $earch = $(this);
         const offset = $earch.offset();
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $('#ratePopModal').modal('toggle');
         } else {
             $('#ratePopModal').modal('toggle');
         }
     });
     $(document).on('click', '#overtimeRateType', function(e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         const $earch = $(this);
         const offset = $earch.offset();
-        if (e.clientX > offset.left + $earch.width() - 8) { // X button 16px wide?
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $(e.currentTarget).addClass('paste-rate');
             $('#select-rate-type-modal').modal('show');
         } else {

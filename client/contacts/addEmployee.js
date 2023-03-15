@@ -2171,6 +2171,8 @@ Template.employeescard.onRendered(function () {
   });
 
   $(document).on('click', '#editEmployeeTitle', function (e, li) {
+    e.preventDefault();
+    e.stopPropagation();
     const $earch = $(this);
     const offset = $earch.offset();
     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?

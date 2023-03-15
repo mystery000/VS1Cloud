@@ -1142,6 +1142,15 @@ Template.reconciliationlist.events({
     'click #btnReconcile':function(event){
         window.open('/bankrecon','_self');
     },
+    'click #btnReconMacthingRulesList':function(event){
+        window.open('/reconrulelist','_self');
+    },
+    'click #btnNewReconMatchingRule':function(event){
+        window.open('/newreconrule','_self');
+    },
+    'click #btnNewStatementImportRule':function(event){
+        window.open('/newbankrule','_self');
+    },
     // 'click .chkDatatable' : function(event){
     //     var columns = $('#tblreconciliationlist th');
     //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
