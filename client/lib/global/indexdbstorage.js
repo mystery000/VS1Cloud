@@ -553,6 +553,7 @@ openDb = function (dbName) {
       db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
       db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TDashbaordOptions", {keyPath: "EmployeeEmail"});
       db.createObjectStore("TTransactionDescription", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
