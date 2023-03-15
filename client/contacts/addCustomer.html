@@ -97,6 +97,12 @@
         <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
       </div>
       {{/unless}}
+      <!-- All Cards List -->
+      {{#if isModal}}
+
+      {{else}}
+      {{> allCardsLists tabGroupID="9" chartGroup="PaymentOverviewCustomer"}}
+      {{/if}}
       <div class="row">
         {{#unless isModal}}
         <div class="col-12 col-md-4 col-lg-2 displayList" id="displayList">
@@ -172,12 +178,7 @@
         {{/unless}}
         <div class="{{#if isModal}}{{else}}col-12 col-md-8 col-lg-10 displayInfo{{/if}}" id="displayInfo"
           style="padding-top: 8px; width: 100%;">
-          <!-- All Cards List -->
-          {{#if isModal}}
-
-          {{else}}
-          {{> allCardsLists tabGroupID="9" chartGroup="PaymentOverviewCustomer"}}
-          {{/if}}
+          
           <div class="card shadow mb-4 cardSizing">
             {{> vs1_contact_card_header isJob=isJob record=record id="customerInfo"}}
             {{> customfieldDroppop}}
