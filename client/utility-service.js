@@ -275,19 +275,17 @@ const XLSX = require("xlsx");
                     const writable = await handle.createWritable();
                     await writable.write(data);
                     await writable.close();
-                    // swal('Success', 'SpreadSheet Created Successfully!', 'success');
                     swal({
-                            title: "Success",
-                            text: "SpreadSheet Created Successfully!\nWould you like to open SpreadSheet help?",
-                            type: "success",
-                            showCancelButton: true,
-                            confirmButtonColor: "rgb(140, 212, 245)",
-                            confirmButtonText: "Yes",
-                            closeOnConfirm: false
-                        },
-                        function(){
+                        title: "Success",
+                        html: "<div id=\"swal2-content\" class=\"swal2-content\" style=\"display: block;\">SpreadSheet Created Successfully!<br>Would you like to open SpreadSheet help guide?</div>",
+                        type: "success",
+                        showCancelButton: true,
+                        confirmButtonColor: "rgb(140, 212, 245)",
+                        confirmButtonText: "Yes",
+                    }).then(function(confirm){
+                        if(confirm.value == true)
                             window.open('downloads/SpreadSheetHelpFile.pdf');
-                        });
+                    });
                     return;
                 } catch (err) {
                     if (err.name == 'AbortError') {
