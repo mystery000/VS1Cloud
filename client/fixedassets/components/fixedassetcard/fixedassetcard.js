@@ -13,6 +13,7 @@ let fixedAssetService = new FixedAssetService();
 
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
+  templateObject.currency = new ReactiveVar('$');
   templateObject.currentAssetID = new ReactiveVar(0);
   templateObject.currentAssetName = new ReactiveVar('');
   templateObject.currentAssetCode = new ReactiveVar('');
@@ -687,6 +688,9 @@ Template.fixedassetcard.events({
 });
 
 Template.fixedassetcard.helpers({
+  currency: () => {
+    return Template.instance().currency.get();
+  },
   chkEnterAmount: () => {
     return Template.instance().chkEnterAmount.get();
   },
