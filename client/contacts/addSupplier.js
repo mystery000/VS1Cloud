@@ -10,12 +10,15 @@ import { Template } from 'meteor/templating';
 import './addSupplier.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import moment from "moment";
+import { OrganisationService } from "../js/organisation-service";
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
 const contactService = new ContactService();
 const countryService = new CountryService();
+const organisationService = new OrganisationService();
 const crmService = new CRMService();
+let primaryAccountantName = localStorage.getItem('VS1Accountant');
 
 function MakeNegative() {
   $('td').each(function () {
@@ -396,6 +399,13 @@ Template.supplierscard.onCreated(function () {
       const rowCount = $('.results tbody tr').length;
       $('.counter').text(rowCount + 'items');
       setTab();
+      if (primaryAccountantName === lineItemObj.company) {
+        $('#chkSameAsPrimary').prop('checked', true)
+        $('.active-password-wrapper').removeClass('d-none')
+        $('.vs1-login-nav').removeClass('d-none')        
+      }
+      $('#primaryAccountantUsername').val(lineItemObj.email)
+      $('#primaryAccountantPassword').val(`${lineItemObj.firstname}@123`)
     }, 1000)
     $('.fullScreenSpin').css('display', 'none');
   }
@@ -687,7 +697,6 @@ Template.supplierscard.onRendered(function () {
 
   templateObject.fillBankInfoFromUrl();
   templateObject.getCountryData();
-
 
   $(document).on("click", "#tblBankName tbody tr", function (e) {
     var table = $(this);
@@ -1260,7 +1269,7 @@ Template.supplierscard.onRendered(function () {
         // $('#addLetterTemplateModal').modal('toggle');
       })
 
-      $(document).on("click", "#termsList tbody tr", function (e) {
+      $(document).on("click", "#termsListModal tbody tr", function (e) {
         $('#sltTerms').val($(this).find(".colName").text());
         $('#termsListModal').modal('hide');
       });
@@ -1298,6 +1307,18 @@ Template.supplierscard.onRendered(function () {
       $(".btnTask").attr("disabled", false);
     }
   });
+
+  
+  $(document).on('click', ".toggle-password", function (ev) {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var passwordSecret = $($(this).data('toggle'));
+    if (passwordSecret.attr("type") == "password") {
+      passwordSecret.attr("type", "text");
+    } else {
+      passwordSecret.attr("type", "password");
+    }
+  });
+                                
 });
 
 Template.supplierscard.events({
@@ -1429,6 +1450,18 @@ Template.supplierscard.events({
         e.preventDefault();
         return false;
       }
+
+      if ($('#chkSameAsPrimary').prop('checked')) {
+        if ($('#edtActivePrimaryPassword').val() !== "VS1Cloud@123") {
+          swal('Activate primary password is incorrect!', '', 'error');
+          return
+        }
+        if (!$('#primaryAccountantUsername').val() || !$('#primaryAccountantPassword').val()) {
+          swal('VS1 User Login should not be empty!', '', 'error');
+          $('.vs1-login-nav-link').trigger('click')
+          return
+        }
+      }
       $('.fullScreenSpin').css('display', 'inline-block');
 
       let company = $('#edtSupplierCompany').val() || '';
@@ -1482,12 +1515,12 @@ Template.supplierscard.events({
       let sltShippingMethodName = '';
       let notes = $('#txaNotes').val() || '';
       let suppaccountno = $('#suppAccountNo').val() || '';
-      let BankAccountName = $('#edtBankAccountName').val();
-      let BSB = $('#edtBsb').val();
-      let BankName = $('#edtBankName').val();
-      let BankAccountNo = $('#edtBankAccountNumber').val();
-      let SwiftCode = $('#edtSwiftCode').val();
-      let RoutingNumber = $('#edtRoutingNumber').val();
+      let BankAccountName = $('#edtBankAccountName').val() || '';
+      let BSB = $('#edtBsb').val() || '';
+      let BankName = $('#edtBankName').val() || '';
+      let BankAccountNo = $('#edtBankAccountNumber').val() || '';
+      let SwiftCode = $('#edtSwiftCode').val() || '';
+      let RoutingNumber = $('#edtRoutingNumber').val() || '';
 
       // add to custom field
       let custField1 = $('#edtSaleCustField1').val() || '';
@@ -1714,24 +1747,37 @@ Template.supplierscard.events({
       }
 
       contactService.saveSupplierEx(objDetails).then(function (objDetails) {
-
+        let supplierSaveID = objDetails.fields.ID;
+        if (supplierSaveID) {
+          organisationService.getOrganisationDetail().then(function(data) {
+            if (!data || !data.tcompanyinfo || !data.tcompanyinfo[0]) return
+            data.tcompanyinfo[0] = {...data.tcompanyinfo[0], Contact: company}         
+            let organisationSettings = {type: "TCompanyInfo", fields: data.tcompanyinfo[0]}
+            organisationService
+              .saveOrganisationSetting(organisationSettings)
+              .then(function () {
+                  localStorage.setItem("VS1Accountant", company);
+                  addVS1Data('TCompanyInfo', JSON.stringify(data));
+                  swal("Organisation details successfully updated!", "", "success")
+                  sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                    addVS1Data('TSupplierVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                      window.open('/supplierlist', '_self');
+                    }).catch(function (err) {
+                      window.open('/supplierlist', '_self');
+                    });
+                  }).catch(function (err) {
+                    window.open('/supplierlist', '_self');
+                  });
+              })
+              .catch(function (err) {
+                  swal('Oooops...', err, 'error');                  
+              });
+          });
+        }
         if (localStorage.getItem("enteredURL") != null) {
           FlowRouter.go(localStorage.getItem("enteredURL"));
           localStorage.removeItem("enteredURL");
           return;
-        }
-
-        let supplierSaveID = objDetails.fields.ID;
-        if (supplierSaveID) {
-          sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
-            addVS1Data('TSupplierVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-              window.open('/supplierlist', '_self');
-            }).catch(function (err) {
-              window.open('/supplierlist', '_self');
-            });
-          }).catch(function (err) {
-            window.open('/supplierlist', '_self');
-          });
         }
       }).catch(function (err) {
         swal({
@@ -2650,6 +2696,37 @@ Template.supplierscard.events({
     $(".btnTask").attr("disabled", false);
     event.preventDefault();
   },
+
+  "change #chkSameAsPrimary": async function (event) {
+    if ($("#chkSameAsPrimary").prop('checked')) {
+      if (primaryAccountantName !== $('#edtSupplierCompany').val()) {
+        let result = await swal({
+          title: 'Warning',
+          text: 'supplier name is already Your primary accountant, do you wish to switch?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+        })        
+        if (result.dismiss === 'cancel') {
+          $("#chkSameAsPrimary").prop('checked', false)
+        }
+      }
+      $('.active-password-wrapper').removeClass('d-none')
+      $('.vs1-login-nav').removeClass('d-none')
+    } else {
+      $('.active-password-wrapper').addClass('d-none')
+      $('.vs1-login-nav').addClass('d-none')
+    }
+  },
+
+  // "change #edtSupplierFirstName": async function (event) {
+  //   $('#primaryAccountantPassword').val(`${$(event.target).val()}@123`)
+  // },
+
+  // "change #edtSupplierCompanyEmail": async function (event) {
+  //   $('#primaryAccountantUsername').val($(event.target).val())
+  // },
 });
 
 Template.supplierscard.helpers({

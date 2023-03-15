@@ -148,7 +148,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 105;
+  let allDataToLoad = 106;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -1689,6 +1689,32 @@ Template.onsuccesswaterfall.onRendered(function () {
 
       });
 
+    }).catch(function (err) {
+
+    });
+
+
+    sideBarService.getAllTReconcilationListDataForBankAccountChart(initialDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Purchase Order "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Bank Accounts Recon ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TReconciliationBankAccountsList', JSON.stringify(data));
+      $("<span class='process'>Bank Accounts Recon Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
 
     });

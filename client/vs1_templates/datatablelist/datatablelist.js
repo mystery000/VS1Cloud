@@ -504,13 +504,10 @@ Template.datatablelist.onRendered(async function () {
                 colReorder: true,
                 pageLength: initialDatatableLoad,
                 "bLengthChange": isShowSelect,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
+                lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
                 responsive: true,
-                "order": [[1, "asc"]],
+                "order": [[templateObject.data.orderby ? templateObject.data.orderby:1, templateObject.data.orderdesc ? templateObject.data.orderdesc:"asc"]],
                 // "autoWidth": false,
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
