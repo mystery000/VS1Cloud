@@ -15936,6 +15936,8 @@ Template.appointments.events({
             $("#chkSMSUser").prop("checked", false);
             let emailCustomer = $("#customerEmail").is(":checked");
             let emailUser = $("#userEmail").is(":checked");
+            // $("#saveAppointmentModal").modal("hide");
+            // $("#event-modal").modal("hide");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
                 // $("#frmAppointment").trigger("submit");
