@@ -2501,3 +2501,12 @@ authenticatedRoutes.route('/manufacturingsettings',  {
         })
     }
 })
+
+authenticatedRoutes.route('/buildcostreport', {
+    name: 'buildcostreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'buildcostreport'
+        });
+    }
+});

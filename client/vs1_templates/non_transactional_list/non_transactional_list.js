@@ -52,6 +52,8 @@ Template.non_transactional_list.onCreated(function() {
     templateObject.tablename = new ReactiveVar();
     templateObject.currentproductID = new ReactiveVar();
     templateObject.currenttype = new ReactiveVar();
+    templateObject.processlist = new ReactiveVar([]);
+
 });
 
 Template.non_transactional_list.onRendered(function() {
@@ -1008,7 +1010,30 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Password', class: 'colPassword', active: true, display: true, width: "" },
                 { index: 2, label: 'SMS number', class: 'colSMS', active: true, display: true, width: "" },
             ]
-        }
+        }  else if(currenttablename === "tblBuildCostReport"){
+
+            reset_data = [
+                { index: 0, label: "Work Order", class: "colWorkOrder", width: "80", active: true, display: true },
+                { index: 1, label: "ProductID", class: "colProductID", width: "80", active: true, display: true },
+                { index: 2, label: "Process BOM", class: "colProcessBOM", width: "100", active: true, display: true },
+                { index: 3, label: "BOM Changed", class: "colBOMChanged", width: "100", active: true, display: true },
+                { index: 4, label: "BOM Products", class: "colProducts", width: "100", active: true, display: true },
+                { index: 5, label: "Products Changed", class: "colProductChanged", width: "100", active: true, display: true },
+                { index: 6, label: "Unit Cost", class: "colUnitCost", width: "100", active: true, display: true },
+                { index: 7, label: "BOM Qty", class: "colBOMQty", width: "100", active: true, display: true },
+                { index: 8, label: "Changed Qty", class: "colChangedQty", width: "100", active: true, display: true },
+                { index: 9, label: "Variance", class: "colVariance", width: "100", active: true, display: true },
+                { index: 10, label: "Wastage", class: "colWastage", width: "100", active: true, display: true },
+                { index: 11, label: "Total Clocked Hrs", class: "colTotalClockedHrs", width: "100", active: true, display: true },
+                { index: 12, label: "Labour Cost", class: "colLabourCost", width: "100", active: true, display: true },
+                { index: 13, label: "Overhead Cost", class: "colOverheadCost", width: "100", active: true, display: true },
+                { index: 14, label: "Raw Material Cost", class: "colRawMaterialCost", width: "100", active: true, display: true },
+                { index: 15, label: "Total BOM Cost", class: "colTotalBOMCost", width: "100", active: true, display: true },
+                { index: 16, label: "Wastage Cost", class: "colWastageCost", width: "100", active: true, display: true },
+        
+            ]
+        }        
+
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -2510,7 +2535,7 @@ Template.non_transactional_list.onRendered(function() {
                 productsData = data.tproductvs1;
             }
         });
-
+        
         for (let i = 0; i < data.tproductbin.length; i++) {
             let linestatus = '';
             let productDetail;
@@ -2563,6 +2588,8 @@ Template.non_transactional_list.onRendered(function() {
                 dataTableList.push(dataList);
             }
         }
+
+        console.log(splashArrayProductList);
 
 
         templateObject.transactiondatatablerecords.set(dataTableList);
@@ -2944,6 +2971,295 @@ Template.non_transactional_list.onRendered(function() {
 
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+
+    //Build Cost Report Data    
+    templateObject.getBuildCostReport = async function(deleteFilter = false) {
+        var customerpage = 0;
+        getVS1Data('TVS1Workorder').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                //     templateObject.displaySuppliersListData(data);
+                // }).catch(function(err) {
+                // });
+            } else {
+                let data_buildCost = JSON.parse(dataObject[0].data);
+
+                getVS1Data('TProcessStep').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                            await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                                templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder,data);
+                            })
+                        })
+                    } else {
+                        let data_process = JSON.parse(dataObject[0].data);
+                        templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder, data_process); 
+                    }
+                }).catch(function(e) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                        await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                            templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder,data);
+                                                    })
+                    })
+                })
+
+                
+            }
+        }).catch(function(err) {
+            // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+            //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+            //     templateObject.displaySuppliersListData(data);
+            // }).catch(function(err) {
+
+            // });
+        });
+    }
+
+    templateObject.displayBuildCostReportData = async function(data, data2) {
+        var splashArrayBuildCostReport = new Array();
+        let deleteFilter = false;
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+        let bomData;
+        let process_data = data2.tprocessstep;
+
+        let hourly_labour_cost;
+        let hourly_overhead_cost;
+
+        console.log(process_data);
+        
+        for (let i = 0; i < data.length; i++) {
+
+            bomData = JSON.parse(data[i].fields.BOMStructure);                    
+            for(let k =0 ; k < process_data.length; k++) {
+                if (bomData.Info == process_data[k].fields.Description) {
+                    hourly_labour_cost = parseFloat(process_data[k].fields.HourlyLabourCost);
+                    hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);    
+                }
+            }
+
+
+            let details = JSON.parse(bomData.Details);
+            
+            let dataList = [ bomData.Id || '' , 
+                             bomData.Caption || '',
+                             bomData.Info || '',
+                             '' || '',
+                            bomData.Caption || '',
+                            '' || '',
+                            '$95' || '',
+                            bomData.TotalQtyOriginal || '0',
+                            '0' || '',
+                            bomData.QtyVariation || '0',
+                            '' || '',
+                            '00:12:35' || '',
+                            hourly_labour_cost * 1 || '',
+                            hourly_overhead_cost * 1 || '',
+                            '' || '',
+                            '' || '',
+                            parseFloat(bomData.TotalQtyOriginal) * 95  || '0'
+                        ];
+
+            splashArrayBuildCostReport.push(dataList);
+            
+
+            for(let j=0; j<details.length;j++) {
+
+                dataList = [  '' , 
+                              '',
+                              '',
+                              '' || '',
+                              details[j].productName || '',
+                              '' || '',
+                              '$7.5' || '',
+                               details[j].qty || '',
+                                2.0 || '',
+                                parseFloat(details[j].qty) -2.0 || '',
+                                2.0- parseFloat(details[j].qty) || '',
+                                '' || '',
+                                hourly_labour_cost * 1 || '',
+                                hourly_overhead_cost * 1 || '',
+                                '' || '',
+                                '' || '',
+                                parseFloat(details[j].qty) * 7.5 || ''
+                        ];
+                splashArrayBuildCostReport.push(dataList);        
+            }
+
+          
+           
+            
+            templateObject.transactiondatatablerecords.set(splashArrayBuildCostReport);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayBuildCostReport,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    // {
+                    //     targets: 0,
+                    //     className: "colSupplierID colID hiddenColumn",
+                    //     width: "10px",
+                    //     createdCell: function(td, cellData, rowData, row, col) {
+                    //         $(td).closest("tr").attr("id", rowData[0]);
+                    //     }
+                    // },
+                    {
+                        targets: 0,
+                        className: "colCompany",
+                        width: "200px",
+                    },
+                    {
+                        targets: 1,
+                        className: "colPhone",
+                        width: "95px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colARBalance text-right",
+                        width: "90px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colCreditBalance text-right",
+                        width: "110px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colBalance text-right",
+                        width: "80px",
+                    },
+                    {
+                        targets: 5,
+                        className: "colCreditLimit text-right",
+                        width: "90px",
+                    },
+                    {
+                        targets: 6,
+                        className: "colSalesOrderBalance text-right",
+                        width: "120px",
+                    },
+
+                    {
+                        targets: 7,
+                        className: "colSuburb",
+                        width: "120px",
+                    },
+                    {
+                        targets: 8,
+                        className: "colCountry",
+                        width: "200px",
+                    },
+                    {
+                        targets: 9,
+                        className: "colNotes",
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Suppliers List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Suppliers List',
+                        filename: "Suppliers List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Suppliers List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (data.Params.Search.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = splashArrayBuildCostReport.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
 
     //Lead List Data
     templateObject.getLeadListData = async function(deleteFilter = false) {
@@ -6420,7 +6736,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
                     await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
-                        templateObject.displayProcessListData(data)
+                        templateObject.displayProcessListData(data);
                     })
                 })
             } else {
@@ -6430,7 +6746,7 @@ Template.non_transactional_list.onRendered(function() {
         }).catch(function(e) {
             manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
                 await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
-                    templateObject.displayProcessListData(data)
+                    templateObject.displayProcessListData(data);
                 })
             })
         })
@@ -17877,6 +18193,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getBOMListData();
     } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
         templateObject.getSupplierListData();
+    } else if (currenttablename == "tblBuildCostReport") {
+        templateObject.getBuildCostReport();
     } else if (currenttablename == "tblLeadlist") {
         templateObject.getLeadListData();
     } else if (currenttablename == "tblCurrencyList") {

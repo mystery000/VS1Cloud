@@ -556,6 +556,7 @@ openDb = function (dbName) {
       db.createObjectStore("TTransactionDescription", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("VS1BuildCost_Report", { keyPath: "EmployeeEmail" });
 
 
     };

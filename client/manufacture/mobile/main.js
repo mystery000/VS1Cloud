@@ -403,7 +403,7 @@ Template.mobileapp.events({
         Template.instance().isEnterJobProcess.set(false);
         Template.instance().isSelectEmployeeNumber.set(true);
 
-        $(".mobile-checkin-container").css('display', 'block');
+       // $(".mobile-checkin-container").css('display', 'block');
         if (window.screen.width <= 480) {
             $(".mobile-right-btn-containner").css('display', 'none');
         }
@@ -835,19 +835,18 @@ Template.mobileapp.events({
             let BomDataList = [];        
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
+            let change_to = 0;
             
-            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo:"0", wastage:"0" };
+            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
 
             BomDataList.push(tempBomData);    
-                
-
-            let bomDetailData = JSON.parse(bomStructureData.Details);
             
+            let bomDetailData = JSON.parse(bomStructureData.Details);
+          
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo:"0",wastage:"0" };
+                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: change_to, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(change_to) };
                 BomDataList.push(tempBomData);  
             }
-
         
             let wastage_table = $("#tblWastageForm").DataTable({
                 data: BomDataList,
@@ -862,7 +861,7 @@ Template.mobileapp.events({
                     { title: 'UOM', mData: 'uom' },
                     { title: 'Total', mData: 'total' },
                     { title: 'Change To', mData: 'changeTo', className: 'editable' },
-                    { title: 'Item', mData: 'wastage' }
+                    { title: 'Wastage', mData: 'wastage' }
 
                 ]
             })
@@ -883,10 +882,9 @@ Template.mobileapp.events({
                 var total_new = total - changeto;
                 var wastage_new = wastage + changeto;
 
-                wastage_table.cell(rowIndex, colIndex-1).data(total_new);
-                wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
+                // wastage_table.cell(rowIndex, colIndex-1).data(total_new);
+                // wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
 
-                console.log(changeto);
 
                 // var colIndex = wastage_table.cell(this).index().column;
                 // var rowIndex = wastage_table.cell(this).index().row;
@@ -916,16 +914,11 @@ Template.mobileapp.events({
         $('#btnStopJob').prop('disabled', true);
         $('#btnStopBreak').prop('disabled', true);
         $(".mobile-header-status-text").text("Enter Job Number");
-
         $(".mobile-main-input").val(" ");
 
     },
 
-    // 'click #tblWastageForm tbody td.editable': function (e, instance) {
-    //     $(this).attr('contenteditable', 'true');
-         
-    // },
-
+   
     'change #breakCheck': function(e, instance) {
 
         if($('#breakCheck').is(":checked") == true){
@@ -964,9 +957,19 @@ Template.mobileapp.events({
     'click .btn-save-wastage': function(e,instance) {
         $('.fullScreenSpin').css('display', 'inline-block');
         $('.fullScreenSpin').css('display', 'none')
+        
+        var temp = [];
+
+        $("#tblWastageForm tr").each(function(){
+            var thirdColumnValue = $(this).find("td:eq(3)").text();
+            temp.push(thirdColumnValue);
+            
+        });
+
+       
         swal('The wastage is saved', '', 'success');
         $('#WastageModal').modal('toggle');
-
+    
     } 
     ,
     'click .btn-cancel-wastage': function(e,instance) {
