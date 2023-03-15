@@ -570,6 +570,10 @@ openDb = function (dbName) {
       db.createObjectStore('TFavReportSoleTraderNonTrading', {keyPath: 'EmployeeEmail'});
       db.createObjectStore('TFavReportTrust', {keyPath: 'EmployeeEmail'});
 
+      db.createObjectStore('TFavSupplierList', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavSupplierSummaryReport', {keyPath: 'EmployeeEmail'});
+
+
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });

@@ -82,6 +82,9 @@ Template.allreports.onCreated(function() {
     templateObject.isSingleDirector = new ReactiveVar(false);
     templateObject.isSoleTraderNonTrading = new ReactiveVar(false);
     templateObject.isTrust = new ReactiveVar(false);
+
+    templateObject.isSupplierList = new ReactiveVar(false);
+    templateObject.isSupplierSummaryReport = new ReactiveVar(false);
 });
 Template.allreports.onRendered(() => {
     let templateObject = Template.instance();
@@ -676,6 +679,78 @@ Template.allreports.onRendered(() => {
         }
     });
 
+    getVS1Data("TFavReportCompany").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isCompanyAccountant.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportTrustee").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isTrustee.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportFinancialStatement").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isFinancialStatement.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportIndividual").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isIndividual.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportPartnershipNonTrading").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isPartnershipNonTrading.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportTrustNonTrading").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isTrustNonTrading.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportSelfManagedSuperfund").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSelfManagedSuperfund.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportSingleDirector").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSingleDirector.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportSoleTraderNonTrading").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSoleTraderNonTrading.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportTrust").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isTrust.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavSupplierList").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSupplierList.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavSupplierSummaryReport").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSupplierSummaryReport.set(dataObject[0].data === 'true')
+        }
+    })
+
     const taxRateService = new TaxRateService();
     const accountantList = [];
 
@@ -833,7 +908,7 @@ Template.allreports.events({
             templateObject.isJobProfitReport.set(false);
         }
     },
-    'click .chkSupplierDetails': function(event) {
+    'click #formCheck-SupplierDetails': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
             addVS1Data('SupplierDetailsReport', 'true');
@@ -841,6 +916,26 @@ Template.allreports.events({
         } else {
             addVS1Data('SupplierDetailsReport', 'false');
             templateObject.isSupplierDetails.set(false);
+        }
+    },
+    'click #formCheck-SupplierList': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavSupplierList', 'true');
+            templateObject.isSupplierList.set(true);
+        } else {
+            addVS1Data('TFavSupplierList', 'false');
+            templateObject.isSupplierList.set(false);
+        }
+    },
+    'click #formCheck-SupplierSummaryReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavSupplierSummaryReport', 'true');
+            templateObject.isSupplierSummaryReport.set(true);
+        } else {
+            addVS1Data('TFavSupplierSummaryReport', 'false');
+            templateObject.isSupplierSummaryReport.set(false);
         }
     },
     'click .chkSupplierProduct': function(event) {
@@ -1334,6 +1429,7 @@ Template.allreports.events({
         }
     },
     'click #formCheck-Company': function(event) {
+        console.log(event)
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
             addVS1Data('TFavReportCompany', 'true');
@@ -1697,6 +1793,42 @@ Template.allreports.helpers({
         return Template.instance().isWorkOrder.get();
     },
 
+    isCompanyAccountant: function() {
+        return Template.instance().isCompanyAccountant.get();
+    },
+    isTrustee : function () {
+        return Template.instance().isTrustee.get();
+    },
+    isFinancialStatement : function () {
+        return Template.instance().isFinancialStatement.get();
+    },
+    isIndividual : function () {
+        return Template.instance().isIndividual.get();
+    },
+    isPartnershipNonTrading : function () {
+        return Template.instance().isPartnershipNonTrading.get();
+    },
+    isTrustNonTrading : function () {
+        return Template.instance().isTrustNonTrading.get();
+    },
+    isSelfManagedSuperfund : function () {
+        return Template.instance().isSelfManagedSuperfund.get();
+    },
+    isSingleDirector : function () {
+        return Template.instance().isSingleDirector.get();
+    },
+    isSoleTraderNonTrading : function () {
+        return Template.instance().isSoleTraderNonTrading.get();
+    },
+    isTrust : function () {
+        return Template.instance().isTrust.get();
+    },
+    isSupplierList: function () {
+        return Template.instance().isSupplierList.get();
+    },
+    isSupplierSummaryReport: function () {
+        return Template.instance().isSupplierSummaryReport.get();
+    },
     isFavorite: function() {
         let isBalanceSheet = Template.instance().isBalanceSheet.get();
         let isProfitLoss = Template.instance().isProfitLoss.get();
@@ -1764,9 +1896,88 @@ Template.allreports.helpers({
         let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
         let isWorkOrder = Template.instance().isWorkOrder.get();
 
+
+
         let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
+        if (isBalanceSheet || 
+            isProfitLoss || 
+            isAgedReceivables || 
+            isProductSalesReport || 
+            isSalesReport || 
+            isSalesSummaryReport || 
+            isGeneralLedger || 
+            isTaxSummaryReport || 
+            isTrialBalance || 
+            isExecutiveSummary || 
+            isCashReport || 
+            isProfitabilityReport || 
+            isPerformanceReport || 
+            isBalanceSheetReport || 
+            isIncomeReport || 
+            isPositionReport || 
+            is1099Transaction || 
+            isAccountsLists || 
+            isAgedPayables || 
+            isPurchaseReport || 
+            isPurchaseSummaryReport || 
+            isPrintStatement || 
+            isAgedReceivablesSummary || 
+            isAgedPayablesSummary || 
+            isJournalEntryList || 
+            isStockAdjustmentList || 
+            isChequeList || 
+            isTimeSheetDetails || 
+            isInvoicesPaid || 
+            isInvoicesUnpaid || 
+            isQuotesConverted || 
+            isQuotesUnconverted || 
+            isBackOrderedInvoices || 
+            isPaymentMethodsList || 
+            isSalesOrderConverted || 
+            isSalesOrderUnconverted || 
+            isBackOrderedPO || 
+            isUnpaidPO || 
+            isUnpaidBills || 
+            isTransactionJournal || 
+            isSerialNumberReport || 
+            isPayrollLeaveAccrued || 
+            isPayrollLeaveTaken || 
+            isForeignExchangeHistoryList || 
+            isForeignExchangeList || 
+            isBinLocations || 
+            isTimeSheetSummary || 
+            isPayrollHistoryReport || 
+            isStockValue || 
+            isStockMovementReport || 
+            isStockQuantity || 
+            isLotReport || 
+            isCustomerDetails || 
+            isCustomerSummary || 
+            isSupplierDetails || 
+            isSupplierProduct || 
+            isJobProfitReport || 
+            isPLMonthly || 
+            isPLQuarterly || 
+            isPLYearly || 
+            isPLYTD || 
+            isJobSalesSummary || 
+            isBuildProfitability || 
+            isProductionWorkSheet || 
+            isWorkOrder ||
+            Template.instance().isCompanyAccountant.get() || 
+            Template.instance().isTrustee.get() || 
+            Template.instance().isFinancialStatement.get() || 
+            Template.instance().isIndividual.get() || 
+            Template.instance().isPartnershipNonTrading.get() || 
+            Template.instance().isTrustNonTrading.get() || 
+            Template.instance().isSelfManagedSuperfund.get() || 
+            Template.instance().isSingleDirector.get() || 
+            Template.instance().isSoleTraderNonTrading.get() || 
+            Template.instance().isTrust.get() || 
+            Template.instance().isSupplierList.get() || 
+            Template.instance().isSupplierSummaryReport.get()
+            ) {
             isShowFavorite = true;
         }
         return isShowFavorite;
