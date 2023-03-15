@@ -14836,10 +14836,7 @@ Template.non_transactional_list.onRendered(function() {
                 destroy: true,
                 colReorder: true,
                 pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
+                lengthMenu: [],
                 info: true,
                 responsive: true,
             //   "order": [

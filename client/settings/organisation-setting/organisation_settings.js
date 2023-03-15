@@ -397,7 +397,13 @@ Template.organisationsettings.onRendered(function () {
     }
 
     $("#sltAccountant").val(mainData.Contact);
-    $("#sltYearEnd").val(localStorage.getItem("yearEnd"));
+
+    let yearEnd = localStorage.getItem("yearEnd");
+
+    if(yearEnd){
+        $("#sltYearEnd").val(localStorage.getItem("yearEnd"));
+    }
+
     // YearEnd: sltYearEnd,
     $("#sltCompanyType").val(mainData.CompanyCategory);
     $("#contact").val(mainData.ContactName);
@@ -419,7 +425,7 @@ Template.organisationsettings.onRendered(function () {
         var $earch = $(this);
         var offset = $earch.offset();
         $("#edtSupplierPOPID").val("");
-        var supplierDataName = e.target.value || "";        
+        var supplierDataName = e.target.value || "";
         if (e.pageX > offset.left + $earch.width() - 8) {
           // X button 16px wide?
           $("#supplierListModal").modal();
