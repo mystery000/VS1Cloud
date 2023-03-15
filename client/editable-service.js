@@ -1486,6 +1486,80 @@ export class EditableService {
     };
 
     clickDepartment = (e) => {
-        $("#myModalDepartment").modal("toggle");
+        let $earch = $(e.currentTarget);
+        let offset = $earch.offset();
+        var deptDataName = e.target.value || "";
+        if (e.pageX > offset.left + $earch.width() - 8) {
+            $("#myModalDepartment").modal("toggle");
+        }
+        // else {
+        //     $("#newDepartmentModal").modal("toggle");
+        // }
+        else {
+            if (deptDataName.replace(/\s/g, "") != "") {
+                $("#newDeptHeader").text("Edit Department");
+                getVS1Data("TDeptClass")
+                    .then(function (dataObject) {
+                        if (dataObject.length == 0) {
+                            $(".fullScreenSpin").css("display", "inline-block");
+                            sideBarService.getDepartment().then(function (data) {
+                                for (let i = 0; i < data.tdeptclass.length; i++) {
+                                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                        $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+                                        $("#edtNewDeptName").val(
+                                            data.tdeptclass[i].DeptClassName
+                                        );
+                                        $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+                                        $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+                                    }
+                                }
+                                setTimeout(function () {
+                                    $(".fullScreenSpin").css("display", "none");
+                                    $("#newDepartmentModal").modal("toggle");
+                                }, 200);
+                            });
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            for (let i = 0; i < data.tdeptclass.length; i++) {
+                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                    $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+                                    $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
+                                    $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+                                    $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+                                }
+                                break;
+                            }
+                            $(".fullScreenSpin").css("display", "none");
+                            $("#newDepartmentModal").modal("toggle");
+                        }
+                    })
+                    .catch(function (err) {
+                        $(".fullScreenSpin").css("display", "inline-block");
+                        sideBarService.getDepartment().then(function (data) {
+                            for (let i = 0; i < data.tdeptclass.length; i++) {
+                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                    $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+                                    $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
+                                    $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+                                    $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+                                }
+                                break;
+                            }
+                            $(".fullScreenSpin").css("display", "none");
+                            $("#newDepartmentModal").modal("toggle");
+                        });
+                    });
+            } else {
+                $("#departmentModal").modal();
+                setTimeout(function () {
+                    $("#departmentList_filter .form-control-sm").focus();
+                    $("#departmentList_filter .form-control-sm").val("");
+                    $("#departmentList_filter .form-control-sm").trigger("input");
+                    var datatable = $("#departmentList").DataTable();
+                    datatable.draw();
+                    $("#departmentList_filter .form-control-sm").trigger("input");
+                }, 500);
+            }
+        }
     };
 }

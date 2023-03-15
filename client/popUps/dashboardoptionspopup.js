@@ -11,7 +11,9 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 Template.dashboardoptionspopup.onCreated(function () {
     const templateObject = Template.instance();
-    templateObject.dashboardoptionrecords = new ReactiveVar([]);
+    const options = Template.currentData();
+    const defaultDashboardOptions = require('./dashboardoptions.json');
+    templateObject.dashboardoptionrecords = new ReactiveVar(defaultDashboardOptions);
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.deptrecords = new ReactiveVar();
@@ -31,6 +33,26 @@ Template.dashboardoptionspopup.onCreated(function () {
     templateObject.includeSalesDefault.set(false);
     templateObject.includePurchaseDefault = new ReactiveVar();
     templateObject.includePurchaseDefault.set(false);
+    if(options.options !== ""){
+        try {
+            const doptions = JSON.parse(options.options);
+            const defaultOptions = [...defaultDashboardOptions];
+            doptions.map(option => {
+                if(option.length < 3) {
+                    return option;
+                }
+                const id = option[0];
+                const isDefaultLogin = option[1];
+                const isshowdefault = option[2];
+                const index = defaultOptions.findIndex(d => d.Id == id);
+                if(index == -1) return option;
+                defaultOptions[index].isdefaultlogin = isDefaultLogin == 1;
+                defaultOptions[index].isshowdefault = isshowdefault == 1;
+            })
+            templateObject.dashboardoptionrecords.set(defaultOptions);
+        } catch(err) {
+        }   
+    }
 
 });
 
@@ -43,42 +65,6 @@ Template.dashboardoptionspopup.onRendered(function () {
     let deptprodlineItems = [];
 
     templateObject.getDashboardOptions = async function () {
-        let data = [];
-        try {
-            data = await getVS1Data("TVS1DashboardOptions");
-            if(!data || data.length === 0) {
-                data = require('./dashboardoptions.json');
-            } else {
-                data = JSON.parse(data[0].data)
-            }
-        } catch (error) {
-            data = require('./dashboardoptions.json');
-        }
-        
-        //let useData = data.ttermsvs1;
-        let lineItems = [];
-        let lineItemObj = {};
-        let setISCOD = false;
-        let dataObject = await getVS1Data('TVS1DashboardStatus');
-        let dataShow;
-        if (dataObject.length > 0) {
-            dataShow = JSON.parse(dataObject[0].data);
-        }
-        for (let i = 0; i < data.length; i++) {
-            // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-            var dataList = {
-                id: data[i].Id || '',
-                name: data[i].name || '',
-                isdefault: data[i].isdefaultlogin,
-                isshowdefault: data[i].isshowdefault,
-            };
-            dataTableList.push(dataList);
-            //}
-        }
-
-        templateObject.dashboardoptionrecords.set(dataTableList);
-
-        $('.fullScreenSpin').css('display', 'none');
         setTimeout(function () {
             $('#tblDashboardOptions').DataTable({
                 select: true,
@@ -147,8 +133,8 @@ Template.dashboardoptionspopup.onRendered(function () {
             $(this).closest("tbody").find("input[value='Sales Manager']").prop('checked', false);
             $(this).closest('tbody').find('td.colLogginDef input[type=radio]').attr('disabled', false);
         }
-        showDashboard = showDashboard.includes(dashboardStatus) ? showDashboard.filter(el => el !== dashboardStatus) : [...showDashboard, dashboardStatus];
-        addVS1Data('TVS1DashboardStatus', JSON.stringify(showDashboard));
+        // showDashboard = showDashboard.includes(dashboardStatus) ? showDashboard.filter(el => el !== dashboardStatus) : [...showDashboard, dashboardStatus];
+        // addVS1Data('TVS1DashboardStatus', JSON.stringify(showDashboard));
         // Update the dashboardOptions field
         const updatedDashboardOptions = [];
         $("#tblDashboardOptions tbody").find("tr").map((index, tr) => {
@@ -165,7 +151,7 @@ Template.dashboardoptionspopup.onRendered(function () {
             })
         });
 
-        addVS1Data('TVS1DashboardOptions', JSON.stringify(updatedDashboardOptions))
+        // addVS1Data('TVS1DashboardOptions', JSON.stringify(updatedDashboardOptions))
     });
     $('#tblDashboardOptions tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function () {
         var listData = $(this).closest('tr').attr('id');

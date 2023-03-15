@@ -45,7 +45,6 @@ const smsSettings = [
 
 Template.emailsettings.onCreated(function () {
     this.datatablerecords = new ReactiveVar([]);
-    this.tableheaderrecords = new ReactiveVar([]);
     this.countryData = new ReactiveVar();
     this.originScheduleData = new ReactiveVar([]);
     this.employeescheduledrecord = new ReactiveVar([]);
@@ -151,11 +150,15 @@ Template.emailsettings.onCreated(function () {
             name: "Trial Balance",
         },
     ]);
-    const templateObject = Template.instance();
-    templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    this.datatablerecords = new ReactiveVar([]);
+    this.tableheaderrecords = new ReactiveVar([]);
+
+    // For Correspondence
+    this.datatablerecords1 = new ReactiveVar([]);
+    this.tableheaderrecords1 = new ReactiveVar([]);
     // templateObject.selectedInventoryAssetAccount = new ReactiveVar('');
-    templateObject.getDataTableList = function(data){
+    this.getDataTableList = function(data){
         let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
 
         if (data.fields.custFld13 == "Yes") {
@@ -196,6 +199,27 @@ Template.emailsettings.onCreated(function () {
         return dataList;
     }
 
+    // For Correspondence List
+    this.getDataTableList1 = function(data){
+        let dataList = [
+            data.fields.MessageId || "",
+            data.fields.Ref_Type || "",
+            data.fields.ReferenceTxt || "",
+            data.fields.MessageTo || "",
+            "", // Used On
+            data.fields.MessageAsString || "",
+            `
+                <td class="colDelete d-flex align-items-center justify-content-center">
+                    <button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'>
+                        <i class='fa fa-remove'></i>
+                    </button>
+                </td>
+            `,
+        ]
+        // let dataList = [];
+        return dataList;
+    }
+
     let headerStructure  = [
         { index: 0, label: '#ID', class: 'colProcessId', active: false, display: false, width: "10" },
         { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "84" },
@@ -210,7 +234,19 @@ Template.emailsettings.onCreated(function () {
         { index: 10, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "60" }
     ];
 
-    templateObject.tableheaderrecords.set(headerStructure);
+    // For Correspondence
+    let headerStructure1  = [
+        { index: 0, label: '#ID', class: 'colProcessId', active: false, display: false, width: "10" },
+        { index: 1, label: 'Reference Letter Label', class: 'colLabel', active: true, display: true, width: "120" },
+        { index: 2, label: 'Subject', class: 'colSubject', active: true, display: true, width: "84" },
+        { index: 3, label: 'Recipient', class: 'colRecipient', active: true, display: true, width: "84" },
+        { index: 4, label: 'Used on', class: 'colUsedOn', active: true, display: true, width: "84" },
+        { index: 5, label: 'Memo', class: 'colTemplateContent', active: true, display: true, width: "300" },
+        { index: 6, label: '', class: 'colDelete', active: true, display: true, width: "40" }
+    ];
+
+    this.tableheaderrecords.set(headerStructure);
+    this.tableheaderrecords1.set(headerStructure1);
 });
 
 Template.emailsettings.onRendered(function () {
@@ -5283,18 +5319,6 @@ Template.emailsettings.events({
 });
 
 Template.emailsettings.helpers({
-    // datatablerecords: () => {
-    //     // return Template.instance().datatablerecords.get().sort(function (a, b) {
-    //     //     if (a.code == 'NA') {
-    //     //         return 1;
-    //     //     } else if (b.code == 'NA') {
-    //     //         return -1;
-    //     //     }
-    //     //     return (a.code.toUpperCase() > b.code.toUpperCase()) ? 1 : -1;
-    //     //     // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
-    //     // });
-    //     return Template.instance.datatablerecords.get();
-    // },
 
     invoicerecords: () => {
         return Template.instance().invoicerecords.get();
@@ -5376,24 +5400,30 @@ Template.emailsettings.helpers({
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
+    tableheaderrecords1: () => {
+        return Template.instance().tableheaderrecords1.get();
+    },
 
     apiFunction:function() {
-        // let manufacturingService = new ManufacturingService();
-        // return manufacturingService.getAllProcessData;
         let sidebarService = new SideBarService();
         return sidebarService.getAllAppointmentList;
     },
 
-    searchAPI: function() {
-        // let manufacturingService = new ManufacturingService();
-        // return manufacturingService.getProcessByName;
+    apiFunction1:function() {
         let sidebarService = new SideBarService();
-        return sidebarService.getAppointmentByName;
+        return sidebarService.getAllCorrespondenceList;
+    },
+
+    searchAPI: function() {
+        let sidebarService = new SideBarService();
+        return sidebarService.getTAppointmentListDataByName;
+    },
+    searchAPI1: function() {
+        let sidebarService = new SideBarService();
+        return sidebarService.getTCorrespondenceListDataByName;
     },
 
     service: ()=>{
-        // let manufacturingService = new ManufacturingService();
-        // return manufacturingService;
         let sidebarService = new SideBarService();
         return sidebarService;
     },
@@ -5406,6 +5436,14 @@ Template.emailsettings.helpers({
         }
     },
 
+    datahandler1: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList1(data)
+            return dataReturn
+        }
+    },
+
     exDataHandler: function() {
         let templateObject = Template.instance();
         return function(data) {
@@ -5413,9 +5451,19 @@ Template.emailsettings.helpers({
             return dataReturn
         }
     },
+    exDataHandler1: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList1(data)
+            return dataReturn
+        }
+    },
 
     apiParams: ()=>{
-        // return ['limitCount', 'limitFrom', 'deleteFilter']
         return ['limitCount', 'limitFrom']
-    }
+    },
+
+    apiParams1: ()=>{
+        return ['limitCount', 'limitFrom']
+    },
 });

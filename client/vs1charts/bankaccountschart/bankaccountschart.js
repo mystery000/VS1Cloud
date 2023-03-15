@@ -31,9 +31,9 @@ Template.bankaccountschart.onCreated(() => {
         var dataList = [
             data.ReconciliationID,
             data.AccountName,
-            "$" + data.OpenBalance,
+            utilityService.modifynegativeCurrencyFormat(data.OpenBalance) || 0.0,
             data.OnHold ? "On-Hold" : "Not Reconciled",
-            moment(data.ReconciliationDate).format("DD/MM/YYYY"),
+            '<span style="display:none;">'+moment(data.ReconciliationDate).format("YYYY/MM/DD")+'</span>'+moment(data.ReconciliationDate).format("DD/MM/YYYY"),
             data.Deleted ? "In-Active" : "",
         ];
         return dataList;
