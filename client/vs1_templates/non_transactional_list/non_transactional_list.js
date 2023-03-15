@@ -3342,7 +3342,7 @@ Template.non_transactional_list.onRendered(function() {
             });
         });
     }
-    templateObject.displayClientTypeListData = async function(data) {
+    templateObject.displayClientTypeListData = function(data) {
         var splashArrayClientTypeList = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -3352,25 +3352,25 @@ Template.non_transactional_list.onRendered(function() {
         }else{
           deleteFilter = false;
         };
-        for (let i = 0; i < data.tclienttype.length; i++) {
+        for (let i = 0; i < data.tclienttypelist.length; i++) {
             let mobile = "";
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
             let linestatus = '';
-            if (data.tclienttype[i].fields.Active == true) {
+            if (data.tclienttypelist[i].fields.Active == true) {
                 linestatus = "";
-            } else if (data.tclienttype[i].fields.Active == false) {
+            } else if (data.tclienttypelist[i].fields.Active == false) {
                 linestatus = "In-Active";
             };
             var dataList = [
-                data.tclienttype[i].fields.ID || "",
-                data.tclienttype[i].fields.TypeName || "",
-                data.tclienttype[i].fields.TypeDescription || "",
-                data.tclienttype[i].fields.CreditLimit || 0.0,
-                data.tclienttype[i].fields.DefaultPostAccount || "",
-                data.tclienttype[i].fields.GracePeriod || "",
-                data.tclienttype[i].fields.TermsName || "", //need to be replaced with Default Discount
-                data.tclienttype[i].fields.TermsName || "",
-                data.tclienttype[i].fields.TermsName || "", // need to be replaced with prefered payment method
+                data.tclienttypelist[i].fields.ID || "",
+                data.tclienttypelist[i].fields.TypeName || "",
+                data.tclienttypelist[i].fields.TypeDescription || "",
+                data.tclienttypelist[i].fields.CreditLimit || 0.0,
+                data.tclienttypelist[i].fields.DefaultPostAccount || "",
+                data.tclienttypelist[i].fields.GracePeriod || "",
+                data.tclienttypelist[i].fields.TermsName || "", //need to be replaced with Default Discount
+                data.tclienttypelist[i].fields.TermsName || "",
+                data.tclienttypelist[i].fields.TermsName || "", // need to be replaced with prefered payment method
                 linestatus,
             ];
 
@@ -3630,7 +3630,7 @@ Template.non_transactional_list.onRendered(function() {
             });
         });
     }
-    templateObject.displayLeadStatusListData = async function(data) {
+    templateObject.displayLeadStatusListData = function(data) {
         var splashArrayLeadStatusList = new Array();
         let lineItems = [];
         let lineItemObj = {};
