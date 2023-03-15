@@ -51,7 +51,6 @@ Template.dashboardoptionspopup.onCreated(function () {
             })
             templateObject.dashboardoptionrecords.set(defaultOptions);
         } catch(err) {
-            console.log(err)
         }   
     }
 

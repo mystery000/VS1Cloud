@@ -1981,10 +1981,8 @@ Template.accountsoverview.events({
                 addVS1Data("TAccountVS1", JSON.stringify(data))
                     .then(function(datareturn) {
                         //location.reload();
-                        console.log(27);
                     })
                     .catch(function(err) {
-                        console.log(28);
                         //location.reload();
                     });
             })

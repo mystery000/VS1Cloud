@@ -214,7 +214,6 @@ Template.transaction_print_modal.onCreated(async function () {
       return templates;
     } else {
       const vs1DataList = JSON.parse(vs1Data[0].data);
-      console.log("template List:", vs1DataList)
       const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
