@@ -227,8 +227,8 @@ Template.accountant_company.onRendered(() => {
     templateObject.getReceiptCategoryList();
 
     organisationService.getOrganisationDetail().then(function(data) {
-        organisationSettings = data.tcompanyinfo[0];
-        $("#pageTitle").html(organisationSettings.CompanyName + " trading as " + organisationSettings.TradingName);
+        organisationSettings = data;
+        $("#pageTitle").html(organisationSettings.tcompanyinfo[0].CompanyName + " trading as " + organisationSettings.tcompanyinfo[0].TradingName);
     });
 
     templateObject.accountPanList.set([{
@@ -2539,11 +2539,14 @@ Template.accountant_company.events({
                         }
                     }
                     contactService.saveSupplierEx(saveSupplierData).then(function (objDetails) {
-                        let saveOrganisationSettings = {type: "TCompanyInfo", fields: {...organisationSettings, Contact: company}}
+                        if (!organisationSettings || !organisationSettings.tcompanyinfo || !organisationSettings.tcompanyinfo[0]) return
+                        organisationSettings.tcompanyinfo[0].Contact = company
+                        let saveOrganisationSettings = {type: "TCompanyInfo", fields: organisationSettings.tcompanyinfo[0]}
                         organisationService
                             .saveOrganisationSetting(saveOrganisationSettings)
                             .then(function (data) {
                                 localStorage.setItem("VS1Accountant", company);
+                                addVS1Data('TCompanyInfo', JSON.stringify(organisationSettings));
                                 swal({
                                     title: "Organisation details successfully updated!",
                                     text: "",
