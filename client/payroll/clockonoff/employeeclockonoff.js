@@ -344,36 +344,24 @@ Template.clockOnOff.events({
   },
   'change #startTime': function () {
     const templateObject = Template.instance();
-    let date1 = document.getElementById("dtSODate").value;
     let date = new Date();
-    if (date1 == "") {
-      date1 = ("0" + date.getDate()).toString().slice(-2) + "/" + ("0" + (date.getMonth() + 1)).toString().slice(-2) + "/" + date.getFullYear();
-    } else {
-      date1 = templateObject.dateFormat(date1);
-    }
+    let date1 = ("0" + date.getDate()).toString().slice(-2) + "/" + ("0" + (date.getMonth() + 1)).toString().slice(-2) + "/" + date.getFullYear();
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
     if (endTime > startTime) {
       document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
     } else {
-
     }
   },
   'change #endTime': function () {
     const templateObject = Template.instance();
-    let date1 = document.getElementById("dtSODate").value;
     let date = new Date();
-    if (date1 == "") {
-      date1 = ("0" + date.getDate()).toString().slice(-2) + "/" + ("0" + (date.getMonth() + 1)).toString().slice(-2) + "/" + date.getFullYear();
-    } else {
-      date1 = templateObject.dateFormat(date1);
-    }
+    let date1 = ("0" + date.getDate()).toString().slice(-2) + "/" + ("0" + (date.getMonth() + 1)).toString().slice(-2) + "/" + date.getFullYear();
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
     if (endTime > startTime) {
       document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
     } else {
-
     }
   },
   'click .resetTable': function (event) {
