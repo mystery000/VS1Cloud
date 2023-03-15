@@ -12,6 +12,8 @@ import '../lib/global/indexdbstorage.js';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
 import GlobalFunctions from "../GlobalFunctions.js";
+import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
+
 
 const productService = new ProductService();
 const sideBarService = new SideBarService();
@@ -146,7 +148,7 @@ Template.onsuccesswaterfall.onCreated(function () {
 });
 Template.onsuccesswaterfall.onRendered(function () {
   var countObjectTimes = 0;
-  let allDataToLoad = 105;
+  let allDataToLoad = 106;
   let progressPercentage = 0;
   let templateObject = Template.instance();
 
@@ -1690,6 +1692,32 @@ Template.onsuccesswaterfall.onRendered(function () {
     }).catch(function (err) {
 
     });
+
+
+    sideBarService.getAllTReconcilationListDataForBankAccountChart(initialDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Purchase Order "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Bank Accounts Recon ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TReconciliationBankAccountsList', JSON.stringify(data));
+      $("<span class='process'>Bank Accounts Recon Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
   }
 
   templateObject.getAllTbillReportData = function () {
@@ -2893,6 +2921,16 @@ Template.onsuccesswaterfall.onRendered(function () {
         $('.checkmarkwrapper').removeClass("hide");
         templateObject.dashboardRedirectOnLogin();
       }
+
+      const employeeCorrespondences = data.tcorrespondence.filter(
+          (item) =>
+              item.fields.EmployeeId == localStorage.getItem("mySessionEmployeeLoggedID") && item.fields.MessageTo == ""
+      ).map(item => item);
+
+      employeeCorrespondences.sort((a, b) => a.fields.Ref_Type.localeCompare(b.fields.Ref_Type));
+
+      data.tcorrespondence = employeeCorrespondences;
+
       addVS1Data('TCorrespondence', JSON.stringify(data));
       $("<span class='process'>Correspondence Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
@@ -5214,7 +5252,86 @@ Template.onsuccesswaterfall.onRendered(function () {
           }).catch(function (err) {
             templateObject.getAllAppointmentPrefData();
           });
+          getVS1Data('TAssignLeaveType').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+              sideBarService.getAssignLeaveType("All",0).then(function(data) {
+                countObjectTimes++;
+                progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+                $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+                $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+                $(".progressName").text("Assign Leave Types ");
+                if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                  if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                  } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                  }
 
+                } else if (Math.round(progressPercentage) >= 100) {
+                  $('.checkmarkwrapper').removeClass("hide");
+                  templateObject.dashboardRedirectOnLogin();
+                }
+                addVS1Data("TAssignLeaveType", JSON.stringify(data));
+                $("<span class='process'>Assign Leave Types Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+              })
+            } else {
+            }
+          }).catch(async function (err) {
+          });
+          getVS1Data('TLeavRequest').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+              sideBarService.getLeaveRequest().then(function(data) {
+                countObjectTimes++;
+                progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+                $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+                $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+                $(".progressName").text("Leave Requests ");
+                if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                  if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                  } else {
+                    $('.headerprogressbar').addClass('headerprogressbarShow');
+                    $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                  }
+
+                } else if (Math.round(progressPercentage) >= 100) {
+                  $('.checkmarkwrapper').removeClass("hide");
+                  templateObject.dashboardRedirectOnLogin();
+                }
+                addVS1Data("TLeavRequest", JSON.stringify(data));
+                $("<span class='process'>Leave Requests Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+              })
+            } else {
+            }
+          }).catch(async function (err) {
+          });
+          getVS1Data("TRepServices").then(function(dataObject){
+            if (dataObject.length == 0) {
+              let employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
+                sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                  countObjectTimes++;
+                  progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+                  $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+                  $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+                  $(".progressName").text("Rep Services ");
+                  if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                      $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                    } else {
+                      $('.headerprogressbar').addClass('headerprogressbarShow');
+                      $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                    }
+
+                  } else if (Math.round(progressPercentage) >= 100) {
+                    $('.checkmarkwrapper').removeClass("hide");
+                    templateObject.dashboardRedirectOnLogin();
+                  }
+                  addVS1Data("TRepServices", JSON.stringify(data));
+                  $("<span class='process'>Rep Services Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+                })
+            }
+          });
           getVS1Data('TERPPreference').then(function (dataObject) {
             if (dataObject.length == 0) {
               templateObject.getAllTERPPreferenceData();

@@ -3483,6 +3483,8 @@ Template.payrolloverview.onRendered(function () {
   $("#sltJob")
     .editableSelect()
     .on("click.editable-select", function (e, li) {
+      e.preventDefault();
+      e.stopPropagation();
       var $earch = $(this);
       var offset = $earch.offset();
       $("#edtCustomerPOPID").val("");
