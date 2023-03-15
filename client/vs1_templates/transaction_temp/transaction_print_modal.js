@@ -140,6 +140,26 @@ const TransactionTypeData = {
       },
     ],
   },
+  stocktransfer: {
+    templates: [
+      {
+        name: "Stock Transfer",
+        title: "Stock Transfer",
+        key: 'stocktransfer',
+        active: true
+      },
+    ],
+  },
+  stockadjustment: {
+    templates: [
+      {
+        name: "Stock Adjustment",
+        title: "Stock Adjustment",
+        key: 'stockadjustment',
+        active: true
+      },
+    ],
+  }
 };
 
 Template.transaction_print_modal.onCreated(async function () {
@@ -158,17 +178,18 @@ Template.transaction_print_modal.onCreated(async function () {
     stopAppointmentSMSMessage:
       "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
   });
+  this.templates = new ReactiveVar([]);
+
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
+
     if (vs1Data.length == 0) {
       const templateInfomation = await sideBarService.getTemplateInformation(
         initialBaseDataLoad,
         0
       );
-
       addVS1Data("TTemplateSettings", JSON.stringify(templateInfomation));
-
       const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
@@ -263,7 +284,6 @@ Template.transaction_print_modal.onCreated(async function () {
   }
 
   const templates = await getTemplates();
-  this.templates = new ReactiveVar(templates);
   getSMSSettings();
 
   this.fnSendSMS = async function(isForced = false){
