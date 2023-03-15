@@ -1460,7 +1460,7 @@ Template.productview.onRendered(function () {
                 });
             }
           }
-        }).catch(function (err) {ss
+        }).catch(function (err) {
           productService
             .getOneProductdata(currentProductID)
             .then(function (data) {
