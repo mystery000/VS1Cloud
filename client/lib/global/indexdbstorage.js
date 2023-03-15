@@ -558,6 +558,17 @@ openDb = function (dbName) {
       db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
 
+      // For accountant favorite reports state
+      db.createObjectStore('TFavReportCompany', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustee', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportFinancialStatement', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportIndividual', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportPartnershipNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSelfManagedSuperfund', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSingleDirector', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSoleTraderNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrust', {keyPath: 'EmployeeEmail'});
 
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
