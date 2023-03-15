@@ -40,8 +40,47 @@ Template.clockOnOff.onRendered(function () {
   $('.formClassDate').val(begunDate);
   
   $(document).ready(function () {
+    $('#employee_name').editableSelect();
+    $('#employee_name').editableSelect().on('click.editable-select', function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      var employeeDataName = e.target.value || '';
+      if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+          $('#employeeListPOPModal').modal();
+          setTimeout(function () {
+              $('#tblEmployeelist_filter .form-control-sm').focus();
+              $('#tblEmployeelist_filter .form-control-sm').val('');
+              $('#tblEmployeelist_filter .form-control-sm').trigger("input");
+              var datatable = $('#tblEmployeelist').DataTable();
+              //datatable.clear();
+              //datatable.rows.add(splashArrayCustomerList);
+              datatable.draw();
+              $('#tblEmployeelist_filter .form-control-sm').trigger("input");
+              //$('#tblEmployeelist').dataTable().fnFilter(' ').draw(false);
+          }, 500);
+      } else {          
+        $('#employeeListPOPModal').modal();              
+      }
+    });
     $("#clockonoffModal").modal("show");
   });
+
+  $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
+    let employeeName = $(this).find(".colEmployeeName").text() || '';
+    let employeeID = $(this).find(".colID").text() || '';
+    $('#employee_name').val(employeeName);
+    $('#employee_id').val(employeeID);
+    $('#barcodeScanInput').prop("disabled", true);
+    $('#employeeListPOPModal').modal('toggle');
+  });
+
+  document
+    .querySelector("#barcodeScanInput")
+    .addEventListener("keypress", function (e) {
+      if (e.key == "Enter") {
+        $("#btnDesktopSearch").trigger("click");
+      }
+    });
 
   //
   // Initializes jQuery Raty control
@@ -109,6 +148,161 @@ Template.clockOnOff.onRendered(function () {
 });
 
 Template.clockOnOff.events({
+  "click .btnDesktopSearch": function (e) {
+    const templateObject = Template.instance();
+    let contactService = new ContactService();
+    let barcodeData = $("#barcodeScanInput").val();
+    let empNo = barcodeData.replace(/^\D+/g, "");
+    $('.fullScreenSpin').css('display', 'inline-block');
+    if (barcodeData == "") {
+      swal("Please enter the employee number", "", "warning");
+      $(".fullScreenSpin").css("display", "none");
+      e.preventDefault();
+      return false;
+    } else {
+      contactService
+        .getOneEmployeeDataEx(empNo)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          if (Object.keys(data).length > 0) {
+            $("#employee_name").val(data.fields.EmployeeName || "");
+            $('#employee_id').val(data.fields.ID);
+            $("#startTime").val("");
+            $("#endTime").val("");
+            $("#txtBookedHoursSpent").val("");
+            $("#startTime").prop("disabled", false);
+            $("#endTime").prop("disabled", false);
+            $("#btnClockOn").prop("disabled", false);
+            $("#btnHold").prop("disabled", false);
+            $("#btnClockOff").prop("disabled", false);
+            var curretDate = moment().format("DD/MM/YYYY");
+            // if (data.fields.CustFld8 == "false") {
+            //   templateObject.getAllSelectedProducts(data.fields.ID);
+            // } else {
+            //   templateObject.getAllProductData();
+            // }
+
+            // let clockList = templateObject.timesheetrecords.get();
+            // clockList = clockList.filter((clkList) => {
+            //   return clkList.employee == $("#employee_name").val();
+            // });
+
+            // if (clockList.length > 0) {
+            //   if (clockList[clockList.length - 1].isPaused == "paused") {
+            //     $(".btnHold").prop("disabled", true);
+            //   } else {
+            //     $(".btnHold").prop("disabled", false);
+            //   }
+
+            //   if (clockList[clockList.length - 1].isPaused == "paused") {
+            //     $(".paused").show();
+            //     $("#btnHold").prop("disabled", true);
+            //     $("#btnHold").addClass("mt-32");
+            //   } else {
+            //     $(".paused").hide();
+            //     $("#btnHold").prop("disabled", false);
+            //     $("#btnHold").removeClass("mt-32");
+            //   }
+
+            //   if (
+            //     Array.isArray(clockList[clockList.length - 1].timelog) &&
+            //     clockList[clockList.length - 1].isPaused != "completed"
+            //   ) {
+            //     let startTime =
+            //       clockList[clockList.length - 1].timelog[0].fields
+            //         .StartDatetime || "";
+            //     let date = clockList[clockList.length - 1].timesheetdate;
+            //     if (startTime != "") {
+            //       $("#startTime").val(startTime.split(" ")[1]);
+            //       $("#dtSODate").val(date);
+            //       $("#txtBookedHoursSpent").val(
+            //         clockList[clockList.length - 1].hourFormat
+            //       );
+            //       $("#txtBookedHoursSpent1").val(
+            //         clockList[clockList.length - 1].hours
+            //       );
+            //       $("#updateID").val(clockList[clockList.length - 1].id);
+            //       $("#hourly_rate").val(
+            //         clockList[clockList.length - 1].hourlyrate.replace(
+            //           /[^0-9.-]+/g,
+            //           ""
+            //         )
+            //       );
+            //       $("#startTime").prop("disabled", true);
+            //       if (clockList[clockList.length - 1].isPaused == "completed") {
+            //         $("#endTime").val(endTime);
+            //         $("#endTime").prop("disabled", true);
+            //         $("#btnClockOn").prop("disabled", true);
+            //         $("#btnHold").prop("disabled", true);
+            //         $("#btnClockOff").prop("disabled", true);
+            //       }
+            //     }
+            //   } else if (
+            //     clockList[clockList.length - 1].isPaused != "completed"
+            //   ) {
+            //     if (
+            //       clockList[clockList.length - 1].timelog.fields.EndDatetime ==
+            //       ""
+            //     ) {
+            //       let startTime =
+            //         clockList[
+            //           clockList.length - 1
+            //         ].timelog.fields.StartDatetime.split(" ")[1];
+            //       let date = clockList[clockList.length - 1].timesheetdate;
+            //       if (startTime != "") {
+            //         $("#startTime").val(startTime);
+            //         $("#dtSODate").val(date);
+            //         $("#txtBookedHoursSpent").val(
+            //           clockList[clockList.length - 1].hourFormat
+            //         );
+            //         $("#txtBookedHoursSpent1").val(
+            //           clockList[clockList.length - 1].hours
+            //         );
+            //         $("#updateID").val(clockList[clockList.length - 1].id);
+            //         $("#hourly_rate").val(
+            //           clockList[clockList.length - 1].hourlyrate.replace(
+            //             /[^0-9.-]+/g,
+            //             ""
+            //           )
+            //         );
+            //         $("#startTime").prop("disabled", true);
+            //         if (
+            //           clockList[clockList.length - 1].isPaused == "completed"
+            //         ) {
+            //           $("#endTime").val(endTime);
+            //           $("#endTime").prop("disabled", true);
+            //           $("#btnClockOn").prop("disabled", true);
+            //           $("#btnHold").prop("disabled", true);
+            //           $("#btnClockOff").prop("disabled", true);
+            //         }
+            //       }
+            //     }
+            //   }
+            // } else {
+            //   $(".paused").hide();
+            //   $("#btnHold").prop("disabled", false);
+            // }
+          } else {
+            swal("Employee Not Found", "", "warning");
+          }
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: "Employee Not Found",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              // Meteor._reload.reload();
+            } else if (result.dismiss == "cancel") {
+            }
+          });
+          $(".fullScreenSpin").css("display", "none");
+        });
+    }
+  },
   'click .chkDatatable': function (event) {
     var columns = $('#tblTimeSheet th');
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
