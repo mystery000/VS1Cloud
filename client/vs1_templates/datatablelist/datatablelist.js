@@ -86,6 +86,20 @@ Template.datatablelist.onRendered(async function () {
             if ($(this).text() == "Converted") $(this).addClass("text-converted");
             if ($(this).text() == "Completed") $(this).addClass("text-completed");
             if ($(this).text() == "Not Converted") $(this).addClass("text-deleted");
+            if ($(this).text() == "On-Hold") $(this).addClass("text-Yellow");
+            if ($(this).text() == "Processed") $(this).addClass("text-Processed");
+        });
+        $("td.colFinished").each(function () {
+            if ($(this).text() == "In-Active") $(this).addClass("text-deleted");
+            if ($(this).text() == "Deleted") $(this).addClass("text-deleted");
+            if ($(this).text() == "Full") $(this).addClass("text-fullyPaid");
+            if ($(this).text() == "Part") $(this).addClass("text-partialPaid");
+            if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
+            if ($(this).text() == "Converted") $(this).addClass("text-converted");
+            if ($(this).text() == "Completed") $(this).addClass("text-completed");
+            if ($(this).text() == "Not Converted") $(this).addClass("text-deleted");
+            if ($(this).text() == "On-Hold") $(this).addClass("text-Yellow");
+            if ($(this).text() == "Processed") $(this).addClass("text-Processed");
         });
     };
 
@@ -128,7 +142,6 @@ Template.datatablelist.onRendered(async function () {
     }
 
     templateObject.showCustomFieldDisplaySettings = async function (savedHeaderInfo) {
-      // console.log(savedHeaderInfo);
         let custFields = [];
         let customData = {};
         let customFieldCount = savedHeaderInfo.length;
@@ -403,7 +416,6 @@ Template.datatablelist.onRendered(async function () {
         let aitems = [];
 
         const tabledraw = () => {
-          console.log(acolDef);
             $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,

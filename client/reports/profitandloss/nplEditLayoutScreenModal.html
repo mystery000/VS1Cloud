@@ -714,7 +714,7 @@
                                             </div>
                                         </div>
                                         <div class="form-group" style="margin-bottom:0; text-align: center;">
-                                            <button class="btn btn-primary btnCreateLayout" type="button" style="margin: 16px;" autocomplete="off">Create Layout</button>
+                                            <button class="btn btn-primary btnCreateLayout w-100" type="button" autocomplete="off">Create Layout</button>
                                         </div>
                                     </div>
                                 </div>
@@ -786,10 +786,13 @@
                                     <div class="container mb-3 editRowGroup">
                                         <h5>Group</h5>
                                         <hr class="periodSelectorLine" />
-                                        <div>
+                                        <div class="groupSection1">
                                             <label>Row Heading</label><br>
                                             <input id="editGroupName" type="text" class="form-control" name="editGroupName" value="" placeholder="">
                                             <input id="editGroupID" type="hidden" class="form-control" name="editGroupID">
+                                        </div>
+                                        <div class="groupSection2" style="display:none">
+                                            <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" id="btnGroupSelection">Group Selection</button>
                                         </div>
                                         <!-- <div class="mt-2">
                                             <label style="width:100%;">Display Balance</label>

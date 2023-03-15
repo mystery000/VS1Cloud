@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <h4 >
                     <div id="add-terms-title" name="add-terms-title" style="float: left;">
-                        {{#if equals record.termname ''}}<div id="termModalHeader" name="termModalHeader">Add New Term</div>{{else}}<div id="termModalHeader" name="termModalHeader">Add New Term</div>{{/if}}
+                        {{#if equals record.termname ''}}<div id="termModalHeader" name="termModalHeader">Add New Term</div>{{else}}<div id="termModalHeader" name="termModalHeader">Edit Term {{record.termname}}</div>{{/if}}
                     </div>
                     {{> helpbutton}}
                 </h4>
@@ -16,11 +16,11 @@
                 <div class="row no-gutters">
                     <div class="col d-xl-flex align-items-xl-end">
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >Days</label>
-                            <input type="number" class="form-control" style="width: 100px;" id="edtDays" name="edtDays" min="0"></div>
+                            <input type="number" class="form-control" style="width: 100px;" id="edtDays" name="edtDays" min="0" value="{{record.days}}"></div>
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" title="The name for the Tax Rate to appear in VS1 Cloud">Term Name</label>
-                            <input type="text" class="form-control" style="width: 100px;" id="edtName" name="edtName"></div>
+                            <input type="text" class="form-control" style="width: 100px;" id="edtName" name="edtName" value="{{record.termname}}"></div>
                         <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Description</label>
-                            <input type="text" class="form-control" id="edtDesc" name="edtDesc"></div>
+                            <input type="text" class="form-control" id="edtDesc" name="edtDesc" value="{{record.description}}"></div>
                         <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom" >EOM</label>
                             <!-- {{#if equals includeEOM true}} -->
                             <div class="custom-control custom-switch chkBox" style="height: 38px; text-align: center; padding-top: 7px;"><input class="custom-control-input chkBox chkTerms" type="checkbox" id="isEOM" name="group1[]" checked="{{record.isEOM}}"><label class="custom-control-label chkBox" for="isEOM"></label></div>

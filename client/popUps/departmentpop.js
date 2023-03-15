@@ -145,22 +145,41 @@ Template.departmentpop.onRendered(function() {
 //    templateObject.getAllEmployees();
 
     templateObject.getRooms = function () {
-
-        taxRateService.getBins().then(function (data) {
-            let binList = [];
-            for (let i = 0; i < data.tproductbin.length; i++) {
-
-                let dataObj = {
-                    roomid: data.tproductbin[i].BinNumber || ' ',
-                    roomname: data.tproductbin[i].BinLocation || ' '
-                };
-                if(data.tproductbin[i].BinLocation.replace(/\s/g, '') != ''){
-                    binList.push(dataObj);
-                }
-
+        getVS1Data('TProductBin').then(async function(dataObject) {
+            if (dataObject.length == 0) {
+                taxRateService.getBins().then(function (data) {
+                    let binList = [];
+                    for (let i = 0; i < data.tproductbin.length; i++) {
+        
+                        let dataObj = {
+                            roomid: data.tproductbin[i].BinNumber || ' ',
+                            roomname: data.tproductbin[i].BinLocation || ' '
+                        };
+                        if(data.tproductbin[i].BinLocation.replace(/\s/g, '') != ''){
+                            binList.push(dataObj);
+                        }
+        
+                    }
+                    templateObject.roomrecords.set(binList);
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                let binList = [];
+                    for (let i = 0; i < data.tproductbin.length; i++) {
+        
+                        let dataObj = {
+                            roomid: data.tproductbin[i].BinNumber || ' ',
+                            roomname: data.tproductbin[i].BinLocation || ' '
+                        };
+                        if(data.tproductbin[i].BinLocation.replace(/\s/g, '') != ''){
+                            binList.push(dataObj);
+                        }
+        
+                    }
+                    templateObject.roomrecords.set(binList);
             }
-            templateObject.roomrecords.set(binList);
-        });
+        })
+        
     };
 //    templateObject.getRooms();
 

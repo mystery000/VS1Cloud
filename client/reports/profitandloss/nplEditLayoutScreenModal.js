@@ -87,7 +87,7 @@ function buildSubAccountJson( $sortContainer ){
 
 Template.npleditlayoutscreen.onRendered(function () {
   const templateObject = Template.instance();
-
+  
   // templateObject.getPNLLayout = async () => {    
   //   getVS1Data("TPNLLayout")
   //     .then(function (dataObject) {
@@ -166,6 +166,9 @@ Template.npleditlayoutscreen.onRendered(function () {
 });
 
 Template.npleditlayoutscreen.events({
+  "click #btnGroupSelection": async function () {
+    $("#nplAddGroupScreen").modal("toggle");    
+  },
   "click .saveProfitLossLayouts": async function () {
     let id = $("#nplLayoutID").val();
     let name = $("#nplLayoutName").val();
@@ -326,10 +329,10 @@ Template.npleditlayoutscreen.helpers({
     const templateObject = Template.instance();
     return templateObject.data.dateAsAt || "";
   },
-  profitlosslayoutrecords() {
-    const templateObject = Template.instance();
-    return templateObject.data.profitlosslayoutrecords || [];
-  },
+  // profitlosslayoutrecords: () => {
+  //   const templateObject = Template.instance();
+  //   return templateObject.data.profitlosslayoutrecords || [];
+  // },
   recordslayout: () => {
     return Template.instance().recordslayout.get();
   },

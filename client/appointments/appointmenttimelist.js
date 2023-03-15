@@ -22,6 +22,228 @@ Template.appointmenttimelist.onCreated(function() {
     templateObject.clientrecords = new ReactiveVar([]);
     templateObject.selectedAppointment = new ReactiveVar([]);
     templateObject.appointmentInfo = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let dataList = [];
+        if (data.fields.AppointmentsTimeLog != null) {
+            let url = new URL(window.location.href);
+            let searchID = parseInt(url.searchParams.get("id")) || 0;
+            if (Array.isArray(data.fields.AppointmentsTimeLog)) {
+                for (let a = 0; a < data.fields.AppointmentsTimeLog.length; a++) {
+                    const appointmentdate = data.fields.StartTime != '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : data.fields.StartTime;
+                    if (searchID != 0) {
+                        if (searchID == data.fields.AppointmentsTimeLog[a].fields.AppointID) {
+                            if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
+                                data.fields.AppointmentsTimeLog[a].fields.StartDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.StartDatetime).format('h:mm a')
+                            }
+
+                            if (data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
+                                data.fields.AppointmentsTimeLog[a].fields.EndDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.EndDatetime).format('h:mm a')
+                            }
+
+                            let time = new Date();
+                            let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.StartDatetime.split(' ')[0]);
+                            let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.EndDatetime.split(' ')[0]);
+                            if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "" && data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
+                                Hours = templateObject.diff_hours1(dt2, dt1);
+                            } else {
+                                Hours = 0;
+                            }
+                            let tempDataList = [
+                                data.fields.AppointmentsTimeLog[a].fields.AppointID || '',
+                                appointmentdate,
+                                data.fields.ClientName || '',
+                                data.fields.TrainerName || '',
+                                data.fields.TrainerName || '',
+                                data.fields.DeptClassName || '',
+                                data.fields.Phone || '',
+                                data.fields.ClientMobile || '',
+                                data.fields.Suburb || '',
+                                data.fields.Street || '',
+                                data.fields.State || '',
+                                data.fields.Country || '',
+                                data.fields.Postcode || '',
+                                data.fields.AppointmentsTimeLog || '',
+                                data.fields.StartTime.split(' ')[1] || '',
+                                data.fields.AppointmentsTimeLog[a].fields.StartDatetime || '',
+                                data.fields.AppointmentsTimeLog[a].fields.EndDatetime || '',
+                                data.fields.TotalHours || 0,
+                                Hours,
+                                data.fields.EndTime.split(' ')[1] || '',
+                                data.fields.StartTime || '',
+                                data.fields.EndTime || '',
+                                moment(data.fields.StartTime).format('dddd') + ', ' + moment(data.fields.StartTime).format('DD'),
+                                moment(data.fields.endTime).format('dddd') + ', ' + moment(data.fields.endTime).format('DD'),
+                                data.fields.Actual_EndTime != '' ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : data.fields.Actual_EndTime,
+                                data.fields.Actual_EndTime || '',
+                                data.fields.Actual_StartTime.split(' ')[1] || '',
+                                data.fields.Actual_EndTime.split(' ')[1] || '',
+                                '',
+                                '',
+                                data.fields.AppointmentsTimeLog[a].fields.ID,
+                                data.fields.ProductDesc || '',
+                                data.fields.Status || '',
+                                data.fields.EndTime != '' ? moment(data.fields.EndTime).format("DD/MM/YYYY") : data.fields.EndTime,
+                                data.fields.AppointmentsTimeLog[a].fields.Description || ''
+                            ];
+                            dataList.push(tempDataList);
+                        }
+                    } else {
+                        if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
+                            data.fields.AppointmentsTimeLog[a].fields.StartDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.StartDatetime).format('h:mm a')
+                        }
+
+                        if (data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
+                            data.fields.AppointmentsTimeLog[a].fields.EndDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.EndDatetime).format('h:mm a')
+                        }
+
+                        let time = new Date();
+                        let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.StartDatetime.split(' ')[0]);
+                        let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.EndDatetime.split(' ')[0]);
+                        if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "" && data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
+                            Hours = templateObject.diff_hours1(dt2, dt1);
+                        } else {
+                            Hours = 0;
+                        }
+                        let tempDataList = [
+                            data.fields.AppointmentsTimeLog[a].fields.AppointID || '',
+                            appointmentdate,
+                            data.fields.ClientName || '',
+                            data.fields.TrainerName || '',
+                            data.fields.AppointmentsTimeLog[a].fields.StartDatetime || '',
+                            data.fields.AppointmentsTimeLog[a].fields.EndDatetime || '',
+                            Hours,
+                            data.fields.AppointmentsTimeLog[a].fields.Description || '',
+                            data.fields.AppointmentsTimeLog[a].fields.ID
+                        ];
+                        dataList.push(tempDataList)
+                    }
+                }
+                return dataList;
+            } else {
+                if (searchID != 0) {
+                    if (data.fields.AppointmentsTimeLog.fields.StartDatetime != "") {
+                        data.fields.AppointmentsTimeLog.fields.StartDatetime = moment(data.fields.AppointmentsTimeLog.fields.StartDatetime).format('h:mm a');
+                    }
+                    if (data.fields.AppointmentsTimeLog.fields.EndDatetime != "") {
+                        data.fields.AppointmentsTimeLog.fields.EndDatetime = moment(data.fields.AppointmentsTimeLog.fields.EndDatetime).format('h:mm a');
+                    }
+
+                    if (searchID == data.fields.AppointmentsTimeLog.fields.AppointID) {
+
+                        let time = new Date();
+                        let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.StartDatetime.split(' ')[0]);
+                        let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.EndDatetime.split(' ')[0]);
+                        if (data.fields.AppointmentsTimeLog.fields.StartDatetime != "" && data.fields.AppointmentsTimeLog.fields.EndDatetime != "") {
+                            Hours = templateObject.diff_hours1(dt2, dt1);
+                        } else {
+                            Hours = 0;
+                        }
+                        dataList = [
+                            data.fields.AppointmentsTimeLog.fields.AppointID || '',
+                            appointmentdate,
+                            data.fields.ClientName || '',
+                            data.fields.TrainerName || '',
+                            data.fields.TrainerName || '',
+                            data.fields.DeptClassName || '',
+                            data.fields.Phone || '',
+                            data.fields.ClientMobile || '',
+                            data.fields.Suburb || '',
+                            data.fields.Street || '',
+                            data.fields.State || '',
+                            data.fields.Country || '',
+                            data.fields.Postcode || '',
+                            new Array(data.fields.AppointmentsTimeLog) || '',
+                            data.fields.StartTime.split(' ')[1] || '',
+                            data.fields.AppointmentsTimeLog.fields.StartDatetime || '',
+                            data.fields.AppointmentsTimeLog.fields.EndDatetime || '',
+                            data.fields.TotalHours || 0,
+                            Hours,
+                            data.fields.EndTime.split(' ')[1] || '',
+                            data.fields.StartTime || '',
+                            data.fields.EndTime || '',
+                            moment(data.fields.StartTime).format('dddd') + ', ' + moment(data.fields.StartTime).format('DD') || '',
+                            moment(data.fields.endTime).format('dddd') + ', ' + moment(data.fields.endTime).format('DD') || '',
+                            data.fields.Actual_EndTime != '' ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : data.fields.Actual_EndTime,
+                            data.fields.Actual_EndTime || '',
+                            data.fields.Actual_StartTime.split(' ')[1] || '',
+                            data.fields.Actual_EndTime.split(' ')[1] || '',
+                            Hours,
+                            '',
+                            '',
+                            data.fields.ProductDesc || '',
+                            data.fields.Status || '',
+                            data.fields.EndTime != '' ? moment(data.fields.EndTime).format("DD/MM/YYYY") : data.fields.EndTime,
+                            data.fields.AppointmentsTimeLog.fields.Description || ''
+                        ];
+                    }
+                } else {
+                    let time = new Date();
+                    let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.StartDatetime.split(' ')[0]);
+                    let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.EndDatetime.split(' ')[0]);
+                    if (data.fields.AppointmentsTimeLog.fields.StartDatetime != "" && data.fields.AppointmentsTimeLog.fields.EndDatetime != "") {
+                        Hours = templateObject.diff_hours1(dt2, dt1);
+
+                    } else {
+                        Hours = 0;
+                    }
+                    dataList = [
+                        data.fields.AppointmentsTimeLog.fields.AppointID || '',
+                        appointmentdate,
+                        data.fields.ClientName || '',
+                        data.fields.TrainerName || '',
+                        data.fields.TrainerName || '',
+                        data.fields.DeptClassName || '',
+                        data.fields.Phone || '',
+                        data.fields.ClientMobile || '',
+                        data.fields.Suburb || '',
+                        data.fields.Street || '',
+                        data.fields.State || '',
+                        data.fields.Country || '',
+                        data.fields.Postcode || '',
+                        new Array(data.fields.AppointmentsTimeLog) || '',
+                        data.fields.StartTime.split(' ')[1] || '',
+                        data.fields.AppointmentsTimeLog.fields.StartDatetime || '',
+                        data.fields.AppointmentsTimeLog.fields.EndDatetime || '',
+                        data.fields.TotalHours || 0,
+                        Hours,
+                        data.fields.EndTime.split(' ')[1] || '',
+                        data.fields.StartTime || '',
+                        data.fields.EndTime || '',
+                        moment(data.fields.StartTime).format('dddd') + ', ' + moment(data.fields.StartTime).format('DD'),
+                        moment(data.fields.endTime).format('dddd') + ', ' + moment(data.fields.endTime).format('DD'),
+                        data.fields.Actual_EndTime != '' ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : data.fields.Actual_EndTime,
+                        data.fields.Actual_EndTime || '',
+                        data.fields.Actual_StartTime.split(' ')[1] || '',
+                        data.fields.Actual_EndTime.split(' ')[1] || '',
+                        '',
+                        '',
+                        data.fields.ProductDesc || '',
+                        data.fields.Status || '',
+                        data.fields.EndTime != '' ? moment(data.fields.EndTime).format("DD/MM/YYYY") : data.fields.EndTime,
+                        data.fields.AppointmentsTimeLog.fields.Description || ''
+                    ];
+                }
+                return dataList;
+            }
+        }else{
+            return dataList;
+        }
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'ID', class: 'colSortDate', active: true, display: true, width: "150" },
+        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
+        { index: 2, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 3, label: 'Rep', class: 'colReq', active: true, display: true, width: "150" },
+        { index: 4, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "150" },
+        { index: 5, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
+        { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
+        { index: 7, label: 'Break', class: 'colNotes', active: true, display: true, width: "100" },
+        { index: 8, label: 'TimeLog ID', class: 'colTimeLog', active: false, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+
 });
 
 Template.appointmenttimelist.onRendered(function() {

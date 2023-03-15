@@ -41,8 +41,8 @@ Template.projectListPop.onCreated(function() {
                 `<span style="display: none;">${data.fields.MsTimeStamp}</span>` + moment(data.fields.MsTimeStamp).format("DD/MM/YYYY"),
                 data.fields.ProjectName,
                 data.fields.Description,
-                projectStatus,
                 taskCount,
+                projectStatus,
                 data.fields.ID,
                 // data.fields.Active,
             ];
@@ -53,8 +53,8 @@ Template.projectListPop.onCreated(function() {
         { index: 0, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "100" },
         { index: 1, label: 'Project', class: 'colProjectName', active: true, display: true, width: "100" },
         { index: 2, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "200" },
-        { index: 3, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "60" },
-        { index: 4, label: 'Tasks', class: 'colProjectTasks', active: true, display: true, width: "100" },
+        { index: 3, label: 'Tasks', class: 'colProjectTasks', active: true, display: true, width: "100" },
+        { index: 4, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "60" },
         { index: 5, label: '#ID', class: 'colProjectID', active: false, display: false, width: "0" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
