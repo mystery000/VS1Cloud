@@ -488,9 +488,7 @@ batchUpdateCall = function (url, flag = false) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TVS1_Dashboard_summary = dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_summary;
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
-                        console.log(9);
                       addLoginData(dashboardArray).then(function (datareturnCheck) {
-                          console.log(10);
                           if (localStorage.getItem("enteredURL") != null) {
                               FlowRouter.go(localStorage.getItem("enteredURL"));
                               localStorage.removeItem("enteredURL");
@@ -499,15 +497,12 @@ batchUpdateCall = function (url, flag = false) {
 
                         setTimeout(function () {
                         if(url){
-                            console.log(11);
                           window.open(url,'_self');
                         }else{
-                            console.log(12);
                           location.reload(true);
                         }
                       }, 500);
                       }).catch(function (err) {
-                          console.log(13);
                           if(url){
                             window.open(url,'_self');
                           }else{
@@ -576,9 +571,7 @@ batchUpdateCall = function (url, flag = false) {
           //if(responseBack.ResponseStatus == )
             //Meteor._reload.reload();
         }else if (oReq.status != 200){
-            console.log(19);
           setTimeout(function () {
-              console.log(18);
             if(url){
               window.open(url,'_self');
             }else{
