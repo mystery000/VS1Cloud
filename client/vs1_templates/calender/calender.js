@@ -7516,7 +7516,6 @@ Template.calender.events({
                         cancelButtonText: 'Cancel'
                     }).then((result) => {
                         if (result.value) {
-                            console.log('Oops!')
                             $('#chkSMSCustomer').prop('checked', false);
                             $('#chkSMSUser').prop('checked', false);
                             $('#btnSaveAppointmentSubmit').trigger('click');

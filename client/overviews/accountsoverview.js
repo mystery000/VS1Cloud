@@ -31,7 +31,7 @@ Template.accountsoverview.onCreated(function() {
     templateObject.isBankAccount.set(false);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
-    templateObject.setupFinished = new ReactiveVar();    
+    templateObject.setupFinished = new ReactiveVar();
     templateObject.transactiondatatablerecords = new ReactiveVar([]);
     templateObject.treeColumnHeader = new ReactiveVar([])
 });
@@ -286,14 +286,14 @@ Template.accountsoverview.onRendered(function() {
             });
         });
     }
-    templateObject.displayAccountsOverviewListData = async function(data) {        
+    templateObject.displayAccountsOverviewListData = async function(data) {
         templateObject.displayAccountsOverviewTreeData(data)
         var splashArrayAccountsOverview = new Array();
         let lineItems = [];
         let lineItemObj = {};
         let fullAccountTypeName = "";
         let accBalance = "";
-        let deleteFilter = false;        
+        let deleteFilter = false;
         if (data.Params.Search.replace(/\s/g, "") == "") {
             deleteFilter = true;
         } else {
@@ -552,7 +552,7 @@ Template.accountsoverview.onRendered(function() {
                 level3: data.taccountvs1list[i].Level3 || "",
             };
             splashArrayAccountsOverview.push(dataList);
-        }       
+        }
 
         splashArrayAccountsOverview.sort((a,b) => {
             if (a.type > b.type) return 1
@@ -567,15 +567,15 @@ Template.accountsoverview.onRendered(function() {
                         if (a.level3 > b.level3) return 1
                         else if (a.level3 < b.level3) return -1
                         else {
-                            return 0    
-                        }        
-                    }    
+                            return 0
+                        }
+                    }
                 }
             }
         })
         let treeDataArray = []
         let accountType
-        let parentIndex        
+        let parentIndex
         let emptyData = {
             id: "",
             name: "",
@@ -608,7 +608,7 @@ Template.accountsoverview.onRendered(function() {
                 treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: 0})
                 continue
             }
-            if (!accountType || accountType !== item.type)  {                                
+            if (!accountType || accountType !== item.type)  {
                 if (parentIndex) treeDataArray[parentIndex - 1].balance = utilityService.modifynegativeCurrencyFormat(totalBalance) || Currency + "0.00"
                 totalBalance = 0
                 accountType = item.type
@@ -624,67 +624,67 @@ Template.accountsoverview.onRendered(function() {
                 "data": "id"
             },
             {
-                "data": "name",                
+                "data": "name",
             },
             {
                 "data": "description"
             },
             {
-                "data": "number",                
+                "data": "number",
             },
             {
                 "data": "type"
             },
             {
-                "data": "balance",                
+                "data": "balance",
             },
             {
                 "data": "taxcode"
             },
             {
-                "data": "bankname",                
+                "data": "bankname",
             },
             {
                 "data": "bankaccountname"
             },
             {
-                "data": "bsb",                
+                "data": "bsb",
             },
             {
                 "data": "bankaccountnumber"
             },
             {
-                "data": "carnumber",                
+                "data": "carnumber",
             },
             {
                 "data": "expirydate"
             },
             {
-                "data": "cvc",                
+                "data": "cvc",
             },
             {
                 "data": "extra"
             },
             {
-                "data": "banknumber",                
+                "data": "banknumber",
             },
             {
                 "data": "isheader"
             },
             {
-                "data": "allowexpenseclaim",                
+                "data": "allowexpenseclaim",
             },
             {
                 "data": "receiptcategory"
             },
             {
-                "data": "linestatus",                
+                "data": "linestatus",
             },
             {
                 "data": "level1"
             },
             {
-                "data": "level2",                
+                "data": "level2",
             },
             {
                 "data": "level3"
@@ -702,10 +702,10 @@ Template.accountsoverview.onRendered(function() {
         // $('#test-table').treeTable({
         //     "data": treeDataArray,
         //     "collapsed": false,
-        //     "columns": columns,            
+        //     "columns": columns,
         //     "order": [[1, 'desc']]
-        // });        
-        
+        // });
+
         setTimeout(function() {
             $('#tblAccountTreeOverview').treeTable({
                 data: treeDataArray,
@@ -725,7 +725,7 @@ Template.accountsoverview.onRendered(function() {
                 responsive: true,
                 "order": [
                     [1, "asc"]
-                ],                
+                ],
                 "fnDrawCallback": function(oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
                     $('#tblAccountTreeOverview_ellipsis').addClass('disabled');
@@ -807,7 +807,7 @@ Template.accountsoverview.onRendered(function() {
                     setTimeout(function() {
                         makeNegativeGlobal();
                         $('#tblAccountTreeOverview tbody td').attr('style', 'padding: 0 12px 0 12px !important')
-                        $('#tblAccountTreeOverview .tt-details-control').attr('style', 'padding: 0 !important; border-right-width: 0; width: 30px; position: relative; z-index: 100;')                        
+                        $('#tblAccountTreeOverview .tt-details-control').attr('style', 'padding: 0 !important; border-right-width: 0; width: 30px; position: relative; z-index: 100;')
                         $('#tblAccountTreeOverview th.colAccountName').attr('style', 'padding-left: 0')
                         $('#tblAccountTreeOverview td.colAccountName').attr('style', 'padding: 0 12px 0 0px !important')
                         $('#tblAccountTreeOverview tbody tr.has-parent.level-1 td.colAccountName').attr('style', 'padding: 0 12px 0 18px !important')
@@ -1863,7 +1863,7 @@ Template.accountsoverview.onRendered(function() {
                             $(".showOnTransactions").prop("checked", false);
                         }
                     }
-                    
+
                     let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
                     $("#expenseCategory").val(category);
 
@@ -1968,12 +1968,18 @@ Template.accountsoverview.events({
             });
     },
     "click .btnBatchUpdate": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        batchUpdateCall("/accountsoverview?success=true");
+        // $(".fullScreenSpin").css("display", "inline-block");
+        showCounterProgressModal();
+
+        batchUpdateCall("/accountsoverview?success=true", true);
         //FlowRouter.go('/salesorderslist?success=true');
+
         sideBarService
             .getAccountListVS1()
             .then(function(data) {
+
+                updateCounterProgress("Accounts Load");
+
                 addVS1Data("TAccountVS1", JSON.stringify(data))
                     .then(function(datareturn) {
                         //location.reload();
@@ -1985,7 +1991,7 @@ Template.accountsoverview.events({
             .catch(function(err) {
                 //location.reload();
             });
-    },    
+    },
     "click .btnAddNewAccounts": function() {
         $("#add-account-title").text("Add New Account");
         $("#edtAccountID").val("");
