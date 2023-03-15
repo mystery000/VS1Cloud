@@ -3698,8 +3698,9 @@ export class SideBarService extends BaseService {
         let options = "";
 
         options = {
-            IgnoreDates: false,
-            OrderBy: "ReconciliationID desc",
+            IgnoreDates: true,
+            // OrderBy: "ReconciliationID desc",
+            OrderBy: "ReconciliationDate desc",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
             Search: "Deleted != true",
