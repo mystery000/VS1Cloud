@@ -323,7 +323,7 @@ Template.accountsoverview.onRendered(function() {
                 data.taccountvs1list[i].AccountType || "",
                 accBalance || '',
                 data.taccountvs1list[i].TaxCode || '',
-                data.taccountvs1list[i].BankName || '',
+                data.taccountvs1list[i].BankCode || '',
                 data.taccountvs1list[i].BankAccountName || '',
                 data.taccountvs1list[i].BSB || '',
                 data.taccountvs1list[i].BankAccountNumber || "",
@@ -1841,7 +1841,9 @@ Template.accountsoverview.onRendered(function() {
                     $("#edtBankAccountNo").val(bankacountno);
                     $("#swiftCode").val(swiftCode);
                     $("#routingNo").val(routingNo);
-                    $("#edtBankName").val(bankname);
+                    $("#edtBankName").val(bankname);                    
+                    $('#eftBankName').val(bankname);                                        
+                    $('#eftDescription').val($("#tblBankName").find(`td:contains(${bankname})`).next().text());                    
                     $("#edtSubAccount1").val(level1);
                     $("#edtSubAccount2").val(level2);
                     $("#edtSubAccount3").val(level3);

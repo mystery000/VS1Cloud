@@ -1478,6 +1478,15 @@ authenticatedRoutes.route('/timesheettimelog', {
     }
 });
 
+authenticatedRoutes.route('/clockOnOff', {
+    name: 'clockOnOff',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'clockOnOff'
+        });
+    }
+});
+
 authenticatedRoutes.route('/squareapi', {
     name: 'squareapi',
     action() {
@@ -2501,3 +2510,21 @@ authenticatedRoutes.route('/manufacturingsettings',  {
         })
     }
 })
+
+authenticatedRoutes.route('/buildcostreport', {
+    name: 'buildcostreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'buildcostreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/worksheetreport', {
+    name: 'worksheetreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'worksheetreport'
+        });
+    }
+});

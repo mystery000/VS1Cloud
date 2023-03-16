@@ -24,7 +24,7 @@ function inActive(){
     let checkGreenTrack = localStorage.getItem('isGreenTrack') || false;
       if ((loc != '/') && (loc != '/register') && (loc != '/registerdb')
       && (loc != '/vs1greentracklogin')&& (loc != '/registersts')
-    && (loc != '/paymentmethodSettings')) {
+    && (loc != '/paymentmethodSettings') && (loc != '/clockOnOff')) {
         if (checkGreenTrack == true) {
           window.open('/vs1greentracklogin','_self');
         }else{

@@ -1,0 +1,9 @@
+<template name="worksheetreport">
+    {{# vs1_report_template tabledisplayname="Production WorkSheet Report" tablename="productionworksheetreport"  dateAsAt=dateAsAt sheetname="Production WorkSheet Report"}}
+    <div class="table-responsive">
+        <div class="card-body p-3 rounded" style="margin: 0px 16px;">
+            {{> non_transactional_list tablename = "tblProductionWorksheetReport"}}
+        </div>
+    </div>
+    {{/vs1_report_template}}
+</template>
