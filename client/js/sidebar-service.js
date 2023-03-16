@@ -4208,13 +4208,13 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
           ListType: "Detail",
-          select: "[Allclasses]=true",
+          select: "[Active]=true",
         };
       } else {
         options = {
           // orderby:'"ClientID desc"',
           ListType: "Detail",
-          select: "[Allclasses]=true",
+          select: "[Active]=true",
         };
       }
     }
