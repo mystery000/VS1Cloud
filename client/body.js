@@ -520,7 +520,7 @@ import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
 import './popUps/editServiceCheckerModal.js';
 import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
-import './payroll/clockonoff/employeeclockonoff.js';
+// import './payroll/clockonoff/employeeclockonoff.js';
 import './reports/buildcost/buildcostreport';
 import './reports/worksheet/worksheetreport.js';
 /* Roverto */
