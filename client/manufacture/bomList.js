@@ -53,6 +53,7 @@ Template.bom_list.onCreated(function(){
   templateObject.tableheaderrecords.set(headerStructure);
       
 })
+
 Template.bom_list.onRendered(function(){
   const templateObject  = Template.instance();
   const productService = new ProductService();
