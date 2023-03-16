@@ -519,8 +519,10 @@ import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
 import './popUps/editServiceCheckerModal.js';
-import './js/new_wastage_form.js';
 import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
+// import './payroll/clockonoff/employeeclockonoff.js';
+import './reports/buildcost/buildcostreport';
+import './reports/worksheet/worksheetreport.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -643,6 +645,8 @@ import './reports/exeincome/exeincome.js';
 import './reports/exeperformance/exeperformance.js';
 import './reports/exeposition/exeposition.js';
 import './reports/exeprofitability/exeprofitability.js';
+// import './reconciliation/newstatementrule.js';
+// import './vs1_templates/template_buttons/report_export_import_print_display_button.js';
 /* Scott */
 
 /* Mainstar */
