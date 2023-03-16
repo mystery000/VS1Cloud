@@ -1140,16 +1140,16 @@ Template.reconciliationlist.onRendered(function() {
 
 Template.reconciliationlist.events({
     'click #btnReconcile':function(event){
-        window.open('/bankrecon','_self');
+        FlowRouter.go('/bankrecon');
     },
     'click #btnReconMacthingRulesList':function(event){
-        window.open('/reconrulelist','_self');
+        FlowRouter.go('/reconrulelist');
     },
     'click #btnNewReconMatchingRule':function(event){
-        window.open('/newreconrule','_self');
+        FlowRouter.go('/newbankrule');
     },
     'click #btnNewStatementImportRule':function(event){
-        window.open('/newbankrule','_self');
+        FlowRouter.go('/newstatementrule');
     },
     // 'click .chkDatatable' : function(event){
     //     var columns = $('#tblreconciliationlist th');

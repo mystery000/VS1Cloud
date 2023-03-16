@@ -431,18 +431,12 @@ Template.reconrulelist.onRendered(function() {
     $('#tblbankrulelist tbody').on( 'click', 'tr', function () {
         const listData = $(this).closest('tr').attr('id');
         if(listData){
-            window.open('/newbankrule?id=' + listData,'_self');
+            window.open('/newstatementrule?id=' + listData,'_self');
         }
     });
 });
 
 Template.reconrulelist.events({
-    'click #btnBankRule':function(event){
-        FlowRouter.go(
-            `/newstatementrule`
-        );
-        // window.open('/newbankrule','_self');
-    },
     'click .chkDatatable' : function(event){
         const columns = $('#tblbankrulelist th');
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
