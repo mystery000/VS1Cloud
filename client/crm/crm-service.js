@@ -3,13 +3,13 @@ export class CRMService extends BaseService {
     getAllTaskList(EnteredByID = '') {
         var options = {
             ListType: "Detail",
-            select: "pt.Active=true"
+            select: "[pt.Active]=true"
         };
         if (EnteredByID) {
             options = {
                 ListType: "Detail",
-                // select: "[Active]=true and [EnteredByID]=" + EnteredByID
-                select: "pt.Active=true and [EnteredBy]='" + EnteredByID + "'"
+                select: "[pt.Active]=true and [EnteredByID]=" + EnteredByID
+                // Search: "pt.Active=true and EnteredBy='" + EnteredByID + "'"
             };
         }
         return this.getList(this.ERPObjects.Tprojecttasks, options);
@@ -25,24 +25,60 @@ export class CRMService extends BaseService {
         if (TaskName) {
             options = {
                 ListType: "Detail",
-                select: "pt.Active=true and [TaskName]='" + TaskName + "'"
+                select: "pt.Active=true and TaskName='" + TaskName + "'"
             };
         }
         return this.getList(this.ERPObjects.Tprojecttasks, options);
     }
 
+
     getAllTasksByContactName(ContactName = '') {
         var options = {
             ListType: "Detail",
-            select: "pt.Active=true"
+            Search: "pt.Active=true"
         };
         if (ContactName) {
             options = {
                 ListType: "Detail",
-                select: "pt.Active=true and [ContactName]='" + ContactName + "'"
+                Search: "pt.Active=true and ContactName='" + ContactName + "'"
             };
         }
-        return this.getList(this.ERPObjects.Tprojecttasks, options);
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
+    }
+
+    getAllTasksByName(TaskName = '') {
+        var options = {
+            ListType: "Detail",
+            Search: "pt.Active=true",
+        };
+        if (TaskName) {
+            options = {
+                ListType: "Detail",
+                Search: "pt.Active=true and TaskName='" + TaskName + "'",
+            };
+        }
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
+    }
+
+    getAllTasksList(dateFrom, dateTo, ignoreDate, deleteFilter) {
+        let options;
+        if (ignoreDate == true) {
+            options = {
+                ListType: "Detail",
+                Search: "pt.Active=true",
+                IgnoreDates: true,
+            };
+        } else {
+            options = {
+                ListType: "Detail",
+                Search: "pt.Active=true",
+                IgnoreDates: false,
+                DateFrom: '"' + dateFrom + '"',
+                DateTo: '"' + dateTo + '"',
+            };
+        }
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TProjectTasksList, options);
     }
 
     getAllAppointments(ClientName = '') {
@@ -165,5 +201,13 @@ export class CRMService extends BaseService {
             select: "[Active]=true and [IsCustomer]!=true and [IsSupplier]!=true and [CreationDate]>'" + fromDate + "'",
         };
         return this.getList(this.ERPObjects.TProspect, options);
+    }
+
+    getAllLeadCharts(){
+      let options = {
+          PropertyList: "ID,CreationDate,SourceName",
+          select: "[Active]=true",
+      };
+      return this.getList(this.ERPObjects.TProspect, options);
     }
 }

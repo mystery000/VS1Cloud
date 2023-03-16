@@ -8,6 +8,7 @@ import { SideBarService } from '../../js/sidebar-service';
 import { Template } from 'meteor/templating';
 import './quotedsalesorderinvoicedamounts.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let _ = require('lodash');
 let vs1chartService = new VS1ChartService();
@@ -29,6 +30,13 @@ Template.quotedsalesorderinvoicedamounts.onCreated(() => {
 Template.quotedsalesorderinvoicedamounts.onRendered(() => {
 
     const templateObject = Template.instance();
+    templateObject.autorun(function() {
+        const currentData = Template.currentData();
+        const context = currentData.updateChart;
+        if(context.update) {
+            templateObject.updateChart(context.dateFrom, context.dateTo);
+        }
+    });
 
     let topTenData1 = [];
     let topTenSuppData1 = [];
@@ -111,7 +119,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
                         var dateFrom = new Date();
                         dateFrom.setMonth(dateFrom.getMonth() - 6);
                         dateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-                        $("#sales").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
+                        $("#quotedsalesorderinvoicedamounts #earnings").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
                         for (let l = 0; l < initialData.length; l++) {
 
                             let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
@@ -323,8 +331,6 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
                         });
 
                     }, 1000)
-
-
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -345,7 +351,7 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
                     var dateFrom = new Date();
                     dateFrom.setMonth(dateFrom.getMonth() - 6);
                     dateFrom = dateFrom.getFullYear() + '-' + ("0" + (dateFrom.getMonth() + 1)).slice(-2) + '-' + ("0" + (dateFrom.getDate())).slice(-2);
-                    $("#sales").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
+                    $("#quotedsalesorderinvoicedamounts #earnings").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + getLoadDate);
                     for (let l = 0; l < initialData.length; l++) {
 
                         let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
@@ -784,24 +790,247 @@ Template.quotedsalesorderinvoicedamounts.onRendered(() => {
 
             });
         });
-
-
-
     });
 
     function getInvSales(callback) {
-
         return new Promise((res, rej) => {
-            // var salesBoardService = new SalesBoardService();
-
             callback('');
-
-
-
         });
-
     }
+    templateObject.updateChart = function(dateFrom, dateTo) {
+        let currentDate = moment(dateTo);
+        let currentMonthDate = currentDate.month() + 1;
+        let currentYear = currentDate.year();
+        let currentMonthData = [];
+        let prevMonthData = [];
+        let prevMonth2Data = [];
+        let prevMonth3Data = [];
+        let prevMonth4Data = [];
+        let prevMonth5Data = [];
+        let prevMonth6Data = [];
+        let prevMonth7Data = [];
+        let totalQuotePayment1 = 0;
+        let totalQuotePayment2 = 0;
+        let totalQuotePayment3 = 0;
+        let totalQuotePayment4 = 0;
+        let totalQuotePayment5 = 0;
+        let totalQuotePayment6 = 0;
+        let totalQuotePayment7 = 0;
+        let totalQuotePayment8 = 0;
 
+        let totalSOPayment1 = 0;
+        let totalSOPayment2 = 0;
+        let totalSOPayment3 = 0;
+        let totalSOPayment4 = 0;
+        let totalSOPayment5 = 0;
+        let totalSOPayment6 = 0;
+        let totalSOPayment7 = 0;
+        let totalSOPayment8 = 0;
+
+        let totalInvPayment1 = 0;
+        let totalInvPayment2 = 0;
+        let totalInvPayment3 = 0;
+        let totalInvPayment4 = 0;
+        let totalInvPayment5 = 0;
+        let totalInvPayment6 = 0;
+        let totalInvPayment7 = 0;
+        let totalInvPayment8 = 0;
+
+        sideBarService.getSalesListData(dateFrom, dateTo, false, initialReportLoad, 0).then((data) => {
+            setTimeout(function() {
+                let filterData = _.filter(data.tsaleslist, function(data) {
+                    return data.CustomerName
+                });
+
+                let graphData = _.orderBy(filterData, 'SaleDate');
+                let initialData = _.filter(graphData, obj => (obj.SaleDate !== ''));
+                $("#quotedsalesorderinvoicedamounts #earnings").attr("href", "/salesreport?dateFrom=" + dateFrom + "&dateTo=" + dateTo);
+                for (let l = 0; l < initialData.length; l++) {
+
+                    let getMonth = new Date(initialData[l].SaleDate).getMonth() + 1;
+                    if (initialData[l].Type === "Quote") {
+                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment1 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment2 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment3 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment4 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment5 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment6 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment7 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalQuotePayment8 += initialData[l].TotalAmountinc;
+
+                        }
+                    } else if (initialData[l].Type === "Sales Order") {
+                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment1 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment2 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment3 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment4 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment5 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment6 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment7 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalSOPayment8 += initialData[l].TotalAmountinc;
+
+                        }
+                    } else if (initialData[l].Type === "Invoice") {
+                        if (getMonth === currentMonthDate && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment1 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 1) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment2 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 2) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment3 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 3) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment4 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 4) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment5 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 5) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment6 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 6) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment7 += initialData[l].TotalAmountinc;
+
+                        } else if (getMonth === (currentMonthDate - 7) && currentYear === new Date(initialData[l].SaleDate).getFullYear()) {
+                            totalInvPayment8 += initialData[l].TotalAmountinc;
+
+                        }
+                    }
+
+                }
+
+                let prevMonth1 = moment(dateTo).format("MMMM").substring(0, 3);
+                let prevMonth2 =  (moment(dateTo).subtract(1, 'months')).format("MMMM").substring(0, 3);
+                let prevMonth3 = (moment(dateTo).subtract(2, 'months')).format("MMMM").substring(0, 3);
+                let prevMonth4 = (moment(dateTo).subtract(3, 'months')).format("MMMM").substring(0, 3);
+                let prevMonth5 = (moment(dateTo).subtract(4, 'months')).format("MMMM").substring(0, 3);
+                let prevMonth6 = (moment(dateTo).subtract(5, 'months')).format("MMMM").substring(0, 3);
+                let prevMonth7 = (moment(dateTo).subtract(6, 'months')).format("MMMM").substring(0, 3);
+  
+                const diff = Math.ceil(moment(dateTo).diff(moment(dateFrom), 'months', true)) + 1;            
+                let list_prevMonth = [prevMonth7,prevMonth6,prevMonth5,prevMonth4,prevMonth3,prevMonth2,prevMonth1];
+                let list_totalQuotePayment = [totalQuotePayment7,totalQuotePayment6,totalQuotePayment5,totalQuotePayment4,totalQuotePayment3,totalQuotePayment2,totalQuotePayment1];
+                let list_totalSOPayment = [totalSOPayment7,totalSOPayment6,totalSOPayment5,totalSOPayment4,totalSOPayment3,totalSOPayment2,totalSOPayment1];
+                let list_totalInvPayment = [totalInvPayment7,totalInvPayment6,totalInvPayment5,totalInvPayment4,totalInvPayment3,totalInvPayment2,totalInvPayment1];
+                
+                list_prevMonth = list_prevMonth.slice(-diff);
+                list_totalQuotePayment = list_totalQuotePayment.slice(-diff);
+                list_totalSOPayment = list_totalSOPayment.slice(-diff);
+                list_totalInvPayment = list_totalInvPayment.slice(-diff);
+
+                var ctx = document.getElementById("quotedsoinvoicedamounts").getContext("2d");
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: list_prevMonth,
+                        datasets: [{
+                                "label": "Quotes",
+                                "fill": true,
+                                "data": list_totalQuotePayment,
+                                "backgroundColor": "rgba(28,200,138,0.16)",
+                                "borderColor": "#1cc88a"
+                            },
+                            {
+                                "label": "Sales Orders",
+                                "fill": true,
+                                "data": list_totalSOPayment,
+                                "borderColor": "#36b9cc",
+                                "backgroundColor": "rgba(54,185,204,0.17)"
+                            },
+                            {
+                                "label": "Invoices",
+                                "fill": true,
+                                "data": list_totalInvPayment,
+                                "borderColor": "#f6c23e",
+                                "backgroundColor": "rgba(246,194,62,0.17)"
+                            }
+                        ]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        responsive: true,
+                        tooltips: {
+                            callbacks: {
+                                label: function(tooltipItem, data) {
+                                    return utilityService.modifynegativeCurrencyFormat(Math.abs(tooltipItem.yLabel)) || 0.00;
+
+                                }
+                            }
+                        },
+                        "legend": {
+                            "display": true,
+                            "position": "bottom",
+                        },
+                        onClick: chartClickEvent,
+                        "title": {},
+                        "scales": {
+                            "xAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"],
+                                    "drawOnChartArea": false
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "padding": 20
+                                }
+                            }],
+                            "yAxes": [{
+                                "gridLines": {
+                                    "color": "rgb(234, 236, 244)",
+                                    "zeroLineColor": "rgb(234, 236, 244)",
+                                    "drawBorder": false,
+                                    "drawTicks": false,
+                                    "borderDash": ["2"],
+                                    "zeroLineBorderDash": ["2"]
+                                },
+                                "ticks": {
+                                    "fontColor": "#858796",
+                                    "padding": 20
+                                }
+                            }]
+                        }
+                    }
+                });
+
+            }, 1000)
+        });
+    }
 });
 
 

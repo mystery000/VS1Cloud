@@ -21,6 +21,26 @@ Template.reimbursementSettings.onCreated(function() {
   templateObject.imageFileData=new ReactiveVar();
   templateObject.currentDrpDownID = new ReactiveVar();
   // templateObject.Accounts = new ReactiveVar([]);
+  templateObject.tableheaderrecords6 = new ReactiveVar([]);
+
+  templateObject.getDataTableList6 = function(data){
+    let dataList = [
+        data.fields.ID || '',
+        data.fields.ReimbursementName || 0,
+        data.fields.ReimbursementAccount || 0,
+        data.fields.Active == true ? '' : 'In-Active',
+       '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    ];
+    return dataList;
+  }
+  let headerStructure6  = [
+    { index: 0, label: 'ID', class: 'colReimbursementID', active: false, display: true, width: "" },
+    { index: 1, label: 'Reimbursement Name', class: 'colReimbursementName', active: true, display: true, width: "100" },
+    { index: 2, label: 'Account', class: 'colReimbursementAccount', active: true, display: true, width: "50" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+    { index: 4, label: '', class: 'colDeleterei', active: true, display: true, width: "20" }
+  ];
+  templateObject.tableheaderrecords6.set(headerStructure6);
 });
 
 Template.reimbursementSettings.onRendered(function() {
@@ -173,7 +193,7 @@ Template.reimbursementSettings.onRendered(function() {
                     }, 100);
                 },
                 "fnInitComplete": function () {
-                    $("<button class='btn btn-primary newReimbursementModal' data-dismiss='modal' data-toggle='modal' data-target='#newReimbursementModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblReimbursements_filter");
+                    $("<button class='btn btn-primary btnAddNewReimbursement' data-dismiss='modal' data-toggle='modal' data-target='#newReimbursementModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblReimbursements_filter");
                     $("<button class='btn btn-primary btnRefreshReimbursement type='button' id='btnRefreshReimbursement' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblReimbursements_filter");
                 }
 
@@ -218,7 +238,7 @@ Template.reimbursementSettings.onRendered(function() {
     }
 };
 
-templateObject.getReimbursement();
+// templateObject.getReimbursement();
 
 $('.reimbursementDropDown').editableSelect();
 $('.reimbursementDropDown').editableSelect()
@@ -355,7 +375,7 @@ Template.reimbursementSettings.events({
         }
 
     },
-    'click .newreiumbursement': async function (event) {
+    'click .btnSaveReimbursement': async function (event) {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
 
@@ -454,5 +474,35 @@ Template.reimbursementSettings.events({
 Template.reimbursementSettings.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get();
-    }
+    },
+
+    tableheaderrecords6: () => {
+        return Template.instance().tableheaderrecords6.get();
+    },
+    apiFunction6:function() {
+        return sideBarService.getReimbursement;
+    },
+    searchAPI6: function() {
+        return sideBarService.getReimbursementByName;
+    },
+    service6: ()=>{
+        return sideBarService;
+    },
+    datahandler6: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList6(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler6: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList6(data);
+            return dataReturn;
+        }
+    },
+    apiParams6: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

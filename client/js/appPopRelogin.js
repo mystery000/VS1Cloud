@@ -24,6 +24,11 @@ Template.appAlertPage.onRendered(function(){
     e.preventDefault();
   });
 
+  $(".btnLogin-field").click(function(e){
+    document.getElementById('apptimer').style.display='none';
+    e.preventDefault();
+  });
+
   $("#erppassword").keyup(function (e) {
       if (e.keyCode == 13) {
           $("#resubmitLogin").trigger("click");

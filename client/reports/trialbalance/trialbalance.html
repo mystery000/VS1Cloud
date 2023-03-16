@@ -4,7 +4,7 @@
         <div class="table-responsive">
             <table class="table table-sm" id="trialbalance" name="trialbalance">
                 <thead>
-                <tr class="table-active tblAvoid customDoubleTableHeading">
+                <tr class="table-active">
                     {{#each c in trialbalanceth}}
                         {{#if c.display}}
                             <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
@@ -17,146 +17,21 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!--
-        {{#if records}}
-
-                    {{#each record in records}}
-                        {{#if record.title}}
-        <tr class="totalhr">
-          <td colspan="5" style="font-weight: 800;">
-            <div class="SectionTitle2 report-heading-last">{{record.title}}</div>
-          </td>
-        </tr>
-
-        {{/if}}
-
-                        {{#if record.entries}}
-
-                            {{#each entry in record.entries}}
-
-        <tr class="{{entry.type}}" id="{{entry.Id}}">
-          <div style="display:none;">{{entry.AccountName}}</div>
-
-          <td></td>
-
-          <td class="Total1Indented MenuLeft text-nowrap Indent1">
-            <a href="#" style="text-decoration:none!important;">{{entry.AccountNumber}}</a>
-          </td>
-
-          <td class="Total1Indented MenuLeft text-nowrap Indent1">
-            <a href="#" style="text-decoration:none!important;">{{entry.Account}}</a>
-          </td>
-
-
-        </tr>
-
-        {{/each}}
-
-                        {{/if}}
-
-                        {{#if record.total}}
-
-        <tr class="TotalField">
-
-          <td class="Total1Indented MenuLeft TotalField">
-            <span class="table-cells">
-              <strong>{{record.total.title}}</strong>
-            </span>
-          </td>
-
-          <td></td>
-          <td></td>
-
-          {{#if isOnlyDefaultActive}}
-
-                            {{#if currencyList}}
-                                {{#each c in currencyList }}
-                                    {{# if c.active}}
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount record.total.CreditsEx c}} text-danger {{/if}}">
-            <span class="table-cells">
-              <strong>{{convertAmount record.total.CreditsEx c}}</strong>
-            </span>
-          </td>
-          {{/if}}
+                    {{#if transactiondatatablerecords}}
+                        {{#each items in transactiondatatablerecords}}
+                            <tr>
+                                {{#each item in items}}
+                                    <td class="{{item.indent}}">
+                                        <span class={{item.className}}>{{item.string}}</span>
+                                    </td>
                                 {{/each}}
-
-                                {{#each c in currencyList }}
-                                    {{# if c.active}}
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount record.total.DebitsEx c}} text-danger {{/if}}">
-            <span class="table-cells">
-              <strong>{{convertAmount record.total.DebitsEx c}}</strong>
-            </span>
-          </td>
-          {{/if}}
-                                {{/each}}
-                            {{/if}}
-
-                        {{else}}
-          <td
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-            <span class="table-cells">
-              <strong>{{formatPrice record.total.CreditsEx}}</strong>
-            </span>
-          </td>
-
-          <td
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount subItem}} text-danger {{/if}}">
-            <span class="table-cells">
-              <strong>{{formatPrice record.total.DebitsEx}}</strong>
-            </span>
-          </td>
-
-          {{/if}}
-
-        </tr>
-
-        {{/if}}
-
-                    {{/each}}
-
-                    {{#if grandrecords}}
-        <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-          <td>{{grandrecords.title}}</td>
-          <td></td>
-          <td></td>
-
-          {{#if isOnlyDefaultActive}}
-
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
-                                {{#if c.active}}
-          <td class="text-right {{#if isNegativeAmount grandrecords.CreditsEx c}} text-danger {{/if}}"
-            currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount grandrecords.CreditsEx c}}</td>
-          {{/if}}
-                            {{/each}}
-
-                            {{#each c in currencyList }}
-                                {{#if c.active}}
-          <td class="text-right {{#if isNegativeAmount grandrecords.DebitsEx c}} text-danger {{/if}}"
-            currency="{{c.code}}" currency-id="{{c.id}}">{{convertAmount grandrecords.DebitsEx c}}</td>
-          {{/if}}
-                            {{/each}}
-                        {{/if}}
-
+                            </tr>
+                        {{/each}}
                     {{else}}
-          <td class=" {{#if isNegativeAmount grandrecords.CreditsEx}} text-danger {{/if}}">{{ formatPrice
-                            grandrecords.CreditsEx}}</td>
-          <td class=" {{#if isNegativeAmount grandrecords.DebitsEx}} text-danger {{/if}}">{{ formatPrice
-                            grandrecords.DebitsEx}}</td>
-          {{/if}}
-
-
-
-        </tr>
-        {{/if}}
-
-                {{else}}
-        <tr class="odd" style="text-align: center;">
-          <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
-        </tr>
-        {{/if}} -->
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="5" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
                 </tbody>
             </table>
         </div>

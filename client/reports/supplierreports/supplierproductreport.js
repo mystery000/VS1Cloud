@@ -72,7 +72,21 @@ Template.supplierproductreport.onRendered(() => {
   // templateObject.currentMonth.set(currentMonth);
 
   // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
-
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
+    templateObject.setDateAs(dateFrom);
+    let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
+      return await reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    await addVS1Data('TSupplierProduct', JSON.stringify(data.response));
+    templateObject.displayReportData(data.response);
+  }
   templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate) {
 
     templateObject.setDateAs(dateFrom);
@@ -251,7 +265,7 @@ Template.supplierproductreport.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: customerProductReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -505,19 +519,7 @@ Template.supplierproductreport.onRendered(() => {
 //     }
 //   }
 
-//   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
-//     LoadingOverlay.show();
-//     templateObject.setDateAs(dateFrom);
-//     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
-//       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
-//     }, {
-//       useIndexDb: true,
-//       useLocalStorage: false,
-//       validate: (cachedResponse) => {
-//         return false;
-//       }
-//     });
-//     data = data.response;
+
 
 //     let reportSummary = data.tsupplierproduct.map(el => {
 //       let resultobj = {};

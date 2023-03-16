@@ -4,7 +4,7 @@ import { CoreService } from '../js/core-service';
 import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
 import { SideBarService } from '../js/sidebar-service';
-import '../lib/global/indexdbstorage.js'; 
+import '../lib/global/indexdbstorage.js';
 
 import { Template } from 'meteor/templating';
 import './popemployeelist.html';
@@ -12,12 +12,54 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let contactService = new ContactService();
 Template.popemployeelist.onCreated(function(){
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
 
   templateObject.selectedFile = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let mobile = contactService.changeMobileFormat(data.Mobile);
+        var dataList = [
+            //id: data.Id || '',
+            //employeeno: data.EmployeeNo || '',
+            data.EmployeeName || '',
+            data.FirstName || '',
+            data.LastName || '',
+            data.Phone || '',
+            mobile || '',
+            data.Email || '',
+            data.DefaultClassName || '',
+            data.Country || '',
+            data.CustFld1 || '',
+            data.CustFld2 || '',
+            data.Street || '',
+            data.Active ? "" : "In-Active",
+            data.ID || '',
+            //custFld3: data.CustFld3 || '',
+            //custFld4: data.CustFld4 || ''
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "80" },
+        { index: 1, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "50" },
+        { index: 2, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100" },
+        { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "100" },
+        { index: 4, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "100" },
+        { index: 5, label: 'Email', class: 'colEmail', active: true, display: true, width: "100" },
+        { index: 6, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
+        { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
+        { index: 8, label: '#Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "80" },
+        { index: 9, label: '#Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "80" },
+        { index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: "100" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+        { index: 12, label: '#ID', class: 'colID', active: false, display: false, width: "30" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.popemployeelist.onRendered(function() {
@@ -30,27 +72,27 @@ Template.popemployeelist.onRendered(function() {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
-    if(error){
-
-    }else{
-      if(result){
-        for (let i = 0; i < result.customFields.length; i++) {
-          let customcolumn = result.customFields;
-          let columData = customcolumn[i].label;
-          let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-          let hiddenColumn = customcolumn[i].hidden;
-          let columnClass = columHeaderUpdate.split('.')[1];
-          let columnWidth = customcolumn[i].width;
-          // let columnindex = customcolumn[i].index + 1;
-           $("th."+columnClass+"").html(columData);
-            $("th."+columnClass+"").css('width',""+columnWidth+"px");
-
-        }
-      }
-
-    }
-    });
+    // Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblEmployeelistpop', function(error, result){
+    // if(error){
+    //
+    // }else{
+    //   if(result){
+    //     for (let i = 0; i < result.customFields.length; i++) {
+    //       let customcolumn = result.customFields;
+    //       let columData = customcolumn[i].label;
+    //       let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //       let hiddenColumn = customcolumn[i].hidden;
+    //       let columnClass = columHeaderUpdate.split('.')[1];
+    //       let columnWidth = customcolumn[i].width;
+    //       // let columnindex = customcolumn[i].index + 1;
+    //        $("th."+columnClass+"").html(columData);
+    //         $("th."+columnClass+"").css('width',""+columnWidth+"px");
+    //
+    //     }
+    //   }
+    //
+    // }
+    // });
 
     templateObject.getEmployees = function () {
       getVS1Data('TEmployee').then(function (dataObject) {
@@ -555,10 +597,10 @@ Template.popemployeelist.onRendered(function() {
       });
     }
 
-    templateObject.getEmployees();
+    //templateObject.getEmployees();
 
     $('#tblEmployeelistpop tbody').on( 'click', 'tr', function () {
-    var listData = $(this).closest('tr').attr('id');
+    var listData = $(this).closest('tr').find('.colID');
     if(listData){
       FlowRouter.go('/employeescard?addvs1user=true&id=' + listData);
     }
@@ -827,7 +869,7 @@ Template.popemployeelist.events({
                    var result = {};
                    workbook.SheetNames.forEach(function (sheetName) {
                        var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
-                       var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                       var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                        templateObj.selectedFile.set(sCSV);
 
                        if (roa.length) result[sheetName] = roa;
@@ -939,5 +981,40 @@ Template.popemployeelist.helpers({
   },
   salesCloudPreferenceRec: () => {
   return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblEmployeelistpop'});
-}
+},
+
+    apiFunction:function() {
+        let contactService = new ContactService();
+        return contactService.getAllEmployeesData;
+    },
+
+    searchAPI: function() {
+        return contactService.getAllEmployeesDataVS1ByName;
+    },
+
+    service: ()=>{
+        let contactService = new ContactService();
+        return contactService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

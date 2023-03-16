@@ -387,8 +387,7 @@ Template.dashboardexe.onRendered(function() {
         // on edit mode false
         // $(".on-editor-change-mode").removeClass("showelement");
         // $(".on-editor-change-mode").addClass("hideelement");
-
-        var dimmedElements = document.getElementsByClassName("dimmedChart");
+        const dimmedElements = document.getElementsByClassName("dimmedChart");
         while (dimmedElements.length > 0) {
             dimmedElements[0].classList.remove("dimmedChart");
         }
@@ -1405,8 +1404,8 @@ Template.dashboardexe.events({
         $(".editcharts").trigger("click");
         chartsEditor.enable();
         const templateObject = Template.instance();
-        curChartActive = JSON.parse(localStorage.getItem("arrChartActive"));
         templateObject.showChartElements();
+        $(".card-visibility").removeClass('hideelement');
     },
     "click #btnReset2": async(event) => {
         event.preventDefault();
@@ -1462,13 +1461,13 @@ Template.dashboardexe.events({
     },
     "click #btnCancel2": async() => {
         playCancelAudio();
+        const templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "block");
             chartsEditor.disable();
-            const templateObject = Template.instance();
-            await templateObject.hideChartElements();
+            await templateObject.hideChartElements();     
             await templateObject.checkChartToDisplay();
-            $('.sortable-chart-widget-js').removeClass("editCharts");
+            $(".card-visibility").addClass('hideelement');
             $(".fullScreenSpin").css("display", "none");
             //templateObject.deactivateDraggable();
         }, delayTimeAfterSound);
@@ -1485,6 +1484,12 @@ Template.dashboardexe.events({
             // Save Into local indexDB
             await ChartHandler.saveChartsInLocalDB();
             await templateObject.checkChartToDisplay();
+
+            let cards = $(".card-visibility");
+            $.each(cards, function (i, card) {
+                if ($(card).attr("card-active") == 'false') $(card).addClass("hideelement");
+            });
+
             $(".fullScreenSpin").css("display", "none");
 
             localStorage.setItem("arrChartActive", JSON.stringify(curChartActive));

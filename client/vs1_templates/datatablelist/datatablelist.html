@@ -141,7 +141,7 @@
         </div>
     </div>
     {{/if}}
-    <div class="table-responsive">
+    <div class="table-responsive divTemplate">
         <style>
             th {
                 background-color: #ededed;
@@ -181,11 +181,11 @@
                 overflow-y: hidden !important;
             }
 
-            .table th.colARBalance,
-            .table th.colCreditBalance,
-            .table th.colBalance,
-            .table th.colCreditLimit,
-            .table th.colSalesOrderBalance {
+            .table tbody td.colARBalance,
+            .table tbody td.colCreditBalance,
+            .table tbody td.colBalance,
+            .table tbody td.colCreditLimit,
+            .table tbody td.colSalesOrderBalance {
                 text-align: right !important;
             }
 
@@ -204,8 +204,14 @@
                     padding: 0.6rem !important;
                 }
             }
+
+            .dtTemplate th{
+              overflow:hidden;
+              white-space:nowrap;
+            }
+
         </style>
-        <table id="{{tablename}}" class="dataTable table table-striped table-bordered {{tablename}}">
+        <table id="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tablename}}">
             <thead>
                 <!-- <tr class="dnd-moved">
                     {{#each displayfield in displayfields}}

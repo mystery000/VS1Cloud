@@ -31,11 +31,12 @@
                     <div class="col-12">
                         <!-- <a href="#" class="btn btn-primary btnMoveAccount" role="button">Move selected accounts...</a> -->
                         <a data-toggle="modal" href="#nplAddGroupScreen" class="btn btn-primary btnAddGroup" role="button" onclick="$('#defineGrouping').hide();$('#nplAddGroupDefTag').show();  return false;">Add
-                            Group...</a>
+                            Group</a>
+                        <button class="btn btn-danger btnDelSelected" type="button" style="margin: 16px;" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
                         <!-- <a data-toggle="modal" href="#nplGroupAccounts" class="btn btn-primary btnGroupAccounts" role="button" onclick="$('#defineGrouping2').hide();$('#nplGroupAccountDefTag').show();  return false;">Group selected
                             accounts...</a> -->
                     </div>
-                    <div class="col-12 d-flex justify-content-center">
+                    <!-- <div class="col-12 d-flex justify-content-center">
                         <div class="btnTextBlockColumn pointer btnLayoutAction" style="margin: 0px 16px;">
                             <svg xml:space="http://www.w3.org/2000/svg" data-icon-name="text" width="16" height="17" fill="#00A3D3" stroke="#00A3D3" viewBox="0 0 16 17">
                                 <path d="M0 0h16v2H0V0zm7 2h2v13H7V2zM0 2h2v2H0V2zm14 0h2v2h-2V2zM5 15h6v2H5v-2z" fill-rule="evenodd" alt="Text"></path>
@@ -126,7 +127,7 @@
                             </svg>
                             <span class="tooltiptext">Print to PDF</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -679,34 +680,45 @@
 
                             </div>
                             <div class="col-4 editor-Right">
-                                <div class="col-12" style="margin-bottom:25px;">
-                                    <div class="container mb-3">
-                                        <h2 style="font-size: 1.5rem;">Change the order and grouping of your report
+                                <div class="col-12">
+                                    <div class="container mb-3" style="float:left">
+                                        <!-- <h2 style="font-size: 1.5rem;">Change the order and grouping of your report
                                         </h2>
                                         <p>Select one or more accounts to group or move. You can group accounts
                                             under headings of your choice, these will appear as subtotals in your
                                             report.</p>
                                         <p>When you've finished customising your layout, click 'Save' below.</p>
-                                        <a>Get more help on customising report layouts</a>
+                                        <a>Get more help on customising report layouts</a> -->
+                                        <div class="form-group">
+                                            <label>Select Layout</label>
+                                            <select type="search" class="form-control" id="sltLaybout" name="sltLaybout" style="float:left; background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            </select>
+                                        </div>
                                     </div>
                                     <div class="container">
                                         <h5>Layout Details</h5>
                                         <hr>
                                         <div class="form-group">
                                             <label>Layout Name</label>
-                                            <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="" value="{{layoutinfo.LName}}">
+                                            <input type="text" class="form-control" name="nplLayoutName" id="nplLayoutName" placeholder="">
+                                            <input type="hidden" class="form-control" name="nplLayoutID" id="nplLayoutID" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label>Layout Description</label>
-                                            <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="" value="{{layoutinfo.Description}}">
+                                            <input type="text" class="form-control" name="nplLayoutDescr" id="nplLayoutDescr" placeholder="">
                                         </div>
-                                        <div class="custom-control custom-switch mt-3">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting" checked="{{layoutinfo.IsCurrentLayout}}">
-                                            <label class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all users</label>
+                                        <div class="form-group">
+                                            <div class="custom-control custom-switch mt-3">
+                                                <input type="checkbox" class="custom-control-input feeOnTopInput" id="npldefaultSettting">
+                                                <label class="custom-control-label" for="npldefaultSettting">Make this the default Profit and Loss for all users</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom:0; text-align: center;">
+                                            <button class="btn btn-primary btnCreateLayout w-100" type="button" autocomplete="off">Create Layout</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="container mb-3 editDefault" style="">
+                                <!-- <div class="container mb-3 editDefault" style="">
                                     <h3>Start editing your layout</h3>
                                     <hr class="periodSelectorLine" />
                                     <div>
@@ -769,37 +781,42 @@
                                             <label class="custom-control-label" for="grpTotal">Total</label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="container mb-3 editRowGroup" style="">
-                                    <h5>Group</h5>
-                                    <hr class="periodSelectorLine" />
-                                    <div>
-                                        <label>Row Heading</label><br>
-                                        <input id="editGroupName" type="text" class="form-control" name="editGroupName" value="" placeholder="">
-                                        <input id="editGroupID" type="hidden" class="form-control" name="editGroupID">
-                                    </div>
-                                    <div class="mt-2">
-                                        <label style="width:100%;">Display Balance</label>
-                                        <div class="row m-2 dspBalanceControls">
-                                            <button class="btn btn-primary text-nowrap " type="button" id="btnDebitPositive">Debit Positive
-                                            </button>
-                                            <button class="btn btn-primary text-nowrap " type="button" id="btnCreditPositive">Credit Positive
-                                            </button>
-                                        </div>
+                                </div> -->
+                                <div class="col-12">
+                                    <div class="container mb-3 editRowGroup">
+                                        <h5>Group</h5>
                                         <hr class="periodSelectorLine" />
-                                        <div class="m-1 col-12 p-1">
-                                            <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="" type="button" id="btnCancelLayoutCreation">Group Selection
-                                            </button>
-                                            <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="#nplSwitchRuleModal" type="button" id="btnCancelLayoutCreation">Add Switch Rule...
-                                            </button>
+                                        <div class="groupSection1">
+                                            <label>Row Heading</label><br>
+                                            <input id="editGroupName" type="text" class="form-control" name="editGroupName" value="" placeholder="">
+                                            <input id="editGroupID" type="hidden" class="form-control" name="editGroupID">
                                         </div>
-                                        <div class="custom-control custom-switch grpTotal-container">
-                                            <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="grpTotal" checked="">
-                                            <label class="custom-control-label" for="grpTotal">Total</label>
+                                        <div class="groupSection2" style="display:none">
+                                            <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" id="btnGroupSelection">Group Selection</button>
                                         </div>
+                                        <!-- <div class="mt-2">
+                                            <label style="width:100%;">Display Balance</label>
+                                            <div class="row m-2 dspBalanceControls">
+                                                <button class="btn btn-primary text-nowrap " type="button" id="btnDebitPositive">Debit Positive
+                                                </button>
+                                                <button class="btn btn-primary text-nowrap " type="button" id="btnCreditPositive">Credit Positive
+                                                </button>
+                                            </div>
+                                            <hr class="periodSelectorLine" />
+                                            <div class="m-1 col-12 p-1">
+                                                <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="" type="button" id="btnCancelLayoutCreation">Group Selection
+                                                </button>
+                                                <button class="btn btn-primary text-nowrap mt-1 mb-1 w-100" role="presentation" data-toggle="modal" href="#nplSwitchRuleModal" type="button" id="btnCancelLayoutCreation">Add Switch Rule...
+                                                </button>
+                                            </div>
+                                            <div class="custom-control custom-switch grpTotal-container">
+                                                <input type="checkbox" class="custom-control-input feeOnTopInput lytAccountToggle" id="grpTotal" checked="">
+                                                <label class="custom-control-label" for="grpTotal">Total</label>
+                                            </div>
+                                        </div> -->
                                     </div>
-                                </div>
-                                <div class="container mb-3 scheduleColumn" style="">
+                                </div>                                
+                                <!-- <div class="container mb-3 scheduleColumn" style="">
                                     <h3>Schedule</h3>
                                     <hr class="periodSelectorLine" />
                                     <div>
@@ -1363,7 +1380,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -1374,10 +1391,13 @@
                 <button class="btn btn-success saveProfitLossLayouts" type="button" style="margin: 14px;" autocomplete="off">
                     <i class="fa fa-save" style="margin-right: 5px;"></i>Save
                 </button>
+                <button class="btn btn-danger deleteProfitLossLayouts" type="button" style="margin: 16px;" autocomplete="off">
+                    <i class="fa fa-trash" style="padding-right: 8px;"></i>Delete
+                </button>
                 <button class="btn btn-secondary text-nowrap" data-dismiss="modal" type="button" style="margin: 14px;" id="btnCancelLayoutCreation">
                     <i class="fa fa-close" style="margin-right: 5px;"></i>Close
                 </button>
             </div>
         </div>
-    </div>    
+    </div>
 </template>

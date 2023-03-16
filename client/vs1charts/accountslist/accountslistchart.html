@@ -43,12 +43,12 @@
             <button class="btn btnNav btn-primary btnRefresh float-left" type="button" style="margin: 14px; margin-left:0px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
             <a class="btn btnNav btn-primary float-left btnAddNewAccounts" role="button" data-toggle="modal" href="#addNewAccount" style="margin: 14px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Account</a>
             <div>
-                <div class="modal fade addNewAccount" role="dialog" tabindex="-1" id="addNewAccount">
+                <!-- <div class="modal fade addNewAccount" role="dialog" tabindex="-1" id="addNewAccount">
                     {{> addAccountModal}}
-                </div>
-                <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
+                </div> -->
+                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal">
                     {{> taxratelistpop}}
-                </div>
+                </div> -->
                 <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal">
                     {{> newtaxratepop}}
                 </div>
@@ -261,7 +261,23 @@
             </table>
         </div> -->
 
-        {{> non_transactional_list tablename="tblDashboardAccountChartList"}}
+
+        {{>datatablelist
+                tablename="tblDashboardAccountChartList"
+                apiName= apiFunction
+                indexeddbname = 'TAccountVS1List'
+                tableheaderrecords = tableheaderrecords
+                exportfilename = 'Account VS1 List'
+                istransaction = false
+                apiParams= apiParams
+                datahandler = datahandler
+                service=service
+                lowercaseDataName='taccountvs1list'
+                exIndexDBName = 'taccountvs1list'
+                exdatahandler = exDataHandler
+                searchAPI = searchAPI
+        }}
+<!--        {{> non_transactional_list tablename="tblDashboardAccountChartList"}}-->
     </div>
 </div>
 {{/draggablePanel}}

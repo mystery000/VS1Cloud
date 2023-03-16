@@ -53,12 +53,12 @@
 
             </tr>
           {{/if}} -->
-          <tr class="table-active tblAvoid customDoubleTableHeading">
+          <tr class="table-active">
             {{#each c in productsalesreportth}}
             {{#if c.display}}
             <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
               class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-              style="text-align: left!important; width:{{c.width}}px">
+              style="text-align: left; width:{{c.width}}px">
               {{c.label}}
             </th>
             {{/if}}
@@ -256,7 +256,7 @@
               <td></td>
               <td></td>
               <td></td>
-              <td>{{  grandRecords.Qty}}</td>
+              <td class="text-right">{{  grandRecords.Qty}}</td>
 
 
               {{#if isOnlyDefaultActive }}
@@ -298,7 +298,7 @@
 
           {{else}}
             <tr class="odd" style="text-align: center;">
-              <td valign="top" colspan="10" class="dataTables_empty">No data available in table</td>
+              <td valign="top" colspan="9" class="dataTables_empty">No data available in table</td>
             </tr>
           {{/if}}
 

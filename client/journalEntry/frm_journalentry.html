@@ -479,6 +479,9 @@
                                             -ms-user-select: none;
                                             user-select: none;
                                         }
+
+                                        /* Damien */
+                                        td.colDepartment label{display: none;}
                                     </style>
                                     <table id="tblJournalEntryLine" style="width:100%" class="table table-striped table-bordered tblJournalEntryLine">
                                         <thead>
@@ -486,6 +489,7 @@
                                                 <th class="th colAccountName" style="width: 300px;">Account Name</th>
                                                 <!-- <th class="th colAccountNo" style="width: 300px;">Account No</th> -->
                                                 <th class="th colMemo">Memo</th>
+                                                <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Department</th>
                                                 <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
                                                 <th colspan="{{displayFieldColspan }}" class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
                                                 <th colspan="{{displayFieldColspan }}" class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
@@ -520,6 +524,17 @@
                                                     <td contenteditable="false" class="colAccountName"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}"></td>
                                                     <!-- <td contenteditable="true" class="lineAccountNo colAccountNo">{{item.accountno}}</td> -->
                                                     <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
+
+                                                    <!-- Department -->
+                                                    <td contenteditable="false" class="colDepartment" id="department-select-{{item.lineID}}">
+                                                        <div class="form-group">
+                                                            <select type="search" class="form-control select-department" id="select-department-{{item.lineID}}" name="department-{{item.lineID}}"
+                                                                    style="background-color:rgb(255, 255, 255); cursor: pointer;" onloadeddata={{test item.lineID item.department}} value="{{item.department}}">
+                                                                <option value="{{item.department}}" selected>{{item.department}}</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
+
                                                     <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
                                                     <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
 
@@ -554,7 +569,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="2" style="font-size: 20px; color: #696969; font-weight: 800;">Total</td>
+                                                <td colspan="3" style="font-size: 20px; color: #696969; font-weight: 800;">Total</td>
                                                 <td class="colTaxCode"></td>
 
                                                 <td class="colCreditExCheck" style="font-size: 20px; color: #696969; font-weight: 800; text-align: right!important; margin: 0px;" id="creditTotal" name="creditTotal">{{totalCredit}}</td>
@@ -773,7 +788,7 @@
             <!-- END PDF -->
         {{/if}}
         {{> all_transaction_modals}}
-    
+
     </div>
 
     <!-- Start Help Video Modal -->

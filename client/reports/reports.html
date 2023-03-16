@@ -950,6 +950,48 @@
                                                     </div>
                                                 </div>
                                             {{/if}}
+                                            {{#if isBuildProfitability}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/exeprofitabilityreport">Build Profitability Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkProfitabilityReport" type="checkbox" id="formCheck-profitabilityReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-profitabilityReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isProductionWorksheet}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/exeprofitabilityreport">Production Worksheet Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkProfitabilityReport" type="checkbox" id="formCheck-profitabilityReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-profitabilityReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
+                                            {{#if isWorkOrder}}
+                                                <div class="row">
+                                                    <hr style="width: 100%;margin: 4px;">
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col flex-grow-1"><a href="/exeprofitabilityreport">Work Order Report</a></div>
+                                                    <div class="col float-right d-xl-flex justify-content-xl-end flex-grow-0">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input chkProfitabilityReport" type="checkbox" id="formCheck-profitabilityReportFave" checked>
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-profitabilityReportFave"></label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {{/if}}
                                         </div>
                                     </div>
                                 </div>
@@ -2783,6 +2825,75 @@
                                                 </script>
                                             {{/if}}
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Manufacturing -->
+                            <div class="col-12 col-md-3">
+                                <div class="card shadow mb-3 reportCard">
+                                    <div class="card-header py-3">
+                                        <p class="text-primary m-0 font-weight-bold" style="float: left;">Manufaturing</p>
+                                        <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
+                                    </div>
+                                    <div class="card-body" style="overflow-x: auto;">
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/agedreceivables">Build Profitability</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox"><input class="custom-control-input favCheckBox chkBuildProfitability" type="checkbox" id="formCheck-4"><label style="cursor: pointer;"
+                                                        class="custom-control-label" for="formCheck-4"></label></div>
+                                            </div>
+                                        </div>
+                                        {{#if isBuildProfitability}}
+                                            <script>
+                                                $('.chkBuildProfitability').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('.chkBuildProfitability').prop("checked", false);
+                                            </script>
+                                        {{/if}}
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/agedreceivablessummary">Production Worksheet</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox"><input class="custom-control-input favCheckBox chkProductionWorksheet" type="checkbox" id="formCheck-agedreceivablesummary"><label style="cursor: pointer;"
+                                                        class="custom-control-label" for="formCheck-agedreceivablesummary"></label></div>
+                                            </div>
+                                        </div>
+                                        {{#if isProductionWorksheet}}
+                                            <script>
+                                                $('.chkProductionWorksheet').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('.chkProductionWorksheet').prop("checked", false);
+                                            </script>
+                                        {{/if}}
+                                        <div class="row">
+                                            <hr style="width: 100%;margin: 4px;">
+                                        </div>
+                                        <div class="row">
+                                            <div class="col flex-grow-1"><a href="/workorderlist">Work Orders</a></div>
+                                            <div class="col d-xl-flex justify-content-xl-end flex-grow-0">
+                                                <div class="custom-control custom-checkbox">
+                                                    <input class="custom-control-input favCheckBox chkWorkOrders" type="checkbox" id="formCheck-12ProductSales">
+                                                    <label style="cursor: pointer;" class="custom-control-label" for="formCheck-12ProductSales"></label></div>
+                                            </div>
+                                        </div>
+                                        {{#if isWorkOrder}}
+                                            <script>
+                                                $('.chkWorkOrders').prop("checked", true);
+                                            </script>
+                                        {{else}}
+                                            <script>
+                                                $('.chkWorkOrders').prop("checked", false);
+                                            </script>
+                                        {{/if}}                                       
+                                        
+                                        
+                                        
                                     </div>
                                 </div>
                             </div>

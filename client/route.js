@@ -234,7 +234,7 @@ FlowRouter.triggers.exit([
         "employeescard", "leadscard", "supplierscard", "journalentrycard", "fixedassetcard", "bom_setup",
         "servicelogcard", "new_process", "stockadjustmentcard", "paymentcard", "supplierpaymentcard",
         "purchaseordercard", "billcard", "creditcard", "allreports", "new_quote", "new_salesorder",
-        "new_invoice", "refundcard"
+        "new_invoice", "refundcard","appointments"
     ]});
 
 authenticatedRoutes.route('/accounttransactions', {
@@ -805,6 +805,15 @@ authenticatedRoutes.route('/accesslevel', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'accesslevel'
+        });
+    }
+});
+
+authenticatedRoutes.route('/serviceChecker', {
+    name: 'serviceChecker',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serviceChecker'
         });
     }
 });

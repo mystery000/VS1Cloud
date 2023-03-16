@@ -3,6 +3,7 @@ import { CRMService } from '../../crm-service';
 import { Template } from 'meteor/templating';
 import './projectListPop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let crmService = new CRMService();
 
@@ -15,6 +16,48 @@ Template.projectListPop.onCreated(function() {
     templateObject.deleted_projects = new ReactiveVar([]);
     templateObject.favorite_projects = new ReactiveVar([]);
     templateObject.projecttasks = new ReactiveVar([]);
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let projectStatus = "";
+        let taskCount = "";
+
+            if (data.fields.Active) {
+                projectStatus = "";
+            } else {
+                projectStatus = "In-Active";
+            }
+            if (data.fields.projecttasks == null) {
+                taskCount = "";
+            } else if (Array.isArray(data.fields.projecttasks) == true) {
+                taskCount = data.fields.projecttasks.filter(
+                    (tk) => tk.fields.Active == true && tk.fields.Completed == false
+                ).length;
+            } else {
+                taskCount = data.fields.projecttasks.fields.Active == true ? 1 : 0;
+            }
+
+            let dataList = [
+                `<span style="display: none;">${data.fields.MsTimeStamp}</span>` + moment(data.fields.MsTimeStamp).format("DD/MM/YYYY"),
+                data.fields.ProjectName,
+                data.fields.Description,
+                taskCount,
+                projectStatus,
+                data.fields.ID,
+                // data.fields.Active,
+            ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "100" },
+        { index: 1, label: 'Project', class: 'colProjectName', active: true, display: true, width: "100" },
+        { index: 2, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "200" },
+        { index: 3, label: 'Tasks', class: 'colProjectTasks', active: true, display: true, width: "100" },
+        { index: 4, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "60" },
+        { index: 5, label: '#ID', class: 'colProjectID', active: false, display: false, width: "0" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.projectListPop.onRendered(function() {
@@ -238,7 +281,7 @@ Template.projectListPop.onRendered(function() {
         $("#tblProjectsDatatablePop_filter input").val(search);
     };
 
-    templateObject.getInitTProjectList();
+    //templateObject.getInitTProjectList();
 
     templateObject.makeProjectTableRows = function(task_array) {
         let taskRows = new Array();
@@ -285,4 +328,42 @@ Template.projectListPop.events({
 
 });
 
-Template.projectListPop.helpers({});
+Template.projectListPop.helpers({
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        let crmService = new CRMService();
+        return crmService.getTProjectList;
+    },
+
+    searchAPI: function() {
+        return crmService.getProjectsByNameOrID;
+    },
+
+    service: ()=>{
+        let crmService = new CRMService();
+        return crmService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["EnteredByID"];
+    },
+});

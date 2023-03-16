@@ -66,6 +66,24 @@ export class EmployeePayrollService extends BaseService {
     return this.POST(this.ERPObjects.TLeavRequest, data);
   }
 
+  getAssignLeaveType(limitcount, limitfrom) {
+      let options = '';
+      if(limitcount == 'All'){
+          options = {
+              ListType: "Detail"
+              //select: '[Active]=true'
+          };
+      }else{
+          options = {
+              ListType: "Detail",
+              //select: '[Active]=true',
+              LimitCount: parseInt(limitcount),
+              LimitFrom: parseInt(limitfrom),
+          };
+      };
+      return this.getList('TAssignLeaveType', options);
+    }
+
   getAssignLeaveTypeByName(dataSearchName) {
     let options = "";
     options = {

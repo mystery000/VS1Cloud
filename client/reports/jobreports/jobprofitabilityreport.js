@@ -39,17 +39,17 @@ Template.jobprofitabilityreport.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Company', class: 'colCompanyName', active: true, display: true, width: "120" },
+      { index: 1, label: 'Company', class: 'colCompanyName', active: true, display: true, width: "200" },
       { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "120" },
       { index: 3, label: 'Job No', class: 'colJobNo', active: true, display: true, width: "120" },
-      { index: 4, label: 'Cost (ex)', class: 'colCostEX', active: true, display: true, width: "120" },
-      { index: 5, label: 'Income (ex)', class: 'colIncomeEX', active: true, display: true, width: "120" },
-      { index: 6, label: 'Quoted (ex)', class: 'colQuotedEX', active: true, display: true, width: "120" },
-      { index: 7, label: 'Diff Inc Cost', class: 'colDiffIncCost', active: true, display: true, width: "120" },
+      { index: 4, label: 'Cost (ex)', class: 'colCostEX text-right', active: true, display: true, width: "120" },
+      { index: 5, label: 'Income (ex)', class: 'colIncomeEX text-right', active: true, display: true, width: "120" },
+      { index: 6, label: 'Quoted (ex)', class: 'colQuotedEX text-right', active: true, display: true, width: "120" },
+      { index: 7, label: 'Diff Inc Cost', class: 'colDiffIncCost text-right', active: true, display: true, width: "120" },
       { index: 8, label: 'Backorders', class: 'colBackorders', active: true, display: true, width: "120" },
-      { index: 9, label: 'Credit', class: 'colCredit', active: true, display: true, width: "120" },
+      { index: 9, label: 'Credit', class: 'colCredit text-right', active: true, display: true, width: "120" },
       { index: 10, label: 'Profit %', class: 'colProfit%', active: true, display: true, width: "120" },
-      { index: 11, label: 'Profit', class: 'colProfit', active: true, display: true, width: "120" },
+      { index: 11, label: 'Profit', class: 'colProfit text-right', active: true, display: true, width: "120" },
       // { index: 1, label: 'Company Name', class: 'colCompanyName', active: true, display: true, width: "120" },
       // { index: 2, label: 'Job Name', class: 'colJobName', active: true, display: true, width: "120" },
       // { index: 3, label: 'Job Number', class: 'colJobNumber', active: true, display: true, width: "120" },
@@ -124,7 +124,22 @@ Template.jobprofitabilityreport.onRendered(() => {
   // templateObject.currentMonth.set(currentMonth);
 
   // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
-
+  templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
+    LoadingOverlay.show();
+    templateObject.setDateAs(dateFrom);
+    let data = await CachedHttp.get(erpObject.TJobProfitability, async () => {
+      return await reportService.getJobProfitabilityReport(dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    addVS1Data('TJobProfitability', JSON.stringify(data.response));
+    templateObject.displayReportData(data.response);
+    LoadingOverlay.hide();
+  }
   templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate) {
 
     templateObject.setDateAs(dateFrom);
@@ -231,7 +246,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     }
     let T_AccountName = "", j, customerProductReport = [];
     function currencySpan(tmp){
-      return (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+      return (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success', 'text-right') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger', 'text-right');
     }
     for(let i = 0 ; i < splashArrayReport.length ; i ++){
       if(T_AccountName != splashArrayReport[i][0]) {
@@ -267,8 +282,7 @@ Template.jobprofitabilityreport.onRendered(() => {
 
       customerProductReport.push(splashArrayReport[i]);
     }
-    templateObject.records.set(splashArrayReport);
-
+    templateObject.records.set(customerProductReport);
     if (templateObject.records.get()) {
       setTimeout(function () {
         MakeNegative();
@@ -277,7 +291,7 @@ Template.jobprofitabilityreport.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: customerProductReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -680,39 +694,39 @@ Template.jobprofitabilityreport.onRendered(() => {
 //     await templateObject.getJobProfitabilityReportData();
 //   };
 
-//   templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
-//     LoadingOverlay.show();
-//     templateObject.setDateAs(dateFrom);
-//     // let data = [];
-//     // if (!localStorage.getItem('VS1JobProfitability_Report')) {
-//     //   const options = await templateObject.reportOptions.get();
-//     //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-//     //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-//     //   let ignoreDate = options.ignoreDate || false;
-//     //   data = await reportService.getJobProfitabilityReport( dateFrom, dateTo, ignoreDate);
-//     //   if( data.tjobprofitability.length > 0 ){
-//     //     localStorage.setItem('VS1JobProfitability_Report', JSON.stringify(data)||'');
-//     //   }
-//     // }else{
-//     //   data = JSON.parse(localStorage.getItem('VS1JobProfitability_Report'));
-//     // }
-
-//     // const options = await templateObject.reportOptions.get();
-//     // let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-//     // let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-//     // let ignoreDate = options.ignoreDate || false;
-
-//     let data = await CachedHttp.get(erpObject.TJobProfitability, async () => {
-//       return await reportService.getJobProfitabilityReport(dateFrom, dateTo, ignoreDate);
-//     }, {
-//       useIndexDb: true,
-//       useLocalStorage: false,
-//       validate: (cachedResponse) => {
-//         return false;
-//       }
-//     });
-
-//     data = data.response;
+  // templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
+  //   LoadingOverlay.show();
+  //   templateObject.setDateAs(dateFrom);
+  //   // let data = [];
+  //   // if (!localStorage.getItem('VS1JobProfitability_Report')) {
+  //   //   const options = await templateObject.reportOptions.get();
+  //   //   let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+  //   //   let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+  //   //   let ignoreDate = options.ignoreDate || false;
+  //   //   data = await reportService.getJobProfitabilityReport( dateFrom, dateTo, ignoreDate);
+  //   //   if( data.tjobprofitability.length > 0 ){
+  //   //     localStorage.setItem('VS1JobProfitability_Report', JSON.stringify(data)||'');
+  //   //   }
+  //   // }else{
+  //   //   data = JSON.parse(localStorage.getItem('VS1JobProfitability_Report'));
+  //   // }
+  //
+  //   // const options = await templateObject.reportOptions.get();
+  //   // let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+  //   // let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
+  //   // let ignoreDate = options.ignoreDate || false;
+  //
+  //   let data = await CachedHttp.get(erpObject.TJobProfitability, async () => {
+  //     return await reportService.getJobProfitabilityReport(dateFrom, dateTo, ignoreDate);
+  //   }, {
+  //     useIndexDb: true,
+  //     useLocalStorage: false,
+  //     validate: (cachedResponse) => {
+  //       return false;
+  //     }
+  //   });
+  //
+  //   data = data.response;
 
 
 //     let reportData = [];

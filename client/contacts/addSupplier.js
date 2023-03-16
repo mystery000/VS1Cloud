@@ -9,12 +9,16 @@ import '../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './addSupplier.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
+import { OrganisationService } from "../js/organisation-service";
 
 const sideBarService = new SideBarService();
 const utilityService = new UtilityService();
 const contactService = new ContactService();
 const countryService = new CountryService();
+const organisationService = new OrganisationService();
 const crmService = new CRMService();
+let primaryAccountantName = localStorage.getItem('VS1Accountant');
 
 function MakeNegative() {
   $('td').each(function () {
@@ -395,6 +399,13 @@ Template.supplierscard.onCreated(function () {
       const rowCount = $('.results tbody tr').length;
       $('.counter').text(rowCount + 'items');
       setTab();
+      if (primaryAccountantName === lineItemObj.company) {
+        $('#chkSameAsPrimary').prop('checked', true)
+        $('.active-password-wrapper').removeClass('d-none')
+        $('.vs1-login-nav').removeClass('d-none')        
+      }
+      $('#primaryAccountantUsername').val(lineItemObj.email)
+      $('#primaryAccountantPassword').val(`${lineItemObj.firstname}@123`)
     }, 1000)
     $('.fullScreenSpin').css('display', 'none');
   }
@@ -620,24 +631,61 @@ Template.supplierscard.onCreated(function () {
   }
   let supplierID = '';
 
-  if (JSON.stringify(currentId) != '{}') {
-    if (currentId.id === "undefined" || currentId.name === "undefined") {
-      templateObject.setInitialForEmptyCurrentID();
-    } else {
-      if (!isNaN(currentId.id)) {
-        supplierID = currentId.id;
-        templateObject.getEmployeeData(supplierID);
-        templateObject.getReferenceLetters();
-      } else if ((currentId.name)) {
-        supplierID = currentId.name.replace(/%20/g, " ");
-        templateObject.getEmployeeDataByName(supplierID);
-      } else {
-        templateObject.setInitialForEmptyCurrentID();
-      }
-    }
+  if(templateObject.data.record) {
+    templateObject.records.set(templateObject.data.record)
   } else {
-    templateObject.setInitialForEmptyCurrentID();
+    if (JSON.stringify(currentId) != '{}') {
+      if (currentId.id === "undefined" || currentId.name === "undefined") {
+        templateObject.setInitialForEmptyCurrentID();
+      } else {
+        if (!isNaN(currentId.id)) {
+          supplierID = currentId.id;
+          templateObject.getEmployeeData(supplierID);
+          templateObject.getReferenceLetters();
+        } else if ((currentId.name)) {
+          supplierID = currentId.name.replace(/%20/g, " ");
+          templateObject.getEmployeeDataByName(supplierID);
+        } else {
+          templateObject.setInitialForEmptyCurrentID();
+        }
+      }
+    } else {
+      templateObject.setInitialForEmptyCurrentID();
+    }
   }
+
+  templateObject.getDataTableList = function(data) {
+    let taskDescription = data.TaskDescription || '';
+    taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+    const dataList = [
+      data.ID || 0,
+      // data.priority || 0,
+      data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+      data.ProjectID || '',
+      data.TaskName || '',
+      //data.ProjectName || '',
+      taskDescription,
+      //JSON.stringify(taskLabelArray),
+      //category: 'Task',
+      data.Completed ? "Completed" : "In-Completed",
+        data.Active ? "" : "In-Active",
+      data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
+    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+    { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
+    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
+    { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
+    { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
+    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    { index: 7, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 
 });
 
@@ -649,7 +697,6 @@ Template.supplierscard.onRendered(function () {
 
   templateObject.fillBankInfoFromUrl();
   templateObject.getCountryData();
-
 
   $(document).on("click", "#tblBankName tbody tr", function (e) {
     var table = $(this);
@@ -1222,13 +1269,13 @@ Template.supplierscard.onRendered(function () {
         // $('#addLetterTemplateModal').modal('toggle');
       })
 
-      $(document).on("click", "#termsList tbody tr", function (e) {
-        $('#sltTerms').val($(this).find(".colTermName").text());
-        $('#termsListModal').modal('toggle');
+      $(document).on("click", "#termsListModal tbody tr", function (e) {
+        $('#sltTerms').val($(this).find(".colName").text());
+        $('#termsListModal').modal('hide');
       });
 
       $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editSupplierTitle').val($(this).find(".colTypeName").text());
+        $('#editSupplierTitle').val($(this).find(".colTitleName").text());
         $('#supplierTitlePopModal').modal('toggle');
       });
 
@@ -1260,6 +1307,18 @@ Template.supplierscard.onRendered(function () {
       $(".btnTask").attr("disabled", false);
     }
   });
+
+  
+  $(document).on('click', ".toggle-password", function (ev) {
+    $(this).toggleClass("fa-eye fa-eye-slash");
+    var passwordSecret = $($(this).data('toggle'));
+    if (passwordSecret.attr("type") == "password") {
+      passwordSecret.attr("type", "text");
+    } else {
+      passwordSecret.attr("type", "password");
+    }
+  });
+                                
 });
 
 Template.supplierscard.events({
@@ -1391,6 +1450,18 @@ Template.supplierscard.events({
         e.preventDefault();
         return false;
       }
+
+      if ($('#chkSameAsPrimary').prop('checked')) {
+        if ($('#edtActivePrimaryPassword').val() !== "VS1Cloud@123") {
+          swal('Activate primary password is incorrect!', '', 'error');
+          return
+        }
+        if (!$('#primaryAccountantUsername').val() || !$('#primaryAccountantPassword').val()) {
+          swal('VS1 User Login should not be empty!', '', 'error');
+          $('.vs1-login-nav-link').trigger('click')
+          return
+        }
+      }
       $('.fullScreenSpin').css('display', 'inline-block');
 
       let company = $('#edtSupplierCompany').val() || '';
@@ -1444,12 +1515,12 @@ Template.supplierscard.events({
       let sltShippingMethodName = '';
       let notes = $('#txaNotes').val() || '';
       let suppaccountno = $('#suppAccountNo').val() || '';
-      let BankAccountName = $('#edtBankAccountName').val();
-      let BSB = $('#edtBsb').val();
-      let BankName = $('#edtBankName').val();
-      let BankAccountNo = $('#edtBankAccountNumber').val();
-      let SwiftCode = $('#edtSwiftCode').val();
-      let RoutingNumber = $('#edtRoutingNumber').val();
+      let BankAccountName = $('#edtBankAccountName').val() || '';
+      let BSB = $('#edtBsb').val() || '';
+      let BankName = $('#edtBankName').val() || '';
+      let BankAccountNo = $('#edtBankAccountNumber').val() || '';
+      let SwiftCode = $('#edtSwiftCode').val() || '';
+      let RoutingNumber = $('#edtRoutingNumber').val() || '';
 
       // add to custom field
       let custField1 = $('#edtSaleCustField1').val() || '';
@@ -1676,24 +1747,37 @@ Template.supplierscard.events({
       }
 
       contactService.saveSupplierEx(objDetails).then(function (objDetails) {
-
+        let supplierSaveID = objDetails.fields.ID;
+        if (supplierSaveID) {
+          organisationService.getOrganisationDetail().then(function(data) {
+            if (!data || !data.tcompanyinfo || !data.tcompanyinfo[0]) return
+            data.tcompanyinfo[0] = {...data.tcompanyinfo[0], Contact: company}         
+            let organisationSettings = {type: "TCompanyInfo", fields: data.tcompanyinfo[0]}
+            organisationService
+              .saveOrganisationSetting(organisationSettings)
+              .then(function () {
+                  localStorage.setItem("VS1Accountant", company);
+                  addVS1Data('TCompanyInfo', JSON.stringify(data));
+                  swal("Organisation details successfully updated!", "", "success")
+                  sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                    addVS1Data('TSupplierVS1', JSON.stringify(dataReload)).then(function (datareturn) {
+                      window.open('/supplierlist', '_self');
+                    }).catch(function (err) {
+                      window.open('/supplierlist', '_self');
+                    });
+                  }).catch(function (err) {
+                    window.open('/supplierlist', '_self');
+                  });
+              })
+              .catch(function (err) {
+                  swal('Oooops...', err, 'error');                  
+              });
+          });
+        }
         if (localStorage.getItem("enteredURL") != null) {
           FlowRouter.go(localStorage.getItem("enteredURL"));
           localStorage.removeItem("enteredURL");
           return;
-        }
-
-        let supplierSaveID = objDetails.fields.ID;
-        if (supplierSaveID) {
-          sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
-            addVS1Data('TSupplierVS1', JSON.stringify(dataReload)).then(function (datareturn) {
-              window.open('/supplierlist', '_self');
-            }).catch(function (err) {
-              window.open('/supplierlist', '_self');
-            });
-          }).catch(function (err) {
-            window.open('/supplierlist', '_self');
-          });
         }
       }).catch(function (err) {
         swal({
@@ -1938,7 +2022,8 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnRefresh': function () {
-    Meteor._reload.reload();
+    //Meteor._reload.reload();
+    window.location.reload()
   },
 
   'click .btnRefreshCrm': function () {
@@ -2199,8 +2284,11 @@ Template.supplierscard.events({
       let currentId = FlowRouter.current().queryParams;
       let objDetails = '';
 
-      if (!isNaN(currentId.id)) {
+      if (!isNaN(currentId.id) || templateObject.data.record) {
         let currentSupplier = parseInt(currentId.id);
+        if(isNaN(currentId.id)) {
+          currentSupplier = templateObject.data.record.id
+        }
         objDetails = {
           type: "TSupplierEx",
           fields: {
@@ -2231,9 +2319,10 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnTask': function (event) {
+    let templateObject = Template.instance();
     // $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
-    if (!isNaN(currentId.id)) {
+    if (!isNaN(currentId.id) || templateObject.data.record ) {
       let supplierID = parseInt(currentId.id);
       // FlowRouter.go('/crmoverview?supplierid=' + supplierID);
       $("#btnAddLine").trigger("click");
@@ -2242,11 +2331,12 @@ Template.supplierscard.events({
     }
   },
   'click .btnEmail': function (event) {
+    let templateObject = Template.instance();
     playEmailAudio();
     setTimeout(function () {
       $('.fullScreenSpin').css('display', 'inline-block');
       let currentId = FlowRouter.current().queryParams;
-      if (!isNaN(currentId.id)) {
+      if (!isNaN(currentId.id) ||  templateObject.data.record ) {
         let supplierID = parseInt(currentId.id);
         // FlowRouter.go('/crmoverview?supplierid=' + supplierID);
         $('#referenceLetterModal').modal('toggle');
@@ -2257,43 +2347,63 @@ Template.supplierscard.events({
     }, delayTimeAfterSound);
   },
   'click .btnAppointment': function (event) {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/appointments?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('.edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/appointments?supplierid=' + suppID);
+      }
     }
   },
   'click .btnBill': function (event) {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/billcard?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('.edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/billcard?supplierid=' + suppID);
+      }
     }
   },
   'click .btnCredit': function (event) {
+    let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/creditcard?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('.edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/creditcard?supplierid=' + suppID);
+      }
     }
   },
   'click .btnPurchaseOrder': function (event) {
+    let templateObject = Template.instance()
     $('.fullScreenSpin').css('display', 'inline-block');
     let currentId = FlowRouter.current().queryParams;
     if (!isNaN(currentId.id)) {
       let supplierID = parseInt(currentId.id);
       FlowRouter.go('/purchaseordercard?supplierid=' + supplierID);
     } else {
-
+      if(templateObject.data.record) {
+        $('edtSupplier_modal').modal('hide')
+        let suppID = parseInt(templateObject.data.record.id);
+        FlowRouter.go('/purchaseordercard?supplierid=' + suppID);
+      }
     }
   },
 
@@ -2586,6 +2696,37 @@ Template.supplierscard.events({
     $(".btnTask").attr("disabled", false);
     event.preventDefault();
   },
+
+  "change #chkSameAsPrimary": async function (event) {
+    if ($("#chkSameAsPrimary").prop('checked')) {
+      if (primaryAccountantName !== $('#edtSupplierCompany').val()) {
+        let result = await swal({
+          title: 'Warning',
+          text: 'supplier name is already Your primary accountant, do you wish to switch?',
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Yes',
+          cancelButtonText: 'No'
+        })        
+        if (result.dismiss === 'cancel') {
+          $("#chkSameAsPrimary").prop('checked', false)
+        }
+      }
+      $('.active-password-wrapper').removeClass('d-none')
+      $('.vs1-login-nav').removeClass('d-none')
+    } else {
+      $('.active-password-wrapper').addClass('d-none')
+      $('.vs1-login-nav').addClass('d-none')
+    }
+  },
+
+  // "change #edtSupplierFirstName": async function (event) {
+  //   $('#primaryAccountantPassword').val(`${$(event.target).val()}@123`)
+  // },
+
+  // "change #edtSupplierCompanyEmail": async function (event) {
+  //   $('#primaryAccountantUsername').val($(event.target).val())
+  // },
 });
 
 Template.supplierscard.helpers({
@@ -2642,9 +2783,6 @@ Template.supplierscard.helpers({
       return (a.orderdate.toUpperCase() > b.orderdate.toUpperCase()) ? 1 : -1;
     });
   },
-  tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
-  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSalesOverview' });
   },
@@ -2687,7 +2825,45 @@ Template.supplierscard.helpers({
       isMobile = true;
     }
     return isMobile;
-  }
+  },
+
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+    let crmService = new CRMService();
+    return crmService.getAllTasksList;
+  },
+
+  searchAPI: function() {
+    return crmService.getAllTasksByName;
+  },
+
+  service: ()=>{
+    let crmService = new CRMService();
+    return crmService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+  },
 });
 
 function getCheckPrefDetails(prefName) {

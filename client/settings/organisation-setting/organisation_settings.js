@@ -9,11 +9,184 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { Template } from 'meteor/templating';
 import "./organisation.html";
 import _ from "lodash";
+import { ContactService } from "../../contacts/contact-service";
 //
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let contactService = new ContactService();
 let organisationService = new OrganisationService();
+let accountantDetailObj
+let supplierList
+let supplierListIndex
+
+function initEditSupplierForm() {
+  let data = accountantDetailObj
+  $(".fullScreenSpin").css("display", "none");                      
+    $("#add-supplier-title").text("Edit Supplier");
+    let popSupplierID = data.fields.ID || "";
+    let popSupplierName = data.fields.ClientName || "";
+    let popSupplierEmail = data.fields.Email || "";
+    let popSupplierTitle = data.fields.Title || "";
+    let popSupplierFirstName = data.fields.FirstName || "";
+    let popSupplierMiddleName = data.fields.CUSTFLD10 || "";
+    let popSupplierLastName = data.fields.LastName || "";
+    let popSuppliertfn = "" || "";
+    let popSupplierPhone = data.fields.Phone || "";
+    let popSupplierMobile = data.fields.Mobile || "";
+    let popSupplierFaxnumber = data.fields.Faxnumber || "";
+    let popSupplierSkypeName = data.fields.SkypeName || "";
+    let popSupplierURL = data.fields.URL || "";
+    let popSupplierStreet = data.fields.Street || "";
+    let popSupplierStreet2 = data.fields.Street2 || "";
+    let popSupplierState = data.fields.State || "";
+    let popSupplierPostcode = data.fields.Postcode || "";
+    let popSupplierCountry = data.fields.Country || LoggedCountry;
+    let popSupplierbillingaddress = data.fields.BillStreet || "";
+    let popSupplierbcity = data.fields.BillStreet2 || "";
+    let popSupplierbstate = data.fields.BillState || "";
+    let popSupplierbpostalcode = data.fields.BillPostcode || "";
+    let popSupplierbcountry =
+        data.fields.Billcountry || LoggedCountry;
+    let popSuppliercustfield1 = data.fields.CUSTFLD1 || "";
+    let popSuppliercustfield2 = data.fields.CUSTFLD2 || "";
+    let popSuppliercustfield3 = data.fields.CUSTFLD3 || "";
+    let popSuppliercustfield4 = data.fields.CUSTFLD4 || "";
+    let popSuppliernotes = data.fields.Notes || "";
+    let popSupplierpreferedpayment =
+        data.fields.PaymentMethodName || "";
+    let popSupplierterms = data.fields.TermsName || "";
+    let popSupplierdeliverymethod =
+        data.fields.ShippingMethodName || "";
+    let popSupplieraccountnumber = data.fields.ClientNo || "";
+    let popSupplierisContractor = data.fields.Contractor || false;
+    let popSupplierissupplier = data.fields.IsSupplier || false;
+    let popSupplieriscustomer = data.fields.IsCustomer || false;
+
+    $("#edtSupplierCompany").val(popSupplierName);
+    $("#edtSupplierPOPID").val(popSupplierID);
+    $("#edtSupplierCompanyEmail").val(popSupplierEmail);
+    $("#edtSupplierTitle").val(popSupplierTitle);
+    $("#edtSupplierFirstName").val(popSupplierFirstName);
+    $("#edtSupplierMiddleName").val(popSupplierMiddleName);
+    $("#edtSupplierLastName").val(popSupplierLastName);
+    $("#edtSupplierPhone").val(popSupplierPhone);
+    $("#edtSupplierMobile").val(popSupplierMobile);
+    $("#edtSupplierFax").val(popSupplierFaxnumber);
+    $("#edtSupplierSkypeID").val(popSupplierSkypeName);
+    $("#edtSupplierWebsite").val(popSupplierURL);
+    $("#edtSupplierShippingAddress").val(popSupplierStreet);
+    $("#edtSupplierShippingCity").val(popSupplierStreet2);
+    $("#edtSupplierShippingState").val(popSupplierState);
+    $("#edtSupplierShippingZIP").val(popSupplierPostcode);
+    $("#sedtCountry").val(popSupplierCountry);
+    $("#txaNotes").val(popSuppliernotes);
+    $("#sltPreferedPayment").val(popSupplierpreferedpayment);
+    $("#sltTerms").val(popSupplierterms);
+    $("#suppAccountNo").val(popSupplieraccountnumber);
+    $("#edtCustomeField1").val(popSuppliercustfield1);
+    $("#edtCustomeField2").val(popSuppliercustfield2);
+    $("#edtCustomeField3").val(popSuppliercustfield3);
+    $("#edtCustomeField4").val(popSuppliercustfield4);
+
+    if (
+        data.fields.Street ==
+            data.fields.BillStreet &&
+        data.fields.Street2 ==
+            data.fields.BillStreet2 &&
+        data.fields.State ==
+            data.fields.BillState &&
+        data.fields.Postcode ==
+            data.fields.Postcode &&
+        data.fields.Country ==
+            data.fields.Billcountry
+    ) {
+        //templateObject.isSameAddress.set(true);
+        $("#chkSameAsShipping").attr("checked", "checked");
+    }
+    if (data.fields.Contractor == true) {
+        // $('#isformcontractor')
+        $("#isformcontractor").attr("checked", "checked");
+    } else {
+        $("#isformcontractor").removeAttr("checked");
+    }
+}
+
+function initAccountantDetails() {
+  let data = accountantDetailObj
+    let popSupplierID = data.fields.ID || "";    
+    let popSupplierEmail = data.fields.Email || "";    
+    let popSupplierFirstName = data.fields.FirstName || "";
+    let popSupplierMiddleName = data.fields.CUSTFLD10 || "";
+    let popSupplierLastName = data.fields.LastName || "";    
+    let popSupplierPhone = data.fields.Phone || "";
+    
+    $("#sltAccountant").data('supplierId', popSupplierID);
+    $("#accountantemailaddress").val(popSupplierEmail);
+    $("#accountantfirstname").val(popSupplierFirstName);
+    $("#accountantmiddlename").val(popSupplierMiddleName);
+    $("#accountantlastname").val(popSupplierLastName);
+    $("#accountantphonenumber").val(popSupplierPhone);
+}
+
+async function loadAccountantDetailByName(supplierDataName) {
+  $(".fullScreenSpin").css("display", "inline-block");
+  try {
+    let dataObject = await getVS1Data("TSupplierVS1");
+    if (dataObject.length) {
+      let data = JSON.parse(dataObject[0].data);                
+      supplierList = data
+      var added = false;
+      for (let i = 0; i < data.tsuppliervs1.length; i++) {
+          if (
+              data.tsuppliervs1[i].fields.ClientName ===
+              supplierDataName
+          ) {
+              added = true;
+              accountantDetailObj = data.tsuppliervs1[i]                        
+              supplierListIndex = i
+              continue;
+          }
+      }
+      if (!added) {      
+          data = await sideBarService.getOneSupplierDataExByName(supplierDataName)              
+          accountantDetailObj = data.tsupplier[0]                             
+      }
+    } else {      
+      let data = await sideBarService.getOneSupplierDataExByName(supplierDataName)
+      accountantDetailObj = data.tsupplier[0]      
+    }
+  } catch (e) {    
+    let data = await sideBarService.getOneSupplierDataExByName(supplierDataName)
+    accountantDetailObj = data.tsupplier[0]                        
+  }
+  $(".fullScreenSpin").css("display", "none");
+}
+
+async function saveAccountantDetail() {
+  let saveObj = {
+      type: "TSupplierEx",
+      fields: { 
+        ...accountantDetailObj.fields, 
+        FirstName: $("#accountantfirstname").val(),
+        CUSTFLD10: $("#accountantmiddlename").val(),
+        LastName: $("#accountantlastname").val(),
+        Email: $("#accountantemailaddress").val(),
+        Phone: $("#accountantphonenumber").val(),
+      },
+  };
+  try {    
+    let objDetails = await contactService.saveSupplierEx(saveObj)
+    let supplierSaveID = objDetails.fields.ID;
+    if (supplierSaveID) {
+      supplierList.tsuppliervs1[supplierListIndex].fields = saveObj.fields
+      await addVS1Data('TSupplierVS1', JSON.stringify(supplierList))
+    }
+    swal('Accountant details successfully updated', '', 'success')
+  } catch (err) {
+    swal('Oooops...', err, 'error')
+  }
+}
 
 Template.organisationsettings.onCreated(() => {
   const templateObject = Template.instance();
@@ -104,197 +277,6 @@ Template.organisationsettings.onRendered(function () {
   };
   templateObject.getCountryData();
 
-  templateObject.getSuppliers = function () {
-    getVS1Data("TSupplierVS1")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
-          sideBarService
-            .getAllSuppliersDataVS1(initialBaseDataLoad, 0)
-            .then(function (data) {
-              addVS1Data("TSupplierVS1", JSON.stringify(data));
-              for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                let arBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.APBalance
-                  ) || 0.0;
-                let creditBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.ExcessAmount
-                  ) || 0.0;
-                let balance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.Balance
-                  ) || 0.0;
-                let creditLimit =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.SupplierCreditLimit
-                  ) || 0.0;
-                let salesOrderBalance =
-                  utilityService.modifynegativeCurrencyFormat(
-                    data.tsuppliervs1[i].fields.Balance
-                  ) || 0.0;
-                var dataList = {
-                  id: data.tsuppliervs1[i].fields.ID + 1 || "",
-                  company: data.tsuppliervs1[i].fields.ClientName || "",
-                  contactname: data.tsuppliervs1[i].fields.ContactName || "",
-                  phone: data.tsuppliervs1[i].fields.Phone || "",
-                  arbalance: arBalance || 0.0,
-                  creditbalance: creditBalance || 0.0,
-                  balance: balance || 0.0,
-                  creditlimit: creditLimit || 0.0,
-                  salesorderbalance: salesOrderBalance || 0.0,
-                  email: data.tsuppliervs1[i].fields.Email || "",
-                  accountno: data.tsuppliervs1[i].fields.AccountNo || "",
-                  clientno: data.tsuppliervs1[i].fields.ClientNo || "",
-                  jobtitle: data.tsuppliervs1[i].fields.JobTitle || "",
-                  notes: data.tsuppliervs1[i].fields.Notes || "",
-                  suburb: data.tsuppliervs1[i].fields.Suburb || "",
-                  country: data.tsuppliervs1[i].fields.Country || "",
-                };
-
-                suppliers.push(dataList);
-              }
-
-              templateObject.suppliersData.set(suppliers);
-            })
-            .catch(function (err) {
-              // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-              $(".fullScreenSpin").css("display", "none");
-              // Meteor._reload.reload();
-            });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tsuppliervs1;
-
-          // //////////////////////////////////
-          // var dataListinit = {
-          //     id: '',
-          //     company: '',
-          //     contactname: '',
-          //     phone: '',
-          //     arbalance: 0.00,
-          //     creditbalance: 0.00,
-          //     balance: 0.00,
-          //     creditlimit: 0.00,
-          //     salesorderbalance: 0.00,
-          //     email: '',
-          //     accountno: '',
-          //     clientno: '',
-          //     jobtitle: '',
-          //     notes: '',
-          //     suburb: '',
-          //     country: ''
-          // };
-          // suppliers.push(dataListinit);
-
-          // //////////////////////////////////
-
-          for (let i = 0; i < useData.length; i++) {
-            let arBalance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.APBalance
-              ) || 0.0;
-            let creditBalance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.ExcessAmount
-              ) || 0.0;
-            let balance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.Balance
-              ) || 0.0;
-            let creditLimit =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.SupplierCreditLimit
-              ) || 0.0;
-            let salesOrderBalance =
-              utilityService.modifynegativeCurrencyFormat(
-                useData[i].fields.Balance
-              ) || 0.0;
-            var dataList = {
-              id: useData[i].fields.ID + 1 || "",
-              company: useData[i].fields.ClientName || "",
-              contactname: useData[i].fields.ContactName || "",
-              phone: useData[i].fields.Phone || "",
-              arbalance: arBalance || 0.0,
-              creditbalance: creditBalance || 0.0,
-              balance: balance || 0.0,
-              creditlimit: creditLimit || 0.0,
-              salesorderbalance: salesOrderBalance || 0.0,
-              email: useData[i].fields.Email || "",
-              accountno: useData[i].fields.AccountNo || "",
-              clientno: useData[i].fields.ClientNo || "",
-              jobtitle: useData[i].fields.JobTitle || "",
-              notes: useData[i].fields.Notes || "",
-              suburb: useData[i].fields.Suburb || "",
-              country: useData[i].fields.Country || "",
-            };
-
-            suppliers.push(dataList);
-          }
-
-          templateObject.suppliersData.set(suppliers);
-        }
-      })
-      .catch(function (err) {
-        sideBarService
-          .getAllSuppliersDataVS1(initialBaseDataLoad, 0)
-          .then(function (data) {
-            addVS1Data("TSupplierVS1", JSON.stringify(data));
-            for (let i = 0; i < data.tsuppliervs1.length; i++) {
-              let arBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.APBalance
-                ) || 0.0;
-              let creditBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.ExcessAmount
-                ) || 0.0;
-              let balance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.Balance
-                ) || 0.0;
-              let creditLimit =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.SupplierCreditLimit
-                ) || 0.0;
-              let salesOrderBalance =
-                utilityService.modifynegativeCurrencyFormat(
-                  data.tsuppliervs1[i].fields.Balance
-                ) || 0.0;
-              var dataList = {
-                id: data.tsuppliervs1[i].fields.ID || "",
-                company: data.tsuppliervs1[i].fields.ClientName || "",
-                contactname: data.tsuppliervs1[i].fields.ContactName || "",
-                phone: data.tsuppliervs1[i].fields.Phone || "",
-                arbalance: arBalance || 0.0,
-                creditbalance: creditBalance || 0.0,
-                balance: balance || 0.0,
-                creditlimit: creditLimit || 0.0,
-                salesorderbalance: salesOrderBalance || 0.0,
-                email: data.tsuppliervs1[i].fields.Email || "",
-                accountno: data.tsuppliervs1[i].fields.AccountNo || "",
-                clientno: data.tsuppliervs1[i].fields.ClientNo || "",
-                jobtitle: data.tsuppliervs1[i].fields.JobTitle || "",
-                notes: data.tsuppliervs1[i].fields.Notes || "",
-                suburb: data.tsuppliervs1[i].fields.Suburb || "",
-                country: data.tsuppliervs1[i].fields.Country || "",
-              };
-
-              suppliers.push(dataList);
-            }
-
-            templateObject.suppliersData.set(suppliers);
-          })
-          .catch(function (err) {
-            // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-            $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
-          });
-      });
-  };
-
-  templateObject.getSuppliers();
-
   templateObject.getDropDown = function (id, country) {
     $("#" + id)
       .autocomplete({
@@ -308,12 +290,24 @@ Template.organisationsettings.onRendered(function () {
       .autocomplete("widget")
       .addClass("countries-dropdown");
   };
+  
   templateObject.getOrganisationDetails = async () => {
     LoadingOverlay.show();
+    let dataObject;
+    try {
+      let companyInfoData = await getVS1Data('TCompanyInfo');
+      if (companyInfoData.length) {
+        dataObject = JSON.parse(companyInfoData[0].data);
+      } else {
+        dataObject = await organisationService.getOrganisationDetail();
+        addVS1Data('TCompanyInfo', JSON.stringify(dataObject));
+      }
+    } catch (e) {
+      dataObject = await organisationService.getOrganisationDetail();
+      addVS1Data('TCompanyInfo', JSON.stringify(dataObject));
+    }    
 
-    const dataListRet = await organisationService.getOrganisationDetail();
-    let mainData = dataListRet.tcompanyinfo[0];
-
+    let mainData = dataObject.tcompanyinfo[0];
     templateObject.showSkype.set(mainData.ContactEmail);
     templateObject.showMob.set(mainData.MobileNumber);
     templateObject.showFax.set(mainData.FaxNumber);
@@ -397,6 +391,9 @@ Template.organisationsettings.onRendered(function () {
     }
 
     $("#sltAccountant").val(mainData.Contact);
+    await loadAccountantDetailByName(mainData.Contact)
+    initAccountantDetails()
+
     $("#sltYearEnd").val(localStorage.getItem("yearEnd"));
     // YearEnd: sltYearEnd,
     $("#sltCompanyType").val(mainData.CompanyCategory);
@@ -419,9 +416,7 @@ Template.organisationsettings.onRendered(function () {
         var $earch = $(this);
         var offset = $earch.offset();
         $("#edtSupplierPOPID").val("");
-        var supplierDataName = e.target.value || "";
-        var supplierDataID =
-          $("#sltAccountant").attr("suppid").replace(/\s/g, "") || "";
+        var supplierDataName = e.target.value || "";        
         if (e.pageX > offset.left + $earch.width() - 8) {
           // X button 16px wide?
           $("#supplierListModal").modal();
@@ -435,541 +430,8 @@ Template.organisationsettings.onRendered(function () {
           }, 500);
         } else {
           if (supplierDataName.replace(/\s/g, "") != "") {
-            getVS1Data("TSupplierVS1")
-              .then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  $(".fullScreenSpin").css("display", "inline-block");
-                  sideBarService
-                    .getOneSupplierDataExByName(supplierDataName)
-                    .then(function (data) {
-                      $(".fullScreenSpin").css("display", "none");
-                      let lineItems = [];
-
-                      $("#add-supplier-title").text("Edit Supplier");
-                      let popSupplierID = data.tsupplier[0].fields.ID || "";
-                      let popSupplierName =
-                        data.tsupplier[0].fields.ClientName || "";
-                      let popSupplierEmail =
-                        data.tsupplier[0].fields.Email || "";
-                      let popSupplierTitle =
-                        data.tsupplier[0].fields.Title || "";
-                      let popSupplierFirstName =
-                        data.tsupplier[0].fields.FirstName || "";
-                      let popSupplierMiddleName =
-                        data.tsupplier[0].fields.CUSTFLD10 || "";
-                      let popSupplierLastName =
-                        data.tsupplier[0].fields.LastName || "";
-                      let popSuppliertfn = "" || "";
-                      let popSupplierPhone =
-                        data.tsupplier[0].fields.Phone || "";
-                      let popSupplierMobile =
-                        data.tsupplier[0].fields.Mobile || "";
-                      let popSupplierFaxnumber =
-                        data.tsupplier[0].fields.Faxnumber || "";
-                      let popSupplierSkypeName =
-                        data.tsupplier[0].fields.SkypeName || "";
-                      let popSupplierURL = data.tsupplier[0].fields.URL || "";
-                      let popSupplierStreet =
-                        data.tsupplier[0].fields.Street || "";
-                      let popSupplierStreet2 =
-                        data.tsupplier[0].fields.Street2 || "";
-                      let popSupplierState =
-                        data.tsupplier[0].fields.State || "";
-                      let popSupplierPostcode =
-                        data.tsupplier[0].fields.Postcode || "";
-                      let popSupplierCountry =
-                        data.tsupplier[0].fields.Country || LoggedCountry;
-                      let popSupplierbillingaddress =
-                        data.tsupplier[0].fields.BillStreet || "";
-                      let popSupplierbcity =
-                        data.tsupplier[0].fields.BillStreet2 || "";
-                      let popSupplierbstate =
-                        data.tsupplier[0].fields.BillState || "";
-                      let popSupplierbpostalcode =
-                        data.tsupplier[0].fields.BillPostcode || "";
-                      let popSupplierbcountry =
-                        data.tsupplier[0].fields.Billcountry || LoggedCountry;
-                      let popSuppliercustfield1 =
-                        data.tsupplier[0].fields.CUSTFLD1 || "";
-                      let popSuppliercustfield2 =
-                        data.tsupplier[0].fields.CUSTFLD2 || "";
-                      let popSuppliercustfield3 =
-                        data.tsupplier[0].fields.CUSTFLD3 || "";
-                      let popSuppliercustfield4 =
-                        data.tsupplier[0].fields.CUSTFLD4 || "";
-                      let popSuppliernotes =
-                        data.tsupplier[0].fields.Notes || "";
-                      let popSupplierpreferedpayment =
-                        data.tsupplier[0].fields.PaymentMethodName || "";
-                      let popSupplierterms =
-                        data.tsupplier[0].fields.TermsName || "";
-                      let popSupplierdeliverymethod =
-                        data.tsupplier[0].fields.ShippingMethodName || "";
-                      let popSupplieraccountnumber =
-                        data.tsupplier[0].fields.ClientNo || "";
-                      let popSupplierisContractor =
-                        data.tsupplier[0].fields.Contractor || false;
-                      let popSupplierissupplier =
-                        data.tsupplier[0].fields.IsSupplier || false;
-                      let popSupplieriscustomer =
-                        data.tsupplier[0].fields.IsCustomer || false;
-
-                      $("#edtSupplierCompany").val(popSupplierName);
-                      $("#edtSupplierPOPID").val(popSupplierID);
-                      $("#edtSupplierCompanyEmail").val(popSupplierEmail);
-                      $("#edtSupplierTitle").val(popSupplierTitle);
-                      $("#edtSupplierFirstName").val(popSupplierFirstName);
-                      $("#edtSupplierMiddleName").val(popSupplierMiddleName);
-                      $("#edtSupplierLastName").val(popSupplierLastName);
-                      $("#edtSupplierPhone").val(popSupplierPhone);
-                      $("#edtSupplierMobile").val(popSupplierMobile);
-                      $("#edtSupplierFax").val(popSupplierFaxnumber);
-                      $("#edtSupplierSkypeID").val(popSupplierSkypeName);
-                      $("#edtSupplierWebsite").val(popSupplierURL);
-                      $("#edtSupplierShippingAddress").val(popSupplierStreet);
-                      $("#edtSupplierShippingCity").val(popSupplierStreet2);
-                      $("#edtSupplierShippingState").val(popSupplierState);
-                      $("#edtSupplierShippingZIP").val(popSupplierPostcode);
-                      $("#sedtCountry").val(popSupplierCountry);
-                      $("#txaNotes").val(popSuppliernotes);
-                      $("#sltPreferedPayment").val(popSupplierpreferedpayment);
-                      $("#sltTerms").val(popSupplierterms);
-                      $("#suppAccountNo").val(popSupplieraccountnumber);
-                      $("#edtCustomeField1").val(popSuppliercustfield1);
-                      $("#edtCustomeField2").val(popSuppliercustfield2);
-                      $("#edtCustomeField3").val(popSuppliercustfield3);
-                      $("#edtCustomeField4").val(popSuppliercustfield4);
-
-                      if (
-                        data.tsupplier[0].fields.Street ==
-                          data.tsupplier[0].fields.BillStreet &&
-                        data.tsupplier[0].fields.Street2 ==
-                          data.tsupplier[0].fields.BillStreet2 &&
-                        data.tsupplier[0].fields.State ==
-                          data.tsupplier[0].fields.BillState &&
-                        data.tsupplier[0].fields.Postcode ==
-                          data.tsupplier[0].fields.Postcode &&
-                        data.tsupplier[0].fields.Country ==
-                          data.tsupplier[0].fields.Billcountry
-                      ) {
-                        //templateObject.isSameAddress.set(true);
-                        $("#chkSameAsShipping").attr("checked", "checked");
-                      }
-                      if (data.tsupplier[0].fields.Contractor == true) {
-                        // $('#isformcontractor')
-                        $("#isformcontractor").attr("checked", "checked");
-                      } else {
-                        $("#isformcontractor").removeAttr("checked");
-                      }
-
-                      setTimeout(function () {
-                        $("#addSupplierModal").modal("show");
-                      }, 200);
-                    })
-                    .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "none");
-                    });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  let useData = data.tsuppliervs1;
-                  var added = false;
-                  for (let i = 0; i < data.tsuppliervs1.length; i++) {
-                    if (
-                      data.tsuppliervs1[i].fields.ClientName ===
-                      supplierDataName
-                    ) {
-                      added = true;
-                      $(".fullScreenSpin").css("display", "none");
-                      let lineItems = [];
-                      $("#add-supplier-title").text("Edit Supplier");
-                      let popSupplierID = data.tsuppliervs1[i].fields.ID || "";
-                      let popSupplierName =
-                        data.tsuppliervs1[i].fields.ClientName || "";
-                      let popSupplierEmail =
-                        data.tsuppliervs1[i].fields.Email || "";
-                      let popSupplierTitle =
-                        data.tsuppliervs1[i].fields.Title || "";
-                      let popSupplierFirstName =
-                        data.tsuppliervs1[i].fields.FirstName || "";
-                      let popSupplierMiddleName =
-                        data.tsuppliervs1[i].fields.CUSTFLD10 || "";
-                      let popSupplierLastName =
-                        data.tsuppliervs1[i].fields.LastName || "";
-                      let popSuppliertfn = "" || "";
-                      let popSupplierPhone =
-                        data.tsuppliervs1[i].fields.Phone || "";
-                      let popSupplierMobile =
-                        data.tsuppliervs1[i].fields.Mobile || "";
-                      let popSupplierFaxnumber =
-                        data.tsuppliervs1[i].fields.Faxnumber || "";
-                      let popSupplierSkypeName =
-                        data.tsuppliervs1[i].fields.SkypeName || "";
-                      let popSupplierURL =
-                        data.tsuppliervs1[i].fields.URL || "";
-                      let popSupplierStreet =
-                        data.tsuppliervs1[i].fields.Street || "";
-                      let popSupplierStreet2 =
-                        data.tsuppliervs1[i].fields.Street2 || "";
-                      let popSupplierState =
-                        data.tsuppliervs1[i].fields.State || "";
-                      let popSupplierPostcode =
-                        data.tsuppliervs1[i].fields.Postcode || "";
-                      let popSupplierCountry =
-                        data.tsuppliervs1[i].fields.Country || LoggedCountry;
-                      let popSupplierbillingaddress =
-                        data.tsuppliervs1[i].fields.BillStreet || "";
-                      let popSupplierbcity =
-                        data.tsuppliervs1[i].fields.BillStreet2 || "";
-                      let popSupplierbstate =
-                        data.tsuppliervs1[i].fields.BillState || "";
-                      let popSupplierbpostalcode =
-                        data.tsuppliervs1[i].fields.BillPostcode || "";
-                      let popSupplierbcountry =
-                        data.tsuppliervs1[i].fields.Billcountry ||
-                        LoggedCountry;
-                      let popSuppliercustfield1 =
-                        data.tsuppliervs1[i].fields.CUSTFLD1 || "";
-                      let popSuppliercustfield2 =
-                        data.tsuppliervs1[i].fields.CUSTFLD2 || "";
-                      let popSuppliercustfield3 =
-                        data.tsuppliervs1[i].fields.CUSTFLD3 || "";
-                      let popSuppliercustfield4 =
-                        data.tsuppliervs1[i].fields.CUSTFLD4 || "";
-                      let popSuppliernotes =
-                        data.tsuppliervs1[i].fields.Notes || "";
-                      let popSupplierpreferedpayment =
-                        data.tsuppliervs1[i].fields.PaymentMethodName || "";
-                      let popSupplierterms =
-                        data.tsuppliervs1[i].fields.TermsName || "";
-                      let popSupplierdeliverymethod =
-                        data.tsuppliervs1[i].fields.ShippingMethodName || "";
-                      let popSupplieraccountnumber =
-                        data.tsuppliervs1[i].fields.ClientNo || "";
-                      let popSupplierisContractor =
-                        data.tsuppliervs1[i].fields.Contractor || false;
-                      let popSupplierissupplier =
-                        data.tsuppliervs1[i].fields.IsSupplier || false;
-                      let popSupplieriscustomer =
-                        data.tsuppliervs1[i].fields.IsCustomer || false;
-
-                      $("#edtSupplierCompany").val(popSupplierName);
-                      $("#edtSupplierPOPID").val(popSupplierID);
-                      $("#edtSupplierCompanyEmail").val(popSupplierEmail);
-                      $("#edtSupplierTitle").val(popSupplierTitle);
-                      $("#edtSupplierFirstName").val(popSupplierFirstName);
-                      $("#edtSupplierMiddleName").val(popSupplierMiddleName);
-                      $("#edtSupplierLastName").val(popSupplierLastName);
-                      $("#edtSupplierPhone").val(popSupplierPhone);
-                      $("#edtSupplierMobile").val(popSupplierMobile);
-                      $("#edtSupplierFax").val(popSupplierFaxnumber);
-                      $("#edtSupplierSkypeID").val(popSupplierSkypeName);
-                      $("#edtSupplierWebsite").val(popSupplierURL);
-                      $("#edtSupplierShippingAddress").val(popSupplierStreet);
-                      $("#edtSupplierShippingCity").val(popSupplierStreet2);
-                      $("#edtSupplierShippingState").val(popSupplierState);
-                      $("#edtSupplierShippingZIP").val(popSupplierPostcode);
-                      $("#sedtCountry").val(popSupplierCountry);
-                      $("#txaNotes").val(popSuppliernotes);
-                      $("#sltPreferedPayment").val(popSupplierpreferedpayment);
-                      $("#sltTerms").val(popSupplierterms);
-                      $("#suppAccountNo").val(popSupplieraccountnumber);
-                      $("#edtCustomeField1").val(popSuppliercustfield1);
-                      $("#edtCustomeField2").val(popSuppliercustfield2);
-                      $("#edtCustomeField3").val(popSuppliercustfield3);
-                      $("#edtCustomeField4").val(popSuppliercustfield4);
-
-                      if (
-                        data.tsuppliervs1[i].fields.Street ==
-                          data.tsuppliervs1[i].fields.BillStreet &&
-                        data.tsuppliervs1[i].fields.Street2 ==
-                          data.tsuppliervs1[i].fields.BillStreet2 &&
-                        data.tsuppliervs1[i].fields.State ==
-                          data.tsuppliervs1[i].fields.BillState &&
-                        data.tsuppliervs1[i].fields.Postcode ==
-                          data.tsuppliervs1[i].fields.Postcode &&
-                        data.tsuppliervs1[i].fields.Country ==
-                          data.tsuppliervs1[i].fields.Billcountry
-                      ) {
-                        //templateObject.isSameAddress.set(true);
-                        $("#chkSameAsShipping").attr("checked", "checked");
-                      }
-                      if (data.tsuppliervs1[i].fields.Contractor == true) {
-                        // $('#isformcontractor')
-                        $("#isformcontractor").attr("checked", "checked");
-                      } else {
-                        $("#isformcontractor").removeAttr("checked");
-                      }
-
-                      setTimeout(function () {
-                        $("#addSupplierModal").modal("show");
-                      }, 200);
-                    }
-                  }
-
-                  if (!added) {
-                    $(".fullScreenSpin").css("display", "inline-block");
-                    sideBarService
-                      .getOneSupplierDataExByName(supplierDataName)
-                      .then(function (data) {
-                        $(".fullScreenSpin").css("display", "none");
-                        let lineItems = [];
-
-                        $("#add-supplier-title").text("Edit Supplier");
-                        let popSupplierID = data.tsupplier[0].fields.ID || "";
-                        let popSupplierName =
-                          data.tsupplier[0].fields.ClientName || "";
-                        let popSupplierEmail =
-                          data.tsupplier[0].fields.Email || "";
-                        let popSupplierTitle =
-                          data.tsupplier[0].fields.Title || "";
-                        let popSupplierFirstName =
-                          data.tsupplier[0].fields.FirstName || "";
-                        let popSupplierMiddleName =
-                          data.tsupplier[0].fields.CUSTFLD10 || "";
-                        let popSupplierLastName =
-                          data.tsupplier[0].fields.LastName || "";
-                        let popSuppliertfn = "" || "";
-                        let popSupplierPhone =
-                          data.tsupplier[0].fields.Phone || "";
-                        let popSupplierMobile =
-                          data.tsupplier[0].fields.Mobile || "";
-                        let popSupplierFaxnumber =
-                          data.tsupplier[0].fields.Faxnumber || "";
-                        let popSupplierSkypeName =
-                          data.tsupplier[0].fields.SkypeName || "";
-                        let popSupplierURL = data.tsupplier[0].fields.URL || "";
-                        let popSupplierStreet =
-                          data.tsupplier[0].fields.Street || "";
-                        let popSupplierStreet2 =
-                          data.tsupplier[0].fields.Street2 || "";
-                        let popSupplierState =
-                          data.tsupplier[0].fields.State || "";
-                        let popSupplierPostcode =
-                          data.tsupplier[0].fields.Postcode || "";
-                        let popSupplierCountry =
-                          data.tsupplier[0].fields.Country || LoggedCountry;
-                        let popSupplierbillingaddress =
-                          data.tsupplier[0].fields.BillStreet || "";
-                        let popSupplierbcity =
-                          data.tsupplier[0].fields.BillStreet2 || "";
-                        let popSupplierbstate =
-                          data.tsupplier[0].fields.BillState || "";
-                        let popSupplierbpostalcode =
-                          data.tsupplier[0].fields.BillPostcode || "";
-                        let popSupplierbcountry =
-                          data.tsupplier[0].fields.Billcountry || LoggedCountry;
-                        let popSuppliercustfield1 =
-                          data.tsupplier[0].fields.CUSTFLD1 || "";
-                        let popSuppliercustfield2 =
-                          data.tsupplier[0].fields.CUSTFLD2 || "";
-                        let popSuppliercustfield3 =
-                          data.tsupplier[0].fields.CUSTFLD3 || "";
-                        let popSuppliercustfield4 =
-                          data.tsupplier[0].fields.CUSTFLD4 || "";
-                        let popSuppliernotes =
-                          data.tsupplier[0].fields.Notes || "";
-                        let popSupplierpreferedpayment =
-                          data.tsupplier[0].fields.PaymentMethodName || "";
-                        let popSupplierterms =
-                          data.tsupplier[0].fields.TermsName || "";
-                        let popSupplierdeliverymethod =
-                          data.tsupplier[0].fields.ShippingMethodName || "";
-                        let popSupplieraccountnumber =
-                          data.tsupplier[0].fields.ClientNo || "";
-                        let popSupplierisContractor =
-                          data.tsupplier[0].fields.Contractor || false;
-                        let popSupplierissupplier =
-                          data.tsupplier[0].fields.IsSupplier || false;
-                        let popSupplieriscustomer =
-                          data.tsupplier[0].fields.IsCustomer || false;
-
-                        $("#edtSupplierCompany").val(popSupplierName);
-                        $("#edtSupplierPOPID").val(popSupplierID);
-                        $("#edtSupplierCompanyEmail").val(popSupplierEmail);
-                        $("#edtSupplierTitle").val(popSupplierTitle);
-                        $("#edtSupplierFirstName").val(popSupplierFirstName);
-                        $("#edtSupplierMiddleName").val(popSupplierMiddleName);
-                        $("#edtSupplierLastName").val(popSupplierLastName);
-                        $("#edtSupplierPhone").val(popSupplierPhone);
-                        $("#edtSupplierMobile").val(popSupplierMobile);
-                        $("#edtSupplierFax").val(popSupplierFaxnumber);
-                        $("#edtSupplierSkypeID").val(popSupplierSkypeName);
-                        $("#edtSupplierWebsite").val(popSupplierURL);
-                        $("#edtSupplierShippingAddress").val(popSupplierStreet);
-                        $("#edtSupplierShippingCity").val(popSupplierStreet2);
-                        $("#edtSupplierShippingState").val(popSupplierState);
-                        $("#edtSupplierShippingZIP").val(popSupplierPostcode);
-                        $("#sedtCountry").val(popSupplierCountry);
-                        $("#txaNotes").val(popSuppliernotes);
-                        $("#sltPreferedPayment").val(
-                          popSupplierpreferedpayment
-                        );
-                        $("#sltTerms").val(popSupplierterms);
-                        $("#suppAccountNo").val(popSupplieraccountnumber);
-                        $("#edtCustomeField1").val(popSuppliercustfield1);
-                        $("#edtCustomeField2").val(popSuppliercustfield2);
-                        $("#edtCustomeField3").val(popSuppliercustfield3);
-                        $("#edtCustomeField4").val(popSuppliercustfield4);
-
-                        if (
-                          data.tsupplier[0].fields.Street ==
-                            data.tsupplier[0].fields.BillStreet &&
-                          data.tsupplier[0].fields.Street2 ==
-                            data.tsupplier[0].fields.BillStreet2 &&
-                          data.tsupplier[0].fields.State ==
-                            data.tsupplier[0].fields.BillState &&
-                          data.tsupplier[0].fields.Postcode ==
-                            data.tsupplier[0].fields.Postcode &&
-                          data.tsupplier[0].fields.Country ==
-                            data.tsupplier[0].fields.Billcountry
-                        ) {
-                          //templateObject.isSameAddress.set(true);
-                          $("#chkSameAsShipping").attr("checked", "checked");
-                        }
-                        if (data.tsupplier[0].fields.Contractor == true) {
-                          // $('#isformcontractor')
-                          $("#isformcontractor").attr("checked", "checked");
-                        } else {
-                          $("#isformcontractor").removeAttr("checked");
-                        }
-
-                        setTimeout(function () {
-                          $("#addSupplierModal").modal("show");
-                        }, 200);
-                      })
-                      .catch(function (err) {
-                        $(".fullScreenSpin").css("display", "none");
-                      });
-                  }
-                }
-              })
-              .catch(function (err) {
-                sideBarService
-                  .getOneSupplierDataExByName(supplierDataName)
-                  .then(function (data) {
-                    $(".fullScreenSpin").css("display", "none");
-                    let lineItems = [];
-
-                    $("#add-supplier-title").text("Edit Supplier");
-                    let popSupplierID = data.tsupplier[0].fields.ID || "";
-                    let popSupplierName =
-                      data.tsupplier[0].fields.ClientName || "";
-                    let popSupplierEmail = data.tsupplier[0].fields.Email || "";
-                    let popSupplierTitle = data.tsupplier[0].fields.Title || "";
-                    let popSupplierFirstName =
-                      data.tsupplier[0].fields.FirstName || "";
-                    let popSupplierMiddleName =
-                      data.tsupplier[0].fields.CUSTFLD10 || "";
-                    let popSupplierLastName =
-                      data.tsupplier[0].fields.LastName || "";
-                    let popSuppliertfn = "" || "";
-                    let popSupplierPhone = data.tsupplier[0].fields.Phone || "";
-                    let popSupplierMobile =
-                      data.tsupplier[0].fields.Mobile || "";
-                    let popSupplierFaxnumber =
-                      data.tsupplier[0].fields.Faxnumber || "";
-                    let popSupplierSkypeName =
-                      data.tsupplier[0].fields.SkypeName || "";
-                    let popSupplierURL = data.tsupplier[0].fields.URL || "";
-                    let popSupplierStreet =
-                      data.tsupplier[0].fields.Street || "";
-                    let popSupplierStreet2 =
-                      data.tsupplier[0].fields.Street2 || "";
-                    let popSupplierState = data.tsupplier[0].fields.State || "";
-                    let popSupplierPostcode =
-                      data.tsupplier[0].fields.Postcode || "";
-                    let popSupplierCountry =
-                      data.tsupplier[0].fields.Country || LoggedCountry;
-                    let popSupplierbillingaddress =
-                      data.tsupplier[0].fields.BillStreet || "";
-                    let popSupplierbcity =
-                      data.tsupplier[0].fields.BillStreet2 || "";
-                    let popSupplierbstate =
-                      data.tsupplier[0].fields.BillState || "";
-                    let popSupplierbpostalcode =
-                      data.tsupplier[0].fields.BillPostcode || "";
-                    let popSupplierbcountry =
-                      data.tsupplier[0].fields.Billcountry || LoggedCountry;
-                    let popSuppliercustfield1 =
-                      data.tsupplier[0].fields.CUSTFLD1 || "";
-                    let popSuppliercustfield2 =
-                      data.tsupplier[0].fields.CUSTFLD2 || "";
-                    let popSuppliercustfield3 =
-                      data.tsupplier[0].fields.CUSTFLD3 || "";
-                    let popSuppliercustfield4 =
-                      data.tsupplier[0].fields.CUSTFLD4 || "";
-                    let popSuppliernotes = data.tsupplier[0].fields.Notes || "";
-                    let popSupplierpreferedpayment =
-                      data.tsupplier[0].fields.PaymentMethodName || "";
-                    let popSupplierterms =
-                      data.tsupplier[0].fields.TermsName || "";
-                    let popSupplierdeliverymethod =
-                      data.tsupplier[0].fields.ShippingMethodName || "";
-                    let popSupplieraccountnumber =
-                      data.tsupplier[0].fields.ClientNo || "";
-                    let popSupplierisContractor =
-                      data.tsupplier[0].fields.Contractor || false;
-                    let popSupplierissupplier =
-                      data.tsupplier[0].fields.IsSupplier || false;
-                    let popSupplieriscustomer =
-                      data.tsupplier[0].fields.IsCustomer || false;
-
-                    $("#edtSupplierCompany").val(popSupplierName);
-                    $("#edtSupplierPOPID").val(popSupplierID);
-                    $("#edtSupplierCompanyEmail").val(popSupplierEmail);
-                    $("#edtSupplierTitle").val(popSupplierTitle);
-                    $("#edtSupplierFirstName").val(popSupplierFirstName);
-                    $("#edtSupplierMiddleName").val(popSupplierMiddleName);
-                    $("#edtSupplierLastName").val(popSupplierLastName);
-                    $("#edtSupplierPhone").val(popSupplierPhone);
-                    $("#edtSupplierMobile").val(popSupplierMobile);
-                    $("#edtSupplierFax").val(popSupplierFaxnumber);
-                    $("#edtSupplierSkypeID").val(popSupplierSkypeName);
-                    $("#edtSupplierWebsite").val(popSupplierURL);
-                    $("#edtSupplierShippingAddress").val(popSupplierStreet);
-                    $("#edtSupplierShippingCity").val(popSupplierStreet2);
-                    $("#edtSupplierShippingState").val(popSupplierState);
-                    $("#edtSupplierShippingZIP").val(popSupplierPostcode);
-                    $("#sedtCountry").val(popSupplierCountry);
-                    $("#txaNotes").val(popSuppliernotes);
-                    $("#sltPreferedPayment").val(popSupplierpreferedpayment);
-                    $("#sltTerms").val(popSupplierterms);
-                    $("#suppAccountNo").val(popSupplieraccountnumber);
-                    $("#edtCustomeField1").val(popSuppliercustfield1);
-                    $("#edtCustomeField2").val(popSuppliercustfield2);
-                    $("#edtCustomeField3").val(popSuppliercustfield3);
-                    $("#edtCustomeField4").val(popSuppliercustfield4);
-
-                    if (
-                      data.tsupplier[0].fields.Street ==
-                        data.tsupplier[0].fields.BillStreet &&
-                      data.tsupplier[0].fields.Street2 ==
-                        data.tsupplier[0].fields.BillStreet2 &&
-                      data.tsupplier[0].fields.State ==
-                        data.tsupplier[0].fields.BillState &&
-                      data.tsupplier[0].fields.Postcode ==
-                        data.tsupplier[0].fields.Postcode &&
-                      data.tsupplier[0].fields.Country ==
-                        data.tsupplier[0].fields.Billcountry
-                    ) {
-                      //templateObject.isSameAddress.set(true);
-                      $("#chkSameAsShipping").attr("checked", "checked");
-                    }
-                    if (data.tsupplier[0].fields.Contractor == true) {
-                      // $('#isformcontractor')
-                      $("#isformcontractor").attr("checked", "checked");
-                    } else {
-                      $("#isformcontractor").removeAttr("checked");
-                    }
-
-                    setTimeout(function () {
-                      $("#addSupplierModal").modal("show");
-                    }, 200);
-                  })
-                  .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
-                  });
-              });
+            initEditSupplierForm()
+            $("#addSupplierModal").modal("show");
             //FlowRouter.go('/supplierscard?name=' + e.target.value);
           } else {
             $("#supplierListModal").modal();
@@ -994,10 +456,12 @@ Template.organisationsettings.onRendered(function () {
     $("#changeLogo").show();
   }
 
-  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+  $(document).on("click", "#tblSupplierlist tbody tr", async function (e) {
     const tableSupplier = $(this);
     $("#sltAccountant").val(tableSupplier.find(".colCompany").text());
-    $("#sltAccountant").attr("suppid", tableSupplier.find(".colID").text());
+    await loadAccountantDetailByName(tableSupplier.find(".colCompany").text())
+    initAccountantDetails()
+    $("#sltAccountant").data("supplierId", tableSupplier.find(".colID").text());
     $("#supplierListModal").modal("toggle");
   });
 });
@@ -1216,7 +680,7 @@ Template.organisationsettings.events({
   "click #saveCompanyInfo": function (event) {
     playSaveAudio();
     let templateObject = Template.instance();
-    setTimeout(function () {
+    setTimeout(async function () {
       $(".fullScreenSpin").css("display", "inline-block");
 
       let companyID = 1;
@@ -1305,6 +769,8 @@ Template.organisationsettings.events({
           IsUSRegionTax: isChkUSRegionTax,
         },
       };
+
+      await saveAccountantDetail()
       organisationService
         .saveOrganisationSetting(objDetails)
         .then(function (data) {

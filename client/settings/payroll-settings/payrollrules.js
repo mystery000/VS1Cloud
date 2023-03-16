@@ -33,22 +33,250 @@ Template.payrollrules.onCreated(function() {
 
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.datatableallowancerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.tableheaderrecords2 = new ReactiveVar([]);
+    templateObject.tableheaderrecords3 = new ReactiveVar([]);
+    templateObject.tableheaderrecords4 = new ReactiveVar([]);
+    templateObject.tableheaderrecords5 = new ReactiveVar([]);
+    templateObject.tableheaderrecords6 = new ReactiveVar([]);
+    templateObject.tableheaderrecords7 = new ReactiveVar([]);
+    templateObject.tableheaderrecords8 = new ReactiveVar([]);
+    templateObject.datatableallowancerecords = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
     // templateObject.Ratetypes = new ReactiveVar([]);
     templateObject.imageFileData=new ReactiveVar();
     templateObject.Accounts = new ReactiveVar([]);
-
-
     templateObject.overtimes = new ReactiveVar([]);
     templateObject.rateTypes = new ReactiveVar([]);
     templateObject.earnings = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data){
+        let dataList = [
+            data.fields.ID || "",
+            data.fields.PayrollCalendarName || "",
+            data.fields.PayrollCalendarPayPeriod || "",
+            moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
+            moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
+            data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
+        ];
+        // let dataList = [];
+        return dataList;
+    }
+    let headerStructure  = [
+        { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
+        { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "150" },
+        { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
+        { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "150" },
+        { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "150" },
+        { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" }
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+
+    templateObject.getDataTableList2 = function(data){
+        let dataList = [
+            data.fields.ID || "",
+            data.fields.PayrollHolidaysName || "",
+            moment(data.fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
+            data.fields.PayrollHolidaysGroupName || "",
+            data.fields.PayrollHolidaysActive == true ? '' : 'In-Active',
+        ];
+        // let dataList = [];
+        return dataList;
+    }
+    let headerStructure2  = [
+        { index: 0, label: 'ID', class: 'colHolidayID', active: false, display: true, width: "" },
+        { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "150" },
+        { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "150" },
+        { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" }
+    ];
+    templateObject.tableheaderrecords2.set(headerStructure2);
+
+    templateObject.getDataTableList3 = function(data){
+        let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.fields.Amount) || 0.00;
+        let dataList = [
+            data.fields.ID || 0,
+            data.fields.Description || '-',
+            data.fields.AllowanceType || '',
+            data.fields.DisplayName || '',
+            allowanceAmount || 0.00,
+            data.fields.Accountname || '',
+            data.fields.Accountid || 0,
+            data.fields.Payrolltaxexempt || false,
+            data.fields.Superinc || false,
+            data.fields.Workcoverexempt || false,
+            data.fields.Active == true ? '' : 'In-Active',
+            '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        return dataList;
+    }
+    let headerStructure3  = [
+        { index: 0, label: 'ID', class: 'colAlowancesID', active: false, display: true, width: "" },
+        { index: 1, label: 'Allowance Name', class: 'colAlowancesNames', active: true, display: true, width: "200" },
+        { index: 2, label: 'Allowance Type', class: 'colAllowancesType', active: true, display: true, width: "80" },
+        { index: 3, label: 'Display Name', class: 'colAllowancesDisplayName', active: true, display: true, width: "200" },
+        { index: 4, label: 'Amount', class: 'colAllowancesAmount', active: true, display: true, width: "100" },
+        { index: 5, label: 'Account', class: 'colAllowancesAccounts', active: true, display: true, width: "100" },
+        { index: 6, label: 'Account ID', class: 'colAllowancesAccountsID', active: false, display: true, width: "" },
+        { index: 7, label: 'PAYG withholding', class: 'colAllowancesPAYG', active: false, display: true, width: "" },
+        { index: 8, label: 'Superannuation Guarantee Contribution', class: 'colAllowancesSuperannuation', active: false, display: true, width: "" },
+        { index: 9, label: 'Reportable as W1', class: 'colAllowancesReportableasW1', active: false, display: true, width: "" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 11, label: '', class: 'colDeleteAllowances', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords3.set(headerStructure3);
+
+    templateObject.getDataTableList4 = function(data){
+        let dataList = [
+            data.fields.ID || 0,
+            data.fields.EarningsName || '',
+            data.fields.EarningType || '',
+            data.fields.EarningsDisplayName || '',
+            data.fields.EarningsRateType || '',
+            '100',
+            data.fields.ExpenseAccount || '',
+            data.fields.ExpenseAccount || '',
+            data.fields.EarningsExemptPaygWithholding || '',
+            data.fields.EarningsExemptSuperannuationGuaranteeCont || '',
+            data.fields.EarningsReportableW1onActivityStatement || '',
+            data.fields.Active == true ? '' : 'In-Active',
+           '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        return dataList;
+    }
+    let headerStructure4  = [
+        { index: 0, label: 'ID', class: 'colEarningsID', active: false, display: true, width: "" },
+        { index: 1, label: 'Earnings Name', class: 'colEarningsNames', active: true, display: true, width: "200" },
+        { index: 2, label: 'Earnings Type', class: 'colEarningsType', active: true, display: true, width: "80" },
+        { index: 3, label: 'Display Name', class: 'colEarningsDisplayName', active: true, display: true, width: "200" },
+        { index: 4, label: 'Rate Type', class: 'colEarningsratetype', active: true, display: true, width: "100" },
+        { index: 5, label: 'Amount', class: 'colEarningsAmount', active: true, display: true, width: "100" },
+        { index: 6, label: 'Account', class: 'colEarningsAccounts', active: true, display: true, width: "100" },
+        { index: 7, label: 'Account ID', class: 'colEarningsAccountsID', active: false, display: true, width: "" },
+        { index: 8, label: 'PAYG withholding', class: 'colEarningsPAYG', active: false, display: true, width: "" },
+        { index: 9, label: 'Superannuation Guarantee Contribution', class: 'colEarningsSuperannuation', active: false, display: true, width: "" },
+        { index: 10, label: 'Reportable as W1', class: 'colEarningsReportableasW1', active: false, display: true, width: "" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 12, label: '', class: 'colDeleteEarnings', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords4.set(headerStructure4);
+
+    templateObject.getDataTableList5 = function(data){
+        let deductionAmount = utilityService.modifynegativeCurrencyFormat(data.fields.Amount) || 0.00;
+        let dataList = [
+            data.fields.ID || 0,
+            data.fields.Description || '-',
+            data.fields.DeductionType,
+            data.fields.Displayin || '',
+            deductionAmount || 0.00,
+            data.fields.Accountname || '',
+            data.fields.Accountid || 0,
+            data.fields.Taxexempt || false,
+            data.fields.SuperInc || false,
+            data.fields.WorkCoverExempt || false,
+            data.fields.Active == true ? '' : 'In-Active',
+            '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        return dataList;
+    }
+    let headerStructure5  = [
+        { index: 0, label: 'ID', class: 'colDeductionsID', active: false, display: true, width: "" },
+        { index: 1, label: 'Deduction Name', class: 'colDeductionsNames', active: true, display: true, width: "200" },
+        { index: 2, label: 'Deduction Type', class: 'colDeductionsType', active: true, display: true, width: "80" },
+        { index: 3, label: 'Display Name', class: 'colDeductionsDisplayName', active: true, display: true, width: "200" },
+        { index: 4, label: 'Amount', class: 'colDeductionsAmount', active: true, display: true, width: "100" },
+        { index: 5, label: 'Account', class: 'colDeductionsAccounts', active: true, display: true, width: "100" },
+        { index: 6, label: 'Account ID', class: 'colDeductionsAccountsID', active: false, display: true, width: "" },
+        { index: 7, label: 'Reduces PAYG Withholding', class: 'colDeductionsPAYG', active: false, display: true, width: "" },
+        { index: 8, label: 'Reduces Superannuation Guarantee Contribution', class: 'colDeductionsSuperannuation', active: false, display: true, width: "" },
+        { index: 9, label: 'Excluded from W1 on Activity Statement', class: 'colDeductionsReportableasW1', active: false, display: true, width: "" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 11, label: '', class: 'colDeleteDeductions', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords5.set(headerStructure5);
+
+    templateObject.getDataTableList6 = function(data){
+        let dataList = [
+            data.fields.ID || '',
+            data.fields.ReimbursementName || 0,
+            data.fields.ReimbursementAccount || 0,
+            data.fields.Active == true ? '' : 'In-Active',
+           '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        return dataList;
+    }
+    let headerStructure6  = [
+        { index: 0, label: 'ID', class: 'colReimbursementID', active: false, display: true, width: "" },
+        { index: 1, label: 'Reimbursement Name', class: 'colReimbursementName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Account', class: 'colReimbursementAccount', active: true, display: true, width: "100" },
+        { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 4, label: '', class: 'colDeleterei', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords6.set(headerStructure6);
+
+    templateObject.getDataTableList7 = function(data){
+        let dataList = [
+            data.fields.ID || '',
+            data.fields.LeavePaidName || '',
+            data.fields.LeavePaidUnits || '',
+            data.fields.LeavePaidNormalEntitlement || '',
+            data.fields.LeavePaidLeaveLoadingRate || '',
+            'Paid Leave',
+            data.fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
+            data.fields.LeavePaidActive == true ? '' : 'In-Active',
+           '<td contenteditable="false" class="colDeletepaidrem"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        // let dataList = [];
+        return dataList;
+    }
+    let headerStructure7  = [
+        { index: 0, label: 'ID', class: 'colLeaveID', active: false, display: true, width: "" },
+        { index: 1, label: 'Leave Name', class: 'colLeaveName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Units', class: 'colLeaveUnits', active: true, display: true, width: "80" },
+        { index: 3, label: 'Normal Entitlement', class: 'colLeaveNormalEntitlement', active: true, display: true, width: "100" },
+        { index: 4, label: 'Leave Loading Rate', class: 'colLeaveLeaveLoadingRate', active: true, display: true, width: "100" },
+        { index: 5, label: 'Leave Type', class: 'colLeavePaidLeave', active: true, display: true, width: "100" },
+        { index: 6, label: 'Shown On Payslip', class: 'colLeaveShownOnPayslip', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 8, label: '', class: 'colDeletepaidrem', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords7.set(headerStructure7);
+
+    templateObject.getDataTableList8 = function(data){
+        let dataList = [
+            data.fields.ID || '',
+            data.fields.Superfund || '',
+            data.fields.Area || '',
+            data.fields.Employeeid || '',
+            data.fields.ABN || '',
+            data.fields.ElectronicsServiceAddressAlias || '',
+            data.fields.BSB || '',
+            data.fields.Accountno || '',
+            data.fields.AccountName || '',
+            data.fields.Supertypeid || '',
+            data.fields.Active == true ? '' : 'In-Active',
+            '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        ];
+        return dataList;
+    }
+    let headerStructure8  = [
+        { index: 0, label: 'ID', class: 'colSuperannuationID', active: false, display: true, width: "" },
+        { index: 1, label: 'Name', class: 'colSuperannuationName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Type', class: 'colSuperannuationType', active: true, display: true, width: "80" },
+        { index: 3, label: 'Employer Number', class: 'colEmployerNum', active: true, display: true, width: "100" },
+        { index: 4, label: 'ABN', class: 'colabn', active: false, display: true, width: "" },
+        { index: 5, label: 'Electronics Service Address Alias', class: 'colservicealias', active: false, display: true, width: "" },
+        { index: 6, label: 'BSB', class: 'colbsb', active: true, display: true, width: "100" },
+        { index: 7, label: 'Account Number', class: 'colaccountnumber', active: false, display: true, width: "" },
+        { index: 8, label: 'Account Name', class: 'colaccountname', active: true, display: true, width: "100" },
+        { index: 9, label: 'fundid', class: 'colSuperannuationTypeid', active: false, display: true, width: "" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 11, label: '', class: 'colDeletesup', active: true, display: true, width: "20" }
+    ];
+    templateObject.tableheaderrecords8.set(headerStructure8);
 });
 
 Template.payrollrules.onRendered(function() {
-
-
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     let accountService = new AccountService();
@@ -85,7 +313,6 @@ Template.payrollrules.onRendered(function() {
         $('#holidays').removeClass('active show');
         $('#payitems').removeClass('active show');
         $('#superannuation').removeClass('active show');
-
     }
     else if(tabid == "super"){
         $('#sup-tab').addClass('active');
@@ -100,7 +327,6 @@ Template.payrollrules.onRendered(function() {
         $('#payitems').removeClass('active show');
     }
     else if(tabid == "holiday"){
-
         $('#hol-tab').addClass('active');
         $('#holidays').addClass('active show');
 
@@ -117,11 +343,8 @@ Template.payrollrules.onRendered(function() {
     else if(tabid == "payitem"){
         let itemtype = FlowRouter.current().queryParams.itemtype;
 
-
-
         $('#pay-tab').addClass('active');
         $('#payitems').addClass('active show');
-
 
         if(itemtype === 'deduction')
         {
@@ -169,8 +392,6 @@ Template.payrollrules.onRendered(function() {
 
         }
 
-
-
         $('#cal-tab').removeClass('active');
         $('#calendars').removeClass('active show');
         $('#org-tab').removeClass('active');
@@ -179,7 +400,6 @@ Template.payrollrules.onRendered(function() {
         $('#organisation').removeClass('active show');
         $('#holidays').removeClass('active show');
         $('#superannuation').removeClass('active show');
-
     }
     else
     {
@@ -221,7 +441,6 @@ Template.payrollrules.onRendered(function() {
     // This has been improved
     templateObject.getPayrollOrgainzations = async (refresh = false) =>
     {
-
         let data = await CachedHttp.get(erpObject.TPayrollOrganization, async () => {
             return await sideBarService.getPayrollinformation(initialBaseDataLoad, 0);
         }, {
@@ -679,7 +898,6 @@ Template.payrollrules.onRendered(function() {
             }, 100);
             setTimeout(function () {
                 $('#tblAlowances').DataTable({
-
                     data: splashArrayAllowanceList,
                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                     columnDefs: [
@@ -1054,8 +1272,6 @@ Template.payrollrules.onRendered(function() {
         });
         });
     };
-
-
 
     templateObject.getAllDeductions = function() {
         getVS1Data('TDeduction').then(function(dataObject) {
@@ -3113,7 +3329,7 @@ Template.payrollrules.onRendered(function() {
 
 
     templateObject.loadEarnings = async (refresh = false) => {
-        const resp = await getVS1Data(erpObject.TEarningData);
+        const resp = await getVS1Data(erpObject.TEarnings);
         let data = resp.length > 0 ? JSON.parse(resp[0].data) : [];
         const response  = data;
 
@@ -3193,11 +3409,11 @@ Template.payrollrules.onRendered(function() {
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
-    }
+    };
 
 
-    templateObject.getEarningData = function(){
-        getVS1Data(erpObject.TEarningData).then(function(dataObject) {
+    templateObject.geTEarnings = function(){
+        getVS1Data(erpObject.TEarnings).then(function(dataObject) {
 
             if(dataObject.length == 0)
             {
@@ -3533,7 +3749,7 @@ Template.payrollrules.onRendered(function() {
         });
 
 
-     };
+    };
 
 
 
@@ -3541,7 +3757,7 @@ Template.payrollrules.onRendered(function() {
 
     templateObject.getLeaveTypeData = function(){
 
-        getVS1Data('TLeaveData').then(function(dataObject) {
+        getVS1Data('TLeave').then(function(dataObject) {
 
 
             if(dataObject.length == 0)
@@ -5635,11 +5851,11 @@ Template.payrollrules.onRendered(function() {
     }
 
     templateObject.addOverTime= async () => {
-        if($('#btnAddNewOvertime').attr('overtime-id')) {
-            const overtimeIdToupdate = $('#btnAddNewOvertime').attr('overtime-id');
+        if($('#newOvertimeModal').attr('overtime-id')) {
+            const overtimeIdToupdate = $('#newOvertimeModal').attr('overtime-id');
             return templateObject.updateOvertime(overtimeIdToupdate);
         }
-        $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
+        $('#newOvertimeModal .modal-title').text('Add new Overtime');
 
         LoadingOverlay.show();
 
@@ -5679,7 +5895,7 @@ Template.payrollrules.onRendered(function() {
         // await templateObject.setupOvertimeTable();
         await templateObject.resetOvertimeModal();
 
-        $('#btnAddNewOvertime').modal('hide');
+        $('#newOvertimeModal').modal('hide');
         LoadingOverlay.hide();
 
     }
@@ -5730,25 +5946,25 @@ Template.payrollrules.onRendered(function() {
             });
 
             await templateObject.overtimes.set(overtimes);
-            $('#btnAddNewOvertime').removeAttr('overtime-id');
-            $('#btnAddNewOvertime').modal('hide');
-            $('#btnAddNewOvertime .modal-title').text('Add new Overtime');
+            $('#newOvertimeModal').removeAttr('overtime-id');
+            $('#newOvertimeModal').modal('hide');
+            $('#newOvertimeModal .modal-title').text('Add new Overtime');
             return false;
         }
 
     }
 
     templateObject.openAddOvertimeEditor = async (overtimeId = null)  => {
-        $('#btnAddNewOvertime').modal('show');
-        $('#btnAddNewOvertime .modal-title').text('Add Overtime');
+        $('#newOvertimeModal').modal('show');
+        $('#newOvertimeModal .modal-title').text('Add Overtime');
         $('#overtimeRateType').attr('rate-type-id', 1);
     }
 
     templateObject.openOvertimeEditor = async (overtimeId = null)  => {
-        $('#btnAddNewOvertime').modal('show');
-        $('#btnAddNewOvertime .modal-title').text('Edit Overtime');
+        $('#newOvertimeModal').modal('show');
+        $('#newOvertimeModal .modal-title').text('Edit Overtime');
 
-        $('#btnAddNewOvertime').attr('overtime-id', overtimeId);
+        $('#newOvertimeModal').attr('overtime-id', overtimeId);
         let overtimes = await templateObject.overtimes.get();
         let overtime = overtimes.find(overtime => overtime.id == overtimeId);
         if(overtime.rate == "Weekend"){
@@ -5807,21 +6023,21 @@ Template.payrollrules.onRendered(function() {
         await templateObject.loadDefaultOvertimes();
 
         await templateObject.getPayrollOrgainzations(refresh);
-        await templateObject.getAllAllowance(refresh);
-        await templateObject.getAllDeductions(refresh);
+        // await templateObject.getAllAllowance(refresh);
+        // await templateObject.getAllDeductions(refresh);
         // await templateObject.getCalenders(refresh);
-        await templateObject.getHolidayData(refresh);
+        // await templateObject.getHolidayData(refresh);
 
-        //await templateObject.getEarningData(refresh);
-        await templateObject.loadEarnings(refresh);
+        // await templateObject.geTEarnings(refresh);
+        // await templateObject.loadEarnings(refresh);
 
-        await templateObject.getLeaveTypeData(refresh);
-        await templateObject.getunpaidleavedata(refresh);
-        await templateObject.getReimbursement(refresh);
-        await templateObject.getSuperannuationData(refresh);
+        // await templateObject.getLeaveTypeData(refresh);
+        // await templateObject.getunpaidleavedata(refresh);
+        // await templateObject.getReimbursement(refresh);
+        // await templateObject.getSuperannuationData(refresh);
 
         await templateObject.loadRateTypes(refresh);
-        await templateObject.getOvertimes(refresh);
+        // await templateObject.getOvertimes(refresh);
         LoadingOverlay.hide();
     }
 
@@ -6190,6 +6406,8 @@ Template.payrollrules.onRendered(function() {
     });
 
      $('#editbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -6573,6 +6791,8 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editpaygbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -6956,6 +7176,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtReimbursementAccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -7340,6 +7562,8 @@ Template.payrollrules.onRendered(function() {
 
 
      $('#editwagesexpbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -7723,6 +7947,8 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editwagespaybankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -8104,6 +8330,8 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -8487,6 +8715,8 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#editsuperexpbankaccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -8870,6 +9100,8 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#edtExpenseAccountAllowance').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
       var $earch = $(this);
       var offset = $earch.offset();
       let accountService = new AccountService();
@@ -9253,6 +9485,8 @@ Template.payrollrules.onRendered(function() {
      });
 
     $('#edtExpenseAccountDirectorsFees').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -9636,6 +9870,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountTermnination').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -10019,6 +10255,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -10402,6 +10640,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountOvertime').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -10788,6 +11028,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountLumpSumE').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -11171,6 +11413,8 @@ Template.payrollrules.onRendered(function() {
       });
 
      $('#edtExpenseAccountBonusesCommissions').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -11554,6 +11798,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtExpenseAccountLumpSumW').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
@@ -11938,13 +12184,15 @@ Template.payrollrules.onRendered(function() {
 
 
      $('#edtDeductionAccount').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let accountService = new AccountService();
         const accountTypeList = [];
         var accountDataName = e.target.value ||'';
 
-         if(e.pageX > offset.left + $earch.width() - 8) {
+        if(e.pageX > offset.left + $earch.width() - 8) {
            $('#selectLineID').val('edtDeductionAccount');
            $('#accountListModal').modal();
            setTimeout(function () {
@@ -12334,7 +12582,8 @@ Template.payrollrules.onRendered(function() {
      });
 
     $('#edtRateTypeOvertime').editableSelect().on('click.editable-select', function (e, li) {
-
+        e.preventDefault();
+        e.stopPropagation();
         var $earch = $(this);
         var offset = $earch.offset();
         let ratetypeService = new RateTypeService();
@@ -12701,6 +12950,8 @@ Template.payrollrules.onRendered(function() {
 
 
     $('#holidaygroup').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -12887,6 +13138,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#addexistgroup').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13073,6 +13326,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#holidaygroup2').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13261,6 +13516,8 @@ Template.payrollrules.onRendered(function() {
 
 
     $('#edtFundType').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13447,6 +13704,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#edtRateTypeTermnination').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13630,6 +13889,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeLumpSumE').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13814,6 +14075,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeBonusesCommissions').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -13998,6 +14261,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeDirectorsFees').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -14182,6 +14447,8 @@ Template.payrollrules.onRendered(function() {
       });
 
     $('#edtRateTypeLumpSumW').editableSelect().on('click.editable-select', function (e, li) {
+        e.preventDefault();
+        e.stopPropagation();
 
         var $earch = $(this);
         var offset = $earch.offset();
@@ -14609,7 +14876,6 @@ Template.payrollrules.onRendered(function() {
     });
 
     $(document).on("click", "#tblLeave tbody tr td:not(.colDeletepaidrem)", function(e) {
-
         var table = $(this);
         let id = $(this).closest('tr').find(".colLeaveID").text() || 0;
         let colLeaveName = $(this).closest('tr').find(".colLeaveName").text()||'';
@@ -14619,11 +14885,8 @@ Template.payrollrules.onRendered(function() {
         let colLeavePaidLeave = $(this).closest('tr').find(".colLeavePaidLeave").text()|| '';
         let colLeaveShownOnPayslip = $(this).closest('tr').find(".colLeaveShownOnPayslip").text()|| 'hide';
 
-
         if(colLeavePaidLeave === 'paid')
         {
-
-
             $('#paidLeaveLabel').text('Edit Paid Leave Details');
             $('#paidleaveid').val(id);
             $('#edtLeaveName').val(colLeaveName);
@@ -14638,11 +14901,9 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ShowBalance').removeAttr('checked');;
             }
-
             $('#paidLeaveModal').modal('toggle');
         }
         else{
-
             $('#unpaidLeaveLabel').text('Edit UnPaid Leave Details');
             $('#unpaidleaveid').val(id);
             $('#edtUnpaidLeaveName').val(colLeaveName);
@@ -14659,14 +14920,9 @@ Template.payrollrules.onRendered(function() {
             }
             $('#unpaidLeaveModal').modal('toggle');
         }
-
-
     });
 
-
-
     $(document).on("click", "#tblEarnings tbody tr td:not(.colDeleteEarnings)", function(e) {
-
         var table = $(this);
         let id = $(this).closest('tr').find(".colEarningsID").text() || 0;
         let colEarningsNames = $(this).closest('tr').find(".colEarningsNames").text()||'';
@@ -14682,8 +14938,6 @@ Template.payrollrules.onRendered(function() {
 
         if(colEarningsType === 'Ordinary Time Earning')
         {
-
-
             $('#ordinaryTimeEarningsLabel').text('Edit Ordinary Time Earnings Details');
             $('#ordinaryTimeEarningsid').val(id);
             $('#edtEarningsName').val(colEarningsNames);
@@ -14714,13 +14968,9 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportable').removeAttr('checked');
             }
-
-            $('#add-tblEarnings_modal').modal('toggle');
-
-
+            $('#ordinaryTimeEarningsModal').modal('toggle');
         }
         else if(colEarningsType === 'OverTime Earning'){
-
             $('#overtimeEarningsLabel').text('Edit Over Time Earnings Details');
             $('#edtEarningsNameOvertimeid').val(id);
             $('#edtEarningsNameOvertime').val(colEarningsNames);
@@ -14751,12 +15001,9 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportableOvertime').removeAttr('checked');
             }
-
-            $('#add-tblEarnings_modal').modal('toggle');
-
+            $('#add-overtimeEarningsModal').modal('toggle');
         }
         else if(colEarningsType === 'Employee Termnination'){
-
             $('#employmentTermninationPaymentsLabel').text('Edit Employment Termnination Payments Details');
             $('#edtemploymentTermninationid').val(id);
             $('#edtEarningsNameTermnination').val(colEarningsNames);
@@ -14787,11 +15034,9 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportableTermnination').removeAttr('checked');
             }
-
             $('#employmentTermninationPaymentsModal').modal('toggle');
         }
         else if(colEarningsType === 'Lump Sum E Earning'){
-
             $('#lumpSumELabel').text('Edit Lump Sum E Details');
             $('#edtLumpSumid').val(id);
             $('#edtEarningsNameLumpSumE').val(colEarningsNames);
@@ -14822,13 +15067,9 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportableLumpSumE').removeAttr('checked');
             }
-
             $('#lumpSumEModal').modal('toggle');
-
-
         }
         else if(colEarningsType === 'Bonuese Commission'){
-
             $('#bonusesCommissionsLabel').text('Edit Bonuses & Commissions Details');
             $('#edtEarningsNameBonusesCommissionid').val(id);
             $('#edtEarningsNameBonusesCommissions').val(colEarningsNames);
@@ -14859,7 +15100,6 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportableBonusesCommissions').removeAttr('checked');
             }
-
             $('#bonusesCommissionsModal').modal('toggle');
         }
         else if(colEarningsType === 'Lump Sumw'){
@@ -14893,11 +15133,9 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportableLumpSumW').removeAttr('checked');
             }
-
             $('#lumpSumWModal').modal('toggle');
         }
         else{
-
             $('#directorsFeesLabel').text('Edit Directors Fees Details');
             $('#edtEarningsDirectorsFeesid').val(id);
             $('#edtEarningsNameDirectorsFees').val(colEarningsNames);
@@ -14928,12 +15166,8 @@ Template.payrollrules.onRendered(function() {
             {
                 $('#formCheck-ExemptReportableDirectorsFees').removeAttr('checked');
             }
-
             $('#directorsFeesModal').modal('toggle');
         }
-
-
-
     });
 
     $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
@@ -15021,6 +15255,8 @@ Template.payrollrules.onRendered(function() {
     });
 
     $(document).on('click', '#rateList', function(e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         const $earch = $(this);
         const offset = $earch.offset();
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
@@ -15030,6 +15266,8 @@ Template.payrollrules.onRendered(function() {
         }
     });
     $(document).on('click', '#overtimeRateType', function(e, li) {
+        e.preventDefault();
+        e.stopPropagation();
         const $earch = $(this);
         const offset = $earch.offset();
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
@@ -15073,7 +15311,6 @@ Template.payrollrules.onRendered(function() {
 });
 
 Template.payrollrules.events({
-
     'click .btnAddNewPayCalender':function(){
         let id = $('#paycalendarId').val();
         var today = new Date();
@@ -15102,7 +15339,6 @@ Template.payrollrules.events({
     },
 
     'click .btnAddNewHoliday':function(){
-
         let id = $('#holidayid').val();
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -15127,10 +15363,7 @@ Template.payrollrules.events({
              $('#holidayname').val('');
              $('#holidayid').val(0);
              $('#holidaygroup').val('');
-
-
         }
-
     },
 
     'click #btnEarnings': function() {
@@ -17455,7 +17688,7 @@ Template.payrollrules.events({
         }, delayTimeAfterSound);
     },
 
-   'click .newreiumbursement': function(){
+   'click .btnSaveReimbursement': function(){
        LoadingOverlay.show();
         let templateObject = Template.instance();
 
@@ -17706,7 +17939,7 @@ Template.payrollrules.events({
 
             LoadingOverlay.show();
 
-            getVS1Data('TLeaveData').then(function(dataObject) {
+            getVS1Data('TLeave').then(function(dataObject) {
 
                 if(dataObject.length == 0)
                 {
@@ -17714,7 +17947,7 @@ Template.payrollrules.events({
                     var golarray = [];
 
                     var  objDetails = {
-                        type: "TLeaveData",
+                        type: "TLeave",
                         fields: {
                             LeaveName:Leavename,
                             LeaveUnits:Typeofunit,
@@ -17728,7 +17961,7 @@ Template.payrollrules.events({
 
                     golarray.push(objDetails)
 
-                    addVS1Data("TLeaveData", JSON.stringify(golarray)).then(function (datareturn) {
+                    addVS1Data("TLeave", JSON.stringify(golarray)).then(function (datareturn) {
                         LoadingOverlay.hide();
                         swal({
                         title: 'Success',
@@ -17790,7 +18023,7 @@ Template.payrollrules.events({
 
 
                      var  objDetails = {
-                        type: "TLeaveData",
+                        type: "TLeave",
                         fields: {
                             LeaveName:Leavename,
                             LeaveUnits:Typeofunit,
@@ -17805,7 +18038,7 @@ Template.payrollrules.events({
                     golarray.push(objDetails)
 
 
-                    addVS1Data("TLeaveData", JSON.stringify(golarray)).then(function (datareturn) {
+                    addVS1Data("TLeave", JSON.stringify(golarray)).then(function (datareturn) {
                         LoadingOverlay.hide();
                         swal({
                         title: 'Success',
@@ -17924,7 +18157,7 @@ Template.payrollrules.events({
      else {
         LoadingOverlay.show();
 
-        getVS1Data(erpObject.TEarningData).then(function(dataObject) {
+        getVS1Data(erpObject.TEarnings).then(function(dataObject) {
 
             if(dataObject.length == 0)
             {
@@ -17947,7 +18180,7 @@ Template.payrollrules.events({
                 golarray.push(objDetails)
 
 
-                addVS1Data("TEarningData", JSON.stringify(golarray)).then(function (datareturn) {
+                addVS1Data("TEarnings", JSON.stringify(golarray)).then(function (datareturn) {
                     LoadingOverlay.hide();
                     swal({
                     title: 'Success',
@@ -18018,7 +18251,7 @@ Template.payrollrules.events({
                 };
 
                 golarray.push(objDetails)
-                addVS1Data("TEarningData", JSON.stringify(golarray)).then(function (datareturn) {
+                addVS1Data("TEarnings", JSON.stringify(golarray)).then(function (datareturn) {
                     LoadingOverlay.hide();
                     swal({
                     title: 'Success',
@@ -21115,8 +21348,6 @@ Template.payrollrules.events({
     },
 
     'click .addunpaidleave':function(event){
-
-
         $('#paidLeaveLabel').text('Add Un Paid leave');
         $('#edtUnpaidLeaveName').val('');
         $('#edtUnpaidTypeOfUnits').val('');
@@ -21124,14 +21355,9 @@ Template.payrollrules.events({
         $('#edtUnpaidNormalEntitlement').val('');
         $('#formCheck-UnpaidShowBalance').removeAttr('checked');
         $('#unpaidleaveid').val(0);
-
-
-
-
     },
 
     'click .btnAddNewPaidLeave':function(event){
-
         $('#paidLeaveLabel').text('Add leave');
         $('#edtLeaveName').val('');
         $('#paidleaveid').val(0);
@@ -21139,19 +21365,15 @@ Template.payrollrules.events({
         $('#edtLeaveLoadingRate').val('');
         $('#edtNormalEntitlement').val('');
         $('#formCheck-ShowBalance').removeAttr('checked');
-
     },
 
     'click .btnAddNewReimbursements':function(event){
-
           $('#newReimbursementLabel').text('Add New Reimbursement');
           $('#edtReimbursementName').val('');
           $('#edtReimbursementAccount').val('');
           $('#res_id').val(0);
-
     },
     'click .btnAddNewSuperannuation':function(event){
-
          $('#newSuperannuationFundLabel').text('Add New Superannuation');
          $('#newSuperannuationFundId').val(0);
          $('#edtFundType').val('');
@@ -21162,11 +21384,8 @@ Template.payrollrules.events({
          $('#edtbsb').val();
          $('#edtaccountnumber').val();
          $('#edtaccountname').val('');
-
-
     },
     'click .btnAddordinaryTimeEarnings, click .add-tblEarnings': function(event){
-
         $('#ordinaryTimeEarningsLabel').text('Add New Earnings');
         $('#ordinaryTimeEarningsid').val(0);
         $('#edtEarningsName').val('');
@@ -21176,10 +21395,8 @@ Template.payrollrules.events({
         $('#formCheck-ShowBalance').removeAttr('checked');
         $('#formCheck-ExemptSuperannuation').removeAttr('checked');
         $('#formCheck-ExemptReportable').removeAttr('checked');
-
     },
     'click .add-tblEarnings':function(event){
-
        $('#overtimeEarningsLabel').text('Add New Over Time Earnings');
             $('#edtEarningsNameOvertimeid').val(0);
             $('#edtEarningsNameOvertime').val('');
@@ -21192,7 +21409,6 @@ Template.payrollrules.events({
     },
 
     'click .btnAddemploymentTermnination':function(event){
-
             $('#employmentTermninationPaymentsLabel').text('Add New Employment Termnination');
             $('#edtemploymentTermninationid').val(0);
             $('#edtEarningsNameTermnination').val('');
@@ -21202,11 +21418,8 @@ Template.payrollrules.events({
             $('#formCheck-ExemptPAYGTermnination').removeAttr('checked');
             $('#formCheck-ExemptSuperannuationTermnination').removeAttr('checked');
             $('#formCheck-ExemptReportableTermnination').removeAttr('checked');
-
-
     },
     'click .btnAddolumpSumE':function(event){
-
         $('#lumpSumELabel').text('Add New Lump Sum E');
         $('#edtLumpSumid').val(0);
         $('#edtEarningsNameLumpSumE').val('');
@@ -21216,12 +21429,9 @@ Template.payrollrules.events({
         $('#formCheck-ExemptPAYGLumpSumE').removeAttr('checked');
         $('#formCheck-ExemptSuperannuationLumpSumE').removeAttr('checked');
         $('#formCheck-ExemptReportableLumpSumE').removeAttr('checked');
-
-
     },
 
     'click .btnAddbonusesCommissions':function(event){
-
             $('#bonusesCommissionsLabel').text('Add New Bonuses & Commissions');
             $('#edtEarningsNameBonusesCommissionid').val(0);
             $('#edtEarningsNameBonusesCommissions').val('');
@@ -21234,7 +21444,6 @@ Template.payrollrules.events({
     },
 
     'click .btnAddlumpSumW':function(event){
-
             $('#lumpSumWLabel').text('Add New Lump Sum W');
             $('#edtEarningsNameLumpSumWid').val(0);
             $('#edtEarningsNameLumpSumW').val('');
@@ -21246,7 +21455,6 @@ Template.payrollrules.events({
             $('#formCheck-ExemptReportableLumpSumW').removeAttr('checked');
     },
     'click .btnAdddirectorsFees':function(event){
-
         $('#directorsFeesLabel').text('Add New Directors Fees');
         $('#edtEarningsDirectorsFeesid').val(0);
         $('#edtEarningsNameDirectorsFees').val('');
@@ -21256,8 +21464,6 @@ Template.payrollrules.events({
         $('#formCheck-ExemptPAYGDirectorsFees').removeAttr('checked');
         $('#formCheck-ExemptSuperannuationDirectorsFees').removeAttr('checked');
         $('#formCheck-ExemptReportableDirectorsFees').removeAttr('checked');
-
-
     },
     'click #uploadImg':function (event) {
         //let imageData= (localStorage.getItem("Image"));
@@ -21415,16 +21621,16 @@ Template.payrollrules.events({
     },
 
    'keyup #tblHolidays_filter input': function (event) {
-    if($(event.target).val() != ''){
-      $(".btnRefreshHoliday").addClass('btnSearchAlert');
-    }else{
-      $(".btnRefreshHoliday").removeClass('btnSearchAlert');
-    }
-    if (event.keyCode == 13) {
-       $(".btnRefreshHoliday").trigger("click");
-    }
+        if($(event.target).val() != ''){
+        $(".btnRefreshHoliday").addClass('btnSearchAlert');
+        }else{
+        $(".btnRefreshHoliday").removeClass('btnSearchAlert');
+        }
+        if (event.keyCode == 13) {
+        $(".btnRefreshHoliday").trigger("click");
+        }
     },
-   'click .btnRefreshHoliday':function(event){
+    'click .btnRefreshHoliday':function(event){
 
     let templateObject = Template.instance();
     let utilityService = new UtilityService();
@@ -21521,7 +21727,7 @@ Template.payrollrules.events({
 
     },
 
-   'keyup #tblSuperannuation_filter input': function (event) {
+    'keyup #tblSuperannuation_filter input': function (event) {
     if($(event.target).val() != ''){
       $(".btnRefreshSuperannuation").addClass('btnSearchAlert');
     }else{
@@ -21530,10 +21736,9 @@ Template.payrollrules.events({
     if (event.keyCode == 13) {
          $(".btnRefreshSuperannuation").trigger("click");
         }
-     },
+    },
 
-     'click .btnRefreshSuperannuation':function(event){
-
+    'click .btnRefreshSuperannuation':function(event){
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let tableProductList;
@@ -21636,8 +21841,7 @@ Template.payrollrules.events({
 
      },
 
-    'click  .filterholiday':function(event) {
-
+    'click  .filterHoliday':function(event) {
         let templateObject = Template.instance();
         let utilityService = new UtilityService();
         let tableProductList;
@@ -22398,6 +22602,247 @@ Template.payrollrules.helpers({
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
+    
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        return sideBarService.getCalender;
+    },
+    searchAPI: function() {
+        return sideBarService.getNewCalenderByNameOrPayPeriod;
+    },
+    service: ()=>{
+        return sideBarService;
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data);
+            return dataReturn;
+        }
+    },
+    apiParams: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords2: () => {
+        return Template.instance().tableheaderrecords2.get();
+    },
+    apiFunction2:function() {
+        return sideBarService.getHolidayData;
+    },
+    searchAPI2: function() {
+        return sideBarService.getNewHolidayByName;
+    },
+    service2: ()=>{
+        return sideBarService;
+    },
+    datahandler2: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList2(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler2: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList2(data);
+            return dataReturn;
+        }
+    },
+    apiParams2: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords3: () => {
+        return Template.instance().tableheaderrecords3.get();
+    },
+    apiFunction3:function() {
+        return sideBarService.getAllowance;
+    },
+    searchAPI3: function() {
+        return sideBarService.getAllowanceByName;
+    },
+    service3: ()=>{
+        return sideBarService;
+    },
+    datahandler3: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList3(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler3: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList3(data);
+            return dataReturn;
+        }
+    },
+    apiParams3: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords4: () => {
+        return Template.instance().tableheaderrecords4.get();
+    },
+    apiFunction4:function() {
+        return sideBarService.getEarnings;
+    },
+    searchAPI4: function() {
+        return sideBarService.getEarningByName;
+    },
+    service4: ()=>{
+        return sideBarService;
+    },
+    datahandler4: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList4(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler4: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList4(data);
+            return dataReturn;
+        }
+    },
+    apiParams4: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords5: () => {
+        return Template.instance().tableheaderrecords5.get();
+    },
+    apiFunction5:function() {
+        return sideBarService.getDeduction;
+    },
+    searchAPI5: function() {
+        return sideBarService.getDeductionByName;
+    },
+    service5: ()=>{
+        return sideBarService;
+    },
+    datahandler5: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList5(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler5: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList5(data);
+            return dataReturn;
+        }
+    },
+    apiParams5: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords6: () => {
+        return Template.instance().tableheaderrecords6.get();
+    },
+    apiFunction6:function() {
+        return sideBarService.getReimbursement;
+    },
+    searchAPI6: function() {
+        return sideBarService.getReimbursementByName;
+    },
+    service6: ()=>{
+        return sideBarService;
+    },
+    datahandler6: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList6(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler6: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList6(data);
+            return dataReturn;
+        }
+    },
+    apiParams6: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords7: () => {
+        return Template.instance().tableheaderrecords7.get();
+    },
+    apiFunction7:function() {
+        return sideBarService.getPaidLeave;
+    },
+    searchAPI7: function() {
+        return sideBarService.getPaidLeaveByName;
+    },
+    service7: ()=>{
+        return sideBarService;
+    },
+    datahandler7: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList7(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler7: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList7(data);
+            return dataReturn;
+        }
+    },
+    apiParams7: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords8: () => {
+        return Template.instance().tableheaderrecords8.get();
+    },
+    apiFunction8:function() {
+        return sideBarService.getSuperannuation;
+    },
+    searchAPI8: function() {
+        return sideBarService.getSuperannuationByName;
+    },
+    service8: ()=>{
+        return sideBarService;
+    },
+    datahandler8: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList8(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler8: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList8(data);
+            return dataReturn;
+        }
+    },
+    apiParams8: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
     overtimes: () => {
         return Template.instance().overtimes.get();
     },
@@ -22407,8 +22852,6 @@ Template.payrollrules.helpers({
     earnings: () => {
         return Template.instance().earnings.get();
     }
-
-
 });
 
 
@@ -22478,7 +22921,7 @@ export const getRateTypes = async (refresh = false) => {
 }
 
 export const getEarnings = async (refresh = false) => {
-    let data = await getVS1Data(erpObject.TEarningData);
+    let data = await getVS1Data(erpObject.TEarnings);
     let earnings =  data.length > 0 ? JSON.parse(data[0].data) : [];
     return earnings;
 }

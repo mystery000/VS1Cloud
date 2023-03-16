@@ -23,6 +23,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let contactService = new ContactService();
 Template.employeelistpop.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.custdatatablerecords = new ReactiveVar([]);
@@ -30,1382 +31,1430 @@ Template.employeelistpop.onCreated(function () {
 
     templateObject.selectedFile = new ReactiveVar();
     templateObject.tablename = new ReactiveVar();
+
+    templateObject.getDataTableList = function (data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        }
+        ;
+        var dataList = [
+            data.EmployeeID || "",
+            data.EmployeeName || "",
+            data.FirstName || "",
+            data.LastName || "",
+            data.Phone || "",
+            data.Mobile || '',
+            data.Email || '',
+            data.DefaultClassName || '',
+            data.CustFld1 || '',
+            data.CustFld2 || '',
+            data.Street || "",
+            data.Street2 || "",
+            data.State || "",
+            data.Postcode || "",
+            data.Country || "",
+            linestatus,
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        {index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10"},
+        {index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200"},
+        {index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100"},
+        {index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100"},
+        {index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+        {index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "95"},
+        {index: 6, label: 'Email', class: 'colEmail', active: true, display: true, width: "200"},
+        {index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "80"},
+        {index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120"},
+        {index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120"},
+        {index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: ""},
+        {index: 11, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120"},
+        {index: 12, label: 'State', class: 'colState', active: false, display: true, width: "120"},
+        {index: 13, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80"},
+        {index: 14, label: 'Country', class: 'colCountry', active: false, display: true, width: "200"},
+        {index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.employeelistpop.onRendered(function () {
     //$('.fullScreenSpin').css('display','inline-block');
-    let templateObject = Template.instance();
-    let contactService = new ContactService();
-    const employeeList = [];
-    let salesOrderTable;
-    var splashArray = new Array();
-    var splashArrayEmployeeList = new Array();
-
-    let currenttablename = templateObject.data.tablename || "tblEmployeelist";
-    templateObject.tablename.set(currenttablename);
-
-    const lineEmployeeItems = [];
-    const dataTableList = [];
-    const tableHeaderList = [];
-
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
-    templateObject.resetData = function (dataVal) {
-        location.reload();
-    }
-
-    templateObject.getEmployees = function () {
-      var employeepage = 0;
-        getVS1Data('TEmployee').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0).then(function (data) {
-                    addVS1Data('TEmployee', JSON.stringify(data));
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
-                        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
-                        let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
-                        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
-                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
-                        var dataList = {
-                            id: data.temployee[i].fields.ID || '',
-                            clientName: data.temployee[i].fields.ClientName || '',
-                            company: data.temployee[i].fields.Companyname || '',
-                            contactname: data.temployee[i].fields.ContactName || '',
-                            phone: data.temployee[i].fields.Phone || '',
-                            arbalance: arBalance || 0.00,
-                            creditbalance: creditBalance || 0.00,
-                            balance: balance || 0.00,
-                            creditlimit: creditLimit || 0.00,
-                            salesorderbalance: salesOrderBalance || 0.00,
-                            email: data.temployee[i].fields.Email || '',
-                            job: data.temployee[i].fields.JobName || '',
-                            accountno: data.temployee[i].fields.AccountNo || '',
-                            clientno: data.temployee[i].fields.ClientNo || '',
-                            jobtitle: data.temployee[i].fields.JobTitle || '',
-                            notes: data.temployee[i].fields.Notes || '',
-                            state: data.temployee[i].fields.State || '',
-                            country: data.temployee[i].fields.Country || '',
-                            street: data.temployee[i].fields.Street || ' ',
-                            street2: data.temployee[i].fields.Street2 || ' ',
-                            street3: data.temployee[i].fields.Street3 || ' ',
-                            suburb: data.temployee[i].fields.Suburb || ' ',
-                            postcode: data.temployee[i].fields.Postcode || ' ',
-                            clienttype: data.temployee[i].fields.ClientTypeName || 'Default',
-                            discount: data.temployee[i].fields.Discount || 0
-                        };
-
-                        dataTableList.push(dataList);
-                        let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
-                        var dataListEmployee = [
-                            data.temployee[i].fields.EmployeeName || '-',
-                            data.temployee[i].fields.FirstName || '',
-                            data.temployee[i].fields.LastName || '',
-                            data.temployee[i].fields.Phone || '',
-                            mobile || '',
-                            data.temployee[i].fields.Email || '',
-                            data.temployee[i].fields.DefaultClassName || '',
-                            data.temployee[i].fields.Country || '',
-                            data.temployee[i].fields.State || '',
-                            data.temployee[i].fields.Street2 || '',
-                            data.temployee[i].fields.Street || '',
-                            data.temployee[i].fields.Postcode || '',
-                            data.temployee[i].fields.ID || ''
-                        ];
-                        splashArrayEmployeeList.push(dataListEmployee);
-                        //}
-                    }
-
-                    function MakeNegative() {
-                        $('td').each(function () {
-                            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                        });
-                    };
-
-                    templateObject.custdatatablerecords.set(dataTableList);
-
-                    if (templateObject.custdatatablerecords.get()) {
-
-                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
-                            if (error) {
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if (hiddenColumn == true) {
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    }
-
-                    //$('.fullScreenSpin').css('display','none');
-                    setTimeout(function () {
-                        $(currenttablename).DataTable({
-                            data: splashArrayEmployeeList,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            columnDefs: [
-                                {
-                                    className: "colEmployeeName",
-                                    "targets": [0]
-                                }, {
-                                    className: "colFirstName",
-                                    "targets": [1]
-                                }, {
-                                    className: "colLastName",
-                                    "targets": [2]
-                                }, {
-                                    className: "colPhone",
-                                    "targets": [3]
-                                }, {
-                                    className: "colMobile",
-                                    "targets": [4]
-                                }, {
-                                    className: "colEmail ",
-                                    "targets": [5]
-                                }, {
-                                    className: "colDepartment",
-                                    "targets": [6]
-                                }, {
-                                    className: "colCountry",
-                                    "targets": [7]
-                                }, {
-                                    className: "colState hiddenColumn",
-                                    "targets": [8]
-                                }, {
-                                    className: "colCity hiddenColumn",
-                                    "targets": [9]
-                                }, {
-                                    className: "colStreetAddress hiddenColumn",
-                                    "targets": [10]
-                                }, {
-                                    className: "colZipCode hiddenColumn",
-                                    "targets": [11]
-                                }, {
-                                    className: "colID hiddenColumn",
-                                    "targets": [12]
-                                }
-                            ],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                            info: true,
-                            responsive: true,
-                            "order": [[0, "asc"]],
-                            action: function () {
-                                $('.tblEmployeelist').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function (oSettings) {
-                                $('.paginate_button.page-item').removeClass('disabled');
-                                $('#tblEmployeelist_ellipsis').addClass('disabled');
-                                if (oSettings._iDisplayLength == -1) {
-                                    if (oSettings.fnRecordsDisplay() > 150) {
-
-                                    }
-                                } else {
-
-                                }
-                                if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                    $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-
-                                $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                    .on('click', function () {
-                                        $('.fullScreenSpin').css('display', 'inline-block');
-                                        var splashArrayEmployeeListDupp = new Array();
-                                        let dataLenght = oSettings._iDisplayLength;
-                                        let employeeSearch = $('#tblEmployeelist_filter input').val();
-
-                                        sideBarService.getAllEmployeesDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                                    for (let j = 0; j < dataObjectnew.temployee.length; j++) {
-
-                                                        let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.ARBalance) || 0.00;
-                                                        let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditBalance) || 0.00;
-                                                        let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.Balance) || 0.00;
-                                                        let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditLimit) || 0.00;
-                                                        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.SalesOrderBalance) || 0.00;
-                                                        var dataList = {
-                                                            id: dataObjectnew.temployee[j].fields.ID || '',
-                                                            clientName: dataObjectnew.temployee[j].fields.ClientName || '',
-                                                            company: dataObjectnew.temployee[j].fields.Companyname || '',
-                                                            contactname: dataObjectnew.temployee[j].fields.ContactName || '',
-                                                            phone: dataObjectnew.temployee[j].fields.Phone || '',
-                                                            arbalance: arBalance || 0.00,
-                                                            creditbalance: creditBalance || 0.00,
-                                                            balance: balance || 0.00,
-                                                            creditlimit: creditLimit || 0.00,
-                                                            salesorderbalance: salesOrderBalance || 0.00,
-                                                            email: dataObjectnew.temployee[j].fields.Email || '',
-                                                            job: dataObjectnew.temployee[j].fields.JobName || '',
-                                                            accountno: dataObjectnew.temployee[j].fields.AccountNo || '',
-                                                            clientno: dataObjectnew.temployee[j].fields.ClientNo || '',
-                                                            jobtitle: dataObjectnew.temployee[j].fields.JobTitle || '',
-                                                            notes: dataObjectnew.temployee[j].fields.Notes || '',
-                                                            state: dataObjectnew.temployee[j].fields.State || '',
-                                                            country: dataObjectnew.temployee[j].fields.Country || '',
-                                                            street: dataObjectnew.temployee[j].fields.Street || ' ',
-                                                            street2: dataObjectnew.temployee[j].fields.Street2 || ' ',
-                                                            street3: dataObjectnew.temployee[j].fields.Street3 || ' ',
-                                                            suburb: dataObjectnew.temployee[j].fields.Suburb || ' ',
-                                                            postcode: dataObjectnew.temployee[j].fields.Postcode || ' ',
-                                                            clienttype: dataObjectnew.temployee[j].fields.ClientTypeName || 'Default',
-                                                            discount: dataObjectnew.temployee[j].fields.Discount || 0
-                                                        };
-
-                                                        dataTableList.push(dataList);
-                                                        let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile)
-                                                        var dataListEmployeeDupp = [
-                                                            dataObjectnew.temployee[j].fields.EmployeeName || '-',
-                                                            dataObjectnew.temployee[j].fields.FirstName || '',
-                                                            dataObjectnew.temployee[j].fields.LastName || '',
-                                                            dataObjectnew.temployee[j].fields.Phone || '',
-                                                            mobile || '',
-                                                            dataObjectnew.temployee[j].fields.Email || '',
-                                                            dataObjectnew.temployee[j].fields.DefaultClassName || '',
-                                                            dataObjectnew.temployee[j].fields.Country || '',
-                                                            dataObjectnew.temployee[j].fields.State || '',
-                                                            dataObjectnew.temployee[j].fields.Street2 || '',
-                                                            dataObjectnew.temployee[j].fields.Street || '',
-                                                            dataObjectnew.temployee[j].fields.Postcode || '',
-                                                            dataObjectnew.temployee[j].fields.ID || ''
-                                                        ];
-
-                                                        splashArrayEmployeeList.push(dataListEmployeeDupp);
-                                                        //}
-                                                    }
-
-                                                    let uniqueChars = [...new Set(splashArrayEmployeeList)];
-                                                    var datatable = $('.tblEmployeelist').DataTable();
-                                                    datatable.clear();
-                                                    datatable.rows.add(uniqueChars);
-                                                    datatable.draw(false);
-                                                    setTimeout(function () {
-                                                      $(".tblEmployeelist").dataTable().fnPageChange('last');
-                                                    }, 400);
-
-                                                    $('.fullScreenSpin').css('display', 'none');
-
-
-                                        }).catch(function (err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-
-                                    });
-                                setTimeout(function () {
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function (oSettings) {
-                                $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
-                                $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
-
-                                let urlParametersPage = FlowRouter.current().queryParams.page;
-                                if (urlParametersPage) {
-                                    this.fnPageChange('last');
-                                }
-
-                            }
-
-                        }).on('page', function () {
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.custdatatablerecords.get();
-                            templateObject.custdatatablerecords.set(draftRecord);
-                        }).on('column-reorder', function () {
-
-                        }).on('length.dt', function (e, settings, len) {
-
-                            let dataLenght = settings._iDisplayLength;
-                            let employeeSearch = $('#tblEmployeelist_filter input').val();
-                            splashArrayEmployeeList = [];
-                            if (dataLenght == -1) {
-                              if(settings.fnRecordsDisplay() > initialDatatableLoad){
-                                $('.fullScreenSpin').css('display','none');
-                              }else{
-                                if (employeeSearch.replace(/\s/g, '') != '') {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  sideBarService.getAllEmployeesDataVS1ByName(employeeSearch).then(function (data) {
-                                      let lineItems = [];
-                                      let lineItemObj = {};
-                                      if (data.temployee.length > 0) {
-                                          for (let i = 0; i < data.temployee.length; i++) {
-                                              let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
-                                              let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
-                                              let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
-                                              let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
-                                              let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
-                                              var dataList = {
-                                                  id: data.temployee[i].fields.ID || '',
-                                                  clientName: data.temployee[i].fields.ClientName || '',
-                                                  company: data.temployee[i].fields.Companyname || '',
-                                                  contactname: data.temployee[i].fields.ContactName || '',
-                                                  phone: data.temployee[i].fields.Phone || '',
-                                                  arbalance: arBalance || 0.00,
-                                                  creditbalance: creditBalance || 0.00,
-                                                  balance: balance || 0.00,
-                                                  creditlimit: creditLimit || 0.00,
-                                                  salesorderbalance: salesOrderBalance || 0.00,
-                                                  email: data.temployee[i].fields.Email || '',
-                                                  job: data.temployee[i].fields.JobName || '',
-                                                  accountno: data.temployee[i].fields.AccountNo || '',
-                                                  clientno: data.temployee[i].fields.ClientNo || '',
-                                                  jobtitle: data.temployee[i].fields.JobTitle || '',
-                                                  notes: data.temployee[i].fields.Notes || '',
-                                                  state: data.temployee[i].fields.State || '',
-                                                  country: data.temployee[i].fields.Country || '',
-                                                  street: data.temployee[i].fields.Street || ' ',
-                                                  street2: data.temployee[i].fields.Street2 || ' ',
-                                                  street3: data.temployee[i].fields.Street3 || ' ',
-                                                  suburb: data.temployee[i].fields.Suburb || ' ',
-                                                  postcode: data.temployee[i].fields.Postcode || ' '
-                                              };
-
-                                              dataTableList.push(dataList);
-                                              let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
-                                              var dataListEmployee = [
-                                                  data.temployee[i].fields.EmployeeName || '-',
-                                                  data.temployee[i].fields.FirstName || '',
-                                                  data.temployee[i].fields.LastName || '',
-                                                  data.temployee[i].fields.Phone || '',
-                                                  mobile || '',
-                                                  data.temployee[i].fields.Email || '',
-                                                  data.temployee[i].fields.DefaultClassName || '',
-                                                  data.temployee[i].fields.Country || '',
-                                                  data.temployee[i].fields.State || '',
-                                                  data.temployee[i].fields.Street2 || '',
-                                                  data.temployee[i].fields.Street || '',
-                                                  data.temployee[i].fields.Postcode || '',
-                                                  data.temployee[i].fields.ID || ''
-                                              ];
-                                              splashArrayEmployeeList.push(dataListEmployee);
-                                              //}
-                                          }
-                                          var datatable = $('.tblEmployeelist').DataTable();
-                                          datatable.clear();
-                                          datatable.rows.add(splashArrayEmployeeList);
-                                          datatable.draw(false);
-
-                                          $('.fullScreenSpin').css('display', 'none');
-                                      } else {
-
-                                          $('.fullScreenSpin').css('display', 'none');
-                                          $('#employeeListPOPModal').modal('toggle');
-                                          swal({
-                                              title: 'Question',
-                                              text: "Employee does not exist, would you like to create it?",
-                                              type: 'question',
-                                              showCancelButton: true,
-                                              confirmButtonText: 'Yes',
-                                              cancelButtonText: 'No'
-                                          }).then((result) => {
-                                              if (result.value) {
-                                                  $('#addEmployeeModal').modal('toggle');
-                                                  $('#edtEmployeeCompany').val(dataSearchName);
-                                              } else if (result.dismiss === 'cancel') {
-                                                  $('#employeeListPOPModal').modal('toggle');
-                                              }
-                                          });
-
-                                      }
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-                                }else{
-                                  $('.fullScreenSpin').css('display', 'none');
-
-                                }
-
-                              }
-
-                            } else {
-                                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                } else {
-                                    sideBarService.getAllEmployeesDataVS1(dataLenght, 0).then(function (dataNonBo) {
-
-                                        addVS1Data('TEmployee', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                            templateObject.resetData(dataNonBo);
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        }).catch(function (err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }
-                            }
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        });
-
-                        // $(currenttablename).DataTable().column( 0 ).visible( true );
-                        //$('.fullScreenSpin').css('display','none');
-                    }, 0);
-
-
-                    var columns = $(currenttablename + ' th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function (i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if ((v.className.includes("hiddenColumn"))) {
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || 0,
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-
-                }).catch(function (err) {
-
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.temployee;
-
-                let lineItems = [];
-                let lineItemObj = {};
-                for (let i = 0; i < data.temployee.length; i++) {
-                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile)
-                    var dataListEmployee = [
-                        data.temployee[i].fields.EmployeeName || '-',
-                        data.temployee[i].fields.FirstName || '',
-                        data.temployee[i].fields.LastName || '',
-                        data.temployee[i].fields.Phone || '',
-                        mobile || '',
-                        data.temployee[i].fields.Email || '',
-                        data.temployee[i].fields.DefaultClassName || '',
-                        data.temployee[i].fields.Country || '',
-                        data.temployee[i].fields.State || '',
-                        data.temployee[i].fields.Street2 || '',
-                        data.temployee[i].fields.Street || '',
-                        data.temployee[i].fields.Postcode || '',
-                        data.temployee[i].fields.ID || ''
-                    ];
-
-                    splashArrayEmployeeList.push(dataListEmployee);
-                    //}
-                }
-
-                function MakeNegative() {
-                    $('td').each(function () {
-                        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                    });
-                };
-
-                templateObject.custdatatablerecords.set(dataTableList);
-
-                if (templateObject.custdatatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                //$('.fullScreenSpin').css('display','none');
-                setTimeout(function () {
-                    $("#"+currenttablename).DataTable({
-                        data: splashArrayEmployeeList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [
-                            {
-                                className: "colEmployeeName",
-                                "targets": [0]
-                            }, {
-                                className: "colFirstName",
-                                "targets": [1]
-                            }, {
-                                className: "colLastName",
-                                "targets": [2]
-                            }, {
-                                className: "colPhone",
-                                "targets": [3]
-                            }, {
-                                className: "colMobile",
-                                "targets": [4]
-                            }, {
-                                className: "colEmail ",
-                                "targets": [5]
-                            }, {
-                                className: "colDepartment",
-                                "targets": [6]
-                            }, {
-                                className: "colCountry",
-                                "targets": [7]
-                            }, {
-                                className: "colState hiddenColumn",
-                                "targets": [8]
-                            }, {
-                                className: "colCity hiddenColumn",
-                                "targets": [9]
-                            }, {
-                                className: "colStreetAddress hiddenColumn",
-                                "targets": [10]
-                            }, {
-                                className: "colZipCode hiddenColumn",
-                                "targets": [11]
-                            }, {
-                                className: "colID hiddenColumn",
-                                "targets": [12]
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[0, "asc"]],
-                        action: function () {
-                            $("#"+currenttablename).DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#'+currenttablename+'_ellipsis').addClass('disabled');
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-
-                                }
-                            } else {
-
-                            }
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    var splashArrayEmployeeListDupp = new Array();
-                                    let dataLenght = oSettings._iDisplayLength;
-                                    let employeeSearch = $('#'+currenttablename+'_filter input').val();
-
-                                    sideBarService.getAllEmployeesDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                                for (let j = 0; j < dataObjectnew.temployee.length; j++) {
-
-                                                    let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.ARBalance) || 0.00;
-                                                    let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditBalance) || 0.00;
-                                                    let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.Balance) || 0.00;
-                                                    let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditLimit) || 0.00;
-                                                    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.SalesOrderBalance) || 0.00;
-                                                    var dataList = {
-                                                        id: dataObjectnew.temployee[j].fields.ID || '',
-                                                        clientName: dataObjectnew.temployee[j].fields.ClientName || '',
-                                                        company: dataObjectnew.temployee[j].fields.Companyname || '',
-                                                        contactname: dataObjectnew.temployee[j].fields.ContactName || '',
-                                                        phone: dataObjectnew.temployee[j].fields.Phone || '',
-                                                        arbalance: arBalance || 0.00,
-                                                        creditbalance: creditBalance || 0.00,
-                                                        balance: balance || 0.00,
-                                                        creditlimit: creditLimit || 0.00,
-                                                        salesorderbalance: salesOrderBalance || 0.00,
-                                                        email: dataObjectnew.temployee[j].fields.Email || '',
-                                                        job: dataObjectnew.temployee[j].fields.JobName || '',
-                                                        accountno: dataObjectnew.temployee[j].fields.AccountNo || '',
-                                                        clientno: dataObjectnew.temployee[j].fields.ClientNo || '',
-                                                        jobtitle: dataObjectnew.temployee[j].fields.JobTitle || '',
-                                                        notes: dataObjectnew.temployee[j].fields.Notes || '',
-                                                        state: dataObjectnew.temployee[j].fields.State || '',
-                                                        country: dataObjectnew.temployee[j].fields.Country || '',
-                                                        street: dataObjectnew.temployee[j].fields.Street || ' ',
-                                                        street2: dataObjectnew.temployee[j].fields.Street2 || ' ',
-                                                        street3: dataObjectnew.temployee[j].fields.Street3 || ' ',
-                                                        suburb: dataObjectnew.temployee[j].fields.Suburb || ' ',
-                                                        postcode: dataObjectnew.temployee[j].fields.Postcode || ' ',
-                                                        clienttype: dataObjectnew.temployee[j].fields.ClientTypeName || 'Default',
-                                                        discount: dataObjectnew.temployee[j].fields.Discount || 0
-                                                    };
-
-                                                    dataTableList.push(dataList);
-
-                                                    let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile);
-                                                    var dataListEmployeeDupp = [
-                                                        dataObjectnew.temployee[j].fields.EmployeeName || '-',
-                                                        dataObjectnew.temployee[j].fields.FirstName || '',
-                                                        dataObjectnew.temployee[j].fields.LastName || '',
-                                                        dataObjectnew.temployee[j].fields.Phone || '',
-                                                        mobile || '',
-                                                        dataObjectnew.temployee[j].fields.Email || '',
-                                                        dataObjectnew.temployee[j].fields.DefaultClassName || '',
-                                                        dataObjectnew.temployee[j].fields.Country || '',
-                                                        dataObjectnew.temployee[j].fields.State || '',
-                                                        dataObjectnew.temployee[j].fields.Street2 || '',
-                                                        dataObjectnew.temployee[j].fields.Street || '',
-                                                        dataObjectnew.temployee[j].fields.Postcode || '',
-                                                        dataObjectnew.temployee[j].fields.ID || ''
-                                                    ];
-
-
-                                                    splashArrayEmployeeList.push(dataListEmployeeDupp);
-                                                    //}
-                                                }
-
-                                                let uniqueChars = [...new Set(splashArrayEmployeeList)];
-                                                var datatable = $("#"+currenttablename).DataTable();
-                                                datatable.clear();
-                                                datatable.rows.add(uniqueChars);
-                                                datatable.draw(false);
-                                                setTimeout(function () {
-                                                  $("#"+currenttablename).dataTable().fnPageChange('last');
-                                                }, 400);
-
-                                                $('.fullScreenSpin').css('display', 'none');
-
-
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-
-                                });
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function (oSettings) {
-                            $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
-                            $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
-
-                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage) {
-                                this.fnPageChange('last');
-                            }
-
-                        }
-
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.custdatatablerecords.get();
-                        templateObject.custdatatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {
-
-                    }).on('length.dt', function (e, settings, len) {
-
-                        let dataLenght = settings._iDisplayLength;
-                        let employeeSearch = $('#'+currenttablename+'_filter input').val();
-                        splashArrayEmployeeList = [];
-                        if (dataLenght == -1) {
-                          if(settings.fnRecordsDisplay() > initialDatatableLoad){
-                            $('.fullScreenSpin').css('display','none');
-                          }else{
-                            if (employeeSearch.replace(/\s/g, '') != '') {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              sideBarService.getAllEmployeesDataVS1ByName(employeeSearch).then(function (data) {
-                                  let lineItems = [];
-                                  let lineItemObj = {};
-                                  if (data.temployee.length > 0) {
-                                      for (let i = 0; i < data.temployee.length; i++) {
-                                          let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
-                                          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
-                                          let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
-                                          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
-                                          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
-                                          var dataList = {
-                                              id: data.temployee[i].fields.ID || '',
-                                              clientName: data.temployee[i].fields.ClientName || '',
-                                              company: data.temployee[i].fields.Companyname || '',
-                                              contactname: data.temployee[i].fields.ContactName || '',
-                                              phone: data.temployee[i].fields.Phone || '',
-                                              arbalance: arBalance || 0.00,
-                                              creditbalance: creditBalance || 0.00,
-                                              balance: balance || 0.00,
-                                              creditlimit: creditLimit || 0.00,
-                                              salesorderbalance: salesOrderBalance || 0.00,
-                                              email: data.temployee[i].fields.Email || '',
-                                              job: data.temployee[i].fields.JobName || '',
-                                              accountno: data.temployee[i].fields.AccountNo || '',
-                                              clientno: data.temployee[i].fields.ClientNo || '',
-                                              jobtitle: data.temployee[i].fields.JobTitle || '',
-                                              notes: data.temployee[i].fields.Notes || '',
-                                              state: data.temployee[i].fields.State || '',
-                                              country: data.temployee[i].fields.Country || '',
-                                              street: data.temployee[i].fields.Street || ' ',
-                                              street2: data.temployee[i].fields.Street2 || ' ',
-                                              street3: data.temployee[i].fields.Street3 || ' ',
-                                              suburb: data.temployee[i].fields.Suburb || ' ',
-                                              postcode: data.temployee[i].fields.Postcode || ' '
-                                          };
-
-                                          dataTableList.push(dataList);
-
-                                          let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
-                                          var dataListEmployee = [
-                                              data.temployee[i].fields.EmployeeName || '-',
-                                              data.temployee[i].fields.FirstName || '',
-                                              data.temployee[i].fields.LastName || '',
-                                              data.temployee[i].fields.Phone || '',
-                                              mobile || '',
-                                              data.temployee[i].fields.Email || '',
-                                              data.temployee[i].fields.DefaultClassName || '',
-                                              data.temployee[i].fields.Country || '',
-                                              data.temployee[i].fields.State || '',
-                                              data.temployee[i].fields.Street2 || '',
-                                              data.temployee[i].fields.Street || '',
-                                              data.temployee[i].fields.Postcode || '',
-                                              data.temployee[i].fields.ID || ''
-                                          ];
-
-                                          splashArrayEmployeeList.push(dataListEmployee);
-                                          //}
-                                      }
-                                      var datatable = $("#"+currenttablename).DataTable();
-                                      datatable.clear();
-                                      datatable.rows.add(splashArrayEmployeeList);
-                                      datatable.draw(false);
-
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  } else {
-
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#employeeListPOPModal').modal('toggle');
-                                      swal({
-                                          title: 'Question',
-                                          text: "Employee does not exist, would you like to create it?",
-                                          type: 'question',
-                                          showCancelButton: true,
-                                          confirmButtonText: 'Yes',
-                                          cancelButtonText: 'No'
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              $('#addEmployeeModal').modal('toggle');
-                                              $('#edtEmployeeCompany').val(dataSearchName);
-                                          } else if (result.dismiss === 'cancel') {
-                                              $('#employeeListPOPModal').modal('toggle');
-                                          }
-                                      });
-
-                                  }
-
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
-                            }else{
-                              $('.fullScreenSpin').css('display', 'none');
-
-                            }
-
-                          }
-
-                        } else {
-                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            } else {
-                                sideBarService.getAllEmployeesDataVS1(dataLenght, 0).then(function (dataNonBo) {
-
-                                    addVS1Data('TEmployee', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                        templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }
-                        }
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    });
-
-                    // $(currenttablename).DataTable().column( 0 ).visible( true );
-                    //$('.fullScreenSpin').css('display','none');
-                }, 0);
-
-                var columns = $('#'+currenttablename+' th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function (i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || 0,
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-            }
-        }).catch(function (err) {
-
-            sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0).then(function (data) {
-                addVS1Data('TEmployee', JSON.stringify(data));
-                let lineItems = [];
-                let lineItemObj = {};
-                for (let i = 0; i < data.temployee.length; i++) {
-                    let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
-                    let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
-                    let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
-                    let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
-                    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
-                    var dataList = {
-                        id: data.temployee[i].fields.ID || '',
-                        clientName: data.temployee[i].fields.ClientName || '',
-                        company: data.temployee[i].fields.Companyname || '',
-                        contactname: data.temployee[i].fields.ContactName || '',
-                        phone: data.temployee[i].fields.Phone || '',
-                        arbalance: arBalance || 0.00,
-                        creditbalance: creditBalance || 0.00,
-                        balance: balance || 0.00,
-                        creditlimit: creditLimit || 0.00,
-                        salesorderbalance: salesOrderBalance || 0.00,
-                        email: data.temployee[i].fields.Email || '',
-                        job: data.temployee[i].fields.JobName || '',
-                        accountno: data.temployee[i].fields.AccountNo || '',
-                        clientno: data.temployee[i].fields.ClientNo || '',
-                        jobtitle: data.temployee[i].fields.JobTitle || '',
-                        notes: data.temployee[i].fields.Notes || '',
-                        country: data.temployee[i].fields.Country || '',
-                        state: data.temployee[i].fields.State || '',
-                        street: data.temployee[i].fields.Street || ' ',
-                        street2: data.temployee[i].fields.Street2 || ' ',
-                        street3: data.temployee[i].fields.Street3 || ' ',
-                        suburb: data.temployee[i].fields.Suburb || ' ',
-                        postcode: data.temployee[i].fields.Postcode || ' ',
-                        clienttype: data.temployee[i].fields.ClientTypeName || 'Default',
-                        discount: data.temployee[i].fields.Discount || 0
-                    };
-
-                    dataTableList.push(dataList);
-                    let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
-                    var dataListEmployee = [
-                        data.temployee[i].fields.EmployeeName || '-',
-                        data.temployee[i].fields.FirstName || '',
-                        data.temployee[i].fields.LastName || '',
-                        data.temployee[i].fields.Phone || '',
-                        mobile || '',
-                        data.temployee[i].fields.Email || '',
-                        data.temployee[i].fields.DefaultClassName || '',
-                        data.temployee[i].fields.Country || '',
-                        data.temployee[i].fields.State || '',
-                        data.temployee[i].fields.Street2 || '',
-                        data.temployee[i].fields.Street || '',
-                        data.temployee[i].fields.Postcode || '',
-                        data.temployee[i].fields.ID || ''
-                    ];
-
-                    splashArrayEmployeeList.push(dataListEmployee);
-                    //}
-                }
-
-                function MakeNegative() {
-                    // TDs = document.getElementsByTagName('td');
-                    // for (var i=0; i<TDs.length; i++) {
-                    // var temp = TDs[i];
-                    // if (temp.firstChild.nodeValue.indexOf('-'+Currency) == 0){
-                    // temp.className = "text-danger";
-                    // }
-                    // }
-
-                    $('td').each(function () {
-                        if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-                    });
-                };
-
-                templateObject.custdatatablerecords.set(dataTableList);
-
-                if (templateObject.custdatatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                //$('.fullScreenSpin').css('display','none');
-                setTimeout(function () {
-                    $("#"+currenttablename).DataTable({
-                        data: splashArrayEmployeeList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        columnDefs: [
-                            {
-                                className: "colEmployeeName",
-                                "targets": [0]
-                            }, {
-                                className: "colFirstName",
-                                "targets": [1]
-                            }, {
-                                className: "colLastName",
-                                "targets": [2]
-                            }, {
-                                className: "colPhone",
-                                "targets": [3]
-                            }, {
-                                className: "colMobile",
-                                "targets": [4]
-                            }, {
-                                className: "colEmail ",
-                                "targets": [5]
-                            }, {
-                                className: "colDepartment",
-                                "targets": [6]
-                            }, {
-                                className: "colCountry",
-                                "targets": [7]
-                            }, {
-                                className: "colState hiddenColumn",
-                                "targets": [8]
-                            }, {
-                                className: "colCity hiddenColumn",
-                                "targets": [9]
-                            }, {
-                                className: "colStreetAddress hiddenColumn",
-                                "targets": [10]
-                            }, {
-                                className: "colZipCode hiddenColumn",
-                                "targets": [11]
-                            }, {
-                                className: "colID hiddenColumn",
-                                "targets": [12]
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[0, "asc"]],
-                        action: function () {
-                            $("#"+currenttablename).DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#'+currenttablename+'_ellipsis').addClass('disabled');
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-
-                                }
-                            } else {
-
-                            }
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    var splashArrayEmployeeListDupp = new Array();
-                                    let dataLenght = oSettings._iDisplayLength;
-                                    let employeeSearch = $('#'+currenttablename+'_filter input').val();
-
-                                    sideBarService.getAllEmployeesDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                                for (let j = 0; j < dataObjectnew.temployee.length; j++) {
-
-                                                    let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.ARBalance) || 0.00;
-                                                    let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditBalance) || 0.00;
-                                                    let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.Balance) || 0.00;
-                                                    let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditLimit) || 0.00;
-                                                    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.SalesOrderBalance) || 0.00;
-                                                    var dataList = {
-                                                        id: dataObjectnew.temployee[j].fields.ID || '',
-                                                        clientName: dataObjectnew.temployee[j].fields.ClientName || '',
-                                                        company: dataObjectnew.temployee[j].fields.Companyname || '',
-                                                        contactname: dataObjectnew.temployee[j].fields.ContactName || '',
-                                                        phone: dataObjectnew.temployee[j].fields.Phone || '',
-                                                        arbalance: arBalance || 0.00,
-                                                        creditbalance: creditBalance || 0.00,
-                                                        balance: balance || 0.00,
-                                                        creditlimit: creditLimit || 0.00,
-                                                        salesorderbalance: salesOrderBalance || 0.00,
-                                                        email: dataObjectnew.temployee[j].fields.Email || '',
-                                                        job: dataObjectnew.temployee[j].fields.JobName || '',
-                                                        accountno: dataObjectnew.temployee[j].fields.AccountNo || '',
-                                                        clientno: dataObjectnew.temployee[j].fields.ClientNo || '',
-                                                        jobtitle: dataObjectnew.temployee[j].fields.JobTitle || '',
-                                                        notes: dataObjectnew.temployee[j].fields.Notes || '',
-                                                        state: dataObjectnew.temployee[j].fields.State || '',
-                                                        country: dataObjectnew.temployee[j].fields.Country || '',
-                                                        street: dataObjectnew.temployee[j].fields.Street || ' ',
-                                                        street2: dataObjectnew.temployee[j].fields.Street2 || ' ',
-                                                        street3: dataObjectnew.temployee[j].fields.Street3 || ' ',
-                                                        suburb: dataObjectnew.temployee[j].fields.Suburb || ' ',
-                                                        postcode: dataObjectnew.temployee[j].fields.Postcode || ' ',
-                                                        clienttype: dataObjectnew.temployee[j].fields.ClientTypeName || 'Default',
-                                                        discount: dataObjectnew.temployee[j].fields.Discount || 0
-                                                    };
-
-                                                    dataTableList.push(dataList);
-                                                    let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile);
-                                                    var dataListEmployeeDupp = [
-                                                        dataObjectnew.temployee[j].fields.EmployeeName || '-',
-                                                        dataObjectnew.temployee[j].fields.FirstName || '',
-                                                        dataObjectnew.temployee[j].fields.LastName || '',
-                                                        dataObjectnew.temployee[j].fields.Phone || '',
-                                                        mobile || '',
-                                                        dataObjectnew.temployee[j].fields.Email || '',
-                                                        dataObjectnew.temployee[j].fields.DefaultClassName || '',
-                                                        dataObjectnew.temployee[j].fields.Country || '',
-                                                        dataObjectnew.temployee[j].fields.State || '',
-                                                        dataObjectnew.temployee[j].fields.Street2 || '',
-                                                        dataObjectnew.temployee[j].fields.Street || '',
-                                                        dataObjectnew.temployee[j].fields.Postcode || '',
-                                                        dataObjectnew.temployee[j].fields.ID || ''
-                                                    ];
-
-                                                    splashArrayEmployeeList.push(dataListEmployeeDupp);
-                                                    //}
-                                                }
-
-                                                let uniqueChars = [...new Set(splashArrayEmployeeList)];
-                                                var datatable = $("#"+currenttablename).DataTable();
-                                                datatable.clear();
-                                                datatable.rows.add(uniqueChars);
-                                                datatable.draw(false);
-                                                setTimeout(function () {
-                                                  $("#"+currenttablename).dataTable().fnPageChange('last');
-                                                }, 400);
-
-                                                $('.fullScreenSpin').css('display', 'none');
-
-
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-
-                                });
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function (oSettings) {
-                            $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
-                            $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
-
-                            let urlParametersPage = FlowRouter.current().queryParams.page;
-                            if (urlParametersPage) {
-                                this.fnPageChange('last');
-                            }
-
-                        }
-
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.custdatatablerecords.get();
-                        templateObject.custdatatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {
-
-                    }).on('length.dt', function (e, settings, len) {
-
-                        let dataLenght = settings._iDisplayLength;
-                        let employeeSearch = $('#'+currenttablename+'_filter input').val();
-                        splashArrayEmployeeList = [];
-                        if (dataLenght == -1) {
-                          if(settings.fnRecordsDisplay() > initialDatatableLoad){
-                            $('.fullScreenSpin').css('display','none');
-                          }else{
-                            if (employeeSearch.replace(/\s/g, '') != '') {
-                              $('.fullScreenSpin').css('display', 'inline-block');
-                              sideBarService.getAllEmployeesDataVS1ByName(employeeSearch).then(function (data) {
-                                  let lineItems = [];
-                                  let lineItemObj = {};
-                                  if (data.temployee.length > 0) {
-                                      for (let i = 0; i < data.temployee.length; i++) {
-                                          let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
-                                          let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
-                                          let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
-                                          let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
-                                          let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
-                                          var dataList = {
-                                              id: data.temployee[i].fields.ID || '',
-                                              clientName: data.temployee[i].fields.ClientName || '',
-                                              company: data.temployee[i].fields.Companyname || '',
-                                              contactname: data.temployee[i].fields.ContactName || '',
-                                              phone: data.temployee[i].fields.Phone || '',
-                                              arbalance: arBalance || 0.00,
-                                              creditbalance: creditBalance || 0.00,
-                                              balance: balance || 0.00,
-                                              creditlimit: creditLimit || 0.00,
-                                              salesorderbalance: salesOrderBalance || 0.00,
-                                              email: data.temployee[i].fields.Email || '',
-                                              job: data.temployee[i].fields.JobName || '',
-                                              accountno: data.temployee[i].fields.AccountNo || '',
-                                              clientno: data.temployee[i].fields.ClientNo || '',
-                                              jobtitle: data.temployee[i].fields.JobTitle || '',
-                                              notes: data.temployee[i].fields.Notes || '',
-                                              state: data.temployee[i].fields.State || '',
-                                              country: data.temployee[i].fields.Country || '',
-                                              street: data.temployee[i].fields.Street || ' ',
-                                              street2: data.temployee[i].fields.Street2 || ' ',
-                                              street3: data.temployee[i].fields.Street3 || ' ',
-                                              suburb: data.temployee[i].fields.Suburb || ' ',
-                                              postcode: data.temployee[i].fields.Postcode || ' '
-                                          };
-
-                                          dataTableList.push(dataList);
-                                          let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
-                                          var dataListEmployee = [
-                                              data.temployee[i].fields.EmployeeName || '-',
-                                              data.temployee[i].fields.FirstName || '',
-                                              data.temployee[i].fields.LastName || '',
-                                              data.temployee[i].fields.Phone || '',
-                                              mobile || '',
-                                              data.temployee[i].fields.Email || '',
-                                              data.temployee[i].fields.DefaultClassName || '',
-                                              data.temployee[i].fields.Country || '',
-                                              data.temployee[i].fields.State || '',
-                                              data.temployee[i].fields.Street2 || '',
-                                              data.temployee[i].fields.Street || '',
-                                              data.temployee[i].fields.Postcode || '',
-                                              data.temployee[i].fields.ID || ''
-                                          ];
-                                          splashArrayEmployeeList.push(dataListEmployee);
-                                          //}
-                                      }
-                                      var datatable = $("#"+currenttablename).DataTable();
-                                      datatable.clear();
-                                      datatable.rows.add(splashArrayEmployeeList);
-                                      datatable.draw(false);
-
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  } else {
-
-                                      $('.fullScreenSpin').css('display', 'none');
-                                      $('#employeeListPOPModal').modal('toggle');
-                                      swal({
-                                          title: 'Question',
-                                          text: "Employee does not exist, would you like to create it?",
-                                          type: 'question',
-                                          showCancelButton: true,
-                                          confirmButtonText: 'Yes',
-                                          cancelButtonText: 'No'
-                                      }).then((result) => {
-                                          if (result.value) {
-                                              $('#addEmployeeModal').modal('toggle');
-                                              $('#edtEmployeeCompany').val(dataSearchName);
-                                          } else if (result.dismiss === 'cancel') {
-                                              $('#employeeListPOPModal').modal('toggle');
-                                          }
-                                      });
-
-                                  }
-
-                              }).catch(function (err) {
-                                  $('.fullScreenSpin').css('display', 'none');
-                              });
-                            }else{
-                              $('.fullScreenSpin').css('display', 'none');
-
-                            }
-
-                          }
-
-                        } else {
-                            if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            } else {
-                                sideBarService.getAllEmployeesDataVS1(dataLenght, 0).then(function (dataNonBo) {
-
-                                    addVS1Data('TEmployee', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                                        templateObject.resetData(dataNonBo);
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                                }).catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                            }
-                        }
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    });
-
-                    // $('.tblEmployeelist').DataTable().column( 0 ).visible( true );
-                    //$('.fullScreenSpin').css('display','none');
-                }, 0);
-
-
-                var columns = $('#'+currenttablename+' th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function (i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || 0,
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-
-
-            }).catch(function (err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                //$('.fullScreenSpin').css('display','none');
-                // Meteor._reload.reload();
-            });
-        });
-
-
-    }
-
-    templateObject.getEmployees();
-
-    tableResize();
-
+    // let templateObject = Template.instance();
+    // let contactService = new ContactService();
+    // const employeeList = [];
+    // let salesOrderTable;
+    // var splashArray = new Array();
+    // var splashArrayEmployeeList = new Array();
+    //
+    // let currenttablename = templateObject.data.tablename || "tblEmployeelist";
+    // templateObject.tablename.set(currenttablename);
+    //
+    // const lineEmployeeItems = [];
+    // const dataTableList = [];
+    // const tableHeaderList = [];
+    //
+    // Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
+    //     if (error) {
+    //
+    //     } else {
+    //         if (result) {
+    //
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //                 // let columnindex = customcolumn[i].index + 1;
+    //                 $("th." + columnClass + "").html(columData);
+    //                 $("th." + columnClass + "").css('width', "" + columnWidth + "px");
+    //
+    //             }
+    //         }
+    //
+    //     }
+    // });
+    //
+    // templateObject.resetData = function (dataVal) {
+    //     location.reload();
+    // }
+    //
+    // templateObject.getEmployees = function () {
+    //   var employeepage = 0;
+    //     getVS1Data('TEmployee').then(function (dataObject) {
+    //         if (dataObject.length == 0) {
+    //             sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0).then(function (data) {
+    //                 addVS1Data('TEmployee', JSON.stringify(data));
+    //                 let lineItems = [];
+    //                 let lineItemObj = {};
+    //                 for (let i = 0; i < data.temployee.length; i++) {
+    //                     let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
+    //                     let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
+    //                     let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
+    //                     let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
+    //                     let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
+    //                     var dataList = {
+    //                         id: data.temployee[i].fields.ID || '',
+    //                         clientName: data.temployee[i].fields.ClientName || '',
+    //                         company: data.temployee[i].fields.Companyname || '',
+    //                         contactname: data.temployee[i].fields.ContactName || '',
+    //                         phone: data.temployee[i].fields.Phone || '',
+    //                         arbalance: arBalance || 0.00,
+    //                         creditbalance: creditBalance || 0.00,
+    //                         balance: balance || 0.00,
+    //                         creditlimit: creditLimit || 0.00,
+    //                         salesorderbalance: salesOrderBalance || 0.00,
+    //                         email: data.temployee[i].fields.Email || '',
+    //                         job: data.temployee[i].fields.JobName || '',
+    //                         accountno: data.temployee[i].fields.AccountNo || '',
+    //                         clientno: data.temployee[i].fields.ClientNo || '',
+    //                         jobtitle: data.temployee[i].fields.JobTitle || '',
+    //                         notes: data.temployee[i].fields.Notes || '',
+    //                         state: data.temployee[i].fields.State || '',
+    //                         country: data.temployee[i].fields.Country || '',
+    //                         street: data.temployee[i].fields.Street || ' ',
+    //                         street2: data.temployee[i].fields.Street2 || ' ',
+    //                         street3: data.temployee[i].fields.Street3 || ' ',
+    //                         suburb: data.temployee[i].fields.Suburb || ' ',
+    //                         postcode: data.temployee[i].fields.Postcode || ' ',
+    //                         clienttype: data.temployee[i].fields.ClientTypeName || 'Default',
+    //                         discount: data.temployee[i].fields.Discount || 0
+    //                     };
+    //
+    //                     dataTableList.push(dataList);
+    //                     let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
+    //                     var dataListEmployee = [
+    //                         data.temployee[i].fields.EmployeeName || '-',
+    //                         data.temployee[i].fields.FirstName || '',
+    //                         data.temployee[i].fields.LastName || '',
+    //                         data.temployee[i].fields.Phone || '',
+    //                         mobile || '',
+    //                         data.temployee[i].fields.Email || '',
+    //                         data.temployee[i].fields.DefaultClassName || '',
+    //                         data.temployee[i].fields.Country || '',
+    //                         data.temployee[i].fields.State || '',
+    //                         data.temployee[i].fields.Street2 || '',
+    //                         data.temployee[i].fields.Street || '',
+    //                         data.temployee[i].fields.Postcode || '',
+    //                         data.temployee[i].fields.ID || ''
+    //                     ];
+    //                     splashArrayEmployeeList.push(dataListEmployee);
+    //                     //}
+    //                 }
+    //
+    //                 function MakeNegative() {
+    //                     $('td').each(function () {
+    //                         if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+    //                     });
+    //                 };
+    //
+    //                 templateObject.custdatatablerecords.set(dataTableList);
+    //
+    //                 if (templateObject.custdatatablerecords.get()) {
+    //
+    //                     Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
+    //                         if (error) {
+    //
+    //                         } else {
+    //                             if (result) {
+    //                                 for (let i = 0; i < result.customFields.length; i++) {
+    //                                     let customcolumn = result.customFields;
+    //                                     let columData = customcolumn[i].label;
+    //                                     let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                     let hiddenColumn = customcolumn[i].hidden;
+    //                                     let columnClass = columHeaderUpdate.split('.')[1];
+    //                                     let columnWidth = customcolumn[i].width;
+    //                                     let columnindex = customcolumn[i].index + 1;
+    //
+    //                                     if (hiddenColumn == true) {
+    //
+    //                                         $("." + columnClass + "").addClass('hiddenColumn');
+    //                                         $("." + columnClass + "").removeClass('showColumn');
+    //                                     } else if (hiddenColumn == false) {
+    //                                         $("." + columnClass + "").removeClass('hiddenColumn');
+    //                                         $("." + columnClass + "").addClass('showColumn');
+    //                                     }
+    //
+    //                                 }
+    //                             }
+    //
+    //                         }
+    //                     });
+    //
+    //
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                 }
+    //
+    //                 //$('.fullScreenSpin').css('display','none');
+    //                 setTimeout(function () {
+    //                     $(currenttablename).DataTable({
+    //                         data: splashArrayEmployeeList,
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         columnDefs: [
+    //                             {
+    //                                 className: "colEmployeeName",
+    //                                 "targets": [0]
+    //                             }, {
+    //                                 className: "colFirstName",
+    //                                 "targets": [1]
+    //                             }, {
+    //                                 className: "colLastName",
+    //                                 "targets": [2]
+    //                             }, {
+    //                                 className: "colPhone",
+    //                                 "targets": [3]
+    //                             }, {
+    //                                 className: "colMobile",
+    //                                 "targets": [4]
+    //                             }, {
+    //                                 className: "colEmail ",
+    //                                 "targets": [5]
+    //                             }, {
+    //                                 className: "colDepartment",
+    //                                 "targets": [6]
+    //                             }, {
+    //                                 className: "colCountry",
+    //                                 "targets": [7]
+    //                             }, {
+    //                                 className: "colState hiddenColumn",
+    //                                 "targets": [8]
+    //                             }, {
+    //                                 className: "colCity hiddenColumn",
+    //                                 "targets": [9]
+    //                             }, {
+    //                                 className: "colStreetAddress hiddenColumn",
+    //                                 "targets": [10]
+    //                             }, {
+    //                                 className: "colZipCode hiddenColumn",
+    //                                 "targets": [11]
+    //                             }, {
+    //                                 className: "colID hiddenColumn",
+    //                                 "targets": [12]
+    //                             }
+    //                         ],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //                         pageLength: initialDatatableLoad,
+    //                         lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                         info: true,
+    //                         responsive: true,
+    //                         "order": [[0, "asc"]],
+    //                         action: function () {
+    //                             $('.tblEmployeelist').DataTable().ajax.reload();
+    //                         },
+    //                         "fnDrawCallback": function (oSettings) {
+    //                             $('.paginate_button.page-item').removeClass('disabled');
+    //                             $('#tblEmployeelist_ellipsis').addClass('disabled');
+    //                             if (oSettings._iDisplayLength == -1) {
+    //                                 if (oSettings.fnRecordsDisplay() > 150) {
+    //
+    //                                 }
+    //                             } else {
+    //
+    //                             }
+    //                             if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //                                 $('.paginate_button.page-item.next').addClass('disabled');
+    //                             }
+    //
+    //                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                                 .on('click', function () {
+    //                                     $('.fullScreenSpin').css('display', 'inline-block');
+    //                                     var splashArrayEmployeeListDupp = new Array();
+    //                                     let dataLenght = oSettings._iDisplayLength;
+    //                                     let employeeSearch = $('#tblEmployeelist_filter input').val();
+    //
+    //                                     sideBarService.getAllEmployeesDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //
+    //                                                 for (let j = 0; j < dataObjectnew.temployee.length; j++) {
+    //
+    //                                                     let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.ARBalance) || 0.00;
+    //                                                     let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditBalance) || 0.00;
+    //                                                     let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.Balance) || 0.00;
+    //                                                     let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditLimit) || 0.00;
+    //                                                     let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.SalesOrderBalance) || 0.00;
+    //                                                     var dataList = {
+    //                                                         id: dataObjectnew.temployee[j].fields.ID || '',
+    //                                                         clientName: dataObjectnew.temployee[j].fields.ClientName || '',
+    //                                                         company: dataObjectnew.temployee[j].fields.Companyname || '',
+    //                                                         contactname: dataObjectnew.temployee[j].fields.ContactName || '',
+    //                                                         phone: dataObjectnew.temployee[j].fields.Phone || '',
+    //                                                         arbalance: arBalance || 0.00,
+    //                                                         creditbalance: creditBalance || 0.00,
+    //                                                         balance: balance || 0.00,
+    //                                                         creditlimit: creditLimit || 0.00,
+    //                                                         salesorderbalance: salesOrderBalance || 0.00,
+    //                                                         email: dataObjectnew.temployee[j].fields.Email || '',
+    //                                                         job: dataObjectnew.temployee[j].fields.JobName || '',
+    //                                                         accountno: dataObjectnew.temployee[j].fields.AccountNo || '',
+    //                                                         clientno: dataObjectnew.temployee[j].fields.ClientNo || '',
+    //                                                         jobtitle: dataObjectnew.temployee[j].fields.JobTitle || '',
+    //                                                         notes: dataObjectnew.temployee[j].fields.Notes || '',
+    //                                                         state: dataObjectnew.temployee[j].fields.State || '',
+    //                                                         country: dataObjectnew.temployee[j].fields.Country || '',
+    //                                                         street: dataObjectnew.temployee[j].fields.Street || ' ',
+    //                                                         street2: dataObjectnew.temployee[j].fields.Street2 || ' ',
+    //                                                         street3: dataObjectnew.temployee[j].fields.Street3 || ' ',
+    //                                                         suburb: dataObjectnew.temployee[j].fields.Suburb || ' ',
+    //                                                         postcode: dataObjectnew.temployee[j].fields.Postcode || ' ',
+    //                                                         clienttype: dataObjectnew.temployee[j].fields.ClientTypeName || 'Default',
+    //                                                         discount: dataObjectnew.temployee[j].fields.Discount || 0
+    //                                                     };
+    //
+    //                                                     dataTableList.push(dataList);
+    //                                                     let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile)
+    //                                                     var dataListEmployeeDupp = [
+    //                                                         dataObjectnew.temployee[j].fields.EmployeeName || '-',
+    //                                                         dataObjectnew.temployee[j].fields.FirstName || '',
+    //                                                         dataObjectnew.temployee[j].fields.LastName || '',
+    //                                                         dataObjectnew.temployee[j].fields.Phone || '',
+    //                                                         mobile || '',
+    //                                                         dataObjectnew.temployee[j].fields.Email || '',
+    //                                                         dataObjectnew.temployee[j].fields.DefaultClassName || '',
+    //                                                         dataObjectnew.temployee[j].fields.Country || '',
+    //                                                         dataObjectnew.temployee[j].fields.State || '',
+    //                                                         dataObjectnew.temployee[j].fields.Street2 || '',
+    //                                                         dataObjectnew.temployee[j].fields.Street || '',
+    //                                                         dataObjectnew.temployee[j].fields.Postcode || '',
+    //                                                         dataObjectnew.temployee[j].fields.ID || ''
+    //                                                     ];
+    //
+    //                                                     splashArrayEmployeeList.push(dataListEmployeeDupp);
+    //                                                     //}
+    //                                                 }
+    //
+    //                                                 let uniqueChars = [...new Set(splashArrayEmployeeList)];
+    //                                                 var datatable = $('.tblEmployeelist').DataTable();
+    //                                                 datatable.clear();
+    //                                                 datatable.rows.add(uniqueChars);
+    //                                                 datatable.draw(false);
+    //                                                 setTimeout(function () {
+    //                                                   $(".tblEmployeelist").dataTable().fnPageChange('last');
+    //                                                 }, 400);
+    //
+    //                                                 $('.fullScreenSpin').css('display', 'none');
+    //
+    //
+    //                                     }).catch(function (err) {
+    //                                         $('.fullScreenSpin').css('display', 'none');
+    //                                     });
+    //
+    //                                 });
+    //                             setTimeout(function () {
+    //                                 MakeNegative();
+    //                             }, 100);
+    //                         },
+    //                         language: { search: "",searchPlaceholder: "Search List..." },
+    //                         "fnInitComplete": function (oSettings) {
+    //                             $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblEmployeelist_filter");
+    //                             $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblEmployeelist_filter");
+    //
+    //                             let urlParametersPage = FlowRouter.current().queryParams.page;
+    //                             if (urlParametersPage) {
+    //                                 this.fnPageChange('last');
+    //                             }
+    //
+    //                         }
+    //
+    //                     }).on('page', function () {
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                         let draftRecord = templateObject.custdatatablerecords.get();
+    //                         templateObject.custdatatablerecords.set(draftRecord);
+    //                     }).on('column-reorder', function () {
+    //
+    //                     }).on('length.dt', function (e, settings, len) {
+    //
+    //                         let dataLenght = settings._iDisplayLength;
+    //                         let employeeSearch = $('#tblEmployeelist_filter input').val();
+    //                         splashArrayEmployeeList = [];
+    //                         if (dataLenght == -1) {
+    //                           if(settings.fnRecordsDisplay() > initialDatatableLoad){
+    //                             $('.fullScreenSpin').css('display','none');
+    //                           }else{
+    //                             if (employeeSearch.replace(/\s/g, '') != '') {
+    //                               $('.fullScreenSpin').css('display', 'inline-block');
+    //                               sideBarService.getAllEmployeesDataVS1ByName(employeeSearch).then(function (data) {
+    //                                   let lineItems = [];
+    //                                   let lineItemObj = {};
+    //                                   if (data.temployee.length > 0) {
+    //                                       for (let i = 0; i < data.temployee.length; i++) {
+    //                                           let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
+    //                                           let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
+    //                                           let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
+    //                                           let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
+    //                                           let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
+    //                                           var dataList = {
+    //                                               id: data.temployee[i].fields.ID || '',
+    //                                               clientName: data.temployee[i].fields.ClientName || '',
+    //                                               company: data.temployee[i].fields.Companyname || '',
+    //                                               contactname: data.temployee[i].fields.ContactName || '',
+    //                                               phone: data.temployee[i].fields.Phone || '',
+    //                                               arbalance: arBalance || 0.00,
+    //                                               creditbalance: creditBalance || 0.00,
+    //                                               balance: balance || 0.00,
+    //                                               creditlimit: creditLimit || 0.00,
+    //                                               salesorderbalance: salesOrderBalance || 0.00,
+    //                                               email: data.temployee[i].fields.Email || '',
+    //                                               job: data.temployee[i].fields.JobName || '',
+    //                                               accountno: data.temployee[i].fields.AccountNo || '',
+    //                                               clientno: data.temployee[i].fields.ClientNo || '',
+    //                                               jobtitle: data.temployee[i].fields.JobTitle || '',
+    //                                               notes: data.temployee[i].fields.Notes || '',
+    //                                               state: data.temployee[i].fields.State || '',
+    //                                               country: data.temployee[i].fields.Country || '',
+    //                                               street: data.temployee[i].fields.Street || ' ',
+    //                                               street2: data.temployee[i].fields.Street2 || ' ',
+    //                                               street3: data.temployee[i].fields.Street3 || ' ',
+    //                                               suburb: data.temployee[i].fields.Suburb || ' ',
+    //                                               postcode: data.temployee[i].fields.Postcode || ' '
+    //                                           };
+    //
+    //                                           dataTableList.push(dataList);
+    //                                           let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
+    //                                           var dataListEmployee = [
+    //                                               data.temployee[i].fields.EmployeeName || '-',
+    //                                               data.temployee[i].fields.FirstName || '',
+    //                                               data.temployee[i].fields.LastName || '',
+    //                                               data.temployee[i].fields.Phone || '',
+    //                                               mobile || '',
+    //                                               data.temployee[i].fields.Email || '',
+    //                                               data.temployee[i].fields.DefaultClassName || '',
+    //                                               data.temployee[i].fields.Country || '',
+    //                                               data.temployee[i].fields.State || '',
+    //                                               data.temployee[i].fields.Street2 || '',
+    //                                               data.temployee[i].fields.Street || '',
+    //                                               data.temployee[i].fields.Postcode || '',
+    //                                               data.temployee[i].fields.ID || ''
+    //                                           ];
+    //                                           splashArrayEmployeeList.push(dataListEmployee);
+    //                                           //}
+    //                                       }
+    //                                       var datatable = $('.tblEmployeelist').DataTable();
+    //                                       datatable.clear();
+    //                                       datatable.rows.add(splashArrayEmployeeList);
+    //                                       datatable.draw(false);
+    //
+    //                                       $('.fullScreenSpin').css('display', 'none');
+    //                                   } else {
+    //
+    //                                       $('.fullScreenSpin').css('display', 'none');
+    //                                       $('#employeeListPOPModal').modal('toggle');
+    //                                       swal({
+    //                                           title: 'Question',
+    //                                           text: "Employee does not exist, would you like to create it?",
+    //                                           type: 'question',
+    //                                           showCancelButton: true,
+    //                                           confirmButtonText: 'Yes',
+    //                                           cancelButtonText: 'No'
+    //                                       }).then((result) => {
+    //                                           if (result.value) {
+    //                                               $('#addEmployeeModal').modal('toggle');
+    //                                               $('#edtEmployeeCompany').val(dataSearchName);
+    //                                           } else if (result.dismiss === 'cancel') {
+    //                                               $('#employeeListPOPModal').modal('toggle');
+    //                                           }
+    //                                       });
+    //
+    //                                   }
+    //
+    //                               }).catch(function (err) {
+    //                                   $('.fullScreenSpin').css('display', 'none');
+    //                               });
+    //                             }else{
+    //                               $('.fullScreenSpin').css('display', 'none');
+    //
+    //                             }
+    //
+    //                           }
+    //
+    //                         } else {
+    //                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             } else {
+    //                                 sideBarService.getAllEmployeesDataVS1(dataLenght, 0).then(function (dataNonBo) {
+    //
+    //                                     addVS1Data('TEmployee', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //                                         templateObject.resetData(dataNonBo);
+    //                                         $('.fullScreenSpin').css('display', 'none');
+    //                                     }).catch(function (err) {
+    //                                         $('.fullScreenSpin').css('display', 'none');
+    //                                     });
+    //                                 }).catch(function (err) {
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 });
+    //                             }
+    //                         }
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                     });
+    //
+    //                     // $(currenttablename).DataTable().column( 0 ).visible( true );
+    //                     //$('.fullScreenSpin').css('display','none');
+    //                 }, 0);
+    //
+    //
+    //                 var columns = $(currenttablename + ' th');
+    //                 let sTible = "";
+    //                 let sWidth = "";
+    //                 let sIndex = "";
+    //                 let sVisible = "";
+    //                 let columVisible = false;
+    //                 let sClass = "";
+    //                 $.each(columns, function (i, v) {
+    //                     if (v.hidden == false) {
+    //                         columVisible = true;
+    //                     }
+    //                     if ((v.className.includes("hiddenColumn"))) {
+    //                         columVisible = false;
+    //                     }
+    //                     sWidth = v.style.width.replace('px', "");
+    //                     let datatablerecordObj = {
+    //                         sTitle: v.innerText || '',
+    //                         sWidth: sWidth || '',
+    //                         sIndex: v.cellIndex || 0,
+    //                         sVisible: columVisible || false,
+    //                         sClass: v.className || ''
+    //                     };
+    //                     tableHeaderList.push(datatablerecordObj);
+    //                 });
+    //                 templateObject.tableheaderrecords.set(tableHeaderList);
+    //                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //
+    //
+    //             }).catch(function (err) {
+    //
+    //             });
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.temployee;
+    //
+    //             let lineItems = [];
+    //             let lineItemObj = {};
+    //             for (let i = 0; i < data.temployee.length; i++) {
+    //                 let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile)
+    //                 var dataListEmployee = [
+    //                     data.temployee[i].fields.EmployeeName || '-',
+    //                     data.temployee[i].fields.FirstName || '',
+    //                     data.temployee[i].fields.LastName || '',
+    //                     data.temployee[i].fields.Phone || '',
+    //                     mobile || '',
+    //                     data.temployee[i].fields.Email || '',
+    //                     data.temployee[i].fields.DefaultClassName || '',
+    //                     data.temployee[i].fields.Country || '',
+    //                     data.temployee[i].fields.State || '',
+    //                     data.temployee[i].fields.Street2 || '',
+    //                     data.temployee[i].fields.Street || '',
+    //                     data.temployee[i].fields.Postcode || '',
+    //                     data.temployee[i].fields.ID || ''
+    //                 ];
+    //
+    //                 splashArrayEmployeeList.push(dataListEmployee);
+    //                 //}
+    //             }
+    //
+    //             function MakeNegative() {
+    //                 $('td').each(function () {
+    //                     if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+    //                 });
+    //             };
+    //
+    //             templateObject.custdatatablerecords.set(dataTableList);
+    //
+    //             if (templateObject.custdatatablerecords.get()) {
+    //
+    //                 Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
+    //                     if (error) {
+    //
+    //                     } else {
+    //                         if (result) {
+    //                             for (let i = 0; i < result.customFields.length; i++) {
+    //                                 let customcolumn = result.customFields;
+    //                                 let columData = customcolumn[i].label;
+    //                                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                 let hiddenColumn = customcolumn[i].hidden;
+    //                                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                                 let columnWidth = customcolumn[i].width;
+    //                                 let columnindex = customcolumn[i].index + 1;
+    //
+    //                                 if (hiddenColumn == true) {
+    //
+    //                                     $("." + columnClass + "").addClass('hiddenColumn');
+    //                                     $("." + columnClass + "").removeClass('showColumn');
+    //                                 } else if (hiddenColumn == false) {
+    //                                     $("." + columnClass + "").removeClass('hiddenColumn');
+    //                                     $("." + columnClass + "").addClass('showColumn');
+    //                                 }
+    //
+    //                             }
+    //                         }
+    //
+    //                     }
+    //                 });
+    //
+    //
+    //                 setTimeout(function () {
+    //                     MakeNegative();
+    //                 }, 100);
+    //             }
+    //
+    //             //$('.fullScreenSpin').css('display','none');
+    //             setTimeout(function () {
+    //                 $("#"+currenttablename).DataTable({
+    //                     data: splashArrayEmployeeList,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     columnDefs: [
+    //                         {
+    //                             className: "colEmployeeName",
+    //                             "targets": [0]
+    //                         }, {
+    //                             className: "colFirstName",
+    //                             "targets": [1]
+    //                         }, {
+    //                             className: "colLastName",
+    //                             "targets": [2]
+    //                         }, {
+    //                             className: "colPhone",
+    //                             "targets": [3]
+    //                         }, {
+    //                             className: "colMobile",
+    //                             "targets": [4]
+    //                         }, {
+    //                             className: "colEmail ",
+    //                             "targets": [5]
+    //                         }, {
+    //                             className: "colDepartment",
+    //                             "targets": [6]
+    //                         }, {
+    //                             className: "colCountry",
+    //                             "targets": [7]
+    //                         }, {
+    //                             className: "colState hiddenColumn",
+    //                             "targets": [8]
+    //                         }, {
+    //                             className: "colCity hiddenColumn",
+    //                             "targets": [9]
+    //                         }, {
+    //                             className: "colStreetAddress hiddenColumn",
+    //                             "targets": [10]
+    //                         }, {
+    //                             className: "colZipCode hiddenColumn",
+    //                             "targets": [11]
+    //                         }, {
+    //                             className: "colID hiddenColumn",
+    //                             "targets": [12]
+    //                         }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [[0, "asc"]],
+    //                     action: function () {
+    //                         $("#"+currenttablename).DataTable().ajax.reload();
+    //                     },
+    //                     "fnDrawCallback": function (oSettings) {
+    //                         $('.paginate_button.page-item').removeClass('disabled');
+    //                         $('#'+currenttablename+'_ellipsis').addClass('disabled');
+    //                         if (oSettings._iDisplayLength == -1) {
+    //                             if (oSettings.fnRecordsDisplay() > 150) {
+    //
+    //                             }
+    //                         } else {
+    //
+    //                         }
+    //                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //                             $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
+    //
+    //                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                             .on('click', function () {
+    //                                 $('.fullScreenSpin').css('display', 'inline-block');
+    //                                 var splashArrayEmployeeListDupp = new Array();
+    //                                 let dataLenght = oSettings._iDisplayLength;
+    //                                 let employeeSearch = $('#'+currenttablename+'_filter input').val();
+    //
+    //                                 sideBarService.getAllEmployeesDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //
+    //                                             for (let j = 0; j < dataObjectnew.temployee.length; j++) {
+    //
+    //                                                 let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.ARBalance) || 0.00;
+    //                                                 let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditBalance) || 0.00;
+    //                                                 let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.Balance) || 0.00;
+    //                                                 let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditLimit) || 0.00;
+    //                                                 let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.SalesOrderBalance) || 0.00;
+    //                                                 var dataList = {
+    //                                                     id: dataObjectnew.temployee[j].fields.ID || '',
+    //                                                     clientName: dataObjectnew.temployee[j].fields.ClientName || '',
+    //                                                     company: dataObjectnew.temployee[j].fields.Companyname || '',
+    //                                                     contactname: dataObjectnew.temployee[j].fields.ContactName || '',
+    //                                                     phone: dataObjectnew.temployee[j].fields.Phone || '',
+    //                                                     arbalance: arBalance || 0.00,
+    //                                                     creditbalance: creditBalance || 0.00,
+    //                                                     balance: balance || 0.00,
+    //                                                     creditlimit: creditLimit || 0.00,
+    //                                                     salesorderbalance: salesOrderBalance || 0.00,
+    //                                                     email: dataObjectnew.temployee[j].fields.Email || '',
+    //                                                     job: dataObjectnew.temployee[j].fields.JobName || '',
+    //                                                     accountno: dataObjectnew.temployee[j].fields.AccountNo || '',
+    //                                                     clientno: dataObjectnew.temployee[j].fields.ClientNo || '',
+    //                                                     jobtitle: dataObjectnew.temployee[j].fields.JobTitle || '',
+    //                                                     notes: dataObjectnew.temployee[j].fields.Notes || '',
+    //                                                     state: dataObjectnew.temployee[j].fields.State || '',
+    //                                                     country: dataObjectnew.temployee[j].fields.Country || '',
+    //                                                     street: dataObjectnew.temployee[j].fields.Street || ' ',
+    //                                                     street2: dataObjectnew.temployee[j].fields.Street2 || ' ',
+    //                                                     street3: dataObjectnew.temployee[j].fields.Street3 || ' ',
+    //                                                     suburb: dataObjectnew.temployee[j].fields.Suburb || ' ',
+    //                                                     postcode: dataObjectnew.temployee[j].fields.Postcode || ' ',
+    //                                                     clienttype: dataObjectnew.temployee[j].fields.ClientTypeName || 'Default',
+    //                                                     discount: dataObjectnew.temployee[j].fields.Discount || 0
+    //                                                 };
+    //
+    //                                                 dataTableList.push(dataList);
+    //
+    //                                                 let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile);
+    //                                                 var dataListEmployeeDupp = [
+    //                                                     dataObjectnew.temployee[j].fields.EmployeeName || '-',
+    //                                                     dataObjectnew.temployee[j].fields.FirstName || '',
+    //                                                     dataObjectnew.temployee[j].fields.LastName || '',
+    //                                                     dataObjectnew.temployee[j].fields.Phone || '',
+    //                                                     mobile || '',
+    //                                                     dataObjectnew.temployee[j].fields.Email || '',
+    //                                                     dataObjectnew.temployee[j].fields.DefaultClassName || '',
+    //                                                     dataObjectnew.temployee[j].fields.Country || '',
+    //                                                     dataObjectnew.temployee[j].fields.State || '',
+    //                                                     dataObjectnew.temployee[j].fields.Street2 || '',
+    //                                                     dataObjectnew.temployee[j].fields.Street || '',
+    //                                                     dataObjectnew.temployee[j].fields.Postcode || '',
+    //                                                     dataObjectnew.temployee[j].fields.ID || ''
+    //                                                 ];
+    //
+    //
+    //                                                 splashArrayEmployeeList.push(dataListEmployeeDupp);
+    //                                                 //}
+    //                                             }
+    //
+    //                                             let uniqueChars = [...new Set(splashArrayEmployeeList)];
+    //                                             var datatable = $("#"+currenttablename).DataTable();
+    //                                             datatable.clear();
+    //                                             datatable.rows.add(uniqueChars);
+    //                                             datatable.draw(false);
+    //                                             setTimeout(function () {
+    //                                               $("#"+currenttablename).dataTable().fnPageChange('last');
+    //                                             }, 400);
+    //
+    //                                             $('.fullScreenSpin').css('display', 'none');
+    //
+    //
+    //                                 }).catch(function (err) {
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 });
+    //
+    //                             });
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                     },
+    //                     language: { search: "",searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function (oSettings) {
+    //                         $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
+    //                         $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
+    //
+    //                         let urlParametersPage = FlowRouter.current().queryParams.page;
+    //                         if (urlParametersPage) {
+    //                             this.fnPageChange('last');
+    //                         }
+    //
+    //                     }
+    //
+    //                 }).on('page', function () {
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                     let draftRecord = templateObject.custdatatablerecords.get();
+    //                     templateObject.custdatatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function () {
+    //
+    //                 }).on('length.dt', function (e, settings, len) {
+    //
+    //                     let dataLenght = settings._iDisplayLength;
+    //                     let employeeSearch = $('#'+currenttablename+'_filter input').val();
+    //                     splashArrayEmployeeList = [];
+    //                     if (dataLenght == -1) {
+    //                       if(settings.fnRecordsDisplay() > initialDatatableLoad){
+    //                         $('.fullScreenSpin').css('display','none');
+    //                       }else{
+    //                         if (employeeSearch.replace(/\s/g, '') != '') {
+    //                           $('.fullScreenSpin').css('display', 'inline-block');
+    //                           sideBarService.getAllEmployeesDataVS1ByName(employeeSearch).then(function (data) {
+    //                               let lineItems = [];
+    //                               let lineItemObj = {};
+    //                               if (data.temployee.length > 0) {
+    //                                   for (let i = 0; i < data.temployee.length; i++) {
+    //                                       let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
+    //                                       let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
+    //                                       let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
+    //                                       let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
+    //                                       let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
+    //                                       var dataList = {
+    //                                           id: data.temployee[i].fields.ID || '',
+    //                                           clientName: data.temployee[i].fields.ClientName || '',
+    //                                           company: data.temployee[i].fields.Companyname || '',
+    //                                           contactname: data.temployee[i].fields.ContactName || '',
+    //                                           phone: data.temployee[i].fields.Phone || '',
+    //                                           arbalance: arBalance || 0.00,
+    //                                           creditbalance: creditBalance || 0.00,
+    //                                           balance: balance || 0.00,
+    //                                           creditlimit: creditLimit || 0.00,
+    //                                           salesorderbalance: salesOrderBalance || 0.00,
+    //                                           email: data.temployee[i].fields.Email || '',
+    //                                           job: data.temployee[i].fields.JobName || '',
+    //                                           accountno: data.temployee[i].fields.AccountNo || '',
+    //                                           clientno: data.temployee[i].fields.ClientNo || '',
+    //                                           jobtitle: data.temployee[i].fields.JobTitle || '',
+    //                                           notes: data.temployee[i].fields.Notes || '',
+    //                                           state: data.temployee[i].fields.State || '',
+    //                                           country: data.temployee[i].fields.Country || '',
+    //                                           street: data.temployee[i].fields.Street || ' ',
+    //                                           street2: data.temployee[i].fields.Street2 || ' ',
+    //                                           street3: data.temployee[i].fields.Street3 || ' ',
+    //                                           suburb: data.temployee[i].fields.Suburb || ' ',
+    //                                           postcode: data.temployee[i].fields.Postcode || ' '
+    //                                       };
+    //
+    //                                       dataTableList.push(dataList);
+    //
+    //                                       let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
+    //                                       var dataListEmployee = [
+    //                                           data.temployee[i].fields.EmployeeName || '-',
+    //                                           data.temployee[i].fields.FirstName || '',
+    //                                           data.temployee[i].fields.LastName || '',
+    //                                           data.temployee[i].fields.Phone || '',
+    //                                           mobile || '',
+    //                                           data.temployee[i].fields.Email || '',
+    //                                           data.temployee[i].fields.DefaultClassName || '',
+    //                                           data.temployee[i].fields.Country || '',
+    //                                           data.temployee[i].fields.State || '',
+    //                                           data.temployee[i].fields.Street2 || '',
+    //                                           data.temployee[i].fields.Street || '',
+    //                                           data.temployee[i].fields.Postcode || '',
+    //                                           data.temployee[i].fields.ID || ''
+    //                                       ];
+    //
+    //                                       splashArrayEmployeeList.push(dataListEmployee);
+    //                                       //}
+    //                                   }
+    //                                   var datatable = $("#"+currenttablename).DataTable();
+    //                                   datatable.clear();
+    //                                   datatable.rows.add(splashArrayEmployeeList);
+    //                                   datatable.draw(false);
+    //
+    //                                   $('.fullScreenSpin').css('display', 'none');
+    //                               } else {
+    //
+    //                                   $('.fullScreenSpin').css('display', 'none');
+    //                                   $('#employeeListPOPModal').modal('toggle');
+    //                                   swal({
+    //                                       title: 'Question',
+    //                                       text: "Employee does not exist, would you like to create it?",
+    //                                       type: 'question',
+    //                                       showCancelButton: true,
+    //                                       confirmButtonText: 'Yes',
+    //                                       cancelButtonText: 'No'
+    //                                   }).then((result) => {
+    //                                       if (result.value) {
+    //                                           $('#addEmployeeModal').modal('toggle');
+    //                                           $('#edtEmployeeCompany').val(dataSearchName);
+    //                                       } else if (result.dismiss === 'cancel') {
+    //                                           $('#employeeListPOPModal').modal('toggle');
+    //                                       }
+    //                                   });
+    //
+    //                               }
+    //
+    //                           }).catch(function (err) {
+    //                               $('.fullScreenSpin').css('display', 'none');
+    //                           });
+    //                         }else{
+    //                           $('.fullScreenSpin').css('display', 'none');
+    //
+    //                         }
+    //
+    //                       }
+    //
+    //                     } else {
+    //                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                         } else {
+    //                             sideBarService.getAllEmployeesDataVS1(dataLenght, 0).then(function (dataNonBo) {
+    //
+    //                                 addVS1Data('TEmployee', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //                                     templateObject.resetData(dataNonBo);
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 }).catch(function (err) {
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 });
+    //                             }).catch(function (err) {
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             });
+    //                         }
+    //                     }
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                 });
+    //
+    //                 // $(currenttablename).DataTable().column( 0 ).visible( true );
+    //                 //$('.fullScreenSpin').css('display','none');
+    //             }, 0);
+    //
+    //             var columns = $('#'+currenttablename+' th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let sClass = "";
+    //             $.each(columns, function (i, v) {
+    //                 if (v.hidden == false) {
+    //                     columVisible = true;
+    //                 }
+    //                 if ((v.className.includes("hiddenColumn"))) {
+    //                     columVisible = false;
+    //                 }
+    //                 sWidth = v.style.width.replace('px', "");
+    //                 let datatablerecordObj = {
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '',
+    //                     sIndex: v.cellIndex || 0,
+    //                     sVisible: columVisible || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //         }
+    //     }).catch(function (err) {
+    //
+    //         sideBarService.getAllEmployeesDataVS1(initialBaseDataLoad, 0).then(function (data) {
+    //             addVS1Data('TEmployee', JSON.stringify(data));
+    //             let lineItems = [];
+    //             let lineItemObj = {};
+    //             for (let i = 0; i < data.temployee.length; i++) {
+    //                 let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
+    //                 let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
+    //                 let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
+    //                 let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
+    //                 let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
+    //                 var dataList = {
+    //                     id: data.temployee[i].fields.ID || '',
+    //                     clientName: data.temployee[i].fields.ClientName || '',
+    //                     company: data.temployee[i].fields.Companyname || '',
+    //                     contactname: data.temployee[i].fields.ContactName || '',
+    //                     phone: data.temployee[i].fields.Phone || '',
+    //                     arbalance: arBalance || 0.00,
+    //                     creditbalance: creditBalance || 0.00,
+    //                     balance: balance || 0.00,
+    //                     creditlimit: creditLimit || 0.00,
+    //                     salesorderbalance: salesOrderBalance || 0.00,
+    //                     email: data.temployee[i].fields.Email || '',
+    //                     job: data.temployee[i].fields.JobName || '',
+    //                     accountno: data.temployee[i].fields.AccountNo || '',
+    //                     clientno: data.temployee[i].fields.ClientNo || '',
+    //                     jobtitle: data.temployee[i].fields.JobTitle || '',
+    //                     notes: data.temployee[i].fields.Notes || '',
+    //                     country: data.temployee[i].fields.Country || '',
+    //                     state: data.temployee[i].fields.State || '',
+    //                     street: data.temployee[i].fields.Street || ' ',
+    //                     street2: data.temployee[i].fields.Street2 || ' ',
+    //                     street3: data.temployee[i].fields.Street3 || ' ',
+    //                     suburb: data.temployee[i].fields.Suburb || ' ',
+    //                     postcode: data.temployee[i].fields.Postcode || ' ',
+    //                     clienttype: data.temployee[i].fields.ClientTypeName || 'Default',
+    //                     discount: data.temployee[i].fields.Discount || 0
+    //                 };
+    //
+    //                 dataTableList.push(dataList);
+    //                 let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
+    //                 var dataListEmployee = [
+    //                     data.temployee[i].fields.EmployeeName || '-',
+    //                     data.temployee[i].fields.FirstName || '',
+    //                     data.temployee[i].fields.LastName || '',
+    //                     data.temployee[i].fields.Phone || '',
+    //                     mobile || '',
+    //                     data.temployee[i].fields.Email || '',
+    //                     data.temployee[i].fields.DefaultClassName || '',
+    //                     data.temployee[i].fields.Country || '',
+    //                     data.temployee[i].fields.State || '',
+    //                     data.temployee[i].fields.Street2 || '',
+    //                     data.temployee[i].fields.Street || '',
+    //                     data.temployee[i].fields.Postcode || '',
+    //                     data.temployee[i].fields.ID || ''
+    //                 ];
+    //
+    //                 splashArrayEmployeeList.push(dataListEmployee);
+    //                 //}
+    //             }
+    //
+    //             function MakeNegative() {
+    //                 // TDs = document.getElementsByTagName('td');
+    //                 // for (var i=0; i<TDs.length; i++) {
+    //                 // var temp = TDs[i];
+    //                 // if (temp.firstChild.nodeValue.indexOf('-'+Currency) == 0){
+    //                 // temp.className = "text-danger";
+    //                 // }
+    //                 // }
+    //
+    //                 $('td').each(function () {
+    //                     if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+    //                 });
+    //             };
+    //
+    //             templateObject.custdatatablerecords.set(dataTableList);
+    //
+    //             if (templateObject.custdatatablerecords.get()) {
+    //
+    //                 Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), currenttablename, function (error, result) {
+    //                     if (error) {
+    //
+    //                     } else {
+    //                         if (result) {
+    //                             for (let i = 0; i < result.customFields.length; i++) {
+    //                                 let customcolumn = result.customFields;
+    //                                 let columData = customcolumn[i].label;
+    //                                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                 let hiddenColumn = customcolumn[i].hidden;
+    //                                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                                 let columnWidth = customcolumn[i].width;
+    //                                 let columnindex = customcolumn[i].index + 1;
+    //
+    //                                 if (hiddenColumn == true) {
+    //
+    //                                     $("." + columnClass + "").addClass('hiddenColumn');
+    //                                     $("." + columnClass + "").removeClass('showColumn');
+    //                                 } else if (hiddenColumn == false) {
+    //                                     $("." + columnClass + "").removeClass('hiddenColumn');
+    //                                     $("." + columnClass + "").addClass('showColumn');
+    //                                 }
+    //
+    //                             }
+    //                         }
+    //
+    //                     }
+    //                 });
+    //
+    //
+    //                 setTimeout(function () {
+    //                     MakeNegative();
+    //                 }, 100);
+    //             }
+    //
+    //             //$('.fullScreenSpin').css('display','none');
+    //             setTimeout(function () {
+    //                 $("#"+currenttablename).DataTable({
+    //                     data: splashArrayEmployeeList,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     columnDefs: [
+    //                         {
+    //                             className: "colEmployeeName",
+    //                             "targets": [0]
+    //                         }, {
+    //                             className: "colFirstName",
+    //                             "targets": [1]
+    //                         }, {
+    //                             className: "colLastName",
+    //                             "targets": [2]
+    //                         }, {
+    //                             className: "colPhone",
+    //                             "targets": [3]
+    //                         }, {
+    //                             className: "colMobile",
+    //                             "targets": [4]
+    //                         }, {
+    //                             className: "colEmail ",
+    //                             "targets": [5]
+    //                         }, {
+    //                             className: "colDepartment",
+    //                             "targets": [6]
+    //                         }, {
+    //                             className: "colCountry",
+    //                             "targets": [7]
+    //                         }, {
+    //                             className: "colState hiddenColumn",
+    //                             "targets": [8]
+    //                         }, {
+    //                             className: "colCity hiddenColumn",
+    //                             "targets": [9]
+    //                         }, {
+    //                             className: "colStreetAddress hiddenColumn",
+    //                             "targets": [10]
+    //                         }, {
+    //                             className: "colZipCode hiddenColumn",
+    //                             "targets": [11]
+    //                         }, {
+    //                             className: "colID hiddenColumn",
+    //                             "targets": [12]
+    //                         }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [[0, "asc"]],
+    //                     action: function () {
+    //                         $("#"+currenttablename).DataTable().ajax.reload();
+    //                     },
+    //                     "fnDrawCallback": function (oSettings) {
+    //                         $('.paginate_button.page-item').removeClass('disabled');
+    //                         $('#'+currenttablename+'_ellipsis').addClass('disabled');
+    //                         if (oSettings._iDisplayLength == -1) {
+    //                             if (oSettings.fnRecordsDisplay() > 150) {
+    //
+    //                             }
+    //                         } else {
+    //
+    //                         }
+    //                         if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //                             $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
+    //
+    //                         $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                             .on('click', function () {
+    //                                 $('.fullScreenSpin').css('display', 'inline-block');
+    //                                 var splashArrayEmployeeListDupp = new Array();
+    //                                 let dataLenght = oSettings._iDisplayLength;
+    //                                 let employeeSearch = $('#'+currenttablename+'_filter input').val();
+    //
+    //                                 sideBarService.getAllEmployeesDataVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
+    //
+    //                                             for (let j = 0; j < dataObjectnew.temployee.length; j++) {
+    //
+    //                                                 let arBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.ARBalance) || 0.00;
+    //                                                 let creditBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditBalance) || 0.00;
+    //                                                 let balance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.Balance) || 0.00;
+    //                                                 let creditLimit = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.CreditLimit) || 0.00;
+    //                                                 let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.temployee[j].fields.SalesOrderBalance) || 0.00;
+    //                                                 var dataList = {
+    //                                                     id: dataObjectnew.temployee[j].fields.ID || '',
+    //                                                     clientName: dataObjectnew.temployee[j].fields.ClientName || '',
+    //                                                     company: dataObjectnew.temployee[j].fields.Companyname || '',
+    //                                                     contactname: dataObjectnew.temployee[j].fields.ContactName || '',
+    //                                                     phone: dataObjectnew.temployee[j].fields.Phone || '',
+    //                                                     arbalance: arBalance || 0.00,
+    //                                                     creditbalance: creditBalance || 0.00,
+    //                                                     balance: balance || 0.00,
+    //                                                     creditlimit: creditLimit || 0.00,
+    //                                                     salesorderbalance: salesOrderBalance || 0.00,
+    //                                                     email: dataObjectnew.temployee[j].fields.Email || '',
+    //                                                     job: dataObjectnew.temployee[j].fields.JobName || '',
+    //                                                     accountno: dataObjectnew.temployee[j].fields.AccountNo || '',
+    //                                                     clientno: dataObjectnew.temployee[j].fields.ClientNo || '',
+    //                                                     jobtitle: dataObjectnew.temployee[j].fields.JobTitle || '',
+    //                                                     notes: dataObjectnew.temployee[j].fields.Notes || '',
+    //                                                     state: dataObjectnew.temployee[j].fields.State || '',
+    //                                                     country: dataObjectnew.temployee[j].fields.Country || '',
+    //                                                     street: dataObjectnew.temployee[j].fields.Street || ' ',
+    //                                                     street2: dataObjectnew.temployee[j].fields.Street2 || ' ',
+    //                                                     street3: dataObjectnew.temployee[j].fields.Street3 || ' ',
+    //                                                     suburb: dataObjectnew.temployee[j].fields.Suburb || ' ',
+    //                                                     postcode: dataObjectnew.temployee[j].fields.Postcode || ' ',
+    //                                                     clienttype: dataObjectnew.temployee[j].fields.ClientTypeName || 'Default',
+    //                                                     discount: dataObjectnew.temployee[j].fields.Discount || 0
+    //                                                 };
+    //
+    //                                                 dataTableList.push(dataList);
+    //                                                 let mobile = contactService.changeMobileFormat(dataObjectnew.temployee[j].fields.Mobile);
+    //                                                 var dataListEmployeeDupp = [
+    //                                                     dataObjectnew.temployee[j].fields.EmployeeName || '-',
+    //                                                     dataObjectnew.temployee[j].fields.FirstName || '',
+    //                                                     dataObjectnew.temployee[j].fields.LastName || '',
+    //                                                     dataObjectnew.temployee[j].fields.Phone || '',
+    //                                                     mobile || '',
+    //                                                     dataObjectnew.temployee[j].fields.Email || '',
+    //                                                     dataObjectnew.temployee[j].fields.DefaultClassName || '',
+    //                                                     dataObjectnew.temployee[j].fields.Country || '',
+    //                                                     dataObjectnew.temployee[j].fields.State || '',
+    //                                                     dataObjectnew.temployee[j].fields.Street2 || '',
+    //                                                     dataObjectnew.temployee[j].fields.Street || '',
+    //                                                     dataObjectnew.temployee[j].fields.Postcode || '',
+    //                                                     dataObjectnew.temployee[j].fields.ID || ''
+    //                                                 ];
+    //
+    //                                                 splashArrayEmployeeList.push(dataListEmployeeDupp);
+    //                                                 //}
+    //                                             }
+    //
+    //                                             let uniqueChars = [...new Set(splashArrayEmployeeList)];
+    //                                             var datatable = $("#"+currenttablename).DataTable();
+    //                                             datatable.clear();
+    //                                             datatable.rows.add(uniqueChars);
+    //                                             datatable.draw(false);
+    //                                             setTimeout(function () {
+    //                                               $("#"+currenttablename).dataTable().fnPageChange('last');
+    //                                             }, 400);
+    //
+    //                                             $('.fullScreenSpin').css('display', 'none');
+    //
+    //
+    //                                 }).catch(function (err) {
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 });
+    //
+    //                             });
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                     },
+    //                     language: { search: "",searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function (oSettings) {
+    //                         $("<button class='btn btn-primary btnAddNewEmployee' data-dismiss='modal' data-toggle='modal' data-target='#addEmployeeModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#"+currenttablename+"_filter");
+    //                         $("<button class='btn btn-primary btnRefreshEmployee' type='button' id='btnRefreshEmployee' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#"+currenttablename+"_filter");
+    //
+    //                         let urlParametersPage = FlowRouter.current().queryParams.page;
+    //                         if (urlParametersPage) {
+    //                             this.fnPageChange('last');
+    //                         }
+    //
+    //                     }
+    //
+    //                 }).on('page', function () {
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                     let draftRecord = templateObject.custdatatablerecords.get();
+    //                     templateObject.custdatatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function () {
+    //
+    //                 }).on('length.dt', function (e, settings, len) {
+    //
+    //                     let dataLenght = settings._iDisplayLength;
+    //                     let employeeSearch = $('#'+currenttablename+'_filter input').val();
+    //                     splashArrayEmployeeList = [];
+    //                     if (dataLenght == -1) {
+    //                       if(settings.fnRecordsDisplay() > initialDatatableLoad){
+    //                         $('.fullScreenSpin').css('display','none');
+    //                       }else{
+    //                         if (employeeSearch.replace(/\s/g, '') != '') {
+    //                           $('.fullScreenSpin').css('display', 'inline-block');
+    //                           sideBarService.getAllEmployeesDataVS1ByName(employeeSearch).then(function (data) {
+    //                               let lineItems = [];
+    //                               let lineItemObj = {};
+    //                               if (data.temployee.length > 0) {
+    //                                   for (let i = 0; i < data.temployee.length; i++) {
+    //                                       let arBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.ARBalance) || 0.00;
+    //                                       let creditBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditBalance) || 0.00;
+    //                                       let balance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.Balance) || 0.00;
+    //                                       let creditLimit = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.CreditLimit) || 0.00;
+    //                                       let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.temployee[i].fields.SalesOrderBalance) || 0.00;
+    //                                       var dataList = {
+    //                                           id: data.temployee[i].fields.ID || '',
+    //                                           clientName: data.temployee[i].fields.ClientName || '',
+    //                                           company: data.temployee[i].fields.Companyname || '',
+    //                                           contactname: data.temployee[i].fields.ContactName || '',
+    //                                           phone: data.temployee[i].fields.Phone || '',
+    //                                           arbalance: arBalance || 0.00,
+    //                                           creditbalance: creditBalance || 0.00,
+    //                                           balance: balance || 0.00,
+    //                                           creditlimit: creditLimit || 0.00,
+    //                                           salesorderbalance: salesOrderBalance || 0.00,
+    //                                           email: data.temployee[i].fields.Email || '',
+    //                                           job: data.temployee[i].fields.JobName || '',
+    //                                           accountno: data.temployee[i].fields.AccountNo || '',
+    //                                           clientno: data.temployee[i].fields.ClientNo || '',
+    //                                           jobtitle: data.temployee[i].fields.JobTitle || '',
+    //                                           notes: data.temployee[i].fields.Notes || '',
+    //                                           state: data.temployee[i].fields.State || '',
+    //                                           country: data.temployee[i].fields.Country || '',
+    //                                           street: data.temployee[i].fields.Street || ' ',
+    //                                           street2: data.temployee[i].fields.Street2 || ' ',
+    //                                           street3: data.temployee[i].fields.Street3 || ' ',
+    //                                           suburb: data.temployee[i].fields.Suburb || ' ',
+    //                                           postcode: data.temployee[i].fields.Postcode || ' '
+    //                                       };
+    //
+    //                                       dataTableList.push(dataList);
+    //                                       let mobile = contactService.changeMobileFormat(data.temployee[i].fields.Mobile);
+    //                                       var dataListEmployee = [
+    //                                           data.temployee[i].fields.EmployeeName || '-',
+    //                                           data.temployee[i].fields.FirstName || '',
+    //                                           data.temployee[i].fields.LastName || '',
+    //                                           data.temployee[i].fields.Phone || '',
+    //                                           mobile || '',
+    //                                           data.temployee[i].fields.Email || '',
+    //                                           data.temployee[i].fields.DefaultClassName || '',
+    //                                           data.temployee[i].fields.Country || '',
+    //                                           data.temployee[i].fields.State || '',
+    //                                           data.temployee[i].fields.Street2 || '',
+    //                                           data.temployee[i].fields.Street || '',
+    //                                           data.temployee[i].fields.Postcode || '',
+    //                                           data.temployee[i].fields.ID || ''
+    //                                       ];
+    //                                       splashArrayEmployeeList.push(dataListEmployee);
+    //                                       //}
+    //                                   }
+    //                                   var datatable = $("#"+currenttablename).DataTable();
+    //                                   datatable.clear();
+    //                                   datatable.rows.add(splashArrayEmployeeList);
+    //                                   datatable.draw(false);
+    //
+    //                                   $('.fullScreenSpin').css('display', 'none');
+    //                               } else {
+    //
+    //                                   $('.fullScreenSpin').css('display', 'none');
+    //                                   $('#employeeListPOPModal').modal('toggle');
+    //                                   swal({
+    //                                       title: 'Question',
+    //                                       text: "Employee does not exist, would you like to create it?",
+    //                                       type: 'question',
+    //                                       showCancelButton: true,
+    //                                       confirmButtonText: 'Yes',
+    //                                       cancelButtonText: 'No'
+    //                                   }).then((result) => {
+    //                                       if (result.value) {
+    //                                           $('#addEmployeeModal').modal('toggle');
+    //                                           $('#edtEmployeeCompany').val(dataSearchName);
+    //                                       } else if (result.dismiss === 'cancel') {
+    //                                           $('#employeeListPOPModal').modal('toggle');
+    //                                       }
+    //                                   });
+    //
+    //                               }
+    //
+    //                           }).catch(function (err) {
+    //                               $('.fullScreenSpin').css('display', 'none');
+    //                           });
+    //                         }else{
+    //                           $('.fullScreenSpin').css('display', 'none');
+    //
+    //                         }
+    //
+    //                       }
+    //
+    //                     } else {
+    //                         if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //                             $('.fullScreenSpin').css('display', 'none');
+    //                         } else {
+    //                             sideBarService.getAllEmployeesDataVS1(dataLenght, 0).then(function (dataNonBo) {
+    //
+    //                                 addVS1Data('TEmployee', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //                                     templateObject.resetData(dataNonBo);
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 }).catch(function (err) {
+    //                                     $('.fullScreenSpin').css('display', 'none');
+    //                                 });
+    //                             }).catch(function (err) {
+    //                                 $('.fullScreenSpin').css('display', 'none');
+    //                             });
+    //                         }
+    //                     }
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                 });
+    //
+    //                 // $('.tblEmployeelist').DataTable().column( 0 ).visible( true );
+    //                 //$('.fullScreenSpin').css('display','none');
+    //             }, 0);
+    //
+    //
+    //             var columns = $('#'+currenttablename+' th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let sClass = "";
+    //             $.each(columns, function (i, v) {
+    //                 if (v.hidden == false) {
+    //                     columVisible = true;
+    //                 }
+    //                 if ((v.className.includes("hiddenColumn"))) {
+    //                     columVisible = false;
+    //                 }
+    //                 sWidth = v.style.width.replace('px', "");
+    //                 let datatablerecordObj = {
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '',
+    //                     sIndex: v.cellIndex || 0,
+    //                     sVisible: columVisible || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             templateObject.tableheaderrecords.set(tableHeaderList);
+    //
+    //
+    //         }).catch(function (err) {
+    //             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //             //$('.fullScreenSpin').css('display','none');
+    //             // Meteor._reload.reload();
+    //         });
+    //     });
+    //
+    //
+    // }
+    //
+    // templateObject.getEmployees();
+    //
+    // tableResize();
 });
 
 
@@ -1898,7 +1947,7 @@ Template.employeelistpop.events({
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
                         header: 1
                     });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -2033,5 +2082,40 @@ Template.employeelistpop.helpers({
     },
     tablename: () => {
         return Template.instance().tablename.get();
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTEmployeeList;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllEmployeesDataVS1ByName;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

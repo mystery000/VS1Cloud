@@ -12,7 +12,7 @@ import './js/vs1Login.js';
 import './js/appPopRelogin.js';
 import './Navigation/newsidenav.html';
 import './Navigation/header.html';
-import './popUps/supportpopup.html';
+import './popUps/supportpopup.js';
 import './vs1_templates/global_search/vs1_global_search_modal.html';
 
 import './js/newsidenav.js';
@@ -178,7 +178,6 @@ import './accounts/inventoryassetaccountpop.js';
 
 import './vs1_templates/init_form_page_script/init_form_page_script.html';
 import './vs1_templates/draggable_panel/draggable_panel.html';
-import './vs1_templates/title_list_pop/title_list_pop.html';
 import './vs1_templates/transaction_temp/all_transaction_modals.html';
 import './vs1_templates/kpi_card/kpi_card.html';
 import './vs1_templates/kpi_card/kpi_card_title.html';
@@ -263,6 +262,8 @@ import './contacts/addCustomer.js';
 import './contacts/addSupplier.js';
 import './contacts/addLead.js';
 import './contacts/addEmployee.js';
+import './popUps/layoutpop.js';
+import './settings/service-checker/serviceChecker.js';
 
 /* Riley*/
 import './accounts/addApcaModal/addApcaModal.html';
@@ -278,7 +279,9 @@ import './eft/optionsModal/eftOptionsModal.js';
 import './eft/bankCodesModal/eftBankCodesModal.js';
 import './vs1charts/accountrevenuestreams/accountrevenuestreams.js';
 import './settings/template-settings/templatesettings.js';
-// import './accesslevel/accesslevel.js';
+import './accesslevel/accesslevel.js';
+import './accesslevel/featureallocation.html';
+import './accounts/chartsofaccounts/chartofaccounts.html';
 // import './accounts/account-service.js';
 // import './packages/currency/CurrencyRate.js';
 import './vs1_templates/transaction_temp/transaction_print_modal.js';
@@ -313,6 +316,8 @@ import './js/packagerenewal.js';
 import './Navigation/onsuccesswaterfall.js';
 import './Help_Form/help_advisor.js';
 import './js/Table/TableHandler.js';
+import "./vs1_templates/vs1filteroptions/customfiltersdropdownbutton.js";
+import "./vs1_templates/vs1filteroptions/customfiltersmodal.js";
 /* Rasheed */
 
 /* Jeyhun */
@@ -333,6 +338,10 @@ import './manufacture/workorderList.js';
 import './manufacture/manufacturing_dashboard.js';
 import './vs1charts/mfgPlanner/mfgPlannerchart.js';
 import './settings/manufacturingsettings/manufacturingsettings.js';
+import './vs1_templates/drop_down/vs1___dropdown.js';
+import './manufacture/bomlistpop.js';
+import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
+import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -444,6 +453,7 @@ import './cheque/cheque_list.js';
 import './settings/paymentmethod-setting/paymentmethods.js';
 import './salesorder/salesorder_express_list_tables.js';
 import './payroll/timesheet/timesheet.js';
+import './overviews/Modal/AddPayRunModal.js';
 /* Alex */
 
 /*Vladyslav*/
@@ -508,6 +518,9 @@ import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
+import './popUps/editServiceCheckerModal.js';
+import './js/new_wastage_form.js';
+import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -552,7 +565,8 @@ import '../public/js/cdnjs/pdfmake.min.js';
 import '../public/js/cdnjs/split.min.js';
 import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
-
+import './vs1_templates/title_list_pop/title_list_pop.js';
+import './expenseclaim/expenseclaims.html';
 /* Stefan */
 
 /* Arthlo */
@@ -634,6 +648,10 @@ import './reports/exeprofitability/exeprofitability.js';
 /* Mainstar */
 import './inventory/binlocations/binlocations.js';
 /* Mainstar */
+
+/* Damien Begin */
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+/* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';

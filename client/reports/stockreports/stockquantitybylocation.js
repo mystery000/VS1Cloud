@@ -32,47 +32,47 @@ Template.stockquantitybylocation.onRendered(() => {
 
   let reset_data = [
     { index: 1, label: 'Department', class: 'colDepartment', active: true, display: true, width: "150" },
-    { index: 2, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "200" },
-    { index: 3, label: 'Parts Description', class: 'colDescription', active: true, display: true, width: "200" },
-    { index: 4, label: 'UOM', class: 'colUOM', active: true, display: true, width: "70" },
-    { index: 5, label: 'Manufacture', class: 'colManufacture', active: true, display: true, width: "120" },
-    { index: 6, label: 'Products Type', class: 'colProductsType', active: true, display: true, width: "140" },
-    { index: 7, label: 'Products Dept', class: 'colProductsDept', active: true, display: true, width: "140" },
-    { index: 8, label: 'Batch No', class: 'colBatchNo', active: true, display: true, width: "100" },
-    { index: 9, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "130" },
-    { index: 10, label: 'Location', class: 'colLocation', active: true, display: true, width: "80" },
-    { index: 11, label: 'No', class: 'colNo', active: false, display: true, width: "60" },
-    { index: 11, label: 'Serial~No', class: 'colSerialNo', active: false, display: true, width: "90" },
-    { index: 12, label: 'Cost', class: 'colCost', active: false, display: true, width: "70" },
-    { index: 13, label: 'Value', class: 'colValue', active: false, display: true, width: "70" },
-    { index: 14, label: 'Sales Order', class: 'colSalesOrder', active: false, display: true, width: "100" },
-    { index: 15, label: 'In-Stock', class: 'colInStock', active: false, display: true, width: "80" },
-    { index: 16, label: 'If read as UOM', class: 'colIfreadasUOM', active: false, display: true, width: "110" },
-    { index: 17, label: 'Multiplier', class: 'colMultiplier', active: false, display: true, width: "100" },
-    { index: 18, label: 'If read as Units', class: 'colIfreadasUnits1', active: false, display: true, width: "120" },
-    { index: 19, label: 'If read as Units', class: 'colIfreadasUnits2', active: false, display: true, width: "120" },
-    { index: 20, label: 'Multiplier', class: 'colMultiplier', active: false, display: true, width: "100" },
-    { index: 21, label: 'If read as UOM', class: 'colIfreadasUOM2', active: true, display: true, width: "130" },
-    { index: 22, label: 'In-Stock', class: 'colIn-stock', active: false, display: true, width: "80" },
-    { index: 23, label: 'Sales Order', class: 'colSalesOrder', active: false, display: true, width: "100" },
-    { index: 24, label: 'Available', class: 'colAvailable', active: false, display: true, width: "90" },
-    { index: 25, label: 'UOMMultiplier', class: 'colUOMMultiplier', active: false, display: true, width: "100" },
-    { index: 26, label: 'Unit Volume', class: 'colUnitVolume', active: false, display: true, width: "100" },
-    { index: 27, label: 'Volume~ Available Qty', class: 'colVolumeAvailableQty', active: false, display: true, width: "130" },
-    { index: 28, label: 'Volume~ Instock Qty', class: 'colVolumeINstockQty', active: false, display: true, width: "130" },
-    { index: 29, label: 'Part Type', class: 'colPartType', active: false, display: true, width: "100" },
-    { index: 30, label: 'Truck Load No', class: 'colTruckLoadNo', active: false, display: true, width: "110" },
-    { index: 31, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "100" },
-    { index: 32, label: 'SOQty', class: 'colSQQty', active: false, display: true, width: "80" },
-    { index: 33, label: 'Instock Qty', class: 'colInstockQty2', active: false, display: true, width: "100" },
-    { index: 34, label: 'Allocated UOMQty', class: 'colAllocatedUOMQty', active: false, display: true, width: "120" },
-    { index: 35, label: 'Allocated SOUOMQty', class: 'colAllocatedSOUOMQty', active: false, display: true, width: "130" },
-    { index: 36, label: 'Allocated In Stock UOMQty', class: 'colAllocatedInStockUOMQty', active: false, display: true, width: "150" },
-    { index: 37, label: 'Bin', class: 'colBin', active: false, display: true, width: "70" },
-    { index: 39, label: 'Batch', class: 'colBatch', acticve: false, display: true, width: "70" },
-    { index: 39, label: 'SN', class: 'colSn', acticve: false, display: true, width: "60" },
-    { index: 40, label: 'Preferred Supplier', class: 'colPreferredsupplier', active: false, display: true, width: "110" },
-    { index: 41, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "100" },
+    { index: 2, label: 'Product', class: 'colProductID', active: true, display: true, width: "150" },
+    { index: 3, label: 'Parts Desc', class: 'colDescription', active: true, display: true, width: "150" },
+    { index: 4, label: 'UOM', class: 'colUOM', active: true, display: true, width: "150" },
+    { index: 5, label: 'Manufacture', class: 'colManufacture', active: true, display: true, width: "150" },
+    { index: 6, label: 'Products Type', class: 'colProductsType', active: true, display: true, width: "150" },
+    { index: 7, label: 'Products Dept', class: 'colProductsDept', active: true, display: true, width: "150" },
+    { index: 8, label: 'Cost', class: 'colBatchNo text-right', active: true, display: true, width: "150" },
+    { index: 9, label: 'Value', class: 'colExpiryDate text-right', active: true, display: true, width: "150" },
+    { index: 10, label: 'Qty', class: 'colLocation text-right', active: true, display: true, width: "150" },
+    // { index: 11, label: 'No', class: 'colNo', active: false, display: true, width: "60" },
+    // { index: 11, label: 'Serial~No', class: 'colSerialNo', active: false, display: true, width: "90" },
+    // { index: 12, label: 'Cost', class: 'colCost', active: true, display: true, width: "100" },
+    // { index: 13, label: 'Value', class: 'colValue', active: true, display: true, width: "100" },
+    // { index: 14, label: 'Sales Order', class: 'colSalesOrder', active: false, display: true, width: "100" },
+    // { index: 15, label: 'In-Stock', class: 'colInStock', active: false, display: true, width: "80" },
+    // { index: 16, label: 'If read as UOM', class: 'colIfreadasUOM', active: false, display: true, width: "110" },
+    // { index: 17, label: 'Multiplier', class: 'colMultiplier', active: false, display: true, width: "100" },
+    // { index: 18, label: 'If read as Units', class: 'colIfreadasUnits1', active: false, display: true, width: "120" },
+    // { index: 19, label: 'If read as Units', class: 'colIfreadasUnits2', active: false, display: true, width: "120" },
+    // { index: 20, label: 'Multiplier', class: 'colMultiplier', active: false, display: true, width: "100" },
+    // { index: 21, label: 'If read as UOM', class: 'colIfreadasUOM2', active: true, display: true, width: "130" },
+    // { index: 22, label: 'In-Stock', class: 'colIn-stock', active: false, display: true, width: "80" },
+    // { index: 23, label: 'Sales Order', class: 'colSalesOrder', active: false, display: true, width: "100" },
+    // { index: 24, label: 'Available', class: 'colAvailable', active: false, display: true, width: "90" },
+    // { index: 25, label: 'UOMMultiplier', class: 'colUOMMultiplier', active: false, display: true, width: "100" },
+    // { index: 26, label: 'Unit Volume', class: 'colUnitVolume', active: false, display: true, width: "100" },
+    // { index: 27, label: 'Volume~ Available Qty', class: 'colVolumeAvailableQty', active: false, display: true, width: "130" },
+    // { index: 28, label: 'Volume~ Instock Qty', class: 'colVolumeINstockQty', active: false, display: true, width: "130" },
+    // { index: 29, label: 'Part Type', class: 'colPartType', active: false, display: true, width: "100" },
+    // { index: 30, label: 'Truck Load No', class: 'colTruckLoadNo', active: false, display: true, width: "110" },
+    // { index: 31, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "100" },
+    // { index: 32, label: 'SOQty', class: 'colSQQty', active: false, display: true, width: "80" },
+    // { index: 33, label: 'Instock Qty', class: 'colInstockQty2', active: false, display: true, width: "100" },
+    // { index: 34, label: 'Allocated UOMQty', class: 'colAllocatedUOMQty', active: false, display: true, width: "120" },
+    // { index: 35, label: 'Allocated SOUOMQty', class: 'colAllocatedSOUOMQty', active: false, display: true, width: "130" },
+    // { index: 36, label: 'Allocated In Stock UOMQty', class: 'colAllocatedInStockUOMQty', active: false, display: true, width: "150" },
+    // { index: 37, label: 'Bin', class: 'colBin', active: false, display: true, width: "70" },
+    // { index: 39, label: 'Batch', class: 'colBatch', acticve: false, display: true, width: "70" },
+    // { index: 39, label: 'SN', class: 'colSn', acticve: false, display: true, width: "60" },
+    // { index: 40, label: 'Preferred Supplier', class: 'colPreferredsupplier', active: false, display: true, width: "110" },
+    // { index: 41, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "100" },
   ]
   templateObject.stockquantitybylocationth.set(reset_data);
 
@@ -162,7 +162,28 @@ Template.stockquantitybylocation.onRendered(() => {
     await templateObject.getStockLocationReportData();
   };
 
+  templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate = false) {
+    getVS1Data('StockQuantityReport').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        reportService.getStockQuantityLocationReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('StockQuantityReport', JSON.stringify(data));
+          templateObject.displayStockQuantityData(data);
+        }).catch(function (err) {
 
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayStockQuantityData(data);
+      }
+    }).catch(function (err) {
+      reportService.getBalanceSheetReport(dateAsOf).then(async function (data) {
+        await addVS1Data('StockQuantityReport', JSON.stringify(data));
+        templateObject.displayStockQuantityData(data);
+      }).catch(function (err) {
+
+      });
+    });
+  }
   templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate) => {
     LoadingOverlay.show();
     templateObject.setDateAs(dateFrom);
@@ -190,67 +211,67 @@ Template.stockquantitybylocation.onRendered(() => {
       }
     });
 
-    data = data.response;
-
-
-
-    let reportData = [];
-    if (data.tstockquantitylocation.length > 0) {
-      for (const item of data.tstockquantitylocation) {
-        let isExist = reportData.filter((subitem) => {
-          if (subitem.DepartmentID == item.DepartmentID) {
-            subitem.SubAccounts.push(item)
-            return subitem
-          }
-        });
-
-        if (isExist.length == 0) {
-          reportData.push({
-            TotalCost: 0,
-            TotalValue: 0,
-            SubAccounts: [item],
-            ...item
-          });
-        }
-        $(".fullScreenSpin").css("display", "none");
-      }
-    }
-    let useData = reportData.filter((item) => {
-      let TotalCost = 0;
-      let TotalValue = 0;
-      item.SubAccounts.map((subitem) => {
-        TotalCost += subitem.Cost;
-        TotalValue += subitem.Value;
-      });
-      item.TotalCost = TotalCost;
-      item.TotalValue = TotalValue;
-      return item;
-    });
-    templateObject.records.set(useData);
-    if (templateObject.records.get()) {
-      setTimeout(function () {
-        $("td a").each(function () {
-          if ($(this).text().indexOf("-" + Currency) >= 0) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-        $("td").each(function () {
-          if ($(this).text().indexOf("-" + Currency) >= 0) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-        $(".fullScreenSpin").css("display", "none");
-      }, 1000);
-    }
-
-    LoadingOverlay.hide();
+    templateObject.displayStockQuantityData(data.response);
   }
+
+    templateObject.displayStockQuantityData = async function (data) {
+      let reportData = [];
+      if (data.tstockquantitylocation.length > 0) {
+        for (const item of data.tstockquantitylocation) {
+          let isExist = reportData.filter((subitem) => {
+            if (subitem.DepartmentID == item.DepartmentID) {
+              subitem.SubAccounts.push(item)
+              return subitem
+            }
+          });
+
+          if (isExist.length == 0) {
+            reportData.push({
+              TotalCost: 0,
+              TotalValue: 0,
+              SubAccounts: [item],
+              ...item
+            });
+          }
+          $(".fullScreenSpin").css("display", "none");
+        }
+      }
+      let useData = reportData.filter((item) => {
+        let TotalCost = 0;
+        let TotalValue = 0;
+        item.SubAccounts.map((subitem) => {
+          TotalCost += subitem.Cost;
+          TotalValue += subitem.Value;
+        });
+        item.TotalCost = TotalCost;
+        item.TotalValue = TotalValue;
+        return item;
+      });
+      templateObject.records.set(useData);
+      if (templateObject.records.get()) {
+        setTimeout(function () {
+          $("td a").each(function () {
+            if ($(this).text().indexOf("-" + Currency) >= 0) {
+              $(this).addClass("text-danger");
+              $(this).removeClass("fgrblue");
+            }
+          });
+          $("td").each(function () {
+            if ($(this).text().indexOf("-" + Currency) >= 0) {
+              $(this).addClass("text-danger");
+              $(this).removeClass("fgrblue");
+            }
+          });
+          $(".fullScreenSpin").css("display", "none");
+        }, 1000);
+      }
+
+      LoadingOverlay.hide();
+    }
 
   templateObject.initDate();
 
-  templateObject.loadReport(
+  templateObject.getReportData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false

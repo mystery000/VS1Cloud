@@ -1,0 +1,202 @@
+<template name="transactionheader">
+    <div class="transaction_header"
+    style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
+     
+      <div class="row">
+          <div class="col-12 col-md-4">
+              <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
+                  {{data.lid}}
+                  {{> helpbutton}}
+              </h2>
+          </div>
+          <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+          <div class="col-12 col-md-4">
+            <a
+                    class="btn btnSettings"
+                    role="button"
+                    data-toggle="modal"
+                    href="#myModal4"
+                    style="float: right;">
+                <i class="icon ion-android-more-horizontal"></i>
+            </a>
+              <div class="printID" id="{{data.id}}" style="display: none;">{{data.id}}</div>
+                {{> customfieldDroppop}}
+                {{> customfieldpop}}
+          </div>
+      </div>
+      <div class="row align-items-center justify-content-between">
+        <div class="col-12 col-xl-10">
+            {{#if includeClient}}
+                <div class="row">
+                        <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
+                            {{> customerselector
+                                label=clientType
+                                id=getCustomerID
+                                value=data.CustomerID
+                                data = data.ClientName
+                                email = data.ClientEmail
+                                modalId=modal_id
+                                list_template_name=getTemplate
+                                target_modal_id=getTargetModalID
+                                target_template_id=getTargetTemplate
+                                is_editable=true
+                                colNameForValue='colCompany'
+                                modal_title=getModalTitle
+                                lineTableId=gridTableId
+                                printTableId=printTableId
+                              }}
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
+                            {{> customer_email_input
+                                label=clientType
+                            }}
+                        </div>
+                </div>
+            {{/if}}
+            <div class="row">
+                {{#if includeAddress}}
+                    <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+                        {{# vs1_textarea
+                        label="Billing Address"
+                        row="5"
+                        id="txabillingAddress"
+                        name="txabillingAddress"
+                        }}{{/vs1_textarea}}
+                    </div>
+                {{/if}}
+                {{#if includeAccount}}
+                    <div class="col-12 col-md-6 col-lg-2 col-xl-3">
+                        {{> vs1___dropdown
+                            type='search'
+                            id='sltAccountName'
+                            name='sltAccountName'
+                            modalId= 'accountListModal'
+                            list_template_name='accountlistpop'
+                            innerModal=true
+                            modal_title='Account List'
+                            label = 'Account'
+                            colNameForValue = 'colAccountName'
+                            target_modal_id= 'addAccountModal'
+                            target_template_id='addaccountpop'
+                            is_editable=true
+                        }}
+                    </div>
+                {{/if}}
+                <div class="col-12 {{#if includeAddress}} col-md-6 col-lg-10 col-xl-9 {{/if}}">
+                    <div class="row">
+                        {{#each item in headerfields}}
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-2">
+                            {{#if equals item.type 'search'}}
+                                {{>vs1___dropdown
+                                    type='search'
+                                    id=item.id
+                                    name=item.id
+                                    modalId= item.listModalId
+                                    list_template_name=item.listModalTemp
+                                    innerModal=true
+                                    modal_title=item.modalTitle
+                                    label = item.label
+                                    colNameForValue = item.colName
+                                    target_modal_id= item.editModalId
+                                    target_template_id=item.editModalTemp
+                                    is_editable=item.editable
+                                }}
+                            {{else}}
+                                {{#if equals item.type 'date'}}
+                                    {{> sale_date_selector
+                                        label= item.label
+                                        SODate=item.value
+                                        DueDate=data.duedate
+                                    }}
+                                {{else}}
+                                {{> default_input
+                                    label=item.label
+                                    classes=item.classes
+                                    type=item.type
+                                    id=item.id
+                                    name=item.name
+                                    readonly=item.readonly
+                                }}
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                        {{/each}}
+                        <style>
+                            .transaction_header .currency-module {
+                                margin: 0
+                            }
+                        </style>
+                        <div class="d-flex align-items-center">
+                            {{#if currency}}
+                                {{#if equals clientType 'Customer'}}
+                                    {{> CurrencyWidget rate="sell" trans="true"}}
+                                {{else}}
+                                    {{> CurrencyWidget rate="buy" row="true"}}
+                                {{/if}}
+                            {{/if}}
+                        </div>
+                        {{> custom_fields
+                            containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
+                            salesCloudPreferenceRec=salesCloudPreferenceRec
+                            custfields=custfields
+                            data=data
+                          }}
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin: 16px 16px 0px 16px;">
+                <div class="col-12 mb-3">
+                  <a class="btn btn-link" data-toggle="collapse" aria-expanded="false" aria-controls="collapse-notes"
+                    href="#collapse-notes" role="button">+ Shipping Information</a>
+                  <div class="row">
+                    <div class="col-12 col-md-4">
+                      <div class="collapse" id="collapse-notes" style="margin-top: 8px;">
+                        {{# vs1_textarea label="Shipping Address" row="3" id="txaShipingInfo"
+                        name="txaShipingInfo"}}{{data.shipToDesc}}{{/vs1_textarea}}
+                      </div>
+                    </div>
+                  </div>
+        
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-xl-2">
+            {{#if payment}}
+                <div class="row">
+                    <div class="col-12 d-flex flex-column align-items-end justify-content-center" >
+                        <p style="font-size: 20px; font-weight: 700;color: rgb(84,94,103); margin: 12px 24px">BALANCE DUE</p>
+                        {{#if equals isPaid true}}
+                        <p style="font-size: 25px;font-weight: 700;color: #e74a3b; margin: 12px 24px">Paid</p>
+                        <input class="form-control form-control ispaidInv" type="hidden" value="true">
+                        {{else}}
+                        <input class="form-control form-control ispaidInv" type="hidden" value="false">
+                        <p style="margin: 12px 24px; font-size: 25px;font-weight: 700;color: rgb(56,63,69);" id="balanceDue" name="balanceDue">
+                        {{balanceDue}}</p>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+            {{#each button in headerbuttons}}
+                <div class="row ">
+                    <div class="col-12 transaction_header_buttons d-flex align-items-center justify-content-end">
+                        <style>
+                            .transaction_header .transaction_header_buttons button {
+                                margin: 12px 24px;
+                                width: 140px
+                            }
+                        </style>
+                        {{> vs1_button
+                            color=button.bsColor
+                            classes=button.class
+                            id=button.id
+                            title=button.label
+                            htmlType='button'
+                            iconName=button.icon
+                        }}
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+      </div>
+    </div>
+</template>

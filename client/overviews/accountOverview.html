@@ -129,8 +129,8 @@
                 <button class="btn btnNav btn-primary vs1ButtonMargin btnTaxSummary" type="button" style="display:none"><i class="fas fa-user" style="padding-right: 5px;"></i>Tax Summary</button>
                 <div class="btn-group btnNav vs1ButtonMargin" >
                     <div class="custom-control custom-switch">
-                        <input type="checkbox" class="custom-control-input showAsChart" name="showAsChart" id="showAsChart" />
-                        <label class="custom-control-label" for="showAsChart">Chart</label>
+                        <input type="checkbox" class="custom-control-input showAsTree" name="showAsTree" id="showAsTree" />
+                        <label class="custom-control-label" for="showAsTree">Tree</label>
                     </div>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                 <div
                   class="col d-xl-flex justify-content-xl-end align-items-xl-start"
                   style="padding: 0px !important">
-                    {{> spreadsheet_link templateName="Accountslist report result"}}
+                    {{> spreadsheet_link templateName="Accountslist Report Result"}}
                     {{> export_import_print_display_button Import="hiddenButton"  tablename="tblAccountOverview"}}
                 </div>
                 <div>
@@ -226,18 +226,45 @@
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myAccountModal" style="margin: 12px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
             </div>
         </div>
-        <style>
-        .isNotBankAccount {
-            display: none !important;
-        }
-
-        .isNotCreditAccount {
-            display: none !important;
-        }
-        </style>
         <div class="card-body p-0 rounded">
             {{> non_transactional_list tablename="tblAccountOverview"}}
+            <div class="table-responsive d-none">
+                <table id="tblAccountTreeOverview" class="dataTable table table-bordered tblAccountTreeOverview">
+                    <thead>
+                        <tr class="dnd-moved">
+                            {{#each displayfield in treeColumnHeader}}
+                                {{#if displayfield.display}}
+                                    <th data-class="{{displayfield.class}}" thclass="{{displayfield.class}}" data-col-index="{{displayfield.index}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{displayfield.width}}px">
+                                        {{displayfield.label}}
+                                    </th>
+                                {{/if}}
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <style>
+            .isNotBankAccount {
+                display: none !important;
+            }
+
+            .isNotCreditAccount {
+                display: none !important;
+            }
+
+            tr.has-parent {
+                background-color:#fff !important;
+                color: #00a3d3
+            }
+
+            tr.has-child {
+                background-color:#fff !important;
+                font-weight: bold;
+            }
+        </style>
     </div>
 
 

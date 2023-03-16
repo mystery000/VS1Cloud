@@ -51,6 +51,7 @@ Template.new_workorder.onCreated(function() {
     templateObject.isSaved = new ReactiveVar(false);
     templateObject.updateFromPO = new ReactiveVar(false);
     templateObject.isCompleted = new ReactiveVar(false);
+    templateObject.targetProductField = new ReactiveVar();
 })
 
 Template.new_workorder.onRendered(async function(){
@@ -107,6 +108,54 @@ Template.new_workorder.onRendered(async function(){
     let temp = await templateObject.getAllWorkorders()
     templateObject.workOrderRecords.set(temp);
 
+
+    templateObject.getCustomerData = async function(customername = 'Workshop') {
+        return new Promise(async(resolve, reject)=> {
+            getVS1Data('TCustomerVS1').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    contactService.getOneCustomerDataExByName(customername).then(function(data){
+                        $('.fullScreenSpin').css('display', 'none')
+                        resolve(data.tcustomer[0].fields)
+
+                    }).catch(function(err){
+                        $('.fullScreenSpin').css('display', 'none')
+                        resolve({ClientID: '', ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tcustomervs1;
+                    let added = true
+                    for(let i = 0; i< useData.length; i++) {
+                        if(useData[i].fields.ClientName == customername) {
+                            added = false
+                            $('.fullScreenSpin').css('display', 'none')
+                            resolve(useData[i].fields)
+                        }
+                    }
+
+                    if(added == true) {
+                        contactService.getOneCustomerDataExByName(customername).then(function(data){
+                            $('.fullScreenSpin').css('display', 'none')
+                            resolve(data.tcustomer[0].fields)
+                        }).catch(function(error){
+                            $('.fullScreenSpin').css('display', 'none')
+                            resolve({ClientID: '',ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                        })
+                    }
+                }
+            }).catch(function (e) {
+                contactService.getOneCustomerDataExByName(customername).then(function(data){
+                    $('.fullScreenSpin').css('display', 'none')
+                    resolve(data.tcustomer[0].fields)
+                }).catch(function(error){
+                    $('.fullScreenSpin').css('display', 'none')
+                    resolve({ClientID: '', ClientName: customername, Companyname: customername,  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
+                })
+            })
+        })
+    }
+
+
     templateObject.getWorkorderRecord = async function() {
         if(FlowRouter.current().queryParams.id) {
             $('.fullScreenSpin').css('display', 'inline-block')
@@ -118,17 +167,27 @@ Template.new_workorder.onRendered(async function(){
             // if(workorder.fields.StoppedTime && new Date(workorder.fields.StoppedTime).getTime() < new Date().getTime()) {
             //     templateObject.isCompleted = true;
             // }
+           
+
             let isCompleted = false
+            
             if(workorder.fields.IsCompleted == true) {
                 isCompleted = true;
+               
+                templateObject.isCompleted.set(true);
+                
             }
+
             templateObject.salesOrderId.set(workorder.fields.SaleID)
+            let customerData = await templateObject.getCustomerData(workorder.fields.Customer);
             let record = {
                 id: orderid,
                 salesorderid: workorder.fields.SaleID,
                 lid: 'Edit Work Order ' + orderid,
                 customer: workorder.fields.Customer || '',
                 ClientName: workorder.fields.Customer || '',
+                CustomerID: customerData.ID,
+                ClientEmail: customerData.Email,
                 invoiceToDesc: workorder.fields.OrderTo || '',
                 custPONumber: workorder.fields.PONumber  || '',
                 saledate: workorder.fields.SaleDate || "",
@@ -201,7 +260,8 @@ Template.new_workorder.onRendered(async function(){
                                 if(added == true) {
                                     accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
                                         resolve(data)
-                                    })
+                                    }).catch (function(e){
+                                    }) 
                                 }
                             }
                         }).catch(
@@ -219,6 +279,8 @@ Template.new_workorder.onRendered(async function(){
                     lid: 'Edit Work Order' + ' ' + data.fields.ID + '_' + (workordersCount+1).toString(),
                     customer: data.fields.CustomerName,
                     ClientName: data.fields.CustomerName || '',
+                    ClientEmail: data.fields.ContactEmail || '',
+                    CustomerID: data.fields.CustomerID,
                     invoiceToDesc: data.fields.InvoiceToDesc,
                     custPONumber: data.fields.CustPONumber,
                     saledate: data.fields.SaleDate ? moment(data.fields.SaleDate).format('DD/MM/YYYY') : "",
@@ -271,53 +333,8 @@ Template.new_workorder.onRendered(async function(){
                 // }, 15000)
 
             }else {
-                async function getCustomerData() {
-                    return new Promise(async(resolve, reject)=> {
-                        getVS1Data('TCustomerVS1').then(function(dataObject){
-                            if(dataObject.length == 0) {
-                                contactService.getOneCustomerDataExByName('Workshop').then(function(data){
-                                    $('.fullScreenSpin').css('display', 'none')
-                                    resolve(data.tcustomer[0].fields)
-
-                                }).catch(function(err){
-                                    $('.fullScreenSpin').css('display', 'none')
-                                    resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                                })
-                            }else {
-                                let data = JSON.parse(dataObject[0].data);
-                                let useData = data.tcustomervs1;
-                                let added = true
-                                for(let i = 0; i< useData.length; i++) {
-                                    if(useData[i].fields.ClientName == 'Workshop') {
-                                        added = false
-                                        $('.fullScreenSpin').css('display', 'none')
-                                        resolve(useData[i].fields)
-                                    }
-                                }
-
-                                if(added == true) {
-                                    contactService.getOneCustomerDataExByName('Workshop').then(function(data){
-                                        $('.fullScreenSpin').css('display', 'none')
-                                        resolve(data.tcustomer[0].fields)
-                                    }).catch(function(error){
-                                        $('.fullScreenSpin').css('display', 'none')
-                                        resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                                    })
-                                }
-                            }
-                        }).catch(function (e) {
-                            contactService.getOneCustomerDataExByName('Workshop').then(function(data){
-                                $('.fullScreenSpin').css('display', 'none')
-                                resolve(data.tcustomer[0].fields)
-                            }).catch(function(error){
-                                $('.fullScreenSpin').css('display', 'none')
-                                resolve({ClientName: 'WorkShop', Companyname: 'WorkShop',  Email: '', Street: '', Street2: '', Suburb: '', State: '', Postcode: '', Country: ''})
-                            })
-                        })
-                    })
-                }
-
-                let customerData = await getCustomerData();
+                
+                let customerData = await templateObject.getCustomerData();
                 let orderAddress = customerData.Companyname + '\n' + customerData.Street+" "+customerData.Street2 + '\n'+ customerData.State+'\n' + customerData.Postcode + ' ' + customerData.Country
                 let record = {
                     id: '',
@@ -325,6 +342,8 @@ Template.new_workorder.onRendered(async function(){
                     lid: 'New WorkOrder',
                     customer: 'Workshop',
                     ClientName: 'Workshop',
+                    CustomerID: customerData.ID || 2,
+                    ClientEmail: '',
                     invoiceToDesc: orderAddress,
                     custPONumber: '',
                     saledate: moment().format('DD/MM/YYYY'),
@@ -505,10 +524,16 @@ Template.new_workorder.onRendered(async function(){
 
     }
 
+    if(templateObject.isCompleted.get()) {
+     
+        $("#workorder-detail :input").prop("disabled", true);  
+
+        
+    }
+
 })
 
 Template.new_workorder.events({
-
 
     'click .btnSave': function(event) {
         event.stopPropagation();
@@ -975,6 +1000,8 @@ Template.new_workorder.events({
                 async function saveMainOrders() {
                     let record = templateObject.workorderrecord.get();
                     let totalWorkOrders = await templateObject.getAllWorkorders();
+                    
+                   
                     let savedworkorders = totalWorkOrders.filter(order => {
                         return order.fields.SaleID == templateObject.salesOrderId.get();
                     })
@@ -984,10 +1011,12 @@ Template.new_workorder.events({
                     templateObject.workorderrecord.set(temp);
                     record = templateObject.workorderrecord.get();
                     let objDetail = {
-                        LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                    //    LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        LID: $('#ponumber').val() + "_" + (count + 1).toString(),
                         Customer: $('#edtCustomerName').val() || '',
                         OrderTo: $('#txabillingAddress').val() || '',
                         PONumber: $('#ponumber').val()||'',
+                        OrderNumber:$('#edtOrderNumber').val() || '',
                         SaleDate: record.saledate,
                         DueDate: record.duedate,
                         BOMStructure: JSON.stringify(templateObject.bomStructure.get()),
@@ -997,10 +1026,12 @@ Template.new_workorder.events({
                         ProductName: record.productname,
                         ProductDescription: record.product_description,
                         ShipDate: record.shipDate,
-                        ProductID: record.productid,
+                        // ProductID: record.productid,
                         Quantity: record.quantity || 1,
                         InProgress: record.isStarted,
-                        ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        //ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        ID: $('#ponumber').val() + "_" + (count + 1).toString(),
+
                         UpdateFromPO: templateObject.updateFromPO.get(),
                         POStatus: record.poStatus,
                         Status: record.status,
@@ -1028,13 +1059,12 @@ Template.new_workorder.events({
                     }else {
                         workorders = [...workorders, {type:'TVS1Workorder', fields:objDetail}];
                     }
+                    
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
                     // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                 }
 
                 await saveMainOrders();
-
-
 
                 $('.fullScreenSpin').css('display', 'none');
 
@@ -1072,10 +1102,31 @@ Template.new_workorder.events({
         event.preventDefault();
         event.stopPropagation();
         let templateObject = Template.instance();
+        templateObject.showBOMModal.set(false)
         let productName = $(event.target).closest('tr').find('input.lineProductName').val()
         let tempBOMs = templateObject.bomProducts.get();
+        templateObject.targetProductField.set($(event.target))
+        $('#bomProductListModal').modal('toggle')
+    },
 
-        $('#BOMSetupModal').modal('toggle')
+    'click #bomProductListModal tbody tr': function(event) {
+        event.preventDefault()
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        let productName = $(event.target).closest('tr').find('.colName').text()
+        let description = $(event.target).closest('tr').find('.colDescription').text()
+        let field = templateObject.targetProductField.get();
+        $(field).val(productName)
+        let descriptionField = $(field).closest('tr').find('.colDescription');
+        $(descriptionField).text(description) 
+        let record = templateObject.workorderrecord.get();
+        let tempRecord = cloneDeep(record)
+        tempRecord.productname = productName;
+        tempRecord.productDescription = description;
+        templateObject.workorderrecord.set(tempRecord)
+        $('#bomProductListModal').modal('toggle');
+
+
     },
     'change .edtQuantity' : function(event) {
         let value = $(event.target).val();
@@ -1295,15 +1346,80 @@ Template.new_workorder.events({
         templateObject.changeWorkorderStatus('QAStopped')
     },
 
-    'click #tblBOMList': function(event) {
+    'click #tblBOMList tbody tr': async function(event) {
         let templateObject = Template.instance();
         let productName = $(event.target).closest('tr').find('.colName').text();
         let productDescription = $(event.target).closest('tr').find('.colDescription').text();
         let record = cloneDeep(templateObject.workorderrecord.get())
         record.productname = productName;
         record.productDescription = productDescription;
+        async function getBOMStructure() {
+         getVS1Data('TProcTree').then(function(dataObject){
+            return new Promise(async(resolve, reject) =>{
+                if(dataObject.length == 0) {
+                    productService.getOneBOMProductByName(productName).then(function(data) {
+                        if (data.tproctree.length > -1) {
+                            templateObject.bomStructure.set(data.tproctree[0])
+                            resolve()
+                        }
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tproctree;
+                    let added = false
+                    for(let i=0; i< useData.length; i++){
+                        if(useData[i].Caption == productName) {
+                            added = true;
+                            templateObject.bomStructure.set(useData[i])
+                            resolve()
+                        }
+                    }
+                    if(added == false) {
+                        productService.getOneBOMProductByName(productName).then(function(data) {
+                            if (data.tproctree.length > -1) {
+                                templateObject.bomStructure.set(data.tproctree[0])
+                                resolve()
+                            }
+                        })  
+                    }
+                }
+            })
+            }).catch(function(e){
+                productService.getOneBOMProductByName(productName).then(function(data) {
+                    if (data.tproctree.length > -1) {
+                        templateObject.bomStructure.set(data.tproctree[0])
+                        resolve()
+                    }
+                })
+            })  
+        }
+        await getBOMStructure();
         templateObject.workorderrecord.set(record)
+        templateObject.showBOMModal.set(true)
         $('#bomListModal').modal('toggle')
+    },
+
+    'click #btnShowBOM': function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        let templateObject = Template.instance();
+        $('#BOMSetupModal').modal('toggle')
+    },
+
+    'change #edtCustomerName': function(event) {
+        let templateObject = Template.instance();
+        setTimeout(async function(){
+            let customerName = $('#edtCustomerName').val()
+            
+            let record = cloneDeep(templateObject.workorderrecord.get());
+            let customerData = await templateObject.getCustomerData(customerName);
+            record.customer= customerName,
+            record.ClientName= customerName,
+            record.CustomerID= customerData.ID,
+            record.ClientEmail= customerData.Email,
+            templateObject.workorderrecord.set(record);
+
+        }, 1000)
     }
 
 

@@ -38,7 +38,7 @@ openDb = function (dbName) {
       let db = event.target.result;
       db.createObjectStore("vscloudlogininfo", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProductVS1", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TProductQtyList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSupplierProduct", { keyPath: "EmployeeEmail" });
@@ -393,8 +393,6 @@ openDb = function (dbName) {
       db.createObjectStore("TCurrencyRateHistory", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TXeCurrencySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTripGroup", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TLeaveData", { keyPath: "EmployeeEmail" });
-      // db.createObjectStore('TEarningData', { keyPath: "EmployeeEmail" });
       db.createObjectStore("TReportsAccountantsCategory", {
         keyPath: "EmployeeEmail",
       });
@@ -446,7 +444,6 @@ openDb = function (dbName) {
         keyPath: "EmployeeEmail",
       });
       db.createObjectStore("TRateTypes", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TEarningData", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTimeSheetDetails", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
@@ -465,6 +462,7 @@ openDb = function (dbName) {
       db.createObjectStore("TVS1Workorder", {keyPath: "EmployeeEmail" });
 
       db.createObjectStore("TVS1DashboardStatus", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1DashboardOptions", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1Image", {keyPath: "EmployeeEmail"});
 
       db.createObjectStore("TVS1Sales_Report", {keyPath: "EmployeeEmail"});
@@ -542,6 +540,27 @@ openDb = function (dbName) {
       db.createObjectStore("PrintDisplaySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TPNLLayout", { keyPath: "EmployeeEmail" });
       db.createObjectStore("ManufacturingSettings", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardExecData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData2", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData3", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData2", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData3", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("BuildProfitabilityReport", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("ProductionWorksheetReport", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("WorkOrderReport", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TDashbaordOptions", {keyPath: "EmployeeEmail"});
+      db.createObjectStore("TTransactionDescription", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
+
+      db.createObjectStore("TReconciliationBankAccountsList", { keyPath: "EmployeeEmail" });
+
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
@@ -804,7 +823,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 240);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 250);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };

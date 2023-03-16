@@ -20,6 +20,7 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './supplierlistpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -29,6 +30,62 @@ Template.supplierlistpop.onCreated(function () {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.ExcessAmount) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.SupplierCreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
+        var dataList = [
+            data.Company || '',
+            data.Phone || '',
+            arBalance || 0.00,
+            creditBalance || 0.00,
+            balance || 0.00,
+            creditLimit || 0.00,
+            salesOrderBalance || 0.00,
+            data.Suburb || '',
+            data.Country || '',
+            data.Notes || '',
+            data.ClientID || '',
+            data.Active ? "" : "In-Active",
+            // data.Email || '',
+            // data.AccountNo || '',
+            // data.ClientNo || '',
+            // data.JobTitle || '',
+            // data.CUSTFLD1 || '',
+            // data.CUSTFLD2 || '',
+            // data.POState || '',
+            // data.Postcode || '',
+            // linestatus,
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+        { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+        { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+        { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+        { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "60" },
+        { index: 10, label: '#ID', class: 'colID', active: false, display: false, width: "20" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.supplierlistpop.onRendered(function () {
@@ -43,9 +100,9 @@ Template.supplierlistpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    templateObject.resetData = function (dataVal) {
-        location.reload();
-    }
+    // templateObject.resetData = function (dataVal) {
+    //     location.reload();
+    // }
 
     templateObject.getSuppliers = function () {
         getVS1Data('TSupplierVS1').then(function (dataObject) {
@@ -1324,7 +1381,7 @@ Template.supplierlistpop.onRendered(function () {
 
     }
 
-    templateObject.getSuppliers();
+//    templateObject.getSuppliers();
 
 
 
@@ -1559,54 +1616,54 @@ Template.supplierlistpop.events({
          $(".btnRefreshSupplier").trigger("click");
       }
     },
-    'click .chkDatatable': function (event) {
-        var columns = $('#tblSupplierlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function (i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblSupplierlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function (err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
+    // 'click .chkDatatable': function (event) {
+    //     var columns = $('#tblSupplierlist th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function (i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .resetTable': function (event) {
+    //     var getcurrentCloudDetails = CloudUser.findOne({
+    //         _id: localStorage.getItem('mycloudLogonID'),
+    //         clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
+    //     });
+    //     if (getcurrentCloudDetails) {
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({
+    //                 userid: clientID,
+    //                 PrefName: 'tblSupplierlist'
+    //             });
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.remove({
+    //                     _id: checkPrefDetails._id
+    //                 }, function (err, idTag) {
+    //                     if (err) {
+    //
+    //                     } else {
+    //                         Meteor._reload.reload();
+    //                     }
+    //                 });
+    //
+    //             }
+    //         }
+    //     }
+    // },
     'click .saveTable': function (event) {
         let lineItems = [];
         $('.columnSettings').each(function (index) {
@@ -1841,7 +1898,7 @@ Template.supplierlistpop.events({
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
                         header: 1
                     });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -1973,5 +2030,40 @@ Template.supplierlistpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllSuppliersDataVS1List;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllSuppliersDataVS1;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

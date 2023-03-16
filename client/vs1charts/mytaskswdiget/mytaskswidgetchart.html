@@ -1,32 +1,52 @@
 <template name="mytaskswidgetchart">
-  <style>
-    .my-taskswidget {
-        display: flex;
-        flex-direction: column;
-        padding: 20px 10px;
-        background-color: #ededed;
-        border: 3px solid #878787;
-        border-radius: 14px;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
+    <style>
+        .my-taskswidget {
+            display: flex;
+            flex-direction: column;
+            padding: 20px 10px;
+            background: #00a3d3;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
 
-    #mytaskschartcol .mytaskHeader{
-      display:none;
-    }
-  </style>
-  {{# draggablePanel
-    xs=xs sm=sm md=md lg=lg xl=xl
-    defaultPosition=defaultPosition
-    key=key
-    id="showearningchat"
-    headerClass="mytaskswidgetchartheader"
-    bodyClass="my-taskswidget"
-    headerColor="primary"
-    headerTitle="My Tasks"
-    hrefDetails="/crmoverview"
-    editModalID="editDashboardModal"
-  }}
-    {{> myTasksWidget}}
-  {{/draggablePanel}}
+        .my-taskswidget.card-body {
+            color: white;
+        }
+
+        #mytaskschartcol .mytaskHeader {
+            display: none;
+        }
+
+        .mytaskswidgetchartheader {
+            background-color: #00a3d3;
+            color: white;
+        }
+
+        .mytaskswidgetchartheader h6 {
+            color: white !important;
+        }
+
+        #taskDetailModal, #taskDetailModal .card-body{
+            color: #333;
+        }
+
+        #taskDetailModal .modal-footer button.btnSaveEditTask, #taskDetailModal .modal-footer button.delete-task {
+            display: none;
+        }
+
+    </style>
+    {{# draggablePanel
+            xs=xs sm=sm md=md lg=lg xl=xl
+            defaultPosition=defaultPosition
+            key=key
+            id="showearningchat"
+            headerClass="mytaskswidgetchartheader"
+            bodyClass="my-taskswidget"
+            headerColor="primary"
+            headerTitle="My Tasks"
+            hrefDetails="/crmoverview"
+            editModalID="editDashboardModal"
+    }}
+        {{> myTasksWidget}}
+    {{/draggablePanel}}
 </template>
