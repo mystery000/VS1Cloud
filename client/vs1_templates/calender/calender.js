@@ -74,6 +74,9 @@ Template.calender.onCreated(function() {
     templateObject.toupdatelogid = new ReactiveVar();
     templateObject.createAppointment = new ReactiveVar();
     templateObject.createAppointment.set(false);
+
+    templateObject.changedEvents = new ReactiveVar([]);
+    addVS1Data("TNewAppointment", JSON.stringify([]))
 });
 
 async function sendAppointmentEmail() {
@@ -693,6 +696,36 @@ Template.calender.onRendered(function() {
         },
     };
 
+    templateObject.saveUpdatedEvents = async() => {
+        localStorage.setItem("isFormUpdated", false);
+        let updatedEvents = await getVS1Data("TNewAppointment");
+        // let updatedEvents = templateObject.changedEvents.get();
+        for(var i = 0; i< updatedEvents.length; i++){
+            await appointmentService.saveAppointment(updatedEvents[i]);
+        }
+        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+            addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+        })
+    }
+
+    templateObject.updateEvents = async (updatedEvent) => {
+        let tempEvents = await getVS1Data("TNewAppointment")
+        // let tempEvents = templateObject.changedEvents.get();
+        if(tempEvents.length == 0){
+            tempEvents.push(updatedEvent)
+        }else{
+            let currentEventIndex = tempEvents.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
+            if(currentEventIndex > -1){
+                tempEvents[currentEventIndex] = updatedEvent;
+            }else{
+                tempEvents.push(updatedEvent)
+            }
+        }
+        localStorage.setItem("isFormUpdated", true);
+        addVS1Data("TNewAppointment", JSON.stringify(tempEvents))
+        // templateObject.changedEvents.set(tempEvents)
+    }
+
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
         const calendarEl = document.getElementById("calendar");
@@ -1061,39 +1094,52 @@ Template.calender.onRendered(function() {
                             '</div>' + "" +
                             '</div>';
                         let day = moment(startDate).format("dddd").toLowerCase();
-                        appointmentService.saveAppointment(objectData).then(function(data) {
-                            appointmentData[index].startDate = startDate + " " + startTime;
-                            appointmentData[index].endDate = endDate + " " + endTime;
-                            templateObject.appointmentrecords.set(appointmentData);
-                            $(".droppable #" + eventDropID).remove();
-                            $("#" + nameid + " ." + day + " .droppable").append(job);
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == nameid) {
-                                    $(this).attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
-                                }
-                            });
-                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                    } else {
-                                        window.open("/appointments", "_self");
-                                    }
-                                }).catch(function(err) {});
-                            }).catch(function(err) {
-                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                                } else {
-                                    window.open("/appointments", "_self");
-                                }
-                            });
-                        }).catch(function(err) {
-                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                            } else {
-                                window.open("/appointments", "_self");
+
+                        appointmentData[index].startDate = startDate + " " + startTime;
+                        appointmentData[index].endDate = endDate + " " + endTime;
+                        templateObject.appointmentrecords.set(appointmentData);
+                        $(".droppable #" + eventDropID).remove();
+                        $("#" + nameid + " ." + day + " .droppable").append(job);
+                        $("#allocationTable tbody tr").each(function() {
+                            if (this.id == nameid) {
+                                $(this).attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
                             }
                         });
+                        let tempEvents = templateObject.changedEvents.get();
+                        templateObject.updateEvents(objectData)
+                        // appointmentService.saveAppointment(objectData).then(function(data) {
+                        //     appointmentData[index].startDate = startDate + " " + startTime;
+                        //     appointmentData[index].endDate = endDate + " " + endTime;
+                        //     templateObject.appointmentrecords.set(appointmentData);
+                        //     $(".droppable #" + eventDropID).remove();
+                        //     $("#" + nameid + " ." + day + " .droppable").append(job);
+                        //     $("#allocationTable tbody tr").each(function() {
+                        //         if (this.id == nameid) {
+                        //             $(this).attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
+                        //         }
+                        //     });
+                        //     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                        //         addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
+                        //             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //                 window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //             } else {
+                        //                 window.open("/appointments", "_self");
+                        //             }
+                        //         }).catch(function(err) {});
+                        //     }).catch(function(err) {
+                        //         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //             window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //         } else {
+                        //             window.open("/appointments", "_self");
+                        //         }
+                        //     });
+                        // }).catch(function(err) {
+                        //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //         window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //     } else {
+                        //         window.open("/appointments", "_self");
+                        //     }
+                        // });
                     }
                 }
             },
@@ -1497,7 +1543,7 @@ Template.calender.onRendered(function() {
                     document.getElementById("product-list").value = result[0].product || "";
                     document.getElementById("product-list-1").value = result[0].product || "";
                     
-                    if (result[0].extraProducts != "") {
+                    if (result[0].extraProducts && result[0].extraProducts != "") {
                         let extraProducts = result[0].extraProducts.split(":");
                         let extraProductFees = [];
                         productService.getNewProductServiceListVS1()
@@ -1630,29 +1676,42 @@ Template.calender.onRendered(function() {
                             '</div>' + "" +
                             '</div>';
                         let day = moment(startDate).format("dddd").toLowerCase();
-                        appointmentService.saveAppointment(objectData).then(function(data) {
-                            appointmentData[index].startDate = startDate + " " + startTime;
-                            appointmentData[index].endDate = endDate + " " + endTime;
-                            templateObject.appointmentrecords.set(appointmentData);
-                            $(".droppable #" + eventDropID).remove();
-                            $("#" + nameid + " ." + day + " .droppable").append(job);
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == nameid) {
-                                    $(this).attr("id", $(this).attr("id").replace("-", " "));
-                                }
-                            });
-                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    window.open("/appointments", '_self');
-                                }).catch(function(err) {
-                                    window.open("/appointments", '_self');
-                                });
-                            }).catch(function(err) {
-                                window.open("/appointments", '_self');
-                            });
-                        }).catch(function(err) {
-                            window.open("/appointments", '_self');
+                        appointmentData[index].startDate = startDate + " " + startTime;
+                        appointmentData[index].endDate = endDate + " " + endTime;
+                        templateObject.appointmentrecords.set(appointmentData);
+                        $(".droppable #" + eventDropID).remove();
+                        $("#" + nameid + " ." + day + " .droppable").append(job);
+                        $("#allocationTable tbody tr").each(function() {
+                            if (this.id == nameid) {
+                                $(this).attr("id", $(this).attr("id").replace("-", " "));
+                            }
                         });
+                        let tempEvents = templateObject.changedEvents.get();
+                        templateObject.updateEvents(objectData)
+
+                        // appointmentService.saveAppointment(objectData).then(function(data) {
+                        //     appointmentData[index].startDate = startDate + " " + startTime;
+                        //     appointmentData[index].endDate = endDate + " " + endTime;
+                        //     templateObject.appointmentrecords.set(appointmentData);
+                        //     $(".droppable #" + eventDropID).remove();
+                        //     $("#" + nameid + " ." + day + " .droppable").append(job);
+                        //     $("#allocationTable tbody tr").each(function() {
+                        //         if (this.id == nameid) {
+                        //             $(this).attr("id", $(this).attr("id").replace("-", " "));
+                        //         }
+                        //     });
+                        //     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                        //         addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
+                        //             window.open("/appointments", '_self');
+                        //         }).catch(function(err) {
+                        //             window.open("/appointments", '_self');
+                        //         });
+                        //     }).catch(function(err) {
+                        //         window.open("/appointments", '_self');
+                        //     });
+                        // }).catch(function(err) {
+                        //     window.open("/appointments", '_self');
+                        // });
                     }
                 }
 
@@ -2085,6 +2144,7 @@ Template.calender.onRendered(function() {
         getVS1Data("TRepServices").then(function(dataObject){
             if (dataObject.length == 0) {
                 sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                    addVS1Data("TRepServices", JSON.stringify(data));
                     let dataList = {};
                     let getallinvproducts = templateObject.allnoninvproducts.get();
                     if (data.trepservices.length > 0) {
@@ -9060,7 +9120,11 @@ Template.calender.events({
     },
     'click #chkmyAppointments': function(event) {
 
-    }
+    },
+    'click .btn-auto-save': function(event) {
+        let templateObject = Template.instance();
+        templateObject.saveUpdatedEvents();
+    },
 });
 
 Template.calender.helpers({
