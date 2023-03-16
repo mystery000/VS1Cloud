@@ -641,10 +641,16 @@ Template.bankingoverview.events({
         FlowRouter.go('/newreconrule');
     },
     'click #btnEFTBankRuleList': function() {
-        FlowRouter.go('/eft');
+        FlowRouter.go('/bankrulelist');
     },
     'click #btnNewEFTBankRule': function(event) {
         FlowRouter.go('/newbankrule');
+    },
+    'click #btnEFTFileList': function() {
+        FlowRouter.go('/bankingoverview');
+    },
+    'click #btnEFTNewFile': function(event) {
+        FlowRouter.go('/eft');
     },
 });
 Template.bankingoverview.helpers({

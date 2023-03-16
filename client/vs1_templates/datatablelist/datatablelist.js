@@ -168,7 +168,6 @@ Template.datatablelist.onRendered(async function () {
             custFields.push(customData);
         }
         await templateObject.displayfields.set(custFields);
-        $('.dataTable').resizable();
 
         let tableData = await templateObject.getTableData();
         await templateObject.displayTableData(tableData);
@@ -1499,4 +1498,4 @@ Template.datatablelist.helpers({
     istransaction: () => {
         return Template.instance().data.istransaction;
     }
-})
+});
