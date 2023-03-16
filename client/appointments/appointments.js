@@ -8544,20 +8544,6 @@ Template.appointments.onRendered(function() {
             });
     };
 
-    templateObject.saveUpdatedEvents = async() => {
-        localStorage.setItem("isFormUpdated", false);
-        let updatedEvents = await getVS1Data("TNewAppointment");
-        let data = JSON.parse(updatedEvents[0].data)
-        if(data.length !== 0){
-            for(var i = 0; i< data.length; i++){
-                await appointmentService.saveAppointment(data[i]);
-            }
-            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                addVS1Data("TAppointment", JSON.stringify(dataUpdate))
-            })
-        }
-    }
-
     templateObject.updateEvents = async (updatedEvent) => {
         let tempEvents = await getVS1Data("TNewAppointment")
         localStorage.setItem("isFormUpdated", true);
@@ -19321,10 +19307,6 @@ Template.appointments.events({
     "click #btnCreateLeaveRequest": function(event){
         $("#appointmentLeaveConfirmModal").modal("hide");
         $("#customerListModal").modal();
-    },
-    'click .btn-auto-save': function(event) {
-        let templateObject = Template.instance();
-        templateObject.saveUpdatedEvents();
     },
 });
 
