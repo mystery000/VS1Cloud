@@ -2605,9 +2605,6 @@ Template.non_transactional_list.onRendered(function() {
             }
         }
 
-        console.log(splashArrayProductList);
-
-
         templateObject.transactiondatatablerecords.set(dataTableList);
 
         $(".fullScreenSpin").css("display", "none");
