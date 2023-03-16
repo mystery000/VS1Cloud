@@ -694,7 +694,6 @@ Template.allChartLists.events({
             const dsOption = data.fields.CustFld11 || "All";
             isEditable = defaultOptions.find(opt => opt.name == dsOption).isshowdefault;
         });
-        console.log(isEditable)
         if(isEditable){
             $(".editcharts").trigger("click");
             chartsEditor.enable();       
