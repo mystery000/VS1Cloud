@@ -700,7 +700,6 @@ Template.calender.onRendered(function() {
         localStorage.setItem("isFormUpdated", false);
         let updatedEvents = await getVS1Data("TNewAppointment");
         let data = JSON.parse(updatedEvents[0].data)
-        // let updatedEvents = templateObject.changedEvents.get();
         if(data.length !== 0){
             for(var i = 0; i< data.length; i++){
                 await appointmentService.saveAppointment(data[i]);
@@ -713,7 +712,6 @@ Template.calender.onRendered(function() {
 
     templateObject.updateEvents = async (updatedEvent) => {
         let tempEvents = await getVS1Data("TNewAppointment")
-        // let tempEvents = templateObject.changedEvents.get();
         localStorage.setItem("isFormUpdated", true);
         if(tempEvents.length == 0){
             addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
@@ -731,7 +729,6 @@ Template.calender.onRendered(function() {
             }
             addVS1Data("TNewAppointment", JSON.stringify(data))
         }
-        // templateObject.changedEvents.set(tempEvents)
     }
 
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
