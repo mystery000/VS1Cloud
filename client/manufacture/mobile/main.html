@@ -201,6 +201,7 @@
 			
 			.mobile-phone-right-btn-containner {
 				display: block;
+				margin-left: 10px;
 			}
 
 			.mobile-right-btn-containner   {
@@ -251,6 +252,7 @@
 			.mobile-main-input {
 				width: 70%;
 				height: 10vw;
+				margin-left:10px;
 
 			}
 			.mobile-right-side-btn {
@@ -283,6 +285,7 @@
 		@media (min-width: 480px) {
 			.mobile-right-btn-containner {
 				display: block;
+			
 			}
 		}
 
@@ -397,13 +400,14 @@
 					<h4 class="title-header" >Wastage Form</h4>
 					<button type="button" class="close" id="closeBOMSetupModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
 				</div>
-				<div class="modal-body">
-					{{>wastage_form_template }}
+				<div class="table-responsive">
+					<table id="tblWastageForm" name="tblWastageForm" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-striped table-bordered ">
+					</table>
 				</div>
 				<div class="modal-footer d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
-					<button class="btn btn-success btn-save-bom" type="button"><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
-					<button class="btn btn-primary btn-print-bom" type="button"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
-					<button class="btn btn-secondary btn-cancel-bom" type="button"><i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel</button>
+					<button class="btn btn-success btn-save-wastage" type="button" ><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+					<button class="btn btn-primary btn-print-wastage" type="button"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
+					<button class="btn btn-secondary btn-cancel-wastage" type="button"><i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel</button>
 				</div>
 			</div>
 		</div>

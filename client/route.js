@@ -2510,3 +2510,21 @@ authenticatedRoutes.route('/manufacturingsettings',  {
         })
     }
 })
+
+authenticatedRoutes.route('/buildcostreport', {
+    name: 'buildcostreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'buildcostreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/worksheetreport', {
+    name: 'worksheetreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'worksheetreport'
+        });
+    }
+});
