@@ -37,6 +37,8 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "./stocktransfercard.html"
 import "../lib/global/globalStockTransfer.js";
+import LoadingOverlay from '../LoadingOverlay';
+
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -67,6 +69,689 @@ Template.stocktransfercard.onCreated(function() {
 
     templateObject.isProccessed = new ReactiveVar();
     templateObject.isProccessed.set(false);
+
+
+    templateObject.generatePdfForMail = async (invoiceId) => {
+        let stripe_id = templateObject.accountID.get() || "";
+        let file = "Invoice-" + invoiceId + ".pdf";
+        let stringQuery = '?';
+        return new Promise((resolve, reject) => {
+          var source = document.getElementById("html-2-pdfwrapper_invoice");
+          var opt = {
+            margin: 0,
+            filename: file,
+            image: {
+              type: "jpeg",
+              quality: 0.98,
+            },
+            html2canvas: {
+              scale: 2,
+            },
+            jsPDF: {
+              unit: "in",
+              format: "a4",
+              orientation: "portrait",
+            },
+          };
+          resolve(
+            html2pdf().set(opt).from(source).toPdf().output("datauristring")
+          );
+        });
+      }
+    
+    templateObject.addAttachment = async (objDetails, isforced = false) => {
+    let attachment = [];
+    let invoiceId = objDetails.fields.ID;
+    let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
+    let pdfObject = "";
+    let base64data = encodedPdf.split(",")[1];
+    pdfObject = {
+        filename: "invoice-" + invoiceId + ".pdf",
+        content: base64data,
+        encoding: "base64",
+    };
+    attachment.push(pdfObject);
+    let erpInvoiceId = objDetails.fields.ID;
+
+    let mailFromName = localStorage.getItem("vs1companyName");
+    let mailFrom =
+        localStorage.getItem("VS1OrgEmail") ||
+        localStorage.getItem("VS1AdminUserName");
+    let customerEmailName = $("#edtCustomerName").val();
+    let checkEmailData = $("#edtCustomerEmail").val();
+    let grandtotal = $("#grandTotal").html();
+    let emailDueDate = $("#dtDueDate").val();
+    let customerBillingAddress = $("#txabillingAddress").val();
+    let customerTerms = $("#sltTerms").val();
+
+    let customerSubtotal = $("#subtotal_total").html();
+    let customerTax = $("#subtotal_tax").html();
+    let customerNett = $("#subtotal_nett").html();
+    let customerTotal = $("#grandTotal").html();
+
+    const stringQuery = "";
+    const stripeGlobalURL = ""
+
+    let mailSubject =
+        "Invoice " +
+        erpInvoiceId +
+        " from " +
+        mailFromName +
+        " for " +
+        customerEmailName;
+    var htmlmailBody =
+        '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+        "        <tr>" +
+        '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+        '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+        '                    <table class="main">' +
+        "                        <tr>" +
+        '                            <td class="wrapper">' +
+        '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+        '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
+        erpInvoiceId +
+        " Details</span>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="height: 16px;"></tr>' +
+        "                                    <tr>" +
+        "                                        <td>" +
+        '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="height: 48px;"></tr>' +
+        '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+        '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+        '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
+        emailDueDate +
+        "</p>" +
+        '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
+        grandtotal +
+        "</p>" +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        "                                                <tbody>" +
+        "                                                    <tr>" +
+        '                                                        <td align="center" style="padding-bottom: 15px;">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        "                                                                <tbody>" +
+        "                                                                    <tr>" +
+        '                                                                        <td> <a href="' +
+        stripeGlobalURL +
+        "" +
+        stringQuery +
+        '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        "                                                                    </tr>" +
+        "                                                                </tbody>" +
+        "                                                            </table>" +
+        "                                                        </td>" +
+        "                                                    </tr>" +
+        "                                                </tbody>" +
+        "                                            </table>" +
+        '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 18px;">Dear ' +
+        customerEmailName +
+        ",</p>" +
+        '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+        '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+        '                                            <p style="font-size: 18px;">' +
+        mailFromName +
+        "</p>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+        "                                                </div>" +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+        customerEmailName +
+        "</p>" +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+        customerBillingAddress +
+        "</p>" +
+        "                                                </div>" +
+        "                                            </div>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Terms</p>' +
+        "                                                </div>" +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="font-size: 16px;">' +
+        customerTerms +
+        "</p>" +
+        "                                                </div>" +
+        "                                            </div>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+        "                                                </div>" +
+        '                                                <div style="width: 50%; float: right; text-align: right;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerSubtotal +
+        "</p>" +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerTax +
+        "</p>" +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerNett +
+        "</p>" +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerTotal +
+        "</p>" +
+        "                                                </div>" +
+        "                                            </div>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        "                                                <tbody>" +
+        "                                                    <tr>" +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        "                                                                <tbody>" +
+        "                                                                    <tr>" +
+        '                                                                        <td> <a href="' +
+        stripeGlobalURL +
+        "" +
+        stringQuery +
+        '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        "                                                                    </tr>" +
+        "                                                                </tbody>" +
+        "                                                            </table>" +
+        "                                                        </td>" +
+        "                                                    </tr>" +
+        "                                                </tbody>" +
+        "                                            </table>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        "                                        <td>" +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        "                                                <tbody>" +
+        "                                                    <tr>" +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        "                                                                <tbody>" +
+        "                                                                    <tr>" +
+        '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+        "                                                                    </tr>" +
+        "                                                                </tbody>" +
+        "                                                            </table>" +
+        "                                                        </td>" +
+        "                                                    </tr>" +
+        "                                                </tbody>" +
+        "                                            </table>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                </table>" +
+        "                            </td>" +
+        "                        </tr>" +
+        "                    </table>" +
+        '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+        '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        "                            <tr>" +
+        '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+        '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
+        mailFromName +
+        "</span>" +
+        "                                    <br>" +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+        "                                </td>" +
+        "                            </tr>" +
+        "                        </table>" +
+        "                    </div>" +
+        "                </div>" +
+        "            </td>" +
+        "        </tr>" +
+        "    </table>";
+
+    if (
+        $(".chkEmailCopy").is(":checked") &&
+        $(".chkEmailRep").is(":checked")
+    ) {
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: checkEmailData,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To Customer: " + checkEmailData + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            }).then((result) => {
+            });
+            }
+        }
+        );
+
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: mailFrom,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To Customer: " +
+                checkEmailData +
+                " and User: " +
+                mailFrom +
+                "",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            }).then((result) => {
+                if (result.value) {
+                window.open(url, "_self");
+                } else if (result.dismiss === "cancel") { }
+            });
+            }
+        }
+        );
+    } else if ($(".chkEmailCopy").is(":checked") || isforced) {
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: checkEmailData,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To Customer: " + checkEmailData + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            }).then((result) => {
+            });
+            }
+        }
+        );
+    } else if ($(".chkEmailRep").is(":checked")) {
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: mailFrom,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To User: " + mailFrom + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            });
+            }
+        }
+        );
+    } else {
+        // window.open(url, "_self");
+    }
+    }
+    
+    templateObject.sendEmail = async (isforced = false) => {
+    var splashLineArray = new Array();
+    let lineItemsForm = [];
+    let lineItems = [];
+    let lineItemObjForm = {};
+    var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+    let saleDate =
+        saledateTime.getFullYear() +
+        "-" +
+        (saledateTime.getMonth() + 1) +
+        "-" +
+        saledateTime.getDate();
+    let checkBackOrder = templateObject.includeBOnShippedQty.get();
+    $("#tblInvoiceLine > tbody > tr").each(function () {
+        var lineID = this.id;
+        const tdproduct = $(this).find(".lineProductName").val();
+        const tddescription = $(this).find('.lineProductDesc').text();
+        const tdQty = $(this).find('.lineQty').val();
+        const tdOrderd = $(this).find(".lineOrdered").val();
+        const tdunitprice = $(this).find('.colUnitPriceExChange').val();
+        const tdtaxCode = $(this).find(".lineTaxCode").val();
+        const tdtaxrate = $(this).find(".lineTaxRate").val();
+        const tdlineUnit = $(this).find(".lineUOM").text() || defaultUOM;
+        const taxamount = $(this).find('.colTaxAmount').val();
+        const tdlineamt = $(this).find(".colAmountInc").text();
+        const tdSalesLineCustField1 = $(this).find(".lineSalesLinesCustField1").val();
+
+        const lineItemObj = {
+        description: tddescription || "",
+        quantity: tdQty || 0,
+        unitPrice: tdunitprice.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+        }) || 0,
+        };
+
+        lineItems.push(lineItemObj);
+
+        if (tdproduct != "") {
+        if (checkBackOrder == true) {
+            lineItemObjForm = {
+            type: "TInvoiceLine",
+            fields: {
+                ProductName: tdproduct || "",
+                ProductDescription: tddescription || "",
+                UOMQtySold: parseFloat(tdOrderd) || 0,
+                UOMQtyShipped: parseFloat(tdQty) || 0,
+                LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                Headershipdate: saleDate,
+                LineTaxCode: tdtaxCode || "",
+                DiscountPercent: parseFloat($(this).find(".lineDiscount").val()) || 0,
+                UnitOfMeasure: tdlineUnit,
+                SalesLinesCustField1: tdSalesLineCustField1,
+            },
+            };
+        } else {
+            lineItemObjForm = {
+            type: "TInvoiceLine",
+            fields: {
+                ProductName: tdproduct || "",
+                ProductDescription: tddescription || "",
+                UOMQtySold: parseFloat(tdQty) || 0,
+                UOMQtyShipped: parseFloat(tdQty) || 0,
+                LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                Headershipdate: saleDate,
+                LineTaxCode: tdtaxCode || "",
+                DiscountPercent: parseFloat($(this).find(".lineDiscount").val()) || 0,
+                UnitOfMeasure: tdlineUnit,
+                SalesLinesCustField1: tdSalesLineCustField1,
+            },
+            };
+        }
+
+        lineItemsForm.push(lineItemObjForm);
+        splashLineArray.push(lineItemObjForm);
+        }
+    });
+    if ($("#formCheck-one").is(":checked")) {
+        getchkcustomField1 = false;
+    }
+    if ($("#formCheck-two").is(":checked")) {
+        getchkcustomField2 = false;
+    }
+
+    let customer = $("#edtCustomerName").val();
+
+    let poNumber = $("#ponumber").val();
+    let reference = $("#edtRef").val();
+
+    let departement = $("#sltDept").val();
+    let shippingAddress = $("#txaShipingInfo").val();
+    let comments = $("#txaComment").val();
+    let pickingInfrmation = $("#txapickmemo").val();
+    let saleCustField1 = $("#edtSaleCustField1").val() || "";
+    let saleCustField2 = $("#edtSaleCustField2").val() || "";
+    let saleCustField3 = $("#edtSaleCustField3").val() || "";
+    const billingAddress  = $("#txabillingAddress").val();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split("?id=");
+    var currentInvoice = getso_id[getso_id.length - 1];
+    let uploadedItems = templateObject.uploadedFiles.get();
+    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    let ForeignExchangeRate = $('#exchange_rate').val() || 0;
+    var objDetails = "";
+    let termname = $('#sltTerms').val() || '';
+    if (termname === '') {
+        swal('Terms has not been selected!', '', 'warning');
+        event.preventDefault();
+        return false;
+    }
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        objDetails = {
+        type: "TInvoiceEx",
+        fields: {
+            ID: currentInvoice,
+            CustomerName: customer,
+            ForeignExchangeCode: currencyCode,
+            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            Lines: splashLineArray,
+            InvoiceToDesc: billingAddress,
+            SaleDate: saleDate,
+            CustPONumber: poNumber,
+            ReferenceNo: reference,
+            TermsName: termname,
+            SaleClassName: departement,
+            ShipToDesc: shippingAddress,
+            Comments: comments,
+            SaleCustField1: saleCustField1,
+            SaleCustField2: saleCustField2,
+            SaleCustField3: saleCustField3,
+            PickMemo: pickingInfrmation,
+            Attachments: uploadedItems,
+            SalesStatus: $("#sltStatus").val(),
+        },
+        };
+    } else {
+        objDetails = {
+        type: "TInvoiceEx",
+        fields: {
+            CustomerName: customer,
+            ForeignExchangeCode: currencyCode,
+            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            Lines: splashLineArray,
+            InvoiceToDesc: billingAddress,
+            SaleDate: saleDate,
+            CustPONumber: poNumber,
+            ReferenceNo: reference,
+            TermsName: termname,
+            SaleClassName: departement,
+            ShipToDesc: shippingAddress,
+            Comments: comments,
+            SaleCustField1: saleCustField1,
+            SaleCustField2: saleCustField2,
+            SaleCustField3: saleCustField3,
+            PickMemo: pickingInfrmation,
+            Attachments: uploadedItems,
+            SalesStatus: $("#sltStatus").val(),
+        },
+        };
+    }
+    await templateObject.addAttachment(objDetails, isforced);
+    }
+    
+    templateObject.print = async (_template = '') => {
+    LoadingOverlay.show();
+    setTimeout(async function () {
+        var printTemplate = [];
+        $("#html-2-pdfwrapper").css("display", "block");
+        var invoices = $('input[name="Invoices"]:checked').val();
+        var invoices_back_order = $(
+        'input[name="Invoice Back Orders"]:checked'
+        ).val();
+        var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
+        let emid = localStorage.getItem("mySessionEmployeeLoggedID");
+
+        if(_template !== ''){
+        const _templateNumber = $(`input[name="${_template}"]:checked`).val();
+        await templateObject.exportSalesToPdf(_template, _templateNumber);
+        return;
+        }
+
+        $(".pdfCustomerName").html($("#edtCustomerName").val());
+        $(".pdfCustomerAddress").html(
+        $("#txabillingAddress")
+            .val()
+            .replace(/[\r\n]/g, "<br />")
+        );
+        $("#printcomment").html(
+        $("#txaComment")
+            .val()
+            .replace(/[\r\n]/g, "<br />")
+        );
+        var ponumber = $("#ponumber").val() || ".";
+        $(".po").text(ponumber);
+
+        var invoice_type = FlowRouter.current().queryParams.type;
+        if (invoice_type == "bo") {
+        if (
+            $("#print_Invoices_back_orders").is(":checked") ||
+            $("#print_Invoices_back_orders_second").is(":checked")
+        ) {
+            printTemplate.push("Invoice Back Orders");
+        }
+        } else {
+        if (
+            $("#print_invoice").is(":checked") ||
+            $("#print_invoice_second").is(":checked")
+        ) {
+            printTemplate.push("Invoices");
+        }
+        if (
+            $("#print_delivery_docket").is(":checked") ||
+            $("#print_delivery_docket_second").is(":checked")
+        ) {
+            printTemplate.push("Delivery Docket");
+        }
+        }
+
+        if(printTemplate.length === 0) {
+        printTemplate.push("Invoices");
+        }
+
+        var template_number = 1;
+        if (printTemplate.length > 0) {
+        for (var i = 0; i < printTemplate.length; i++) {
+            if (printTemplate[i] == "Invoices") {
+            template_number = $("input[name=Invoices]:checked").val();
+            } else if (printTemplate[i] == "Delivery Docket") {
+            template_number = $(
+                'input[name="Delivery Docket"]:checked'
+            ).val();
+            } else if (printTemplate[i] == "Invoice Back Orders") {
+            template_number = $(
+                'input[name="Invoice Back Orders"]:checked'
+            ).val();
+            } else { }
+
+            let result = await templateObject.exportSalesToPdf(
+            printTemplate[i],
+            template_number
+            );
+            if (result == true) { }
+        }
+        }
+        const isCheckedEmail = $("#printModal").find("#emailSend").is(":checked");
+        if(isCheckedEmail){
+        if ($("#edtCustomerEmail").val() != "") {
+            await templateObject.sendEmail();
+        } else {
+            swal({
+            title: "Customer Email Required",
+            text: "Please enter customer email",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+            }).then((result) => {
+            if (result.value) { } else if (result.dismiss === "cancel") { }
+            });
+        }
+        }
+        $("#printModal").modal('hide');
+        LoadingOverlay.hide();
+
+    }, delayTimeAfterSound);
+    }
+    templateObject.exportSalesToPdf = function() {
+        let margins = {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: 100
+        };
+        let id = $('.printID').attr("id");
+        var source = document.getElementById('html-2-pdfwrapper');
+        let file = "Stock Transer.pdf";
+        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+            file = 'Stock Transfer-' + id + '.pdf';
+        }
+
+        var opt = {
+            margin: 0,
+            filename: file,
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        };
+        html2pdf().set(opt).from(source).save().then(function(dataObject) {
+            $('.fullScreenSpin').css('display', 'none');
+            $('#html-2-pdfwrapper').css('display', 'none');
+        });
+
+    };
 });
 
 Template.stocktransfercard.onRendered(function() {
@@ -1409,42 +2094,7 @@ Template.stocktransfercard.onRendered(function() {
     }, delayTimeAfterSound);
     });
 
-    exportSalesToPdf = function() {
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-        let id = $('.printID').attr("id");
-        var source = document.getElementById('html-2-pdfwrapper');
-        let file = "Stock Transer.pdf";
-        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            file = 'Stock Transfer-' + id + '.pdf';
-        }
-
-        var opt = {
-            margin: 0,
-            filename: file,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
-        html2pdf().set(opt).from(source).save().then(function(dataObject) {
-            $('.fullScreenSpin').css('display', 'none');
-            $('#html-2-pdfwrapper').css('display', 'none');
-        });
-
-    };
+  
     $(document).ready(function() {
         $('#sltDepartment').editableSelect();
         $('#edtCustomerName').editableSelect();
@@ -4739,7 +5389,37 @@ Template.stocktransfercard.events({
                 }
             });
         }
-    }
+    },
+
+    // Print Modal Events
+    "click #printModal .btn-check-template": function (event) {
+        const template = $(event.target).data('template');
+        const templateObject = Template.instance()
+        templateObject.print(template)
+    },
+    "click #printModal #btnSendEmail" : async function (event) {
+        const templateObject = Template.instance()
+        const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
+        if ($("#edtCustomerEmail").val() != "") {
+            LoadingOverlay.show();
+            await templateObject.sendEmail(true);
+            LoadingOverlay.hide();
+        } else {
+            swal({
+            title: "Customer Email Required",
+            text: "Please enter customer email",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+            })
+        }
+    },
+    "click .printConfirm": async function (event) {
+        const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
+        playPrintAudio();
+        const templateObject = Template.instance();
+        templateObject.print()
+    },
 });
 
 Template.stocktransfercard.helpers({
