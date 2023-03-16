@@ -1843,7 +1843,6 @@ Template.calender.onRendered(function() {
             },
             events: templateObject.eventdata.get(),
             eventDidMount: function(info) {
-                console.log('OK')
                 info.el.children[0].setAttribute("data-toggle", "tooltip");
                 info.el.children[0].setAttribute("title", info.event.extendedProps.description);
                 setTimeout(function() {
@@ -4394,7 +4393,6 @@ Template.calender.onRendered(function() {
                     events: eventData,
                     eventDidMount: function(event) {},
                     eventContent: function(event) {
-                        console.log('Oops:',event)
                         let title = document.createElement('p');
                         if (event.event.title) {
                             title.setAttribute("data-toggle", "tooltip");
