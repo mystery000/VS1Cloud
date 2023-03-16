@@ -3069,15 +3069,16 @@ Template.non_transactional_list.onRendered(function() {
                             '' || '',
                             '$95' || '',
                             bomData.TotalQtyOriginal || '0',
-                            '0' || '',
+                            bomData.TotalQtyOriginal || '0', //change qty
                             bomData.QtyVariation || '0',
-                            '' || '',
+                            '' || 0,
                             '00:12:35' || '',
                             hourly_labour_cost * 1 || '',
                             hourly_overhead_cost * 1 || '',
-                            '' || '',
-                            '' || '',
-                            parseFloat(bomData.TotalQtyOriginal) * unit_cost_f  || '0'
+                            parseFloat(bomData.TotalQtyOriginal) * unit_cost_f  || 0,
+                            '' || 0,
+                            '' || 0,
+                            
                         ];
 
             splashArrayBuildCostReport.push(dataList);
@@ -3091,17 +3092,18 @@ Template.non_transactional_list.onRendered(function() {
                               '' || '',
                               details[j].productName || '',
                               '' || '',
-                              '$7.5' || '',
-                               details[j].qty || '',
-                                2.0 || '',
-                                parseFloat(details[j].qty) -2.0 || '',
-                                2.0- parseFloat(details[j].qty) || '',
+                              '$7.5' || '',   //unit cost
+                               details[j].qty || '',  //qty
+                               details[j].qty || '',  //change qty
+                                '' || 0,     //variance
+                                '' || 0,    //wastage
                                 '' || '',
                                 hourly_labour_cost * 1 || '',
                                 hourly_overhead_cost * 1 || '',
-                                '' || '',
-                                '' || '',
-                                parseFloat(details[j].qty) * 7.5 || ''
+                                parseFloat(details[j].qty) * 7.5 || 0,
+                                '' || 0,
+                                '' || 0,
+                                
                         ];
                 splashArrayBuildCostReport.push(dataList);        
             }
@@ -3365,7 +3367,7 @@ Template.non_transactional_list.onRendered(function() {
             for(let j=0; j < data_workorder.length ; j++) {
                 bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
                 let details = JSON.parse(bomData.Details);
-                
+
                 for(let k=0 ; k < details.length ; k++) {
                     if (process_data[i].fields.Description == details[k].process) {
                         dataList = [
