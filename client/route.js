@@ -2510,3 +2510,12 @@ authenticatedRoutes.route('/buildcostreport', {
         });
     }
 });
+
+authenticatedRoutes.route('/worksheetreport', {
+    name: 'worksheetreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'worksheetreport'
+        });
+    }
+});

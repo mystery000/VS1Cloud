@@ -1031,7 +1031,24 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 16, label: "Wastage Cost", class: "colWastageCost", width: "100", active: true, display: true },
         
             ]
-        }        
+        } else if(currenttablename === "tblProductionWorksheetReport"){
+
+            reset_data = [
+                { index: 0, label: "Sale", class: "colSale", width: "80", active: true, display: true },
+                { index: 1, label: "Customer", class: "colCustomer", width: "100", active: true, display: true },
+                { index: 2, label: "Ship Date", class: "colShipDate", width: "100", active: true, display: true },
+                { index: 3, label: "Total Qty", class: "colTotalQty", width: "100", active: true, display: true },
+                { index: 4, label: "Product", class: "colProducts", width: "100", active: true, display: true },
+                { index: 5, label: "Description", class: "colDescription", width: "100", active: true, display: true },
+                { index: 6, label: "ItemCaption", class: "colItemCation", width: "100", active: true, display: true },
+                { index: 7, label: "Resource", class: "colResource", width: "100", active: true, display: true },
+                { index: 8, label: "Employee", class: "colEmployee", width: "100", active: true, display: true },
+                { index: 9, label: "Start", class: "colStart", width: "100", active: true, display: true },
+                { index: 10, label: "Duration", class: "colDuration", width: "100", active: true, display: true },
+              
+        
+            ]
+        }       
 
         templateObject.reset_data.set(reset_data);
     }
@@ -3258,6 +3275,302 @@ Template.non_transactional_list.onRendered(function() {
 
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+
+    //Production WorkSheet Report Data    
+    templateObject.getProductionWorksheetReport = async function() {
+
+        getVS1Data('TVS1Workorder').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                //     templateObject.displaySuppliersListData(data);
+                // }).catch(function(err) {
+                // });
+            } else {
+                let data_buildCost = JSON.parse(dataObject[0].data);
+
+
+                getVS1Data('TProcessStep').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                            await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                                let data_process = JSON.parse(dataObject[0].data);
+                                templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder,data_process);
+                            })
+                        })
+                    } else {
+                        let data_process = JSON.parse(dataObject[0].data);
+                        templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder, data_process); 
+                    }
+                }).catch(function(e) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                        await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                            let data_process = JSON.parse(dataObject[0].data);
+                            templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder,data_process);
+                                                    })
+                    })
+                })
+
+                
+            }
+        }).catch(function(err) {
+            // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+            //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+            //     templateObject.displaySuppliersListData(data);
+            // }).catch(function(err) {
+
+            // });
+        });
+    }
+
+    templateObject.displayProductionWorksheetReportData = async function(data_workorder, data_process) {
+     
+        var splashArrayWorksheetReport = new Array();
+        let deleteFilter = false;
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+        let bomData;
+        let process_data = data_process.tprocessstep;
+
+        for(let i = 0; i < process_data.length; i ++ ) {
+            let exist_data = false ;
+            for(let j=0; j < data_workorder.length ; j++) {
+                bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
+                let details = JSON.parse(bomData.Details);
+                for(let k=0 ; k < details.length ; k++) {
+                    if (process_data[i].fields.Description == details[k].process) {
+                        exist_data = true;
+                    }
+                }  
+                
+            }
+
+            if(exist_data) {
+                let dataList = [
+                    "<span style = 'font-weight:bold; font-size:20px ' >Resource/Process </span>",
+                    "<span style = 'font-weight:bold; font-size:20px ' >" + process_data[i].fields.Description +  "    Bay</span>", 
+                    "<span style = 'font-weight:bold; font-size:20px ' > /    " + process_data[i].fields.Description + "</span>"
+                ];
+                splashArrayWorksheetReport.push(dataList);
+
+            }
+
+    
+            
+            for(let j=0; j < data_workorder.length ; j++) {
+                bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
+                let details = JSON.parse(bomData.Details);
+                for(let k=0 ; k < details.length ; k++) {
+                    if (process_data[i].fields.Description == details[k].process) {
+                        dataList = [
+                        bomData.Id || '' ,
+                        data_workorder[j].fields.Customer || '' ,
+                        data_workorder[j].fields.ShipDate  || '',
+                        details[k].qty || '',
+                        data_workorder[j].fields.ProductName || '',
+                        bomData.Description || '',
+                        bomData.Caption || '',
+                        details[k].process + "  Bays" || '',
+                        "Dene Mills",
+                        data_workorder[j].fields.StartTime || '',
+                        "12:00 AM ",
+                        "30 min"
+
+
+                        ];
+
+                        console.log(dataList);
+
+                        splashArrayWorksheetReport.push(dataList);
+                    }
+                }  
+                
+            }
+
+
+
+            templateObject.transactiondatatablerecords.set(splashArrayWorksheetReport);
+        }
+
+                
+     
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayWorksheetReport,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    // {
+                    //     targets: 0,
+                    //     className: "colSupplierID colID hiddenColumn",
+                    //     width: "10px",
+                    //     createdCell: function(td, cellData, rowData, row, col) {
+                    //         $(td).closest("tr").attr("id", rowData[0]);
+                    //     }
+                    // },
+                    {
+                        targets: 0,
+                        className: "colSale",
+                        width: "200px",
+                    },
+                    {
+                        targets: 1,
+                        className: "colCustomer",
+                        width: "95px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colShipDate",
+                        width: "90px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colTotalQty",
+                        width: "110px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colProducts",
+                        width: "80px",
+                    },
+                    {
+                        targets: 5,
+                        className: "colDescription text-right",
+                        width: "90px",
+                    },
+                    {
+                        targets: 6,
+                        className: "colItemCation text-right",
+                        width: "90px",
+                    },
+                    {
+                        targets: 7,
+                        className: "colResource text-right",
+                        width: "120px",
+                    },
+
+                    {
+                        targets: 8,
+                        className: "colSuburb",
+                        width: "120px",
+                    },
+                    {
+                        targets: 9,
+                        className: "colEmployee",
+                        width: "100px",
+                    },
+                    {
+                        targets: 10,
+                        className: "colEmployee",
+                        width: "100px",
+                    },
+                    
+                    
+                   
+                    
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Suppliers List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Suppliers List',
+                        filename: "Suppliers List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Production Worksheet List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (data.Params.Search.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = splashArrayWorksheetReport.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
 
 
     //Lead List Data
@@ -18189,6 +18502,8 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getSupplierListData();
     } else if (currenttablename == "tblBuildCostReport") {
         templateObject.getBuildCostReport();
+    } else if (currenttablename == "tblProductionWorksheetReport") {
+        templateObject.getProductionWorksheetReport();    
     } else if (currenttablename == "tblLeadlist") {
         templateObject.getLeadListData();
     } else if (currenttablename == "tblCurrencyList") {
