@@ -87,7 +87,7 @@ Template.addAccountModal.onRendered(function () {
         });
       });
   };
-  templateObject.loadAccountTypes();  
+  templateObject.loadAccountTypes();
 
   $("#sltBankCodes").editableSelect();
   $("#sltBankCodes")
@@ -140,7 +140,7 @@ Template.addAccountModal.onRendered(function () {
 
     $(document).on("click", "#tblBankName tbody tr", function (e) {
       var table = $(this);
-      let BankName = table.find(".colBankName").text();
+      let BankName = table.find(".bankName").text();
       $('#bankNameModal').modal('toggle');
       $('#edtBankName').val(BankName);
     });

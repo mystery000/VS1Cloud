@@ -177,7 +177,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let targetRows = [];
         let jsonText = localStorage.getItem("colnames_" + (currenttablename.split("_")[1] || ""))
         var colnames = []
-        if(jsonText) colnames = JSON.parse(jsonText)
+        if(jsonText != '') colnames = JSON.parse(jsonText)
         if(currenttablename == "tblAvailableSNCheckbox"){
             colnames.forEach(itemName => {
                 let index = currentTableData.findIndex(item => item[2] == itemName);
@@ -2092,6 +2092,16 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let deleteFilter = false;
         let chkBoxId;
         let chkBox;
+        const transactionCodeOptions = ` <option value="13">Debit Items</option>
+                                            <option value="50">Credit Items</option>
+                                            <option value="51">Australian Govt. Security Interest</option>
+                                            <option value="52">Basic Family Payments/Additional Family Payment</option>
+                                            <option value="53">Pay</option>
+                                            <option value="54">Pension</option>
+                                            <option value="55">Allotment</option>
+                                            <option value="56">Dividend</option>
+                                            <option value="57">Debenture/Note Interest</option>
+                                        `
 
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
@@ -2103,10 +2113,10 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 lineData.AccountName || "",
                 lineData.BSB || "___-___",
                 lineData.CreditDebitAccountNumber || "",
-                `<input
-                    class="form-control pointer sltTransactionCode es-input bg-white"
-                    value="Credit"                    
-                />`,
+                `<select
+                    class="form-control pointer sltTranslactionCode"
+                    value="${lineData.TransactionCode}"
+                >${transactionCodeOptions}</select>`,
                 lineData.LodgementReferences || "",
                 lineData.Amount || "",
                 lineData.UsersBSB || "___-___",
@@ -2197,12 +2207,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     checkBoxClickByName();
 
                     $('.fullScreenSpin').css('display', 'none');
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
