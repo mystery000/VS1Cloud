@@ -13,7 +13,7 @@ import Tvs1ChartDashboardPreferenceField from "../../js/Api/Model/Tvs1ChartDashb
 import ApiService from "../../js/Api/Module/ApiService";
 import '../../lib/global/indexdbstorage.js';
 import { SideBarService } from "../../js/sidebar-service";
-
+import { ContactService } from "../../contacts/contact-service";
 import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './allChartLists.html';
@@ -110,6 +110,7 @@ let chartsPlaceList = {
 };
 
 let sideBarService = new SideBarService();
+const contactService = new ContactService();
 /**
  * Current User ID
  */
@@ -683,11 +684,22 @@ Template.allChartLists.events({
         $(".fullScreenSpin").css("display", "inline-block");
         batchUpdateCall();
     },
-    "click .editchartsbtn": () => {
-        $(".editcharts").trigger("click");
-        chartsEditor.enable();
+    "click .editchartsbtn": async function() {      
+        let isEditable = false;
         const templateObject = Template.instance();
-        templateObject.showChartElements();
+        const defaultDashboardOptions = require('../../popUps/dashboardoptions.json');
+        const defaultOptions = [...defaultDashboardOptions];
+        const employeeID = localStorage.getItem('mySessionEmployeeLoggedID');
+        await contactService.getOneEmployeeDataEx(employeeID).then(function (data) {   
+            const dsOption = data.fields.CustFld11 || "All";
+            isEditable = defaultOptions.find(opt => opt.name == dsOption).isshowdefault;
+        });
+        console.log(isEditable)
+        if(isEditable){
+            $(".editcharts").trigger("click");
+            chartsEditor.enable();       
+            templateObject.showChartElements();
+        }
     },
     "click .resetchartbtn": async(event) => {
         event.preventDefault();
@@ -756,9 +768,8 @@ Template.allChartLists.events({
             await chartsEditor.disable();
             await templateObject.hideChartElements();
             templateObject.checkChartToDisplay();
-
             $(".fullScreenSpin").css("display", "none");
-            Meteor._reload.reload();
+            Meteor_reload.reload();
         }, delayTimeAfterSound);
     },
 });
