@@ -559,6 +559,21 @@ openDb = function (dbName) {
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
 
+      // For accountant favorite reports state
+      db.createObjectStore('TFavReportCompany', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustee', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportFinancialStatement', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportIndividual', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportPartnershipNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSelfManagedSuperfund', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSingleDirector', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSoleTraderNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrust', {keyPath: 'EmployeeEmail'});
+
+      db.createObjectStore('TFavSupplierList', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavSupplierSummaryReport', {keyPath: 'EmployeeEmail'});
+
       db.createObjectStore("TReconciliationBankAccountsList", { keyPath: "EmployeeEmail" });
 
     };
