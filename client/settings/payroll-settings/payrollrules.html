@@ -476,19 +476,19 @@
                                         </div>
                                         <div class="col-12">
                                             <style>
-                                                .colPayCalendarName{
+                                                #tblPayCalendars .colPayCalendarName{
                                                     width: 30%!important;
                                                 }
-                                                .colPayPeriod{
+                                                #tblPayCalendars .colPayPeriod{
                                                     width: 20%!important;
                                                 }
-                                                .colNextPayPeriod{
+                                                #tblPayCalendars .colNextPayPeriod{
                                                     width: 20%!important;
                                                 }
-                                                .colNextPaymentDate{
+                                                #tblPayCalendars .colNextPaymentDate{
                                                     width: 20%!important;
                                                 }
-                                                .colStatus{
+                                                #tblPayCalendars .colStatus{
                                                     width: 10%!important;
                                                 }
                                             </style>
@@ -1178,7 +1178,29 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblAlowances .colAlowancesNames{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesType{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesDisplayName{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesAmount{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesAccounts{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblAlowances .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblAlowances .colDeleteAllowances{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblAlowances"
                                                     apiName=apiFunction3
@@ -2042,7 +2064,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblEarnings .colEarningsNames{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsType{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsDisplayName{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsratetype{
+                                                        width: 12%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsAmount{
+                                                        width: 12%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsAccounts{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblEarnings .colDeleteEarnings{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblEarnings"
                                                     apiName=apiFunction4
@@ -2422,7 +2469,29 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblDeductions .colDeductionsNames{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsType{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsDisplayName{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsAmount{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsAccounts{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblDeductions .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblDeductions .colDeleteDeductions{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblDeductions"
                                                     apiName=apiFunction5
@@ -2567,7 +2636,20 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblReimbursements .colReimbursementName{
+                                                        width: 45%!important;
+                                                    }
+                                                    #tblReimbursements .colReimbursementAccount{
+                                                        width: 40%!important;
+                                                    }
+                                                    #tblReimbursements .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblReimbursements .colDeleterei{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblReimbursements"
                                                     apiName=apiFunction6
@@ -2866,7 +2948,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+                                                <style>
+                                                    #tblLeave .colLeaveName{
+                                                        width: 18%!important;
+                                                    }
+                                                    #tblLeave .colLeaveUnits{
+                                                        width: 8%!important;
+                                                    }
+                                                    #tblLeave .colLeaveNormalEntitlement{
+                                                        width: 18%!important;
+                                                    }
+                                                    #tblLeave .colLeaveLeaveLoadingRate{
+                                                        width: 18%!important;
+                                                    }
+                                                    #tblLeave .colLeavePaidLeave{
+                                                        width: 12%!important;
+                                                    }
+                                                    #tblLeave .colLeaveShownOnPayslip{
+                                                        width: 14%!important;
+                                                    }                                                    
+                                                    #tblLeave .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblLeave .colDeleterei{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblLeave"
                                                     apiName=apiFunction7
@@ -3102,7 +3209,29 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <style>
+                                                .colSuperannuationName{
+                                                    width: 25%!important;
+                                                }
+                                                .colSuperannuationType{
+                                                    width: 15%!important;
+                                                }
+                                                .colEmployerNum{
+                                                    width: 15%!important;
+                                                }
+                                                .colbsb{
+                                                    width: 15%!important;
+                                                }
+                                                .colaccountname{
+                                                    width: 15%!important;
+                                                }
+                                                .colStatus{
+                                                    width: 10%!important;
+                                                }
+                                                .colDeletesup{
+                                                    width: 5%!important;
+                                                }
+                                            </style>
                                             {{> datatablelist
                                                 tablename="tblSuperannuation"
                                                 apiName=apiFunction8
@@ -3355,6 +3484,18 @@
                                                         border: 1px solid #e3e6f0 !important;
                                                         border-collapse: collapse;
                                                     }
+                                                    #tblOverTimeSheet .colRate{
+                                                        width: 30%!important;
+                                                    }
+                                                    #tblOverTimeSheet .colRateRule{
+                                                        width: 30%!important;
+                                                    }
+                                                    #tblOverTimeSheet .colHourlyAmount{
+                                                        width: 30%!important;
+                                                    }
+                                                    #tblOverTimeSheet .colStatus{
+                                                        width: 10%!important;
+                                                    }                                                    
                                                 </style>
                                                 
                                                 {{> non_transactional_list tablename="tblOverTimeSheet"}}
