@@ -475,20 +475,23 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <!-- <style>
+                                            <style>
                                                 .colPayCalendarName{
-                                                    width: 25%;
+                                                    width: 30%!important;
                                                 }
                                                 .colPayPeriod{
-                                                    width: 25%;
+                                                    width: 20%!important;
                                                 }
                                                 .colNextPayPeriod{
-                                                    width: 25%;
+                                                    width: 20%!important;
                                                 }
                                                 .colNextPaymentDate{
-                                                    width: 25%;
+                                                    width: 20%!important;
                                                 }
-                                            </style> -->
+                                                .colStatus{
+                                                    width: 10%!important;
+                                                }
+                                            </style>
                                             {{> datatablelist
                                                 tablename="tblPayCalendars"
                                                 apiName=apiFunction
@@ -496,6 +499,7 @@
                                                 tableheaderrecords=tableheaderrecords
                                                 exportfilename='Pay Calendars'
                                                 apiParams=apiParams
+                                                istransaction = false
                                                 datahandler=datahandler
                                                 service=service
                                                 lowercaseDataName='tpayrollcalendars'
