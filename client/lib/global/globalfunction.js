@@ -282,7 +282,48 @@ $('.dropdown-toggle').on("click",function(event){
     });
   };
 
-batchUpdateCall = function (url) {
+  let updateReportCounter = 6;
+  let countTimes = 0;
+  let percent = 0;
+
+  showCounterProgressModal = function(){
+      updateReportCounter = 6;
+      countTimes = 0;
+      percent = 0;
+
+      $('.headerprogressbar').addClass('headerprogressbarShow');
+      $('.headerprogressbar').removeClass('headerprogressbarHidden');
+      $('.headerprogressbar').removeClass('killProgressBar');
+
+      $('.headerprogressbar .modal').modal()
+  };
+
+  hideCounterProgressModal = function(){
+      $('.headerprogressbar .modal').modal("hide");
+  };
+
+  updateCounterProgress = function(text){
+      countTimes ++;
+      percent = (countTimes * 100) / updateReportCounter;
+      $('.loadingbar').css('width', percent + '%').attr('aria-valuenow', percent);
+      //$(".progressBarInner").text("AP Report "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(percent) + "%");
+      $(".progressName").text("text");
+
+      $("<span class='process'>" + text + " Done <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+  };
+  updateCounterProgressDone = function(){
+      text = 'All';
+      percent = 100;
+      $('.loadingbar').css('width', percent + '%').attr('aria-valuenow', percent);
+      //$(".progressBarInner").text("AP Report "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(percent) + "%");
+      $(".progressName").text("text");
+
+      $("<span class='process'>" + text + " Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+  };
+
+batchUpdateCall = function (url, flag = false) {
     var erpGet = erpDb();
     let dashboardArray = [];
     var oReq = new XMLHttpRequest();
@@ -304,12 +345,16 @@ batchUpdateCall = function (url) {
     var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
 
+
     oReq.open("GET",URLRequest + erpGet.ERPIPAddress + ':' + erpGet.ERPPort + '/' + 'erpapi/VS1_Cloud_Task/VS1_BatchUpdate', true);
     oReq.setRequestHeader("database",erpGet.ERPDatabase);
     oReq.setRequestHeader("username",erpGet.ERPUsername);
     oReq.setRequestHeader("password",erpGet.ERPPassword);
     oReq.send();
     oReq.onreadystatechange = function() {
+        if(flag){
+            updateCounterProgress('BatchUpdate');
+        }
         if(oReq.readyState == 4 && oReq.status == 200) {
           var myArrResponse = JSON.parse(oReq.responseText);
           let responseBack = myArrResponse.ProcessLog.ResponseStatus;
@@ -337,7 +382,13 @@ batchUpdateCall = function (url) {
             oReq2.setRequestHeader("username",erpGet.ERPUsername);
             oReq2.setRequestHeader("password",erpGet.ERPPassword);
             oReq2.send();
+
             oReq2.onreadystatechange = function() {
+
+                if(flag){
+                    updateCounterProgress('Dashboard Request');
+                }
+
                 if(oReq2.readyState == 4 && oReq2.status == 200) {
                   // var myArrResponse2 = JSON.parse(oReq2.responseText);
                   var dataReturnRes = JSON.parse(oReq2.responseText);
@@ -398,6 +449,7 @@ batchUpdateCall = function (url) {
                   localStorage.setItem('VS1PNLPeriodReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_pnl_period.items)||'');
                   localStorage.setItem('VS1SalesListReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_saleslist.items)||'');
                   localStorage.setItem('VS1SalesEmpReport_dash', JSON.stringify(dataReturnRes.ProcessLog.TUser.TVS1_Dashboard_salesperemployee.items)||'');
+
                   getVS1Data('vscloudlogininfo').then(function (dataObject) {
                     if(dataObject.length == 0){
 
@@ -437,7 +489,6 @@ batchUpdateCall = function (url) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
                       addLoginData(dashboardArray).then(function (datareturnCheck) {
-
                           if (localStorage.getItem("enteredURL") != null) {
                               FlowRouter.go(localStorage.getItem("enteredURL"));
                               localStorage.removeItem("enteredURL");
@@ -481,7 +532,13 @@ batchUpdateCall = function (url) {
             oReq3.setRequestHeader("username",erpGet.ERPUsername);
             oReq3.setRequestHeader("password",erpGet.ERPPassword);
             oReq3.send();
+
             oReq3.onreadystatechange = function() {
+
+                if(flag){
+                    updateCounterProgress('TAccountVS1 Request');
+                }
+
                 if(oReq3.readyState == 4 && oReq3.status == 200) {
                   var dataReturnRes3 = JSON.parse(oReq3.responseText);
                   if (dataReturnRes3.taccountvs1.length > 0) {
@@ -524,8 +581,12 @@ batchUpdateCall = function (url) {
         }
     }
 
-
     sideBarService.getCurrentLoggedUser().then(function (data) {
+
+        if(flag){
+            updateCounterProgress('Getting Current Logged User');
+        }
+
       addVS1Data('TAppUser', JSON.stringify(data));
     });
 

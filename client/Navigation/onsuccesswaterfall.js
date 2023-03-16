@@ -2921,6 +2921,16 @@ Template.onsuccesswaterfall.onRendered(function () {
         $('.checkmarkwrapper').removeClass("hide");
         templateObject.dashboardRedirectOnLogin();
       }
+
+      const employeeCorrespondences = data.tcorrespondence.filter(
+          (item) =>
+              item.fields.EmployeeId == localStorage.getItem("mySessionEmployeeLoggedID") && item.fields.MessageTo == ""
+      ).map(item => item);
+
+      employeeCorrespondences.sort((a, b) => a.fields.Ref_Type.localeCompare(b.fields.Ref_Type));
+
+      data.tcorrespondence = employeeCorrespondences;
+
       addVS1Data('TCorrespondence', JSON.stringify(data));
       $("<span class='process'>Correspondence Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
     }).catch(function (err) {
