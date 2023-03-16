@@ -620,16 +620,12 @@ Template.stocktransfercard.onCreated(function() {
         var printTemplate = [];
         $("#html-2-pdfwrapper").css("display", "block");
         var invoices = $('input[name="Invoices"]:checked').val();
-        var invoices_back_order = $(
-        'input[name="Invoice Back Orders"]:checked'
-        ).val();
-        var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
         let emid = localStorage.getItem("mySessionEmployeeLoggedID");
 
         if(_template !== ''){
-        const _templateNumber = $(`input[name="${_template}"]:checked`).val();
-        await templateObject.exportSalesToPdf(_template, _templateNumber);
-        return;
+            const _templateNumber = $(`input[name="${_template}"]:checked`).val();
+            await templateObject.exportSalesToPdf(_template, _templateNumber);
+            return;
         }
 
         $(".pdfCustomerName").html($("#edtCustomerName").val());
@@ -643,34 +639,10 @@ Template.stocktransfercard.onCreated(function() {
             .val()
             .replace(/[\r\n]/g, "<br />")
         );
-        var ponumber = $("#ponumber").val() || ".";
-        $(".po").text(ponumber);
-
-        var invoice_type = FlowRouter.current().queryParams.type;
-        if (invoice_type == "bo") {
-        if (
-            $("#print_Invoices_back_orders").is(":checked") ||
-            $("#print_Invoices_back_orders_second").is(":checked")
-        ) {
-            printTemplate.push("Invoice Back Orders");
-        }
-        } else {
-        if (
-            $("#print_invoice").is(":checked") ||
-            $("#print_invoice_second").is(":checked")
-        ) {
-            printTemplate.push("Invoices");
-        }
-        if (
-            $("#print_delivery_docket").is(":checked") ||
-            $("#print_delivery_docket_second").is(":checked")
-        ) {
-            printTemplate.push("Delivery Docket");
-        }
-        }
+       
 
         if(printTemplate.length === 0) {
-        printTemplate.push("Invoices");
+            printTemplate.push("Stock Transfer");
         }
 
         var template_number = 1;
