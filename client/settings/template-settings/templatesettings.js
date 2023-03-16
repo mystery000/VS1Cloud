@@ -10081,7 +10081,7 @@ Template.templatesettings.events({
             .catch(function (err) {});
         });
 
-        console.log($('input[name="Stock Transfer_3"]'))
+        console.log($('input[name="Stock Transfer_3"]').val())
 
       sideBarService
         .getTemplateNameandEmployeId("Stock Transfer", emid, 3)
@@ -10140,6 +10140,269 @@ Template.templatesettings.events({
               Description: $('input[name="Stock Transfer_3"]').val(),
               Template: "3",
               Active: stockTransfer == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+        sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 1)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_1"]').val(),
+              Template: "1",
+              Active: stockAdjustment == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_1"]').val(),
+              Template: "1",
+              Active: stockAdjustment == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+        
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 2)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_2"]').val(),
+              Template: "2",
+              Active: stockAdjustment == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_2"]').val(),
+              Template: "2",
+              Active: stockAdjustment == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+        console.log($('input[name="Stock Adjustment_3"]').val())
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 3)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_3"]').val(),
+              Template: "3",
+              Active: stockAdjustment == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_3"]').val(),
+              Template: "3",
+              Active: stockAdjustment == 3,
             },
           };
 
