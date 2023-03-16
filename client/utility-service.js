@@ -282,6 +282,7 @@ const XLSX = require("xlsx");
                         showCancelButton: true,
                         confirmButtonColor: "rgb(140, 212, 245)",
                         confirmButtonText: "Yes",
+                        cancelButtonText: "No",
                     }).then(function(confirm){
                         if(confirm.value == true)
                             window.open('downloads/SpreadSheetHelpFile.pdf');
