@@ -843,7 +843,7 @@ Template.mobileapp.events({
             let bomDetailData = JSON.parse(bomStructureData.Details);
           
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
+                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
                 BomDataList.push(tempBomData);  
             }
         
@@ -887,6 +887,8 @@ Template.mobileapp.events({
                 var index = cell.index();
                 var column = index.column;
                 var row = index.row;
+
+                alert(cell.data());
                 
                 if (column < wastage_table.columns().count() - 1) {
                     var nextCell = wastage_table.cell(row, column + 1);
