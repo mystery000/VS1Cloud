@@ -1,1210 +1,778 @@
 import {ReactiveVar} from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import "./reports.html"
-
 import { TaxRateService } from "../settings/settings-service"; 
-import { template } from 'lodash';
 
 Template.allreports.onCreated(function() {
     const templateObject = Template.instance();
-    templateObject.isBalanceSheet = new ReactiveVar();
-    templateObject.isBalanceSheet.set(false);
-    templateObject.isProfitLoss = new ReactiveVar();
-    templateObject.isProfitLoss.set(false);
-    templateObject.isPLMonthly = new ReactiveVar();
-    templateObject.isPLMonthly.set(false);
-    templateObject.isPLQuarterly = new ReactiveVar();
-    templateObject.isPLQuarterly.set(false);
-    templateObject.isPLYearly = new ReactiveVar();
-    templateObject.isPLYearly.set(false);
-    templateObject.isPLYTD = new ReactiveVar();
-    templateObject.isPLYTD.set(false);
-    templateObject.isJobSalesSummary = new ReactiveVar();
-    templateObject.isJobSalesSummary.set(false);
-    templateObject.isAgedReceivables = new ReactiveVar();
-    templateObject.isAgedReceivables.set(false);
-    templateObject.isAgedReceivablesSummary = new ReactiveVar();
-    templateObject.isAgedReceivablesSummary.set(false);
-    templateObject.isProductSalesReport = new ReactiveVar();
-    templateObject.isProductSalesReport.set(false);
-    templateObject.isSalesReport = new ReactiveVar();
-    templateObject.isSalesReport.set(false);
-    templateObject.isJobProfitReport = new ReactiveVar();
-    templateObject.isJobProfitReport.set(false);
-    templateObject.isSupplierDetails = new ReactiveVar();
-    templateObject.isSupplierDetails.set(false);
-    templateObject.isSupplierProduct = new ReactiveVar();
-    templateObject.isSupplierProduct.set(false);
-    templateObject.isCustomerDetails = new ReactiveVar();
-    templateObject.isCustomerDetails.set(false);
-    templateObject.isCustomerSummary = new ReactiveVar();
-    templateObject.isCustomerSummary.set(false);
-    templateObject.isLotReport = new ReactiveVar();
-    templateObject.isLotReport.set(false);
-    templateObject.isStockValue = new ReactiveVar();
-    templateObject.isStockValue.set(false);
-    templateObject.isStockQuantity = new ReactiveVar();
-    templateObject.isStockQuantity.set(false);
-    templateObject.isStockMovementReport = new ReactiveVar();
-    templateObject.isStockMovementReport.set(false);
-    templateObject.isPayrollHistoryReport = new ReactiveVar();
-    templateObject.isPayrollHistoryReport.set(false);
-    templateObject.isForeignExchangeHistoryList = new ReactiveVar();
-    templateObject.isForeignExchangeHistoryList.set(false);
-    templateObject.isForeignExchangeList = new ReactiveVar();
-    templateObject.isForeignExchangeList.set(false);
-    templateObject.isSalesSummaryReport = new ReactiveVar();
-    templateObject.isSalesSummaryReport.set(false);
-    templateObject.isGeneralLedger = new ReactiveVar();
-    templateObject.isGeneralLedger.set(false);
-    templateObject.isTaxSummaryReport = new ReactiveVar();
-    templateObject.isTaxSummaryReport.set(false);
-    templateObject.isTrialBalance = new ReactiveVar();
-    templateObject.isTrialBalance.set(false);
-    templateObject.isTimeSheetSummary = new ReactiveVar();
-    templateObject.isTimeSheetSummary.set(false);
-    templateObject.isPayrollLeaveAccrued = new ReactiveVar();
-    templateObject.isPayrollLeaveAccrued.set(false);
-    templateObject.isPayrollLeaveTaken = new ReactiveVar();
-    templateObject.isPayrollLeaveTaken.set(false);
-    templateObject.isSerialNumberReport = new ReactiveVar();
-    templateObject.isSerialNumberReport.set(false);
-    templateObject.is1099Transaction = new ReactiveVar();
-    templateObject.is1099Transaction.set(false);
-    templateObject.isAccountsLists = new ReactiveVar();
-    templateObject.isAccountsLists.set(false);
-    templateObject.isBinLocations = new ReactiveVar();
-    templateObject.isBinLocations.set(false);
-    templateObject.isTransactionJournal = new ReactiveVar();
-    templateObject.isTransactionJournal.set(false);
-    templateObject.isUnpaidBills = new ReactiveVar();
-    templateObject.isUnpaidBills.set(false);
-    templateObject.isUnpaidPO = new ReactiveVar();
-    templateObject.isUnpaidPO.set(false);
-    templateObject.isBackOrderedPO = new ReactiveVar();
-    templateObject.isBackOrderedPO.set(false);
-    templateObject.isSalesOrderConverted = new ReactiveVar();
-    templateObject.isSalesOrderConverted.set(false);
-    templateObject.isSalesOrderUnconverted = new ReactiveVar();
-    templateObject.isSalesOrderUnconverted.set(false);
-    templateObject.isPaymentMethodsList = new ReactiveVar();
-    templateObject.isPaymentMethodsList.set(false);
-    templateObject.isBackOrderedInvoices = new ReactiveVar();
-    templateObject.isBackOrderedInvoices.set(false);
-    templateObject.isQuotesConverted = new ReactiveVar();
-    templateObject.isQuotesConverted.set(false);
-    templateObject.isQuotesUnconverted = new ReactiveVar();
-    templateObject.isQuotesUnconverted.set(false);
-    templateObject.isInvoicesPaid = new ReactiveVar();
-    templateObject.isInvoicesPaid.set(false);
-    templateObject.isInvoicesUnpaid = new ReactiveVar();
-    templateObject.isInvoicesUnpaid.set(false);
-    templateObject.isTimeSheetDetails = new ReactiveVar();
-    templateObject.isTimeSheetDetails.set(false);
-    templateObject.isChequeList = new ReactiveVar();
-    templateObject.isChequeList.set(false);
-    templateObject.isJournalEntryList = new ReactiveVar();
-    templateObject.isJournalEntryList.set(false);
-    templateObject.isStockAdjustmentList = new ReactiveVar();
-    templateObject.isStockAdjustmentList.set(false);
-    templateObject.isAgedPayables = new ReactiveVar();
-    templateObject.isAgedPayables.set(false);
-    templateObject.isAgedPayablesSummary = new ReactiveVar();
-    templateObject.isAgedPayablesSummary.set(false);
-    templateObject.isPurchaseReport = new ReactiveVar();
-    templateObject.isPurchaseReport.set(false);
-    templateObject.isPurchaseSummaryReport = new ReactiveVar();
-    templateObject.isPurchaseSummaryReport.set(false);
-    templateObject.isPrintStatement = new ReactiveVar();
-    templateObject.isPrintStatement.set(false);
-    templateObject.isExecutiveSummary = new ReactiveVar();
-    templateObject.isExecutiveSummary.set(false);
-    templateObject.isCashReport = new ReactiveVar();
-    templateObject.isCashReport.set(false);
-    templateObject.isProfitabilityReport = new ReactiveVar();
-    templateObject.isProfitabilityReport.set(false);
-    templateObject.isPerformanceReport = new ReactiveVar();
-    templateObject.isPerformanceReport.set(false);
-    templateObject.isBalanceSheetReport = new ReactiveVar();
-    templateObject.isBalanceSheetReport.set(false);
-    templateObject.isIncomeReport = new ReactiveVar();
-    templateObject.isIncomeReport.set(false);
-    templateObject.isPositionReport = new ReactiveVar();
-    templateObject.isPositionReport.set(false);
+    templateObject.isBalanceSheet = new ReactiveVar(false);
+    templateObject.isProfitLoss = new ReactiveVar(false);
+    templateObject.isPLMonthly = new ReactiveVar(false);
+    templateObject.isPLQuarterly = new ReactiveVar(false);
+    templateObject.isPLYearly = new ReactiveVar(false);
+    templateObject.isPLYTD = new ReactiveVar(false);
+    templateObject.isJobSalesSummary = new ReactiveVar(false);
+    templateObject.isAgedReceivables = new ReactiveVar(false);
+    templateObject.isAgedReceivablesSummary = new ReactiveVar(false);
+    templateObject.isProductSalesReport = new ReactiveVar(false);
+    templateObject.isSalesReport = new ReactiveVar(false);
+    templateObject.isJobProfitReport = new ReactiveVar(false);
+    templateObject.isSupplierDetails = new ReactiveVar(false);
+    templateObject.isSupplierProduct = new ReactiveVar(false);
+    templateObject.isCustomerDetails = new ReactiveVar(false);
+    templateObject.isCustomerSummary = new ReactiveVar(false);
+    templateObject.isLotReport = new ReactiveVar(false);
+    templateObject.isStockValue = new ReactiveVar(false);
+    templateObject.isStockQuantity = new ReactiveVar(false);
+    templateObject.isStockMovementReport = new ReactiveVar(false);
+    templateObject.isPayrollHistoryReport = new ReactiveVar(false);
+    templateObject.isForeignExchangeHistoryList = new ReactiveVar(false);
+    templateObject.isForeignExchangeList = new ReactiveVar(false);
+    templateObject.isSalesSummaryReport = new ReactiveVar(false);
+    templateObject.isGeneralLedger = new ReactiveVar(false);
+    templateObject.isTaxSummaryReport = new ReactiveVar(false);
+    templateObject.isTrialBalance = new ReactiveVar(false);
+    templateObject.isTimeSheetSummary = new ReactiveVar(false);
+    templateObject.isPayrollLeaveAccrued = new ReactiveVar(false);
+    templateObject.isPayrollLeaveTaken = new ReactiveVar(false);
+    templateObject.isSerialNumberReport = new ReactiveVar(false);
+    templateObject.is1099Transaction = new ReactiveVar(false);
+    templateObject.isAccountsLists = new ReactiveVar(false);
+    templateObject.isBinLocations = new ReactiveVar(false);
+    templateObject.isTransactionJournal = new ReactiveVar(false);
+    templateObject.isUnpaidBills = new ReactiveVar(false);
+    templateObject.isUnpaidPO = new ReactiveVar(false);
+    templateObject.isBackOrderedPO = new ReactiveVar(false);
+    templateObject.isSalesOrderConverted = new ReactiveVar(false);
+    templateObject.isSalesOrderUnconverted = new ReactiveVar(false);
+    templateObject.isPaymentMethodsList = new ReactiveVar(false);
+    templateObject.isBackOrderedInvoices = new ReactiveVar(false);
+    templateObject.isQuotesConverted = new ReactiveVar(false);
+    templateObject.isQuotesUnconverted = new ReactiveVar(false);
+    templateObject.isInvoicesPaid = new ReactiveVar(false);
+    templateObject.isInvoicesUnpaid = new ReactiveVar(false);
+    templateObject.isTimeSheetDetails = new ReactiveVar(false);
+    templateObject.isChequeList = new ReactiveVar(false);
+    templateObject.isJournalEntryList = new ReactiveVar(false);
+    templateObject.isStockAdjustmentList = new ReactiveVar(false);
+    templateObject.isAgedPayables = new ReactiveVar(false);
+    templateObject.isAgedPayablesSummary = new ReactiveVar(false);
+    templateObject.isPurchaseReport = new ReactiveVar(false);
+    templateObject.isPurchaseSummaryReport = new ReactiveVar(false);
+    templateObject.isPrintStatement = new ReactiveVar(false);
+    templateObject.isExecutiveSummary = new ReactiveVar(false);
+    templateObject.isCashReport = new ReactiveVar(false);
+    templateObject.isProfitabilityReport = new ReactiveVar(false);
+    templateObject.isPerformanceReport = new ReactiveVar(false);
+    templateObject.isBalanceSheetReport = new ReactiveVar(false);
+    templateObject.isIncomeReport = new ReactiveVar(false);
+    templateObject.isPositionReport = new ReactiveVar(false);
     templateObject.accountantList = new ReactiveVar([]);
+    templateObject.isBuildProfitability = new ReactiveVar(false);
+    templateObject.isProductionWorkSheet = new ReactiveVar(false);
+    templateObject.isWorkOrder = new ReactiveVar(false);
+    // For Accountants
+    templateObject.isCompanyAccountant = new ReactiveVar(false);
+    templateObject.isTrustee = new ReactiveVar(false);
+    templateObject.isFinancialStatement = new ReactiveVar(false);
+    templateObject.isIndividual = new ReactiveVar(false);
+    templateObject.isPartnershipNonTrading = new ReactiveVar(false);
+    templateObject.isTrustNonTrading = new ReactiveVar(false);
+    templateObject.isSelfManagedSuperfund = new ReactiveVar(false);
+    templateObject.isSingleDirector = new ReactiveVar(false);
+    templateObject.isSoleTraderNonTrading = new ReactiveVar(false);
+    templateObject.isTrust = new ReactiveVar(false);
 
-    templateObject.isBuildProfitability = new ReactiveVar();
-    templateObject.isBuildProfitability.set(false);
-    templateObject.isProductionWorksheet = new ReactiveVar();
-    templateObject.isProductionWorksheet.set(false);
-    templateObject.isWorkOrder = new ReactiveVar();
-    templateObject.isWorkOrder.set(false);
-    
+    templateObject.isSupplierList = new ReactiveVar(false);
+    templateObject.isSupplierSummaryReport = new ReactiveVar(false);
 });
 Template.allreports.onRendered(() => {
     let templateObject = Template.instance();
-    // let isBalanceSheet = localStorage.getItem('cloudBalanceSheet');
+
     let isBalanceSheet;
     getVS1Data("BalanceSheetReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            // addVS1Data('BalanceSheetReport', JSON.stringify(false));
             isBalanceSheet = false;
         } else {
-            isBalanceSheet = JSON.parse(dataObject[0].data);
+            isBalanceSheet = dataObject[0].data === "true";
+            templateObject.isBalanceSheet.set(isBalanceSheet);
         }
     });
-    // let isProfitLoss = localStorage.getItem('cloudProfitLoss');
+
     let isProfitLoss;
     getVS1Data("ProfitLossReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ProfitLossReport', JSON.stringify(false));
             isProfitLoss = false;
         } else {
-            isProfitLoss = JSON.parse(dataObject[0].data);
+            isProfitLoss = dataObject[0].data === 'true';
+            templateObject.isProfitLoss.set(isProfitLoss);
         }
     });
     let isPLMonthly;
     getVS1Data("PLMonthlyReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PLMonthlyReport', JSON.stringify(false));
             isPLMonthly = false;
         } else {
-            isPLMonthly = JSON.parse(dataObject[0].data);
+            isPLMonthly = dataObject[0].data === 'true';
+            templateObject.isPLMonthly.set(isPLMonthly);
         }
     });
-    // let isPLQuarterly = localStorage.getItem('cloudPLQuarterly');
     let isPLQuarterly;
     getVS1Data("PLQuarterlyReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PLQuarterlyReport', JSON.stringify(false));
             isPLQuarterly = false;
         } else {
-            isPLQuarterly = JSON.parse(dataObject[0].data);
+            isPLQuarterly = dataObject[0].data === 'true';
+            templateObject.isPLQuarterly.set(isPLQuarterly);
         }
     });
-    // let isPLYearly = localStorage.getItem('cloudPLYearly');
     let isPLYearly;
     getVS1Data("PLYearlyReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PLYearlyReport', JSON.stringify(false));
             isPLYearly = false;
         } else {
-            isPLYearly = JSON.parse(dataObject[0].data);
+            isPLYearly = dataObject[0].data === 'true';
+            templateObject.isPLYearly.set(isPLYearly);
         }
     });
-    // let isPLYTD = localStorage.getItem('cloudPLYTD');
     let isPLYTD;
     getVS1Data("PLYTDReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PLYTDReport', JSON.stringify(false));
             isPLYTD = false;
         } else {
-            isPLYTD = JSON.parse(dataObject[0].data);
+            isPLYTD = dataObject[0].data === 'true';
+            templateObject.isPLYTD.set(isPLYTD);
         }
     });
-    // let isJobSalesSummary = localStorage.getItem('cloudJobSalesSummary');
     let isJobSalesSummary;
     getVS1Data("JobSalesSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('JobSalesSummaryReport', JSON.stringify(false));
             isJobSalesSummary = false;
         } else {
-            isJobSalesSummary = JSON.parse(dataObject[0].data);
+            isJobSalesSummary = dataObject[0].data === 'true';
+            templateObject.isJobSalesSummary.set(isJobSalesSummary);
         }
     });
-    // let isAgedReceivables = localStorage.getItem('cloudAgedReceivables');
     let isAgedReceivables;
     getVS1Data("AgedReceivablesReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('AgedReceivablesReport', JSON.stringify(false));
             isAgedReceivables = false;
         } else {
-            isAgedReceivables = JSON.parse(dataObject[0].data);
+            isAgedReceivables = dataObject[0].data === 'true';
+            templateObject.isAgedReceivables.set(isAgedReceivables);
         }
     });
-    // let isAgedReceivablesSummary = localStorage.getItem('cloudAgedReceivablesSummary');
     let isAgedReceivablesSummary;
     getVS1Data("AgedReceivablesSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('AgedReceivablesSummaryReport', JSON.stringify(false));
             isAgedReceivablesSummary = false;
         } else {
-            isAgedReceivablesSummary = JSON.parse(dataObject[0].data);
+            isAgedReceivablesSummary = dataObject[0].data === 'true';
+            templateObject.isAgedReceivablesSummary.set(isAgedReceivablesSummary);
         }
     });
-    // let isProductSalesReport = localStorage.getItem('cloudProductSalesReport');
     let isProductSalesReport;
     getVS1Data("ProductSalesReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ProductSalesReport', JSON.stringify(false));
             isProductSalesReport = false;
         } else {
-            isProductSalesReport = JSON.parse(dataObject[0].data);
+            isProductSalesReport = dataObject[0].data === 'true';
+            templateObject.isProductSalesReport.set(isProductSalesReport);
         }
     });
-    // let isSalesReport = localStorage.getItem('cloudSalesReport');
     let isSalesReport;
     getVS1Data("SalesReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SalesReport', JSON.stringify(false));
             isSalesReport = false;
         } else {
-            isSalesReport = JSON.parse(dataObject[0].data);
+            isSalesReport = dataObject[0].data === 'true';
+            templateObject.isSalesReport.set(isSalesReport);
         }
     });
-    // let isJobProfitReport = localStorage.getItem('cloudJobProfit');
     let isJobProfitReport;
     getVS1Data("JobProfitReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('JobProfitReport', JSON.stringify(false));
             isJobProfitReport = false;
         } else {
-            isJobProfitReport = JSON.parse(dataObject[0].data);
+            isJobProfitReport = dataObject[0].data === 'true';
+            templateObject.isJobProfitReport.set(isJobProfitReport);
         }
     });
-    // let isSupplierDetails = localStorage.getItem('cloudSupplierDetails');
     let isSupplierDetails;
     getVS1Data("SupplierDetailsReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SupplierDetailsReport', JSON.stringify(false));
             isSupplierDetails = false;
         } else {
-            isSupplierDetails = JSON.parse(dataObject[0].data);
+            isSupplierDetails = dataObject[0].data === 'true';
+            templateObject.isSupplierDetails.set(isSupplierDetails);
         }
     });
-    // let isSupplierProduct = localStorage.getItem('cloudSupplierProduct');
     let isSupplierProduct;
     getVS1Data("SupplierProductReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SupplierProductReport', JSON.stringify(false));
             isSupplierProduct = false;
         } else {
-            isSupplierProduct = JSON.parse(dataObject[0].data);
+            isSupplierProduct = dataObject[0].data === 'true';
+            templateObject.isSupplierProduct.set(isSupplierProduct);
         }
     });
-    // let isCustomerDetails = localStorage.getItem('cloudCustomerDetails');
     let isCustomerDetails;
     getVS1Data("CustomerDetailsReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('CustomerDetailsReport', JSON.stringify(false));
             isCustomerDetails = false;
         } else {
-            isCustomerDetails = JSON.parse(dataObject[0].data);
+            isCustomerDetails = dataObject[0].data === 'true';
+            templateObject.isCustomerDetails.set(isCustomerDetails);
         }
-        // isCustomerDetails =JSON.parse(dataObject[0]).data;
     });
-    // let isCustomerSummary = localStorage.getItem('cloudCustomerSummary');
     let isCustomerSummary;
     getVS1Data("CustomerSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('CustomerSummaryReport', JSON.stringify(false));
             isCustomerSummary = false;
         } else {
-            isCustomerSummary = JSON.parse(dataObject[0].data);
+            isCustomerSummary = dataObject[0].data === 'true';
+            templateObject.isCustomerSummary.set(isCustomerSummary);
         }
     });
-    // let isLotReport = localStorage.getItem('cloudLotReport');
     let isLotReport;
     getVS1Data("LotReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('LotReport', JSON.stringify(false));
             isLotReport = false;
         } else {
-            isLotReport = JSON.parse(dataObject[0].data);
+            isLotReport = dataObject[0].data === 'true';
+            templateObject.isLotReport.set(isLotReport);
         }
     });
-    // let isStockValue = localStorage.getItem('cloudStockValue');
     let isStockValue;
     getVS1Data("StockValueReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('StockValueReport', JSON.stringify(false));
             isStockValue = false;
         } else {
-            isStockValue = JSON.parse(dataObject[0].data);
+            isStockValue = dataObject[0].data === 'true';
+            templateObject.isStockValue.set(isStockValue);
         }
     });
-    // let isStockQuantity = localStorage.getItem('cloudStockQuantity');
     let isStockQuantity;
     getVS1Data("StockQuantityReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('StockQuantityReport', JSON.stringify(false));
             isStockQuantity = false;
         } else {
-            isStockQuantity = JSON.parse(dataObject[0].data);
+            isStockQuantity = dataObject[0].data === 'true';
+            templateObject.isStockQuantity.set(isStockQuantity);
         }
     });
-    // let isStockMovementReport = localStorage.getItem('cloudStockMovementReport');
     let isStockMovementReport;
     getVS1Data("StockMovementReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('StockMovementReport', JSON.stringify(false));
             isStockMovementReport = false;
         } else {
-            isStockMovementReport = JSON.parse(dataObject[0].data);
+            isStockMovementReport = dataObject[0].data === 'true';
+            templateObject.isStockMovementReport.set(isStockMovementReport);
         }
     });
-    // let isPayrollHistoryReport = localStorage.getItem('cloudPayrollHistoryReport');
     let isPayrollHistoryReport;
     getVS1Data("PayrollHistoryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PayrollHistoryReport', JSON.stringify(false));
             isPayrollHistoryReport = false;
         } else {
-            isPayrollHistoryReport = JSON.parse(dataObject[0].data);
+            isPayrollHistoryReport = dataObject[0].data === 'true';
+            templateObject.isPayrollHistoryReport.set(isPayrollHistoryReport);
         }
     });
-    // let isForeignExchangeHistoryList = localStorage.getItem('cloudForeignExchangeHistoryList');
     let isForeignExchangeHistoryList;
     getVS1Data("ForeignExchangeHistoryListReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ForeignExchangeHistoryListReport', JSON.stringify(false));
             isForeignExchangeHistoryList = false;
         } else {
-            isForeignExchangeHistoryList = JSON.parse(dataObject[0].data);
+            isForeignExchangeHistoryList = dataObject[0].data === 'true';
+            templateObject.isForeignExchangeHistoryList.set(isForeignExchangeHistoryList);
         }
     });
-    // let isForeignExchangeList = localStorage.getItem('cloudForeignExchangeList');
     let isForeignExchangeList;
     getVS1Data("ForeignExchangeListReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ForeignExchangeListReport', JSON.stringify(false));
             isForeignExchangeList = false;
         } else {
-            isForeignExchangeList = JSON.parse(dataObject[0].data);
+            isForeignExchangeList = dataObject[0].data === 'true';
+            templateObject.isForeignExchangeList.set(isForeignExchangeList);
         }
     });
-    // let isSalesSummaryReport = localStorage.getItem('cloudSalesSummaryReport');
     let isSalesSummaryReport;
     getVS1Data("SalesSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SalesSummaryReport', JSON.stringify(false));
             isSalesSummaryReport = false;
         } else {
-            isSalesSummaryReport = JSON.parse(dataObject[0].data);
+            isSalesSummaryReport = dataObject[0].data === 'true';
+            templateObject.isSalesSummaryReport.set(isSalesSummaryReport);
         }
     });
-    // let isGeneralLedger = localStorage.getItem('cloudGeneralLedger');
     let isGeneralLedger;
     getVS1Data("GeneralLedgerReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('GeneralLedgerReport', JSON.stringify(false));
             isGeneralLedger = false;
         } else {
-            isGeneralLedger = JSON.parse(dataObject[0].data);
+            isGeneralLedger = dataObject[0].data === 'true';
+            templateObject.isGeneralLedger.set(isGeneralLedger);
         }
     });
-    // let isTaxSummaryReport = localStorage.getItem('cloudTaxSummaryReport');
     let isTaxSummaryReport;
     getVS1Data("TaxSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('TaxSummaryReport', JSON.stringify(false));
             isTaxSummaryReport = false;
         } else {
-            isTaxSummaryReport = JSON.parse(dataObject[0].data);
+            isTaxSummaryReport = dataObject[0].data === 'true';
+            templateObject.isTaxSummaryReport.set(isTaxSummaryReport);
         }
     });
-    // let isTrialBalance = localStorage.getItem('cloudTrialBalance');
     let isTrialBalance;
     getVS1Data("TrialBalanceReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            // //addVS1Data('TrialBalanceReport', JSON.stringify(false));
             isTrialBalance = false;
         } else {
-            isTrialBalance = JSON.parse(dataObject[0].data);
+            isTrialBalance = dataObject[0].data === 'true';
+            templateObject.isTrialBalance.set(isTrialBalance);
         }
     });
-    // let isTimeSheetSummary = localStorage.getItem('cloudTimeSheetSummary');
     let isTimeSheetSummary;
     getVS1Data("TimeSheetSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('TimeSheetSummaryReport', JSON.stringify(false));
             isTimeSheetSummary = false;
         } else {
-            isTimeSheetSummary = JSON.parse(dataObject[0].data);
+            isTimeSheetSummary = dataObject[0].data === 'true'
+            templateObject.isTimeSheetSummary.set(isTimeSheetSummary);
         }
     });
-    // let isPayrollLeaveAccrued = localStorage.getItem('cloudPayrollLeaveAccrued');
     let isPayrollLeaveAccrued;
     getVS1Data("PayrollLeaveAccruedReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PayrollLeaveAccruedReport', JSON.stringify(false));
             isPayrollLeaveAccrued = false;
         } else {
-            isPayrollLeaveAccrued = JSON.parse(dataObject[0].data);
+            isPayrollLeaveAccrued = dataObject[0].data === 'true';
+            templateObject.isPayrollLeaveAccrued.set(isPayrollLeaveAccrued);
         }
     });
-    // let isPayrollLeaveTaken = localStorage.getItem('cloudPayrollLeaveTaken');
     let isPayrollLeaveTaken;
     getVS1Data("PayrollLeaveTakenReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PayrollLeaveTakenReport', JSON.stringify(false));
             isPayrollLeaveTaken = false;
         } else {
-            isPayrollLeaveTaken = JSON.parse(dataObject[0].data);
+            isPayrollLeaveTaken = dataObject[0].data === 'true';
+            templateObject.isPayrollLeaveTaken.set(isPayrollLeaveTaken);
         }
     });
-    // let isSerialNumberReport = localStorage.getItem('cloudSerialNumberReport');
     let isSerialNumberReport;
     getVS1Data("SerialNumberReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SerialNumberReport', JSON.stringify(false));
             isSerialNumberReport = false;
         } else {
-            isSerialNumberReport = JSON.parse(dataObject[0].data);
+            isSerialNumberReport = dataObject[0].data === 'true'
+            templateObject.isSerialNumberReport.set(isSerialNumberReport);
         }
     });
-    // let is1099Transaction = localStorage.getItem('cloud1099Transaction');
     let is1099Transaction;
     getVS1Data("1099TransactionReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('1099TransactionReport', JSON.stringify(false));
             is1099Transaction = false;
         } else {
-            is1099Transaction = JSON.parse(dataObject[0].data);
+            is1099Transaction = dataObject[0].data === 'true';
+            templateObject.is1099Transaction.set(is1099Transaction);
         }
     });
-    // let isAccountsLists = localStorage.getItem('cloudAccountList');
     let isAccountsLists;
     getVS1Data("AccountsListsReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('AccountsListsReport', JSON.stringify(false));
             isAccountsLists = false;
         } else {
-            isAccountsLists = JSON.parse(dataObject[0].data);
+            isAccountsLists = dataObject[0].data === 'true';
+            templateObject.isAccountsLists.set(isAccountsLists);
         }
     });
-    // let isBinLocations = localStorage.getItem('cloudBinLocations');
     let isBinLocations;
     getVS1Data("BinLocationsReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('BinLocationsReport', JSON.stringify(false));
             isBinLocations = false;
         } else {
-            isBinLocations = JSON.parse(dataObject[0].data);
+            isBinLocations = dataObject[0].data === 'true';
+            templateObject.isBinLocations.set(isBinLocations);
         }
     });
-    // let isTransactionJournal = localStorage.getItem('cloudTransactionJournal');
     let isTransactionJournal;
     getVS1Data("TransactionJournalReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('TransactionJournalReport', JSON.stringify(false));
             isTransactionJournal = false;
         } else {
-            isTransactionJournal = JSON.parse(dataObject[0].data);
+            isTransactionJournal = dataObject[0].data === 'true';
+            templateObject.isTransactionJournal.set(isTransactionJournal);
         }
     });
-    // let isUnpaidBills = localStorage.getItem('cloudBillsUnpaid');
     let isUnpaidBills;
     getVS1Data("UnpaidBillsReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('UnpaidBillsReport', JSON.stringify(false));
             isUnpaidBills = false;
         } else {
-            isUnpaidBills = JSON.parse(dataObject[0].data);
+            isUnpaidBills = dataObject[0].data === 'true';
+            templateObject.isUnpaidBills.set(isUnpaidBills);
         }
     });
-    // let isUnpaidPO = localStorage.getItem('cloudPurchaseOrderUnpaid');
     let isUnpaidPO;
     getVS1Data("UnpaidPOReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('UnpaidPOReport', JSON.stringify(false));
             isUnpaidPO = false;
         } else {
-            isUnpaidPO = JSON.parse(dataObject[0].data);
+            isUnpaidPO = dataObject[0].data === 'true';
+            templateObject.isUnpaidPO.set(isUnpaidPO);
         }
     });
-    // let isBackOrderedPO = localStorage.getItem('cloudPurchaseOrderBO');
     let isBackOrderedPO;
     getVS1Data("BackOrderedPOReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('BackOrderedPOReport', JSON.stringify(false));
             isBackOrderedPO = false;
         } else {
-            isBackOrderedPO = JSON.parse(dataObject[0].data);
+            isBackOrderedPO = dataObject[0].data === 'true';
+            templateObject.isBackOrderedPO.set(isBackOrderedPO);
         }
     });
-    // let isSalesOrderConverted = localStorage.getItem('cloudSalesOrderConverted');
     let isSalesOrderConverted;
     getVS1Data("SalesOrderConvertedReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SalesOrderConvertedReport', JSON.stringify(false));
             isSalesOrderConverted = false;
         } else {
-            isSalesOrderConverted = JSON.parse(dataObject[0].data);
+            isSalesOrderConverted = dataObject[0].data === 'true';
+            templateObject.isSalesOrderConverted.set(isSalesOrderConverted);
         }
     });
-    // let isSalesOrderUnconverted = localStorage.getItem('cloudSalesOrderUnconverted');
     let isSalesOrderUnconverted;
     getVS1Data("SalesOrderUnconvertedReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('SalesOrderUnconvertedReport', JSON.stringify(false));
             isSalesOrderUnconverted = false;
         } else {
-            isSalesOrderUnconverted = JSON.parse(dataObject[0].data);
+            isSalesOrderUnconverted = dataObject[0].data === 'true';
+            templateObject.isSalesOrderUnconverted.set(isSalesOrderUnconverted);
         }
     });
-    // let isPaymentMethodsList = localStorage.getItem('cloudPaymentMethodList');
     let isPaymentMethodsList;
     getVS1Data("PaymentMethodsListReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PaymentMethodsListReport', JSON.stringify(false));
             isPaymentMethodsList = false;
         } else {
-            isPaymentMethodsList = JSON.parse(dataObject[0].data);
+            isPaymentMethodsList = dataObject[0].data === 'true';
+            templateObject.isPaymentMethodsList.set(isPaymentMethodsList);
         }
     });
-    // let isBackOrderedInvoices = localStorage.getItem('cloudInvoicesBackOrdered');
     let isBackOrderedInvoices;
     getVS1Data("BackOrderedInvoicesReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('BackOrderedInvoicesReport', JSON.stringify(false));
             isBackOrderedInvoices = false;
         } else {
-            isBackOrderedInvoices = JSON.parse(dataObject[0].data);
+            isBackOrderedInvoices = dataObject[0].data === 'true';
+            templateObject.isBackOrderedInvoices.set(isBackOrderedInvoices);
         }
     });
-    // let isQuotesConverted = localStorage.getItem('cloudQuotesConverted');
     let isQuotesConverted;
     getVS1Data("QuotesConvertedReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('QuotesConvertedReport', JSON.stringify(false));
             isQuotesConverted = false;
         } else {
-            isQuotesConverted = JSON.parse(dataObject[0].data);
+            isQuotesConverted = dataObject[0].data === 'true';
+            templateObject.isQuotesConverted.set(isQuotesConverted);
         }
     });
-    // let isQuotesUnconverted = localStorage.getItem('cloudQuotesUnconverted');
     let isQuotesUnconverted;
     getVS1Data("QuotesUnconvertedReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('QuotesUnconvertedReport', JSON.stringify(false));
             isQuotesUnconverted = false;
         } else {
-            isQuotesUnconverted = JSON.parse(dataObject[0].data);
+            isQuotesUnconverted = dataObject[0].data === 'true';
+            templateObject.isQuotesUnconverted.set(isQuotesUnconverted);
         }
     });
-    // let isInvoicesPaid = localStorage.getItem('cloudInvoicesPaid');
     let isInvoicesPaid;
     getVS1Data("InvoicesPaidReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('InvoicesPaidReport', JSON.stringify(false));
             isInvoicesPaid = false;
         } else {
-            isInvoicesPaid = JSON.parse(dataObject[0].data);
+            isInvoicesPaid = dataObject[0].data === 'true';
+            templateObject.isInvoicesPaid.set(isInvoicesPaid);
         }
     });
-    // let isInvoicesUnpaid = localStorage.getItem('cloudInvoicesUnpaid');
     let isInvoicesUnpaid;
     getVS1Data("InvoicesUnpaidReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('InvoicesUnpaidReport', JSON.stringify(false));
             isInvoicesUnpaid = false;
         } else {
-            isInvoicesUnpaid = JSON.parse(dataObject[0].data);
+            isInvoicesUnpaid = dataObject[0].data === 'true';
+            templateObject.isInvoicesUnpaid.set(isInvoicesUnpaid);
         }
     });
-    // let isTimeSheetDetails = localStorage.getItem('cloudTimeSheet');
     let isTimeSheetDetails;
     getVS1Data("TimeSheetDetailsReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('TimeSheetDetailsReport', JSON.stringify(false));
             isTimeSheetDetails = false;
         } else {
-            isTimeSheetDetails = JSON.parse(dataObject[0].data);
+            isTimeSheetDetails = dataObject[0].data === 'true';
+            templateObject.isTimeSheetDetails.set(isTimeSheetDetails);
         }
     });
-    // let isChequeList = localStorage.getItem('cloudChequeList');
     let isChequeList;
     getVS1Data("ChequeListReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ChequeListReport', JSON.stringify(false));
             isChequeList = false;
         } else {
-            isChequeList = JSON.parse(dataObject[0].data);
+            isChequeList = dataObject[0].data === 'true';
+            templateObject.isChequeList.set(isChequeList);
         }
     });
-    // let isStockAdjustmentList = localStorage.getItem('cloudStockAdjustmentList');
     let isStockAdjustmentList;
     getVS1Data("StockAdjustmentListReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('StockAdjustmentListReport', JSON.stringify(false));
             isStockAdjustmentList = false;
         } else {
-            isStockAdjustmentList = JSON.parse(dataObject[0].data);
+            isStockAdjustmentList = dataObject[0].data === 'true';
+            templateObject.isStockAdjustmentList.set(isStockAdjustmentList);
         }
     });
-    // let isJournalEntryList = localStorage.getItem('cloudJournalEntryList');
     let isJournalEntryList;
     getVS1Data("JournalEntryListReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('JournalEntryListReport', JSON.stringify(false));
             isJournalEntryList = false;
         } else {
-            isJournalEntryList = JSON.parse(dataObject[0].data);
+            isJournalEntryList = dataObject[0].data === 'true';
+            templateObject.isJournalEntryList.set(isJournalEntryList);
         }
     });
-    // let isAgedPayables = localStorage.getItem('cloudAgedPayables');
     let isAgedPayables;
     getVS1Data("AgedPayablesReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('AgedPayablesReport', JSON.stringify(false));
             isAgedPayables = false;
         } else {
-            isAgedPayables = JSON.parse(dataObject[0].data);
+            isAgedPayables = dataObject[0].data === 'true';
+            templateObject.isAgedPayables.set(isAgedPayables);
         }
     });
-    // let isAgedPayablesSummary = localStorage.getItem('cloudAgedPayablesSummary');
     let isAgedPayablesSummary;
     getVS1Data("AgedPayablesSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('AgedPayablesSummaryReport', JSON.stringify(false));
             isAgedPayablesSummary = false;
         } else {
-            isAgedPayablesSummary = JSON.parse(dataObject[0].data);
+            isAgedPayablesSummary = dataObject[0].data === 'true';
+            templateObject.isAgedPayablesSummary.set(isAgedPayablesSummary);
         }
     });
-    // let isPurchaseReport = localStorage.getItem('cloudPurchaseReport');
     let isPurchaseReport;
     getVS1Data("PurchaseReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PurchaseReport', JSON.stringify(false));
             isPurchaseReport = false;
         } else {
-            isPurchaseReport = JSON.parse(dataObject[0].data);
+            isPurchaseReport = dataObject[0].data === 'true';
+            templateObject.isPurchaseReport.set(isPurchaseReport);
         }
     });
-    // let isPurchaseSummaryReport = localStorage.getItem('cloudPurchaseSummaryReport');
     let isPurchaseSummaryReport;
     getVS1Data("PurchaseSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PurchaseSummaryReport', JSON.stringify(false));
             isPurchaseSummaryReport = false;
         } else {
-            isPurchaseSummaryReport = JSON.parse(dataObject[0].data);
+            isPurchaseSummaryReport = dataObject[0].data === 'true';
+            templateObject.isPurchaseSummaryReport.set(isPurchaseSummaryReport);
         }
     });
-    // let isPrintStatement = localStorage.getItem('cloudPrintStatement');
     let isPrintStatement;
     getVS1Data("PrintStatementReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PrintStatementReport', JSON.stringify(false));
             isPrintStatement = false;
         } else {
-            isPrintStatement = JSON.parse(dataObject[0].data);
+            isPrintStatement = dataObject[0].data === 'true';
+            templateObject.isPrintStatement.set(isPrintStatement);
         }
     });
-    // let isExecutiveSummary = localStorage.getItem('cloudExecutiveSummary');
     let isExecutiveSummary;
     getVS1Data("ExecutiveSummaryReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ExecutiveSummaryReport', JSON.stringify(false));
             isExecutiveSummary = false;
         } else {
-            isExecutiveSummary = JSON.parse(dataObject[0].data);
+            isExecutiveSummary = dataObject[0].data === 'true';
+            templateObject.isExecutiveSummary.set(isExecutiveSummary);
         }
     });
-    // let isCashReport = localStorage.getItem('cloudCashReport');
     let isCashReport;
     getVS1Data("CashReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('CashReport', JSON.stringify(false));
             isCashReport = false;
         } else {
-            isCashReport = JSON.parse(dataObject[0].data);
+            isCashReport = dataObject[0].data === 'true';
+            templateObject.isCashReport.set(isCashReport);
         }
     });
-    // let isProfitabilityReport = localStorage.getItem('cloudProfitabilityReport');
     let isProfitabilityReport;
     getVS1Data("ProfitabilityReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('ProfitabilityReport', JSON.stringify(false));
             isProfitabilityReport = false;
         } else {
-            isProfitabilityReport = JSON.parse(dataObject[0].data);
+            isProfitabilityReport = dataObject[0].data === "true";
+            templateObject.isProfitabilityReport.set(isProfitabilityReport)
         }
-    });
-    // let isPerformanceReport = localStorage.getItem('cloudPerformanceReport');
+    })
     let isPerformanceReport;
     getVS1Data("PerformanceReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('PerformanceReport', JSON.stringify(false));
             isPerformanceReport = false;
         } else {
-            isPerformanceReport = JSON.parse(dataObject[0].data);
+            isPerformanceReport = dataObject[0].data === 'true';
+            templateObject.isPerformanceReport.set(isPerformanceReport);
         }
     });
-    // let isBalanceSheetReport = localStorage.getItem('cloudBalanceSheetReport');
     let isBalanceSheetReport;
     getVS1Data("BalanceSheetReports").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('BalanceSheetReports', JSON.stringify(false));
             isBalanceSheetReport = false;
         } else {
-            isBalanceSheetReport = JSON.parse(dataObject[0].data);
+            isBalanceSheetReport = dataObject[0].data === 'true';
+            templateObject.isBalanceSheetReport.set(isBalanceSheetReport);
         }
     });
-    // let isIncomeReport = localStorage.getItem('cloudIncomeReport');
     let isIncomeReport;
     getVS1Data("IncomeReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            //addVS1Data('IncomeReport', JSON.stringify(false));
             isIncomeReport = false;
         } else {
-            isIncomeReport = JSON.parse(dataObject[0].data);
+            isIncomeReport = dataObject[0].data === 'true';
+            templateObject.isIncomeReport.set(isIncomeReport);
         }
     });
-    // let isPositionReport = localStorage.getItem('cloudPositionReport');
     let isPositionReport;
     getVS1Data("PositionReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            // addVS1Data('PositionReport', JSON.stringify(false));
             isPositionReport = false;
         } else {
-            isPositionReport = JSON.parse(dataObject[0].data);
+            isPositionReport = dataObject[0].data === 'true';
+            templateObject.isPositionReport.set(isPositionReport);
         }
     });
 
-    //BuildProfitability 
     let isBuildProfitability;
     getVS1Data("BuildProfitabilityReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            // addVS1Data('PositionReport', JSON.stringify(false));
             isBuildProfitability = false;
         } else {
-            isBuildProfitability = JSON.parse(dataObject[0].data);
+            isBuildProfitability = dataObject[0].data === 'true';
+            templateObject.isBuildProfitability.set(isBuildProfitability);
         }
     });
 
-    //ProductionWorkSheet 
     let isProductionWorkSheet;
     getVS1Data("ProductionWorksheetReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            // addVS1Data('PositionReport', JSON.stringify(false));
             isProductionWorkSheet = false;
         } else {
-            isProductionWorkSheet = JSON.parse(dataObject[0].data);
+            isProductionWorkSheet = dataObject[0].data === 'true';
+            templateObject.isProductionWorkSheet.set(isProductionWorkSheet);
         }
     });
 
-    //WorkOrder 
     let isWorkOrder;
     getVS1Data("WorkOrderReport").then(function (dataObject) {
         if (dataObject.length === 0) {
-            // addVS1Data('PositionReport', JSON.stringify(false));
             isWorkOrder = false;
         } else {
-            isWorkOrder = JSON.parse(dataObject[0].data);
+            isWorkOrder = dataObject[0].data === 'true';
+            templateObject.isWorkOrder.set(isWorkOrder);
         }
     });
+
+    getVS1Data("TFavReportCompany").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isCompanyAccountant.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportTrustee").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isTrustee.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportFinancialStatement").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isFinancialStatement.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportIndividual").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isIndividual.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportPartnershipNonTrading").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isPartnershipNonTrading.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportTrustNonTrading").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isTrustNonTrading.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportSelfManagedSuperfund").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSelfManagedSuperfund.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportSingleDirector").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSingleDirector.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportSoleTraderNonTrading").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSoleTraderNonTrading.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavReportTrust").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isTrust.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavSupplierList").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSupplierList.set(dataObject[0].data === 'true')
+        }
+    })
+
+    getVS1Data("TFavSupplierSummaryReport").then(function (dataObject) {
+        if(dataObject.length > 0) {
+            templateObject.isSupplierSummaryReport.set(dataObject[0].data === 'true')
+        }
+    })
 
     const taxRateService = new TaxRateService();
     const accountantList = [];
 
-    if (isBalanceSheet == true) {
-        templateObject.isBalanceSheet.set(true);
-    }
-    if (isProfitLoss == true) {
-        templateObject.isProfitLoss.set(true);
-    }
-    if (isPLMonthly == true) {
-        templateObject.isPLMonthly.set(true);
-    }
-    if (isPLQuarterly == true) {
-        templateObject.isPLQuarterly.set(true);
-    }
-    if (isPLYearly == true) {
-        templateObject.isPLYearly.set(true);
-    }
-    if (isPLYTD == true) {
-        templateObject.isPLYTD.set(true);
-    }
-    if (isJobSalesSummary == true) {
-        templateObject.isJobSalesSummary.set(true);
-    }
-    if (isBalanceSheet == true) {
-        templateObject.isBalanceSheet.set(true);
-    }
-    if (isAgedReceivables == true) {
-        templateObject.isAgedReceivables.set(true);
-    }
-    if (isAgedReceivablesSummary == true) {
-        templateObject.isAgedReceivablesSummary.set(true);
-    }
-    if (isProductSalesReport == true) {
-        templateObject.isProductSalesReport.set(true);
-    }
-    if (isSalesReport == true) {
-        templateObject.isSalesReport.set(true);
-    }
-    if (isJobProfitReport == true) {
-        templateObject.isJobProfitReport.set(true);
-    }
-    if (isSupplierDetails == true) {
-        templateObject.isSupplierDetails.set(true);
-    }
-    if (isSupplierProduct == true) {
-        templateObject.isSupplierProduct.set(true);
-    }
-    if (isCustomerDetails == true) {
-        templateObject.isCustomerDetails.set(true);
-    }
-    if (isCustomerSummary == true) {
-        templateObject.isCustomerSummary.set(true);
-    }
-    if (isLotReport == true) {
-        templateObject.isLotReport.set(true);
-    }
-    if (isStockValue == true) {
-        templateObject.isStockValue.set(true);
-    }
-    if (isStockQuantity == true) {
-        templateObject.isStockQuantity.set(true);
-    }
-    if (isStockMovementReport == true) {
-        templateObject.isStockMovementReport.set(true);
-    }
-    if (isPayrollHistoryReport == true) {
-        templateObject.isPayrollHistoryReport.set(true);
-    }
-    if (isForeignExchangeHistoryList == true) {
-        templateObject.isForeignExchangeHistoryList.set(true);
-    }
-    if (isForeignExchangeList == true) {
-        templateObject.isForeignExchangeList.set(true);
-    }
-    if (isSalesSummaryReport == true) {
-        templateObject.isSalesSummaryReport.set(true);
-    }
-    if (isGeneralLedger == true) {
-        templateObject.isGeneralLedger.set(true);
-    }
-    if (isTaxSummaryReport == true) {
-        templateObject.isTaxSummaryReport.set(true);
-    }
-    if (isTrialBalance == true) {
-        templateObject.isTrialBalance.set(true);
-    }
-    if (isTimeSheetSummary == true) {
-        templateObject.isTimeSheetSummary.set(true);
-    }
-    if (isPayrollLeaveAccrued == true) {
-        templateObject.isPayrollLeaveAccrued.set(true);
-    }
-    if (isPayrollLeaveTaken == true) {
-        templateObject.isPayrollLeaveTaken.set(true);
-    }
-    if (isSerialNumberReport == true) {
-        templateObject.isSerialNumberReport.set(true);
-    }
-    if (is1099Transaction == true) {
-        templateObject.is1099Transaction.set(true);
-    }
-    if (isAccountsLists == true) {
-        templateObject.isAccountsLists.set(true);
-    }
-    if (isBinLocations == true) {
-        templateObject.isBinLocations.set(true);
-    }
-    if (isTransactionJournal == true) {
-        templateObject.isTransactionJournal.set(true);
-    }
-    if (isUnpaidBills == true) {
-        templateObject.isUnpaidBills.set(true);
-    }
-    if (isUnpaidPO == true) {
-        templateObject.isUnpaidPO.set(true);
-    }
-    if (isBackOrderedPO == true) {
-        templateObject.isBackOrderedPO.set(true);
-    }
-    if (isSalesOrderConverted == true) {
-        templateObject.isSalesOrderConverted.set(true);
-    }
-    if (isSalesOrderUnconverted == true) {
-        templateObject.isSalesOrderUnconverted.set(true);
-    }
-    if (isPaymentMethodsList == true) {
-        templateObject.isPaymentMethodsList.set(true);
-    }
-    if (isBackOrderedInvoices == true) {
-        templateObject.isBackOrderedInvoices.set(true);
-    }
-    if (isQuotesConverted == true) {
-        templateObject.isQuotesConverted.set(true);
-    }
-    if (isQuotesUnconverted == true) {
-        templateObject.isQuotesUnconverted.set(true);
-    }
-    if (isInvoicesPaid == true) {
-        templateObject.isInvoicesPaid.set(true);
-    }
-    if (isInvoicesUnpaid == true) {
-        templateObject.isInvoicesUnpaid.set(true);
-    }
-    if (isTimeSheetDetails == true) {
-        templateObject.isTimeSheetDetails.set(true);
-    }
-    if (isChequeList == true) {
-        templateObject.isChequeList.set(true);
-    }
-    if (isStockAdjustmentList == true) {
-        templateObject.isStockAdjustmentList.set(true);
-    }
-    if (isJournalEntryList == true) {
-        templateObject.isJournalEntryList.set(true);
-    }
-    if (isAgedPayables == true) {
-        templateObject.isAgedPayables.set(true);
-    }
-    if (isAgedPayablesSummary == true) {
-        templateObject.isAgedPayablesSummary.set(true);
-    }
-    if (isPurchaseReport == true) {
-        templateObject.isPurchaseReport.set(true);
-    }
-    if (isPurchaseSummaryReport == true) {
-        templateObject.isPurchaseSummaryReport.set(true);
-    }
-    if (isPrintStatement == true) {
-        templateObject.isPrintStatement.set(true);
-    }
-    if (isExecutiveSummary == true) {
-        templateObject.isExecutiveSummary.set(true);
-    }
-    if (isCashReport == true) {
-        templateObject.isCashReport.set(true);
-    }
-    if (isProfitabilityReport == true) {
-        templateObject.isProfitabilityReport.set(true);
-    }
-    if (isPerformanceReport == true) {
-        templateObject.isPerformanceReport.set(true);
-    }
-    if (isBalanceSheetReport == true) {
-        templateObject.isBalanceSheetReport.set(true);
-    }
-    if (isIncomeReport == true) {
-        templateObject.isIncomeReport.set(true);
-    }
-    if (isPositionReport == true) {
-        templateObject.isPositionReport.set(true);
-    }
-
-    if(isBuildProfitability == true) {
-        templateObject.isBuildProfitability.set(true);
-    }
-    if(isProductionWorkSheet == true) {
-        templateObject.isProductionWorkSheet.set(true);
-    }
-    if(isWorkOrder == true) {
-        templateObject.isWorkOrder.set(true);
-    }
-
-
-
-
-
     templateObject.getAccountantList = function() {
         getVS1Data('TReportsAccountantsCategory').then(function(dataObject) {
-
-                //         if(dataObject.length == 0){
-                //           taxRateService.getAccountantCategory().then(function (data) {
-                //               let lineItems = [];
-                //               let lineItemObj = {};
-                //               for(let i=0; i<data.tdeptclass.length; i++){
-                //                   var dataList = {
-                //                     id: data.tdeptclass[i].Id || ' ',
-                //                     firstname: data.tdeptclass[i].FirstName || '-',
-                //                     lastname: data.tdeptclass[i].LastName || '-',
-                //                     companyname: data.tdeptclass[i].CompanyName || '-',
-                //                     address: data.tdeptclass[i].Address || '-',
-                //                     docname: data.tdeptclass[i].DocName || '-',
-                //                     towncity: data.tdeptclass[i].TownCity || '-',
-                //                     postalzip: data.tdeptclass[i].PostalZip || '-',
-                //                     stateregion: data.tdeptclass[i].StateRegion || '-',
-                //                     country: data.tdeptclass[i].Country || '-',
-                //                     status:data.tdeptclass[i].Active || 'false',
-                //                   };
-
-                //                   dataTableList.push(dataList);
-                //               }
-
-                //               templateObject.datatablerecords.set(dataTableList);
-
-                //               if(templateObject.datatablerecords.get()){
-
-                //                   Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'accountantList', function(error, result){
-                //                       if(error){
-
-                //                       }else{
-                //                           if(result){
-                //                               for (let i = 0; i < result.customFields.length; i++) {
-                //                                   let customcolumn = result.customFields;
-                //                                   let columData = customcolumn[i].label;
-                //                                   let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                //                                   let hiddenColumn = customcolumn[i].hidden;
-                //                                   let columnClass = columHeaderUpdate.split('.')[1];
-                //                                   let columnWidth = customcolumn[i].width;
-                //                                   let columnindex = customcolumn[i].index + 1;
-
-                //                                   if(hiddenColumn == true){
-                //                                       $("."+columnClass+"").addClass('hiddenColumn');
-                //                                       $("."+columnClass+"").removeClass('showColumn');
-                //                                   }
-                //                                   else if(hiddenColumn == false){
-                //                                       $("."+columnClass+"").removeClass('hiddenColumn');
-                //                                       $("."+columnClass+"").addClass('showColumn');
-                //                                   }
-                //                               }
-                //                           }
-                //                       }
-                //                   });
-
-                //                   setTimeout(function () {
-                //                       MakeNegative();
-                //                   }, 100);
-                //               }
-
-                //               $('.fullScreenSpin').css('display','none');
-                //               setTimeout(function () {
-                //                   $('#accountantList').DataTable({
-                //                       columnDefs: [
-                //                           {type: 'date', targets: 0},
-                //                           { "orderable": false, "targets": -1 }
-                //                       ],
-                //                       "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                //                       buttons: [
-                //                           {
-                //                               extend: 'excelHtml5',
-                //                               text: '',
-                //                               download: 'open',
-                //                               className: "btntabletocsv hiddenColumn",
-                //                               filename: "departmentlist_"+ moment().format(),
-                //                               orientation:'portrait',
-                //                               exportOptions: {
-                //                                   columns: ':visible'
-                //                               }
-                //                           },{
-                //                               extend: 'print',
-                //                               download: 'open',
-                //                               className: "btntabletopdf hiddenColumn",
-                //                               text: '',
-                //                               title: 'Department List',
-                //                               filename: "departmentlist_"+ moment().format(),
-                //                               exportOptions: {
-                //                                   columns: ':visible'
-                //                               }
-                //                           }],
-                //                       select: true,
-                //                       destroy: true,
-                //                       colReorder: true,
-                //                       colReorder: {
-                //                           fixedColumnsRight: 1
-                //                       },
-                //                       // bStateSave: true,
-                //                       // rowId: 0,
-                //                       paging: false,
-                // //                      "scrollY": "400px",
-                // //                      "scrollCollapse": true,
-                //                       info: true,
-                //                       responsive: true,
-                //                       "order": [[ 0, "asc" ]],
-                //                       action: function () {
-                //                           $('#accountantList').DataTable().ajax.reload();
-                //                       },
-                //                       "fnDrawCallback": function (oSettings) {
-                //                           setTimeout(function () {
-                //                               MakeNegative();
-                //                           }, 100);
-                //                       },
-
-                //                   }).on('page', function () {
-                //                       setTimeout(function () {
-                //                           MakeNegative();
-                //                       }, 100);
-                //                       let draftRecord = templateObject.datatablerecords.get();
-                //                       templateObject.datatablerecords.set(draftRecord);
-                //                   }).on('column-reorder', function () {
-
-                //                   }).on( 'length.dt', function ( e, settings, len ) {
-                //                       setTimeout(function () {
-                //                           MakeNegative();
-                //                       }, 100);
-                //                   });
-
-                //                   // $('#accountantList').DataTable().column( 0 ).visible( true );
-                //                   $('.fullScreenSpin').css('display','none');
-                //               }, 0);
-
-                //               var columns = $('#accountantList th');
-                //               let sTible = "";
-                //               let sWidth = "";
-                //               let sIndex = "";
-                //               let sVisible = "";
-                //               let columVisible = false;
-                //               let sClass = "";
-                //               $.each(columns, function(i,v) {
-                //                   if(v.hidden == false){
-                //                       columVisible =  true;
-                //                   }
-                //                   if((v.className.includes("hiddenColumn"))){
-                //                       columVisible = false;
-                //                   }
-                //                   sWidth = v.style.width.replace('px', "");
-
-                //                   let datatablerecordObj = {
-                //                       sTitle: v.innerText || '',
-                //                       sWidth: sWidth || '',
-                //                       sIndex: v.cellIndex || '',
-                //                       sVisible: columVisible || false,
-                //                       sClass: v.className || ''
-                //                   };
-                //                   tableHeaderList.push(datatablerecordObj);
-                //               });
-                //               templateObject.tableheaderrecords.set(tableHeaderList);
-                //               $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                //           }).catch(function (err) {
-                //               swal({
-                //                   title: 'Oooops...',
-                //                   text: err,
-                //                   type: 'error',
-                //                   showCancelButton: false,
-                //                   confirmButtonText: 'Try Again'
-                //               }).then((result) => {
-                //                   if (result.value) {
-                //                       Meteor._reload.reload();
-                //                   } else if (result.dismiss === 'cancel') {
-
-                //                   }
-                //               });
-                //               $('.fullScreenSpin').css('display','none');
-                //               // Meteor._reload.reload();
-                //           });
-                //         }
-                //         else{
-                let data = JSON.parse(dataObject[0].data);
-
-                // for(let i=0; i<useData.length; i++){
-                var dataInfo = {
-                    id: data.Id || '',
-                    firstname: data.FirstName || '-',
-                    lastname: data.LastName || '-',
-                    companyname: data.CompanyName || '-',
-                    address: data.Address || '-',
-                    towncity: data.TownCity || '-',
-                    postalzip: data.PostalZip || '-',
-                    stateregion: data.StateRegion || '-',
-                    country: data.Country || '-',
-                };
-                accountantList.push(dataInfo);
-                // }
-                templateObject.accountantList.set(accountantList);
-                // }
-            })
-            .catch(function(err) {
-  
-            });
+            let data = JSON.parse(dataObject[0].data);
+            var dataInfo = {
+                id: data.Id || '',
+                firstname: data.FirstName || '-',
+                lastname: data.LastName || '-',
+                companyname: data.CompanyName || '-',
+                address: data.Address || '-',
+                towncity: data.TownCity || '-',
+                postalzip: data.PostalZip || '-',
+                stateregion: data.StateRegion || '-',
+                country: data.Country || '-',
+            };
+            accountantList.push(dataInfo);
+            templateObject.accountantList.set(accountantList);
+        })
+        .catch(function(err) {
+        });
     }
     templateObject.getAccountantList();
 
@@ -1223,733 +791,742 @@ Template.allreports.events({
     'click .chkBalanceSheet': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // addVS1Data('BalanceSheetReport', JSON.stringify(true));
+            addVS1Data('BalanceSheetReport',"true");
             templateObject.isBalanceSheet.set(true);
         } else {
-            //addVS1Data('BalanceSheetReport', JSON.stringify(false));
+            addVS1Data('BalanceSheetReport', 'false');
             templateObject.isBalanceSheet.set(false);
         }
     },
     'click .chkProfitLoss': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('ProfitLossReport', JSON.stringify(true));
+            addVS1Data('ProfitLossReport', 'true');
             templateObject.isProfitLoss.set(true);
         } else {
-            //addVS1Data('ProfitLossReport', JSON.stringify(false));
+            addVS1Data('ProfitLossReport', 'false');
             templateObject.isProfitLoss.set(false);
         }
     },
     'click .chkPLMonthly': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PLMonthlyReport', JSON.stringify(true));
+            addVS1Data('PLMonthlyReport', 'true');
             templateObject.isPLMonthly.set(true);
         } else {
-            //addVS1Data('PLMonthlyReport', JSON.stringify(false));
+            addVS1Data('PLMonthlyReport', 'false');
             templateObject.isPLMonthly.set(false);
         }
     },
     'click .chkPLQuarterly': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PLQuarterlyReport', JSON.stringify(true));
+            addVS1Data('PLQuarterlyReport', 'true');
             templateObject.isPLQuarterly.set(true);
         } else {
-            //addVS1Data('PLQuarterlyReport', JSON.stringify(false));
+            addVS1Data('PLQuarterlyReport','false');
             templateObject.isPLQuarterly.set(false);
         }
     },
     'click .chkPLYearly': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PLQuarterlyReport', JSON.stringify(true));
+            addVS1Data('PLQuarterlyReport', 'true');
             templateObject.isPLYearly.set(true);
         } else {
-            localStorage.setItem('cloudPLYearly', false);
-            //addVS1Data('PLQuarterlyReport', JSON.stringify(false));
+            addVS1Data('PLQuarterlyReport', 'false');
             templateObject.isPLYearly.set(false);
         }
     },
     'click .chkPLYTD': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PLYTDReport', JSON.stringify(true));
+            addVS1Data('PLYTDReport', 'true');
             templateObject.isPLYTD.set(true);
         } else {
-            //addVS1Data('PLYTDReport', JSON.stringify(false));
-            // localStorage.setItem('cloudPLYTD', false);
+            addVS1Data('PLYTDReport', 'false');
             templateObject.isPLYTD.set(false);
         }
     },
     'click .chkJobSalesSummary': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('JobSalesSummaryReport', JSON.stringify(true));
-            // localStorage.setItem('cloudJobSalesSummary', true);
+            addVS1Data('JobSalesSummaryReport', 'true');
             templateObject.isJobSalesSummary.set(true);
         } else {
-            //addVS1Data('JobSalesSummaryReport', JSON.stringify(false));
-            // localStorage.setItem('cloudJobSalesSummary', false);
+            addVS1Data('JobSalesSummaryReport', 'false');
             templateObject.isJobSalesSummary.set(false);
         }
     },
     'click .chkAgedReceivables': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('AgedReceivablesReport', JSON.stringify(true));
-            // localStorage.setItem('cloudAgedReceivables', true);
+            addVS1Data('AgedReceivablesReport', 'true');
             templateObject.isAgedReceivables.set(true);
         } else {
-            // localStorage.setItem('cloudAgedReceivables', false);
-            //addVS1Data('AgedReceivablesReport', JSON.stringify(false));
+            addVS1Data('AgedReceivablesReport', 'false');
             templateObject.isAgedReceivables.set(false);
         }
     },
     'click .chkAgedReceivablesSummary': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudAgedReceivablesSummary', true);
-            //addVS1Data('AgedReceivablesSummaryReport', JSON.stringify(true));
+            addVS1Data('AgedReceivablesSummaryReport', 'true');
             templateObject.isAgedReceivablesSummary.set(true);
         } else {
-            // localStorage.setItem('cloudAgedReceivablesSummary', false);
-            //addVS1Data('AgedReceivablesSummaryReport', JSON.stringify(false));
+            addVS1Data('AgedReceivablesSummaryReport', 'false');
             templateObject.isAgedReceivablesSummary.set(false);
         }
     },
     'click .chkProductSalesReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('ProductSalesReport', JSON.stringify(true));
-            // localStorage.setItem('cloudProductSalesReport', true);
+            addVS1Data('ProductSalesReport', 'true');
             templateObject.isProductSalesReport.set(true);
         } else {
-            //addVS1Data('ProductSalesReport', JSON.stringify(false));
-            // localStorage.setItem('cloudProductSalesReport', false);
+            addVS1Data('ProductSalesReport', 'false');
             templateObject.isProductSalesReport.set(false);
         }
     },
     'click .chkSalesReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('SalesReport', JSON.stringify(true));
-            // localStorage.setItem('cloudSalesReport', true);
+            addVS1Data('SalesReport', 'true');
             templateObject.isSalesReport.set(true);
         } else {
-            // localStorage.setItem('cloudSalesReport', false);
-            //addVS1Data('SalesReport', JSON.stringify(false));
+            addVS1Data('SalesReport', 'false');
             templateObject.isSalesReport.set(false);
         }
     },
     'click .chkJobProfitReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudJobProfit', true);
-            //addVS1Data('JobProfitReport', JSON.stringify(true));
+            addVS1Data('JobProfitReport', 'true');
             templateObject.isJobProfitReport.set(true);
         } else {
-            // localStorage.setItem('cloudJobProfit', false);
-            //addVS1Data('JobProfitReport', JSON.stringify(false));
+            addVS1Data('JobProfitReport', 'false');
             templateObject.isJobProfitReport.set(false);
         }
     },
-    'click .chkSupplierDetails': function(event) {
+    'click #formCheck-SupplierDetails': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudSupplierDetails', true);
-            //addVS1Data('SupplierDetailsReport', JSON.stringify(true));
+            addVS1Data('SupplierDetailsReport', 'true');
             templateObject.isSupplierDetails.set(true);
         } else {
-            // localStorage.setItem('cloudSupplierDetails', false);
-            //addVS1Data('SupplierDetailsReport', JSON.stringify(false));
+            addVS1Data('SupplierDetailsReport', 'false');
             templateObject.isSupplierDetails.set(false);
+        }
+    },
+    'click #formCheck-SupplierList': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavSupplierList', 'true');
+            templateObject.isSupplierList.set(true);
+        } else {
+            addVS1Data('TFavSupplierList', 'false');
+            templateObject.isSupplierList.set(false);
+        }
+    },
+    'click #formCheck-SupplierSummaryReport': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavSupplierSummaryReport', 'true');
+            templateObject.isSupplierSummaryReport.set(true);
+        } else {
+            addVS1Data('TFavSupplierSummaryReport', 'false');
+            templateObject.isSupplierSummaryReport.set(false);
         }
     },
     'click .chkSupplierProduct': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudSupplierProduct', true);
-            //addVS1Data('SupplierProductReport', JSON.stringify(true));
+            addVS1Data('SupplierProductReport', 'true');
             templateObject.isSupplierProduct.set(true);
         } else {
-            // localStorage.setItem('cloudSupplierProduct', false);
-            //addVS1Data('SupplierProductReport', JSON.stringify(false));
+            addVS1Data('SupplierProductReport', 'false');
             templateObject.isSupplierProduct.set(false);
         }
     },
     'click .chkCustomerDetails': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudCustomerDetails', true);
-            //addVS1Data('CustomerDetailsReport', JSON.stringify(true));
+            addVS1Data('CustomerDetailsReport', 'true');
             templateObject.isCustomerDetails.set(true);
         } else {
-            // localStorage.setItem('cloudCustomerDetails', false);
-            //addVS1Data('CustomerDetailsReport', JSON.stringify(false));
+            addVS1Data('CustomerDetailsReport', 'false');
             templateObject.isCustomerDetails.set(false);
         }
     },
     'click .chkCustomerSummary': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudCustomerSummary', true);
-            //addVS1Data('CustomerSummaryReport', JSON.stringify(true));
+            addVS1Data('CustomerSummaryReport', 'true');
             templateObject.isCustomerSummary.set(true);
         } else {
-            // localStorage.setItem('cloudCustomerSummary', false);
-            //addVS1Data('CustomerSummaryReport', JSON.stringify(false));
+            addVS1Data('CustomerSummaryReport', 'false');
             templateObject.isCustomerSummary.set(false);
         }
     },
     'click .chkLotReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudLotReport', true);
-            //addVS1Data('LotReport', JSON.stringify(true));
+            addVS1Data('LotReport', 'true');
             templateObject.isLotReport.set(true);
         } else {
-            // localStorage.setItem('cloudLotReport', false);
-            //addVS1Data('LotReport', JSON.stringify(false));
+            addVS1Data('LotReport', 'false');
             templateObject.isLotReport.set(false);
         }
     },
     'click .chkStockValue': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudStockValue', true);
-            //addVS1Data('StockValueReport', JSON.stringify(true));
+            addVS1Data('StockValueReport', 'true');
             templateObject.isStockValue.set(true);
         } else {
-            // localStorage.setItem('cloudStockValue', false);
-            //addVS1Data('StockValueReport', JSON.stringify(false));
+            addVS1Data('StockValueReport', 'false');
             templateObject.isStockValue.set(false);
         }
     },
     'click .chkStockQuantity': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('StockQuantityReport', JSON.stringify(true));
-            // localStorage.setItem('cloudStockQuantity', true);
+            addVS1Data('StockQuantityReport', 'true');
             templateObject.isStockQuantity.set(true);
         } else {
-            // localStorage.setItem('cloudStockQuantity', false);
-            //addVS1Data('StockQuantityReport', JSON.stringify(false));
+            addVS1Data('StockQuantityReport', 'false');
             templateObject.isStockQuantity.set(false);
         }
     },
     'click .chkStockMovementReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudStockMovementReport', true);
-            //addVS1Data('StockMovementReport', JSON.stringify(true));
+            addVS1Data('StockMovementReport', 'true');
             templateObject.isStockMovementReport.set(true);
         } else {
-            // localStorage.setItem('cloudStockMovementReport', false);
-            //addVS1Data('StockMovementReport', JSON.stringify(false));
+            addVS1Data('StockMovementReport', 'false');
             templateObject.isStockMovementReport.set(false);
         }
     },
     'click .chkPayrollHistoryReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudPayrollHistoryReport', true);
-            //addVS1Data('PayrollHistoryReport', JSON.stringify(true));
+            addVS1Data('PayrollHistoryReport', 'true');
             templateObject.isPayrollHistoryReport.set(true);
         } else {
-            // localStorage.setItem('cloudPayrollHistoryReport', false);
-            //addVS1Data('PayrollHistoryReport', JSON.stringify(false));
+            addVS1Data('PayrollHistoryReport', 'false');
             templateObject.isPayrollHistoryReport.set(false);
         }
     },
     'click .chkForeignExchangeHistoryList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('ForeignExchangeHistoryListReport', JSON.stringify(true));
-            // localStorage.setItem('cloudForeignExchangeHistoryList', true);
+            addVS1Data('ForeignExchangeHistoryListReport', 'true');
             templateObject.isForeignExchangeHistoryList.set(true);
         } else {
-            // localStorage.setItem('cloudForeignExchangeHistoryList', false);
-            //addVS1Data('ForeignExchangeHistoryListReport', JSON.stringify(false));
+            addVS1Data('ForeignExchangeHistoryListReport', 'false');
             templateObject.isForeignExchangeHistoryList.set(false);
         }
     },
     'click .chkForeignExchangeList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudForeignExchangeList', true);
-            //addVS1Data('ForeignExchangeListReport', JSON.stringify(true));
+            addVS1Data('ForeignExchangeListReport', 'true');
             templateObject.isForeignExchangeList.set(true);
         } else {
-            // localStorage.setItem('cloudForeignExchangeList', false);
-            //addVS1Data('ForeignExchangeListReport', JSON.stringify(false));
+            addVS1Data('ForeignExchangeListReport', 'false');
             templateObject.isForeignExchangeList.set(false);
         }
     },
     'click .chkSalesSummaryReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('SalesSummaryReport', JSON.stringify(true));
-            // localStorage.setItem('cloudSalesSummaryReport', true);
+            addVS1Data('SalesSummaryReport', 'true');
             templateObject.isSalesSummaryReport.set(true);
         } else {
-            // localStorage.setItem('cloudSalesSummaryReport', false);
-            //addVS1Data('SalesSummaryReport', JSON.stringify(false));
+            addVS1Data('SalesSummaryReport', 'false');
             templateObject.isSalesSummaryReport.set(false);
         }
     },
     'click .chkGeneralLedger': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudGeneralLedger', true);
-            //addVS1Data('GeneralLedgerReport', JSON.stringify(true));
+            addVS1Data('GeneralLedgerReport', 'true');
             templateObject.isGeneralLedger.set(true);
         } else {
-            // localStorage.setItem('cloudGeneralLedger', false);
-            //addVS1Data('GeneralLedgerReport', JSON.stringify(false));
+            addVS1Data('GeneralLedgerReport', 'false');
             templateObject.isGeneralLedger.set(false);
         }
     },
     'click .chkTaxSummaryReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudTaxSummaryReport', true);
-            //addVS1Data('TaxSummaryReport', JSON.stringify(true));
+            addVS1Data('TaxSummaryReport', 'true');
             templateObject.isTaxSummaryReport.set(true);
         } else {
-            // localStorage.setItem('cloudTaxSummaryReport', false);
-            //addVS1Data('TaxSummaryReport', JSON.stringify(false));
+            addVS1Data('TaxSummaryReport', 'false');
             templateObject.isTaxSummaryReport.set(false);
         }
     },
     'click .chkTrialBalance': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudTrialBalance', true);
-            //addVS1Data('TrialBalanceReport', JSON.stringify(true));
+            addVS1Data('TrialBalanceReport', 'true');
             templateObject.isTrialBalance.set(true);
         } else {
-            // localStorage.setItem('cloudTrialBalance', false);
-            //addVS1Data('TrialBalanceReport', JSON.stringify(false));
+            addVS1Data('TrialBalanceReport', 'false');
             templateObject.isTrialBalance.set(false);
         }
     },
     'click .chkTimeSheetSummary': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudTimeSheetSummary', true);
-            //addVS1Data('TimeSheetSummaryReport', JSON.stringify(true));
+            addVS1Data('TimeSheetSummaryReport', 'true');
             templateObject.isTimeSheetSummary.set(true);
         } else {
-            // localStorage.setItem('cloudTimeSheetSummary', false);
-            //addVS1Data('TimeSheetSummaryReport', JSON.stringify(false));
+            addVS1Data('TimeSheetSummaryReport', 'false');
             templateObject.isTimeSheetSummary.set(false);
         }
     },
     'click .chkSerialNumberReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudSerialNumberReport', true);
-            //addVS1Data('SerialNumberReport', JSON.stringify(true));
+            addVS1Data('SerialNumberReport', 'true');
             templateObject.isSerialNumberReport.set(true);
         } else {
-            // localStorage.setItem('cloudSerialNumberReport', false);
-            //addVS1Data('SerialNumberReport', JSON.stringify(false));
+            addVS1Data('SerialNumberReport', 'false');
             templateObject.isSerialNumberReport.set(false);
         }
     },
     'click .chk1099Transaction': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloud1099Transaction', true);
-            //addVS1Data('1099TransactionReport', JSON.stringify(true));
+            addVS1Data('1099TransactionReport', 'true');
             templateObject.is1099Transaction.set(true);
         } else {
-            // localStorage.setItem('cloud1099Transaction', false);
-            //addVS1Data('1099TransactionReport', JSON.stringify(false));
+            addVS1Data('1099TransactionReport', 'false');
             templateObject.is1099Transaction.set(false);
         }
     },
     'click .chkAccountsLists': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudAccountList', true);
-            //addVS1Data('AccountsListsReport', JSON.stringify(true));
+            addVS1Data('AccountsListsReport', 'true');
             templateObject.isAccountsLists.set(true);
         } else {
-            // localStorage.setItem('cloudAccountList', false);
-            //addVS1Data('AccountsListsReport', JSON.stringify(false));
+            addVS1Data('AccountsListsReport', 'false');
             templateObject.isAccountsLists.set(false);
         }
     },
     'click .chkBinLocationsList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudBinLocations', true);
-            //addVS1Data('BinLocationsListReport', JSON.stringify(true));
+            addVS1Data('BinLocationsListReport', 'true');
             templateObject.isBinLocations.set(true);
         } else {
-            // localStorage.setItem('cloudBinLocations', false);
-            //addVS1Data('BinLocationsListReport', JSON.stringify(false));
+            addVS1Data('BinLocationsListReport', 'false');
             templateObject.isBinLocations.set(false);
         }
     },
     'click .chkTransactionJournal': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudTransactionJournal', true);
-            //addVS1Data('TransactionJournalReport', JSON.stringify(true));
+            addVS1Data('TransactionJournalReport', 'true');
             templateObject.isTransactionJournal.set(true);
         } else {
-            // localStorage.setItem('cloudTransactionJournal', false);
-            //addVS1Data('TransactionJournalReport', JSON.stringify(false));
+            addVS1Data('TransactionJournalReport', 'false');
             templateObject.isTransactionJournal.set(false);
         }
     },
     'click .chkUnpaidBills': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudBillsUnpaid', true);
-            //addVS1Data('UnpaidBillsReport', JSON.stringify(true));
+            addVS1Data('UnpaidBillsReport', 'true');
             templateObject.isUnpaidBills.set(true);
         } else {
-            // localStorage.setItem('cloudBillsUnpaid', false);
-            //addVS1Data('UnpaidBillsReport', JSON.stringify(false));
+            addVS1Data('UnpaidBillsReport', 'false');
             templateObject.isUnpaidBills.set(false);
         }
     },
     'click .chkUnpaidPO': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudPurchaseOrderBO', true);
-            //addVS1Data('UnpaidPOReport', JSON.stringify(true));
+            addVS1Data('UnpaidPOReport', 'true');
             templateObject.isUnpaidPO.set(true);
         } else {
-            // localStorage.setItem('cloudPurchaseOrderBO', false);
-            //addVS1Data('UnpaidPOReport', JSON.stringify(false));
+            addVS1Data('UnpaidPOReport', 'false');
             templateObject.isUnpaidPO.set(false);
         }
     },
     'click .chkBackOrderedPO': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudPurchaseOrderBO', true);
-            //addVS1Data('BackOrderedPOReport', JSON.stringify(true));
+            addVS1Data('BackOrderedPOReport', 'true');
             templateObject.isBackOrderedPO.set(true);
         } else {
-            // localStorage.setItem('cloudPurchaseOrderBO', false);
-            //addVS1Data('BackOrderedPOReport', JSON.stringify(false));
+            addVS1Data('BackOrderedPOReport', 'false');
             templateObject.isBackOrderedPO.set(false);
         }
     },
     'click .chkSalesOrderConverted': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('SalesOrderConvertedReport', JSON.stringify(true));
-            // localStorage.setItem('cloudSalesOrderConverted', true);
+            addVS1Data('SalesOrderConvertedReport', 'true');
             templateObject.isSalesOrderConverted.set(true);
         } else {
-            //addVS1Data('SalesOrderConvertedReport', JSON.stringify(false));
-            // localStorage.setItem('cloudSalesOrderConverted', false);
+            addVS1Data('SalesOrderConvertedReport', 'false');
             templateObject.isSalesOrderConverted.set(false);
         }
     },
     'click .chkSalesOrderUnconverted': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('SalesOrderUnconvertedReport', JSON.stringify(true));
-            // localStorage.setItem('cloudSalesOrderUnconverted', true);
+            addVS1Data('SalesOrderUnconvertedReport', 'true');
             templateObject.isSalesOrderUnconverted.set(true);
         } else {
-            // localStorage.setItem('cloudSalesOrderUnconverted', false);
-            //addVS1Data('SalesOrderUnconvertedReport', JSON.stringify(false));
+            addVS1Data('SalesOrderUnconvertedReport', 'false');
             templateObject.isSalesOrderUnconverted.set(false);
         }
     },
     'click .chkPaymentMethodsList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PaymentMethodsListReport', JSON.stringify(true));
-            // localStorage.setItem('cloudPaymentMethodList', true);
+            addVS1Data('PaymentMethodsListReport', 'true');
             templateObject.isPaymentMethodsList.set(true);
         } else {
-            //addVS1Data('PaymentMethodsListReport', JSON.stringify(false));
-            // localStorage.setItem('cloudPaymentMethodList', false);
+            addVS1Data('PaymentMethodsListReport', 'false');
             templateObject.isPaymentMethodsList.set(false);
         }
     },
     'click .chkBackOrderedInvoices': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudInvoicesBackOrdered', true);
-            //addVS1Data('BackOrderedInvoicesReport', JSON.stringify(true));
+            addVS1Data('BackOrderedInvoicesReport', 'true');
             templateObject.isBackOrderedInvoices.set(true);
         } else {
-            // localStorage.setItem('cloudInvoicesBackOrdered', false);
-            //addVS1Data('BackOrderedInvoicesReport', JSON.stringify(false));
+            addVS1Data('BackOrderedInvoicesReport', 'false');
             templateObject.isBackOrderedInvoices.set(false);
         }
     },
     'click .chkQuotesConverted': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('QuotesConvertedReport', JSON.stringify(true));
-            // localStorage.setItem('cloudQuotesConverted', true);
+            addVS1Data('QuotesConvertedReport', 'true');
             templateObject.isQuotesConverted.set(true);
         } else {
-            //addVS1Data('QuotesConvertedReport', JSON.stringify(false));
-            // localStorage.setItem('cloudQuotesConverted', false);
+            addVS1Data('QuotesConvertedReport', 'false');
             templateObject.isQuotesConverted.set(false);
         }
     },
     'click .chkQuotesUnconverted': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('QuotesUnconvertedReport', JSON.stringify(true));
-            // localStorage.setItem('cloudQuotesUnconverted', true);
+            addVS1Data('QuotesUnconvertedReport', 'true');
             templateObject.isQuotesUnconverted.set(true);
         } else {
-            // localStorage.setItem('cloudQuotesUnconverted', false);
-            //addVS1Data('QuotesUnconvertedReport', JSON.stringify(false));
+            addVS1Data('QuotesUnconvertedReport', 'false');
             templateObject.isQuotesUnconverted.set(false);
         }
     },
     'click .chkInvoicesPaid': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('InvoicesPaidReport', JSON.stringify(true));
-            // localStorage.setItem('cloudInvoicesPaid', true);
+            addVS1Data('InvoicesPaidReport', 'true');
             templateObject.isInvoicesPaid.set(true);
         } else {
-            //addVS1Data('InvoicesPaidReport', JSON.stringify(false));
-            // localStorage.setItem('cloudInvoicesPaid', false);
+            addVS1Data('InvoicesPaidReport', 'false');
             templateObject.isInvoicesPaid.set(false);
         }
     },
     'click .chkInvoicesUnpaid': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudInvoicesUnpaid', true);
-            //addVS1Data('InvoicesUnpaidReport', JSON.stringify(true));
+            addVS1Data('InvoicesUnpaidReport', 'true');
             templateObject.isInvoicesUnpaid.set(true);
         } else {
-            // localStorage.setItem('cloudInvoicesUnpaid', false);
-            //addVS1Data('InvoicesUnpaidReport', JSON.stringify(false));
+            addVS1Data('InvoicesUnpaidReport', 'false');
             templateObject.isInvoicesUnpaid.set(false);
         }
     },
     'click .chkTimeSheet': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('TimeSheetReport', JSON.stringify(true));
-            // localStorage.setItem('cloudTimeSheet', true);
+            addVS1Data('TimeSheetReport', 'true');
             templateObject.isTimeSheetDetails.set(true);
         } else {
-            //addVS1Data('TimeSheetReport', JSON.stringify(false));
-            // localStorage.setItem('cloudTimeSheet', false);
+            addVS1Data('TimeSheetReport', 'false');
             templateObject.isTimeSheetDetails.set(false);
         }
     },
     'click .chkChequeList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('ChequeListReport', JSON.stringify(true));
-            // localStorage.setItem('cloudChequeList', true);
+            addVS1Data('ChequeListReport', 'true');
             templateObject.isChequeList.set(true);
         } else {
-            //addVS1Data('ChequeListReport', JSON.stringify(false));
-            // localStorage.setItem('cloudChequeList', false);
+            addVS1Data('ChequeListReport', 'false');
             templateObject.isChequeList.set(false);
         }
     },
     'click .chkPayrollLeaveAccrued': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PayrollLeaveAccruedReport', JSON.stringify(true));
-            // localStorage.setItem('cloudPayrollLeaveAccrued', true);
+            addVS1Data('PayrollLeaveAccruedReport', 'true');
             templateObject.isPayrollLeaveAccrued.set(true);
         } else {
-            //addVS1Data('PayrollLeaveAccruedReport', JSON.stringify(false));
-            // localStorage.setItem('cloudPayrollLeaveAccrued', false);
+            addVS1Data('PayrollLeaveAccruedReport', 'false');
             templateObject.isPayrollLeaveAccrued.set(false);
         }
     },
     'click .chkPayrollLeaveTaken': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PayrollLeaveTakenReport', JSON.stringify(true));
-            // localStorage.setItem('cloudPayrollLeaveTaken', true);
+            addVS1Data('PayrollLeaveTakenReport', 'true');
             templateObject.isPayrollLeaveTaken.set(true);
         } else {
-            //addVS1Data('PayrollLeaveTakenReport', JSON.stringify(false));
-            // localStorage.setItem('cloudPayrollLeaveTaken', false);
+            addVS1Data('PayrollLeaveTakenReport', 'false');
             templateObject.isPayrollLeaveTaken.set(false);
         }
     },
     'click .chkStockAdjustmentList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('StockAdjustmentListReport', JSON.stringify(true));
-            // localStorage.setItem('cloudStockAdjustmentList', true);
+            addVS1Data('StockAdjustmentListReport', 'true');
             templateObject.isStockAdjustmentList.set(true);
         } else {
-            //addVS1Data('StockAdjustmentListReport', JSON.stringify(false));
-            // localStorage.setItem('cloudStockAdjustmentList', false);
+            addVS1Data('StockAdjustmentListReport', 'false');
             templateObject.isStockAdjustmentList.set(false);
         }
     },
     'click .chkJournalEntryList': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('JournalEntryListReport', JSON.stringify(true));
-            // localStorage.setItem('cloudJournalEntryList', true);
+            addVS1Data('JournalEntryListReport', 'true');
             templateObject.isJournalEntryList.set(true);
         } else {
-            //addVS1Data('JournalEntryListReport', JSON.stringify(false));
-            // localStorage.setItem('cloudJournalEntryList', false);
+            addVS1Data('JournalEntryListReport', 'false');
             templateObject.isJournalEntryList.set(false);
         }
     },
     'click .chkAgedPayables': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('AgedPayablesReport', JSON.stringify(true));
-            // localStorage.setItem('cloudAgedPayables', true);
+            addVS1Data('AgedPayablesReport', 'true');
             templateObject.isAgedPayables.set(true);
         } else {
-            //addVS1Data('AgedPayablesReport', JSON.stringify(false));
-            // localStorage.setItem('cloudAgedPayables', false);
+            addVS1Data('AgedPayablesReport', 'false');
             templateObject.isAgedPayables.set(false);
         }
     },
     'click .chkAgedPayablesSummary': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('AgedPayablesSummaryReport', JSON.stringify(true));
-            // localStorage.setItem('cloudAgedPayablesSummary', true);
+            addVS1Data('AgedPayablesSummaryReport', 'true');
             templateObject.isAgedPayablesSummary.set(true);
         } else {
-            //addVS1Data('AgedPayablesSummaryReport', JSON.stringify(false));
-            // localStorage.setItem('cloudAgedPayablesSummary', false);
+            addVS1Data('AgedPayablesSummaryReport', 'false');
             templateObject.isAgedPayablesSummary.set(false);
         }
     },
     'click .chkPurchaseReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PurchaseReportReport', JSON.stringify(true));
-            // localStorage.setItem('cloudPurchaseReport', true);
+            addVS1Data('PurchaseReportReport', 'true');
             templateObject.isPurchaseReport.set(true);
         } else {
-            // localStorage.setItem('cloudPurchaseReport', false);
-            //addVS1Data('PurchaseReportReport', JSON.stringify(false));
+            addVS1Data('PurchaseReportReport', 'false');
             templateObject.isPurchaseReport.set(false);
         }
     },
     'click .chkPurchaseSummaryReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudPurchaseSummaryReport', true);
-            //addVS1Data('PurchaseSummaryReportReport', JSON.stringify(true));
+            addVS1Data('PurchaseSummaryReportReport', 'true');
             templateObject.isPurchaseSummaryReport.set(true);
         } else {
-            // localStorage.setItem('cloudPurchaseSummaryReport', false);
-            //addVS1Data('PurchaseSummaryReportReport', JSON.stringify(false));
+            addVS1Data('PurchaseSummaryReportReport', 'false');
             templateObject.isPurchaseSummaryReport.set(false);
         }
     },
     'click .chkPrintStatement': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PrintStatementReport', JSON.stringify(true));
-            // localStorage.setItem('cloudPrintStatement', true);
+            addVS1Data('PrintStatementReport', 'true');
             templateObject.isPrintStatement.set(true);
         } else {
-            //addVS1Data('PrintStatementReport', JSON.stringify(false));
-            // localStorage.setItem('cloudPrintStatement', false);
+            addVS1Data('PrintStatementReport', 'false');
             templateObject.isPrintStatement.set(false);
         }
     },
     'click .chkExecutiveSummary': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('ExecutiveSummaryReport', JSON.stringify(true));
-            // localStorage.setItem('cloudExecutiveSummary', true);
+            addVS1Data('ExecutiveSummaryReport', 'true');
             templateObject.isExecutiveSummary.set(true);
         } else {
-            //addVS1Data('ExecutiveSummaryReport', JSON.stringify(false));
-            // localStorage.setItem('cloudExecutiveSummary', false);
+            addVS1Data('ExecutiveSummaryReport', 'false');
             templateObject.isExecutiveSummary.set(false);
         }
     },
     'click .chkCashReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('CashReport', JSON.stringify(true));
-            // localStorage.setItem('cloudCashReport', true);
+            addVS1Data('CashReport', 'true');
             templateObject.isCashReport.set(true);
         } else {
-            //addVS1Data('CashReport', JSON.stringify(false));
-            // localStorage.setItem('cloudCashReport', false);
+            addVS1Data('CashReport', 'false');
             templateObject.isCashReport.set(false);
         }
     },
     'click .chkProfitabilityReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudProfitabilityReport', true);
-            //addVS1Data('ProfitabilityReport', JSON.stringify(true));
+            addVS1Data('ProfitabilityReport', 'true');
             templateObject.isProfitabilityReport.set(true);
         } else {
-            // localStorage.setItem('cloudProfitabilityReport', false);
-            //addVS1Data('ProfitabilityReport', JSON.stringify(false));
+            addVS1Data('ProfitabilityReport', 'false');
             templateObject.isProfitabilityReport.set(false);
         }
     },
     'click .chkPerformanceReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('PerformanceReport', JSON.stringify(true));
-            // localStorage.setItem('cloudPerformanceReport', true);
+            addVS1Data('PerformanceReport', 'true');
             templateObject.isPerformanceReport.set(true);
         } else {
-            //addVS1Data('PerformanceReport', JSON.stringify(false));
-            // localStorage.setItem('cloudPerformanceReport', false);
+            addVS1Data('PerformanceReport', 'false');
             templateObject.isPerformanceReport.set(false);
         }
     },
     'click .chkBalanceSheetReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            //addVS1Data('BalanceSheetReports', JSON.stringify(true));
+            addVS1Data('BalanceSheetReports', 'true');
             templateObject.isBalanceSheetReport.set(true);
         } else {
-            //addVS1Data('BalanceSheetReports', JSON.stringify(false));
+            addVS1Data('BalanceSheetReports', 'false');
             templateObject.isBalanceSheetReport.set(false);
         }
     },
     'click .chkIncomeReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudIncomeReport', true);
-            //addVS1Data('IncomeReport', JSON.stringify(true));
+            addVS1Data('IncomeReport', 'true');
             templateObject.isIncomeReport.set(true);
         } else {
-            // localStorage.setItem('cloudIncomeReport', false);
-            //addVS1Data('IncomeReport', JSON.stringify(false));
+            addVS1Data('IncomeReport', 'false');
             templateObject.isIncomeReport.set(false);
         }
     },
     'click .chkPositionReport': function(event) {
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
-            // localStorage.setItem('cloudPositionReport', true);
-            //addVS1Data('PositionReport', JSON.stringify(true));
+            addVS1Data('PositionReport', 'true');
             templateObject.isPositionReport.set(true);
         } else {
-            // localStorage.setItem('cloudPositionReport', false);
-            //addVS1Data('PositionReport', JSON.stringify(false));
+            addVS1Data('PositionReport', 'false');
             templateObject.isPositionReport.set(false);
+        }
+    },
+    'click #formCheck-Company': function(event) {
+        console.log(event)
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportCompany', 'true');
+            templateObject.isCompanyAccountant.set(true);
+        } else {
+            addVS1Data('TFavReportCompany', 'false');
+            templateObject.isCompanyAccountant.set(false);
+        }
+    },
+    'click #formCheck-CompanyTrustee': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportTrustee', 'true');
+            templateObject.isTrustee.set(true);
+        } else {
+            addVS1Data('TFavReportTrustee', 'false');
+            templateObject.isTrustee.set(false);
+        }
+    },
+    'click #formCheck-FinancialStatement': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportFinancialStatement', 'true');
+            templateObject.isFinancialStatement.set(true);
+        } else {
+            addVS1Data('TFavReportFinancialStatement', 'false');
+            templateObject.isFinancialStatement.set(false);
+        }
+    },
+    'click #formCheck-Individual': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportIndividual', 'true');
+            templateObject.isIndividual.set(true);
+        } else {
+            addVS1Data('TFavReportIndividual', 'false');
+            templateObject.isIndividual.set(false);
+        }
+    },
+    'click #formCheck-Partnership': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportPartnershipNonTrading', 'true');
+            templateObject.isPartnershipNonTrading.set(true);
+        } else {
+            addVS1Data('TFavReportPartnershipNonTrading', 'false');
+            templateObject.isPartnershipNonTrading.set(false);
+        }
+    },
+    'click #formCheck-TrustNon': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportTrustNonTrading', 'true');
+            templateObject.isTrustNonTrading.set(true);
+        } else {
+            addVS1Data('TFavReportTrustNonTrading', 'false');
+            templateObject.isTrustNonTrading.set(false);
+        }
+    },
+    'click #formCheck-Superfund': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportSelfManagedSuperfund', 'true');
+            templateObject.isSelfManagedSuperfund.set(true);
+        } else {
+            addVS1Data('TFavReportSelfManagedSuperfund', 'false');
+            templateObject.isSelfManagedSuperfund.set(false);
+        }
+    },
+    'click #formCheck-SingleDirector': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportSingleDirector', 'true');
+            templateObject.isSingleDirector.set(true);
+        } else {
+            addVS1Data('TFavReportSingleDirector', 'false');
+            templateObject.isSingleDirector.set(false);
+        }
+    },
+    'click #formCheck-SoleTrader': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportSoleTraderNonTrading', 'true');
+            templateObject.isSoleTraderNonTrading.set(true);
+        } else {
+            addVS1Data('TFavReportSoleTraderNonTrading', 'false');
+            templateObject.isSoleTraderNonTrading.set(false);
+        }
+    },
+    'click #formCheck-Trust': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('TFavReportTrust', 'true');
+            templateObject.isTrust.set(true);
+        } else {
+            addVS1Data('TFavReportTrust', 'false');
+            templateObject.isTrust.set(false);
         }
     },
     'click .showhidden_fin': function(event) {
@@ -2213,9 +1790,45 @@ Template.allreports.helpers({
     },
 
     isWorkOrder:function() {
-        return template.instance().isWorkOrder.get();
+        return Template.instance().isWorkOrder.get();
     },
 
+    isCompanyAccountant: function() {
+        return Template.instance().isCompanyAccountant.get();
+    },
+    isTrustee : function () {
+        return Template.instance().isTrustee.get();
+    },
+    isFinancialStatement : function () {
+        return Template.instance().isFinancialStatement.get();
+    },
+    isIndividual : function () {
+        return Template.instance().isIndividual.get();
+    },
+    isPartnershipNonTrading : function () {
+        return Template.instance().isPartnershipNonTrading.get();
+    },
+    isTrustNonTrading : function () {
+        return Template.instance().isTrustNonTrading.get();
+    },
+    isSelfManagedSuperfund : function () {
+        return Template.instance().isSelfManagedSuperfund.get();
+    },
+    isSingleDirector : function () {
+        return Template.instance().isSingleDirector.get();
+    },
+    isSoleTraderNonTrading : function () {
+        return Template.instance().isSoleTraderNonTrading.get();
+    },
+    isTrust : function () {
+        return Template.instance().isTrust.get();
+    },
+    isSupplierList: function () {
+        return Template.instance().isSupplierList.get();
+    },
+    isSupplierSummaryReport: function () {
+        return Template.instance().isSupplierSummaryReport.get();
+    },
     isFavorite: function() {
         let isBalanceSheet = Template.instance().isBalanceSheet.get();
         let isProfitLoss = Template.instance().isProfitLoss.get();
@@ -2283,9 +1896,88 @@ Template.allreports.helpers({
         let isProductionWorkSheet = Template.instance().isProductionWorkSheet.get();
         let isWorkOrder = Template.instance().isWorkOrder.get();
 
+
+
         let isShowFavorite = false;
 
-        if (isBalanceSheet || isProfitLoss || isAgedReceivables || isProductSalesReport || isSalesReport || isSalesSummaryReport || isGeneralLedger || isTaxSummaryReport || isTrialBalance || isExecutiveSummary || isCashReport || isProfitabilityReport || isPerformanceReport || isBalanceSheetReport || isIncomeReport || isPositionReport || is1099Transaction || isAccountsLists || isAgedPayables || isPurchaseReport || isPurchaseSummaryReport || isPrintStatement || isAgedReceivablesSummary || isAgedPayablesSummary || isJournalEntryList || isStockAdjustmentList || isChequeList || isTimeSheetDetails || isInvoicesPaid || isInvoicesUnpaid || isQuotesConverted || isQuotesUnconverted || isBackOrderedInvoices || isPaymentMethodsList || isSalesOrderConverted || isSalesOrderUnconverted || isBackOrderedPO || isUnpaidPO || isUnpaidBills || isTransactionJournal || isSerialNumberReport || isPayrollLeaveAccrued || isPayrollLeaveTaken || isForeignExchangeHistoryList || isForeignExchangeList || isBinLocations || isTimeSheetSummary || isPayrollHistoryReport || isStockValue || isStockMovementReport || isStockQuantity || isLotReport || isCustomerDetails || isCustomerSummary || isSupplierDetails || isSupplierProduct || isJobProfitReport || isPLMonthly || isPLQuarterly || isPLYearly || isPLYTD || isJobSalesSummary || isBuildProfitability || isProductionWorkSheet || isWorkOrder) {
+        if (isBalanceSheet || 
+            isProfitLoss || 
+            isAgedReceivables || 
+            isProductSalesReport || 
+            isSalesReport || 
+            isSalesSummaryReport || 
+            isGeneralLedger || 
+            isTaxSummaryReport || 
+            isTrialBalance || 
+            isExecutiveSummary || 
+            isCashReport || 
+            isProfitabilityReport || 
+            isPerformanceReport || 
+            isBalanceSheetReport || 
+            isIncomeReport || 
+            isPositionReport || 
+            is1099Transaction || 
+            isAccountsLists || 
+            isAgedPayables || 
+            isPurchaseReport || 
+            isPurchaseSummaryReport || 
+            isPrintStatement || 
+            isAgedReceivablesSummary || 
+            isAgedPayablesSummary || 
+            isJournalEntryList || 
+            isStockAdjustmentList || 
+            isChequeList || 
+            isTimeSheetDetails || 
+            isInvoicesPaid || 
+            isInvoicesUnpaid || 
+            isQuotesConverted || 
+            isQuotesUnconverted || 
+            isBackOrderedInvoices || 
+            isPaymentMethodsList || 
+            isSalesOrderConverted || 
+            isSalesOrderUnconverted || 
+            isBackOrderedPO || 
+            isUnpaidPO || 
+            isUnpaidBills || 
+            isTransactionJournal || 
+            isSerialNumberReport || 
+            isPayrollLeaveAccrued || 
+            isPayrollLeaveTaken || 
+            isForeignExchangeHistoryList || 
+            isForeignExchangeList || 
+            isBinLocations || 
+            isTimeSheetSummary || 
+            isPayrollHistoryReport || 
+            isStockValue || 
+            isStockMovementReport || 
+            isStockQuantity || 
+            isLotReport || 
+            isCustomerDetails || 
+            isCustomerSummary || 
+            isSupplierDetails || 
+            isSupplierProduct || 
+            isJobProfitReport || 
+            isPLMonthly || 
+            isPLQuarterly || 
+            isPLYearly || 
+            isPLYTD || 
+            isJobSalesSummary || 
+            isBuildProfitability || 
+            isProductionWorkSheet || 
+            isWorkOrder ||
+            Template.instance().isCompanyAccountant.get() || 
+            Template.instance().isTrustee.get() || 
+            Template.instance().isFinancialStatement.get() || 
+            Template.instance().isIndividual.get() || 
+            Template.instance().isPartnershipNonTrading.get() || 
+            Template.instance().isTrustNonTrading.get() || 
+            Template.instance().isSelfManagedSuperfund.get() || 
+            Template.instance().isSingleDirector.get() || 
+            Template.instance().isSoleTraderNonTrading.get() || 
+            Template.instance().isTrust.get() || 
+            Template.instance().isSupplierList.get() || 
+            Template.instance().isSupplierSummaryReport.get()
+            ) {
             isShowFavorite = true;
         }
         return isShowFavorite;
