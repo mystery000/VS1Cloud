@@ -15,8 +15,8 @@ Template.dashboardSalesCharts.onCreated(function() {
     const templateObject = Template.instance();
     templateObject.employees = new ReactiveVar([]);
     templateObject.employeesByTotalSales = new ReactiveVar([]);
-    templateObject.fromDate = new ReactiveVar([]);
-    templateObject.toDate = new ReactiveVar([]);
+    templateObject.fromDate = new ReactiveVar(new Date());
+    templateObject.toDate = new ReactiveVar(new Date());
 });
 
 Template.dashboardSalesCharts.onRendered(function() {
