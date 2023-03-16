@@ -3042,9 +3042,10 @@ Template.non_transactional_list.onRendered(function() {
 
         let hourly_labour_cost;
         let hourly_overhead_cost;
+        let unit_cost = "95.63"
+        let unit_cost_f;
 
-        console.log(process_data);
-        
+       
         for (let i = 0; i < data.length; i++) {
 
             bomData = JSON.parse(data[i].fields.BOMStructure);                    
@@ -3057,6 +3058,8 @@ Template.non_transactional_list.onRendered(function() {
 
 
             let details = JSON.parse(bomData.Details);
+
+            unit_cost_f = parseFloat(unit_cost.replace(/\$/g, '')) ;
             
             let dataList = [ bomData.Id || '' , 
                              bomData.Caption || '',
@@ -3074,7 +3077,7 @@ Template.non_transactional_list.onRendered(function() {
                             hourly_overhead_cost * 1 || '',
                             '' || '',
                             '' || '',
-                            parseFloat(bomData.TotalQtyOriginal) * 95  || '0'
+                            parseFloat(bomData.TotalQtyOriginal) * unit_cost_f  || '0'
                         ];
 
             splashArrayBuildCostReport.push(dataList);
@@ -3177,7 +3180,12 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 9,
                         className: "colNotes",
-                    }
+                    },
+                    
+                    {   orderable: false, 
+                        targets: '_all',
+                    },
+
                 ],
                 buttons: [{
                         extend: 'csvHtml5',
@@ -3352,14 +3360,12 @@ Template.non_transactional_list.onRendered(function() {
                     "<span style = 'font-weight:bold; font-size:20px ' > /    " + process_data[i].fields.Description + "</span>"
                 ];
                 splashArrayWorksheetReport.push(dataList);
-
-            }
-
-    
+            }   
             
             for(let j=0; j < data_workorder.length ; j++) {
                 bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
                 let details = JSON.parse(bomData.Details);
+                
                 for(let k=0 ; k < details.length ; k++) {
                     if (process_data[i].fields.Description == details[k].process) {
                         dataList = [
@@ -3369,30 +3375,21 @@ Template.non_transactional_list.onRendered(function() {
                         details[k].qty || '',
                         data_workorder[j].fields.ProductName || '',
                         bomData.Description || '',
-                        bomData.Caption || '',
+                        details[k].productName || '',
                         details[k].process + "  Bays" || '',
                         "Dene Mills",
                         data_workorder[j].fields.StartTime || '',
-                        "12:00 AM ",
-                        "30 min"
-
-
+                        " " || ' ',
+                        " " || ' '
                         ];
-
-                        console.log(dataList);
-
                         splashArrayWorksheetReport.push(dataList);
                     }
                 }  
                 
             }
 
-
-
             templateObject.transactiondatatablerecords.set(splashArrayWorksheetReport);
-        }
-
-                
+        }                
      
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
@@ -3421,32 +3418,32 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 1,
                         className: "colCustomer",
-                        width: "95px",
+                        width: "135px",
                     },
                     {
                         targets: 2,
                         className: "colShipDate",
-                        width: "90px",
+                        width: "135px",
                     },
                     {
                         targets: 3,
                         className: "colTotalQty",
-                        width: "110px",
+                        width: "100px",
                     },
                     {
                         targets: 4,
                         className: "colProducts",
-                        width: "80px",
+                        width: "100px",
                     },
                     {
                         targets: 5,
                         className: "colDescription text-right",
-                        width: "90px",
+                        width: "130px",
                     },
                     {
                         targets: 6,
                         className: "colItemCation text-right",
-                        width: "90px",
+                        width: "100px",
                     },
                     {
                         targets: 7,
@@ -3456,24 +3453,24 @@ Template.non_transactional_list.onRendered(function() {
 
                     {
                         targets: 8,
-                        className: "colSuburb",
-                        width: "120px",
+                        width: "100px",
                     },
                     {
                         targets: 9,
-                        className: "colEmployee",
                         width: "100px",
                     },
+
                     {
                         targets: 10,
-                        className: "colEmployee",
                         width: "100px",
                     },
-                    
+                                        
+                    { orderable: false, targets: '_all' }
                     
                    
                     
                 ],
+
                 buttons: [{
                         extend: 'csvHtml5',
                         text: '',
@@ -3518,7 +3515,7 @@ Template.non_transactional_list.onRendered(function() {
                     [initialDatatableLoad, "All"]
                 ],
                 info: true,
-                responsive: true,
+                responsive: false,
                 "order": [
                     
                 ],

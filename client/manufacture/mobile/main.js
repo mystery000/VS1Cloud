@@ -835,7 +835,7 @@ Template.mobileapp.events({
             let BomDataList = [];        
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
-            let change_to = 0;
+            let change_to = bomStructureData.TotalQtyOriginal;
             
             let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
 
@@ -844,7 +844,7 @@ Template.mobileapp.events({
             let bomDetailData = JSON.parse(bomStructureData.Details);
           
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: change_to, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(change_to) };
+                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
                 BomDataList.push(tempBomData);  
             }
         
@@ -863,7 +863,8 @@ Template.mobileapp.events({
                     { title: 'Change To', mData: 'changeTo', className: 'editable' },
                     { title: 'Wastage', mData: 'wastage' }
 
-                ]
+                ],
+                responsive: true,
             })
 
             $('#tblWastageForm').on( 'click', 'tbody td.editable', function () {
@@ -904,6 +905,7 @@ Template.mobileapp.events({
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
         $("#btnClockIn").prop('disabled',true);
+        $("#btnClockIn").css('background', '#0084D1');
         $('#btnStartJob').prop('disabled', true);
         $('#btnStartBreak').prop('disabled', true);
         $("#btnClockIn").css('background', '#00AE00');
@@ -913,6 +915,21 @@ Template.mobileapp.events({
         $("#btnStopJob").css('background', '#0084D1');
         $('#btnStopJob').prop('disabled', true);
         $('#btnStopBreak').prop('disabled', true);
+
+        $('#btnClockOut_phone').prop('disabled', true);
+        $("#btnClockOut_phone").css('background', '#0084D1');
+        $("#btnClockIn_phone").prop('disabled',true);
+        $("#btnClockIn_phone").css('background', '#0084D1');
+        $('#btnStartJob_phone').prop('disabled', true);
+        $('#btnStartBreak_phone').prop('disabled', true);
+        $("#btnClockIn_phone").css('background', '#00AE00');
+        $("#btnStartJob_phone").css('background', '#0084D1');
+        $("#btnStartBreak_phone").css('background', '#0084D1');
+        $("#btnStopBreak_phone").css('background', '#0084D1');
+        $("#btnStopJob_phone").css('background', '#0084D1');
+        $('#btnStopJob_phone').prop('disabled', true);
+        $('#btnStopBreak_phone').prop('disabled', true);
+
         $(".mobile-header-status-text").text("Enter Job Number");
         $(".mobile-main-input").val(" ");
 

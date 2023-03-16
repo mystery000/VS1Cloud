@@ -250,7 +250,7 @@ Template.worksheetreport.events({
   },
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1SupplierSummary_Report", "");
+    localStorage.setItem("VS1ProductionWorksheet_Report", "");
     Meteor._reload.reload();
   },
   "click .btnExportReport": function () {
@@ -273,7 +273,7 @@ Template.worksheetreport.events({
       "-" +
       dateTo.getDate();
 
-    const filename = loggedCompany + "- Supplier Product Report" + ".csv";
+    const filename = loggedCompany + "- Production Worksheet Report" + ".csv";
     utilityService.exportReportToCsvTable("tableExport", filename, "csv");
     let rows = [];
   },
@@ -312,12 +312,13 @@ Template.worksheetreport.events({
       }
     });
 
-    document.title = "Supplier Product Report";
+    document.title = "Production Worksheet Report";
     $(".printReport").print({
-      title: "Supplier Product Report | " + loggedCompany,
+      title: "Production Worksheet Report | " + loggedCompany,
       noPrintSelector: ".addSummaryEditor",
     });
   },
+  
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
     let searchItem = $(event.target).val();
@@ -380,54 +381,7 @@ Template.worksheetreport.events({
 
 
   },
-  // "click #lastMonth": async function () {
-  //   LoadingOverlay.show();
-  //   localStorage.setItem('VS1SupplierSummary_Report', '');
-  //   let templateObject = Template.instance();
-  //   let fromDate = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
-  //   let endDate = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
-  //   await templateObject.setReportOptions(false, fromDate, endDate);
-  //   //LoadingOverlay.hide();
-  // },
-  // "click #lastQuarter": async function () {
-  //   LoadingOverlay.show();
-  //   localStorage.setItem('VS1SupplierSummary_Report', '');
-  //   let templateObject = Template.instance();
-  //   let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
-  //   let endDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
-  //   await templateObject.setReportOptions(false, fromDate, endDate);
-  //   //LoadingOverlay.hide();
-  // },
-  // "click #last12Months": async function () {
-  //   LoadingOverlay.show();
-  //   localStorage.setItem('VS1SupplierSummary_Report', '');
-  //   let templateObject = Template.instance();
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   $("#dateFrom").attr("readonly", false);
-  //   $("#dateTo").attr("readonly", false);
-  //   var currentDate = new Date();
-  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-  //   let fromDateDay = currentDate.getDate();
-  //   if (currentDate.getMonth() + 1 < 10) {
-  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
-  //   }
-  //   if (currentDate.getDate() < 10) {
-  //     fromDateDay = "0" + currentDate.getDate();
-  //   }
-
-  //   var fromDate = fromDateDay + "/" + fromDateMonth + "/" + Math.floor(currentDate.getFullYear() - 1);
-  //   templateObject.dateAsAt.set(begunDate);
-  //   $("#dateFrom").val(fromDate);
-  //   $("#dateTo").val(begunDate);
-
-  //   var currentDate2 = new Date();
-  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-  //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + Math.floor(currentDate2.getMonth() + 1) + "-" + currentDate2.getDate();
-  //   await templateObject.setReportOptions(false, getDateFrom, getLoadDate);
-  //   //LoadingOverlay.hide();
-  // },
+  
   "click #ignoreDate": async () => {
     // $(".fullScreenSpin").css("display", "inline-block");
     // $("#dateFrom").attr("readonly", true);
