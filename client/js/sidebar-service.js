@@ -4208,13 +4208,13 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
           ListType: "Detail",
-          select: "[Allclasses]=true",
+          select: "[Active]=true",
         };
       } else {
         options = {
           // orderby:'"ClientID desc"',
           ListType: "Detail",
-          select: "[Allclasses]=true",
+          select: "[Active]=true",
         };
       }
     }
@@ -4627,7 +4627,15 @@ export class SideBarService extends BaseService {
     getWowTransactionCode() {
         var that = this;
         var promise = new Promise(function(resolve, reject) {
-            var splashArrayTitleList = [['', 'Debit Items'], ['', 'Credit Items']]
+            var splashArrayTitleList = [['13', 'Debit'], 
+            ['50', 'Credit'], 
+            ['51', 'Australian Govt. Security Interest'], 
+            ['52', 'Basic Family Payments/Additional Family Payment'], 
+            ['53', 'Pay'], 
+            ['54', 'Pension'], 
+            ['55', 'Allotment'], 
+            ['56', 'Dividend'], 
+            ['57', 'Debenture/Note Interest']]
             resolve({"ttransactioncode" : splashArrayTitleList});
         });
         return promise;

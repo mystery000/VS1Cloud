@@ -3,7 +3,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import './layout/header.html'
 import './main.html';
 import './container/startbreak.html';
-import '../wastage_form_temp.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ManufacturingService } from "../manufacturing-service";
 import { ContactService } from "../../contacts/contact-service";
@@ -140,7 +139,8 @@ Template.mobileapp.events({
             getVS1Data('TVS1Workorder').then(function (dataObject) {
                 $(".mobile-left-workorder-list").css('display', 'block');
                 let workOrderData = JSON.parse(dataObject[0].data);
-                
+
+                                
                 let table = $("#tblWorkOrderList").DataTable({
                     data: workOrderData.tvs1workorder,
                     paging: false,
@@ -403,7 +403,7 @@ Template.mobileapp.events({
         Template.instance().isEnterJobProcess.set(false);
         Template.instance().isSelectEmployeeNumber.set(true);
 
-        $(".mobile-checkin-container").css('display', 'block');
+       // $(".mobile-checkin-container").css('display', 'block');
         if (window.screen.width <= 480) {
             $(".mobile-right-btn-containner").css('display', 'none');
         }
@@ -783,7 +783,6 @@ Template.mobileapp.events({
         $(".mobile-left-btn-containner").css('display', 'block');  // Keypad display
 
         
-
         Template.instance().isClockin.set(false);
         Template.instance().isEnterJobProcess.set(false);
         Template.instance().isEnterJobNumber.set(true);
@@ -819,7 +818,9 @@ Template.mobileapp.events({
             currentworkorder = workorders[workorderindex];
             
             // Set bom Structure for current workorder
-            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
+            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));                 
+
+            
 
             let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
@@ -829,22 +830,92 @@ Template.mobileapp.events({
              //   $('.fullScreenSpin').css('display', 'none')
              //   swal('Work Order state is updated', '', 'success');
             })
-
             
+            let BomDataList = [];        
+
+            let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
+            let change_to = bomStructureData.TotalQtyOriginal;
+            
+            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
+
+            BomDataList.push(tempBomData);    
+            
+            let bomDetailData = JSON.parse(bomStructureData.Details);
+          
+            for (let i = 0; i < bomDetailData.length; i++) {
+                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
+                BomDataList.push(tempBomData);  
+            }
+        
+            let wastage_table = $("#tblWastageForm").DataTable({
+                data: BomDataList,
+                paging: true,
+                searching: false,
+                destroy:true,
+                dom: 't',
+                ordering: false,
+                editable:true,
+                columns: [
+                    { title: 'Item', mData: 'item' },
+                    { title: 'UOM', mData: 'uom' },
+                    { title: 'Total', mData: 'total' },
+                    { title: 'Change To', mData: 'changeTo', className: 'editable' },
+                    { title: 'Wastage', mData: 'wastage' }
+
+                ],
+                responsive: true,
+            })
+
+            $('#tblWastageForm').on( 'click', 'tbody td.editable', function () {
+                $(this).attr('contenteditable', 'true');
+                              
+            } );
+
+            $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
+                
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
+
+                // var changeto =$(this).val();
+                // var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
+                // var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
+                // var total_new = total - changeto;
+                // var wastage_new = wastage + changeto;
+
+
+                var cell = wastage_table.cell(this);
+                var index = cell.index();
+                var column = index.column;
+                var row = index.row;
+                
+                if (column < wastage_table.columns().count() - 1) {
+                    var nextCell = wastage_table.cell(row, column + 1);
+                    nextCell.data(cell.data());
+                }
+
+                // wastage_table.cell(rowIndex, colIndex-1).data(total_new);
+                // wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
+
+
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
+                // console.log(colIndex);  
+                           
+            } );
+           
 
         }
 
-        // modal bom product modal
-        templateObject.showBOMModal.set(true);
+        // wastage form modal       
         e.preventDefault();
         e.stopPropagation();
-        alert("bom setup modal");
         $('#WastageModal').modal('toggle');
 
    
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
         $("#btnClockIn").prop('disabled',true);
+        $("#btnClockIn").css('background', '#0084D1');
         $('#btnStartJob').prop('disabled', true);
         $('#btnStartBreak').prop('disabled', true);
         $("#btnClockIn").css('background', '#00AE00');
@@ -854,14 +925,27 @@ Template.mobileapp.events({
         $("#btnStopJob").css('background', '#0084D1');
         $('#btnStopJob').prop('disabled', true);
         $('#btnStopBreak').prop('disabled', true);
-        $(".mobile-header-status-text").text("Enter Job Number");
 
+        $('#btnClockOut_phone').prop('disabled', true);
+        $("#btnClockOut_phone").css('background', '#0084D1');
+        $("#btnClockIn_phone").prop('disabled',true);
+        $("#btnClockIn_phone").css('background', '#0084D1');
+        $('#btnStartJob_phone').prop('disabled', true);
+        $('#btnStartBreak_phone').prop('disabled', true);
+        $("#btnClockIn_phone").css('background', '#00AE00');
+        $("#btnStartJob_phone").css('background', '#0084D1');
+        $("#btnStartBreak_phone").css('background', '#0084D1');
+        $("#btnStopBreak_phone").css('background', '#0084D1');
+        $("#btnStopJob_phone").css('background', '#0084D1');
+        $('#btnStopJob_phone').prop('disabled', true);
+        $('#btnStopBreak_phone').prop('disabled', true);
+
+        $(".mobile-header-status-text").text("Enter Job Number");
         $(".mobile-main-input").val(" ");
 
     },
-
+   
     'change #breakCheck': function(e, instance) {
-
         if($('#breakCheck').is(":checked") == true){
 
             $(".mobile-main-input").val("Job Paused ");
@@ -871,6 +955,7 @@ Template.mobileapp.events({
             Template.instance().breakState.set(false);
          }
     },
+
     'click #breakSave': function(e, instance) {
         let breakMessage = $('#txtpause-notes').val();
              
@@ -894,14 +979,40 @@ Template.mobileapp.events({
             $(".mobile-left-btn-containner").css('display', 'block');
         }      
     }
+    , 
+    'click .btn-save-wastage': function(e,instance) {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        $('.fullScreenSpin').css('display', 'none')
+        
+        var temp = [];
+
+        $("#tblWastageForm tr").each(function(){
+            var thirdColumnValue = $(this).find("td:eq(3)").text();
+            temp.push(thirdColumnValue);
+            
+        });
+
+       
+        swal('The wastage is saved', '', 'success');
+        $('#WastageModal').modal('toggle');
+    
+    } 
+    ,
+    'click .btn-cancel-wastage': function(e,instance) {
+        
+        $('#WastageModal').modal('toggle');
+
+    } 
+
 });
 
-Template.mobileapp.helpers(function() {
+Template.mobileapp.helpers({
     
     showBOMModal: ()=> {
         return Template.instance().showBOMModal.get();
+    },
+
+    bomRecord: ()=> {
+        return Template.instance().bomStructure.get();
     }
-   
-
-
 });

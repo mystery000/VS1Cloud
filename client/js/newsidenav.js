@@ -1027,9 +1027,10 @@ Template.newsidenav.onRendered(function () {
       templateObject.includePayroll.set(false);
     }
 
-    if (!(isTimesheetEntry) && !(isShowTimesheet) && !(isTimesheetCreate) && !(isEditTimesheetHours) && (isClockOnOff)) {
+    // if (!(isTimesheetEntry) && !(isShowTimesheet) && !(isTimesheetCreate) && !(isEditTimesheetHours) && (isClockOnOff)) {
+    if (JSON.parse(isClockOnOff)) {
       templateObject.includePayrollClockOnOffOnly.set(true);
-      templateObject.includePayroll.set(false);
+      // templateObject.includePayroll.set(false);
     }
 
     if (JSON.parse(isAppointmentScheduling)) {
@@ -3006,11 +3007,13 @@ Template.newsidenav.events({
     templateObject.getSetSideNavFocus();
   },
   'click #sidenavtimeclock': function (event) {
-    if (FlowRouter.current().path == "/payrolloverview") {
-      $("#btnClockOnOff").trigger("click");
-    } else {
-      window.open('/payrolloverview#clockOnOff', '_self');
-    }
+    // if (FlowRouter.current().path == "/payrolloverview") {
+    //   $("#btnClockOnOff").trigger("click");
+    // } else {
+    //   window.open('/payrolloverview#clockOnOff', '_self');
+    // }
+    event.preventDefault();
+    FlowRouter.go('/clockOnOff');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
@@ -3780,7 +3783,30 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
-
+  'click .sidenaveftfileslist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/bankingoverview');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click .sidenaveftnewfile': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/eft');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click .sidenaveftbankrulelist': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/bankrulelist');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+  'click .sidenaveftnewbankrule': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/newbankrule');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
 });
 Template.newsidenav.helpers({
   sideBarPositionClass: () => {

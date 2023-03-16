@@ -7,11 +7,11 @@ import './eft.html';
 
 let accountService = new AccountService();
 let eftService = new EftService();
+let selectLineId
 
 Template.eft_export.onCreated(function () {
     let templateObject = Template.instance();
-    templateObject.eftOptionsList = new ReactiveVar([]);
-    templateObject.accountTypes = new ReactiveVar([]);
+    templateObject.eftOptionsList = new ReactiveVar([]);    
     templateObject.transactionDescriptions = new ReactiveVar([]);
     templateObject.eftRowId = new ReactiveVar(null);
     templateObject.tabadescriptiverecordList = new ReactiveVar([]);
@@ -40,7 +40,7 @@ Template.eft_export.onRendered(function () {
 
     $(() => {
         setTimeout(() => {
-            moment(new Date()).format('DD/MM/YYYY');
+            let currentDate = moment(new Date()).format('DD/MM/YYYY');
             $('.eftProcessingDate').datepicker({
                 showOn: 'button',
                 buttonText: 'Show Date',
@@ -57,53 +57,10 @@ Template.eft_export.onRendered(function () {
                     // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
                 },
             });
+            $(".eftProcessingDate").val(currentDate);
             $('#accountListModal').modal('show');
-        }, 1000);
+        }, 3000);
     })
-
-    templateObject.loadAccountTypes = () => {
-        let accountTypeList = [];
-        getVS1Data('TAccountType')
-            .then(function (dataObject) {
-                if (dataObject.length === 0) {
-                    accountService.getAccountTypeCheck().then(function (data) {
-                        for (let i = 0; i < data.taccounttype.length; i++) {
-                            let accounttyperecordObj = {
-                                accounttypename: data.taccounttype[i].AccountTypeName || ' ',
-                                description: data.taccounttype[i].OriginalDescription || ' ',
-                            };
-                            accountTypeList.push(accounttyperecordObj);
-                        }
-                        templateObject.accountTypes.set(accountTypeList);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    let useData = data.taccounttype;
-
-                    for (let i = 0; i < useData.length; i++) {
-                        let accounttyperecordObj = {
-                            accounttypename: useData[i].AccountTypeName || ' ',
-                            description: useData[i].OriginalDescription || ' ',
-                        };
-                        accountTypeList.push(accounttyperecordObj);
-                    }
-                    templateObject.accountTypes.set(accountTypeList);
-                }
-            })
-            .catch(function (err) {
-                accountService.getAccountTypeCheck().then(function (data) {
-                    for (let i = 0; i < data.taccounttype.length; i++) {
-                        let accounttyperecordObj = {
-                            accounttypename: data.taccounttype[i].AccountTypeName || ' ',
-                            description: data.taccounttype[i].OriginalDescription || ' ',
-                        };
-                        accountTypeList.push(accounttyperecordObj);
-                    }
-                    templateObject.accountTypes.set(accountTypeList);
-                });
-            });
-    };
-    templateObject.loadAccountTypes();
 
     templateObject.loadTabaDescriptiveRecord = () => {
         let descriptiveList = [];
@@ -289,8 +246,10 @@ Template.eft_export.onRendered(function () {
         let lineProductName = table.find('.colAccountName').text();
         let lineProductDesc = table.find('.colDescription').text();
         let lineAccoutNo = table.find('.colAccountNo').text();
+        let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";
         $('#accountListModal').modal('toggle');
         $('#sltBankAccountName').val(lineProductName);
+        $('#sltBankName').val(lineBankName)
     });
 
     $('#sltBankName').editableSelect();
@@ -347,31 +306,16 @@ Template.eft_export.onRendered(function () {
         $('#sltTransactionDescription').val(transactionDescription);
     });
 
-    $('#sltTransactionCode').editableSelect();
-    $('#sltTransactionCode')
-        .editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var bankName = e.target.value || '';
-
-            if (e.pageX > offset.left + $earch.width() - 8) {
-                // $("#transactionCodeModal").modal();
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                if (bankName.replace(/\s/g, '') != '') {
-                    // $("#transactionCodeModal").modal("toggle");
-                } else {
-                    // $("#transactionCodeModal").modal();
-                }
-            }
-        });
+    $(document).on('click', '#tblEftExportCheckbox input.sltTransactionCode', function(e) {
+        selectLineId = $(this).closest('tr').attr('id')
+        $('#transactionCodeModal').modal('show');
+    })
 
     $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
         var table = $(this);
-        let transactionCode = table.find('.coltransactionCode').text();
+        let transactionDescription = table.find('.colTransactionCode').text();        
+        $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
-        $('#sltTransactionCode').val(transactionCode);
     });
 });
 
@@ -396,7 +340,7 @@ Template.eft_export.events({
         let tokenid = Random.id();
 
         let transactionCodes = `
-      <select class="form-control pointer sltTranslactionCode">
+      <select class="form-control pointer sltTransactionCode">
         <option value=""></option>
         <option value="">Debit Items</option>
         <option value="">Credit Items</option>
@@ -467,12 +411,12 @@ Template.eft_export.events({
     'click .btnDoEftExport': (e) => {
         playSaveAudio();
         setTimeout(function () {
-            let sltAccountType = $('#sltBankAccountName').val();
-            let sltBankName = $('#sltBankName').val();
-            let eftProcessingDate = $('#eftProcessingDate').val();
-            let eftUserName = $('#eftUserName').val();
-            let eftNumberUser = $('#eftNumberUser').val();
-            let sltTransactionDescription = $('#sltTransactionDescription').val();
+            let sltAccountType = $('#sltBankAccountName').val() || "";
+            let sltBankName = $('#sltBankName').val() || "";
+            let eftProcessingDate = $('#eftProcessingDate').val() || "";
+            let eftUserName = $('#eftUserName').val() || "";
+            let eftNumberUser = $('#eftNumberUser').val() || "";
+            let sltTransactionDescription = $('#sltTransactionDescription').val() || "";
 
             if (!sltAccountType) {
                 swal('Please input Account Name', '', 'error');
@@ -486,9 +430,9 @@ Template.eft_export.events({
             } else if (!eftUserName) {
                 swal('Please input User Name', '', 'error');
                 return false;
-            } else if (!eftNumberUser) {
-                swal('Please input Number of User', '', 'error');
-                return false;
+            // } else if (!eftNumberUser) {
+            //     swal('Please input Number of User', '', 'error');
+            //     return false;
             } else if (!sltTransactionDescription) {
                 swal('Please input Transaction Description', '', 'error');
                 return false;
@@ -585,19 +529,6 @@ Template.eft_export.events({
 });
 
 Template.eft_export.helpers({
-    accountTypes: () => {
-        return Template.instance()
-            .accountTypes.get()
-            .sort(function (a, b) {
-                if (a.description === 'NA') {
-                    return 1;
-                } else if (b.description === 'NA') {
-                    return -1;
-                }
-                return a.description.toUpperCase() > b.description.toUpperCase() ? 1 : -1;
-            });
-    },
-
     transactionDescriptions: () => {
         return Template.instance().transactionDescriptions.get();
     },

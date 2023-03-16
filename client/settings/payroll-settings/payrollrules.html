@@ -182,7 +182,7 @@
                                                     <div class="modal-content">
                                                         <div class="modal-header" style="padding-bottom: 8px;">
                                                             <h4 class="modal-title">Upload logo</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 0px !important;"><span aria-hidden="true">×</span></button>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="padding: 0px !important; margin-right:0"><span aria-hidden="true">×</span></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="row no-gutters d-xl-flex flex-row justify-content-xl-start align-items-xl-start">
@@ -475,20 +475,23 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <!-- <style>
-                                                .colPayCalendarName{
-                                                    width: 25%;
+                                            <style>
+                                                #tblPayCalendars .colPayCalendarName{
+                                                    width: 30%!important;
                                                 }
-                                                .colPayPeriod{
-                                                    width: 25%;
+                                                #tblPayCalendars .colPayPeriod{
+                                                    width: 20%!important;
                                                 }
-                                                .colNextPayPeriod{
-                                                    width: 25%;
+                                                #tblPayCalendars .colNextPayPeriod{
+                                                    width: 20%!important;
                                                 }
-                                                .colNextPaymentDate{
-                                                    width: 25%;
+                                                #tblPayCalendars .colNextPaymentDate{
+                                                    width: 20%!important;
                                                 }
-                                            </style> -->
+                                                #tblPayCalendars .colStatus{
+                                                    width: 10%!important;
+                                                }
+                                            </style>
                                             {{> datatablelist
                                                 tablename="tblPayCalendars"
                                                 apiName=apiFunction
@@ -496,6 +499,7 @@
                                                 tableheaderrecords=tableheaderrecords
                                                 exportfilename='Pay Calendars'
                                                 apiParams=apiParams
+                                                istransaction = false
                                                 datahandler=datahandler
                                                 service=service
                                                 lowercaseDataName='tpayrollcalendars'
@@ -664,7 +668,7 @@
                                                                             id="holidaygroup" 
                                                                             name="holidaygroup" 
                                                                             defaultValue="" 
-                                                                            type="text"
+                                                                            type="search"
                                                                         }}
                                                                         <!-- <label for="">Add to Group</label>
                                                                         <input type="text" style="cursor: pointer;" class="form-control" id="holidaygroup"> -->
@@ -708,7 +712,7 @@
                                                         <div class="card-body text-nowrap cardB customerListCard" id="customerListCard">
                                                             <div class="sideSearch">
                                                                 <div class="form-group">
-                                                                    <input type="search" id="holidaygroup2" class="search form-control" placeholder="Filter by group">
+                                                                    {{> vs1_dropdown id='holidaygroup2' name='holidaygroup2' value='' type='search' classes='' placeholder="Filter by group"}}
                                                                 </div>
                                                                 <span class="counter pull-right"></span>
                                                                 <table id="tblHolidayCategories" name="tblCustomerSideList" class="table table-hover table-bordered results tblHolidayCategories">
@@ -784,7 +788,7 @@
                                                                                             id="addexistgroup" 
                                                                                             name="addexistgroup" 
                                                                                             defaultValue="" 
-                                                                                            type="text"
+                                                                                            type="search"
                                                                                         }}
                                                                                         <!-- <label for="edtRateName">Add existing holidays from group</label>
                                                                                         <input type="text" style="cursor: pointer;" class="form-control" id="addexistgroup"> -->
@@ -1174,7 +1178,29 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblAlowances .colAlowancesNames{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesType{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesDisplayName{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesAmount{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblAlowances .colAllowancesAccounts{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblAlowances .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblAlowances .colDeleteAllowances{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblAlowances"
                                                     apiName=apiFunction3
@@ -2038,7 +2064,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblEarnings .colEarningsNames{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsType{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsDisplayName{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsratetype{
+                                                        width: 12%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsAmount{
+                                                        width: 12%!important;
+                                                    }
+                                                    #tblEarnings .colEarningsAccounts{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblEarnings .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblEarnings .colDeleteEarnings{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblEarnings"
                                                     apiName=apiFunction4
@@ -2418,7 +2469,29 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblDeductions .colDeductionsNames{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsType{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsDisplayName{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsAmount{
+                                                        width: 16%!important;
+                                                    }
+                                                    #tblDeductions .colDeductionsAccounts{
+                                                        width: 20%!important;
+                                                    }
+                                                    #tblDeductions .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblDeductions .colDeleteDeductions{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblDeductions"
                                                     apiName=apiFunction5
@@ -2563,7 +2636,20 @@
                                                         </div>
                                                     </div>
                                                 </div>
-
+                                                <style>
+                                                    #tblReimbursements .colReimbursementName{
+                                                        width: 45%!important;
+                                                    }
+                                                    #tblReimbursements .colReimbursementAccount{
+                                                        width: 40%!important;
+                                                    }
+                                                    #tblReimbursements .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblReimbursements .colDeleterei{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblReimbursements"
                                                     apiName=apiFunction6
@@ -2862,7 +2948,32 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                                
+                                                <style>
+                                                    #tblLeave .colLeaveName{
+                                                        width: 18%!important;
+                                                    }
+                                                    #tblLeave .colLeaveUnits{
+                                                        width: 8%!important;
+                                                    }
+                                                    #tblLeave .colLeaveNormalEntitlement{
+                                                        width: 18%!important;
+                                                    }
+                                                    #tblLeave .colLeaveLeaveLoadingRate{
+                                                        width: 18%!important;
+                                                    }
+                                                    #tblLeave .colLeavePaidLeave{
+                                                        width: 12%!important;
+                                                    }
+                                                    #tblLeave .colLeaveShownOnPayslip{
+                                                        width: 14%!important;
+                                                    }                                                    
+                                                    #tblLeave .colStatus{
+                                                        width: 9%!important;
+                                                    }
+                                                    #tblLeave .colDeleterei{
+                                                        width: 3%!important;
+                                                    }
+                                                </style>
                                                 {{> datatablelist
                                                     tablename="tblLeave"
                                                     apiName=apiFunction7
@@ -3098,7 +3209,29 @@
                                                     </div>
                                                 </div>
                                             </div>
-
+                                            <style>
+                                                .colSuperannuationName{
+                                                    width: 25%!important;
+                                                }
+                                                .colSuperannuationType{
+                                                    width: 15%!important;
+                                                }
+                                                .colEmployerNum{
+                                                    width: 15%!important;
+                                                }
+                                                .colbsb{
+                                                    width: 15%!important;
+                                                }
+                                                .colaccountname{
+                                                    width: 15%!important;
+                                                }
+                                                .colStatus{
+                                                    width: 10%!important;
+                                                }
+                                                .colDeletesup{
+                                                    width: 5%!important;
+                                                }
+                                            </style>
                                             {{> datatablelist
                                                 tablename="tblSuperannuation"
                                                 apiName=apiFunction8
@@ -3351,6 +3484,18 @@
                                                         border: 1px solid #e3e6f0 !important;
                                                         border-collapse: collapse;
                                                     }
+                                                    #tblOverTimeSheet .colRate{
+                                                        width: 30%!important;
+                                                    }
+                                                    #tblOverTimeSheet .colRateRule{
+                                                        width: 30%!important;
+                                                    }
+                                                    #tblOverTimeSheet .colHourlyAmount{
+                                                        width: 30%!important;
+                                                    }
+                                                    #tblOverTimeSheet .colStatus{
+                                                        width: 10%!important;
+                                                    }                                                    
                                                 </style>
                                                 
                                                 {{> non_transactional_list tablename="tblOverTimeSheet"}}
@@ -3641,16 +3786,18 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="select-rate-type-modal">
         <!-- {{> ratetypelistpop rateTypes=rateTypes}} -->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Rate Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                {{> non_transactional_list tablename="tblRateTypeList"}}
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        <div class="modal-dialog modal-xl modal-dialog-scrollable ui-draggable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Rate Type List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblRateTypeList"}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
             </div>
         </div>
     </div> 
@@ -3680,16 +3827,18 @@
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="ratePopModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Rate List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">×</span></button>
-            </div>
-            <div class="modal-body">
-                {{> non_transactional_list tablename="tblRatePopList"}}
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        <div class="modal-dialog modal-xl modal-dialog-scrollable ui-draggable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Rate List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    {{> non_transactional_list tablename="tblRatePopList"}}
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
             </div>
         </div>
     </div>
