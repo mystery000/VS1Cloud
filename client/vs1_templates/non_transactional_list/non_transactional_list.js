@@ -3341,6 +3341,7 @@ Template.non_transactional_list.onRendered(function() {
         // };
         let bomData;
         let process_data = data_process.tprocessstep;
+        let dataList;
 
         for(let i = 0; i < process_data.length; i ++ ) {
             let exist_data = false ;
@@ -3356,7 +3357,7 @@ Template.non_transactional_list.onRendered(function() {
             }
 
             if(exist_data) {
-                let dataList = [
+                dataList = [
                     "<span style = 'font-weight:bold; font-size:20px ' >Resource/Process </span>",
                     "<span style = 'font-weight:bold; font-size:20px ' >" + process_data[i].fields.Description +  "    Bay</span>", 
                     "<span style = 'font-weight:bold; font-size:20px ' > /    " + process_data[i].fields.Description + "</span>"
@@ -3381,17 +3382,33 @@ Template.non_transactional_list.onRendered(function() {
                         details[k].process + "  Bays" || '',
                         "Dene Mills",
                         data_workorder[j].fields.StartTime || '',
-                        " " || ' ',
-                        " " || ' '
+                        "00:00:00 " || ' ',
                         ];
                         splashArrayWorksheetReport.push(dataList);
                     }
                 }  
                 
             }
+           
+        }
+        dataList = [
+             '' ,
+             '' ,
+             '',
+             '',
+             '',
+             '',
+             '',
+             '',
+             '',
+             
+             '<span style = "color:red ; font-size : 20px " > Total </span>' || ' ',
+             '<span style = "color:red ; font-size : 20px " >00:00:00 </span>' || ' '
+        ];
 
-            templateObject.transactiondatatablerecords.set(splashArrayWorksheetReport);
-        }                
+        splashArrayWorksheetReport.push(dataList);
+        
+        templateObject.transactiondatatablerecords.set(splashArrayWorksheetReport);
      
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {

@@ -783,7 +783,6 @@ Template.mobileapp.events({
         $(".mobile-left-btn-containner").css('display', 'block');  // Keypad display
 
         
-
         Template.instance().isClockin.set(false);
         Template.instance().isEnterJobProcess.set(false);
         Template.instance().isEnterJobNumber.set(true);
@@ -874,14 +873,25 @@ Template.mobileapp.events({
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
                 
-                var colIndex = wastage_table.cell(this).index().column;
-                var rowIndex = wastage_table.cell(this).index().row;
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
 
-                var changeto =$(this).val();
-                var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
-                var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
-                var total_new = total - changeto;
-                var wastage_new = wastage + changeto;
+                // var changeto =$(this).val();
+                // var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
+                // var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
+                // var total_new = total - changeto;
+                // var wastage_new = wastage + changeto;
+
+
+                var cell = wastage_table.cell(this);
+                var index = cell.index();
+                var column = index.column;
+                var row = index.row;
+                
+                if (column < wastage_table.columns().count() - 1) {
+                    var nextCell = wastage_table.cell(row, column + 1);
+                    nextCell.data(cell.data());
+                }
 
                 // wastage_table.cell(rowIndex, colIndex-1).data(total_new);
                 // wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
@@ -934,10 +944,8 @@ Template.mobileapp.events({
         $(".mobile-main-input").val(" ");
 
     },
-
    
     'change #breakCheck': function(e, instance) {
-
         if($('#breakCheck').is(":checked") == true){
 
             $(".mobile-main-input").val("Job Paused ");
@@ -947,6 +955,7 @@ Template.mobileapp.events({
             Template.instance().breakState.set(false);
          }
     },
+
     'click #breakSave': function(e, instance) {
         let breakMessage = $('#txtpause-notes').val();
              
