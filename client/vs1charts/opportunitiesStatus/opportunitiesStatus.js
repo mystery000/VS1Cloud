@@ -190,8 +190,8 @@ Template.opportunitiesStatus.onRendered(function() {
         });
     }
     templateObject.setDateVal = function() {
-        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        const dateTo = new Date($("#dateTo").datepicker("getDate"));
+        const dateFrom = new Date($("#dateFrom_charts").datepicker("getDate"));
+        const dateTo = new Date($("#dateTo_charts").datepicker("getDate"));
         formatDateFrom =
             dateFrom.getFullYear() +
             "-" +
@@ -205,8 +205,8 @@ Template.opportunitiesStatus.onRendered(function() {
             "-" +
             dateTo.getDate();
         if (
-            $("#dateFrom").val().replace(/\s/g, "") == "" &&
-            $("#dateTo").val().replace(/\s/g, "") == ""
+            $("#dateFrom_charts").val().replace(/\s/g, "") == "" &&
+            $("#dateTo_charts").val().replace(/\s/g, "") == ""
         ) {
             renderCharts(formatDateFrom, formatDateTo, true);
         } else {

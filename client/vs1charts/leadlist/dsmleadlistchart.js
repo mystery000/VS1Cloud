@@ -53,8 +53,8 @@ Template.dsmleadlistchart.onRendered(function() {
     function setAllLeads(data) {
         let lineItems = [];
         let lineItemObj = {};
-        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        const dateTo = new Date($("#dateTo").datepicker("getDate"));
+        const dateFrom = new Date($("#dateFrom_charts").datepicker("getDate"));
+        const dateTo = new Date($("#dateTo_charts").datepicker("getDate"));
 
         for (let i = 0; i < data.tprospect.length; i++) {
             // const contactContacts = data.tprospect[i].fields.Contacts?data.tprospect[i].fields.Contacts[0]:null;

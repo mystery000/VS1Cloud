@@ -52,29 +52,52 @@ Template.paymentmethodpop.onRendered(function() {
     };
 
 
-    templateObject.getOrganisationDetails = function() {
-        organisationService.getOrganisationDetail().then((dataListRet) => {
-            let account_id = dataListRet.tcompanyinfo[0].Apcano || '';
-            let feeMethod = dataListRet.tcompanyinfo[0].DvaABN || ''
-            if (feeMethod == "apply") {
-                $("#feeOnTopInput").prop("checked", true);
-                $("#feeInPriceInput").prop("checked", false);
-            } else if (feeMethod == "include") {
-                $("#feeOnTopInput").prop("checked", false);
-                $("#feeInPriceInput").prop("checked", true);
+    templateObject.getOrganisationDetails = function() {    
+        getVS1Data('TCompanyInfo').then(function(dataObject){
+            if(dataObject.length == 0){
+                organisationService.getOrganisationDetail().then((dataListRet) => {
+                    let account_id = dataListRet.tcompanyinfo[0].Apcano || '';
+                    let feeMethod = dataListRet.tcompanyinfo[0].DvaABN || ''
+                    if (feeMethod == "apply") {
+                        $("#feeOnTopInput").prop("checked", true);
+                        $("#feeInPriceInput").prop("checked", false);
+                    } else if (feeMethod == "include") {
+                        $("#feeOnTopInput").prop("checked", false);
+                        $("#feeInPriceInput").prop("checked", true);
+                    } else {
+                        $("#feeOnTopInput").prop("checked", true);
+                        $("#feeInPriceInput").prop("checked", false);
+                    }
+                    if (dataListRet.tcompanyinfo[0].Apcano == '') {
+                        templateObject.includeAccountID.set(false);
+                    } else {
+                        templateObject.includeAccountID.set(true);
+                    }
+        
+                    templateObject.accountID.set(account_id);
+                });
             } else {
-                $("#feeOnTopInput").prop("checked", true);
-                $("#feeInPriceInput").prop("checked", false);
+                let dataListRet = JSON.parse(dataObject[0].data);
+                let account_id = dataListRet.tcompanyinfo[0].Apcano || '';
+                let feeMethod = dataListRet.tcompanyinfo[0].DvaABN || ''
+                if (feeMethod == "apply") {
+                    $("#feeOnTopInput").prop("checked", true);
+                    $("#feeInPriceInput").prop("checked", false);
+                } else if (feeMethod == "include") {
+                    $("#feeOnTopInput").prop("checked", false);
+                    $("#feeInPriceInput").prop("checked", true);
+                } else {
+                    $("#feeOnTopInput").prop("checked", true);
+                    $("#feeInPriceInput").prop("checked", false);
+                }
+                if (dataListRet.tcompanyinfo[0].Apcano == '') {
+                    templateObject.includeAccountID.set(false);
+                } else {
+                    templateObject.includeAccountID.set(true);
+                }
+                templateObject.accountID.set(account_id);
             }
-            if (dataListRet.tcompanyinfo[0].Apcano == '') {
-                templateObject.includeAccountID.set(false);
-            } else {
-                templateObject.includeAccountID.set(true);
-            }
-
-            templateObject.accountID.set(account_id);
         });
-
     }
     templateObject.getOrganisationDetails();
     templateObject.getTaxRates = function() {

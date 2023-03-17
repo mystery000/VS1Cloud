@@ -213,8 +213,8 @@ Template.dsmTop10Customers.onRendered(function() {
                     let useData = data.tinvoicelist;
                     let invoiceItemObj = {};
                     let invoiceItems = [];
-                    const fromDate = new Date($("#dateFrom").datepicker("getDate"));
-                    const toDate = new Date($("#dateTo").datepicker("getDate"));
+                    const fromDate = new Date($("#dateFrom_charts").datepicker("getDate"));
+                    const toDate = new Date($("#dateTo_charts").datepicker("getDate"));
                     for (let j in useData) {
                         const dueDate = new Date(useData[j].DueDate);
                         if (fromDate <= dueDate && toDate >= dueDate) {

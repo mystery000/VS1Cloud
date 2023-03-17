@@ -406,8 +406,8 @@ Template.dashboardManagerCharts.onRendered(function () {
     };
 
     templateObject.setDateVal = function () {
-        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        const dateTo = new Date($("#dateTo").datepicker("getDate"));
+        const dateFrom = new Date($("#dateFrom_charts").datepicker("getDate"));
+        const dateTo = new Date($("#dateTo_charts").datepicker("getDate"));
         formatDateFrom = dateFrom.getFullYear() +"-" +(dateFrom.getMonth() + 1) +"-" +dateFrom.getDate();
         formatDateTo = dateTo.getFullYear() +"-" +(dateTo.getMonth() + 1) +"-" +dateTo.getDate();
         templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
@@ -415,7 +415,7 @@ Template.dashboardManagerCharts.onRendered(function () {
 
     setTimeout(function(){
         templateObject.setDateVal();
-    },500);
+    }, 100);
 });
 
 Template.dashboardManagerCharts.events({
