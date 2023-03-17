@@ -1529,6 +1529,37 @@ Template.allreports.events({
             templateObject.isTrust.set(false);
         }
     },
+    // Manufacturing
+    'click #formCheck-buildProfitability': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('BuildProfitabilityReport', 'true');
+            templateObject.isBuildProfitability.set(true);
+        } else {
+            addVS1Data('BuildProfitabilityReport', 'false');
+            templateObject.isBuildProfitability.set(false);
+        }
+    },
+    'click #formCheck-ProductionWorksheet': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('ProductionWorksheetReport', 'true');
+            templateObject.isProductionWorkSheet.set(true);
+        } else {
+            addVS1Data('ProductionWorksheetReport', 'false');
+            templateObject.isProductionWorkSheet.set(false);
+        }
+    },
+    'click #formCheck-WorkOrders': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('WorkOrderReport', 'true');
+            templateObject.isWorkOrder.set(true);
+        } else {
+            addVS1Data('WorkOrderReport', 'false');
+            templateObject.isWorkOrder.set(false);
+        }
+    },
     'click .showhidden_fin': function(event) {
         if (event.target.id === "ellipsis_fin") {
             $('#ellipsis_fin').hide();

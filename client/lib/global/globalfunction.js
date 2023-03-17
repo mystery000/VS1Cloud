@@ -285,11 +285,13 @@ $('.dropdown-toggle').on("click",function(event){
   let updateReportCounter = 6;
   let countTimes = 0;
   let percent = 0;
+  let textArray = [];
 
   showCounterProgressModal = function(){
       updateReportCounter = 6;
       countTimes = 0;
       percent = 0;
+      textArray = [];
 
       $('.headerprogressbar').addClass('headerprogressbarShow');
       $('.headerprogressbar').removeClass('headerprogressbarHidden');
@@ -303,8 +305,16 @@ $('.dropdown-toggle').on("click",function(event){
   };
 
   updateCounterProgress = function(text){
+      if(textArray.join(',').indexOf(text) >= 0){
+          return;
+      }
+
+      textArray.push(text);
       countTimes ++;
       percent = (countTimes * 100) / updateReportCounter;
+
+      if(percent > 100) return;
+
       $('.loadingbar').css('width', percent + '%').attr('aria-valuenow', percent);
       //$(".progressBarInner").text("AP Report "+Math.round(progressPercentage)+"%");
       $(".progressBarInner").text(Math.round(percent) + "%");
@@ -313,12 +323,18 @@ $('.dropdown-toggle').on("click",function(event){
       $("<span class='process'>" + text + " Done <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
   };
   updateCounterProgressDone = function(){
-      text = 'All';
+      let text = 'All';
+
+      if(textArray.join(',').indexOf(text) >= 0){
+          return;
+      }
+
+      textArray.push(text);
       percent = 100;
       $('.loadingbar').css('width', percent + '%').attr('aria-valuenow', percent);
       //$(".progressBarInner").text("AP Report "+Math.round(progressPercentage)+"%");
       $(".progressBarInner").text(Math.round(percent) + "%");
-      $(".progressName").text("text");
+      $(".progressName").text(text);
 
       $("<span class='process'>" + text + " Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
   };
@@ -465,7 +481,7 @@ batchUpdateCall = function (url, flag = false) {
                         }else{
                           location.reload(true);
                         }
-                      }, 10000);
+                      }, 1000);
                     }else{
                       //let userData = dataObject[0].data;
                       dashboardArray = dataObject[0].data;
@@ -489,6 +505,9 @@ batchUpdateCall = function (url, flag = false) {
                       dashboardArray.ProcessLog.ClientDetails.ProcessLog.TransactionTableLastUpdated = dataReturnRes.ProcessLog.TUser.TransactionTableLastUpdated;
 
                       addLoginData(dashboardArray).then(function (datareturnCheck) {
+                          if(flag){
+                              updateCounterProgress('Login Data Added');
+                          }
                           if (localStorage.getItem("enteredURL") != null) {
                               FlowRouter.go(localStorage.getItem("enteredURL"));
                               localStorage.removeItem("enteredURL");
@@ -503,6 +522,10 @@ batchUpdateCall = function (url, flag = false) {
                         }
                       }, 500);
                       }).catch(function (err) {
+                          if(flag){
+                              updateCounterProgress('Login Data Added');
+                          }
+
                           if(url){
                             window.open(url,'_self');
                           }else{
@@ -560,7 +583,12 @@ batchUpdateCall = function (url, flag = false) {
                 }
             }
           }else{
+
             setTimeout(function () {
+                if(flag){
+                    updateCounterProgressDone();
+                }
+
               if(url){
                 window.open(url,'_self');
               }else{
@@ -572,6 +600,9 @@ batchUpdateCall = function (url, flag = false) {
             //Meteor._reload.reload();
         }else if (oReq.status != 200){
           setTimeout(function () {
+              if(flag){
+                  updateCounterProgressDone();
+              }
             if(url){
               window.open(url,'_self');
             }else{
@@ -581,19 +612,18 @@ batchUpdateCall = function (url, flag = false) {
         }
     }
 
-    sideBarService.getCurrentLoggedUser().then(function (data) {
+    getVS1Data('TAppUser').then(function (data) {
 
         if(flag){
             updateCounterProgress('Getting Current Logged User');
         }
 
-      addVS1Data('TAppUser', JSON.stringify(data));
+      // addVS1Data('TAppUser', JSON.stringify(data));
     });
 
     if (localStorage.getItem("enteredURL") != null) {
         FlowRouter.go(localStorage.getItem("enteredURL"));
         localStorage.removeItem("enteredURL");
-        return;
     }
 };
 
