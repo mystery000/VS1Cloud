@@ -18184,7 +18184,7 @@ Template.appointments.events({
         let hourlyRate = "";
         let status = "Not Converted";
         let uploadedItems = templateObject.uploadedFiles.get();
-        $(".fullScreenSpin").css("display", "inline-block");
+        // $(".fullScreenSpin").css("display", "inline-block");
         if (aStartTime != "") {
             aStartDate = savedStartDate + " " + aStartTime;
         } else {
@@ -18322,6 +18322,7 @@ Template.appointments.events({
                     },
                 };
                 templateObject.updateEvents(objectData)
+                // swal.close()
                 $(".fullScreenSpin").css("display", "none");
                 $("#event-modal").modal("hide");
                 // appointmentService
@@ -18707,6 +18708,7 @@ Template.appointments.events({
                     obj.fields.Description = "Job Started";
                 }
                 templateObject.updateTimeLogs(obj)
+                swal.close()
                 $(".fullScreenSpin").css("display", "none");
                 $("#event-modal").modal("hide");
                 // appointmentService
@@ -19118,8 +19120,8 @@ Template.appointments.events({
                 //     });
 
                 templateObject.updateEvents(objectData)
-                $(".fullScreenSpin").css("display", "none");
                 $("#event-modal").modal("hide");
+                $(".fullScreenSpin").css("display", "none");
             }
         }
     },
