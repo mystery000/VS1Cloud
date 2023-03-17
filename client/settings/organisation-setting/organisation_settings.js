@@ -22,7 +22,7 @@ let supplierListIndex
 
 function initEditSupplierForm() {
   let data = accountantDetailObj
-  $(".fullScreenSpin").css("display", "none");                      
+  $(".fullScreenSpin").css("display", "none");
     $("#add-supplier-title").text("Edit Supplier");
     let popSupplierID = data.fields.ID || "";
     let popSupplierName = data.fields.ClientName || "";
@@ -114,13 +114,13 @@ function initEditSupplierForm() {
 
 function initAccountantDetails() {
   let data = accountantDetailObj
-    let popSupplierID = data.fields.ID || "";    
-    let popSupplierEmail = data.fields.Email || "";    
+    let popSupplierID = data.fields.ID || "";
+    let popSupplierEmail = data.fields.Email || "";
     let popSupplierFirstName = data.fields.FirstName || "";
     let popSupplierMiddleName = data.fields.CUSTFLD10 || "";
-    let popSupplierLastName = data.fields.LastName || "";    
+    let popSupplierLastName = data.fields.LastName || "";
     let popSupplierPhone = data.fields.Phone || "";
-    
+
     $("#sltAccountant").data('supplierId', popSupplierID);
     $("#accountantemailaddress").val(popSupplierEmail);
     $("#accountantfirstname").val(popSupplierFirstName);
@@ -134,7 +134,7 @@ async function loadAccountantDetailByName(supplierDataName) {
   try {
     let dataObject = await getVS1Data("TSupplierVS1");
     if (dataObject.length) {
-      let data = JSON.parse(dataObject[0].data);                
+      let data = JSON.parse(dataObject[0].data);
       supplierList = data
       var added = false;
       for (let i = 0; i < data.tsuppliervs1.length; i++) {
@@ -143,22 +143,22 @@ async function loadAccountantDetailByName(supplierDataName) {
               supplierDataName
           ) {
               added = true;
-              accountantDetailObj = data.tsuppliervs1[i]                        
+              accountantDetailObj = data.tsuppliervs1[i]
               supplierListIndex = i
               continue;
           }
       }
-      if (!added) {      
-          data = await sideBarService.getOneSupplierDataExByName(supplierDataName)              
-          accountantDetailObj = data.tsupplier[0]                             
+      if (!added) {
+          data = await sideBarService.getOneSupplierDataExByName(supplierDataName)
+          accountantDetailObj = data.tsupplier[0]
       }
-    } else {      
+    } else {
       let data = await sideBarService.getOneSupplierDataExByName(supplierDataName)
-      accountantDetailObj = data.tsupplier[0]      
+      accountantDetailObj = data.tsupplier[0]
     }
-  } catch (e) {    
+  } catch (e) {
     let data = await sideBarService.getOneSupplierDataExByName(supplierDataName)
-    accountantDetailObj = data.tsupplier[0]                        
+    accountantDetailObj = data.tsupplier[0]
   }
   $(".fullScreenSpin").css("display", "none");
 }
@@ -166,8 +166,8 @@ async function loadAccountantDetailByName(supplierDataName) {
 async function saveAccountantDetail() {
   let saveObj = {
       type: "TSupplierEx",
-      fields: { 
-        ...accountantDetailObj.fields, 
+      fields: {
+        ...accountantDetailObj.fields,
         FirstName: $("#accountantfirstname").val(),
         CUSTFLD10: $("#accountantmiddlename").val(),
         LastName: $("#accountantlastname").val(),
@@ -175,7 +175,7 @@ async function saveAccountantDetail() {
         Phone: $("#accountantphonenumber").val(),
       },
   };
-  try {    
+  try {
     let objDetails = await contactService.saveSupplierEx(saveObj)
     let supplierSaveID = objDetails.fields.ID;
     if (supplierSaveID) {
@@ -290,7 +290,7 @@ Template.organisationsettings.onRendered(function () {
       .autocomplete("widget")
       .addClass("countries-dropdown");
   };
-  
+
   templateObject.getOrganisationDetails = async () => {
     LoadingOverlay.show();
     let dataObject;
@@ -305,7 +305,7 @@ Template.organisationsettings.onRendered(function () {
     } catch (e) {
       dataObject = await organisationService.getOrganisationDetail();
       addVS1Data('TCompanyInfo', JSON.stringify(dataObject));
-    }    
+    }
 
     let mainData = dataObject.tcompanyinfo[0];
     templateObject.showSkype.set(mainData.ContactEmail);
@@ -394,7 +394,10 @@ Template.organisationsettings.onRendered(function () {
     await loadAccountantDetailByName(mainData.Contact)
     initAccountantDetails()
 
-    $("#sltYearEnd").val(localStorage.getItem("yearEnd"));
+    let yearEnd = localStorage.getItem("yearEnd");
+
+    if(yearEnd) $("#sltYearEnd").val(yearEnd);
+
     // YearEnd: sltYearEnd,
     $("#sltCompanyType").val(mainData.CompanyCategory);
     $("#contact").val(mainData.ContactName);
@@ -416,7 +419,7 @@ Template.organisationsettings.onRendered(function () {
         var $earch = $(this);
         var offset = $earch.offset();
         $("#edtSupplierPOPID").val("");
-        var supplierDataName = e.target.value || "";        
+        var supplierDataName = e.target.value || "";
         if (e.pageX > offset.left + $earch.width() - 8) {
           // X button 16px wide?
           $("#supplierListModal").modal();
