@@ -244,19 +244,7 @@ Template.dsmAppointmentsWidget.onRendered(function() {
                     }
                     templateObject.globalSettings.set(globalSet);
                 }
-            }).catch(function(err) {
-                sideBarService.getGlobalSettingsExtra().then(function(data) {
-                    addVS1Data('TERPPreferenceExtra', JSON.stringify(data));
-                    for (let p = 0; p < data.terppreferenceextra.length; p++) {
-                        if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
-                            globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue
-                        }
-                        $('#productlist').prepend('<option value=' + globalSet.id + '>' + globalSet.defaultProduct + '</option>');
-                        $("#productlist")[0].options[0].selected = true;
-                    }
-                    templateObject.globalSettings.set(globalSet);
-                }).catch(function(err) {});
-            });
+            }).catch(function(err){});
         } else {
             globalSet.defaultProduct = "";
             globalSet.id = "";

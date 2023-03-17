@@ -124,6 +124,7 @@ async function saveCharts() {
 Template.dashboardexe.onCreated(function() {
     this.loggedDb = new ReactiveVar("");
     const templateObject = Template.instance();
+    templateObject.updateChart = new ReactiveVar({update: false})
     templateObject.includeDashboard = new ReactiveVar();
     templateObject.includeDashboard.set(false);
 
@@ -205,13 +206,20 @@ Template.dashboardexe.onRendered(function() {
             changeMonth: true,
             changeYear: true,
             yearRange: "-90:+10",
-            onChangeMonthYear: function(year, month, inst) {
-                // Set date to picker
-                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-                // Hide (close) the picker
-                // $(this).datepicker('hide');
-                // // Change ttrigger the on change function
-                // $(this).trigger('change');
+            onSelect: function(selectedDate) {
+                let dateFrom = $("#dateFrom").datepicker("getDate");
+                $("#dateTo").datepicker("option", "minDate", dateFrom);
+                let dateTo = $("#dateTo").datepicker("getDate");
+                $("#dateFrom").datepicker("option", "maxDate", dateTo);   
+    
+                const from = $("#dateFrom").val().split('/');
+                const to = $("#dateTo").val().split('/');
+    
+                templateObject.updateChart.set({
+                    update: true,
+                    dateFrom: `${from[2]}-${from[1]}-${from[0]}`,
+                    dateTo: `${to[2]}-${to[1]}-${to[0]}`,
+                });
             }
         });
         let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
@@ -1046,6 +1054,9 @@ Template.dashboardexe.onRendered(function() {
 });
 
 Template.dashboardexe.helpers({
+    updateChart: () => {
+        return Template.instance().updateChart.get()
+    },
     includeDashboard: () => {
         return Template.instance().includeDashboard.get();
     },

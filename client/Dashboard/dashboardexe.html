@@ -308,27 +308,27 @@
             </button>
         </div>
         {{> allCardsLists }}
+  
         <div class="charts row connectedChartSortable2 connectedSortable2" id="connectedSortable2" data-key="chart"
             data-chartgroup="DashboardExe" data-tabgroup="1" style="min-width: 100%;">
-
-            {{> monthlyprofitandloss md=8 defaultPosition=1 key="dashboard__monthyl_profit_and_loss"}}
-            {{> quotedsalesorderinvoicedamounts md=4 defaultPosition=1 key="sales__sales_overview"}}
-            {{> accountrevenuestreams md=8 defaultPosition=2 key="accounts__revenue_streams"}}
+            
+            {{> monthlyprofitandloss md=8 defaultPosition=1 key="dashboard__monthyl_profit_and_loss" updateChart=updateChart}}
+            {{> quotedsalesorderinvoicedamounts md=4 defaultPosition=1 key="sales__sales_overview" updateChart=updateChart}}
+            {{> accountrevenuestreams md=8 defaultPosition=2 key="accounts__revenue_streams" updateChart=updateChart}}
             {{> profitandlosschart md=4 defaultPosition=3 key="dashboard__profit_and_loss" }}
             {{> invstockonhandanddemand md=8 defaultPosition=4 key="inventory__stock_on_hand_and_demand" }}
             {{> top10Customers md=4 defaultPosition=11 key="contacts__top_10_customers" }}
             {{> top10Suppliers md=4 defaultPosition=12 key="contacts__top_10_supplies" }}
             {{> resalescomparision md=4 defaultPosition=13 key="dashboard__employee_sales_comparison"
             canvasID="employeeSalesComparisonChart"}}
-            {{> expenseschart md=8 defaultPosition=14 key="dashboard__expenses" }}
+            {{> expenseschart md=8 defaultPosition=14 key="dashboard__expenses" updateChart=updateChart}}
             {{> monthlyearnings md=6 defaultPosition=15 key="dashboard__monthly_earnings" }}
             {{> quotedinvoicedamounts md=6 defaultPosition=16 key="dashboard__quoted_amounts_/_invoiced_amounts" }}
             {{> activeEmployees md=4 defaultPosition=17 key="contacts__active_employees" }}
             {{> employeecompletedjobs md=8 defaultPosition=18 key="payroll__employee_jobs_completed" }}
             {{> clockedOnEmployees md=4 defaultPosition=20 key="payroll__clocked_on_employees" }}
-            {{> monthllyexpenses md=8 defaultPosition=21 key="purchases__monthly_expenses" }}
-            {{> expensebreakdown md=4 defaultPosition=4 key="purchases__expenses_breakdown" }}
-            {{> absenteeRate md=8 defaultPosition=23 key="employees__absentee_rate_over_last_12_months" }}
+            {{> monthllyexpenses md=8 defaultPosition=21 key="purchases__monthly_expenses" updateChart=updateChart}}
+            {{> expensebreakdown md=4 defaultPosition=4 key="purchases__expenses_breakdown" updateChart=updateChart}}
 
             {{#if equals isaccountoverview true}}
             {{else}}
