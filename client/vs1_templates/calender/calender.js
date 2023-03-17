@@ -699,21 +699,34 @@ Template.calender.onRendered(function() {
     templateObject.saveUpdatedEvents = async() => {
         localStorage.setItem("isFormUpdated", false);
         let updatedEvents = await getVS1Data("TNewAppointment");
-        let data = JSON.parse(updatedEvents[0].data)
-        // let updatedEvents = templateObject.changedEvents.get();
-        if(data.length !== 0){
-            for(var i = 0; i< data.length; i++){
-                await appointmentService.saveAppointment(data[i]);
+        let updatedTimeLogs = await getVS1Data("TAppointmentsTimeLog");
+        if(updatedEvents){
+            let data = JSON.parse(updatedEvents[0]?.data)
+            if(data?.length !== 0){
+                for(var i = 0; i< data.length; i++){
+                    await appointmentService.saveAppointment(data[i]);
+                }
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                })
             }
-            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                addVS1Data("TAppointment", JSON.stringify(dataUpdate))
-            })
         }
+        if(updatedTimeLogs){
+            let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
+            if(timeLogData?.length !== 0){
+                for(var i = 0; i< timeLogData.length; i++){
+                    await appointmentService.saveTimeLog(timeLogData[i]);
+                }
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                })
+            }
+        }
+       
     }
 
     templateObject.updateEvents = async (updatedEvent) => {
         let tempEvents = await getVS1Data("TNewAppointment")
-        // let tempEvents = templateObject.changedEvents.get();
         localStorage.setItem("isFormUpdated", true);
         if(tempEvents.length == 0){
             addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
@@ -731,7 +744,6 @@ Template.calender.onRendered(function() {
             }
             addVS1Data("TNewAppointment", JSON.stringify(data))
         }
-        // templateObject.changedEvents.set(tempEvents)
     }
 
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
