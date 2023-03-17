@@ -2675,7 +2675,7 @@ Template.appointments.onRendered(function() {
         calendar.render();
 
         // $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
-        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:160px; float: right; margin:8px 30px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:192px; float: right; margin:8px 0px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
         new Draggable(draggableEl, {
@@ -2692,10 +2692,10 @@ Template.appointments.onRendered(function() {
                 };
             },
         });
-        $("#appointmentDate").css("fontSize", "32px");
+        $("#appointmentDate").css("fontSize", "24px");
         $("#appointmentDate").css("padding", "0px");
         $("#appointmentDate").css("border", "0px");
-        $("#appointmentDate").css("margin-left", "30px");
+        $("#appointmentDate").css("margin-left", "20px");
         $("#appointmentDate").css("height", "40px");
         $("#appointmentDate").css("cursor", "pointer");
         $("#appointmentDate").css("background-color", "white");
