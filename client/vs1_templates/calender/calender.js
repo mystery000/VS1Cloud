@@ -699,21 +699,34 @@ Template.calender.onRendered(function() {
     templateObject.saveUpdatedEvents = async() => {
         localStorage.setItem("isFormUpdated", false);
         let updatedEvents = await getVS1Data("TNewAppointment");
-        let data = JSON.parse(updatedEvents[0].data)
-        // let updatedEvents = templateObject.changedEvents.get();
-        if(data.length !== 0){
-            for(var i = 0; i< data.length; i++){
-                await appointmentService.saveAppointment(data[i]);
+        let updatedTimeLogs = await getVS1Data("TAppointmentsTimeLog");
+        if(updatedEvents){
+            let data = JSON.parse(updatedEvents[0]?.data)
+            if(data?.length !== 0){
+                for(var i = 0; i< data.length; i++){
+                    await appointmentService.saveAppointment(data[i]);
+                }
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                })
             }
-            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                addVS1Data("TAppointment", JSON.stringify(dataUpdate))
-            })
         }
+        if(updatedTimeLogs){
+            let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
+            if(timeLogData?.length !== 0){
+                for(var i = 0; i< timeLogData.length; i++){
+                    await appointmentService.saveTimeLog(timeLogData[i]);
+                }
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                })
+            }
+        }
+       
     }
 
     templateObject.updateEvents = async (updatedEvent) => {
         let tempEvents = await getVS1Data("TNewAppointment")
-        // let tempEvents = templateObject.changedEvents.get();
         localStorage.setItem("isFormUpdated", true);
         if(tempEvents.length == 0){
             addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
@@ -731,7 +744,6 @@ Template.calender.onRendered(function() {
             }
             addVS1Data("TNewAppointment", JSON.stringify(data))
         }
-        // templateObject.changedEvents.set(tempEvents)
     }
 
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
@@ -1867,7 +1879,7 @@ Template.calender.onRendered(function() {
         });
         calendar.render();
         // $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:160px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
-        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:160px; float: right; margin:8px 30px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:192px; float: right; margin:8px 0px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         let draggableEl = document.getElementById('external-events-list');
         new Draggable(draggableEl, {
             itemSelector: '.fc-event',
@@ -1883,10 +1895,10 @@ Template.calender.onRendered(function() {
                 };
             }
         });
-        $("#appointmentDate").css("fontSize", "32px");
+        $("#appointmentDate").css("fontSize", "24px");
         $("#appointmentDate").css("padding", "0px");
         $("#appointmentDate").css("border", "0px");
-        $("#appointmentDate").css("margin-left", "30px");
+        $("#appointmentDate").css("margin-left", "20px");
         $("#appointmentDate").css("height", "40px");
         $("#appointmentDate").css("cursor", "pointer");
         $("#appointmentDate").css("background-color", "white");
