@@ -20,15 +20,19 @@ import '../../vs1_templates/print_templates/preview_header1.html';
 import '../../vs1_templates/print_templates/preview_header2.html';
 import '../../vs1_templates/print_templates/preview_header3.html';
 import LoadingOverlay from '../../LoadingOverlay'
+import moment from 'moment';
 
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
 var template_list = [
   "Bills",
+  "Cheques",
   "Credits",
   "Customer Payments",
   "Customer Statements",
+  "Delivery Docket",
+  "Deposits",
   "Invoices",
   "Invoice Back Orders",
   "Purchase Orders",
@@ -37,11 +41,10 @@ var template_list = [
   "Sales Orders",
   "Supplier Payments",
   "Statements",
-  "Delivery Docket",
   "Journal Entry",
-  "Deposits",
-  "Cheques",
-];
+  "Stock Transfer",
+  "Stock Adjustment"
+].sort();
 var noHasTotals = [
   "Customer Payment",
   "Customer Statement",
@@ -50,6 +53,8 @@ var noHasTotals = [
   "Delivery Docket",
   "Journal Entry",
   "Deposit",
+  "Stock Transfer",
+  "Stock Adjustment"
 ];
 
 var PrintDisplaySettingData = {
@@ -358,6 +363,44 @@ var PrintDisplaySettingData = {
         },
       ] 
     },
+    {
+      "Stock Transfer" : [
+        {
+          'template_type' : 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ]
+    },
+    {
+      "Stock Adjustment" : [
+        {
+          'template_type' : 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ]
+    }
   ]
 };
 
@@ -825,7 +868,6 @@ Template.templatesettings.onRendered(function () {
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
-
           for (let i = 0; i < data.ttemplatesettings.length; i++) {
             if (data.ttemplatesettings[i].fields.SettingName == "bill") {
               if (data.ttemplatesettings[i].fields.Template == 1) {
@@ -5348,6 +5390,331 @@ Template.templatesettings.onRendered(function () {
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
 
+  function showStockTransfer(template_title, number) {
+    object_invoce = [];
+    var array_data = [];
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+    let item_invoices = "";
+    if (number == 1) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Transfer",
+        value: "751",
+        date: moment().format("DD/MM/YYYY"),
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: moment().format("DD/MM/YYYY"),
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "NA",
+        customfield2: "NA",
+        customfield3: "NA",
+        customfieldlabel1: "NA",
+        customfieldlabel2: "NA",
+        customfieldlabel3: "NA",
+        applied: "",
+        showFX: "",
+        comment: "Stock Transfer Template Preview",
+      };
+    } else if (number == 2) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Transfer",
+        value: "751",
+        date: moment().format("DD/MM/YYYY"),
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: moment().format("DD/MM/YYYY"),
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Transfer Template Preview",
+      };
+    } else {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Transfer",
+        value: "751",
+        date: moment().format("DD/MM/YYYY"),
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: moment().format("DD/MM/YYYY"),
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Transfer Template Preview",
+      };
+    }
+
+    object_invoce.push(item_invoices);
+
+    $("#templatePreviewModal .field_payment").show();
+    $("#templatePreviewModal .field_amount").show();
+
+    if (number == 1) {
+      updateTemplate1(object_invoce);
+    } else if (number == 2) {
+      updateTemplate2(object_invoce);
+    } else {
+      updateTemplate3(object_invoce);
+    }
+
+    saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
+  }
+  function showStockAdjustment(template_title, number) {
+    object_invoce = [];
+    var array_data = [];
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+    let item_invoices = "";
+    if (number == 1) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Adjustment",
+        value: "751",
+        date: "25/05/2022",
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: "07/07/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "NA",
+        customfield2: "NA",
+        customfield3: "NA",
+        customfieldlabel1: "NA",
+        customfieldlabel2: "NA",
+        customfieldlabel3: "NA",
+        applied: "",
+        showFX: "",
+        comment: "Stock Adjustment Template Preview",
+      };
+    } else if (number == 2) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Adjustment",
+        value: "751",
+        date: "25/05/2022",
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: "07/07/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Adjustment Template Preview",
+      };
+    } else {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Adjustment",
+        value: "751",
+        date: "25/05/2022",
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: "07/07/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Adjustment Template Preview",
+      };
+    }
+
+    object_invoce.push(item_invoices);
+
+    $("#templatePreviewModal .field_payment").show();
+    $("#templatePreviewModal .field_amount").show();
+
+    if (number == 1) {
+      updateTemplate1(object_invoce);
+    } else if (number == 2) {
+      updateTemplate2(object_invoce);
+    } else {
+      updateTemplate3(object_invoce);
+    }
+
+    saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
+  }
+
   templateObject.generateInvoiceData = function (template_title, number) {
     object_invoce = [];
     switch (template_title) {
@@ -5414,6 +5781,12 @@ Template.templatesettings.onRendered(function () {
       case "Cheques":
         showChequeData(template_title, number);
         break;
+      case "Stock Transfer":
+        showStockTransfer(template_title, number);
+        break;
+      case 'Stock Adjustment':
+        showStockAdjustment(template_title, number);
+      default: break;
     }
   };
 });
@@ -5506,6 +5879,9 @@ Template.templatesettings.events({
       var journal_entry = $('input[name="Journal Entry"]:checked').val();
       var deposits = $('input[name="Deposits"]:checked').val();
       var cheques = $('input[name="Cheques"]:checked').val();
+      const stockTransfer = $('input[name="stock_transfer"]:checked').val();
+      const stockAdjustment = $('input[name="stock_adjustment"]:checked').val();
+      console.log("STock Transfer:", stockTransfer);
       $(".fullScreenSpin").css("display", "inline-block");
       let emid = localStorage.getItem("mySessionEmployeeLoggedID");
       let count = 0;
@@ -9503,6 +9879,531 @@ Template.templatesettings.events({
               Description: $('input[name="Cheques_3"]').val(),
               Template: "3",
               Active: cheques == 3 ? true : false,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Transfer", emid, 1)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              GlobalRef: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_1"]').val(),
+              Template: "1",
+              Active: stockTransfer == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_1"]').val(),
+              Template: "1",
+              Active: stockTransfer == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+        
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Transfer", emid, 2)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              GlobalRef: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_2"]').val(),
+              Template: "2",
+              Active: stockTransfer == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_2"]').val(),
+              Template: "2",
+              Active: stockTransfer == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+        console.log($('input[name="Stock Transfer_3"]').val())
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Transfer", emid, 3)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              GlobalRef: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_3"]').val(),
+              Template: "3",
+              Active: stockTransfer == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_3"]').val(),
+              Template: "3",
+              Active: stockTransfer == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+        sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 1)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_1"]').val(),
+              Template: "1",
+              Active: stockAdjustment == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_1"]').val(),
+              Template: "1",
+              Active: stockAdjustment == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+        
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 2)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_2"]').val(),
+              Template: "2",
+              Active: stockAdjustment == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_2"]').val(),
+              Template: "2",
+              Active: stockAdjustment == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+        console.log($('input[name="Stock Adjustment_3"]').val())
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 3)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_3"]').val(),
+              Template: "3",
+              Active: stockAdjustment == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_3"]').val(),
+              Template: "3",
+              Active: stockAdjustment == 3,
             },
           };
 
