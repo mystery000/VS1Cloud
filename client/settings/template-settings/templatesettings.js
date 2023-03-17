@@ -20,15 +20,19 @@ import '../../vs1_templates/print_templates/preview_header1.html';
 import '../../vs1_templates/print_templates/preview_header2.html';
 import '../../vs1_templates/print_templates/preview_header3.html';
 import LoadingOverlay from '../../LoadingOverlay'
+import moment from 'moment';
 
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
 var template_list = [
   "Bills",
+  "Cheques",
   "Credits",
   "Customer Payments",
   "Customer Statements",
+  "Delivery Docket",
+  "Deposits",
   "Invoices",
   "Invoice Back Orders",
   "Purchase Orders",
@@ -37,13 +41,10 @@ var template_list = [
   "Sales Orders",
   "Supplier Payments",
   "Statements",
-  "Delivery Docket",
   "Journal Entry",
-  "Deposits",
-  "Cheques",
   "Stock Transfer",
   "Stock Adjustment"
-];
+].sort();
 var noHasTotals = [
   "Customer Payment",
   "Customer Statement",
@@ -5454,11 +5455,11 @@ Template.templatesettings.onRendered(function () {
         o_phone: "Phone : 25151944",
         title: "Stock Transfer",
         value: "751",
-        date: "25/05/2022",
+        date: moment().format("DD/MM/YYYY"),
         invoicenumber: "751",
         refnumber: "1234",
         pqnumber: "1244",
-        duedate: "07/07/2022",
+        duedate: moment().format("DD/MM/YYYY"),
         paylink: "Pay Now",
         supplier_type: "Customer",
         supplier_name: "Amar",
@@ -5500,11 +5501,11 @@ Template.templatesettings.onRendered(function () {
         o_phone: "Phone : 25151944",
         title: "Stock Transfer",
         value: "751",
-        date: "25/05/2022",
+        date: moment().format("DD/MM/YYYY"),
         invoicenumber: "751",
         refnumber: "1234",
         pqnumber: "1244",
-        duedate: "07/07/2022",
+        duedate: moment().format("DD/MM/YYYY"),
         paylink: "Pay Now",
         supplier_type: "Customer",
         supplier_name: "Amar",
