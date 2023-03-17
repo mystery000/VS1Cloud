@@ -565,6 +565,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "500" },
                 { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
                 { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
+                { index: 4, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
             ]
         } else if(currenttablename === "tblInventoryOverview"){
             reset_data = [
@@ -6890,10 +6891,10 @@ Template.non_transactional_list.onRendered(function() {
                 overtimes.push(defaultOvertime);
             };
         })
-        templateObject.displayOverTimeSheetListData(overtimes); //Call this function to display data on the table
+        templateObject.displayOverTimeSheetListData(overtimes, deleteFilter); //Call this function to display data on the table
     }
 
-    templateObject.displayOverTimeSheetListData = async function(data) {
+    templateObject.displayOverTimeSheetListData = async function(data, deleteFilter) {
         var splashArrayOverTimeSheetList = new Array();
         for (let i = 0; i < data.length; i++) {
             var dataList = [
@@ -6901,11 +6902,18 @@ Template.non_transactional_list.onRendered(function() {
                 data[i].rate || "",
                 data[i].rule || "",
                 data[i].hourlyMultiplier || "",
+                data[i].active == true ? '' : 'In-Active',
             ];
-            splashArrayOverTimeSheetList.push(dataList);
+            if(deleteFilter == true){
+                splashArrayOverTimeSheetList.push(dataList);
+            }
+            else{
+                if(data[i].active == true){
+                    splashArrayOverTimeSheetList.push(dataList);
+                }
+            }
             templateObject.transactiondatatablerecords.set(splashArrayOverTimeSheetList);
         }
-        let deleteFilter = false;
         if(templateObject.transactiondatatablerecords.get()) {
             setTimeout(function () {
                 MakeNegative();
@@ -6936,6 +6944,11 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 3,
                         className: "colHourlyAmount",
+                        width: "150px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colStatus",
                         width: "150px",
                     }
                 ],
