@@ -2577,7 +2577,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TInvoiceEx, options);
   }
 
-  getAllTInvoiceListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getAllTInvoiceListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2605,6 +2605,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TInvoiceList, options);
   }
   // Rasheed Speed Here
@@ -4627,14 +4628,14 @@ export class SideBarService extends BaseService {
     getWowTransactionCode() {
         var that = this;
         var promise = new Promise(function(resolve, reject) {
-            var splashArrayTitleList = [['13', 'Debit'], 
-            ['50', 'Credit'], 
-            ['51', 'Australian Govt. Security Interest'], 
-            ['52', 'Basic Family Payments/Additional Family Payment'], 
-            ['53', 'Pay'], 
-            ['54', 'Pension'], 
-            ['55', 'Allotment'], 
-            ['56', 'Dividend'], 
+            var splashArrayTitleList = [['13', 'Debit'],
+            ['50', 'Credit'],
+            ['51', 'Australian Govt. Security Interest'],
+            ['52', 'Basic Family Payments/Additional Family Payment'],
+            ['53', 'Pay'],
+            ['54', 'Pension'],
+            ['55', 'Allotment'],
+            ['56', 'Dividend'],
             ['57', 'Debenture/Note Interest']]
             resolve({"ttransactioncode" : splashArrayTitleList});
         });
