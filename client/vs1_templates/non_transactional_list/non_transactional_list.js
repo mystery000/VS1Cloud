@@ -802,6 +802,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
                 { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "150" },
                 { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "150" },
+                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "150" },
             ]
         } else if (currenttablename === "tblHolidays"){
             reset_data = [
@@ -809,6 +810,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "100" },
                 { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "100" },
                 { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "150" },
+                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "150" },
             ]
         }else if (currenttablename === "tblDraftPayRun"){
             reset_data = [
@@ -15746,30 +15748,31 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getPayCalendarsData = function(){
+    templateObject.getPayCalendarsData = async function(deleteFilter = false){
+        await clearData('TPayrollCalendars');
         getVS1Data('TPayrollCalendars').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+                sideBarService.getCalender(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
                     await addVS1Data('TPayrollCalendars', JSON.stringify(data));
-                    templateObject.displayPayCalendars(data);
+                    templateObject.displayPayCalendars(data, deleteFilter);
                 }).catch(function (err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayPayCalendars(data);
+                templateObject.displayPayCalendars(data, deleteFilter);
             }
         }).catch(function (err) {
-          sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+          sideBarService.getCalender(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
               await addVS1Data('TPayrollCalendars', JSON.stringify(data));
-              templateObject.displayPayCalendars(data);
+              templateObject.displayPayCalendars(data, deleteFilter);
           }).catch(function (err) {
 
           });
         });
     }
 
-    templateObject.displayPayCalendars = function(data){
+    templateObject.displayPayCalendars = function(data, deleteFilter){
         let splashArrayPayrollCalendars = new Array();
         for (let i = 0; i < data.tpayrollcalendars.length; i++) {
             let ID = data.tpayrollcalendars[i].fields.ID || '';
@@ -15779,6 +15782,7 @@ Template.non_transactional_list.onRendered(function() {
                 data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
                 moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
                 moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+                data.tpayrollcalendars[i].fields.PayrollCalendarActive == true ? '' : 'In-Active',
               ];
             splashArrayPayrollCalendars.push(dataPayrollCalendars);
             templateObject.transactiondatatablerecords.set(splashArrayPayrollCalendars);
@@ -15820,6 +15824,11 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colNextPaymentDate",
                         targets: 4,
                         width:'150px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 5,
+                        width:'100px'
                     }
                 ],
                 buttons: [{
@@ -15891,7 +15900,7 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                    if (deleteFilter == true) {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -15928,30 +15937,31 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getHolidaysData = function(){
+    templateObject.getHolidaysData = async function(deleteFilter = false){
+        await clearData('TPayrollHolidays');
         getVS1Data('TPayrollHolidays').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getHolidayData(initialBaseDataLoad, 0).then(async function (data) {
+                sideBarService.getHolidayData(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
                     await addVS1Data('TPayrollHolidays', JSON.stringify(data));
-                    templateObject.displayHolidaysData(data);
+                    templateObject.displayHolidaysData(data, deleteFilter);
                 }).catch(function (err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayHolidaysData(data);
+                templateObject.displayHolidaysData(data, deleteFilter);
             }
         }).catch(function (err) {
-          sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+          sideBarService.getCalender(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
               await addVS1Data('TPayrollHolidays', JSON.stringify(data));
-              templateObject.displayHolidaysData(data);
+              templateObject.displayHolidaysData(data, deleteFilter);
           }).catch(function (err) {
 
           });
         });
     }
 
-    templateObject.displayHolidaysData = function(data){
+    templateObject.displayHolidaysData = function(data, deleteFilter){
         let splashArrayHoidays = new Array();
         for (let i = 0; i < data.tpayrollholidays.length; i++) {
             var dataHolidays = [
@@ -15959,6 +15969,7 @@ Template.non_transactional_list.onRendered(function() {
                 data.tpayrollholidays[i].fields.PayrollHolidaysName || "",
                 moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
                 data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || "",
+                data.tpayrollholidays[i].fields.PayrollHolidaysActive == true ? '' : 'In-Active',                
               ];
             splashArrayHoidays.push(dataHolidays);
             templateObject.transactiondatatablerecords.set(splashArrayHoidays);
@@ -15995,6 +16006,11 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colHolidaygroup hiddenColumn",
                         targets: 3,
                         width:'150px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 4,
+                        width:'100px'
                     }
                 ],
                 buttons: [{
@@ -16066,7 +16082,7 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                    if (deleteFilter == true) {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -18677,9 +18693,9 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getLotNumberList(false, prductID);
         }, 100);
     }else if (currenttablename === "tblPayCalendars"){
-        templateObject.getPayCalendarsData();
+        templateObject.getPayCalendarsData(false);
     } else if (currenttablename === "tblHolidays"){
-        templateObject.getHolidaysData();
+        templateObject.getHolidaysData(false);
     } else if(currenttablename === "tblDraftPayRun"){
         templateObject.getDraftPayRunData();
     } else if(currenttablename === "tblAllSingleTouchPayroll"){
@@ -18898,6 +18914,10 @@ Template.non_transactional_list.events({
             templateObject.getMachineDetailList(true);
         } else if (currenttablename === "tblAdminServiceList"){
             templateObject.getAdminServiceList(true);
+        } else if (currenttablename === "tblPayCalendars"){
+            templateObject.getPayCalendarsData(true);
+        } else if (currenttablename === "tblHolidays"){
+            templateObject.getHolidaysData(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -19027,6 +19047,10 @@ Template.non_transactional_list.events({
             templateObject.getMachineDetailList(false);
         } else if (currenttablename === "tblAdminServiceList"){
             templateObject.getAdminServiceList(false);
+        } else if (currenttablename === "tblPayCalendars"){
+            templateObject.getPayCalendarsData(false);
+        } else if (currenttablename === "tblHolidays"){
+            templateObject.getHolidaysData(false);
         }
     },
     'change .custom-range': async function(event) {

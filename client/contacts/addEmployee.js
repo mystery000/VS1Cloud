@@ -2125,8 +2125,51 @@ Template.employeescard.onRendered(function () {
 
         }
       });
+
+      $('#edtEmploymentGroup').editableSelect('add', 'Full-time employment');
+      $('#edtEmploymentGroup').editableSelect('add', 'Part-time employment');
+      $('#edtEmploymentGroup').editableSelect('add', 'Casual employment');
+      $('#edtEmploymentGroup').editableSelect('add', 'Labour hire');
+      $('#edtEmploymentGroup').editableSelect('add', 'Superannuation income stream');
+
+      $('#edtEarningRate').editableSelect('add', 'Australian Resident');
+      $('#edtEarningRate').editableSelect('add', 'Foreign Resident');
+      $('#edtEarningRate').editableSelect('add', 'Working Holiday Maker');
+
+      $('#edtEmploymentBasis').editableSelect('add', 'Full-time employment');
+      $('#edtEmploymentBasis').editableSelect('add', 'Part-time employment');
+      $('#edtEmploymentBasis').editableSelect('add', 'Casual employment');
+      $('#edtEmploymentBasis').editableSelect('add', 'Labour hire');
+      $('#edtEmploymentBasis').editableSelect('add', 'Superannuation income stream');
+
+      $('#edtResidencyStatus').editableSelect('add', 'Australian Resident');
+      $('#edtResidencyStatus').editableSelect('add', 'Foreign Resident');
+      $('#edtResidencyStatus').editableSelect('add', 'Working Holiday Maker');
+      
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
+
+      $('#edtPayrollCalendar').editableSelect()
+        .on('click.editable-select', async function (e, li) {
+          let $search = $(this);
+          let offset = $search.offset();
+          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#payrollCalendarPopModal').modal("toggle");
+          } else {
+            $('#payrollCalendarPopModal').modal("toggle");
+          }
+        });
+
+      $('#edtHolidays').editableSelect()
+        .on('click.editable-select', async function (e, li) {
+          let $search = $(this);
+          let offset = $search.offset();
+          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#holidaysPopModal').modal("toggle");
+          } else {
+            $('#holidaysPopModal').modal("toggle");
+          }
+        });
     }, 1000)
 
     //On Click Client Type List
@@ -3391,8 +3434,8 @@ Template.employeescard.onRendered(function () {
         $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
         $(`#edtPayPeriod`).val(objEmployeePaySettings.Payperiod);
         $(`#edtLeavePayPeriod`).val(objEmployeePaySettings.Payperiod);
-        $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
-        $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
+        // $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
+        // $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
       }
     } catch (err) {
       let employeePayrollService = new EmployeePayrollService();
@@ -10019,12 +10062,12 @@ Template.employeescard.events({
   "click input#edtPayPeriod": (e, ui) => {
     $('#SelectPayRunModal').modal("show");
   },
-  "click input#edtPayrollCalendar": (e, ui) => {
-    $('#payrollCalendarPopModal').modal("show");
-  },
-  "click input#edtHolidays": (e, ui) => {
-    $('#holidaysPopModal').modal("show");
-  },
+  // "click input#edtPayrollCalendar": (e, ui) => {
+  //   $('#payrollCalendarPopModal').modal("show");
+  // },
+  // "click input#edtHolidays": (e, ui) => {
+  //   $('#holidaysPopModal').modal("show");
+  // },
   "click .earningLineDropDown": (e, ui) => {
     $(e.currentTarget).addClass('paste-earnings');
     $('#earningRateSettingsModal').modal('show');
