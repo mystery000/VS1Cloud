@@ -2707,7 +2707,7 @@
                                               id="period" 
                                               name="period" 
                                               defaultValue="" 
-                                              type="text"
+                                              type="search"
                                             }}
                                             <!-- <label>Period</label>
                                             <select type="search" class="form-control" id="period" name="period"
@@ -2742,42 +2742,42 @@
                                               name="totalPay"> -->
                                           </div>
                                         </div>
-                                        <div class="modal-footer">
-                                          {{> vs1_button
-                                            color='danger'
-                                            classes='btnDeletePayslip hidden'
-                                            type='button'
-                                            id="btnDeletePayslipBtn"
-                                            iconName='delete'
-                                            title='Delete'
-                                          }}
-                                          {{> vs1_button
-                                            color='success'
+                                      </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                      {{> vs1_button
+                                        color='danger'
+                                        classes='btnDeletePayslip hidden'
+                                        type='button'
+                                        id="btnDeletePayslipBtn"
+                                        iconName='delete'
+                                        title='Delete'
+                                      }}
+                                      {{> vs1_button
+                                        color='success'
+                                        classes=''
+                                        type='button'
+                                        id="btnPayslip"
+                                        iconName='save'
+                                        title='Save'
+                                      }}
+                                      <a data-dismiss="modal">
+                                        {{> vs1_button
+                                            color='secondary'
                                             classes=''
                                             type='button'
-                                            id="btnPayslip"
-                                            iconName='save'
-                                            title='Save'
-                                          }}
-                                          <a data-dismiss="modal">
-                                            {{> vs1_button
-                                                color='secondary'
-                                                classes='mt-3'
-                                                type='button'
-                                                id="btnCancel"
-                                                iconName='close'
-                                                title='Close'
-                                            }}
-                                          </a>
-                                          <!-- <button type="button" id="btnDeletePayslipBtn" data-id="0"
-                                            style="display: none;" class="btn btn-danger btnDeletePayslip"><i
-                                              class="fa fa-delete" style="margin-right: 5px;"></i>Delete</button>
-                                          <button type="button" id="btnPayslip" class="btn btn-success"><i
-                                              class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                              class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
-                                        </div>
-                                      </form>
+                                            id="btnCancel"
+                                            iconName='close'
+                                            title='Close'
+                                        }}
+                                      </a>
+                                      <!-- <button type="button" id="btnDeletePayslipBtn" data-id="0"
+                                        style="display: none;" class="btn btn-danger btnDeletePayslip"><i
+                                          class="fa fa-delete" style="margin-right: 5px;"></i>Delete</button>
+                                      <button type="button" id="btnPayslip" class="btn btn-success"><i
+                                          class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                      <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                          class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                     </div>
                                   </div>
                                 </div>
@@ -2886,7 +2886,7 @@
                                         <div class="col-6 col-md-7">
                                           <div class="form-group">
                                             <label class="borderBottom1">Earnings Rate</label>
-                                            <input type="text" class="form-control earningLineDropDown"
+                                            <input type="search" class="form-control earningLineDropDown"
                                               id="ptEarningRate{{ item.ID }}" data-value="{{ item.EarningRate }}"
                                               value="{{ item.EarningRate }}"
                                               style="background-color:rgb(255, 255, 255); cursor: pointer;" />

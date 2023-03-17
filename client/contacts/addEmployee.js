@@ -2148,7 +2148,7 @@ Template.employeescard.onRendered(function () {
       
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
-
+      
       $('#edtPayrollCalendar').editableSelect()
         .on('click.editable-select', async function (e, li) {
           let $search = $(this);
@@ -2825,6 +2825,24 @@ Template.employeescard.onRendered(function () {
     let earningLines = await templateObject.getEarnings(employeeID);
 
     templateObject.payTemplateEarningLineInfo.set(earningLines);
+
+    setTimeout(function () {
+      for(var i=0; i<earningLines.length; i++){
+        $('#ptEarningRate'+earningLines[i].ID).editableSelect();
+        $('#ptEarningRate'+earningLines[i].ID).editableSelect()
+          .on('click.editable-select', async function (e, li) {
+            let $search = $(this);
+            let offset = $search.offset();
+            if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+              $('#earningRateSettingsModal').modal('show');            
+            } else {
+              $('#earningRateSettingsModal').modal('show');
+            }
+          });
+          $('#ptEarningRate'+earningLines[i].ID).val(earningLines[i].EarningRate);
+      }
+    }, 1000);
+    
     templateObject.setEarningLineDropDown();
 
   };
@@ -10068,10 +10086,10 @@ Template.employeescard.events({
   // "click input#edtHolidays": (e, ui) => {
   //   $('#holidaysPopModal').modal("show");
   // },
-  "click .earningLineDropDown": (e, ui) => {
-    $(e.currentTarget).addClass('paste-earnings');
-    $('#earningRateSettingsModal').modal('show');
-  },
+  // "click .earningLineDropDown": (e, ui) => {
+  //   $(e.currentTarget).addClass('paste-earnings');
+  //   $('#earningRateSettingsModal').modal('show');
+  // },
 
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
