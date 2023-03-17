@@ -560,7 +560,7 @@ openDb = function (dbName) {
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAppointmentsTimeLog", { keyPath: "EmployeeEmail" });
-      
+
 
       // For accountant favorite reports state
       db.createObjectStore('TFavReportCompany', {keyPath: 'EmployeeEmail'});
@@ -841,7 +841,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 250);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 251);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };
