@@ -1146,10 +1146,10 @@ Template.reconciliationlist.events({
         FlowRouter.go('/reconrulelist');
     },
     'click #btnNewReconMatchingRule':function(event){
-        FlowRouter.go('/newbankrule');
+        FlowRouter.go('/bankrecon');
     },
     'click #btnNewStatementImportRule':function(event){
-        FlowRouter.go('/newstatementrule');
+        FlowRouter.go('/bankrecon');
     },
     // 'click .chkDatatable' : function(event){
     //     var columns = $('#tblreconciliationlist th');

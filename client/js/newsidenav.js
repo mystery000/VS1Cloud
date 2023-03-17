@@ -1690,7 +1690,7 @@ Template.newsidenav.events({
   },
   'click #sidenavNewStatementImportRule': function (event) {
     event.preventDefault();
-    FlowRouter.go('/newstatementrule');
+    FlowRouter.go('/newbankrule');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
