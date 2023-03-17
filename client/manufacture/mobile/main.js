@@ -887,8 +887,6 @@ Template.mobileapp.events({
                 var index = cell.index();
                 var column = index.column;
                 var row = index.row;
-
-                alert(cell.data());
                 
                 if (column < wastage_table.columns().count() - 1) {
                     var nextCell = wastage_table.cell(row, column + 1);
