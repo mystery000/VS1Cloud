@@ -76,7 +76,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Credits": [
@@ -95,7 +95,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Customer Payments": [
@@ -114,7 +114,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Customer Statements": [
@@ -133,7 +133,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Invoices": [
@@ -152,7 +152,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Invoice Back Orders": [
@@ -171,7 +171,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Purchase Orders": [
@@ -190,7 +190,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Quotes": [
@@ -209,7 +209,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Refunds": [
@@ -228,7 +228,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Sales Orders": [
@@ -247,7 +247,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Supplier Payments": [
@@ -266,7 +266,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Statements": [
@@ -285,7 +285,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Delivery Docket": [
@@ -304,7 +304,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Journal Entry": [
@@ -323,7 +323,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Deposits": [
@@ -342,7 +342,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Cheques": [
@@ -361,7 +361,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Stock Transfer" : [
@@ -1973,7 +1973,7 @@ Template.templatesettings.onRendered(function () {
   function saveColumnSettings() {
 
     var userColumnDefs = JSON.parse(localStorage.getItem(tableId)) || [];
-    
+
     var width, header, existingSetting;
 
     table.columns().every( function ( targets ) {
@@ -5881,7 +5881,6 @@ Template.templatesettings.events({
       var cheques = $('input[name="Cheques"]:checked').val();
       const stockTransfer = $('input[name="stock_transfer"]:checked').val();
       const stockAdjustment = $('input[name="stock_adjustment"]:checked').val();
-      console.log("STock Transfer:", stockTransfer);
       $(".fullScreenSpin").css("display", "inline-block");
       let emid = localStorage.getItem("mySessionEmployeeLoggedID");
       let count = 0;
@@ -9994,7 +9993,7 @@ Template.templatesettings.events({
             })
             .catch(function (err) {});
         });
-        
+
       sideBarService
         .getTemplateNameandEmployeId("Stock Transfer", emid, 2)
         .then(function (data) {
@@ -10082,7 +10081,6 @@ Template.templatesettings.events({
             .catch(function (err) {});
         });
 
-        console.log($('input[name="Stock Transfer_3"]').val())
 
       sideBarService
         .getTemplateNameandEmployeId("Stock Transfer", emid, 3)
@@ -10257,7 +10255,7 @@ Template.templatesettings.events({
             })
             .catch(function (err) {});
         });
-        
+
       sideBarService
         .getTemplateNameandEmployeId("Stock Adjustment", emid, 2)
         .then(function (data) {
@@ -10345,7 +10343,6 @@ Template.templatesettings.events({
             .catch(function (err) {});
         });
 
-        console.log($('input[name="Stock Adjustment_3"]').val())
 
       sideBarService
         .getTemplateNameandEmployeId("Stock Adjustment", emid, 3)

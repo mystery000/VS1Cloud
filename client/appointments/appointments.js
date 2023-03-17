@@ -448,7 +448,7 @@ Template.appointments.onRendered(function() {
                     }
                 }
             })
-           
+
         }
     }
     templateObject.hasFollowings();
@@ -3367,7 +3367,7 @@ Template.appointments.onRendered(function() {
                 templateObject.getAllProductData();
             });
         })
-        
+
     };
 
     templateObject.getAllProductData = function() {
@@ -10417,7 +10417,7 @@ Template.appointments.onRendered(function() {
                         }
                     }
                 })
-               
+
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
@@ -11692,7 +11692,7 @@ Template.appointments.onRendered(function() {
             }
         }
     })
-    
+
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
@@ -17118,7 +17118,7 @@ Template.appointments.events({
                 repeatDates = getRepeatDates(sDate2, fDate2, repeatMonths, monthDate);
                 frequency2 = parseInt(monthDate);
             }
-            
+
             if (days.length > 0) {
                 for (let x = 0; x < days.length; x++) {
                     let dayObj = {
@@ -18316,7 +18316,6 @@ Template.appointments.events({
         // }
         let obj = {};
         let date = new Date();
-        // console.log('updateID:',updateID)
         if (updateID) {
             result = appointmentData.filter((apmt) => {
                 return apmt.id == $("#updateID").val();
@@ -18389,7 +18388,7 @@ Template.appointments.events({
         }
 
         let objectData = "";
-        // console.log('createAppointment:',createAppointment)
+
         const messageSid = localStorage.getItem("smsId") || "";
         if (createAppointment == false) {
             if (id == "0") {
@@ -18741,7 +18740,7 @@ Template.appointments.events({
                 //     });
             }
         } else {
-            // console.log("id:",id)
+
             if (id == "0") {
                 objectData = {
                     type: "TAppointmentEx",
@@ -18924,8 +18923,7 @@ Template.appointments.events({
                 //         }
                 //     });
             } else {
-                // console.log('obj:',obj)
-                // console.log('objectData:',objectData)
+
                 // appointmentService
                 //     .saveAppointment(objectData)
                 //     .then(function(data) {
