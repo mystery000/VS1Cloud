@@ -15979,8 +15979,8 @@ Template.appointments.events({
             $("#chkSMSUser").prop("checked", false);
             let emailCustomer = $("#customerEmail").is(":checked");
             let emailUser = $("#userEmail").is(":checked");
-            // $("#saveAppointmentModal").modal("hide");
-            // $("#event-modal").modal("hide");
+            $("#saveAppointmentModal").modal("hide");
+            $("#event-modal").modal("hide");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
                 // $("#frmAppointment").trigger("submit");
@@ -18322,9 +18322,7 @@ Template.appointments.events({
                     },
                 };
                 templateObject.updateEvents(objectData)
-                // swal.close()
                 $(".fullScreenSpin").css("display", "none");
-                $("#event-modal").modal("hide");
                 // appointmentService
                 //     .saveAppointment(objectData)
                 //     .then(function(data) {
@@ -18708,9 +18706,7 @@ Template.appointments.events({
                     obj.fields.Description = "Job Started";
                 }
                 templateObject.updateTimeLogs(obj)
-                swal.close()
                 $(".fullScreenSpin").css("display", "none");
-                $("#event-modal").modal("hide");
                 // appointmentService
                 //     .saveTimeLog(obj)
                 //     .then(function(data) {
@@ -19120,7 +19116,6 @@ Template.appointments.events({
                 //     });
 
                 templateObject.updateEvents(objectData)
-                $("#event-modal").modal("hide");
                 $(".fullScreenSpin").css("display", "none");
             }
         }
