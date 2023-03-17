@@ -5983,7 +5983,7 @@ Template.payrollrules.onRendered(function() {
     }
 
 
-    
+
     templateObject.resetOvertimeModal = async () => {
         $('#overtimeHours').val('');
         $('#overtimeRateType').val('');
@@ -6404,8 +6404,8 @@ Template.payrollrules.onRendered(function() {
       $('#addexistgroup').editableSelect();
       $('#rateList').editableSelect();
       $('#overtimeRateType').editableSelect();
-      
-    
+
+
       $('#editbankaccount').editableSelect().on('click.editable-select', function (e, li) {
         e.preventDefault();
         e.stopPropagation();
@@ -8716,7 +8716,6 @@ Template.payrollrules.onRendered(function() {
             var accountDataName = e.target.value ||'';
 
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                console.log("success");
             $('#selectLineID').val('editsuperexpbankaccount');
             $('#accountListModal').modal("toggle");
             setTimeout(function () {
@@ -14619,7 +14618,7 @@ Template.payrollrules.onRendered(function() {
                 $('#select-rate-type-modal').modal('show');
             }
         });
-    });    
+    });
 
     $(document).on("click", "#tblRateTypeList tbody tr", function(e) {
 
@@ -15932,7 +15931,7 @@ Template.payrollrules.events({
         let taxRateService = new TaxRateService();
         setTimeout(function(){
         LoadingOverlay.show();
-        
+
 
         let rateTypeId = $('#edtRateID').val()|| 0;
         let ratetypedescription = $('#edtRateDescription').val()||'';
@@ -20140,7 +20139,7 @@ Template.payrollrules.events({
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
-        
+
         let calenderid = $('#selectColDeleteLineID').val()||0;
         let calendername = $('#selectCalenderName').val()||0;
         LoadingOverlay.show();
@@ -20230,7 +20229,7 @@ Template.payrollrules.events({
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
-        
+
         let LeaveId = $('#selectLeaveDeleteLineID').val()||0;
         let LeaveName = $('#selectLeaveName').val()||0;
         let Type = $('#leave_type').val()|| '';
@@ -20402,7 +20401,7 @@ Template.payrollrules.events({
         playDeleteAudio();
         let taxRateService = new TaxRateService();
         setTimeout(function(){
-        
+
         let holidayid = $('#selectholidayDeleteLineID').val()||0;
         let holidayname = $('#selectholidayName').val()||0;
         LoadingOverlay.show();
@@ -22567,7 +22566,7 @@ Template.payrollrules.helpers({
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
-    
+
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
