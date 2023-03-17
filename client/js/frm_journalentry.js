@@ -13,6 +13,7 @@ import {
 import {
     UtilityService
 } from "../utility-service";
+import { FixedAssetService } from '../fixedassets/fixedasset-service';
 import {
     ProductService
 } from "../product/product-service";
@@ -45,6 +46,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let fixedAssetService = new FixedAssetService();
 var times = 0;
 let defaultCurrencyCode = CountryAbbr;
 
@@ -2007,6 +2009,45 @@ Template.journalentrycard.onRendered(function() {
         });
     };
     tempObj.getAllTaxCodes();
+
+    tempObj.getAllCostTypes = function () {
+        getVS1Data("TCostTypes").then(function (dataObject) {
+            if (dataObject.length == 0) {
+                fixedAssetService.getCostTypeList().then(function (data) {
+                    tempObj.setAssetCostList(data);
+                }).catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                tempObj.setAssetCostList(data);
+            }
+        }).catch(function (err) {
+            fixedAssetService.getCostTypeList().then(function (data) {
+                tempObj.setAssetCostList(data);
+            }).catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+    tempObj.setAssetCostList = function (data) {
+        addVS1Data('TCostTypes', JSON.stringify(data));
+        let type_record = new Array();
+        for (let i = 0; i < data.tcosttypes.length; i ++) {
+            const costType = data.tcosttypes[i];
+            const typeField = {
+                id: costType.fields.ID,
+                typeName: costType.fields.TypeName
+            };
+            type_record.push(typeField);
+            $('#costTypeLine').editableSelect('add', function(){
+                $(this).val(typeField.id);
+                $(this).text(typeField.typeName);
+            });
+        }
+        tempObj.assetCostTypes.set(type_record);
+    };
+    tempObj.getAllCostTypes();
 
     $('#sltDepartment').editableSelect();
 
