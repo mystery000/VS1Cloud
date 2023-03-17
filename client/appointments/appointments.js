@@ -8,6 +8,17 @@ import { SalesBoardService } from "../js/sales-service";
 import { OrganisationService } from "../js/organisation-service";
 import { AppointmentService } from "./appointment-service";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
+
+// Damien
+// For resizable
+import _ from "lodash";
+import ChartHandler from "../js/Charts/ChartHandler";
+const highCharts = require('highcharts');
+require('highcharts/modules/exporting')(highCharts);
+require('highcharts/highcharts-more')(highCharts);
+//
+
+
 import { Random } from "meteor/random";
 //Calendar
 import { Calendar, formatDate } from "@fullcalendar/core";
@@ -437,7 +448,7 @@ Template.appointments.onRendered(function() {
                     }
                 }
             })
-           
+
         }
     }
     templateObject.hasFollowings();
@@ -3356,7 +3367,7 @@ Template.appointments.onRendered(function() {
                 templateObject.getAllProductData();
             });
         })
-        
+
     };
 
     templateObject.getAllProductData = function() {
@@ -10363,7 +10374,7 @@ Template.appointments.onRendered(function() {
                         }
                     }
                 })
-               
+
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
@@ -11638,7 +11649,7 @@ Template.appointments.onRendered(function() {
             }
         }
     })
-    
+
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
         return new Promise(async(resolve, reject) => {
             const smsSettings = templateObject.defaultSMSSettings.get();
@@ -11858,6 +11869,110 @@ Template.appointments.onRendered(function() {
             });
         } catch (error) {}
     };
+
+    tempObj.resizableFunction = () => {
+        let storeObj = JSON.parse(localStorage.getItem("appointment-card-0"));
+
+        if(storeObj && storeObj.width){
+            let width1 = storeObj.width;
+            let height1 = storeObj.height;
+
+            $("#colEmployeeList").width(parseInt(width1));
+            // $("#colEmployeeList").height(parseInt(height1));
+        }
+
+        storeObj = JSON.parse(localStorage.getItem("appointment-card-1"));
+
+        if(storeObj && storeObj.width){
+            let width2 = storeObj.width;
+            let height2 = storeObj.height;
+
+            $("#colCalendar").width(parseInt(width2));
+            // $("#colCalendar").height(parseInt(height2));
+        }
+
+        setTimeout(() => {
+            $(".portlet").resizable({
+                disabled: false,
+                minHeight: 200,
+                minWidth: 250,
+                // aspectRatio: 1.5 / 1
+                handles: "e,s",
+                stop: async (event, ui) => {
+
+                    // add custom class to manage spacing
+
+
+                    /**
+                     * Build the positions of the widgets
+                     */
+                    if ($(ui.element[0]).parents(".sortable-chart-widget-js").hasClass("editCharts") == false) {
+
+                        // ChartHandler.buildPositions();
+                        // await ChartHandler.saveChart(
+                        //     $(ui.element[0]).parents(".sortable-chart-widget-js")
+                        // );
+
+                    }
+                },
+                resize: function (event, ui) {
+                    let chartHeight = ui.size.height;
+                    let chartWidth = ui.size.width;
+
+                    $(ui.element[0])
+                        .parents(".sortable-chart-widget-js")
+                        .removeClass("col-md-6 col-md-8 col-md-4"); // when you'll star resizing, it will remove its size
+                    // if ($(ui.element[0]).parents(".sortable-chart-widget-js").attr("key") != "purchases__expenses_breakdown") {
+                    $(ui.element[0])
+                        .parents(".sortable-chart-widget-js")
+                        .addClass("resizeAfterChart");
+                    // Restrict width more than 100
+                    if (ChartHandler.calculateWidth(ui.element[0]) >= 100) {
+                        $(this).resizable("option", "maxWidth", ui.size.width);
+                    }
+                    // Resctrict height screen size.
+                    if (ChartHandler.calculateHeight(ui.element[0]) >= 100) {
+                        $(this).resizable("option", "maxHeight", ui.size.height);
+                    }
+
+                    // resize all highcharts
+                    try {
+                        const allHighCharts = $('.ds-highcharts');
+                        _.each(allHighCharts, chartElement => {
+                            const index = $(chartElement).data('highcharts-chart');
+                            let highChart = highCharts.charts[index];
+                            if (highChart) {
+                                highChart.reflow();
+                            }
+                        });
+                    } catch (e) {
+
+                    }
+
+                    // will not apply on Expenses breakdown
+                    $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", chartWidth);
+                    // $(ui.element[0]).parents(".sortable-chart-widget-js").css("height", chartHeight);
+
+                    if (localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'))) {
+                        let storeObj = JSON.parse(localStorage.getItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug')))
+                        localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
+                            position: storeObj.position,
+                            width: chartWidth,
+                            height: chartHeight
+                        }));
+                    } else {
+                        localStorage.setItem($(ui.element[0]).parents(".sortable-chart-widget-js").attr('chart-slug'), JSON.stringify({
+                            position: $(ui.element[0]).parents(".sortable-chart-widget-js").attr("position"),
+                            width: chartWidth,
+                            height: chartHeight
+                        }));
+                    }
+                },
+            });
+        }, 200);
+    }
+
+    tempObj.resizableFunction();
 
     $(document).on("change", "#chkmyAppointments", function(e) {
         if (JSON.parse(seeOwnAppointments) == true) {
@@ -16960,7 +17075,7 @@ Template.appointments.events({
                 repeatDates = getRepeatDates(sDate2, fDate2, repeatMonths, monthDate);
                 frequency2 = parseInt(monthDate);
             }
-            
+
             if (days.length > 0) {
                 for (let x = 0; x < days.length; x++) {
                     let dayObj = {
@@ -18277,7 +18392,7 @@ Template.appointments.events({
                         //   UserEmail: userEmail
                     },
                 };
-                
+
                 appointmentService
                     .saveAppointment(objectData)
                     .then(function(data) {
@@ -19120,7 +19235,7 @@ Template.appointments.events({
             document.getElementById("colCalendar").style.width = "calc(100% - 325px)";
         } else {
             document.getElementById("colEmployeeList").style.display = "none";
-            document.getElementById("colCalendar").style.width = "100vw";
+            document.getElementById("colCalendar").style.width = "100%";
         }
     },
     // 'click .addAppointmentEmp': function(event) {
@@ -19748,3 +19863,5 @@ getRegalTime = (date = new Date()) => {
     var coeff = 1000 * 60 * 60;
     return new Date(Math.round(date.getTime() / coeff) * coeff);
 };
+
+

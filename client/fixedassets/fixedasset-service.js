@@ -1,6 +1,6 @@
 import { BaseService } from "../js/base-service.js";
 export class FixedAssetService extends BaseService {
-  getTFixedAssetsList(limitcount, limitfrom, deleteFilter) {
+  getTFixedAssetsList(limitcount = 25, limitfrom = 0, deleteFilter) {
     let options = {
       ListType: "Detail",
       Search: "Active=true",
