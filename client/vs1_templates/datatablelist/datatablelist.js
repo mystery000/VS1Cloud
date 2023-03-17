@@ -168,7 +168,6 @@ Template.datatablelist.onRendered(async function () {
             custFields.push(customData);
         }
         await templateObject.displayfields.set(custFields);
-        $('.dataTable').resizable();
 
         let tableData = await templateObject.getTableData();
         await templateObject.displayTableData(tableData);
@@ -203,14 +202,6 @@ Template.datatablelist.onRendered(async function () {
         return new Promise((resolve, reject) => {
             // resolve(templateObject.data.apiName(initialDatatableLoad, 0, false))
             if (templateObject.data.istransaction == false) {
-                if (templateObject.data.typefilter) {
-                    let that = templateObject.data.service;
-                    let params = [initialDatatableLoad, 0, deleteFilter, templateObject.data.typefilter]
-                    templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
-                        resolve(dataReturn)
-                    })
-                    return
-                }
                 getVS1Data(indexDBName).then(function (dataObject) {
                     if (dataObject.length == 0) {
                         let that = templateObject.data.service;
@@ -1507,4 +1498,4 @@ Template.datatablelist.helpers({
     istransaction: () => {
         return Template.instance().data.istransaction;
     }
-})
+});
