@@ -559,6 +559,8 @@ openDb = function (dbName) {
       db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TAppointmentsTimeLog", { keyPath: "EmployeeEmail" });
+      
 
       // For accountant favorite reports state
       db.createObjectStore('TFavReportCompany', {keyPath: 'EmployeeEmail'});
