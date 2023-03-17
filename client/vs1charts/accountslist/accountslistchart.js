@@ -705,15 +705,7 @@ Template.accountslistchart.onRendered(() => {
                 let data = JSON.parse(dataObject[0].data);
                 setAccountListVS1(data, true);
             }
-        }).catch(function (err) {
-            accountService.getAccountListVS1().then(function (data) {
-                setAccountListVS1(data);
-            }).catch(function (err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $(".fullScreenSpin").css("display", "none");
-                // Meteor._reload.reload();
-            });
-        });
+        }).catch(function (err) {});
     };
 
     // function setAccountListVS1(data, isField = false) {

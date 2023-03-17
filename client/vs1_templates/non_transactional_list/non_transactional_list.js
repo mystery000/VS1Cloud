@@ -3974,14 +3974,7 @@ Template.non_transactional_list.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 templateObject.displayClientTypeListData(data); //Call this function to display data on the table
             }
-        }).catch(function(err) {
-            sideBarService.getClientTypeDataList(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TClientTypeList', JSON.stringify(data));
-                templateObject.displayClientTypeListData(data); //Call this function to display data on the table
-            }).catch(function(err) {
-
-            });
-        });
+        }).catch(function(err) {});
     }
     templateObject.displayClientTypeListData = function(data) {
         var splashArrayClientTypeList = new Array();
