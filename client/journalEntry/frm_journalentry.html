@@ -266,7 +266,7 @@
                                                                         <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                             <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                             <input class="custom-range widthElement rngRangeAccountName" type="number" style="margin: 8px;"
-                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[0].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[0].width}}{{else}}0{{/if}}" min="0" max="100">
                                                                         </div>
                                                                     </div>
 
@@ -281,7 +281,22 @@
                                                                         <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                             <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                             <input class="custom-range widthElement rngRangeMemo" type="number" style="margin: 8px;"
-                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[2].width}}{{else}}0{{/if}}" min="0" max="100">
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <div class="columnSettings">
+                                                                        <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                                                            <input class="custom-control-input chkcolFixedAsset" type="checkbox" id="formCheck-05" checked="">
+                                                                            <label class="custom-control-label" for="formCheck-05"></label>
+                                                                            <div contenteditable="true" class="groove divcolumn" type="text"
+                                                                                 value="Fixed Asset" valueupdate="th.colFixedAsset">
+                                                                                Fixed Asset</div>
+                                                                        </div>
+                                                                        <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
+                                                                            <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
+                                                                            <input class="custom-range widthElement rngRangeFixedAsset" type="number" style="margin: 8px;"
+                                                                                   value="0" min="0" max="100">
                                                                         </div>
                                                                     </div>
 
@@ -296,7 +311,7 @@
                                                                         <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                             <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                             <input class="custom-range widthElement rngRangeCreditEx" type="number" style="margin: 8px;"
-                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[3].width}}{{else}}0{{/if}}" min="0" max="100">
                                                                         </div>
                                                                     </div>
 
@@ -311,7 +326,7 @@
                                                                         <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
                                                                             <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                                                             <input class="custom-range widthElement rngRangeDebitEx" type="number" style="margin: 8px;"
-                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
+                                                                                value="{{#if salesCloudGridPreferenceRec}}{{salesCloudGridPreferenceRec.customFields.[4].width}}{{else}}0{{/if}}" min="0" max="100">
                                                                         </div>
                                                                     </div>
 
@@ -489,7 +504,9 @@
                                                 <th class="th colAccountName" style="width: 300px;">Account Name</th>
                                                 <!-- <th class="th colAccountNo" style="width: 300px;">Account No</th> -->
                                                 <th class="th colMemo">Memo</th>
-                                                <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Department</th>
+                                                <th class="th colFixedAsset" style="width: 95px; text-align: left!important;">Fixed Asset</th>
+                                                <th class="th colCustomerJob" style="width: 95px; text-align: left!important;">Customer/Job</th>
+                                                <th class="th colDepartment" style="width: 95px; text-align: left!important;">Department</th>
                                                 <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
                                                 <th colspan="{{displayFieldColspan }}" class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
                                                 <th colspan="{{displayFieldColspan }}" class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
@@ -524,6 +541,15 @@
                                                     <td contenteditable="false" class="colAccountName"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}"></td>
                                                     <!-- <td contenteditable="true" class="lineAccountNo colAccountNo">{{item.accountno}}</td> -->
                                                     <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
+
+                                                    <td class="th colFixedAsset" assetID="{{item.fixedAssetID}}" assetname="{{item.fixedAssetName}}"
+                                                        costTypeID="{{item.costTypeID}}" costtypename="{{item.costTypeName}}"><i
+                                                            class="fas fa-plus-square text-success btnFixedAsset"
+                                                            style="margin-left: 40px; font-size: 22px;"></i></td>
+                                                    <td contenteditable="false" class="colCustomerJob">
+                                                        <input class="es-input highlightSelect lineCustomerJob" type="search"
+                                                               value="{{item.customerJob}}">
+                                                    </td>
 
                                                     <!-- Department -->
                                                     <td contenteditable="false" class="colDepartment" id="department-select-{{item.lineID}}">
@@ -610,6 +636,53 @@
                 </div>
             </div>
 
+            <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal" style="padding: 32px;z-index: 1051;">
+                <h4>Fixed Asset List</h4>
+                {{> fixedassetlistpop}}
+            </div>
+
+            <div class="modal fade" role="dialog" tabindex="-1" id="FixedAssetLineAddModal">
+                <div class="modal-dialog" role="document" style="max-width: 670px !important">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title-header">Fixed Asset</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-6 col-md-6 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Fixed Asset</label>
+                                        <select
+                                                type="search"
+                                                class="form-control"
+                                                id="fixedAssetLine"
+                                                name="fixedAssetLine"
+                                                style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        ></select>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-6 col-lg-6">
+                                    <div class="form-group">
+                                        <label>Cost Type</label>
+                                        <select
+                                                type="search"
+                                                class="form-control"
+                                                id="costTypeLine"
+                                                name="costTypeLine"
+                                                style="background-color: rgb(255, 255, 255); cursor: pointer"
+                                        >
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
                 {{> departmentpop}}
             </div>
@@ -619,14 +692,22 @@
             </div>
 
             <div class="row no-gutters">
-                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">
-                    <button class="btn btn-success btnSave btn-auto-save vs1ButtonMargin" type="button" ><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                    <button class="btn btn-danger btnRemove vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>
-                    <button class="btn btn-secondary btnBack vs1ButtonMargin" type="button" ><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+                <div class="col-12 col-md-11">
+                    <div class="row justify-content-center desktopButtons">
+                        {{> transaction_footer AttachmentCount=attachmentCount TransactionType="purchaseorders"}}
+                    </div>
                 </div>
-
             </div>
+
+<!--            <div class="row no-gutters">-->
+<!--                <div class="col d-xl-flex justify-content-xl-center align-items-xl-center" style="padding: 16px;padding-top: 0px!important;">-->
+<!--                    <button class="btn btn-success btnSave btn-auto-save vs1ButtonMargin" type="button" ><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>-->
+<!--                    <button class="btn btn-primary vs1ButtonMargin" id="open_print_confirm" type="button"><i class="fa fa-print" style="margin-right: 5px;"></i>Print</button>-->
+<!--                    <button class="btn btn-danger btnRemove vs1ButtonMargin" type="button" autocomplete="off"><i class="fa fa-trash" style="padding-right: 8px;"></i>Delete</button>-->
+<!--                    <button class="btn btn-secondary btnBack vs1ButtonMargin" type="button" ><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>-->
+<!--                </div>-->
+
+<!--            </div>-->
 
             <div class="modal fade" role="dialog" tabindex="-1" id="templateselection">
                 <div class="modal-dialog modal-lg" role="document">

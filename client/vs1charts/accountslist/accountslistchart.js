@@ -85,7 +85,7 @@ Template.accountslistchart.onCreated(() => {
     let headerStructure = [
         {index: 0, label: '#ID', class: 'colAccountId', active: false, display: false, width: "10"},
         {index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200"},
-        {index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: ""},
+        {index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "720"},
         {index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90"},
         {index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60"},
         {index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},

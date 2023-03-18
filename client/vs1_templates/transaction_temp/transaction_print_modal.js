@@ -219,6 +219,14 @@ Template.transaction_print_modal.onCreated(async function () {
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
             .filter((item) => item.fields.SettingName == template.name)
+            .map((item) => ({
+              fields: {
+                SettingName: item.fields.SettingName,
+                Template: item.fields.Template,
+                Description: item.fields.Description === "" ? `Template ${item.fields.Template}` : item.fields.Description,
+              },
+              type: "TTemplateSettings",
+            }))
             .sort((a, b) => a.fields.Template - b.fields.Template);
 
           if (templateList.length === 0) {
@@ -284,6 +292,7 @@ Template.transaction_print_modal.onCreated(async function () {
   }
 
   const templates = await getTemplates();
+  this.templates.set(templates)
   getSMSSettings();
 
   this.fnSendSMS = async function(isForced = false){
