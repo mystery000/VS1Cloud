@@ -130,6 +130,11 @@
             <div>
 
                 <div class="card-body p-3 rounded" style="margin: 0; margin-left: 16px">
+                    <style>
+                        td.colAmountEx, td.colTax, td.colAmount{
+                            text-align: right !important;
+                        }
+                    </style>
                     {{>datatablelist
                         tablename="tblSalesOrderlist"
                         apiName= apiFunction
@@ -145,6 +150,7 @@
                         exIndexDBName = 'tsalesorderex'
                         exdatahandler = exDataHandler
                         searchAPI = searchAPI
+                        orderby = '[[ 0, "desc" ],[ 1, "asc" ]]'
                     }}
                 </div>
 

@@ -78,6 +78,9 @@ Template.settings.events({
   "click .btnTermsSettings": function (event) {
     FlowRouter.go("/termsettings");
   },
+  "click .btnServiceChecker": function (event) {
+    FlowRouter.go("/serviceChecker");
+  },
   "click .btnSubcription": function (event) {
     FlowRouter.go("/subscriptionSettings");
   },

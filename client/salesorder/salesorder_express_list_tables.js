@@ -36,21 +36,20 @@ Template.salesorderslist.onCreated(function(){
         salestatus = "Deleted";
       };
       let dataList = [
-          data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate,
-          data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate,
+          '<span style="display:none;">'+data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate+'</span>'+data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate,
           data.SaleID || '',
           data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate,
           data.CustomerName || '',
           totalAmountEx || 0.00,
           totalTax || 0.00,
           totalAmount || 0.00,
-          salestatus || '',
           data.EmployeeName || '',
           data.Converted? 'Converted': 'Unconverted',
           data.Comments || '',
           data.SaleCustField1 || '',
           data.SaleCustField2 || '',
-          data.SaleCustField3 || ''
+          data.SaleCustField3 || '',
+          salestatus || '',
       ];
       return dataList;
     }
@@ -69,7 +68,7 @@ Template.salesorderslist.onCreated(function(){
         salestatus = "Deleted";
       };
       var dataList = [
-        data.fields.SaleDate != '' ? moment(data.fields.SaleDate).format("YYYY/MM/DD") : data.fields.SaleDate,
+        // data.fields.SaleDate != '' ? moment(data.fields.SaleDate).format("YYYY/MM/DD") : data.fields.SaleDate,
         data.fields.SaleDate != '' ? moment(data.fields.SaleDate).format("DD/MM/YYYY") : data.fields.SaleDate,
         data.fields.ID || '',
         data.fields.DueDate != '' ? moment(data.fields.DueDate).format("DD/MM/YYYY") : data.fields.DueDate,
@@ -77,26 +76,27 @@ Template.salesorderslist.onCreated(function(){
         totalAmountEx || 0.00,
         totalTax || 0.00,
         totalAmount || 0.00,
-        salestatus || '',
         data.fields.EmployeeName || '',
         data.fields.Converted? 'Converted': 'Unconverted',
         data.fields.Comments || '',
+          salestatus || '',
       ];
       return dataList
     }
 
-    let headerStructure = [ { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
-    { index: 1, label: "Sale Date", class: "colSaleDate", active: true, display: true, width: "100" },
-    { index: 2, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "74" },
-    { index: 3, label: "Due Date", class: "colDueDate", active: true, display: true, width: "100" },
-    { index: 4, label: "Customer", class: "colCustomer", active: true, display: true, width: "150" },
-    { index: 5, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "100" },
-    { index: 6, label: "Tax", class: "colTax", active: true, display: true, width: "100" },
-    { index: 7, label: "Amount (Inc)", class: "colAmount", active: true, display: true, width: "100" },
-    { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
-    { index: 9, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
-    { index: 10, label: "Converted", class: "colConverted", active: true, display: true, width: "100" },
-    { index: 11, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
+    let headerStructure = [
+    // { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
+    { index: 0, label: "Sale Date", class: "colSaleDate", active: true, display: true, width: "100" },
+    { index: 1, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "74" },
+    { index: 2, label: "Due Date", class: "colDueDate", active: true, display: true, width: "100" },
+    { index: 3, label: "Customer", class: "colCustomer", active: true, display: true, width: "150" },
+    { index: 4, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "100" },
+    { index: 5, label: "Tax", class: "colTax", active: true, display: true, width: "100" },
+    { index: 6, label: "Amount (Inc)", class: "colAmount", active: true, display: true, width: "100" },
+    { index: 7, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
+    { index: 8, label: "Converted", class: "colConverted", active: true, display: true, width: "100" },
+    { index: 9, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
+    { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 

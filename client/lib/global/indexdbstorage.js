@@ -53,6 +53,7 @@ openDb = function (dbName) {
       db.createObjectStore("TDeptClass", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDeptClassList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDepartment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TCostTypes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCurrency", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCurrencyList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TLeadStatusType", { keyPath: "EmployeeEmail" });
@@ -553,6 +554,30 @@ openDb = function (dbName) {
       db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
       db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TDashbaordOptions", {keyPath: "EmployeeEmail"});
+      db.createObjectStore("TTransactionDescription", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TAppointmentsTimeLog", { keyPath: "EmployeeEmail" });
+
+
+      // For accountant favorite reports state
+      db.createObjectStore('TFavReportCompany', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustee', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportFinancialStatement', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportIndividual', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportPartnershipNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSelfManagedSuperfund', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSingleDirector', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSoleTraderNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrust', {keyPath: 'EmployeeEmail'});
+
+      db.createObjectStore('TFavSupplierList', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavSupplierSummaryReport', {keyPath: 'EmployeeEmail'});
+
+      db.createObjectStore("TReconciliationBankAccountsList", { keyPath: "EmployeeEmail" });
 
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
@@ -816,7 +841,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 247);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 251);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };

@@ -66,12 +66,30 @@ Template.datatablelist.onRendered(async function () {
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     };
+    let activeViewDeletedLabel = "View Deleted";
+    let hideViewDeletedLabel = "Hide Deleted";
+
     let isShowSelect = false;
     if(templateObject.data.istransaction == true){
       isShowSelect = false;
+      activeViewDeletedLabel = "View Deleted";
+      hideViewDeletedLabel = "Hide Deleted";
     }else{
       isShowSelect = true;
+      activeViewDeletedLabel = "View In-Active";
+      hideViewDeletedLabel = "Hide In-Active";
     };
+
+    if(templateObject.data.viewCompletedButton == true){
+      activeViewDeletedLabel = "View Completed";
+      hideViewDeletedLabel = "Hide Completed";
+    };
+
+    if(templateObject.data.viewShowSoldButton == true){
+      activeViewDeletedLabel = "Show Sold";
+      hideViewDeletedLabel = "Hide Sold";
+    };
+
     function MakeNegative() {
         $('td').each(function () {
             if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
@@ -85,7 +103,23 @@ Template.datatablelist.onRendered(async function () {
             if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
             if ($(this).text() == "Converted") $(this).addClass("text-converted");
             if ($(this).text() == "Completed") $(this).addClass("text-completed");
-            if ($(this).text() == "Not Converted") $(this).addClass("text-deleted");
+            if ($(this).text() == "Not Converted") $(this).addClass("text-NotConverted");
+            if ($(this).text() == "On-Hold") $(this).addClass("text-Yellow");
+            if ($(this).text() == "Processed") $(this).addClass("text-Processed");
+            if ($(this).text() == "In-Stock") $(this).addClass("text-instock");
+            if ($(this).text() == "Sold") $(this).addClass("text-sold");
+        });
+        $("td.colFinished").each(function () {
+            if ($(this).text() == "In-Active") $(this).addClass("text-deleted");
+            if ($(this).text() == "Deleted") $(this).addClass("text-deleted");
+            if ($(this).text() == "Full") $(this).addClass("text-fullyPaid");
+            if ($(this).text() == "Part") $(this).addClass("text-partialPaid");
+            if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
+            if ($(this).text() == "Converted") $(this).addClass("text-converted");
+            if ($(this).text() == "Completed") $(this).addClass("text-completed");
+            if ($(this).text() == "Not Converted") $(this).addClass("text-Yellow");
+            if ($(this).text() == "On-Hold") $(this).addClass("text-Yellow");
+            if ($(this).text() == "Processed") $(this).addClass("text-Processed");
         });
     };
 
@@ -128,7 +162,6 @@ Template.datatablelist.onRendered(async function () {
     }
 
     templateObject.showCustomFieldDisplaySettings = async function (savedHeaderInfo) {
-      // console.log(savedHeaderInfo);
         let custFields = [];
         let customData = {};
         let customFieldCount = savedHeaderInfo.length;
@@ -155,7 +188,6 @@ Template.datatablelist.onRendered(async function () {
             custFields.push(customData);
         }
         await templateObject.displayfields.set(custFields);
-        $('.dataTable').resizable();
 
         let tableData = await templateObject.getTableData();
         await templateObject.displayTableData(tableData);
@@ -403,14 +435,13 @@ Template.datatablelist.onRendered(async function () {
         let aitems = [];
 
         const tabledraw = () => {
-          console.log(acolDef);
             $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,
                 // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 // columns: columns,
                 // aoColumns:acolDef,
-                // columns: acolDef,
+                //columns: acolDef,
                 columnDefs: colDef,
                 deferRender: true,
                 buttons: [{
@@ -492,13 +523,10 @@ Template.datatablelist.onRendered(async function () {
                 colReorder: true,
                 pageLength: initialDatatableLoad,
                 "bLengthChange": isShowSelect,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
+                lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
                 responsive: true,
-                "order": [[1, "asc"]],
+                "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 // "autoWidth": false,
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -574,17 +602,43 @@ Template.datatablelist.onRendered(async function () {
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
                     if (data.Params) {
+                      if(templateObject.data.showCameraButton == true){
+                        $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter('#' + currenttablename + '_filter');
+                      };
+
+                      if(templateObject.data.viewConvertedButton == true){
+                        // if (data.Params.Search == "IsBill = true and IsCheque != true") {
+                          $("<button class='btn btn-danger btnHideConverted' type='button' id='btnHideConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #f6c23e !important;border-color: #f6c23e!important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Converted</button>").insertAfter('#' + currenttablename + '_filter');
+                          $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #1cc88a !important;border-color: #1cc88a!important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + currenttablename + '_filter');
+                        // }else{
+                        //   $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + currenttablename + '_filter');
+                        // }
+                      };
+
+                      if(templateObject.data.showPlusButtonCRM == true){
+                        $(`<div class="btn-group btnNav btnAddLineGroup" style="height:35px">
+                            <button type="button" class="btn btn-primary btnAddLine" id="btnAddLine" style="margin-right: 0px;"><i class='fas fa-plus'></i></button>
+                            <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item btnAddLineTask pointer" id="btnAddLineTask">+ Task</a>
+                            </div>
+                        </div>`).insertAfter('#' + currenttablename + '_filter');
+                      }else if(templateObject.data.showPlusButton == true){
+                        $("<button class='btn btn-primary "+showPlusButtonClass+"' id='"+showPlusButtonClass+"' name='"+showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='#"+showPlusButtonDataTarget+"' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                      };
+
+
                         if (data.Params.Search.replace(/\s/g, "") == "") {
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                         } else {
                           if (data.Params.Search == "IsBill = true and IsCheque != true") {
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                           }else{
-                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                           }
                         }
                     } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
@@ -642,7 +696,6 @@ Template.datatablelist.onRendered(async function () {
 
         function getColDef() {
             let items = templateObject.data.tableheaderrecords;
-
             for (let i = 0; i < $(".displaySettings").length; i ++) {
                 var $tblrow = $($(".displaySettings")[i]);
                 var fieldID = $tblrow.attr("custid") || 0;
@@ -659,14 +712,14 @@ Template.datatablelist.onRendered(async function () {
                     index: parseInt(fieldID),
                     label: colTitle,
                     active: colHidden,
-                    width: parseInt(colWidth),
+                    width: parseFloat(colWidth),
                     class: colthClass,
                     display: true
                 };
 
                 for (let i = 0; i < items.length; i ++) {
-                    let tLabel = items[i].label.indexOf('#') >= 0 ? items[i].label.substr(1) : items[i].label;
-                    let rLabel = lineItemObj.label.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
+                    let tLabel = items[i]?.label?.indexOf('#') >= 0 ? items[i].label.substr(1) : items[i].label;
+                    let rLabel = lineItemObj?.label?.indexOf('#') >= 0 ? lineItemObj.label.substr(1) : lineItemObj.label;
                     if (tLabel == rLabel) {
                         items[i].width = lineItemObj.width;
                         if (lineItemObj.active) {
@@ -688,7 +741,7 @@ Template.datatablelist.onRendered(async function () {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
                         targets: i,
-                        className: items[i].label.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
+                        className: items[i]?.label?.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
                         // className: items[i].class,
                         title: items[i].label,
                         width: items[i].width+'px'
@@ -1436,7 +1489,7 @@ Template.datatablelist.events({
                 index: parseInt(fieldID),
                 label: colTitle,
                 active: colHidden,
-                width: parseInt(colWidth),
+                width: parseFloat(colWidth),
                 class: colthClass,
                 display: true
             };
@@ -1490,4 +1543,4 @@ Template.datatablelist.helpers({
     istransaction: () => {
         return Template.instance().data.istransaction;
     }
-})
+});

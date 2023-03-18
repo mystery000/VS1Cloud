@@ -2257,7 +2257,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCredit, options);
   }
 
-  getTCreditListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getTCreditListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -2278,7 +2278,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-
+    if(deleteFilter) options.Search = '';
     return this.getList(this.ERPObjects.TCreditList, options);
   }
 
@@ -2355,6 +2355,19 @@ export class SideBarService extends BaseService {
       };
     }
     return this.getList(this.ERPObjects.TAppointmentList, options);
+  }
+
+  getTCorrespondenceListDataByName(dataSearchName) {
+    let options = "";
+
+      options = {
+          OrderBy: "Ref_Type asc",
+          IgnoreDates: true,
+          IsDetailReport: false,
+          Search: 'Ref_Type = "' + dataSearchName + '" OR MessageAsString = "' + dataSearchName + '"',
+      };
+
+    return this.getList(this.ERPObjects.TCorrespondence, options);
   }
 
   getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,isDeleted) {
@@ -2564,7 +2577,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TInvoiceEx, options);
   }
 
-  getAllTInvoiceListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getAllTInvoiceListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -2592,6 +2605,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TInvoiceList, options);
   }
   // Rasheed Speed Here
@@ -2790,6 +2804,28 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAppointment, options);
   }
 
+  getAllCorrespondenceList(limitcount, limitfrom) {
+    let options = "";
+
+    if (limitcount == "All") {
+      options = {
+        ListType: "Detail",
+        select: "[Active]=true",
+      };
+    } else {
+      options = {
+        // orderby: '"AppointID desc"',
+        OrderBy: "Ref_Type asc",
+        ListType: "Detail",
+        select: "[Active]=true",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    }
+
+    return this.getList(this.ERPObjects.TCorrespondence, options);
+  }
+
   getAllAppointmentPredList(data) {
     let options = {
       PropertyList:"ID,EmployeeID,ShowApptDurationin,ShowSaturdayinApptCalendar,ShowSundayinApptCalendar,ApptStartTime,ApptEndtime,DefaultApptDuration,DefaultServiceProductID,DefaultServiceProduct",
@@ -2984,11 +3020,12 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TDeptClassList, options);
   }
 
-  getTripGroup() {
+  getTripGroup(limitfrom, limitcount, deleteFilter) {
     let options = {
       PropertyList:"ID,TripName,Description,Active",
       select: "[Active]=true",
     };
+    if(deleteFilter) options.select = "";
     return this.getList(this.ERPObjects.TTripGroup, options);
   }
 
@@ -3446,7 +3483,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TVS1BankDeposit, options);
   }
 
-  getAllTBankDepositListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTBankDepositListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -3467,6 +3504,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TBankDepositList, options);
   }
 
@@ -3691,6 +3729,33 @@ export class SideBarService extends BaseService {
     }
     return this.getList(this.ERPObjects.TReconciliation, options);
   }
+
+    getAllTReconcilationListDataForBankAccountChart(limitfrom,limitcount, deleteFilter) {
+        let options = "";
+
+        options = {
+            IgnoreDates: true,
+            // OrderBy: "ReconciliationID desc",
+            OrderBy: "ReconciliationDate desc",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+            Search: "Deleted != true",
+        };
+
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TReconciliationList, options);
+    }
+    getAllTReconcilationByNameForBankAccountChart(accountName) {
+        let options = {
+            ListType: "Detail",
+            Search: 'AccountName="' + accountName + '"',
+            // IgnoreDates: false,
+            // AccountName: accountName,
+            // DateFrom: '"' + dateFrom + '"',
+            // DateTo: '"' + dateTo + '"'
+        };
+        return this.getList(this.ERPObjects.TReconciliationList, options);
+    }
 
   getAllTReconcilationListData(dateFrom,dateTo,ignoreDate, deleteFilter) {
     let options = "";
@@ -4007,7 +4072,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TRefundSale, options);
   }
 
-  getAllTRefundSaleListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllTRefundSaleListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter) {
     let options = "";
 
     if (ignoreDate == true) {
@@ -4029,6 +4094,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TRefundSaleList, options);
   }
 
@@ -4143,13 +4209,13 @@ export class SideBarService extends BaseService {
       if (limitcount == "All") {
         options = {
           ListType: "Detail",
-          select: "[Allclasses]=true",
+          select: "[Active]=true",
         };
       } else {
         options = {
           // orderby:'"ClientID desc"',
           ListType: "Detail",
-          select: "[Allclasses]=true",
+          select: "[Active]=true",
         };
       }
     }
@@ -4379,6 +4445,30 @@ export class SideBarService extends BaseService {
 
     return this.getList(this.ERPObjects.VS1_Customize, options);
   }
+  getLeaveRequest() {
+    let options = {
+      ListType: "Detail",
+    };
+    return this.getList(this.ERPObjects.TLeavRequest, options);
+  }
+
+  getAssignLeaveType(limitcount, limitfrom) {
+    let options = '';
+    if(limitcount == 'All'){
+        options = {
+            ListType: "Detail"
+            //select: '[Active]=true'
+        };
+    }else{
+        options = {
+            ListType: "Detail",
+            //select: '[Active]=true',
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+    };
+    return this.getList(this.ERPObjects.TAssignLeaveType, options);
+  }
 
   saveNewCustomFields(erpGet, tableName, employeeId, columns)
   {
@@ -4508,6 +4598,46 @@ export class SideBarService extends BaseService {
                 [4,"Ms",""],
             ];
             resolve({"ttitlelist" : splashArrayTitleList});
+        });
+        return promise;
+    }
+
+    getTransactionDescription() {
+        return this.getManualTransactionDescription();
+
+    }
+    getManualTransactionDescription() {
+        return this.getWowTransactionDescription();
+    }
+    getWowTransactionDescription() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [['', 'Payroll'], ['', 'Supplier'], ['', 'Insurance'], ['', 'Accounting']]
+            resolve({"ttransactiondescription" : splashArrayTitleList});
+        });
+        return promise;
+    }
+
+    getTransactionCode() {
+        return this.getManualTransactionCode();
+
+    }
+    getManualTransactionCode() {
+        return this.getWowTransactionCode();
+    }
+    getWowTransactionCode() {
+        var that = this;
+        var promise = new Promise(function(resolve, reject) {
+            var splashArrayTitleList = [['13', 'Debit'],
+            ['50', 'Credit'],
+            ['51', 'Australian Govt. Security Interest'],
+            ['52', 'Basic Family Payments/Additional Family Payment'],
+            ['53', 'Pay'],
+            ['54', 'Pension'],
+            ['55', 'Allotment'],
+            ['56', 'Dividend'],
+            ['57', 'Debenture/Note Interest']]
+            resolve({"ttransactioncode" : splashArrayTitleList});
         });
         return promise;
     }

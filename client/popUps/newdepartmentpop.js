@@ -2,6 +2,9 @@ import {
     TaxRateService
 } from "../settings/settings-service";
 import {
+    ProductService
+} from "../product/product-service";
+import {
     ReactiveVar
 } from 'meteor/reactive-var';
 import {
@@ -12,7 +15,7 @@ import '../lib/global/indexdbstorage.js';
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './newdepartmentpop.html';
-
+let productService = new ProductService();
 let sideBarService = new SideBarService();
 Template.newdepartmentpop.onCreated(function() {
     const templateObject = Template.instance();
@@ -119,23 +122,40 @@ Template.newdepartmentpop.onRendered(async function() {
     templateObject.getAllEmployees();
 
     templateObject.getRooms = function() {
+        getVS1Data('TProductBin').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(async function (data) {
+                    await addVS1Data('TProductBin', JSON.stringify(data));
+                    templateObject.setBinRecords(data);
+                }).catch(function (err) {
 
-        taxRateService.getBins().then(function(data) {
-            let binList = [];
-            for (let i = 0; i < data.tproductbin.length; i++) {
-
-                let dataObj = {
-                    roomid: data.tproductbin[i].BinNumber || ' ',
-                    roomname: data.tproductbin[i].BinLocation || ' '
-                };
-                if (data.tproductbin[i].BinLocation.replace(/\s/g, '') != '') {
-                    binList.push(dataObj);
-                }
-
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.setBinRecords(data);
             }
-            templateObject.roomrecords.set(binList);
+        }).catch(function (err) {
+            productService.getBins().then(async function (data) {
+                await addVS1Data('TProductBin', JSON.stringify(data));
+                templateObject.setBinRecords(data);
+            }).catch(function (err) {
+            });
         });
     };
+    templateObject.setBinRecords = function(data){
+        let binList = [];
+        for (let i = 0; i < data.tproductbin.length; i++) {
+
+            let dataObj = {
+                roomid: data.tproductbin[i].BinNumber || ' ',
+                roomname: data.tproductbin[i].BinLocation || ' '
+            };
+            if (data.tproductbin[i].BinLocation.replace(/\s/g, '') != '') {
+                binList.push(dataObj);
+            }
+        }
+        templateObject.roomrecords.set(binList);
+    }
     templateObject.getRooms();
 
     templateObject.getDeptList = function() {

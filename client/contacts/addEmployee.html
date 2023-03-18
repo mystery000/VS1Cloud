@@ -384,7 +384,7 @@
                           </div>
                           <div class="col-12 col-md-3" style="padding: 0px;">
                             <div class="form-group" style="margin: 4px; padding-left:4px;">
-                              {{> dashboard_options target="edtDashboardOptions" value=record.dashboardOptions}}
+                              {{> dashboard_options target="edtDashboardOptions" value=record.loginDefault}}
                             </div>
                           </div>
                           <div class="col-12 col-md-2" style="padding: 0px;">
@@ -2697,7 +2697,8 @@
                                       }
 
                                       #tblLeaveRequests tr th {
-                                        width: calc(100% / 4 - 30px) !important;
+                                        /* width: calc(100% / 4 - 30px) !important; */
+                                        width: 100% !important;
                                       }
 
                                       #tblLeaveRequests tr th.width30Px {
@@ -2714,7 +2715,21 @@
                                         width: 8px !important;
                                       }
                                     </style>
-                                    <table id="tblLeaveRequests" style="width:100%"
+                                      {{>datatablelist
+                                        tablename="tblLeaveRequests"
+                                        apiName= apiFunction
+                                        indexeddbname = 'TLeavRequest'
+                                        tableheaderrecords = tableLeaveRequestheaderrecords
+                                        exportfilename = 'Payroll Leave Request'
+                                        istransaction = false
+                                        apiParams= apiParams
+                                        datahandler = datahandler
+                                        service=service
+                                        lowercaseDataName='tleavrequest'
+                                        exIndexDBName = 'tleavrequest'
+                                        exdatahandler = exDataHandler
+                                    }}
+                                    <!-- <table id="tblLeaveRequests" style="width:100%"
                                       class="table table-striped table-bordered">
                                       <thead>
                                         <tr class="dnd-moved">
@@ -2730,7 +2745,7 @@
 
                                       </tbody>
 
-                                    </table>
+                                    </table> -->
                                   </div>
                                 </div>
                               </div>
@@ -4238,15 +4253,17 @@
         </div>
       </div>
     </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="dashboardOptionListModal">
+      {{> dashboardoptionspopup options=record.dashboardOptions}}
+    </div>
     {{/if}}
   </div>
+
   <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
     {{> employeeproductlistpop}}
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="dashboardOptionListModal">
-    {{> dashboardoptionspopup}}
-  </div>
+
 
   <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
     {{> newproductpop}}

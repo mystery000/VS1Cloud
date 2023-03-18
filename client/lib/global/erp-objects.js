@@ -93,6 +93,7 @@ const erpObject = {
     TExpenseClaimEx: "TExpenseClaimEx",
     TExpenseClaimList: "TExpenseClaimList",
     TFixedAssets: "TFixedAssets",
+    TFixedAssetsList: "TFixedAssetsList",
     TProductSalesDetailsReport: "TProductSalesDetailsReport",
     ERPTaxCode: "TTaxCode",
     ERPSubTaxCode: "TSubTaxCode",
@@ -322,7 +323,9 @@ const erpObject = {
     BuildProfitabilityReport: "BuildProfitabilityReport",
     ProductionWorksheetReport: "ProductionWorksheetReport",
     WorkOrderReport: "WorkOrderReport",
-    //TProductQtyList:"TProductQtyList"
+    //TProductQtyList:"TProductQtyList",
+    TNewAppointment:"TNewAppointment ", 
+    TAppointmentsTimeLog:"TAppointmentsTimeLog ", 
 };
 
 export default erpObject;

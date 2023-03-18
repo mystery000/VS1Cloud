@@ -26,12 +26,47 @@
         editModalID="editDashboardModal"
     }}
         <div>
+            <style>
+                td.colReconBalance{
+                    text-align: right !important;
+                }
+            </style>
+              <!-- tablename: Specify the html table Id/name
+              apiName: Pass the API function here e.g apiFunction
+              indexeddbname: specify the indexdb name
+              tableheaderrecords: Pass the header records
+              exportfilename:Print out table name
+              istransaction: Assign true or false if it is a transacation or non - transaction list
+              apiParams= apiParams
+              datahandler = datahandler
+              service=service
+              lowercaseDataName='treconciliationlist'
+              exIndexDBName = 'treconciliationlist'
+              exdatahandler = exDataHandler
+              searchAPI = searchAPI
+              orderby = '[[ 4, "desc" ]]'
+              orderdesc = 'desc'
+              indexeddbname = 'TReconciliationBankAccountsList'
+              tableheaderrecords = tableheaderrecords
+              exportfilename = 'Bank Account List'
+              istransaction = false
+              apiParams= apiParams
+              datahandler = datahandler
+              service=service
+              lowercaseDataName='treconciliationlist'
+              exIndexDBName = 'treconciliationlist'
+              exdatahandler = exDataHandler
+              searchAPI = searchAPI
+              orderby: Pass which column to order datatble with. Default 1
+              orderdesc : Specify if order is desc or asc. Deafult asc
+            -->
+
             {{>datatablelist
                     tablename="tblBankAccountChartList"
                     apiName= apiFunction
-                    indexeddbname = 'TReconciliationList'
+                    indexeddbname = 'TReconciliationBankAccountsList'
                     tableheaderrecords = tableheaderrecords
-                    exportfilename = 'Reconciliation List'
+                    exportfilename = 'Bank Account List'
                     istransaction = false
                     apiParams= apiParams
                     datahandler = datahandler
@@ -40,6 +75,12 @@
                     exIndexDBName = 'treconciliationlist'
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
+                    orderby = '[[ 4, "desc" ]]'
+                    viewActiveInactiveButton = true
+                    viewConvertedButton = false
+                    viewCompletedButton = false
+                    showPlusButton = false
+                    showPlusButtonCRM = false
             }}
         </div>
 

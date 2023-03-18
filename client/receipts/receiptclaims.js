@@ -39,6 +39,28 @@ Template.receiptsoverview.onCreated(function () {
     templateObject.multiReceiptRecords = new ReactiveVar([]);
     templateObject.mergeReceiptRecords = new ReactiveVar([]);
     templateObject.mergeReceiptSelectedIndex = new ReactiveVar(0);
+
+    templateObject.tableheaderrecords_TripGroup = new ReactiveVar([]);
+
+    templateObject.getDataTableList_TripGroup = function(data) {
+        const dataList = [
+            data.TripName || '',
+            data.Description || '',
+            data.Id || '',
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+
+    let headerStructure_TripGroup = [
+        { index: 0, label: 'Trip Name', class: 'colTripName', active: true, display: true, width: "80" },
+        { index: 1, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
+        { index: 2, label: '#Trip Group ID', class: 'colTripGroupID', active: false, display: true, width: "50" },
+        { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+
+    ];
+
+    templateObject.tableheaderrecords_TripGroup.set(headerStructure_TripGroup);
 });
 
 Template.receiptsoverview.onRendered(function () {
@@ -460,7 +482,7 @@ Template.receiptsoverview.onRendered(function () {
             $('div.dataTables_filter input').addClass('form-control form-control-sm');
         }
     }
-    templateObject.getTripGroup();
+    //templateObject.getTripGroup();
     templateObject.setTripGroupList = function (e) {
         const $each = $(e.target);
         const offset = $each.offset();
@@ -2630,7 +2652,7 @@ Template.receiptsoverview.events({
     'click #tblTripGroup tbody tr': function (e) {
         let tripName = $(e.target).closest('tr').find(".colTripName").text() || '';
         let description = $(e.target).closest('tr').find(".colDescription").text() || '';
-        let tripGroupID = $(e.target).closest('tr').find(".colID").text() || '';
+        let tripGroupID = $(e.target).closest('tr').find(".colTripGroupID").text() || '';
         let from = $('#employeeListModal').attr('data-from');
 
         if (from == 'ViewReceipt') {
@@ -4052,7 +4074,46 @@ Template.receiptsoverview.helpers({
     sessionCurrency: () => {
         return localStorage.getItem('ERPCountryAbbr');
     },
-    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
+    isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
+
+
+    tableheaderrecords_TripGroup: () => {
+        return Template.instance().tableheaderrecords_TripGroup.get();
+    },
+    apiFunction_TripGroup:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getTripGroup;
+    },
+
+    searchAPI_TripGroup: function() {
+        return sideBarService.getTripGroupByName;
+    },
+
+    service_TripGroup: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler_TripGroup: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList_TripGroup(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_TripGroup: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList_TripGroup(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_TripGroup: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });
 
 function setCurrencyFormatForInput(target) {

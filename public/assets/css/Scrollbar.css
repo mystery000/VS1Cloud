@@ -586,16 +586,21 @@ td.td-input {
 }
 
 .text-converted {
-    background-color: #f6c23e !important;
-    color: #fff;
-}
-
-.text-NotConverted {
     background-color: #1cc88a !important;
     color: #fff;
 }
 
+.text-NotConverted {
+    background-color: #f6c23e !important;
+    color: #fff;
+}
+
 .text-completed {
+    background-color: #1cc88a !important;
+    color: #fff;
+}
+
+.text-Processed {
     background-color: #1cc88a !important;
     color: #fff;
 }
@@ -671,11 +676,11 @@ div.dataTables_wrapper .row button{
  width: 210px;
 }
 
-/* .table-responsive{
+.table-responsive:not(.divTemplate) {
 overflow-x: auto!important;
 overflow-y: hidden!important;
 }
- */
+
 
  .table-responsive table:not(.dtTemplate) {
      max-width: 99.7% !important;
