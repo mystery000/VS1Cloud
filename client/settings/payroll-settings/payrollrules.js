@@ -8716,16 +8716,17 @@ Template.payrollrules.onRendered(function() {
             var accountDataName = e.target.value ||'';
 
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#selectLineID').val('editsuperexpbankaccount');
-                $('#accountListModal').modal("toggle");
-                setTimeout(function () {
-                    $('#tblAccount_filter .form-control-sm').focus();
-                    $('#tblAccount_filter .form-control-sm').val('EXP');
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblAccountlist').DataTable();
-                    datatable.draw();
-                    $('#tblAccountlist_filter .form-control-sm').trigger("input");
-                }, 500);
+                console.log("success");
+            $('#selectLineID').val('editsuperexpbankaccount');
+            $('#accountListModal').modal("toggle");
+            setTimeout(function () {
+                $('#tblAccount_filter .form-control-sm').focus();
+                $('#tblAccount_filter .form-control-sm').val('EXP');
+                $('#tblAccount_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblAccountlist').DataTable();
+                datatable.draw();
+                $('#tblAccountlist_filter .form-control-sm').trigger("input");
+            }, 500);
             }else{
             if(accountDataName.replace(/\s/g, '') != ''){
                 getVS1Data('TAccountVS1').then(function (dataObject) {
