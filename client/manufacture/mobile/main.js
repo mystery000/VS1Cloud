@@ -843,13 +843,8 @@ Template.mobileapp.events({
             let bomDetailData = JSON.parse(bomStructureData.Details);
 
             for (let i = 0; i < bomDetailData.length; i++) {
-<<<<<<< HEAD
                 tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
                 BomDataList.push(tempBomData);  
-=======
-                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
-                BomDataList.push(tempBomData);
->>>>>>> 298a7408f4900f07cf69e89bb05eb802bfc9f5cb
             }
 
             let wastage_table = $("#tblWastageForm").DataTable({
@@ -877,26 +872,11 @@ Template.mobileapp.events({
             } );
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
-<<<<<<< HEAD
                 
-=======
-
-                // var colIndex = wastage_table.cell(this).index().column;
-                // var rowIndex = wastage_table.cell(this).index().row;
-
-                // var changeto =$(this).val();
-                // var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
-                // var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
-                // var total_new = total - changeto;
-                // var wastage_new = wastage + changeto;
-
-
->>>>>>> 298a7408f4900f07cf69e89bb05eb802bfc9f5cb
                 var cell = wastage_table.cell(this);
                 var index = cell.index();
                 var column = index.column;
                 var row = index.row;
-<<<<<<< HEAD
 
                 var cur_val = parseFloat($(this).text());
                 var prev_val = parseFloat(cell.data());
@@ -904,22 +884,6 @@ Template.mobileapp.events({
                 var nextCell = wastage_table.cell(row, column + 1);
                     nextCell.data(prev_val - cur_val);                             
                            
-=======
-
-                if (column < wastage_table.columns().count() - 1) {
-                    var nextCell = wastage_table.cell(row, column + 1);
-                    nextCell.data(cell.data());
-                }
-
-                // wastage_table.cell(rowIndex, colIndex-1).data(total_new);
-                // wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
-
-
-                // var colIndex = wastage_table.cell(this).index().column;
-                // var rowIndex = wastage_table.cell(this).index().row;
-   
-
->>>>>>> 298a7408f4900f07cf69e89bb05eb802bfc9f5cb
             } );
 
 
@@ -930,12 +894,8 @@ Template.mobileapp.events({
         e.stopPropagation();
         $('#WastageModal').modal('toggle');
 
-<<<<<<< HEAD
         // tablet buttons
    
-=======
-
->>>>>>> 298a7408f4900f07cf69e89bb05eb802bfc9f5cb
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
 
