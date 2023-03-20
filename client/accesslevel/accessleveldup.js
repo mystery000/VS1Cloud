@@ -2852,7 +2852,7 @@ Template.accessleveldup.onRendered(function(){
         if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
             $('#employeeListPOPModal').modal();
             setTimeout(function () {
-                $('#tblEmployeelist_filter .form-control-sm').focus();
+                $('#tblEmployeelist_filter').find(".form-control-sm").get(0).focus();
                 $('#tblEmployeelist_filter .form-control-sm').val('');
                 $('#tblEmployeelist_filter .form-control-sm').trigger("input");
                 var datatable = $('#tblEmployeelist').DataTable();
@@ -2861,7 +2861,7 @@ Template.accessleveldup.onRendered(function(){
                 datatable.draw();
                 $('#tblEmployeelist_filter .form-control-sm').trigger("input");
                 //$('#tblEmployeelist').dataTable().fnFilter(' ').draw(false);
-            }, 500);
+            }, 1000);
         } else {
             if (employeeDataName.replace(/\s/g, '') != '') {
                 //FlowRouter.go('/customerscard?name=' + e.target.value);
@@ -3250,7 +3250,7 @@ Template.accessleveldup.onRendered(function(){
               }else{
                 $('#employeeListPOPModal').modal();
                 setTimeout(function () {
-                    $('#tblEmployeelist_filter .form-control-sm').focus();
+                    $('#tblEmployeelist_filter .form-control-sm').get(0).focus();
                     $('#tblEmployeelist_filter .form-control-sm').val('');
                     $('#tblEmployeelist_filter .form-control-sm').trigger("input");
                     var datatable = $('#tblEmployeelist').DataTable();
@@ -3259,12 +3259,12 @@ Template.accessleveldup.onRendered(function(){
                     datatable.draw();
                     $('#tblEmployeelist_filter .form-control-sm').trigger("input");
                     //$('#tblEmployeelist').dataTable().fnFilter(' ').draw(false);
-                }, 500);
+                }, 1000);
               }
             } else {
                 $('#employeeListPOPModal').modal();
                 setTimeout(function () {
-                    $('#tblEmployeelist_filter .form-control-sm').focus();
+                    $('#tblEmployeelist_filter .form-control-sm').get(0).focus();
                     $('#tblEmployeelist_filter .form-control-sm').val('');
                     $('#tblEmployeelist_filter .form-control-sm').trigger("input");
                     var datatable = $('#tblEmployeelist').DataTable();
@@ -3273,7 +3273,7 @@ Template.accessleveldup.onRendered(function(){
                     datatable.draw();
                     $('#tblEmployeelist_filter .form-control-sm').trigger("input");
                     //$('#tblEmployeelist').dataTable().fnFilter(' ').draw(false);
-                }, 500);
+                }, 1000);
             }
         }
 
