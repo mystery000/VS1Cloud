@@ -340,17 +340,18 @@ Template.non_transactional_list.onRendered(function() {
             ];
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') { //Done Something Here
             reset_data = [
-                { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-                { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-                { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
-                { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-                { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-                { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
-                { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-                { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
-                { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-                { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
-            ];
+                { index: 0, label: 'ID', class: 'colSupplierID colID', active: false, display: true, width: "20" },
+                { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+                { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+                { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+                { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+                { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+                { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+                { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+                { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+                { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+                { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+            ];  
         } else if (currenttablename == "tblLeadlist") { //Done Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colLeadId', active: false, display: true, width: "10" },
@@ -2797,7 +2798,7 @@ Template.non_transactional_list.onRendered(function() {
             let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
 
             var dataList = [
-                // data.tsuppliervs1list[i].ClientID || '',
+                data.tsuppliervs1list[i].ClientID || '',
                 data.tsuppliervs1list[i].Company || '',
                 data.tsuppliervs1list[i].Phone || '',
                 arBalance || 0.00,
@@ -2833,62 +2834,62 @@ Template.non_transactional_list.onRendered(function() {
                 data: splashArraySuppliersList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
-                    // {
-                    //     targets: 0,
-                    //     className: "colSupplierID colID hiddenColumn",
-                    //     width: "10px",
-                    //     createdCell: function(td, cellData, rowData, row, col) {
-                    //         $(td).closest("tr").attr("id", rowData[0]);
-                    //     }
-                    // },
                     {
                         targets: 0,
+                        className: "colSupplierID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
                         className: "colCompany",
                         width: "200px",
                     },
                     {
-                        targets: 1,
+                        targets: 2,
                         className: "colPhone",
                         width: "95px",
                     },
                     {
-                        targets: 2,
+                        targets: 3,
                         className: "colARBalance text-right",
                         width: "90px",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colCreditBalance text-right",
                         width: "110px",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colBalance text-right",
                         width: "80px",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCreditLimit text-right",
                         width: "90px",
                     },
                     {
-                        targets: 6,
+                        targets: 7,
                         className: "colSalesOrderBalance text-right",
                         width: "120px",
                     },
 
                     {
-                        targets: 7,
+                        targets: 8,
                         className: "colSuburb",
                         width: "120px",
                     },
                     {
-                        targets: 8,
+                        targets: 9,
                         className: "colCountry",
                         width: "200px",
                     },
                     {
-                        targets: 9,
+                        targets: 10,
                         className: "colNotes",
                     }
                 ],

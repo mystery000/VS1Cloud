@@ -17,10 +17,7 @@
                 .table td {
                     border-top: 0 solid rgb(227, 230, 240);
                 }
-                #tableExport th {
-                    background: #fff;
-                    min-width: 170px !important;
-                }
+
                 .text-center0,
                 .text-center1 {
                     text-align: right !important;
@@ -39,69 +36,22 @@
             </style>
             <table class="table table-sm" id="tableExport" name="tableExport" style="width:100%">
                 <thead>
-                <tr class="table-active customDoubleTableHeading">
-                    <th>Tax Code</th>
-                    {{#if isSub}}
-                        <th>Sub Tax Code</th>
-                    {{/if}}
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Inputs Ex (Purchases)</th>
-                    <!-- <th>INPUTS Inc (Purchases)</th> -->
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Outputs Ex (Sales)</th>
-                    <!-- <th>OUTPUTS Inc (Sales)</th> -->
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total Net</th>
-                    <th class="text-right">Tax Rate</th>
-                    <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total Tax</th>
-
-                    <!-- <th>Total Taxt1</th> -->
-                    <!-- <th>ID</th> -->
-                </tr>
-
-                {{#if isOnlyDefaultActive equal "false" }}
-                    <tr class="table-active tblAvoid">
-                        <th></th>
-                        {{#if isSub}}
-                            <th></th>
-                        {{/if}}
-
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
-                                {{# if c.active}}
-                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                {{/if}}
-                            {{/each}}
-                        {{/if}}
-
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
-                                {{# if c.active}}
-                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                {{/if}}
-                            {{/each}}
-                        {{/if}}
-
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
-                                {{# if c.active}}
-                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                {{/if}}
-                            {{/each}}
-                        {{/if}}
-                        <th></th>
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
-                                {{# if c.active}}
-                                    <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                                {{/if}}
-                            {{/each}}
-                        {{/if}}
-
+                    <tr class="table-active">
+                        {{#each c in currencyRecord}}
+                            {{#if c.display}}
+                                <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}"
+                                    class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                                    style="text-align: left; width:{{c.width}}%">
+                                    {{c.label}}
+                                </th>
+                            {{/if}}
+                        {{/each}}
                     </tr>
-                {{/if}}
                 </thead>
                 <tbody>
                 {{#if reportRecords}}
                     {{#each items in reportRecords}}
-                        <tr class="totalhr">
+                        <tr>
                             <!--                <td colspan="10" style="font-weight: 800;"></td>-->
                         </tr>
 
@@ -206,7 +156,7 @@
                             <td>{{ grandRecords.title}}</td>
 
                             {{#if isSub}}
-                                <th></th>
+                                <td></td>
                             {{/if}}
 
 
@@ -247,10 +197,10 @@
 
                             {{else}}
 
-                                <th></th>
-                                <th></th>
+                                <td></td>
+                                <td></td>
                                 <td class="text-right">{{grandRecords.total.net}}</td>
-                                <th></th>
+                                <td></td>
                                 <td class="text-right">{{grandRecords.total.tax}}</td>
 
                             {{/if}}

@@ -43,24 +43,15 @@ Template.customerdetailsreport.onRendered(() => {
     reset_data = [
       { index: 1, label: 'Name', class:'colCompanyName', active: true, display: true, width: "200" },
       { index: 2, label: 'Phone', class:'colPhone', active: true, display: true, width: "150" },
-      // { index: 2, label: 'Rep', class:'colRep', active: true, display: true, width: "85" },
       { index: 3, label: 'Type', class:'colType', active: true, display: true, width: "150" },
-      { index: 4, label: 'Total (Ex)', class:'colTotalEx', active: true, display: true, width: "150" },
-      { index: 5, label: 'Total (Inc)', class:'colTotalInc', active: true, display: true, width: "150" },
-      { index: 6, label: 'Gross Profit', class:'colGrossProfit', active: true, display: true, width: "150" },
+      { index: 4, label: 'Total (Ex)', class:'colTotalEx text-right', active: true, display: true, width: "150" },
+      { index: 5, label: 'Total (Inc)', class:'colTotalInc text-right', active: true, display: true, width: "150" },
+      { index: 6, label: 'Gross Profit', class:'colGrossProfit text-right', active: true, display: true, width: "150" },
       { index: 7, label: 'Margin', class:'colMargin', active: true, display: true, width: "150" },
       { index: 8, label: 'Address', class:'colAddress', active: true, display: true, width: "150" },
       { index: 9, label: 'City', class:'colCity', active: true, display: true, width: "150" },
       { index: 10, label: 'Zip', class:'colZip', active: true, display: true, width: "150" },
       { index: 11, label: 'State', class:'colState', active: true, display: true, width: "150" },
-      // { index: 8, label: 'Product ID', class:'colProductID', active: true, display: true, width: "85" },
-      // { index: 9, label: 'Description', class:'colDescription', active: true, display: true, width: "85" },
-      // { index: 10, label: 'Sub Group', class:'colSubGroup', active: true, display: true, width: "85" },
-      // { index: 12, label: 'Dept', class:'colDept', active: true, display: true, width: "85" },
-      // { index: 13, label: 'Customer ID', class:'colCustomerID', active: false, display: true, width: "85" },
-      // { index: 14, label: 'Password', class:'colPassword', active: false, display: true, width: "85" },
-      // { index: 15, label: 'Test', class:'colTest', active: false, display: true, width: "85" },
-      // { index: 16, label: 'Birthday', class:'colBirthday', active: false, display: true, width: "85" },
     ];
     templateObject.customerdetailsreportth.set(reset_data);
   }
@@ -87,7 +78,7 @@ Template.customerdetailsreport.onRendered(() => {
 
   templateObject.getCustomerDetailsData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateFrom);
+    templateObject.setDateAs(dateTo);
     getVS1Data('CustomerDetailsReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getCustomerDetailReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -125,18 +116,18 @@ Template.customerdetailsreport.onRendered(() => {
 
     for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
       var dataList = [
-        data.tcustomersummaryreport[i].Company || "",
-        data.tcustomersummaryreport[i].Phone || "",
-        data.tcustomersummaryreport[i].Type || "",
-        data.tcustomersummaryreport[i]["Total Amount (Ex)"] || "",
-        data.tcustomersummaryreport[i]["Total Amount (Inc)"] || "",
-        data.tcustomersummaryreport[i]["Gross Profit"] || "",
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Company || "", "text-primary"),
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Phone || "", "text-primary"),
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Type || "", "text-primary"),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Amount (Ex)"] || ""), "text-success"),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Amount (Inc)"] || ""), "text-success"),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Gross Profit"] || ""), "text-success"),
         "",
-        data.tcustomersummaryreport[i].Address || "",
-        data.tcustomersummaryreport[i]["Address 2"] || "",
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Address || "", "text-primary"),
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i]["Address 2"] || "", "text-primary"),
         // data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
-        data.tcustomersummaryreport[i].Postcode || "",
-        data.tcustomersummaryreport[i].State || "",
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Postcode || "", "text-primary"),
+        GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].State || "", "text-primary"),
         // data.tcustomersummaryreport[i].DATE || "",
         // data.tcustomersummaryreport[i].DEBITSEX || "",
         // data.tcustomersummaryreport[i].DEBITSINC || "",
@@ -172,7 +163,7 @@ Template.customerdetailsreport.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport1').DataTable({
+      $('#tableExport').DataTable({
         data: splashArrayCustomerDetailsReport,
         "bsort": false,
         searching: false,
@@ -192,15 +183,15 @@ Template.customerdetailsreport.onRendered(() => {
           },
           {
             targets: 3,
-            className: "colTotalEx",
+            className: "colTotalEx text-right",
           },
           {
             targets: 4,
-            className: "colTotalInc",
+            className: "colTotalInc text-right",
           },
           {
             targets: 5,
-            className: "colGrossProfit",
+            className: "colGrossProfit text-right",
           },
           {
             targets: 6,
@@ -504,47 +495,19 @@ Template.customerdetailsreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-    let values = [];
-    let basedOnTypeStorages = Object.keys(localStorage);
-    basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-      let employeeId = storage.split("_")[2];
-      return (
-        storage.includes("BasedOnType_") &&
-        employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
-      );
-    });
-    let i = basedOnTypeStorages.length;
-    if (i > 0) {
-      while (i--) {
-        values.push(localStorage.getItem(basedOnTypeStorages[i]));
-      }
-    }
-    values.forEach((value) => {
-      let reportData = JSON.parse(value);
-      reportData.HostURL = $(location).attr("protocal")
-        ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-        : "http://" + $(location).attr("hostname");
-      if (reportData.BasedOnType.includes("P")) {
-        if (reportData.FormID == 1) {
-          let formIds = reportData.FormIDs.split(",");
-          if (formIds.includes("225")) {
-            reportData.FormID = 225;
-            Meteor.call("sendNormalEmail", reportData);
-          }
-        } else {
-          if (reportData.FormID == 225)
-            Meteor.call("sendNormalEmail", reportData);
-        }
-      }
-    });
+    setTimeout(function () {
+      $("a").attr("href", "/");
+      document.title = "Customer Details Report";
+      $(".printReport").print({
+        title: document.title + " | Customer Details | " + loggedCompany,
+        noPrintSelector: ".addSummaryEditor",
+        mediaPrint: false,
+      });
 
-    document.title = "Customer Details Report";
-    $(".printReport").print({
-      title: "Customer Details Report | " + loggedCompany,
-      noPrintSelector: ".addSummaryEditor",
-    });
-  }, delayTimeAfterSound);
+      setTimeout(function () {
+        $("a").attr("href", "#");
+      }, 100);
+    }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
