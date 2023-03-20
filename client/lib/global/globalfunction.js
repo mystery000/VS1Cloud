@@ -627,6 +627,16 @@ batchUpdateCall = function (url, flag = false) {
     }
 };
 
+formatDateByCountry = function(dateStr){
+    let country = localStorage.getItem('vs1companyCountry');
+
+    if(country == 'United States'){
+        return moment(dateStr).format('MM/DD/YYYY');
+    }else{
+        return moment(dateStr).format('DD/MM/YYYY');
+    }
+};
+
 getHour24 = function (timeString) {
   let time = null;
   let timeSplit = timeString.split(':'),

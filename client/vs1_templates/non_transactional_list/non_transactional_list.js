@@ -846,12 +846,12 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblSerialNumberList"){
             reset_data = [
-                { index: 0, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
-                { index: 1, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
-                { index: 2, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
-                { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
-                { index: 4, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
-                { index: 5, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 0, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 1, label: 'Serial Number', class: 'colSerialNumber', active: true, display: true, width: "" },
+                { index: 2, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
+                { index: 3, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
+                { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 5, label: 'Qty', class: 'colQty', active: true, display: true, width: "" },
                 { index: 6, label: 'Transaction', class: 'colTransaction', active: true, display: true, width: "" },
                 { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "" },
                 { index: 8, label: 'Bin', class: 'colBin', active: true, display: true, width: "" },
@@ -866,8 +866,8 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblLotNumberList"){
             reset_data = [
-                { index: 0, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
-                { index: 1, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
+                { index: 0, label: 'Expiry Date', class: 'colExpiryDate', active: true, display: true, width: "" },
+                { index: 1, label: 'Lot Number', class: 'colSerialNumber', active: true, display: true, width: "" },
                 { index: 2, label: 'Product Name', class: 'colProductName', active: true, display: true, width: "" },
                 { index: 3, label: 'Sales Description', class: 'colDescription', active: true, display: true, width: "" },
                 { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
@@ -14766,12 +14766,12 @@ Template.non_transactional_list.onRendered(function() {
             let cssclass = tclass;
 
             var dataTimeSheetList = [
+                formatDateByCountry(date),
                 serialnumber,
                 productname,
                 salsedes,
                 status === ""?"Draft":status,
                 qty,
-                date,
                 transaction,
                 department,
                 bin,
@@ -14843,6 +14843,11 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
+                        className: "colDate",
+                        targets: 5,
+                        width:'8%'
+                    },
+                    {
                         className: "colSerialNumber",
                         targets: 0,
                         width:'8%'
@@ -14871,11 +14876,6 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         className: "colQty",
                         targets: 4,
-                        width:'8%'
-                    },
-                    {
-                        className: "colDate",
-                        targets: 5,
                         width:'8%'
                     },
                     {
@@ -15334,8 +15334,8 @@ Template.non_transactional_list.onRendered(function() {
                     }
 
                     var dataTimeSheetList = [
+                        expirydate ? formatDateByCountry(expirydate) : '',
                         lotnumber,
-                        expirydate,
                         productname,
                         salsedes,
                         status,
@@ -15400,8 +15400,8 @@ Template.non_transactional_list.onRendered(function() {
                     }
 
                     var dataTimeSheetList = [
+                        expirydate ? formatDateByCountry(expirydate) : '',
                         lotnumber,
-                        expirydate,
                         productname,
                         salsedes,
                         status,
@@ -15439,13 +15439,13 @@ Template.non_transactional_list.onRendered(function() {
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
                     {
-                        className: "colSerialNumber",
-                        targets: 0,
+                        className: "colExpiryDate",
+                        targets: 1,
                         width:'8%'
                     },
                     {
-                        className: "colExpiryDate",
-                        targets: 1,
+                        className: "colSerialNumber",
+                        targets: 0,
                         width:'8%'
                     },
                     {
