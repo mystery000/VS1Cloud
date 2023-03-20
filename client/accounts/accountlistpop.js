@@ -103,7 +103,7 @@ Template.accountlistpop.onCreated(() => {
 
     let headerStructure = [
         { index: 0, label: '#ID', class: 'colAccountId', active: false, display: true, width: "60" },
-        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "60" },
+        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "400px" },
         { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "60" },
         { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "60" },
         { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60" },
@@ -662,6 +662,12 @@ Template.accountlistpop.helpers({
 
     apiFunction:function() {
         let sideBarService = new SideBarService();
+        // Alex: add for bank rec {
+        const templateObject = Template.instance();
+        if (templateObject.data.typefilter == 'bankccard') {
+            return sideBarService.getTAccountVS1ListForBankCCard;
+        }
+        // @}
         return sideBarService.getAllTAccountVS1List;
     },
 
