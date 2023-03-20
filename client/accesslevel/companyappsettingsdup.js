@@ -418,10 +418,12 @@ Template.companyappsettingsdup.onRendered(function () {
 Template.companyappsettingsdup.events({
     'click #refreshpagelist': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        Meteor._reload.reload();
+        //Meteor._reload.reload();
+        window.location.reload();
     },
     'click .btnRefresh': function () {
-        Meteor._reload.reload();
+        //Meteor._reload.reload();
+        window.location.reload();
     },
     'click .essentialsdiv .chkSettings': function (event) {
         // Meteor._reload.reload();

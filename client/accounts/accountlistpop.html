@@ -48,6 +48,11 @@
                         </table>
                     </div> -->
 <!--                    {{> non_transactional_list tablename = "tblAccountListPop"}}-->
+                    <style>
+                        td.colBalance, td.colTaxCode{
+                            text-align: right !important;
+                        }
+                    </style>
                     {{>datatablelist
                             tablename="tblAccountListPop"
                             apiName= apiFunction
@@ -62,7 +67,8 @@
                             exIndexDBName = 'taccountvs1list'
                             exdatahandler = exDataHandler
                             searchAPI = searchAPI
-                            typefilter=typefilter
+                            orderby = 1
+                            orderdesc = 'asc'
                     }}
                 </div>
             </div>
