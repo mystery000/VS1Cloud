@@ -108,7 +108,7 @@ Template.non_transactional_list.onRendered(function() {
             if ($(this).text() == "Part") $(this).addClass("text-partialPaid");
             if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
         });
-    };
+    }
 
     var url = FlowRouter.current().path;
     let currenttablename = templateObject.data.tablename || "";
@@ -1030,7 +1030,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 14, label: "Raw Material Cost", class: "colRawMaterialCost", width: "100", active: true, display: true },
                 { index: 15, label: "Total BOM Cost", class: "colTotalBOMCost", width: "100", active: true, display: true },
                 { index: 16, label: "Wastage Cost", class: "colWastageCost", width: "100", active: true, display: true },
-        
+
             ]
         } else if(currenttablename === "tblProductionWorksheetReport"){
 
@@ -1046,10 +1046,10 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 8, label: "Employee", class: "colEmployee", width: "100", active: true, display: true },
                 { index: 9, label: "Start", class: "colStart", width: "100", active: true, display: true },
                 { index: 10, label: "Duration", class: "colDuration", width: "100", active: true, display: true },
-              
-        
+
+
             ]
-        }       
+        }
 
         templateObject.reset_data.set(reset_data);
     }
@@ -2552,7 +2552,7 @@ Template.non_transactional_list.onRendered(function() {
                 productsData = data.tproductvs1;
             }
         });
-        
+
         for (let i = 0; i < data.tproductbin.length; i++) {
             let linestatus = '';
             let productDetail;
@@ -2986,7 +2986,7 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    //Build Cost Report Data    
+    //Build Cost Report Data
     templateObject.getBuildCostReport = async function(deleteFilter = false) {
         var customerpage = 0;
         getVS1Data('TVS1Workorder').then(function(dataObject) {
@@ -3008,7 +3008,7 @@ Template.non_transactional_list.onRendered(function() {
                         })
                     } else {
                         let data_process = JSON.parse(dataObject[0].data);
-                        templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder, data_process); 
+                        templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder, data_process);
                     }
                 }).catch(function(e) {
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
@@ -3018,7 +3018,7 @@ Template.non_transactional_list.onRendered(function() {
                     })
                 })
 
-                
+
             }
         }).catch(function(err) {
             // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
@@ -3046,14 +3046,14 @@ Template.non_transactional_list.onRendered(function() {
         let unit_cost = "95.63"
         let unit_cost_f;
 
-       
+
         for (let i = 0; i < data.length; i++) {
 
-            bomData = JSON.parse(data[i].fields.BOMStructure);                    
+            bomData = JSON.parse(data[i].fields.BOMStructure);
             for(let k =0 ; k < process_data.length; k++) {
                 if (bomData.Info == process_data[k].fields.Description) {
                     hourly_labour_cost = parseFloat(process_data[k].fields.HourlyLabourCost);
-                    hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);    
+                    hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);
                 }
             }
 
@@ -3061,8 +3061,8 @@ Template.non_transactional_list.onRendered(function() {
             let details = JSON.parse(bomData.Details);
 
             unit_cost_f = parseFloat(unit_cost.replace(/\$/g, '')) ;
-            
-            let dataList = [ bomData.Id || '' , 
+
+            let dataList = [ bomData.Id || '' ,
                              bomData.Caption || '',
                              bomData.Info || '',
                              '' || '',
@@ -3079,15 +3079,15 @@ Template.non_transactional_list.onRendered(function() {
                             parseFloat(bomData.TotalQtyOriginal) * unit_cost_f  || 0,
                             '' || 0,
                             '' || 0,
-                            
+
                         ];
 
             splashArrayBuildCostReport.push(dataList);
-            
+
 
             for(let j=0; j<details.length;j++) {
 
-                dataList = [  '' , 
+                dataList = [  '' ,
                               '',
                               '',
                               '' || '',
@@ -3104,14 +3104,14 @@ Template.non_transactional_list.onRendered(function() {
                                 parseFloat(details[j].qty) * 7.5 || 0,
                                 '' || 0,
                                 '' || 0,
-                                
+
                         ];
-                splashArrayBuildCostReport.push(dataList);        
+                splashArrayBuildCostReport.push(dataList);
             }
 
-          
-           
-            
+
+
+
             templateObject.transactiondatatablerecords.set(splashArrayBuildCostReport);
         }
 
@@ -3184,8 +3184,8 @@ Template.non_transactional_list.onRendered(function() {
                         targets: 9,
                         className: "colNotes",
                     },
-                    
-                    {   orderable: false, 
+
+                    {   orderable: false,
                         targets: '_all',
                     },
 
@@ -3236,7 +3236,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: true,
                 "order": [
-                    
+
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -3284,7 +3284,7 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    //Production WorkSheet Report Data    
+    //Production WorkSheet Report Data
     templateObject.getProductionWorksheetReport = async function() {
 
         getVS1Data('TVS1Workorder').then(function(dataObject) {
@@ -3308,7 +3308,7 @@ Template.non_transactional_list.onRendered(function() {
                         })
                     } else {
                         let data_process = JSON.parse(dataObject[0].data);
-                        templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder, data_process); 
+                        templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder, data_process);
                     }
                 }).catch(function(e) {
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
@@ -3319,7 +3319,7 @@ Template.non_transactional_list.onRendered(function() {
                     })
                 })
 
-                
+
             }
         }).catch(function(err) {
             // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
@@ -3332,7 +3332,7 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.displayProductionWorksheetReportData = async function(data_workorder, data_process) {
-     
+
         var splashArrayWorksheetReport = new Array();
         let deleteFilter = false;
         // if (data.Params.Search.replace(/\s/g, "") == "") {
@@ -3353,19 +3353,19 @@ Template.non_transactional_list.onRendered(function() {
                     if (process_data[i].fields.Description == details[k].process) {
                         exist_data = true;
                     }
-                }  
-                
+                }
+
             }
 
             if(exist_data) {
                 dataList = [
                     "<span style = 'font-weight:bold; font-size:20px ' >Resource/Process </span>",
-                    "<span style = 'font-weight:bold; font-size:20px ' >" + process_data[i].fields.Description +  "    Bay</span>", 
+                    "<span style = 'font-weight:bold; font-size:20px ' >" + process_data[i].fields.Description +  "    Bay</span>",
                     "<span style = 'font-weight:bold; font-size:20px ' > /    " + process_data[i].fields.Description + "</span>"
                 ];
                 splashArrayWorksheetReport.push(dataList);
-            }   
-            
+            }
+
             for(let j=0; j < data_workorder.length ; j++) {
                 bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
                 let details = JSON.parse(bomData.Details);
@@ -3387,10 +3387,10 @@ Template.non_transactional_list.onRendered(function() {
                         ];
                         splashArrayWorksheetReport.push(dataList);
                     }
-                }  
-                
+                }
+
             }
-           
+
         }
         dataList = [
              '' ,
@@ -3402,15 +3402,15 @@ Template.non_transactional_list.onRendered(function() {
              '',
              '',
              '',
-             
+
              '<span style = "color:red ; font-size : 20px " > Total </span>' || ' ',
              '<span style = "color:red ; font-size : 20px " >00:00:00 </span>' || ' '
         ];
 
         splashArrayWorksheetReport.push(dataList);
-        
+
         templateObject.transactiondatatablerecords.set(splashArrayWorksheetReport);
-     
+
         if (templateObject.transactiondatatablerecords.get()) {
             setTimeout(function() {
                 MakeNegative();
@@ -3484,11 +3484,11 @@ Template.non_transactional_list.onRendered(function() {
                         targets: 10,
                         width: "100px",
                     },
-                                        
+
                     { orderable: false, targets: '_all' }
-                    
-                   
-                    
+
+
+
                 ],
 
                 buttons: [{
@@ -3537,7 +3537,7 @@ Template.non_transactional_list.onRendered(function() {
                 info: true,
                 responsive: false,
                 "order": [
-                    
+
                 ],
                 action: function() {
                     $('#' + currenttablename).DataTable().ajax.reload();
@@ -14720,11 +14720,27 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.displaySerialNumberList = function(data, deleteFilter=false){
+        let dateFrom = $("#dateFrom").val();
+        let dateTo = $("#dateTo").val();
+
         let splashArrayTimeSheetList = new Array();
         var url = FlowRouter.current().path;
         var getso_id = url.split("?sn=");
         var currentSN = parseInt(getso_id[getso_id.length - 1]) || 0;
         for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+            let date1 = data.tserialnumberlistcurrentreport[i].TransDate;
+
+            if(date1 && new Date(date1).getFullYear() == '1899'){
+                data.tserialnumberlistcurrentreport[i].TransDate = '';
+                date1 = '';
+            }
+
+            let pattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+
+            if(date1 && dateFrom && (new Date(dateFrom.replace(pattern,'$3-$2-$1')) > new Date(date1)
+                || new Date(dateTo.replace(pattern,'$3-$2-$1')) < new Date(date1))){
+                continue;
+            }
 
             let tclass = '';
             if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
@@ -14949,6 +14965,13 @@ Template.non_transactional_list.onRendered(function() {
                     setTimeout(function() {
                         MakeNegative();
                     }, 100);
+
+                    $("#dateFrom").on("change", function(e){
+                        templateObject.getSerialNumberList();
+                    });
+                    $("#dateTo").on("change", function(e){
+                        templateObject.getSerialNumberList();
+                    });
                 },
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
@@ -14960,7 +14983,8 @@ Template.non_transactional_list.onRendered(function() {
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = splashArrayTimeSheetList.length || 0; //get count from API data
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
             }).on('page', function() {
@@ -15223,6 +15247,10 @@ Template.non_transactional_list.onRendered(function() {
     }
 
     templateObject.displayLotNumberList = function(data, deleteFilter=false){
+        //Filter by Date Range
+        let dateFrom = $("#dateFrom").val();
+        let dateTo = $("#dateTo").val();
+
         let splashArrayTimeSheetList = new Array();
         let productname = "";
         let department = "";
@@ -15239,6 +15267,19 @@ Template.non_transactional_list.onRendered(function() {
         var getso_id = url.split("?ln=");
         var currentLN = parseInt(getso_id[getso_id.length - 1]) || 0;
         for (let i = 0; i < data.tproductbatches.length; i++) {
+            let expireDate = data.tproductbatches[i].ExpiryDate;
+
+            if(expireDate && new Date(expireDate).getFullYear() == '1899'){
+                data.tproductbatches[i].ExpiryDate = '';
+                expireDate = '';
+            }
+
+            let pattern = /(\d{2})\/(\d{2})\/(\d{4})/;
+
+            if(expireDate && dateFrom && (new Date(dateFrom.replace(pattern,'$3-$2-$1')) > new Date(expireDate)
+                || new Date(dateTo.replace(pattern,'$3-$2-$1')) < new Date(expireDate))){
+                continue;
+            }
 
             let tclass = '';
             if(data.tproductbatches[i].Alloctype == "OUT"){
@@ -15391,6 +15432,7 @@ Template.non_transactional_list.onRendered(function() {
             }, 100);
         }
         $('.fullScreenSpin').css('display', 'none');
+
         setTimeout(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayTimeSheetList,
@@ -15516,6 +15558,13 @@ Template.non_transactional_list.onRendered(function() {
                     setTimeout(function() {
                         MakeNegative();
                     }, 100);
+
+                    $("#dateFrom").on("change", function(e){
+                        templateObject.getLotNumberList();
+                    });
+                    $("#dateTo").on("change", function(e){
+                        templateObject.getLotNumberList();
+                    });
                 },
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
@@ -15527,7 +15576,8 @@ Template.non_transactional_list.onRendered(function() {
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                    let countTableData = data.Params.Count || 0; //get count from API data
+                    // let countTableData = data.Params.Count || 0; //get count from API data
+                    let countTableData = splashArrayTimeSheetList.length || 0; //get count from API data
                     return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
                 }
             }).on('page', function() {
@@ -18529,7 +18579,7 @@ Template.non_transactional_list.onRendered(function() {
     } else if (currenttablename == "tblBuildCostReport") {
         templateObject.getBuildCostReport();
     } else if (currenttablename == "tblProductionWorksheetReport") {
-        templateObject.getProductionWorksheetReport();    
+        templateObject.getProductionWorksheetReport();
     } else if (currenttablename == "tblLeadlist") {
         templateObject.getLeadListData();
     } else if (currenttablename == "tblCurrencyList") {

@@ -534,6 +534,10 @@ Template.lotnumberlist.onRendered(function() {
 
     // templateObject.getAllSerialNumberData();
     tableResize();
+
+    $("#dateFrom").on("change", function(e){
+        console.log(e.target.value);
+    });
 });
 
 Template.lotnumberlist.events({
