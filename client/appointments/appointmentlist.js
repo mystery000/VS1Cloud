@@ -364,16 +364,16 @@ Template.appointmentlist.onRendered(async function() {
                                         custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                         custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                     };
-        
+
                                     appointmentList.push(appointment);
                                 }
-        
+
                                 for (let i = 0; i < data.tappointmentlist.length; i++) {
                                     appStatus = data.tappointmentlist[i].Status || '';
                                     var apmt__ = appointmentList.filter((apmt) => {
                                         return apmt.id == data.tappointmentlist[i].AppointID;
                                     });
-        
+
                                     // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
                                     // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
                                     if (data.tappointmentlist[i].Active == true) {
@@ -431,11 +431,11 @@ Template.appointmentlist.onRendered(async function() {
                                         extraProducts: data.tappointmentlist[i].ExtraProducts || "",
                                         attachments: data.tappointmentlist[i].Attachments || "",
                                     };
-        
+
                                     if (apmt__.length > 0) {
                                         dataList.statementno = apmt__[0].employeename || "";
                                     }
-        
+
                                     if (accessLevel) {
                                         if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                                             // Get SMS Confimation Info
@@ -472,7 +472,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                         });
                                                                     }).catch(e => {
-        
+
                                                                     });
                                                                     dataList.custFld11 = "Yes";
                                                                     break;
@@ -488,7 +488,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                         });
                                                                     }).catch(e => {
-        
+
                                                                     });
                                                                     dataList.custFld11 = "No";
                                                                     break;
@@ -568,16 +568,16 @@ Template.appointmentlist.onRendered(async function() {
                                     custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                     custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                 };
-    
+
                                 appointmentList.push(appointment);
                             }
-    
+
                             for (let i = 0; i < data.tappointmentlist.length; i++) {
                                 appStatus = data.tappointmentlist[i].Status || '';
                                 var apmt__ = appointmentList.filter((apmt) => {
                                     return apmt.id == data.tappointmentlist[i].AppointID;
                                 });
-    
+
                                 // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
                                 // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
                                 if (data.tappointmentlist[i].Active == true) {
@@ -635,11 +635,11 @@ Template.appointmentlist.onRendered(async function() {
                                     extraProducts: data.tappointmentlist[i].ExtraProducts || "",
                                     attachments: data.tappointmentlist[i].Attachments || "",
                                 };
-    
+
                                 if (apmt__.length > 0) {
                                     dataList.statementno = apmt__[0].employeename || "";
                                 }
-    
+
                                 if (accessLevel) {
                                     if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                                         // Get SMS Confimation Info
@@ -676,7 +676,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "Yes";
                                                                 break;
@@ -692,7 +692,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "No";
                                                                 break;
@@ -707,9 +707,9 @@ Template.appointmentlist.onRendered(async function() {
                                 dataTableList.push(dataList);
                             }
                             templateObject.datatablerecords.set(dataTableList);
-                        } 
+                        }
                     })
-                   
+
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
@@ -795,16 +795,16 @@ Template.appointmentlist.onRendered(async function() {
                                     custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                     custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                 };
-    
+
                                 appointmentList.push(appointment);
                             }
-    
+
                             for (let i = 0; i < data.tappointmentlist.length; i++) {
                                 appStatus = data.tappointmentlist[i].Status || '';
                                 var apmt__ = appointmentList.filter((apmt) => {
                                     return apmt.id == data.tappointmentlist[i].AppointID;
                                 });
-    
+
                                 // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
                                 // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
                                 if (data.tappointmentlist[i].Active == true) {
@@ -862,11 +862,11 @@ Template.appointmentlist.onRendered(async function() {
                                     extraProducts: data.tappointmentlist[i].ExtraProducts || "",
                                     attachments: data.tappointmentlist[i].Attachments || "",
                                 };
-    
+
                                 if (apmt__.length > 0) {
                                     dataList.statementno = apmt__[0].employeename || "";
                                 }
-    
+
                                 if (accessLevel) {
                                     if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                                         // Get SMS Confimation Info
@@ -903,7 +903,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "Yes";
                                                                 break;
@@ -919,7 +919,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "No";
                                                                 break;
@@ -1138,7 +1138,7 @@ Template.appointmentlist.onRendered(async function() {
                             dataTableList.push(dataList);
                         }
                         templateObject.datatablerecords.set(dataTableList);
-                    } 
+                    }
                 })
             }
         })
@@ -1511,6 +1511,12 @@ Template.appointmentlist.events({
             datatableApp.rows.add(splashArrayAppointmentListDupp);
             datatableApp.draw(false);
         }
+    },
+    'click .btnHideConverted': function() {
+
+    },
+    'click .btnViewConverted': function() {
+
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
