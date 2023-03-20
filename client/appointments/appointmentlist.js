@@ -71,6 +71,7 @@ Template.appointmentlist.onCreated(function() {
             actualHours: '',
             closebalance: '',
             product: data.ProductDesc || '',
+            status:data.Active,
             finished: appStatus || '',
             notes: data.Notes || '',
             //color: color,
@@ -116,6 +117,7 @@ Template.appointmentlist.onCreated(function() {
             dataList_origin.actual_start_time || '',
             dataList_origin.actual_end_time || '',
             dataList_origin.finished || '',
+            dataList_origin.status || '',
             confirmedColumn,
             dataList_origin.notes || '',
             dataList_origin.product || '',
@@ -132,14 +134,15 @@ Template.appointmentlist.onCreated(function() {
         { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
         { index: 5, label: 'From Date', class: 'colFromDate', active: true, display: true, width: "250" },
         { index: 6, label: 'To Date', class: 'colToDate', active: true, display: true, width: "100" },
-        { index: 6, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "100" },
-        { index: 6, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
-        { index: 6, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "100" },
-        { index: 6, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "100" },
-        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        { index: 6, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
-        { index: 6, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
-        { index: 6, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
+        { index: 7, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "100" },
+        { index: 8, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
+        { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "100" },
+        { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "100" },
+        { index: 11, label: 'Converted', class: 'colConverted', active: true, display: true, width: "100" },
+        { index: 12, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 13, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
+        { index: 14, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
+        { index: 15, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -361,16 +364,16 @@ Template.appointmentlist.onRendered(async function() {
                                         custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                         custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                     };
-        
+
                                     appointmentList.push(appointment);
                                 }
-        
+
                                 for (let i = 0; i < data.tappointmentlist.length; i++) {
                                     appStatus = data.tappointmentlist[i].Status || '';
                                     var apmt__ = appointmentList.filter((apmt) => {
                                         return apmt.id == data.tappointmentlist[i].AppointID;
                                     });
-        
+
                                     // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
                                     // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
                                     if (data.tappointmentlist[i].Active == true) {
@@ -428,11 +431,11 @@ Template.appointmentlist.onRendered(async function() {
                                         extraProducts: data.tappointmentlist[i].ExtraProducts || "",
                                         attachments: data.tappointmentlist[i].Attachments || "",
                                     };
-        
+
                                     if (apmt__.length > 0) {
                                         dataList.statementno = apmt__[0].employeename || "";
                                     }
-        
+
                                     if (accessLevel) {
                                         if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                                             // Get SMS Confimation Info
@@ -469,7 +472,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                         });
                                                                     }).catch(e => {
-        
+
                                                                     });
                                                                     dataList.custFld11 = "Yes";
                                                                     break;
@@ -485,7 +488,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                             addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                         });
                                                                     }).catch(e => {
-        
+
                                                                     });
                                                                     dataList.custFld11 = "No";
                                                                     break;
@@ -565,16 +568,16 @@ Template.appointmentlist.onRendered(async function() {
                                     custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                     custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                 };
-    
+
                                 appointmentList.push(appointment);
                             }
-    
+
                             for (let i = 0; i < data.tappointmentlist.length; i++) {
                                 appStatus = data.tappointmentlist[i].Status || '';
                                 var apmt__ = appointmentList.filter((apmt) => {
                                     return apmt.id == data.tappointmentlist[i].AppointID;
                                 });
-    
+
                                 // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
                                 // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
                                 if (data.tappointmentlist[i].Active == true) {
@@ -632,11 +635,11 @@ Template.appointmentlist.onRendered(async function() {
                                     extraProducts: data.tappointmentlist[i].ExtraProducts || "",
                                     attachments: data.tappointmentlist[i].Attachments || "",
                                 };
-    
+
                                 if (apmt__.length > 0) {
                                     dataList.statementno = apmt__[0].employeename || "";
                                 }
-    
+
                                 if (accessLevel) {
                                     if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                                         // Get SMS Confimation Info
@@ -673,7 +676,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "Yes";
                                                                 break;
@@ -689,7 +692,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "No";
                                                                 break;
@@ -704,9 +707,9 @@ Template.appointmentlist.onRendered(async function() {
                                 dataTableList.push(dataList);
                             }
                             templateObject.datatablerecords.set(dataTableList);
-                        } 
+                        }
                     })
-                   
+
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
@@ -792,16 +795,16 @@ Template.appointmentlist.onRendered(async function() {
                                     custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                     custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                 };
-    
+
                                 appointmentList.push(appointment);
                             }
-    
+
                             for (let i = 0; i < data.tappointmentlist.length; i++) {
                                 appStatus = data.tappointmentlist[i].Status || '';
                                 var apmt__ = appointmentList.filter((apmt) => {
                                     return apmt.id == data.tappointmentlist[i].AppointID;
                                 });
-    
+
                                 // let openBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.OpenBalance)|| 0.00;
                                 // let closeBalance = utilityService.modifynegativeCurrencyFormat(data.tappointmentex[i].fields.CloseBalance)|| 0.00;
                                 if (data.tappointmentlist[i].Active == true) {
@@ -859,11 +862,11 @@ Template.appointmentlist.onRendered(async function() {
                                     extraProducts: data.tappointmentlist[i].ExtraProducts || "",
                                     attachments: data.tappointmentlist[i].Attachments || "",
                                 };
-    
+
                                 if (apmt__.length > 0) {
                                     dataList.statementno = apmt__[0].employeename || "";
                                 }
-    
+
                                 if (accessLevel) {
                                     if (data.tappointmentlist[i].CUSTFLD13 === "Yes" && data.tappointmentlist[i].CUSTFLD11 === "" && data.tappointmentlist[i].Active == true) {
                                         // Get SMS Confimation Info
@@ -900,7 +903,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "Yes";
                                                                 break;
@@ -916,7 +919,7 @@ Template.appointmentlist.onRendered(async function() {
                                                                         addVS1Data('TAppointment', JSON.stringify(dataUpdate));
                                                                     });
                                                                 }).catch(e => {
-    
+
                                                                 });
                                                                 dataList.custFld11 = "No";
                                                                 break;
@@ -1135,7 +1138,7 @@ Template.appointmentlist.onRendered(async function() {
                             dataTableList.push(dataList);
                         }
                         templateObject.datatablerecords.set(dataTableList);
-                    } 
+                    }
                 })
             }
         })
@@ -1508,6 +1511,12 @@ Template.appointmentlist.events({
             datatableApp.rows.add(splashArrayAppointmentListDupp);
             datatableApp.draw(false);
         }
+    },
+    'click .btnHideConverted': function() {
+
+    },
+    'click .btnViewConverted': function() {
+
     },
     'click .btnRefresh': function() {
         $('.fullScreenSpin').css('display', 'inline-block');

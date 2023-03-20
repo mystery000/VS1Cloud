@@ -48,7 +48,7 @@ Template.mobileapp.onCreated(function() {
     templateObject.bomProducts = new ReactiveVar([]);
 
     templateObject.bomStructure = new ReactiveVar([]);
-    
+
 
 })
 
@@ -78,7 +78,7 @@ Template.mobileapp.onRendered(async function() {
     //get all bom products
     let temp_bom = await templateObject.getAllBOMProducts();
     templateObject.bomProducts.set(temp_bom);
-    
+
     //get all work orders
     templateObject.getAllWorkorders = async function() {
         return new Promise(async(resolve, reject)=>{
@@ -140,7 +140,7 @@ Template.mobileapp.events({
                 $(".mobile-left-workorder-list").css('display', 'block');
                 let workOrderData = JSON.parse(dataObject[0].data);
 
-                                
+
                 let table = $("#tblWorkOrderList").DataTable({
                     data: workOrderData.tvs1workorder,
                     paging: false,
@@ -175,7 +175,7 @@ Template.mobileapp.events({
                 if(dataObject.length == 0) {
 
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
-                 
+
                         addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
                                                                         }).catch(function(err){
                                                                         });
@@ -375,7 +375,7 @@ Template.mobileapp.events({
             });
         });
     },
-    
+
     'click #mobileBtnCancel': function(e, instance) {
         $("#qr-reader-productmodal").css('display', 'none');
         $(".mobile-main-input").val("");
@@ -393,9 +393,9 @@ Template.mobileapp.events({
 
 
         // html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
-        // }).catch((err) => console.log(err));    
-        
-    },    
+        // }).catch((err) => console.log(err));
+
+    },
 
     'click #btnClockIn': function(e, instance) {
         Template.instance().isClockin.set(true);
@@ -639,7 +639,7 @@ Template.mobileapp.events({
             Template.instance().isEnterJobProcess.set(true);
             Template.instance().isClockin.set(false);
 
-           
+
         }
 
         if (isEnterJobProcess) {
@@ -782,7 +782,7 @@ Template.mobileapp.events({
         $('#startBreakContainer').css('display','none');
         $(".mobile-left-btn-containner").css('display', 'block');  // Keypad display
 
-        
+
         Template.instance().isClockin.set(false);
         Template.instance().isEnterJobProcess.set(false);
         Template.instance().isEnterJobNumber.set(true);
@@ -791,9 +791,9 @@ Template.mobileapp.events({
 
         let jobNumber = Template.instance().jobNumber.get();
         let templateObject = Template.instance();
-        
+
         // $('.fullScreenSpin').css('display', 'inline-block');
-        
+
         templateObject.getAllWorkorders = async function() {
             return new Promise(async(resolve, reject)=>{
                 getVS1Data('TVS1Workorder').then(function(dataObject){
@@ -816,37 +816,37 @@ Template.mobileapp.events({
 
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
-            
-            // Set bom Structure for current workorder
-            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));                 
 
-            
+            // Set bom Structure for current workorder
+            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
+
+
 
             let tempworkorder = cloneDeep(currentworkorder);
             tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
-               
+
              //   $('.fullScreenSpin').css('display', 'none')
              //   swal('Work Order state is updated', '', 'success');
             })
-            
-            let BomDataList = [];        
+
+            let BomDataList = [];
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
             let change_to = bomStructureData.TotalQtyOriginal;
-            
+
             let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
 
-            BomDataList.push(tempBomData);    
-            
+            BomDataList.push(tempBomData);
+
             let bomDetailData = JSON.parse(bomStructureData.Details);
-          
+
             for (let i = 0; i < bomDetailData.length; i++) {
                 tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
-                BomDataList.push(tempBomData);  
+                BomDataList.push(tempBomData);
             }
-        
+
             let wastage_table = $("#tblWastageForm").DataTable({
                 data: BomDataList,
                 paging: true,
@@ -868,11 +868,11 @@ Template.mobileapp.events({
 
             $('#tblWastageForm').on( 'click', 'tbody td.editable', function () {
                 $(this).attr('contenteditable', 'true');
-                              
+
             } );
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
-                
+
                 // var colIndex = wastage_table.cell(this).index().column;
                 // var rowIndex = wastage_table.cell(this).index().row;
 
@@ -887,7 +887,7 @@ Template.mobileapp.events({
                 var index = cell.index();
                 var column = index.column;
                 var row = index.row;
-                
+
                 if (column < wastage_table.columns().count() - 1) {
                     var nextCell = wastage_table.cell(row, column + 1);
                     nextCell.data(cell.data());
@@ -899,19 +899,19 @@ Template.mobileapp.events({
 
                 // var colIndex = wastage_table.cell(this).index().column;
                 // var rowIndex = wastage_table.cell(this).index().row;
-                // console.log(colIndex);  
-                           
+   
+
             } );
-           
+
 
         }
 
-        // wastage form modal       
+        // wastage form modal
         e.preventDefault();
         e.stopPropagation();
         $('#WastageModal').modal('toggle');
 
-   
+
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
         $("#btnClockIn").prop('disabled',true);
@@ -944,7 +944,7 @@ Template.mobileapp.events({
         $(".mobile-main-input").val(" ");
 
     },
-   
+
     'change #breakCheck': function(e, instance) {
         if($('#breakCheck').is(":checked") == true){
 
@@ -958,7 +958,7 @@ Template.mobileapp.events({
 
     'click #breakSave': function(e, instance) {
         let breakMessage = $('#txtpause-notes').val();
-             
+
         Template.instance().breakMessage.set(breakMessage);
         swal('Successfully  Save', '', 'success');
         $("#startBreakContainer").css('display', 'none');
@@ -977,37 +977,37 @@ Template.mobileapp.events({
             $(".mobile-left-btn-containner").css('display', 'none');
         } else {
             $(".mobile-left-btn-containner").css('display', 'block');
-        }      
+        }
     }
-    , 
+    ,
     'click .btn-save-wastage': function(e,instance) {
         $('.fullScreenSpin').css('display', 'inline-block');
         $('.fullScreenSpin').css('display', 'none')
-        
+
         var temp = [];
 
         $("#tblWastageForm tr").each(function(){
             var thirdColumnValue = $(this).find("td:eq(3)").text();
             temp.push(thirdColumnValue);
-            
+
         });
 
-       
+
         swal('The wastage is saved', '', 'success');
         $('#WastageModal').modal('toggle');
-    
-    } 
+
+    }
     ,
     'click .btn-cancel-wastage': function(e,instance) {
-        
+
         $('#WastageModal').modal('toggle');
 
-    } 
+    }
 
 });
 
 Template.mobileapp.helpers({
-    
+
     showBOMModal: ()=> {
         return Template.instance().showBOMModal.get();
     },
