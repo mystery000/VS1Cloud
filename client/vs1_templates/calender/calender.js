@@ -5997,835 +5997,837 @@ Template.calender.events({
             });
         }
     },
-    'click #prev': async function() {
-        let templateObject = Template.instance();
-        let changeAppointmentView = templateObject.appointmentrecords.get();
-
-        let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
-        let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
-        //get current week monday date to use it to search week in month
-        let weekDate = moment($('.saturday').attr("id")).format("YYYY/MM/DD");
-        let weekendStartListener = "";
-
-        //get weeks of the month from a template object
-        let weeksOfThisMonth = templateObject.weeksOfMonth.get();
-        //Since we have all weeks of the month we query the weeks of the month object for data to get current week
-        var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
-            return weekend.dates.includes(parseInt(moment(weekDate).format('DD')));
-        });
-
-        let selectedWeekEnd = getSelectedWeek[0].end;
-        if (getSelectedWeek.length < 2) {} else {
-            selectedWeekEnd = getSelectedWeek[1].end;
-        }
-        //we then get index of the week in resource view so that we can use it to query the previous week
-        let index = weeksOfThisMonth.map(function(e) {
-            return e.end;
-        }).indexOf(selectedWeekEnd);
-
-        if (index == 0) {
-            $('.btnPrev').attr('disabled', 'disabled');
-        } else {
-            $('.btnNext').removeAttr('disabled');
-            let dayOfWeek = weeksOfThisMonth[index - 1].dates[0];
-
-            let dayOfWeekEnd = weeksOfThisMonth[index - 1].dates[weeksOfThisMonth[index - 1].dates.length - 1];
-            if (dayOfWeek < 10) {
-                dayOfWeek = "0" + dayOfWeek;
-            }
-            let dayPrev = [];
-            let getDate = new Date();
-            if ((getDate.getMonth() - 1) == -1 && dayOfWeek != 1) {
-                weekendStartListener = moment((getDate.getFullYear() - 1) + "-" + "12" + "-" + dayOfWeek).format('YYYY-MM-DD');
-            } else {
-                let year = getDate.getFullYear();
-                if (getDate.getMonth() == 1) {
-                    let leapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
-                    if (leapYear == true) {
-                        dayOfWeek = 29;
-                    } else {
-                        dayOfWeek = 28;
-                    }
-                }
-                weekendStartListener = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
-            }
-
-            let weekendStart = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
-
-            if (index == 1 && dayOfWeek > dayOfWeekEnd) {
-                weekendStart = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth())).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
-            }
-            let startWeek = new Date(weekendStart);
-            // if (index == 1 && moment(weekendStart).format("DD") != "01") {
-            //     startWeek = new Date(weekendStartListener);
-            // }
-            let weekendEnd = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeekEnd).format('YYYY-MM-DD');
-
-            for (let i = 0; i <= weeksOfThisMonth[index - 1].dates.length; i++) {
-                // if (index == 1 && moment(weekendStart).format("DD") != "01") {
-                //     for (let t = 0; t < weeksOfThisMonth[index - 1].dates.length; t++) {
-                //         if (weeksOfThisMonth[index - 1].dates[0] != 1) {
-                //             dayPrev.push(moment(weekendStartListener).add(t, 'days').format("YYYY-MM-DD"));
-                //         } else {
-                //             dayPrev.push(moment(weekendStart).add(t, 'days').format("YYYY-MM-DD"));
-                //         }
-                //     }
-                //     i = weeksOfThisMonth[index - 1].dates.length;
-                // } else {
-
-                dayPrev.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
-                //}
-
-            }
-            let currentDay = moment().format('YYYY-MM-DD');
-            templateObject.resourceDates.set(dayPrev);
-            //fix the week day
-
-            let endWeek = new Date(weekendEnd);
-            let resourceChat = [];
-            let resourceJob = [];
-            for (let a = 0; a < changeAppointmentView.length; a++) {
-                let weekDay = moment(changeAppointmentView[a].startDate.split(" ")[0]).format("dddd");
-                let date = new Date(changeAppointmentView[a].startDate.split(" ")[0]);
-                if (resourceChat.length > 0) {
-                    if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
-                                let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
-                                if (!found) {
-                                    let resourceColor = templateObject.employeerecords.get();
-
-                                    var result = resourceColor.filter(apmtColor => {
-                                        return apmtColor.employeeName == changeAppointmentView[a].employeename
-                                    });
-                                    let employeeColor = '#00a3d3';
-                                    if (result.length > 0) {
-                                        employeeColor = result[0].color || '#00a3d3';
-                                    }
-
-                                    var dataList = {
-                                        id: changeAppointmentView[a].id,
-                                        employeeName: changeAppointmentView[a].employeename,
-                                        color: employeeColor
-                                    };
-                                    resourceChat.push(dataList);
-                                }
-                                var jobs = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    job: changeAppointmentView[a].accountname,
-                                    street: changeAppointmentView[a].street,
-                                    city: changeAppointmentView[a].suburb,
-                                    zip: changeAppointmentView[a].zip,
-                                    day: weekDay,
-                                    date: changeAppointmentView[a].startDate.split(" ")[0],
-                                }
-
-                                resourceJob.push(jobs)
-                            }
-                        } else {
-                            let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
-                            if (!found) {
-                                let resourceColor = templateObject.employeerecords.get();
-
-                                var result = resourceColor.filter(apmtColor => {
-                                    return apmtColor.employeeName == changeAppointmentView[a].employeename
-                                });
-                                let employeeColor = '#00a3d3';
-                                if (result.length > 0) {
-                                    employeeColor = result[0].color || '#00a3d3';
-                                }
-
-                                var dataList = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    color: employeeColor
-                                };
-                                resourceChat.push(dataList);
-                            }
-                            var jobs = {
-                                id: changeAppointmentView[a].id,
-                                employeeName: changeAppointmentView[a].employeename,
-                                job: changeAppointmentView[a].accountname,
-                                street: changeAppointmentView[a].street,
-                                city: changeAppointmentView[a].suburb,
-                                zip: changeAppointmentView[a].zip,
-                                day: weekDay,
-                                date: changeAppointmentView[a].startDate.split(" ")[0],
-                            }
-
-                            resourceJob.push(jobs)
-                        }
-                    }
-                } else {
-                    if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
-                                let resourceColor = templateObject.employeerecords.get();
-                                var result = resourceColor.filter(apmtColor => {
-                                    return apmtColor.employeeName == changeAppointmentView[a].employeename
-                                });
-                                let employeeColor = '#00a3d3';
-                                if (result.length > 0) {
-                                    employeeColor = result[0].color || '#00a3d3';
-                                }
-                                var dataList = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    color: employeeColor
-                                };
-                                var jobs = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    job: changeAppointmentView[a].accountname,
-                                    street: changeAppointmentView[a].street,
-                                    city: changeAppointmentView[a].suburb,
-                                    zip: changeAppointmentView[a].zip,
-                                    day: weekDay,
-                                    date: changeAppointmentView[a].startDate.split(" ")[0],
-                                }
-                                resourceJob.push(jobs)
-                                resourceChat.push(dataList);
-                            }
-                        } else {
-                            let resourceColor = templateObject.employeerecords.get();
-                            var result = resourceColor.filter(apmtColor => {
-                                return apmtColor.employeeName == changeAppointmentView[a].employeename
-                            });
-                            let employeeColor = '#00a3d3';
-                            if (result.length > 0) {
-                                employeeColor = result[0].color || '#00a3d3';
-                            }
-                            var dataList = {
-                                id: changeAppointmentView[a].id,
-                                employeeName: changeAppointmentView[a].employeename,
-                                color: employeeColor
-                            };
-                            var jobs = {
-                                id: changeAppointmentView[a].id,
-                                employeeName: changeAppointmentView[a].employeename,
-                                job: changeAppointmentView[a].accountname,
-                                street: changeAppointmentView[a].street,
-                                city: changeAppointmentView[a].suburb,
-                                zip: changeAppointmentView[a].zip,
-                                day: weekDay,
-                                date: changeAppointmentView[a].startDate.split(" ")[0],
-                            }
-                            resourceJob.push(jobs)
-                            resourceChat.push(dataList);
-                        }
-                    }
-                }
-            }
-
-            let allEmployeesData = templateObject.employeerecords.get();
-            for (let e = 0; e < allEmployeesData.length; e++) {
-                let found = resourceChat.some(emp => emp.employeeName == allEmployeesData[e].employeeName);
-                if (!found) {
-                    var dataList = {
-                        id: "",
-                        employeeName: allEmployeesData[e].employeeName,
-                        color: ""
-                    };
-                    resourceChat.push(dataList);
-                }
-            }
-
-            let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-            $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-            $('#here_table thead tr').append('<th class="employeeName"></th>');
-            for (let w = 0; w < daysOfTheWeek.length; w++) {
-                if (daysOfTheWeek[w] === "Sunday") {
-                    if ($('#showSunday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    }
-
-                } else if (daysOfTheWeek[w] === "Saturday") {
-                    if ($('#showSaturday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    }
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-                }
-
-            }
-
-            let tableRowData = [];
-            let sundayRowData = [];
-            let mondayRowData = [];
-            let splashArrayMonday = [];
-            let tuesdayRowData = [];
-            let wednesdayRowData = [];
-            let thursdayRowData = [];
-            let fridayRowData = [];
-            let saturdayRowData = [];
-            let sundayRow = "";
-            let mondayRow = "";
-            let tuesdayRow = "";
-            let wednesdayRow = "";
-            let thursdayRow = "";
-            let fridayRow = "";
-            let saturdayRow = "";
-            let tableRow = "";
-            // let saturdayStatus = "";
-            // let sundayStatus = "";
-            for (let r = 0; r < resourceChat.length; r++) {
-
-                sundayRowData = [];
-                mondayRowData = [];
-                tuesdayRowData = [];
-                wednesdayRowData = [];
-                thursdayRowData = [];
-                fridayRowData = [];
-                saturdayRowData = [];
-                for (let j = 0; j < resourceJob.length; j++) {
-
-                    if (resourceJob[j].day == 'Sunday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        sundayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-                        sundayRowData.push(sundayRow);
-                    }
-                    if (resourceJob[j].day == 'Monday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        mondayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        mondayRowData.push(mondayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Tuesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        tuesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        tuesdayRowData.push(tuesdayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Wednesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        wednesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        wednesdayRowData.push(wednesdayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Thursday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        thursdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        thursdayRowData.push(thursdayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Friday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        fridayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        fridayRowData.push(fridayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Saturday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        saturdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        saturdayRowData.push(saturdayRow);
-                    }
-
-                }
-
-                if ($('#showSaturday').is(":checked")) {
-                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                } else {
-                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                }
-
-                if ($('#showSunday').is(":checked")) {
-                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                } else {
-                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                }
-
-                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                    sundayStatus + "" +
-                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                    saturdayStatus + "" +
-                    '</tr>';
-                tableRowData.push(tableRow);
-
-            }
-            $('#here_table table').append(tableRowData);
-
-            $('.sunday').attr("id", dayPrev[0]);
-            $('.monday').attr("id", dayPrev[1]);
-            $('.tuesday').attr("id", dayPrev[2]);
-            $('.wednesday').attr("id", dayPrev[3]);
-            $('.thursday').attr("id", dayPrev[4]);
-            $('.friday').attr("id", dayPrev[5]);
-            $('.saturday').attr("id", dayPrev[6]);
-            $(".dateMon").text(moment(dayPrev[1]).format("MM/DD"));
-            $(".dateTue").text(moment(dayPrev[2]).format("MM/DD"));
-            $(".dateWed").text(moment(dayPrev[3]).format("MM/DD"));
-            $(".dateThu").text(moment(dayPrev[4]).format("MM/DD"));
-            $(".dateFri").text(moment(dayPrev[5]).format("MM/DD"));
-            $(".dateSat").text(moment(dayPrev[6]).format("MM/DD"));
-            $(".dateSun").text(moment(dayPrev[0]).format("MM/DD"));
-            if ((getDate.getMonth() - 1) == -1 && dayOfWeek != 1 && index == 0) {
-                $(".allocationHeaderDate h2").text(Jan + " " + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
-            } else {
-
-                if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
-                    $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[0]).format('DD') + ' - ' + moment(dayPrev[6]).format('DD') + ', ' + moment().format('YYYY'));
-                }
-                if ($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false) {
-                    $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
-                }
-                if (($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)) {
-                    $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[0]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
-                }
-                if (($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)) {
-                    $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[6]).format('DD') + ', ' + moment().format('YYYY'));
-                }
-            }
-            let day = moment().format("dddd");
-            let resourceDate = $('thead tr th.' + day.toLowerCase()).attr("id");
-            await changeColumnColor(resourceDate);
-        }
-
-    },
-    'click #next': function() {
-        let templateObject = Template.instance();
-        let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
-        let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
-        let weekDate = moment($('.monday').attr("id")).format("YYYY/MM/DD");
-        let weeksOfThisMonth = templateObject.weeksOfMonth.get();
-        var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
-            return weekend.dates.includes(parseInt(moment(weekDate).format('DD')));
-        });
-        let index = weeksOfThisMonth.map(function(e) {
-            return e.end;
-        }).indexOf(getSelectedWeek[0].end);
-        if (((index) === (weeksOfThisMonth.length - 1))) {
-            $('.btnNext').attr('disabled', 'disabled');
-
-        } else {
-            $('.btnPrev').removeAttr('disabled');
-            let dayOfWeek = weeksOfThisMonth[index + 1].dates[0];
-
-            let dayOfWeekEnd = weeksOfThisMonth[index + 1].dates[weeksOfThisMonth[index + 1].dates.length - 1];
-            if (dayOfWeek < 10) {
-                dayOfWeek = "0" + dayOfWeek;
-            }
-
-            //let dayOfWeekListerner ="01";
-            let dayNext = [];
-            let getDate = new Date();
-            let weekendStart = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
-            let weekendEnd = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeekEnd).format('YYYY-MM-DD');
-            let weekendEndListener = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 2)).slice(-2) + "-" + dayOfWeekEnd).format('YYYY-MM-DD');
-            let endWeek = new Date(weekendEnd);
-
-            if ((index) === (weeksOfThisMonth.length - 2) && weeksOfThisMonth[index + 1].dates.includes(1)) {
-                endWeek = new Date(weekendEndListener);
-            }
-
-            for (let i = 0; i <= weeksOfThisMonth[index + 1].dates.length; i++) {
-                if ((index) === (weeksOfThisMonth.length - 2) && weeksOfThisMonth[index + 1].dates.includes(1)) {
-                    for (let t = 0; t < weeksOfThisMonth[index + 1].dates.length; t++) {
-                        dayNext.push(moment(weekendStart).add(t, 'days').format("YYYY-MM-DD"));
-                    }
-                    i = weeksOfThisMonth[index + 1].dates.length;
-                } else {
-                    dayNext.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
-                }
-
-            }
-
-            // for (i = 0; i <= weeksOfThisMonth[index + 1].dates.length; i++) {
-            //     dayNext.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
-            // }
-            let changeAppointmentView = templateObject.appointmentrecords.get();
-
-            //fix the week day
-            let startWeek = new Date(weekendStart);
-            let resourceChat = [];
-            let resourceJob = [];
-            for (let a = 0; a < changeAppointmentView.length; a++) {
-                let weekDay = moment(changeAppointmentView[a].startDate.split(" ")[0]).format("dddd");
-                let date = new Date(changeAppointmentView[a].startDate.split(" ")[0]);
-
-                if (resourceChat.length > 0) {
-                    if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
-                                let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
-                                if (!found) {
-                                    let resourceColor = templateObject.employeerecords.get();
-                                    var result = resourceColor.filter(apmtColor => {
-                                        return apmtColor.employeeName == changeAppointmentView[a].employeename
-                                    });
-                                    let employeeColor = '#00a3d3';
-                                    if (result.length > 0) {
-                                        employeeColor = result[0].color || '#00a3d3';
-                                    }
-                                    var dataList = {
-                                        id: changeAppointmentView[a].id,
-                                        employeeName: changeAppointmentView[a].employeename,
-                                        color: employeeColor
-                                    };
-                                    resourceChat.push(dataList);
-                                }
-                                var jobs = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    job: changeAppointmentView[a].accountname,
-                                    street: changeAppointmentView[a].street,
-                                    city: changeAppointmentView[a].suburb,
-                                    zip: changeAppointmentView[a].zip,
-                                    day: weekDay,
-                                    date: changeAppointmentView[a].startDate.split(" ")[0],
-                                }
-                                resourceJob.push(jobs)
-                            }
-                        } else {
-                            let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
-                            if (!found) {
-                                let resourceColor = templateObject.employeerecords.get();
-                                var result = resourceColor.filter(apmtColor => {
-                                    return apmtColor.employeeName == changeAppointmentView[a].employeename
-                                });
-                                let employeeColor = '#00a3d3';
-                                if (result.length > 0) {
-                                    employeeColor = result[0].color || '#00a3d3';
-                                }
-                                var dataList = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    color: employeeColor
-                                };
-                                resourceChat.push(dataList);
-                            }
-                            var jobs = {
-                                id: changeAppointmentView[a].id,
-                                employeeName: changeAppointmentView[a].employeename,
-                                job: changeAppointmentView[a].accountname,
-                                street: changeAppointmentView[a].street,
-                                city: changeAppointmentView[a].suburb,
-                                zip: changeAppointmentView[a].zip,
-                                day: weekDay,
-                                date: changeAppointmentView[a].startDate.split(" ")[0],
-                            }
-                            resourceJob.push(jobs)
-                        }
-                    }
-
-                } else {
-                    if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
-                            if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
-                                let resourceColor = templateObject.employeerecords.get();
-                                var result = resourceColor.filter(apmtColor => {
-                                    return apmtColor.employeeName == changeAppointmentView[a].employeename
-                                });
-                                let employeeColor = '#00a3d3';
-                                if (result.length > 0) {
-                                    employeeColor = result[0].color || '#00a3d3';
-                                }
-                                var dataList = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    color: employeeColor
-                                };
-                                var jobs = {
-                                    id: changeAppointmentView[a].id,
-                                    employeeName: changeAppointmentView[a].employeename,
-                                    job: changeAppointmentView[a].accountname,
-                                    street: changeAppointmentView[a].street,
-                                    city: changeAppointmentView[a].suburb,
-                                    zip: changeAppointmentView[a].zip,
-                                    day: weekDay,
-                                    date: changeAppointmentView[a].startDate.split(" ")[0],
-                                }
-                                resourceJob.push(jobs)
-                                resourceChat.push(dataList);
-                            }
-                        } else {
-                            let resourceColor = templateObject.employeerecords.get();
-                            var result = resourceColor.filter(apmtColor => {
-                                return apmtColor.employeeName == changeAppointmentView[a].employeename
-                            });
-                            let employeeColor = '#00a3d3';
-                            if (result.length > 0) {
-                                employeeColor = result[0].color || '#00a3d3';
-                            }
-                            var dataList = {
-                                id: changeAppointmentView[a].id,
-                                employeeName: changeAppointmentView[a].employeename,
-                                color: employeeColor
-                            };
-                            var jobs = {
-                                id: changeAppointmentView[a].id,
-                                employeeName: changeAppointmentView[a].employeename,
-                                job: changeAppointmentView[a].accountname,
-                                street: changeAppointmentView[a].street,
-                                city: changeAppointmentView[a].suburb,
-                                zip: changeAppointmentView[a].zip,
-                                day: weekDay,
-                                date: changeAppointmentView[a].startDate.split(" ")[0],
-                            }
-                            resourceJob.push(jobs)
-                            resourceChat.push(dataList);
-                        }
-                    }
-                }
-            }
-
-            let allEmployeesData = templateObject.employeerecords.get();
-            for (let e = 0; e < allEmployeesData.length; e++) {
-                let found = resourceChat.some(emp => emp.employeeName == allEmployeesData[e].employeeName);
-                if (!found) {
-                    var dataList = {
-                        id: "",
-                        employeeName: allEmployeesData[e].employeeName,
-                        color: ""
-                    };
-                    resourceChat.push(dataList);
-                }
-            }
-
-            let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-            $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-            $('#here_table thead tr').append('<th class="employeeName"></th>');
-
-            for (let w = 0; w < daysOfTheWeek.length; w++) {
-                if (daysOfTheWeek[w] === "Sunday") {
-                    if ($('#showSunday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    }
-
-                } else if (daysOfTheWeek[w] === "Saturday") {
-                    if ($('#showSaturday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    }
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-                }
-            }
-
-            let tableRowData = [];
-            let sundayRowData = [];
-            let mondayRowData = [];
-            let splashArrayMonday = [];
-            let tuesdayRowData = [];
-            let wednesdayRowData = [];
-            let thursdayRowData = [];
-            let fridayRowData = [];
-            let saturdayRowData = [];
-            let sundayRow = "";
-            let mondayRow = "";
-            let tuesdayRow = "";
-            let wednesdayRow = "";
-            let thursdayRow = "";
-            let fridayRow = "";
-            let saturdayRow = "";
-            let tableRow = "";
-            // let saturdayStatus = "";
-            // let sundayStatus = "";
-            for (let r = 0; r < resourceChat.length; r++) {
-
-                sundayRowData = [];
-                mondayRowData = [];
-                tuesdayRowData = [];
-                wednesdayRowData = [];
-                thursdayRowData = [];
-                fridayRowData = [];
-                saturdayRowData = [];
-                for (let j = 0; j < resourceJob.length; j++) {
-
-                    if (resourceJob[j].day == 'Sunday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        sundayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-                        sundayRowData.push(sundayRow);
-                    }
-                    if (resourceJob[j].day == 'Monday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        mondayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        mondayRowData.push(mondayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Tuesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        tuesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        tuesdayRowData.push(tuesdayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Wednesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        wednesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        wednesdayRowData.push(wednesdayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Thursday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        thursdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        thursdayRowData.push(thursdayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Friday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        fridayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        fridayRowData.push(fridayRow);
-                    }
-
-                    if (resourceJob[j].day == 'Saturday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
-                        saturdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-
-                        saturdayRowData.push(saturdayRow);
-                    }
-
-                }
-
-                if ($('#showSaturday').is(":checked")) {
-                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                } else {
-                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                }
-
-                if ($('#showSunday').is(":checked")) {
-                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                } else {
-                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                }
-
-                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                    sundayStatus + "" +
-                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                    saturdayStatus + "" +
-                    '</tr>';
-                tableRowData.push(tableRow);
-
-            }
-            $('#here_table table').append(tableRowData);
-
-            $('.sunday').attr("id", dayNext[0]);
-            $('.monday').attr("id", dayNext[1]);
-            $('.tuesday').attr("id", dayNext[2]);
-            $('.wednesday').attr("id", dayNext[3]);
-            $('.thursday').attr("id", dayNext[4]);
-            $('.friday').attr("id", dayNext[5]);
-            $('.saturday').attr("id", dayNext[6]);
-
-            $(".dateMon").text(moment(dayNext[1]).format("MM/DD"));
-            $(".dateTue").text(moment(dayNext[2]).format("MM/DD"));
-            $(".dateWed").text(moment(dayNext[3]).format("MM/DD"));
-            $(".dateThu").text(moment(dayNext[4]).format("MM/DD"));
-            $(".dateFri").text(moment(dayNext[5]).format("MM/DD"));
-            $(".dateSat").text(moment(dayNext[6]).format("MM/DD"));
-            $(".dateSun").text(moment(dayNext[0]).format("MM/DD"));
-
-            if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
-                $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[0]).format('DD') + ' - ' + moment(dayNext[6]).format('DD') + ', ' + moment().format('YYYY'));
-            }
-
-            if ($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false) {
-                $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
-            }
-
-            if (($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)) {
-                $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[0]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
-            }
-
-            if (($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)) {
-                $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[6]).format('DD') + ', ' + moment().format('YYYY'));
-            }
-
-            // $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
-
-            let day = moment().format("dddd");
-            let resourceDate = $('thead tr th.' + day.toLowerCase()).attr("id");
-            changeColumnColor(resourceDate);
-
-        }
-    },
+    // 'click #prev': async function() {
+    //     console.log('Clicked prev button')
+    //     let templateObject = Template.instance();
+    //     let changeAppointmentView = templateObject.appointmentrecords.get();
+
+    //     let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
+    //     let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
+    //     //get current week monday date to use it to search week in month
+    //     let weekDate = moment($('.saturday').attr("id")).format("YYYY/MM/DD");
+    //     let weekendStartListener = "";
+
+    //     //get weeks of the month from a template object
+    //     let weeksOfThisMonth = templateObject.weeksOfMonth.get();
+    //     //Since we have all weeks of the month we query the weeks of the month object for data to get current week
+    //     var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
+    //         return weekend.dates.includes(parseInt(moment(weekDate).format('DD')));
+    //     });
+
+    //     let selectedWeekEnd = getSelectedWeek[0].end;
+    //     if (getSelectedWeek.length < 2) {} else {
+    //         selectedWeekEnd = getSelectedWeek[1].end;
+    //     }
+    //     //we then get index of the week in resource view so that we can use it to query the previous week
+    //     let index = weeksOfThisMonth.map(function(e) {
+    //         return e.end;
+    //     }).indexOf(selectedWeekEnd);
+
+    //     if (index == 0) {
+    //         $('.btnPrev').attr('disabled', 'disabled');
+    //     } else {
+    //         $('.btnNext').removeAttr('disabled');
+    //         let dayOfWeek = weeksOfThisMonth[index - 1].dates[0];
+
+    //         let dayOfWeekEnd = weeksOfThisMonth[index - 1].dates[weeksOfThisMonth[index - 1].dates.length - 1];
+    //         if (dayOfWeek < 10) {
+    //             dayOfWeek = "0" + dayOfWeek;
+    //         }
+    //         let dayPrev = [];
+    //         let getDate = new Date();
+    //         if ((getDate.getMonth() - 1) == -1 && dayOfWeek != 1) {
+    //             weekendStartListener = moment((getDate.getFullYear() - 1) + "-" + "12" + "-" + dayOfWeek).format('YYYY-MM-DD');
+    //         } else {
+    //             let year = getDate.getFullYear();
+    //             if (getDate.getMonth() == 1) {
+    //                 let leapYear = ((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0);
+    //                 if (leapYear == true) {
+    //                     dayOfWeek = 29;
+    //                 } else {
+    //                     dayOfWeek = 28;
+    //                 }
+    //             }
+    //             weekendStartListener = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
+    //         }
+
+    //         let weekendStart = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
+
+    //         if (index == 1 && dayOfWeek > dayOfWeekEnd) {
+    //             weekendStart = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth())).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
+    //         }
+    //         let startWeek = new Date(weekendStart);
+    //         // if (index == 1 && moment(weekendStart).format("DD") != "01") {
+    //         //     startWeek = new Date(weekendStartListener);
+    //         // }
+    //         let weekendEnd = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeekEnd).format('YYYY-MM-DD');
+
+    //         for (let i = 0; i <= weeksOfThisMonth[index - 1].dates.length; i++) {
+    //             // if (index == 1 && moment(weekendStart).format("DD") != "01") {
+    //             //     for (let t = 0; t < weeksOfThisMonth[index - 1].dates.length; t++) {
+    //             //         if (weeksOfThisMonth[index - 1].dates[0] != 1) {
+    //             //             dayPrev.push(moment(weekendStartListener).add(t, 'days').format("YYYY-MM-DD"));
+    //             //         } else {
+    //             //             dayPrev.push(moment(weekendStart).add(t, 'days').format("YYYY-MM-DD"));
+    //             //         }
+    //             //     }
+    //             //     i = weeksOfThisMonth[index - 1].dates.length;
+    //             // } else {
+
+    //             dayPrev.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
+    //             //}
+
+    //         }
+    //         let currentDay = moment().format('YYYY-MM-DD');
+    //         templateObject.resourceDates.set(dayPrev);
+    //         //fix the week day
+
+    //         let endWeek = new Date(weekendEnd);
+    //         let resourceChat = [];
+    //         let resourceJob = [];
+    //         for (let a = 0; a < changeAppointmentView.length; a++) {
+    //             let weekDay = moment(changeAppointmentView[a].startDate.split(" ")[0]).format("dddd");
+    //             let date = new Date(changeAppointmentView[a].startDate.split(" ")[0]);
+    //             if (resourceChat.length > 0) {
+    //                 if (date >= startWeek && date <= endWeek) {
+    //                     if (seeOwnAppointments == true) {
+    //                         if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
+    //                             let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
+    //                             if (!found) {
+    //                                 let resourceColor = templateObject.employeerecords.get();
+
+    //                                 var result = resourceColor.filter(apmtColor => {
+    //                                     return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                                 });
+    //                                 let employeeColor = '#00a3d3';
+    //                                 if (result.length > 0) {
+    //                                     employeeColor = result[0].color || '#00a3d3';
+    //                                 }
+
+    //                                 var dataList = {
+    //                                     id: changeAppointmentView[a].id,
+    //                                     employeeName: changeAppointmentView[a].employeename,
+    //                                     color: employeeColor
+    //                                 };
+    //                                 resourceChat.push(dataList);
+    //                             }
+    //                             var jobs = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 job: changeAppointmentView[a].accountname,
+    //                                 street: changeAppointmentView[a].street,
+    //                                 city: changeAppointmentView[a].suburb,
+    //                                 zip: changeAppointmentView[a].zip,
+    //                                 day: weekDay,
+    //                                 date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                             }
+
+    //                             resourceJob.push(jobs)
+    //                         }
+    //                     } else {
+    //                         let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
+    //                         if (!found) {
+    //                             let resourceColor = templateObject.employeerecords.get();
+
+    //                             var result = resourceColor.filter(apmtColor => {
+    //                                 return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                             });
+    //                             let employeeColor = '#00a3d3';
+    //                             if (result.length > 0) {
+    //                                 employeeColor = result[0].color || '#00a3d3';
+    //                             }
+
+    //                             var dataList = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 color: employeeColor
+    //                             };
+    //                             resourceChat.push(dataList);
+    //                         }
+    //                         var jobs = {
+    //                             id: changeAppointmentView[a].id,
+    //                             employeeName: changeAppointmentView[a].employeename,
+    //                             job: changeAppointmentView[a].accountname,
+    //                             street: changeAppointmentView[a].street,
+    //                             city: changeAppointmentView[a].suburb,
+    //                             zip: changeAppointmentView[a].zip,
+    //                             day: weekDay,
+    //                             date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                         }
+
+    //                         resourceJob.push(jobs)
+    //                     }
+    //                 }
+    //             } else {
+    //                 if (date >= startWeek && date <= endWeek) {
+    //                     if (seeOwnAppointments == true) {
+    //                         if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
+    //                             let resourceColor = templateObject.employeerecords.get();
+    //                             var result = resourceColor.filter(apmtColor => {
+    //                                 return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                             });
+    //                             let employeeColor = '#00a3d3';
+    //                             if (result.length > 0) {
+    //                                 employeeColor = result[0].color || '#00a3d3';
+    //                             }
+    //                             var dataList = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 color: employeeColor
+    //                             };
+    //                             var jobs = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 job: changeAppointmentView[a].accountname,
+    //                                 street: changeAppointmentView[a].street,
+    //                                 city: changeAppointmentView[a].suburb,
+    //                                 zip: changeAppointmentView[a].zip,
+    //                                 day: weekDay,
+    //                                 date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                             }
+    //                             resourceJob.push(jobs)
+    //                             resourceChat.push(dataList);
+    //                         }
+    //                     } else {
+    //                         let resourceColor = templateObject.employeerecords.get();
+    //                         var result = resourceColor.filter(apmtColor => {
+    //                             return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                         });
+    //                         let employeeColor = '#00a3d3';
+    //                         if (result.length > 0) {
+    //                             employeeColor = result[0].color || '#00a3d3';
+    //                         }
+    //                         var dataList = {
+    //                             id: changeAppointmentView[a].id,
+    //                             employeeName: changeAppointmentView[a].employeename,
+    //                             color: employeeColor
+    //                         };
+    //                         var jobs = {
+    //                             id: changeAppointmentView[a].id,
+    //                             employeeName: changeAppointmentView[a].employeename,
+    //                             job: changeAppointmentView[a].accountname,
+    //                             street: changeAppointmentView[a].street,
+    //                             city: changeAppointmentView[a].suburb,
+    //                             zip: changeAppointmentView[a].zip,
+    //                             day: weekDay,
+    //                             date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                         }
+    //                         resourceJob.push(jobs)
+    //                         resourceChat.push(dataList);
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         let allEmployeesData = templateObject.employeerecords.get();
+    //         for (let e = 0; e < allEmployeesData.length; e++) {
+    //             let found = resourceChat.some(emp => emp.employeeName == allEmployeesData[e].employeeName);
+    //             if (!found) {
+    //                 var dataList = {
+    //                     id: "",
+    //                     employeeName: allEmployeesData[e].employeeName,
+    //                     color: ""
+    //                 };
+    //                 resourceChat.push(dataList);
+    //             }
+    //         }
+
+    //         let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    //         $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+    //         $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+    //         $('#here_table thead tr').append('<th class="employeeName"></th>');
+    //         for (let w = 0; w < daysOfTheWeek.length; w++) {
+    //             if (daysOfTheWeek[w] === "Sunday") {
+    //                 if ($('#showSunday').is(":checked")) {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+    //                 } else {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+    //                 }
+
+    //             } else if (daysOfTheWeek[w] === "Saturday") {
+    //                 if ($('#showSaturday').is(":checked")) {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+    //                 } else {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+    //                 }
+    //             } else {
+    //                 $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+    //             }
+
+    //         }
+
+    //         let tableRowData = [];
+    //         let sundayRowData = [];
+    //         let mondayRowData = [];
+    //         let splashArrayMonday = [];
+    //         let tuesdayRowData = [];
+    //         let wednesdayRowData = [];
+    //         let thursdayRowData = [];
+    //         let fridayRowData = [];
+    //         let saturdayRowData = [];
+    //         let sundayRow = "";
+    //         let mondayRow = "";
+    //         let tuesdayRow = "";
+    //         let wednesdayRow = "";
+    //         let thursdayRow = "";
+    //         let fridayRow = "";
+    //         let saturdayRow = "";
+    //         let tableRow = "";
+    //         // let saturdayStatus = "";
+    //         // let sundayStatus = "";
+    //         for (let r = 0; r < resourceChat.length; r++) {
+
+    //             sundayRowData = [];
+    //             mondayRowData = [];
+    //             tuesdayRowData = [];
+    //             wednesdayRowData = [];
+    //             thursdayRowData = [];
+    //             fridayRowData = [];
+    //             saturdayRowData = [];
+    //             for (let j = 0; j < resourceJob.length; j++) {
+
+    //                 if (resourceJob[j].day == 'Sunday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     sundayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+    //                     sundayRowData.push(sundayRow);
+    //                 }
+    //                 if (resourceJob[j].day == 'Monday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     mondayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     mondayRowData.push(mondayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Tuesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     tuesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     tuesdayRowData.push(tuesdayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Wednesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     wednesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     wednesdayRowData.push(wednesdayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Thursday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     thursdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     thursdayRowData.push(thursdayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Friday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     fridayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     fridayRowData.push(fridayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Saturday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     saturdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     saturdayRowData.push(saturdayRow);
+    //                 }
+
+    //             }
+
+    //             if ($('#showSaturday').is(":checked")) {
+    //                 saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+    //             } else {
+    //                 saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+    //             }
+
+    //             if ($('#showSunday').is(":checked")) {
+    //                 sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+    //             } else {
+    //                 sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+    //             }
+
+    //             tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+    //                 '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+    //                 sundayStatus + "" +
+    //                 '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+    //                 '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+    //                 '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+    //                 '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+    //                 '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+    //                 saturdayStatus + "" +
+    //                 '</tr>';
+    //             tableRowData.push(tableRow);
+
+    //         }
+    //         $('#here_table table').append(tableRowData);
+
+    //         $('.sunday').attr("id", dayPrev[0]);
+    //         $('.monday').attr("id", dayPrev[1]);
+    //         $('.tuesday').attr("id", dayPrev[2]);
+    //         $('.wednesday').attr("id", dayPrev[3]);
+    //         $('.thursday').attr("id", dayPrev[4]);
+    //         $('.friday').attr("id", dayPrev[5]);
+    //         $('.saturday').attr("id", dayPrev[6]);
+    //         $(".dateMon").text(moment(dayPrev[1]).format("MM/DD"));
+    //         $(".dateTue").text(moment(dayPrev[2]).format("MM/DD"));
+    //         $(".dateWed").text(moment(dayPrev[3]).format("MM/DD"));
+    //         $(".dateThu").text(moment(dayPrev[4]).format("MM/DD"));
+    //         $(".dateFri").text(moment(dayPrev[5]).format("MM/DD"));
+    //         $(".dateSat").text(moment(dayPrev[6]).format("MM/DD"));
+    //         $(".dateSun").text(moment(dayPrev[0]).format("MM/DD"));
+    //         if ((getDate.getMonth() - 1) == -1 && dayOfWeek != 1 && index == 0) {
+    //             $(".allocationHeaderDate h2").text(Jan + " " + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
+    //         } else {
+
+    //             if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+    //                 $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[0]).format('DD') + ' - ' + moment(dayPrev[6]).format('DD') + ', ' + moment().format('YYYY'));
+    //             }
+    //             if ($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false) {
+    //                 $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
+    //             }
+    //             if (($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)) {
+    //                 $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[0]).format('DD') + ' - ' + moment(dayPrev[5]).format('DD') + ', ' + moment().format('YYYY'));
+    //             }
+    //             if (($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)) {
+    //                 $(".allocationHeaderDate h2").text(moment(dayPrev[1]).format('MMM') + " " + moment(dayPrev[1]).format('DD') + ' - ' + moment(dayPrev[6]).format('DD') + ', ' + moment().format('YYYY'));
+    //             }
+    //         }
+    //         let day = moment().format("dddd");
+    //         let resourceDate = $('thead tr th.' + day.toLowerCase()).attr("id");
+    //         await changeColumnColor(resourceDate);
+    //     }
+
+    // },
+    // 'click #next': function() {
+    //     console.log('Clicked next button')
+    //     let templateObject = Template.instance();
+    //     let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
+    //     let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
+    //     let weekDate = moment($('.monday').attr("id")).format("YYYY/MM/DD");
+    //     let weeksOfThisMonth = templateObject.weeksOfMonth.get();
+    //     var getSelectedWeek = weeksOfThisMonth.filter(weekend => {
+    //         return weekend.dates.includes(parseInt(moment(weekDate).format('DD')));
+    //     });
+    //     let index = weeksOfThisMonth.map(function(e) {
+    //         return e.end;
+    //     }).indexOf(getSelectedWeek[0].end);
+    //     if (((index) === (weeksOfThisMonth.length - 1))) {
+    //         $('.btnNext').attr('disabled', 'disabled');
+
+    //     } else {
+    //         $('.btnPrev').removeAttr('disabled');
+    //         let dayOfWeek = weeksOfThisMonth[index + 1].dates[0];
+
+    //         let dayOfWeekEnd = weeksOfThisMonth[index + 1].dates[weeksOfThisMonth[index + 1].dates.length - 1];
+    //         if (dayOfWeek < 10) {
+    //             dayOfWeek = "0" + dayOfWeek;
+    //         }
+
+    //         //let dayOfWeekListerner ="01";
+    //         let dayNext = [];
+    //         let getDate = new Date();
+    //         let weekendStart = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeek).format('YYYY-MM-DD');
+    //         let weekendEnd = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 1)).slice(-2) + "-" + dayOfWeekEnd).format('YYYY-MM-DD');
+    //         let weekendEndListener = moment(getDate.getFullYear() + "-" + ("0" + (getDate.getMonth() + 2)).slice(-2) + "-" + dayOfWeekEnd).format('YYYY-MM-DD');
+    //         let endWeek = new Date(weekendEnd);
+
+    //         if ((index) === (weeksOfThisMonth.length - 2) && weeksOfThisMonth[index + 1].dates.includes(1)) {
+    //             endWeek = new Date(weekendEndListener);
+    //         }
+
+    //         for (let i = 0; i <= weeksOfThisMonth[index + 1].dates.length; i++) {
+    //             if ((index) === (weeksOfThisMonth.length - 2) && weeksOfThisMonth[index + 1].dates.includes(1)) {
+    //                 for (let t = 0; t < weeksOfThisMonth[index + 1].dates.length; t++) {
+    //                     dayNext.push(moment(weekendStart).add(t, 'days').format("YYYY-MM-DD"));
+    //                 }
+    //                 i = weeksOfThisMonth[index + 1].dates.length;
+    //             } else {
+    //                 dayNext.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
+    //             }
+
+    //         }
+
+    //         // for (i = 0; i <= weeksOfThisMonth[index + 1].dates.length; i++) {
+    //         //     dayNext.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
+    //         // }
+    //         let changeAppointmentView = templateObject.appointmentrecords.get();
+
+    //         //fix the week day
+    //         let startWeek = new Date(weekendStart);
+    //         let resourceChat = [];
+    //         let resourceJob = [];
+    //         for (let a = 0; a < changeAppointmentView.length; a++) {
+    //             let weekDay = moment(changeAppointmentView[a].startDate.split(" ")[0]).format("dddd");
+    //             let date = new Date(changeAppointmentView[a].startDate.split(" ")[0]);
+
+    //             if (resourceChat.length > 0) {
+    //                 if (date >= startWeek && date <= endWeek) {
+    //                     if (seeOwnAppointments == true) {
+    //                         if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
+    //                             let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
+    //                             if (!found) {
+    //                                 let resourceColor = templateObject.employeerecords.get();
+    //                                 var result = resourceColor.filter(apmtColor => {
+    //                                     return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                                 });
+    //                                 let employeeColor = '#00a3d3';
+    //                                 if (result.length > 0) {
+    //                                     employeeColor = result[0].color || '#00a3d3';
+    //                                 }
+    //                                 var dataList = {
+    //                                     id: changeAppointmentView[a].id,
+    //                                     employeeName: changeAppointmentView[a].employeename,
+    //                                     color: employeeColor
+    //                                 };
+    //                                 resourceChat.push(dataList);
+    //                             }
+    //                             var jobs = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 job: changeAppointmentView[a].accountname,
+    //                                 street: changeAppointmentView[a].street,
+    //                                 city: changeAppointmentView[a].suburb,
+    //                                 zip: changeAppointmentView[a].zip,
+    //                                 day: weekDay,
+    //                                 date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                             }
+    //                             resourceJob.push(jobs)
+    //                         }
+    //                     } else {
+    //                         let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
+    //                         if (!found) {
+    //                             let resourceColor = templateObject.employeerecords.get();
+    //                             var result = resourceColor.filter(apmtColor => {
+    //                                 return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                             });
+    //                             let employeeColor = '#00a3d3';
+    //                             if (result.length > 0) {
+    //                                 employeeColor = result[0].color || '#00a3d3';
+    //                             }
+    //                             var dataList = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 color: employeeColor
+    //                             };
+    //                             resourceChat.push(dataList);
+    //                         }
+    //                         var jobs = {
+    //                             id: changeAppointmentView[a].id,
+    //                             employeeName: changeAppointmentView[a].employeename,
+    //                             job: changeAppointmentView[a].accountname,
+    //                             street: changeAppointmentView[a].street,
+    //                             city: changeAppointmentView[a].suburb,
+    //                             zip: changeAppointmentView[a].zip,
+    //                             day: weekDay,
+    //                             date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                         }
+    //                         resourceJob.push(jobs)
+    //                     }
+    //                 }
+
+    //             } else {
+    //                 if (date >= startWeek && date <= endWeek) {
+    //                     if (seeOwnAppointments == true) {
+    //                         if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
+    //                             let resourceColor = templateObject.employeerecords.get();
+    //                             var result = resourceColor.filter(apmtColor => {
+    //                                 return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                             });
+    //                             let employeeColor = '#00a3d3';
+    //                             if (result.length > 0) {
+    //                                 employeeColor = result[0].color || '#00a3d3';
+    //                             }
+    //                             var dataList = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 color: employeeColor
+    //                             };
+    //                             var jobs = {
+    //                                 id: changeAppointmentView[a].id,
+    //                                 employeeName: changeAppointmentView[a].employeename,
+    //                                 job: changeAppointmentView[a].accountname,
+    //                                 street: changeAppointmentView[a].street,
+    //                                 city: changeAppointmentView[a].suburb,
+    //                                 zip: changeAppointmentView[a].zip,
+    //                                 day: weekDay,
+    //                                 date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                             }
+    //                             resourceJob.push(jobs)
+    //                             resourceChat.push(dataList);
+    //                         }
+    //                     } else {
+    //                         let resourceColor = templateObject.employeerecords.get();
+    //                         var result = resourceColor.filter(apmtColor => {
+    //                             return apmtColor.employeeName == changeAppointmentView[a].employeename
+    //                         });
+    //                         let employeeColor = '#00a3d3';
+    //                         if (result.length > 0) {
+    //                             employeeColor = result[0].color || '#00a3d3';
+    //                         }
+    //                         var dataList = {
+    //                             id: changeAppointmentView[a].id,
+    //                             employeeName: changeAppointmentView[a].employeename,
+    //                             color: employeeColor
+    //                         };
+    //                         var jobs = {
+    //                             id: changeAppointmentView[a].id,
+    //                             employeeName: changeAppointmentView[a].employeename,
+    //                             job: changeAppointmentView[a].accountname,
+    //                             street: changeAppointmentView[a].street,
+    //                             city: changeAppointmentView[a].suburb,
+    //                             zip: changeAppointmentView[a].zip,
+    //                             day: weekDay,
+    //                             date: changeAppointmentView[a].startDate.split(" ")[0],
+    //                         }
+    //                         resourceJob.push(jobs)
+    //                         resourceChat.push(dataList);
+    //                     }
+    //                 }
+    //             }
+    //         }
+
+    //         let allEmployeesData = templateObject.employeerecords.get();
+    //         for (let e = 0; e < allEmployeesData.length; e++) {
+    //             let found = resourceChat.some(emp => emp.employeeName == allEmployeesData[e].employeeName);
+    //             if (!found) {
+    //                 var dataList = {
+    //                     id: "",
+    //                     employeeName: allEmployeesData[e].employeeName,
+    //                     color: ""
+    //                 };
+    //                 resourceChat.push(dataList);
+    //             }
+    //         }
+
+    //         let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    //         $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+    //         $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+    //         $('#here_table thead tr').append('<th class="employeeName"></th>');
+
+    //         for (let w = 0; w < daysOfTheWeek.length; w++) {
+    //             if (daysOfTheWeek[w] === "Sunday") {
+    //                 if ($('#showSunday').is(":checked")) {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+    //                 } else {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+    //                 }
+
+    //             } else if (daysOfTheWeek[w] === "Saturday") {
+    //                 if ($('#showSaturday').is(":checked")) {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+    //                 } else {
+    //                     $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+    //                 }
+    //             } else {
+    //                 $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+    //             }
+    //         }
+
+    //         let tableRowData = [];
+    //         let sundayRowData = [];
+    //         let mondayRowData = [];
+    //         let splashArrayMonday = [];
+    //         let tuesdayRowData = [];
+    //         let wednesdayRowData = [];
+    //         let thursdayRowData = [];
+    //         let fridayRowData = [];
+    //         let saturdayRowData = [];
+    //         let sundayRow = "";
+    //         let mondayRow = "";
+    //         let tuesdayRow = "";
+    //         let wednesdayRow = "";
+    //         let thursdayRow = "";
+    //         let fridayRow = "";
+    //         let saturdayRow = "";
+    //         let tableRow = "";
+    //         // let saturdayStatus = "";
+    //         // let sundayStatus = "";
+    //         for (let r = 0; r < resourceChat.length; r++) {
+
+    //             sundayRowData = [];
+    //             mondayRowData = [];
+    //             tuesdayRowData = [];
+    //             wednesdayRowData = [];
+    //             thursdayRowData = [];
+    //             fridayRowData = [];
+    //             saturdayRowData = [];
+    //             for (let j = 0; j < resourceJob.length; j++) {
+
+    //                 if (resourceJob[j].day == 'Sunday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     sundayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+    //                     sundayRowData.push(sundayRow);
+    //                 }
+    //                 if (resourceJob[j].day == 'Monday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     mondayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     mondayRowData.push(mondayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Tuesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     tuesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     tuesdayRowData.push(tuesdayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Wednesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     wednesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     wednesdayRowData.push(wednesdayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Thursday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     thursdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     thursdayRowData.push(thursdayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Friday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     fridayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     fridayRowData.push(fridayRow);
+    //                 }
+
+    //                 if (resourceJob[j].day == 'Saturday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
+
+    //                     saturdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+    //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+    //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
+    //                         '</div>' + "" +
+    //                         '</div>';
+
+    //                     saturdayRowData.push(saturdayRow);
+    //                 }
+
+    //             }
+
+    //             if ($('#showSaturday').is(":checked")) {
+    //                 saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+    //             } else {
+    //                 saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+    //             }
+
+    //             if ($('#showSunday').is(":checked")) {
+    //                 sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+    //             } else {
+    //                 sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+    //             }
+
+    //             tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+    //                 '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+    //                 sundayStatus + "" +
+    //                 '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+    //                 '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+    //                 '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+    //                 '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+    //                 '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+    //                 saturdayStatus + "" +
+    //                 '</tr>';
+    //             tableRowData.push(tableRow);
+
+    //         }
+    //         $('#here_table table').append(tableRowData);
+
+    //         $('.sunday').attr("id", dayNext[0]);
+    //         $('.monday').attr("id", dayNext[1]);
+    //         $('.tuesday').attr("id", dayNext[2]);
+    //         $('.wednesday').attr("id", dayNext[3]);
+    //         $('.thursday').attr("id", dayNext[4]);
+    //         $('.friday').attr("id", dayNext[5]);
+    //         $('.saturday').attr("id", dayNext[6]);
+
+    //         $(".dateMon").text(moment(dayNext[1]).format("MM/DD"));
+    //         $(".dateTue").text(moment(dayNext[2]).format("MM/DD"));
+    //         $(".dateWed").text(moment(dayNext[3]).format("MM/DD"));
+    //         $(".dateThu").text(moment(dayNext[4]).format("MM/DD"));
+    //         $(".dateFri").text(moment(dayNext[5]).format("MM/DD"));
+    //         $(".dateSat").text(moment(dayNext[6]).format("MM/DD"));
+    //         $(".dateSun").text(moment(dayNext[0]).format("MM/DD"));
+
+    //         if ($('#showSaturday').is(":checked") && $('#showSunday').is(":checked")) {
+    //             $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[0]).format('DD') + ' - ' + moment(dayNext[6]).format('DD') + ', ' + moment().format('YYYY'));
+    //         }
+
+    //         if ($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == false) {
+    //             $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
+    //         }
+
+    //         if (($("#showSaturday").prop('checked') == false && $("#showSunday").prop('checked') == true)) {
+    //             $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[0]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
+    //         }
+
+    //         if (($("#showSaturday").prop('checked') == true && $("#showSunday").prop('checked') == false)) {
+    //             $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[6]).format('DD') + ', ' + moment().format('YYYY'));
+    //         }
+
+    //         // $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
+
+    //         let day = moment().format("dddd");
+    //         let resourceDate = $('thead tr th.' + day.toLowerCase()).attr("id");
+    //         changeColumnColor(resourceDate);
+
+    //     }
+    // },
     'click .checkclose': function() {
         const templateObject = Template.instance();
         if (templateObject.checkRefresh.get() == true || $('#updateID').val() == "") {
