@@ -5123,6 +5123,35 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllEmployeeData();
           }
 
+          getVS1Data('TCurrencyList').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                sideBarService.getCurrencyDataList(initialBaseDataLoad, 0, deleteFilter=null).then(async function(data) {
+                  countObjectTimes++;
+                  progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+                  $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+                  $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+                  $(".progressName").text("Currencylist ");
+                  if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+                    if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+                      $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                    } else {
+                      $('.headerprogressbar').addClass('headerprogressbarShow');
+                      $('.headerprogressbar').removeClass('headerprogressbarHidden');
+                    }
+                    
+                  } else if (Math.round(progressPercentage) >= 100) {
+                    $('.checkmarkwrapper').removeClass("hide");
+                    templateObject.dashboardRedirectOnLogin();
+                  }
+                  addVS1Data('TCurrencyList', JSON.stringify(data));
+                  $("<span class='process'>Currencylist Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+                }).catch(function(err) {
+
+                });
+            }
+          }).catch(function(err) {
+          });
+
           getVS1Data('TAppointment').then(function (dataObject) {
             if (dataObject.length == 0) {
               sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function (data) {
