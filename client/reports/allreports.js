@@ -1,7 +1,7 @@
 import {ReactiveVar} from 'meteor/reactive-var';
 import { Template } from 'meteor/templating';
 import "./reports.html"
-import { TaxRateService } from "../settings/settings-service"; 
+import { TaxRateService } from "../settings/settings-service";
 
 Template.allreports.onCreated(function() {
     const templateObject = Template.instance();
@@ -1429,7 +1429,6 @@ Template.allreports.events({
         }
     },
     'click #formCheck-Company': function(event) {
-        console.log(event)
         let templateObject = Template.instance();
         if ($(event.target).is(':checked')) {
             addVS1Data('TFavReportCompany', 'true');
@@ -1527,6 +1526,37 @@ Template.allreports.events({
         } else {
             addVS1Data('TFavReportTrust', 'false');
             templateObject.isTrust.set(false);
+        }
+    },
+    // Manufacturing
+    'click #formCheck-buildProfitability': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('BuildProfitabilityReport', 'true');
+            templateObject.isBuildProfitability.set(true);
+        } else {
+            addVS1Data('BuildProfitabilityReport', 'false');
+            templateObject.isBuildProfitability.set(false);
+        }
+    },
+    'click #formCheck-ProductionWorksheet': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('ProductionWorksheetReport', 'true');
+            templateObject.isProductionWorkSheet.set(true);
+        } else {
+            addVS1Data('ProductionWorksheetReport', 'false');
+            templateObject.isProductionWorkSheet.set(false);
+        }
+    },
+    'click #formCheck-WorkOrders': function(event) {
+        let templateObject = Template.instance();
+        if ($(event.target).is(':checked')) {
+            addVS1Data('WorkOrderReport', 'true');
+            templateObject.isWorkOrder.set(true);
+        } else {
+            addVS1Data('WorkOrderReport', 'false');
+            templateObject.isWorkOrder.set(false);
         }
     },
     'click .showhidden_fin': function(event) {
@@ -1900,82 +1930,82 @@ Template.allreports.helpers({
 
         let isShowFavorite = false;
 
-        if (isBalanceSheet || 
-            isProfitLoss || 
-            isAgedReceivables || 
-            isProductSalesReport || 
-            isSalesReport || 
-            isSalesSummaryReport || 
-            isGeneralLedger || 
-            isTaxSummaryReport || 
-            isTrialBalance || 
-            isExecutiveSummary || 
-            isCashReport || 
-            isProfitabilityReport || 
-            isPerformanceReport || 
-            isBalanceSheetReport || 
-            isIncomeReport || 
-            isPositionReport || 
-            is1099Transaction || 
-            isAccountsLists || 
-            isAgedPayables || 
-            isPurchaseReport || 
-            isPurchaseSummaryReport || 
-            isPrintStatement || 
-            isAgedReceivablesSummary || 
-            isAgedPayablesSummary || 
-            isJournalEntryList || 
-            isStockAdjustmentList || 
-            isChequeList || 
-            isTimeSheetDetails || 
-            isInvoicesPaid || 
-            isInvoicesUnpaid || 
-            isQuotesConverted || 
-            isQuotesUnconverted || 
-            isBackOrderedInvoices || 
-            isPaymentMethodsList || 
-            isSalesOrderConverted || 
-            isSalesOrderUnconverted || 
-            isBackOrderedPO || 
-            isUnpaidPO || 
-            isUnpaidBills || 
-            isTransactionJournal || 
-            isSerialNumberReport || 
-            isPayrollLeaveAccrued || 
-            isPayrollLeaveTaken || 
-            isForeignExchangeHistoryList || 
-            isForeignExchangeList || 
-            isBinLocations || 
-            isTimeSheetSummary || 
-            isPayrollHistoryReport || 
-            isStockValue || 
-            isStockMovementReport || 
-            isStockQuantity || 
-            isLotReport || 
-            isCustomerDetails || 
-            isCustomerSummary || 
-            isSupplierDetails || 
-            isSupplierProduct || 
-            isJobProfitReport || 
-            isPLMonthly || 
-            isPLQuarterly || 
-            isPLYearly || 
-            isPLYTD || 
-            isJobSalesSummary || 
-            isBuildProfitability || 
-            isProductionWorkSheet || 
+        if (isBalanceSheet ||
+            isProfitLoss ||
+            isAgedReceivables ||
+            isProductSalesReport ||
+            isSalesReport ||
+            isSalesSummaryReport ||
+            isGeneralLedger ||
+            isTaxSummaryReport ||
+            isTrialBalance ||
+            isExecutiveSummary ||
+            isCashReport ||
+            isProfitabilityReport ||
+            isPerformanceReport ||
+            isBalanceSheetReport ||
+            isIncomeReport ||
+            isPositionReport ||
+            is1099Transaction ||
+            isAccountsLists ||
+            isAgedPayables ||
+            isPurchaseReport ||
+            isPurchaseSummaryReport ||
+            isPrintStatement ||
+            isAgedReceivablesSummary ||
+            isAgedPayablesSummary ||
+            isJournalEntryList ||
+            isStockAdjustmentList ||
+            isChequeList ||
+            isTimeSheetDetails ||
+            isInvoicesPaid ||
+            isInvoicesUnpaid ||
+            isQuotesConverted ||
+            isQuotesUnconverted ||
+            isBackOrderedInvoices ||
+            isPaymentMethodsList ||
+            isSalesOrderConverted ||
+            isSalesOrderUnconverted ||
+            isBackOrderedPO ||
+            isUnpaidPO ||
+            isUnpaidBills ||
+            isTransactionJournal ||
+            isSerialNumberReport ||
+            isPayrollLeaveAccrued ||
+            isPayrollLeaveTaken ||
+            isForeignExchangeHistoryList ||
+            isForeignExchangeList ||
+            isBinLocations ||
+            isTimeSheetSummary ||
+            isPayrollHistoryReport ||
+            isStockValue ||
+            isStockMovementReport ||
+            isStockQuantity ||
+            isLotReport ||
+            isCustomerDetails ||
+            isCustomerSummary ||
+            isSupplierDetails ||
+            isSupplierProduct ||
+            isJobProfitReport ||
+            isPLMonthly ||
+            isPLQuarterly ||
+            isPLYearly ||
+            isPLYTD ||
+            isJobSalesSummary ||
+            isBuildProfitability ||
+            isProductionWorkSheet ||
             isWorkOrder ||
-            Template.instance().isCompanyAccountant.get() || 
-            Template.instance().isTrustee.get() || 
-            Template.instance().isFinancialStatement.get() || 
-            Template.instance().isIndividual.get() || 
-            Template.instance().isPartnershipNonTrading.get() || 
-            Template.instance().isTrustNonTrading.get() || 
-            Template.instance().isSelfManagedSuperfund.get() || 
-            Template.instance().isSingleDirector.get() || 
-            Template.instance().isSoleTraderNonTrading.get() || 
-            Template.instance().isTrust.get() || 
-            Template.instance().isSupplierList.get() || 
+            Template.instance().isCompanyAccountant.get() ||
+            Template.instance().isTrustee.get() ||
+            Template.instance().isFinancialStatement.get() ||
+            Template.instance().isIndividual.get() ||
+            Template.instance().isPartnershipNonTrading.get() ||
+            Template.instance().isTrustNonTrading.get() ||
+            Template.instance().isSelfManagedSuperfund.get() ||
+            Template.instance().isSingleDirector.get() ||
+            Template.instance().isSoleTraderNonTrading.get() ||
+            Template.instance().isTrust.get() ||
+            Template.instance().isSupplierList.get() ||
             Template.instance().isSupplierSummaryReport.get()
             ) {
             isShowFavorite = true;

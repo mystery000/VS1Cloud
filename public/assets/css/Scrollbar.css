@@ -586,12 +586,12 @@ td.td-input {
 }
 
 .text-converted {
-    background-color: #f6c23e !important;
+    background-color: #1cc88a !important;
     color: #fff;
 }
 
 .text-NotConverted {
-    background-color: #1cc88a !important;
+    background-color: #f6c23e !important;
     color: #fff;
 }
 

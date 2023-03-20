@@ -1111,7 +1111,6 @@ Template.accessleveldup.onRendered(function(){
                         //     }
                         // }
                     }
-
                     templateObject.accessgrouprecord.set(groups);
                 }
 
@@ -1679,7 +1678,6 @@ Template.accessleveldup.onRendered(function(){
                         //     }
                         // }
                     }
-
                     templateObject.accessgrouprecord.set(groups);
                 // }
 
@@ -2248,7 +2246,7 @@ Template.accessleveldup.onRendered(function(){
                 //       }
                 //   }
 
-                  templateObject.accessgrouprecord.set(groups);
+                templateObject.accessgrouprecord.set(groups);
               }
 
 
@@ -3482,6 +3480,25 @@ Template.accessleveldup.events({
 });
 
 Template.accessleveldup.events({
+    'click .chkSettingPayroll': function(event){
+        let templateObject = Template.instance();
+        var targetName = $(event.target).closest('div').find('label').text();
+        if($.trim(targetName) == "Clock On/Off"){
+            let accessgrouprecord = templateObject.accessgrouprecord.get();
+            for(var i=0; i<accessgrouprecord.Payroll.length; i++){
+                if(accessgrouprecord.Payroll[i].description == "Clock On/Off"){
+                    if($(event.target).closest('div').find('input').prop("checked") == true){
+                        $("#formCheck-"+accessgrouprecord.Payroll[i].formID).prop("disabled", true);
+                        $("#formCheck-"+accessgrouprecord.Payroll[i].formID).parent().find("label").css("color", "#dadada");
+                    }
+                    else{
+                        $("#formCheck-"+accessgrouprecord.Payroll[i].formID).prop("disabled", false);
+                        $("#formCheck-"+accessgrouprecord.Payroll[i].formID).parent().find("label").css("color", "#858796");
+                    }
+                }
+            }
+        }
+    },
     'click #refreshpagelist': function(event){
         $('.fullScreenSpin').css('display','inline-block');
         localStorage.setItem('VS1TERPFormList', '');

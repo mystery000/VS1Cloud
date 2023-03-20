@@ -1519,7 +1519,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         .rowB {
             overflow-x: auto;
             margin-left: 0px;
-            margin-right: 24px;
+            padding: 20px;
+            justify-content: space-between;
         }
 
         .nav-tabs .nav-link.active {
@@ -2105,8 +2106,12 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         // }, 10);
     </script>
 
-    <div class="row rowB" id="rowB">
-        <div class="colEmployeeList" id="colEmployeeList" style="width:288px; margin:8px">
+    <div style="">
+        <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
+    </div>
+
+    <div class="row rowB charts connectedChartSortable connectedSortable ui-sortable" id="rowB">
+        <div class="colEmployeeList sortable-chart-widget-js draggable-panel" chart-slug="appointment-card-0" id="colEmployeeList" style="width:288px;">
             <style>
                 /* .newcardb {
                     width: 150px;
@@ -2130,7 +2135,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                     user-select: none;
                 }
             </style>
-            <div class="card shadow mb-4 newcardb" id="newcardb" style="margin: 8px;">
+            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb" style="">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary font-weight-bold m-0">Employees</h6>
                 </div>
@@ -2203,17 +2208,26 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                     </div>
                 </div>
             </div>
+
         </div>
-        <div class="colCalendar" id="colCalendar" style="width:calc(100% - 325px); margin:8px">
+
+        <div class="colCalendar sortable-chart-widget-js draggable-panel" chart-slug="appointment-card-1" id="colCalendar" style="width:calc(100% - 325px);">
             <style>
                 #sidebarToggleAppointments:hover {
                     background-color: #eaecf4;
                 }
+
+                #calendar .fc-header-toolbar{padding-top: 5px;}
             </style>
-            <div style="float:left; margin-top: 25px;">
-                <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
+            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb" style="">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-primary font-weight-bold m-0">Calendar</h6>
+                </div>
+                <div class="card-body text-nowrap">
+                    {{> calender}}
+                </div>
             </div>
-            {{> calender}}
+
         </div>
     </div>
 
