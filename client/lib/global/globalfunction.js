@@ -627,6 +627,14 @@ batchUpdateCall = function (url, flag = false) {
     }
 };
 
+/**
+* Damien
+ * Date Format Function
+ * params
+ *   dateStr: javascript date string
+ * return
+ *   converted date with correct date format based on company country ( the country got from localStorage )
+* */
 formatDateByCountry = function(dateStr){
     let country = localStorage.getItem('vs1companyCountry');
 
