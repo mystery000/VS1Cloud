@@ -325,6 +325,7 @@ const erpObject = {
     WorkOrderReport: "WorkOrderReport",
     //TProductQtyList:"TProductQtyList",
     TNewAppointment:"TNewAppointment ", 
+    TAppointmentsTimeLog:"TAppointmentsTimeLog ", 
 };
 
 export default erpObject;

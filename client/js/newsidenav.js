@@ -1027,9 +1027,10 @@ Template.newsidenav.onRendered(function () {
       templateObject.includePayroll.set(false);
     }
 
-    if (!(isTimesheetEntry) && !(isShowTimesheet) && !(isTimesheetCreate) && !(isEditTimesheetHours) && (isClockOnOff)) {
+    // if (!(isTimesheetEntry) && !(isShowTimesheet) && !(isTimesheetCreate) && !(isEditTimesheetHours) && (isClockOnOff)) {
+    if (JSON.parse(isClockOnOff)) {
       templateObject.includePayrollClockOnOffOnly.set(true);
-      templateObject.includePayroll.set(false);
+      // templateObject.includePayroll.set(false);
     }
 
     if (JSON.parse(isAppointmentScheduling)) {
@@ -3006,11 +3007,13 @@ Template.newsidenav.events({
     templateObject.getSetSideNavFocus();
   },
   'click #sidenavtimeclock': function (event) {
-    if (FlowRouter.current().path == "/payrolloverview") {
-      $("#btnClockOnOff").trigger("click");
-    } else {
-      window.open('/payrolloverview#clockOnOff', '_self');
-    }
+    // if (FlowRouter.current().path == "/payrolloverview") {
+    //   $("#btnClockOnOff").trigger("click");
+    // } else {
+    //   window.open('/payrolloverview#clockOnOff', '_self');
+    // }
+    event.preventDefault();
+    FlowRouter.go('/clockOnOff');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
