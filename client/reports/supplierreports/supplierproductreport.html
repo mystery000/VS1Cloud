@@ -15,79 +15,10 @@
                         {{/if}}
                         {{/each}}
                     </tr>
-                    <!-- <tr class="table-active customDoubleTableHeading">
-                        <th>Supplier</th>
-                        <th>PO No</th>
-                        <th>Trans Type</th>
-                        <th>Product ID</th>
-                        <th>Product Desc</th>
-                        <th colspan="{{countActive currencyList}}" class="text-center">Cost (ex)</th>
-                        <th colspan="{{countActive currencyList}}" class="text-center">Tax</th>
-                        <th colspan="{{countActive currencyList}}" class="text-center">Cost (inc)</th>
-                        <th class="text-right">Tax Code</th>
-                        <th class="text-right">Qty Ordered</th>
-                        <th class="text-right">Qty Received</th>
-                        <th class="text-right">Qty BO</th>
-                        <th>ETA Date</th>
-                        <th>Order Date</th>
-                        <th>Received Date</th>
-                    </tr>
 
-                    {{#if isOnlyDefaultActive equal "false" }}
-                        <tr class="table-active tblAvoid customDoubleTableHeading">
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-
-                        {{#if currencyList}}
-                            {{#each c in currencyList }}
-                            {{# if c.active}}
-                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                            {{/if}}
-                            {{/each}}
-                        
-                            {{#each c in currencyList }}
-                            {{# if c.active}}
-                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                            {{/if}}
-                            {{/each}}
-                    
-                            {{#each c in currencyList }}
-                            {{# if c.active}}
-                                <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
-                            {{/if}}
-                            {{/each}}
-                        {{/if}}
-
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-
-                        </tr>
-                    {{/if}} -->
                 </thead>
                 <tbody>
-                    {{#if transactiondatatablerecords}}
-                        {{#each items in transactiondatatablerecords}}
-                            <tr>
-                                {{#each item in items}}
-                                    <td class="{{item.indent}}">
-                                        <span class={{item.className}}>{{item.string}}</span>
-                                    </td>
-                                {{/each}}
-                            </tr>
-                        {{/each}}
-                    {{else}}
-                        <tr class="odd" style="text-align: center;">
-                            <td valign="top" colspan="15" class="dataTables_empty text-left">No data available in table</td>
-                        </tr>
-                    {{/if}}
+
                 </tbody>
             </table>
         </div>
