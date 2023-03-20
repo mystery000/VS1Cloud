@@ -713,7 +713,7 @@ Template.datatablelist.onRendered(async function () {
                     label: colTitle,
                     active: colHidden,
                     width: parseFloat(colWidth),
-                    class: colthClass,
+                    class:colthClass,
                     display: true
                 };
 
@@ -740,16 +740,16 @@ Template.datatablelist.onRendered(async function () {
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
-                        targets: i,
-                        className: items[i]?.label?.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
+                        targets:i,
+                        className:items[i]?.label?.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
                         // className: items[i].class,
-                        title: items[i].label,
-                        width: items[i].width+'px'
+                        title:items[i].label,
+                        width:items[i].width+'px'
                     };
 
                     let aitem = {
-                        targets: i,
-                        width: items[i].width
+                        targets:i,
+                        width:items[i].width
                     };
 
                     acolDef.push(aitem);
