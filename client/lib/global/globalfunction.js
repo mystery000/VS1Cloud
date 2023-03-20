@@ -628,7 +628,7 @@ batchUpdateCall = function (url, flag = false) {
 };
 
 /**
-* Damien
+ * Damien
  * Date Format Function
  * params
  *   dateStr: javascript date string
