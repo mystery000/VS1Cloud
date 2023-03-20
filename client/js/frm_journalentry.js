@@ -113,12 +113,9 @@ Template.journalentrycard.onCreated(() => {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.getDataTableList = function(data) {
-        let mobile = contactService.changeMobileFormat(data.Mobile);
-        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance)|| 0.00;
-        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
         let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
-        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit)|| 0.00;
         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SOBalance)|| 0.00;
+
         let dataList = [
             data.ClientID || '',
             data.Company || '-',
@@ -137,12 +134,47 @@ Template.journalentrycard.onCreated(() => {
         { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "60" },
         { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "60" },
         { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "60" },
-        { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "60" },
-        { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "60" },
-        { index: 25, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
-        { index: 26, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
+        { index: 4, label: "Balance", class: "colBalance", active: true, display: true, width: "60" },
+        { index: 5, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "60" },
+        { index: 6, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
+        { index: 7, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
+
+    templateObject.tableheaderrecords_d = new ReactiveVar([]);
+
+    templateObject.getDataTableList_d = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        var dataList = [
+            data.ClassID || "",
+            data.ClassName || "",
+            data.Description || "",
+            data.ClassGroup || "",
+            data.ClassName,
+            data.Level1 || "",
+            data.SiteCode || "",
+            linestatus
+        ];
+        return dataList;
+    }
+
+    let headerStructure_d = [
+        { index: 0, label: 'ID', class: 'colDeptID', active: false, display: false, width: "10" },
+        { index: 1, label: 'Department Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+        { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords_d.set(headerStructure_d);
 });
 Template.journalentrycard.onRendered(() => {
     let templateObject = Template.instance();
@@ -2133,7 +2165,7 @@ Template.journalentrycard.helpers({
         }
     },
     apiParams: function() {
-        return ['limitCount', 'limitFrom'];
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
@@ -2322,6 +2354,45 @@ Template.journalentrycard.helpers({
             return true;
         }
         return false;
+    },
+
+    // For Department DataTable
+    apiFunction_d:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getDepartmentDataList;
+    },
+
+    searchAPI_d: function() {
+        return sideBarService.getDepartmentDataList;
+    },
+
+    service_d: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler_d: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList_d(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_d: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList_d(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_d: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+    tableheaderrecords_d: () => {
+        return Template.instance().tableheaderrecords_d.get();
     },
 });
 
