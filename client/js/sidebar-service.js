@@ -4038,6 +4038,7 @@ export class SideBarService extends BaseService {
     let options = {
       ListType: "Detail",
       select: "[Active]=true",
+      OrderBy: "TimeSheetDate desc",
     };
     return this.getList(this.ERPObjects.TTimeSheet, options);
   }

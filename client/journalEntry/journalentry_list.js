@@ -104,12 +104,12 @@ Template.journalentrylist.onRendered(function() {
   function init_reset_data() {
     let reset_data = [
       { index: 0, label: 'Transaction Date', class:'colTransactionDate', active: true, display: true, width: "200" },
-      { index: 1, label: 'Entry No', class:'colEntryNo', active: true, display: true, width: "100" },
+      { index: 1, label: 'Entry No', class:'colEntryNo text-right', active: true, display: true, width: "100" },
       { index: 2, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "170" },
       { index: 3, label: 'Department', class:'colDepartmentName', active: true, display: true, width: "180" },
-      { index: 4, label: 'Debit Amount', class:'colDebitAmount', active: true, display: true, width: "150" },
-      { index: 5, label: 'Credit Amount', class:'colCreditAmount', active: true, display: true, width: "150" },
-      { index: 6, label: 'Tax Amount', class:'colTaxAmount', active: true, display: true, width: "140" },
+      { index: 4, label: 'Debit Amount', class:'colDebitAmount text-right', active: true, display: true, width: "150" },
+      { index: 5, label: 'Credit Amount', class:'colCreditAmount text-right', active: true, display: true, width: "150" },
+      { index: 6, label: 'Tax Amount', class:'colTaxAmount text-right', active: true, display: true, width: "140" },
       { index: 7, label: 'Status', class:'colStatus', active: true, display: true, width: "100" },
       // { index: 7, label: 'Account No', class:'colAccountNo', active: false, display: true, width: "" },
       // { index: 8, label: 'Employee Name', class:'colemployeeName', active: false, display: true, width: "" },
@@ -204,7 +204,7 @@ Template.journalentrylist.onRendered(function() {
     let prevMonth11Date = moment().subtract(reportsloadMonths, "months").format("YYYY-MM-DD");
 
     let data = await CachedHttp.get(erpObject.TJournalEntryList, async () => {
-      return await sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0);
+      return await sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, 'All', 0);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -286,11 +286,43 @@ Template.journalentrylist.onRendered(function() {
 
         columnDefs: [
           {
-            type: "date",
+            className: "colTransactionDate",
             targets: 0
-          }
+          },
+          {
+            className: "colEntryNo text-right",
+            targets: 1
+          },
+          {
+            className: "colAccountName",
+            targets: 2
+          },
+          {
+            className: "colDepartmentName",
+            targets: 3
+          },
+          {
+            className: "colDebitAmount text-right",
+            targets: 4
+          },
+          {
+            type: "colCreditAmount text-right",
+            targets: 5
+          },
+          {
+            className: "colTaxAmount text-right",
+            targets: 6
+          },
+          {
+            className: "colStatus",
+            targets: 7
+          },
+          {
+            className: "colMemo",
+            targets: 8
+          },
         ],
-        sDom: "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         buttons: [
           {
             extend: "excelHtml5",
@@ -302,7 +334,8 @@ Template.journalentrylist.onRendered(function() {
             exportOptions: {
               columns: ":visible"
             }
-          }, {
+          },
+          {
             extend: "print",
             download: "open",
             className: "btntabletopdf hiddenColumn",
@@ -310,16 +343,19 @@ Template.journalentrylist.onRendered(function() {
             title: "Journal Entries",
             filename: "journalentrylist_" + moment().format(),
             exportOptions: {
-              columns: ":visible"
-            }
-          }
+              columns: ":visible",
+              stripHtml: false,
+            },
+          },
         ],
         select: true,
         destroy: true,
         colReorder: true,
-
+        lengthMenu: [
+          [initialDatatableLoad, -1],
+          [initialDatatableLoad, "All"]
+        ],
         pageLength: initialDatatableLoad,
-        bLengthChange: false,
         info: true,
         responsive: true,
         order: [
@@ -1864,19 +1900,10 @@ Template.journalentrylist.events({
   "click .printConfirm": function (event) {
     playPrintAudio();
     setTimeout(function(){
-    $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblJournalList_wrapper .dt-buttons .btntabletopdf").click();
-    LoadingOverlay.hide();
-    // $('#html-2-pdfwrapper').css('display','block');
-    // var pdf =  new jsPDF('portrait','mm','a4');
-    // new jsPDF('p', 'pt', 'a4');
-    //   pdf.setFontSize(18);
-    //   var source = document.getElementById('html-2-pdfwrapper');
-    //   pdf.addHTML(source, function () {
-    //      pdf.save('journalentrylist.pdf');
-    //      $('#html-2-pdfwrapper').css('display','none');
-    //  });
-  }, delayTimeAfterSound);
+      $(".fullScreenSpin").css("display", "inline-block");
+      jQuery("#tblJournalList_wrapper .dt-buttons .btntabletopdf").click();
+      LoadingOverlay.hide();
+      }, delayTimeAfterSound);
   },
    // CURRENCY MODULE //
    ...FxGlobalFunctions.getEvents(),
