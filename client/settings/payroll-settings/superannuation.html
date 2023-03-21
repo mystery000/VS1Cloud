@@ -22,6 +22,29 @@
                                 </a>
                             </div>
                         </div>
+                        <style>
+                            #tblSuperannuation{
+                                width: 100%!important;
+                            }
+                            #tblSuperannuation .colSuperannuationName{
+                                width: 20%!important;
+                            }
+                            #tblSuperannuation .colSuperannuationType{
+                                width: 17%!important;
+                            }
+                            #tblSuperannuation .colEmployerNum{
+                                width: 17%!important;
+                            }
+                            #tblSuperannuation .colbsb{
+                                width: 17%!important;
+                            }
+                            #tblSuperannuation .colStatus{
+                                width: 10%!important;
+                            }
+                            #tblSuperannuation .colaccountname{
+                                width: 17%!important;
+                            }
+                        </style>
                         {{> datatablelist
                             tablename="tblSuperannuation"
                             apiName=apiFunction8
@@ -79,13 +102,21 @@
                     <form class="row" id="superannuationRateForm">
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtFundType">Type</label>
                                 <input type="hidden" id="newSuperannuationFundId" value="0">
                                 <input type="hidden" name="edtSuperAnnuationDropDownID" id="edtSuperAnnuationDropDownID" value="">
+                                {{> default_input 
+                                    label="Type" 
+                                    classes="edtFundType customEditableSelect" 
+                                    id="edtFundType" 
+                                    name="edtFundType" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtFundType">Type</label>
                                 <select type="search" class="form-control edtFundType customEditableSelect" id="edtFundType" >
                                     <option value="regulated">Regulated Superannuation Fund</option>
                                     <option value="selfmanged">Self-Managed Superannuation Fund</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <div class="col-12">
@@ -146,7 +177,7 @@
                                 <!-- <label for="edtFundName">Employer Number <span style="font-weight: 200;">(optional)</span></label>
                                 <input type="text" class="form-control" id="edtEmployerNumber"> -->
                             </div>
-                            <span style="font-size: 12px;">Some funds assign a unique number to each employer. If you do not have one, leave this blank.</span>
+                            <span style="font-size: 12px;">Some funds assign a unique number to each employer. <br>If you do not have one, leave this blank.</span>
                         </div>
 
                         <div class="col-12" id="accountbsb" style="display: none;">
