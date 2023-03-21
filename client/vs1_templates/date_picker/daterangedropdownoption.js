@@ -74,8 +74,8 @@ Template.daterangedropdownoption.events({
       var toDateDisplayFrom = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
       var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
 
-      $(".dateFrom").val(toDateDisplayFrom);
-      $(".dateTo").val(toDateDisplayTo);
+      $(".dateFrom").val(toDateDisplayFrom).trigger('change');
+      $(".dateTo").val(toDateDisplayTo).trigger('change');
   },
   'click .thisweek': function () {
       let templateObject = Template.instance();
@@ -100,8 +100,8 @@ Template.daterangedropdownoption.events({
       var toDateDisplayFrom = (fromDateDay -7)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
       var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
 
-      $(".dateFrom").val(toDateDisplayFrom);
-      $(".dateTo").val(toDateDisplayTo);
+      $(".dateFrom").val(toDateDisplayFrom).trigger('change');
+      $(".dateTo").val(toDateDisplayTo).trigger('change');
   },
   'click .thisMonth': function() {
       let templateObject = Template.instance();
@@ -128,8 +128,8 @@ Template.daterangedropdownoption.events({
       var fromDate = formatDate(prevMonthFirstDate);
       var toDate = formatDate(prevMonthLastDate);
 
-      $(".dateFrom").val(fromDate);
-      $(".dateTo").val(toDate);
+      $(".dateFrom").val(fromDate).trigger('change');
+      $(".dateTo").val(toDate).trigger('change');
   },
   'click .thisQuarter': function() {
       let templateObject = Template.instance();
@@ -158,8 +158,8 @@ Template.daterangedropdownoption.events({
       var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
 
 
-      $(".dateFrom").val(lastQuarterStartDateFormat);
-      $(".dateTo").val(lastQuarterEndDateFormat);
+      $(".dateFrom").val(lastQuarterStartDateFormat).trigger('change');
+      $(".dateTo").val(lastQuarterEndDateFormat).trigger('change');
   },
   'click .thisQuarter': function() {
       let templateObject = Template.instance();
@@ -188,8 +188,8 @@ Template.daterangedropdownoption.events({
       var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
 
 
-      $(".dateFrom").val(lastQuarterStartDateFormat);
-      $(".dateTo").val(lastQuarterEndDateFormat);
+      $(".dateFrom").val(lastQuarterStartDateFormat).trigger('change');
+      $(".dateTo").val(lastQuarterEndDateFormat).trigger('change');
   },
   'click .thisQuarter': function() {
       let templateObject = Template.instance();
@@ -208,8 +208,8 @@ Template.daterangedropdownoption.events({
       }
 
       var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-      $(".dateFrom").val(fromDate);
-      $(".dateTo").val(begunDate);
+      $(".dateFrom").val(fromDate).trigger('change');
+      $(".dateTo").val(begunDate).trigger('change');
 
   },
   'click .previousweek': function () {
@@ -235,8 +235,8 @@ Template.daterangedropdownoption.events({
       var toDateDisplayFrom = (fromDateDay -7)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
       var toDateDisplayTo = (fromDateDay)+ "/" +(fromDateMonth) + "/"+currentBeginDate.getFullYear();
 
-      $(".dateFrom").val(toDateDisplayFrom);
-      $(".dateTo").val(toDateDisplayTo);
+      $(".dateFrom").val(toDateDisplayFrom).trigger('change');
+      $(".dateTo").val(toDateDisplayTo).trigger('change');
   },
   'click .previousmonth': function() {
       let templateObject = Template.instance();
@@ -263,8 +263,8 @@ Template.daterangedropdownoption.events({
       var fromDate = formatDate(prevMonthFirstDate);
       var toDate = formatDate(prevMonthLastDate);
 
-      $(".dateFrom").val(fromDate);
-      $(".dateTo").val(toDate);
+      $(".dateFrom").val(fromDate).trigger('change');
+      $(".dateTo").val(toDate).trigger('change');
 
   },
   'click .previousquarter': function() {
@@ -294,10 +294,10 @@ Template.daterangedropdownoption.events({
       var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
 
 
-      $(".dateFrom").val(lastQuarterStartDateFormat);
-      $(".dateTo").val(lastQuarterEndDateFormat);
+      $(".dateFrom").val(lastQuarterStartDateFormat).trigger('change');
+      $(".dateTo").val(lastQuarterEndDateFormat).trigger('change');
   },
-  'click .previousfinancialyear': function() {
+  'click .previousfinancialyear': function() {alert();
       let templateObject = Template.instance();
 
       $('.dateFrom').attr('readonly', false);
@@ -315,8 +315,8 @@ Template.daterangedropdownoption.events({
       }
 
       var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-      $(".dateFrom").val(fromDate);
-      $(".dateTo").val(begunDate);
+      $(".dateFrom").val(fromDate).trigger('change');
+      $(".dateTo").val(begunDate).trigger('change');
   },
 });
 
