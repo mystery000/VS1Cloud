@@ -383,7 +383,7 @@ Template.datatablelist.onRendered(async function () {
         let deleteFilter = false;
         if (data != [] && data.length != 0) {
             if (data.Params) {
-                if (data.Params.Search.replace(/\s/g, "") == "") {
+                if (data.Params.Search?.replace(/\s/g, "") == "") {
                     deleteFilter = false
                 } else {
                     deleteFilter = true
@@ -628,7 +628,7 @@ Template.datatablelist.onRendered(async function () {
                       };
 
 
-                        if (data.Params.Search.replace(/\s/g, "") == "") {
+                        if (data.Params.Search?.replace(/\s/g, "") == "") {
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                         } else {
                           if (data.Params.Search == "IsBill = true and IsCheque != true") {
