@@ -1394,7 +1394,6 @@ Template.binlocationslist.events({
                 BinClassName: editdepartment,
               }
               data.tproductbin.push(dataArray);
-              console.log(data);
               clearData('TProductBin').then(function(){
                 addVS1Data('TProductBin', JSON.stringify(data)).then(function(){alert();
                   window.open('/binlocationslist', '_self');
