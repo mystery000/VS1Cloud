@@ -167,10 +167,10 @@ Template.journalentrycard.onCreated(() => {
     let headerStructure_d = [
         { index: 0, label: 'ID', class: 'colDeptID', active: false, display: false, width: "10" },
         { index: 1, label: 'Department Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
-        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
-        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
-        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
-        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100%" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: true, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: true, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: true, display: true, width: "250" },
         { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
         { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
@@ -1823,6 +1823,34 @@ Template.journalentrycard.onRendered(() => {
         // });
     };
 
+    templateObject.setTableColumnWidth = function(){
+        let obj = localStorage.getItem('frm_journalentry_settings');
+
+        if(obj){
+            obj = JSON.parse(obj);
+
+            for (let i = 0; i < obj.length ; i ++) {
+                let lineItem = obj[i];
+
+                let thClass = lineItem.thclass;
+                let hiddenFlag = lineItem.hidden;
+                let width = lineItem.width;
+                let index = lineItem.index;
+
+                if(hiddenFlag){
+                    $("#tblJournalEntryLine ." + thClass).css("display", "none");
+                    $(document.querySelectorAll('#myModal2 .columnSettings')[parseInt(index)]).find("input.custom-control-input")[0].checked = false;
+                }
+
+                if(width && width != '0'){
+                    $("#tblJournalEntryLine ." + thClass).css("width", width + "px");
+                    $(document.querySelectorAll('#myModal2 .columnSettings')[parseInt(index)]).find("input.widthElement").val(parseInt(width));
+                }
+            }
+        }
+    }
+
+    templateObject.setTableColumnWidth();
 });
 
 
@@ -2184,6 +2212,8 @@ Template.journalentrycard.helpers({
                     var deptDataName = e.target.value || '';
                     $('#edtDepartmentID').val('');
 
+                    $("#selected-department").val(e.target.id);
+
                     $('#departmentModal').modal('toggle');
                 });
         }, 1000);
@@ -2199,6 +2229,9 @@ Template.journalentrycard.helpers({
                 var offset = $earch.offset();
                 var deptDataName = e.target.value || '';
                 $('#edtDepartmentID').val('');
+
+                $("#selected-customer").val(e.target.parentElement.id);
+
                 if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
                     $("#customerListModal").modal();
                 }
@@ -2397,8 +2430,34 @@ Template.journalentrycard.helpers({
 });
 
 Template.journalentrycard.events({
+    'click #tblDepartmentList11 tbody tr': function(e){
+        let val = $(e.target.parentElement).find(".colDeptClassName").text();
+        let selectedId = $("#selected-department").val();
+
+        $("#" + selectedId).val(val);
+
+        $("#departmentModal").modal("hide");
+    },
+    'click #tblCustomerlist_frmj tbody tr': function(e){
+        let val = $(e.target.parentElement).find(".colCompany").text();
+        let selectedId = $("#selected-customer").val();
+
+        $("#" + selectedId).find("input").val(val);
+
+        $("#customerListModal").modal("hide");
+    },
+    'click #tblFixedAssetList_frmj tbody tr': function(e){
+        let val = $(e.target.parentElement).find(".colAssetName ").text();
+        let selectedId = $("#selected-fixedasset").val();
+
+        $("#" + selectedId).text(val);
+
+        $("#fixedassetlistpopModal").modal("hide");
+    },
     'click .btnFixedAsset': function(e) {
         // $('#FixedAssetLineAddModal').modal();
+        $("#selected-fixedasset").val(e.target.parentElement.id);
+
         $('#fixedassetlistpopModal').modal();
     },
     'click #fixedAssetLine': function(event) {
@@ -4480,48 +4539,48 @@ Template.journalentrycard.events({
     'change .rngRangeAccountName': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthAccountName").html(range + '%');
-        $('.colAccountName').css('width', range + '%');
+        $(".spWidthAccountName").html(range + 'px');
+        $('.colAccountName').css('width', range + 'px');
 
     },
     'change .rngRangeAccountNo': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthAccountNo").html(range + '%');
-        $('.colAccountNo').css('width', range + '%');
+        $(".spWidthAccountNo").html(range + 'px');
+        $('.colAccountNo').css('width', range + 'px');
 
     },
     'change .rngRangeMemo': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthMemo").html(range + '%');
-        $('.colMemo').css('width', range + '%');
+        $(".spWidthMemo").html(range + 'px');
+        $('.colMemo').css('width', range + 'px');
 
     },
     'change .rngRangeFixedAsset': function(event) {
         let range = $(event.target).val();
-        $('.colFixedAsset').css('width', range + '%');
+        $('.colFixedAsset').css('width', range + 'px');
     },
     'change .rngRangeDepartment': function(event) {
         let range = $(event.target).val();
-        $('.colDepartment').css('width', range + '%');
+        $('.colDepartment').css('width', range + 'px');
     },
     'change .rngRangeCustomerJob': function(event) {
         let range = $(event.target).val();
-        $('.colCustomerJob').css('width', range + '%');
+        $('.colCustomerJob').css('width', range + 'px');
     },
     'change .rngRangeCreditEx': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthCreditEx").html(range + '%');
-        $('.colCreditEx').css('width', range + '%');
+        $(".spWidthCreditEx").html(range + 'px');
+        $('.colCreditEx').css('width', range + 'px');
 
     },
     'change .rngRangeDebitEx': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthDebitEx").html(range + '%');
-        $('.colDebitEx').css('width', range + '%');
+        $(".spWidthDebitEx").html(range + 'px');
+        $('.colDebitEx').css('width', range + 'px');
 
     },
     'blur .divcolumn': function(event) {
@@ -4535,7 +4594,7 @@ Template.journalentrycard.events({
         setTimeout(function(){
         let lineItems = [];
 
-        $('.columnSettings').each(function(index) {
+        $('#myModal2 .columnSettings').each(function(index) {
             var $tblrow = $(this);
             var colTitle = $tblrow.find(".divcolumn").text() || '';
             var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -4557,6 +4616,7 @@ Template.journalentrycard.events({
             lineItems.push(lineItemObj);
         });
 
+        localStorage.setItem('frm_journalentry_settings', JSON.stringify(lineItems));
 
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: localStorage.getItem('mycloudLogonID'),

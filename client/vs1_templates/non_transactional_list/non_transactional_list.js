@@ -15388,7 +15388,7 @@ Template.non_transactional_list.onRendered(function() {
                     }
                 }
                 else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
-                    qty += "<span class=\"spliter\"></span><label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label><span class=\"spliter\"></span>";
                     if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
                         transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
                     }

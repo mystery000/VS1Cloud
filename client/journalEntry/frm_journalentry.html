@@ -538,6 +538,7 @@
                                         #tblJournalEntryLine td input{
                                             border: none;
                                         }
+                                        #tblFixedAssetList_frmj{width: 100% !important;}
                                     </style>
                                     <table id="tblJournalEntryLine" style="width:100%" class="table table-striped table-bordered tblJournalEntryLine">
                                         <thead>
@@ -547,7 +548,7 @@
                                                 <th class="th colMemo">Memo</th>
                                                 <th class="th colDepartment" style="width: 95px; text-align: left!important;">Department</th>
                                                 <th class="th colCustomerJob" style="width: 95px; text-align: left!important;">Customer/Job</th>
-                                                <th class="th colFixedAsset" style="width: 95px; text-align: left!important;">Fixed Asset</th>
+                                                <th class="th colFixedAsset" style="width: 130px; text-align: left!important;">Fixed Asset</th>
                                                 <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
                                                 <th colspan="{{displayFieldColspan }}" class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
                                                 <th colspan="{{displayFieldColspan }}" class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
@@ -593,7 +594,7 @@
                                                             </select>
                                                         </div>
                                                     </td>
-                                                    <td contenteditable="false" class="colCustomerJob">
+                                                    <td contenteditable="false" class="colCustomerJob" id="td-customer-{{item.lineID}}">
 <!--                                                        <input class="es-input highlightSelect lineCustomerJob" type="search"-->
 <!--                                                               value="{{item.customerJob}}">-->
 
@@ -602,7 +603,7 @@
                                                         }}
                                                     </td>
                                                     <td class="th colFixedAsset" assetID="{{item.fixedAssetID}}" assetname="{{item.fixedAssetName}}"
-                                                        costTypeID="{{item.costTypeID}}" costtypename="{{item.costTypeName}}">
+                                                        costTypeID="{{item.costTypeID}}" costtypename="{{item.costTypeName}}" id="td-fixedasset-{{item.lineID}}">
                                                         <i class="fas fa-plus-square text-success btnFixedAsset" style="margin-left: 40px; font-size: 22px;"></i>
                                                     </td>
 
@@ -681,7 +682,7 @@
             </div>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal" style="padding: 32px;z-index: 1051;">
-                <div class="modal-dialog modal-dialog-scrollable" role="document" style="max-width: 100%;width: 100%;">
+                <div class="modal-dialog modal-dialog-scrollable" role="document" style="max-width: 90vw;width: 100%;">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h4 class="title-header">Fixed Asset</h4>
@@ -690,7 +691,9 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            {{> fixedAssetListTable isHideButton=true }}
+                            {{> fixedAssetListTable isHideButton=true id="tblFixedAssetList_frmj" }}
+
+                            <input type="hidden" id="selected-fixedasset">
                         </div>
                     </div>
                 </div>
@@ -718,7 +721,7 @@
                                     exdatahandler = exDataHandler
                                     searchAPI = searchAPI
                             }}
-
+                            <input type="hidden" id="selected-customer">
                         </div>
                         <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
                         </div>
@@ -776,15 +779,10 @@
                         </div>
                         <div class="modal-body">
                             <style>
-                                #tblDepartmentCheckbox .colChkBox{
-                                    width: 40px!important
-                                }
-                                #tblDepartmentCheckbox .chkBox{
-                                    margin: 0px!important
-                                }
+                                #tblDepartmentList11{width: 100% !important;}
                             </style>
                             {{>datatablelist
-                                    tablename="tblDepartmentList"
+                                    tablename="tblDepartmentList11"
                                     apiName= apiFunction_d
                                     indexeddbname = 'TDeptClassList'
                                     tableheaderrecords = tableheaderrecords_d
@@ -798,6 +796,8 @@
                                     exdatahandler = exDataHandler_d
                                     searchAPI = searchAPI_d
                             }}
+
+                            <input type="hidden" id="selected-department">
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-primary btnDepartmentSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Ok</button>
