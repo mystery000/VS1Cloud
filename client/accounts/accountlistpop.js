@@ -93,10 +93,10 @@ Template.accountlistpop.onCreated(() => {
             data.IsHeader || false,
             data.AllowExpenseClaim || false,
             data.ReceiptCategory || "",
-            linestatus,
             data.Level1 || "",
             data.Level2 || "",
             data.Level3 || "",
+            linestatus,
         ];
         return dataList;
     }
@@ -121,10 +121,10 @@ Template.accountlistpop.onCreated(() => {
         { index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60" },
         { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "80" },
         { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
-        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
-        { index: 20, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "60" },
-        { index: 21, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "60" },
-        { index: 22, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "60" },
+        { index: 19, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "60" },
+        { index: 20, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "60" },
+        { index: 21, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "60" },
+        { index: 22, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });

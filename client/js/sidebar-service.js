@@ -1172,9 +1172,9 @@ export class SideBarService extends BaseService {
           LimitFrom: parseInt(limitfrom),
         };
       }
-      if(typeFilter != 'all') {
-        options.Search = options.Search + ` and AccountType='${typeFilter}'`
-      }
+      // if(typeFilter != 'all') {
+      //   options.Search = options.Search + ` and AccountType='${typeFilter}'`
+      // }
       if (useReceiptClaim) {
         options.Search = options.Search + ` and AllowExpenseClaim=true`
       }
@@ -1192,9 +1192,9 @@ export class SideBarService extends BaseService {
           LimitFrom: parseInt(limitfrom),
         };
       }
-      if(typeFilter != 'all') {
-        options.Search = `AccountType='${typeFilter}'`
-      }
+      // if(typeFilter != 'all') {
+      //   options.Search = `AccountType='${typeFilter}'`
+      // }
       if (useReceiptClaim) {
         if (options.Search)
           options.Search = options.Search + ` and AllowExpenseClaim=true`
