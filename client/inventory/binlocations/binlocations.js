@@ -171,7 +171,7 @@ Template.binlocationslist.onRendered(function () {
 
     $("#sltDepartmentList").editableSelect();
     $("#sltDepartmentList").editableSelect().on("click.editable-select", editableService.clickDepartment);
-    $(document).on("click", "#departmentList tbody tr", function (e) {
+    $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
       let table = $(this);
       let deptName = table.find(".colDeptName").text();
       templateObject.bindept.set(deptName);
@@ -1287,6 +1287,7 @@ Template.binlocationslist.events({
         });
 
       }).catch(function (err) {
+        swal('Error', err, 'error');
         $('.fullScreenSpin').css('display','none');
       });
     }, delayTimeAfterSound);
@@ -1344,12 +1345,13 @@ Template.binlocationslist.events({
               }
             }
           }).catch(function (err){
+            swal('Error', err, 'error');
           });
         })
 
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
-        swal('Error', 'Error occured!', 'error');
+        swal('Error', err, 'error');
       });
     }, delayTimeAfterSound);
   },
@@ -1400,9 +1402,11 @@ Template.binlocationslist.events({
               })
             }
           }).catch(function (err){
+            swal('Error', err, 'error');
           });
         })
       }).catch(function (err) {
+        swal('Error', err, 'error');
         $('.fullScreenSpin').css('display','none');
       });
     }, delayTimeAfterSound);
