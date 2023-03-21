@@ -1345,7 +1345,6 @@ Template.binlocationslist.events({
               }
             }
           }).catch(function (err){
-            swal('Error', err, 'error');
           });
         })
 
@@ -1385,24 +1384,24 @@ Template.binlocationslist.events({
       productService.saveBin(data).then(function (data) {
         $('.fullScreenSpin').css('display','none');
         swal('Success', 'Saved Successfully!', 'success').then(function(){
-
           getVS1Data('TProductBin').then(function (dataObject) {
             let data = JSON.parse(dataObject[0].data);
             if(data.tproductbin.length > 0) {
+              alert();
               let dataArray = {
                 BinLocation: editbinname,
                 BinNumber: editbinnum,
                 BinClassName: editdepartment,
               }
               data.tproductbin.push(dataArray);
+              console.log(data);
               clearData('TProductBin').then(function(){
-                addVS1Data('TProductBin', JSON.stringify(data)).then(function(){
+                addVS1Data('TProductBin', JSON.stringify(data)).then(function(){alert();
                   window.open('/binlocationslist', '_self');
                 })
               })
             }
           }).catch(function (err){
-            swal('Error', err, 'error');
           });
         })
       }).catch(function (err) {
