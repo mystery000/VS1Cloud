@@ -843,8 +843,8 @@ Template.mobileapp.events({
             let bomDetailData = JSON.parse(bomStructureData.Details);
 
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
-                BomDataList.push(tempBomData);  
+                tempBomData = {item: bomDetailData[i].productName, uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
+                BomDataList.push(tempBomData);
             }
 
             let wastage_table = $("#tblWastageForm").DataTable({
@@ -872,18 +872,35 @@ Template.mobileapp.events({
             } );
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
-                
+
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
+
+                // var changeto =$(this).val();
+                // var total = parseFloat(wastage_table.cell(rowIndex, colIndex-1).data());
+                // var wastage = parseFloat(wastage_table.cell(rowIndex,colIndex+1).data());
+                // var total_new = total - changeto;
+                // var wastage_new = wastage + changeto;
+
+
                 var cell = wastage_table.cell(this);
                 var index = cell.index();
                 var column = index.column;
                 var row = index.row;
 
-                var cur_val = parseFloat($(this).text());
-                var prev_val = parseFloat(cell.data());
-                          
-                var nextCell = wastage_table.cell(row, column + 1);
-                    nextCell.data(prev_val - cur_val);                             
-                           
+                if (column < wastage_table.columns().count() - 1) {
+                    var nextCell = wastage_table.cell(row, column + 1);
+                    nextCell.data(cell.data());
+                }
+
+                // wastage_table.cell(rowIndex, colIndex-1).data(total_new);
+                // wastage_table.cell(rowIndex, colIndex+1).data(wastage_new);
+
+
+                // var colIndex = wastage_table.cell(this).index().column;
+                // var rowIndex = wastage_table.cell(this).index().row;
+   
+
             } );
 
 
@@ -894,45 +911,35 @@ Template.mobileapp.events({
         e.stopPropagation();
         $('#WastageModal').modal('toggle');
 
-        // tablet buttons
-   
+
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
-
         $("#btnClockIn").prop('disabled',true);
         $("#btnClockIn").css('background', '#0084D1');
-
-        $('#btnStartBreak').prop('disabled', true);
-        $("#btnStartBreak").css('background', '#0084D1');
-        
-        $('#btnStopBreak').prop('disabled', true);
-        $("#btnStopBreak").css('background', '#0084D1');
-
         $('#btnStartJob').prop('disabled', true);
+        $('#btnStartBreak').prop('disabled', true);
+        $("#btnClockIn").css('background', '#00AE00');
         $("#btnStartJob").css('background', '#0084D1');
+        $("#btnStartBreak").css('background', '#0084D1');
+        $("#btnStopBreak").css('background', '#0084D1');
+        $("#btnStopJob").css('background', '#0084D1');
         $('#btnStopJob').prop('disabled', true);
-        $("#btnStopJob").css('background', '#0084D1');      
-        
-        // phone button 
-
-        $("#btnClockIn_phone").prop('disabled',true);
-        $("#btnClockIn_phone").css('background', '#0084D1');
+        $('#btnStopBreak').prop('disabled', true);
 
         $('#btnClockOut_phone').prop('disabled', true);
         $("#btnClockOut_phone").css('background', '#0084D1');
-
+        $("#btnClockIn_phone").prop('disabled',true);
+        $("#btnClockIn_phone").css('background', '#0084D1');
+        $('#btnStartJob_phone').prop('disabled', true);
         $('#btnStartBreak_phone').prop('disabled', true);
-        $("#btnStartBreak_phone").css('background', '#0084D1');
-        
-        $('#btnStopBreak_phone').prop('disabled', true);
-        $("#btnStopBreak_phone").css('background', '#0084D1');
-
-        $('#btnStartJob_phone').prop('disabled', true);        
+        $("#btnClockIn_phone").css('background', '#00AE00');
         $("#btnStartJob_phone").css('background', '#0084D1');
-        
-        $('#btnStopJob_phone').prop('disabled', true);
+        $("#btnStartBreak_phone").css('background', '#0084D1');
+        $("#btnStopBreak_phone").css('background', '#0084D1');
         $("#btnStopJob_phone").css('background', '#0084D1');
- 
+        $('#btnStopJob_phone').prop('disabled', true);
+        $('#btnStopBreak_phone').prop('disabled', true);
+
         $(".mobile-header-status-text").text("Enter Job Number");
         $(".mobile-main-input").val(" ");
 

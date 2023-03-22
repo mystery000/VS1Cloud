@@ -91,22 +91,6 @@
       color: #00a3d3;
     }
 
-    .currencyTab {
-      position: relative;
-    }
-    
-    .currencyTab span {
-      position: absolute;
-      left: 10px;
-      height: 100%;
-      display: flex;
-      text-align: right;
-      align-items: center;
-    }
-
-    .currencyTab input {
-      text-indent: 15px;
-    }
   </style>
   <div>
     <div class="fullScreenSpin" style="display:none;">
@@ -297,10 +281,7 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Purchase Price</label>
-                        <div class="currencyTab">
-                          <span>{{currency}}</span>
-                          <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
-                        </div>
+                        <input type="number" class="form-control" id="edtPurchCost" name="edtPurchCost" step="0.01">
                       </div>
                     </div>
 
@@ -409,25 +390,25 @@
                   <div class="row input-tab">
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        <div class="form-group" style="margin: 4px;">
-                          <label>Estimated Value</label>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input type="Number" class="form-control" id="edtEstimatedValue" name="edtEstimatedValue" value="0" min="0">
-                          </div>
-                        </div>
+                        {{> default_input 
+                          label = 'Estimated Value'
+                          classes = ''
+                          type = 'number'
+                          id = 'edtEstimatedValue'
+                          name = 'edtEstimatedValue'
+                        }}
                       </div>
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        <div class="form-group" style="margin: 4px;">
-                          <label>Replacement Cost</label>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input type="Number" class="form-control" id="edtReplacementCost" name="edtReplacementCost" value="0" min="0">
-                          </div>
-                        </div>
+                        {{> default_input 
+                          label = 'Replacement Cost'
+                          classes = ''
+                          type = 'number'
+                          id = 'edtReplacementCost'
+                          name = 'edtReplacementCost'
+                        }}
                       </div>
                     </div>
 
@@ -596,10 +577,7 @@
                     <div class="col-8 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>Salvage Value</label>
-                        <div class="currencyTab">
-                          <span>{{currency}}</span>
-                          <input type="Number" class="form-control" id="edtSalvage" name="edtSalvage" value="0" min="0">
-                        </div>
+                        <input type="Number" class="form-control" id="edtSalvage" name="edtSalvage" value="0" min="0">
                       </div>
                     </div>
 
@@ -640,12 +618,8 @@
                         <div class="col-12 col-md-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Accumulated Depreciation</label>
-
-                            <div class="currencyTab">
-                              <span>{{currency}}</span>
                               <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
                               disabled="{{#if chkEnterAmount}}true{{/if}}">
-                            </div>
                           </div>
                         </div>
 
@@ -800,12 +774,8 @@
                         <div class="col-12 col-md-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Accumulated Depreciation</label>
-
-                            <div class="currencyTab">
-                              <span>{{currency}}</span>
                               <input type="text" class="form-control" id="edtAccumulatedDepreciation2" name="edtAccumulatedDepreciation2" 
                               disabled="{{#if chkEnterAmount2}}true{{/if}}">
-                            </div>
                           </div>
                         </div>
 
@@ -877,10 +847,7 @@
                         </div>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:120px; text-align: right; margin-right: 10px;">Sales Price</div>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input class="form-control" type="number" id="edtSalesPrice" name="edtSalesPrice" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
-                          </div>
+                          <input class="form-control" type="number" id="edtSalesPrice" name="edtSalesPrice" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
                         </div>
                       </div>
                     </div>
@@ -899,18 +866,12 @@
                         </div>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:200px; text-align: right; margin-right: 10px;">Accumulated Depreciation</div>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input class="form-control" type="number" id="edtDisposalAccumDeprec" name="edtDisposalAccumDeprec" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
-                          </div>
+                          <input class="form-control" type="number" id="edtDisposalAccumDeprec" name="edtDisposalAccumDeprec" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
                         </div>
 
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:200px; text-align: right; margin-right: 10px;">Book Value</div>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input class="form-control" type="number" id="edtDisposalBookValue" name="edtDisposalBookValue" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
-                          </div>
+                          <input class="form-control" type="number" id="edtDisposalBookValue" name="edtDisposalBookValue" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
                         </div>
 
                       </div>
@@ -932,10 +893,7 @@
                         </div>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:120px; text-align: right; margin-right: 10px;">Sales Price</div>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input class="form-control" type="text" id="edtSalesPrice2" name="edtSalesPrice2" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
-                          </div>
+                          <input class="form-control" type="text" id="edtSalesPrice2" name="edtSalesPrice2" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
                         </div>
                       </div>
                     </div>
@@ -954,18 +912,12 @@
                         </div>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:200px; text-align: right; margin-right: 10px;">Accumulated Depreciation</div>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input class="form-control" type="number" id="edtDisposalAccumDeprec2" name="edtDisposalAccumDeprec2" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
-                          </div>
+                          <input class="form-control" type="number" id="edtDisposalAccumDeprec2" name="edtDisposalAccumDeprec2" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
                         </div>
 
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:200px; text-align: right; margin-right: 10px;">Book Value</div>
-                          <div class="currencyTab">
-                            <span>{{currency}}</span>
-                            <input class="form-control" type="number" id="edtDisposalBookValue2" name="edtDisposalBookValue2" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
-                          </div>
+                          <input class="form-control" type="number" id="edtDisposalBookValue2" name="edtDisposalBookValue2" customerid=" " disabled="{{#if chkDisposalAsset}}true{{/if}}">
                         </div>
 
                       </div>

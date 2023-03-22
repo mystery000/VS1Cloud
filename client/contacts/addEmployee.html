@@ -1637,23 +1637,16 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    <!-- <label>Employee Group</label>
+                                    <label>Employee Group</label>
                                     <select type="search" class="form-control customEditableSelect"
-                                      id="edtEmploymentGroup" name="edtEmploymentGroup" style="cursor: pointer;">
+                                      id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
                                       <option value="F">Full-time employment</option>
                                       <option value="P">Part-time employment</option>
                                       <option value="C">Casual employment</option>
                                       <option value="L">Labour hire</option>
                                       <option value="S">Superannuation income stream</option>
-                                    </select> -->
-                                    {{> default_input 
-                                      label="Employee Group"
-                                      classes=""
-                                      id="edtEmploymentGroup" 
-                                      name="edtEmploymentGroup"
-                                      defaultValue="" 
-                                      type="search"
-                                    }}
+                                    </select>
+
                                   </div>
                                 </div>
                                 <div class="col-12 col-md-3">
@@ -1673,14 +1666,13 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
-                                      label="Ordinary Earnings Rate"
-                                      classes=""
-                                      id="edtEarningRate" 
-                                      name="edtEarningRate"
-                                      defaultValue="" 
-                                      type="search"
-                                    }}
+                                    <label>Ordinary Earnings Rate</label>
+                                    <select type="search" class="form-control customEditableSelect"
+                                      id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
+                                      <option value="true">Australian Resident</option>
+                                      <option value="false">Foreign Resident</option>
+                                      <option value="Working Holiday Maker">Working Holiday Maker</option>
+                                    </select>
                                   </div>
                                 </div>
                               </div>
@@ -1734,7 +1726,7 @@
                                   <h4>Superannuation Memberships</h4>
                                 </div>
                                 <div class="col-12 col-md-6">
-                                  <a href="#newLeaveRequestModal" data-toggle="modal">
+                                  <a href="#newSuperMembershipModal" data-toggle="modal">
                                     {{> vs1_button
                                         color='primary'
                                         classes='float-right btnLeaveRequestBtn'
@@ -1750,7 +1742,7 @@
                                       style="margin-right: 5px;"></i>Add a super membership</button> -->
                                 </div>
                               </div>
-                              <!-- <div class="modal fade" id="newSuperMembershipModal" tabindex="-1" role="dialog"
+                              <div class="modal fade" id="newSuperMembershipModal" tabindex="-1" role="dialog"
                                 aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                   <div class="modal-content">
@@ -1782,6 +1774,9 @@
                                               defaultValue="" 
                                               type="text"
                                             }}
+                                            <!-- <label>Description</label>
+                                            <input type="text" class="form-control" id="edtLeaveDescription"
+                                              name="edtLeaveDescription"> -->
                                           </div>
                                         </div>
                                         <div class="col-6">
@@ -1819,6 +1814,10 @@
                                               type="text"
                                               placeholder="How often will you pay your employees?"
                                             }}
+                                            <!-- <label>Pay Period</label>
+                                            <input type="search" class="form-control" style="cursor: pointer;"
+                                              id="edtLeavePayPeriod" name="edtLeavePayPeriod"
+                                              placeholder="How often will you pay your employees?"> -->
                                           </div>
                                         </div>
                                         <div class="col-4">
@@ -1831,6 +1830,9 @@
                                               defaultValue="" 
                                               type="text"
                                             }}
+                                            <!-- <label>Hours</label>
+                                            <input type="text" class="form-control" id="edtLeaveHours"
+                                              name="edtLeaveHours"> -->
                                           </div>
                                         </div>
                                       </form>
@@ -1847,6 +1849,9 @@
                                               defaultValue="" 
                                               type="text"
                                             }}
+                                            <!-- <label>Status</label>
+                                            <input type="search" class="form-control" style="cursor: pointer;"
+                                              id="edtLeavePayStatus" name="edtLeavePayStatus" /> -->
                                           </div>
                                         </div>
                                       </div>
@@ -1876,10 +1881,17 @@
                                             title='Close'
                                         }}
                                       </a>
+                                      <!-- <button type="button" id="removeLeaveRequestBtn" data-id="0"
+                                        style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i
+                                          class="fa fa-delete" style="margin-right: 5px;"></i>Delete</button> -->
+                                      <!-- <button type="button" id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i
+                                          class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                      <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal"><i
+                                          class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                                     </div>
                                   </div>
                                 </div>
-                              </div> -->
+                              </div>
                               <div class="row">
                                 <div class="col-12">
 
@@ -1935,26 +1947,28 @@
                               <div class="row mb-1">
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
-                                      label="Employment Basis"
-                                      classes=""
-                                      id="edtEmploymentBasis" 
-                                      name="edtEmploymentBasis"
-                                      defaultValue="" 
-                                      type="search"
-                                    }}
+                                    <label>Employment Basis</label>
+                                    <select type="search" class="form-control customEditableSelect"
+                                      id="edtEmploymentBasis" name="edtEmploymentBasis" style="cursor: pointer;">
+                                      <option value="F">Full-time employment</option>
+                                      <option value="P">Part-time employment</option>
+                                      <option value="C">Casual employment</option>
+                                      <option value="L">Labour hire</option>
+                                      <option value="S">Superannuation income stream</option>
+                                    </select>
+
                                   </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
-                                      label="Residency Status"
-                                      classes=""
-                                      id="edtResidencyStatus" 
-                                      name="edtResidencyStatus"
-                                      defaultValue="" 
-                                      type="search"
-                                    }}
+                                    <label>Residency Status</label>
+                                    <select type="search" class="form-control customEditableSelect"
+                                      id="edtResidencyStatus" name="edtResidencyStatus" style="cursor: pointer;">
+                                      <option value="true">Australian Resident</option>
+                                      <option value="false">Foreign Resident</option>
+                                      <option value="Working Holiday Maker">Working Holiday Maker</option>
+                                    </select>
+
                                   </div>
                                 </div>
                                 <div class="col-12 col-md-3">
@@ -2294,6 +2308,7 @@
                                 </div>
                               </div>
                               {{> leaveTypeSettings}}
+                              {{> assignLeaveTypePop}}
                               <div class="modal fade" id="assignLeaveTypeModal" role="dialog"
                                 aria-labelledby="assignLeaveTypeModal" aria-hidden="true" style="z-index:9999;">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -2314,21 +2329,28 @@
                                               id="leaveTypeSelect" 
                                               name="leaveTypeSelect" 
                                               defaultValue="" 
-                                              type="search"
+                                              type="text"
                                             }}
-                                            <input type="hidden" name="assignteavetypeID" id="assignteavetypeID" value="0">
+                                            <!-- <label>Leave</label>
+                                            <select type="search" class="form-control" id="leaveTypeSelect"
+                                              name="leaveTypeSelect"
+                                              style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                            </select> -->
+                                            <input type="hidden" name="assignteavetypeID" id="assignteavetypeID"
+                                              value="0">
                                           </div>
                                         </div>
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Leave Calculation Method" 
-                                              classes="customEditableSelect" 
-                                              id="leaveCalcMethodSelect" 
-                                              name="leaveCalcMethodSelect" 
-                                              defaultValue="" 
-                                              type="search"
-                                            }}                                            
+                                            <label>Leave Calculation Method</label>
+                                            <select type="search" class="form-control customEditableSelect"
+                                              id="leaveCalcMethodSelect" name="leaveCalcMethodSelect">
+                                              <option value="Fixed Amount Each Period">Fixed Amount Each Period</option>
+                                              <option value="Manually Recorded Rate">Manually Recorded Rate</option>
+                                              <option value="No Calculation Required">No Calculation Required</option>
+                                              <option value="Based on Ordinary Earnings">Based on Ordinary Earnings
+                                              </option>
+                                            </select>
                                           </div>
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
@@ -2408,32 +2430,25 @@
                                         </div>
                                         <div class="col-12">
                                           <div class="form-group">
-                                            <!-- <label>On termination unused balance is:</label>
+                                            <label>On termination unused balance is:</label>
                                             <select type="search" class="form-control customEditableSelect"
                                               id="onTerminationUnusedBalance" name="onTerminationUnusedBalance"
                                               style="cursor: pointer;">
                                               <option value="Not Paid Out">Not Paid Out </option>
                                               <option value="Paid Out">Paid Out</option>
-                                            </select> -->
-                                            {{> default_input 
-                                              label="On termination unused balance is:"
-                                              classes="customEditableSelect" 
-                                              id="onTerminationUnusedBalance" 
-                                              name="onTerminationUnusedBalance" 
-                                              defaultValue="" 
-                                              type="search"
-                                            }}
+                                            </select>
                                           </div>
                                         </div>
                                         <div class="col-12">
-                                          <div class="custom-control custom-switch hideelement eftLeaveTypeCont" style="margin:8px">
-                                            <input class="custom-control-input" type="checkbox" id="eftLeaveType" name="eftLeaveType">
-                                            <label class="custom-control-label" for="eftLeaveType">EFT leave type</label>
+                                          <div class="form-group hideelement eftLeaveTypeCont">
+                                            <label><input type="checkbox" name="eftLeaveType" id="eftLeaveType"> EFT
+                                              leave type</label>
                                           </div>
-                                          <div class="custom-control custom-switch hideelement superannuationGuaranteeCont" style="margin:8px">
-                                            <input class="custom-control-input" type="checkbox" id="superannuationGuarantee" name="superannuationGuarantee">
-                                            <label class="custom-control-label" for="superannuationGuarantee">Includes Superannuation Guarantee Contribution</label>
-                                          </div>                                          
+                                          <div class="form-group hideelement superannuationGuaranteeCont">
+                                            <label><input type="checkbox" name="superannuationGuarantee"
+                                                id="superannuationGuarantee"> Includes Superannuation Guarantee
+                                              Contribution</label>
+                                          </div>
                                         </div>
                                       </form>
                                     </div>
@@ -2515,6 +2530,156 @@
                                     id="btnLeaveRequestBtn" data-toggle="modal" data-target="#newLeaveRequestModal"><i
                                       class="fas fa-plus" style="margin-right: 5px;"></i>New Leave
                                     Request</button> -->
+                                </div>
+                              </div>
+                              <div class="modal fade" id="newLeaveRequestModal" tabindex="-1" role="dialog"
+                                aria-labelledby="newPayCalendarLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="newLeaveRequestLabel">New Leave Request</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form class="row" id="leaveRequestForm">
+                                        <div class="col-12">
+                                          <div class="form-group">
+                                            <label>Type of Request</label>
+                                            <input type="hidden" id="edtLeaveRequestID" value="0">
+                                            <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
+                                            <select type="search" class="form-control" id="edtLeaveTypeofRequest"
+                                              name="edtLeaveTypeofRequest" style="cursor: pointer;">
+                                            </select>
+                                          </div>
+                                        </div>
+                                        <div class="col-12">
+                                          <div class="form-group">
+                                            {{> default_input 
+                                              label="Description" 
+                                              classes="edtLeaveDescription" 
+                                              id="edtLeaveDescription" 
+                                              name="edtLeaveDescription" 
+                                              defaultValue="" 
+                                              type="text"
+                                            }}
+                                            <!-- <label>Description</label>
+                                            <input type="text" class="form-control" id="edtLeaveDescription"
+                                              name="edtLeaveDescription"> -->
+                                          </div>
+                                        </div>
+                                        <div class="col-6">
+                                          <div class="form-group">
+                                            <label>Start Date</label>
+                                            <div class="input-group date" style="cursor: pointer;">
+                                              <input type="text" class="form-control formClassDate edtLeaveStartDate"
+                                                id="edtLeaveStartDate" name="edtLeaveStartDate" value="">
+                                              <div class="input-group-addon" style="">
+                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-6">
+                                          <div class="form-group">
+                                            <label>End Date</label>
+                                            <div class="input-group date" style="cursor: pointer;">
+                                              <input type="text" class="form-control formClassDate edtLeaveEndDate"
+                                                id="edtLeaveEndDate" name="edtLeaveEndDate" value="">
+                                              <div class="input-group-addon" style="">
+                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        <div class="col-8">
+                                          <div class="form-group">
+                                            {{> default_input 
+                                              label="Pay Period" 
+                                              classes="edtLeavePayPeriod" 
+                                              id="edtLeavePayPeriod" 
+                                              name="edtLeavePayPeriod" 
+                                              defaultValue="" 
+                                              type="search"
+                                              placeholder="How often will you pay your employees?"
+                                            }}
+                                            <!-- <label>Pay Period</label>
+                                            <input type="search" class="form-control" style="cursor: pointer;"
+                                              id="edtLeavePayPeriod" name="edtLeavePayPeriod"
+                                              placeholder="How often will you pay your employees?"> -->
+                                          </div>
+                                        </div>
+                                        <div class="col-4">
+                                          <div class="form-group">
+                                            {{> default_input 
+                                              label="Hours" 
+                                              classes="edtLeaveHours" 
+                                              id="edtLeaveHours" 
+                                              name="edtLeaveHours" 
+                                              defaultValue="" 
+                                              type="text"
+                                            }}
+                                            <!-- <label>Hours</label>
+                                            <input type="text" class="form-control" id="edtLeaveHours"
+                                              name="edtLeaveHours"> -->
+                                          </div>
+                                        </div>
+                                      </form>
+                                    </div>
+                                    <div class="modal-footer" style="justify-content: space-between;">
+                                      <div class="col-4 pl-0">
+                                        <div class="dropdown float-left">
+                                          <div class="form-group">
+                                            {{> default_input 
+                                              label="Status" 
+                                              classes="edtLeavePayStatus" 
+                                              id="edtLeavePayStatus" 
+                                              name="edtLeavePayStatus" 
+                                              defaultValue="" 
+                                              type="text"
+                                            }}
+                                            <!-- <label>Status</label>
+                                            <input type="search" class="form-control" style="cursor: pointer;"
+                                              id="edtLeavePayStatus" name="edtLeavePayStatus" /> -->
+                                          </div>
+                                        </div>
+                                      </div>
+                                      {{> vs1_button
+                                        color='danger'
+                                        classes='removeLeaveRequest mt-3 hidden'
+                                        type='button'
+                                        id="removeLeaveRequestBtn"
+                                        iconName='delete'
+                                        title='Delete'
+                                      }}
+                                      {{> vs1_button
+                                        color='success'
+                                        classes='mt-3'
+                                        type='button'
+                                        id="btnSaveLeaveRequest"
+                                        iconName='save'
+                                        title='Save'
+                                      }}
+                                      <a data-dismiss="modal">
+                                        {{> vs1_button
+                                            color='secondary'
+                                            classes='mt-3'
+                                            type='button'
+                                            id="btnCancel"
+                                            iconName='close'
+                                            title='Close'
+                                        }}
+                                      </a>
+                                      <!-- <button type="button" id="removeLeaveRequestBtn" data-id="0"
+                                        style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i
+                                          class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                                      <button type="button" id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i
+                                          class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                      <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal"><i
+                                          class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                               <div class="row">
@@ -2707,7 +2872,7 @@
                                               id="period" 
                                               name="period" 
                                               defaultValue="" 
-                                              type="search"
+                                              type="text"
                                             }}
                                             <!-- <label>Period</label>
                                             <select type="search" class="form-control" id="period" name="period"
@@ -2742,42 +2907,42 @@
                                               name="totalPay"> -->
                                           </div>
                                         </div>
-                                      </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                      {{> vs1_button
-                                        color='danger'
-                                        classes='btnDeletePayslip hidden'
-                                        type='button'
-                                        id="btnDeletePayslipBtn"
-                                        iconName='delete'
-                                        title='Delete'
-                                      }}
-                                      {{> vs1_button
-                                        color='success'
-                                        classes=''
-                                        type='button'
-                                        id="btnPayslip"
-                                        iconName='save'
-                                        title='Save'
-                                      }}
-                                      <a data-dismiss="modal">
-                                        {{> vs1_button
-                                            color='secondary'
+                                        <div class="modal-footer">
+                                          {{> vs1_button
+                                            color='danger'
+                                            classes='btnDeletePayslip hidden'
+                                            type='button'
+                                            id="btnDeletePayslipBtn"
+                                            iconName='delete'
+                                            title='Delete'
+                                          }}
+                                          {{> vs1_button
+                                            color='success'
                                             classes=''
                                             type='button'
-                                            id="btnCancel"
-                                            iconName='close'
-                                            title='Close'
-                                        }}
-                                      </a>
-                                      <!-- <button type="button" id="btnDeletePayslipBtn" data-id="0"
-                                        style="display: none;" class="btn btn-danger btnDeletePayslip"><i
-                                          class="fa fa-delete" style="margin-right: 5px;"></i>Delete</button>
-                                      <button type="button" id="btnPayslip" class="btn btn-success"><i
-                                          class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                      <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
-                                          class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
+                                            id="btnPayslip"
+                                            iconName='save'
+                                            title='Save'
+                                          }}
+                                          <a data-dismiss="modal">
+                                            {{> vs1_button
+                                                color='secondary'
+                                                classes='mt-3'
+                                                type='button'
+                                                id="btnCancel"
+                                                iconName='close'
+                                                title='Close'
+                                            }}
+                                          </a>
+                                          <!-- <button type="button" id="btnDeletePayslipBtn" data-id="0"
+                                            style="display: none;" class="btn btn-danger btnDeletePayslip"><i
+                                              class="fa fa-delete" style="margin-right: 5px;"></i>Delete</button>
+                                          <button type="button" id="btnPayslip" class="btn btn-success"><i
+                                              class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                                          <button type="button" class="btn btn-secondary" data-dismiss="modal"><i
+                                              class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
+                                        </div>
+                                      </form>
                                     </div>
                                   </div>
                                 </div>
@@ -2886,7 +3051,7 @@
                                         <div class="col-6 col-md-7">
                                           <div class="form-group">
                                             <label class="borderBottom1">Earnings Rate</label>
-                                            <input type="search" class="form-control earningLineDropDown"
+                                            <input type="text" class="form-control earningLineDropDown"
                                               id="ptEarningRate{{ item.ID }}" data-value="{{ item.EarningRate }}"
                                               value="{{ item.EarningRate }}"
                                               style="background-color:rgb(255, 255, 255); cursor: pointer;" />
@@ -3375,14 +3540,9 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Reiumbursement Type" 
-                                                        classes="reimbursementDropDown" 
-                                                        id="reimbursementTypeSelect" 
-                                                        name="reimbursementTypeSelect" 
-                                                        defaultValue="" 
-                                                        type="search"
-                                                      }}
+                                                      <label>Reiumbursement Type</label>
+                                                      <input type="search" class="form-control reimbursementDropDown"
+                                                        id="reimbursementTypeSelect">
                                                       <input type="hidden" id="reimbursementTypeSelectID" value="0">
                                                     </div>
                                                   </div>
@@ -3395,14 +3555,9 @@
                                                   </div>
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Control of Expense Account" 
-                                                        classes="edtExpenseAccountDropDown" 
-                                                        id="controlExpenseAccount" 
-                                                        name="controlExpenseAccount" 
-                                                        defaultValue="" 
-                                                        type="search"
-                                                      }}                                                      
+                                                      <label>Control of Expense Account</label>
+                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
+                                                        id="controlExpenseAccount">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -3486,14 +3641,9 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Earnings Name" 
-                                                        classes="earningLineDropDown" 
-                                                        id="obEarningsRate" 
-                                                        name="obEarningsRate" 
-                                                        defaultValue="" 
-                                                        type="search"
-                                                      }}
+                                                      <label>Earnings Rate</label>
+                                                      <input type="search" class="form-control earningLineDropDown"
+                                                        id="obEarningsRate">
                                                       <input type="hidden" id="obEarningsRateID" value="0">
                                                     </div>
                                                   </div>
@@ -3576,14 +3726,9 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Deduction Type" 
-                                                        classes="deductionLineDropDown" 
-                                                        id="obDeductionType" 
-                                                        name="obDeductionType" 
-                                                        defaultValue="" 
-                                                        type="search"
-                                                      }}
+                                                      <label>Deduction Type</label>
+                                                      <input type="text" class="form-control deductionLineDropDown"
+                                                        id="obDeductionType">
                                                       <input type="hidden" id="obDeductionTypeID" value="0">
                                                     </div>
                                                   </div>
@@ -3669,14 +3814,9 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Superannuation Fund" 
-                                                        classes="superannuationDropDown" 
-                                                        id="obSuperannuationFund" 
-                                                        name="obSuperannuationFund" 
-                                                        defaultValue="" 
-                                                        type="search"
-                                                      }}
+                                                      <label>Superannuation Fund</label>
+                                                      <input type="text" class="form-control superannuationDropDown"
+                                                        id="obSuperannuationFund">
                                                       <input type="hidden" id="obSuperannuationFundID" value="0">
                                                     </div>
                                                   </div>
@@ -3767,14 +3907,9 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Reimbursement Type" 
-                                                        classes="reimbursementDropDown" 
-                                                        id="obReimbursementType" 
-                                                        name="obReimbursementType" 
-                                                        defaultValue="" 
-                                                        type="search"
-                                                      }}
+                                                      <label>Reimbursement Type</label>
+                                                      <input type="text" class="form-control reimbursementDropDown"
+                                                        id="obReimbursementType">
                                                       <input type="hidden" id="obReimbursementTypeID" value="0">
                                                     </div>
                                                   </div>
@@ -3913,20 +4048,20 @@
                     <div class="row no-gutters">
                       <div class="col-12">
                         {{> vs1_button
-                          color='secondary'
-                          classes='float-right btnCancel mr-2 mb-2'
-                          type='button'
-                          id="btnCancel"
-                          iconName='close'
-                          title='Cancel'
-                        }}
-                        {{> vs1_button
                           color='success'
                           classes='float-right btnSaveEmployeePayroll mr-2 mb-2'
                           type='button'
                           id="btnSaveEmployeePayroll"
                           iconName='save'
                           title='Save'
+                        }}
+                        {{> vs1_button
+                          color='secondary'
+                          classes='float-right btnCancel mr-2 mb-2'
+                          type='button'
+                          id="btnCancel"
+                          iconName='close'
+                          title='Cancel'
                         }}
                         <!-- <button class="btn btn-success " id="btnSaveEmployeePayroll" type="button"
                           style="margin: 12px; margin-top: 0px;"><i class="fa fa-save"
@@ -4286,42 +4421,12 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="payrollCalendar-title">Payroll Calendars</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
-          <style>
-              #tblPayCalendars .colPayCalendarName{
-                  width: 30%!important;
-              }
-              #tblPayCalendars .colPayPeriod{
-                  width: 20%!important;
-              }
-              #tblPayCalendars .colNextPayPeriod{
-                  width: 20%!important;
-              }
-              #tblPayCalendars .colNextPaymentDate{
-                  width: 20%!important;
-              }
-              #tblPayCalendars .colStatus{
-                  width: 10%!important;
-              }              
-          </style>
           {{> non_transactional_list tablename="tblPayCalendars"}}
-        </div>
-        <div class="modal-footer">
-          <a data-dismiss="modal">
-              {{> vs1_button
-                  color='secondary'
-                  classes=''
-                  type='button'
-                  id="btnCancel"
-                  iconName='close'
-                  title='Close'
-              }}
-          </a>
         </div>
       </div>
     </div>
@@ -4330,36 +4435,12 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="payrollHoliday-title">Holidays</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">×</span>
           </button>
         </div>
         <div class="modal-body">
-          <style>
-              #tblHolidays .colHolidayName{
-                  width: 45%!important;
-              }
-              #tblHolidays .colHolidayDate{
-                  width: 45%!important;
-              }
-              #tblHolidays .colStatus{
-                  width: 10%!important;
-              }              
-          </style>
           {{> non_transactional_list tablename="tblHolidays"}}
-        </div>
-        <div class="modal-footer">
-          <a data-dismiss="modal">
-              {{> vs1_button
-                  color='secondary'
-                  classes=''
-                  type='button'
-                  id="btnCancel"
-                  iconName='close'
-                  title='Close'
-              }}
-          </a>
         </div>
       </div>
     </div>
@@ -4370,165 +4451,6 @@
   {{> newTaskModal}}
 
   {{> SelectPayCalendar }}
-  <div class="modal fade" id="newLeaveRequestModal" tabindex="-1" role="dialog"
-    aria-labelledby="newPayCalendarLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-    <div class="modal-header">
-      <h5 class="modal-title" id="newLeaveRequestLabel">New Leave Request</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="modal-body">
-      <form class="row" id="leaveRequestForm">
-        <div class="col-12">
-          <div class="form-group">
-            <input type="hidden" id="edtLeaveRequestID" value="0">
-            <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
-            <!-- <label>Type of Request</label>
-            <select type="search" class="form-control" id="edtLeaveTypeofRequest"
-              name="edtLeaveTypeofRequest" style="cursor: pointer;">
-            </select> -->
-            {{> default_input 
-              label="Type of Request" 
-              classes="" 
-              id="edtLeaveTypeofRequest" 
-              name="edtLeaveTypeofRequest" 
-              defaultValue="" 
-              type="search"
-            }}
-          </div>
-        </div>
-        <div class="col-12">
-          <div class="form-group">
-            {{> default_input 
-              label="Description" 
-              classes="edtLeaveDescription" 
-              id="edtLeaveDescription" 
-              name="edtLeaveDescription" 
-              defaultValue="" 
-              type="text"
-            }}
-            <!-- <label>Description</label>
-            <input type="text" class="form-control" id="edtLeaveDescription"
-              name="edtLeaveDescription"> -->
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="form-group">
-            <label>Start Date</label>
-            <div class="input-group date" style="cursor: pointer;">
-              <input type="text" class="form-control formClassDate edtLeaveStartDate"
-                id="edtLeaveStartDate" name="edtLeaveStartDate" value="">
-              <div class="input-group-addon" style="">
-                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6">
-          <div class="form-group">
-            <label>End Date</label>
-            <div class="input-group date" style="cursor: pointer;">
-              <input type="text" class="form-control formClassDate edtLeaveEndDate"
-                id="edtLeaveEndDate" name="edtLeaveEndDate" value="">
-              <div class="input-group-addon" style="">
-                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-8">
-          <div class="form-group">
-            {{> default_input 
-              label="Pay Period" 
-              classes="edtLeavePayPeriod" 
-              id="edtLeavePayPeriod" 
-              name="edtLeavePayPeriod" 
-              defaultValue="" 
-              type="search"
-              placeholder="How often will you pay your employees?"
-            }}
-            <!-- <label>Pay Period</label>
-            <input type="search" class="form-control" style="cursor: pointer;"
-              id="edtLeavePayPeriod" name="edtLeavePayPeriod"
-              placeholder="How often will you pay your employees?"> -->
-          </div>
-        </div>
-        <div class="col-4">
-          <div class="form-group">
-            {{> default_input 
-              label="Hours" 
-              classes="edtLeaveHours" 
-              id="edtLeaveHours" 
-              name="edtLeaveHours" 
-              defaultValue="" 
-              type="text"
-            }}
-            <!-- <label>Hours</label>
-            <input type="text" class="form-control" id="edtLeaveHours"
-              name="edtLeaveHours"> -->
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="modal-footer" style="justify-content: space-between;">
-      <div class="col-4 pl-0">
-        <div class="dropdown float-left">
-          <div class="form-group">
-            {{> default_input 
-              label="Status" 
-              classes="edtLeavePayStatus" 
-              id="edtLeavePayStatus" 
-              name="edtLeavePayStatus" 
-              defaultValue="" 
-              type="search"
-            }}
-            <!-- <label>Status</label>
-            <input type="search" class="form-control" style="cursor: pointer;"
-              id="edtLeavePayStatus" name="edtLeavePayStatus" /> -->
-          </div>
-        </div>
-      </div>
-      {{> vs1_button
-        color='danger'
-        classes='removeLeaveRequest mt-3 hidden'
-        type='button'
-        id="removeLeaveRequestBtn"
-        iconName='delete'
-        title='Delete'
-      }}
-      {{> vs1_button
-        color='success'
-        classes='mt-3'
-        type='button'
-        id="btnSaveLeaveRequest"
-        iconName='save'
-        title='Save'
-      }}
-      <a data-dismiss="modal">
-        {{> vs1_button
-            color='secondary'
-            classes='mt-3'
-            type='button'
-            id="btnCancel"
-            iconName='close'
-            title='Close'
-        }}
-      </a>
-      <!-- <button type="button" id="removeLeaveRequestBtn" data-id="0"
-        style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i
-          class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
-      <button type="button" id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i
-          class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-      <button type="button" class="btn btn-secondary mt-3" data-dismiss="modal"><i
-          class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
-    </div>
-    </div>
-    </div>
-  </div>
-  {{> assignLeaveTypePop}}
   <script>
     modalDraggable();
   </script>

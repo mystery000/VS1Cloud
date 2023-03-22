@@ -17,6 +17,21 @@
                 </tr>
                 </thead>
                 <tbody>
+                    {{#if transactiondatatablerecords}}
+                        {{#each items in transactiondatatablerecords}}
+                            <tr>
+                                {{#each item in items}}
+                                    <td class="{{item.indent}}">
+                                        <span class={{item.className}}>{{item.string}}</span>
+                                    </td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="5" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
                 </tbody>
             </table>
         </div>

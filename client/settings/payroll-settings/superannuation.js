@@ -58,8 +58,10 @@ Template.superannuationSettings.onCreated(function() {
 });
 
 Template.superannuationSettings.onRendered(function() {
-    $('#edtFundType').editableSelect('add', 'Regulated Superannuation Fund');
-    $('#edtFundType').editableSelect('add', 'Self-Managed Superannuation Fund');
+    $('#edtFundType').editableSelect('add', function(item){
+        $(this).val(item.id);
+        $(this).text(item.name);
+    });
   const templateObject = Template.instance();
   var splashArraySuperannuationList = new Array();
 

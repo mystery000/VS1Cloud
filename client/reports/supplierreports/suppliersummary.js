@@ -105,7 +105,7 @@ Template.suppliersummary.onRendered(() => {
   templateObject.getSupplierReportData = async function (dateFrom, dateTo, ignoreDate = false) {
     getVS1Data('TSupplierProduct').then(function (dataObject) {
       if (dataObject.length == 0) {
-        templateObject.loadReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        templateObject.loadReport(dateAsOf).then(async function (data) {
           await addVS1Data('TSupplierProduct', JSON.stringify(data));
           templateObject.displayReportData(data);
         }).catch(function (err) {
@@ -116,7 +116,7 @@ Template.suppliersummary.onRendered(() => {
         templateObject.displayReportData(data);
       }
     }).catch(function (err) {
-      templateObject.loadReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+      templateObject.loadReport(dateAsOf).then(async function (data) {
         await addVS1Data('TSupplierProduct', JSON.stringify(data));
         templateObject.displayReportData(data);
       }).catch(function (err) {
@@ -126,7 +126,7 @@ Template.suppliersummary.onRendered(() => {
   }
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
     LoadingOverlay.show();
-    templateObject.setDateAs(dateTo);
+    templateObject.setDateAs(dateFrom);
     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
       return await await reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate);
     }, {
@@ -185,7 +185,6 @@ Template.suppliersummary.onRendered(() => {
       item.TotalTax = TotalTax;
       return item;
     });
-    console.log(useData);
     templateObject.records.set(useData);
 
 
@@ -213,7 +212,7 @@ Template.suppliersummary.onRendered(() => {
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateTo').val()) );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
 
 
 });

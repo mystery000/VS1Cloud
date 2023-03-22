@@ -120,7 +120,7 @@ Template.newprofitandloss.onRendered(function () {
         showPercentage:true
       };
     }
-    templateObject.dateAsAt.set(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
+    templateObject.dateAsAt.set(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
     setTimeout(function () {
       $("#dateFrom").val(moment(defaultOptions.fromDate).format('DD/MM/YYYY'));
       $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
@@ -1067,7 +1067,7 @@ Template.newprofitandloss.onRendered(function () {
   //templateObject.getDepartments();
 
   TemplateInjector.addDepartments(templateObject);
-/*
+
   templateObject.getProfitLossLayout = async function () {
     // const profitLossLayoutApi = new ProfitLossLayoutApi();
 
@@ -1209,7 +1209,7 @@ Template.newprofitandloss.onRendered(function () {
             let groupID = parseInt($item.attr("plid"));
             let containerID = parseInt(container.el.parent().attr("plid")) || 0;
             let containerName = container.el.parent().attr("data-group") || "";
-
+            
             $('.fullScreenSpin').css('display', 'inline-block');
             let jsonObj = {
               "Name": "VS1_PNLMoveAccount",
@@ -1238,7 +1238,7 @@ Template.newprofitandloss.onRendered(function () {
                 });
                 $('.fullScreenSpin').css('display', 'none');
             });
-          }
+          }          
         });
 
         $(".collepsDiv").click(function () {
@@ -1393,7 +1393,7 @@ Template.newprofitandloss.onRendered(function () {
     //   // }, 1000);
     // }
   };
-  */
+
   // templateObject.getAllProductData();
   //templateObject.getDepartments();
 
@@ -1723,23 +1723,147 @@ Template.newprofitandloss.events({
   },
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block');
-    $('.nplLayoutSelector').css('display', 'none');
+
     playPrintAudio();
-    setTimeout(function () {
-      $("a").attr("href", "/");
-      document.title = "Profit and Loss";
+    setTimeout( async function(){
+      let targetElement = document.getElementsByClassName('printReport')[0];
+
+      targetElement.style.display = "block";
+      targetElement.style.width = "210mm";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "20px";
+      targetElement.style.height = "fit-content";
+      targetElement.style.fontSize = "13.33px";
+      targetElement.style.color = "#000000";
+      targetElement.style.overflowX = "visible";
+      let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
+      let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
+      for (let k = 0; k< targetTds.length; k++) {
+          $(targetTds[k]).attr('style', 'min-width: 0px !important')
+      }
+      for (let j = 0; j< targetThs.length; j++) {
+          $(targetThs[j]).attr('style', 'min-width: 0px !important')
+      }
+      let trs = $(targetElement).find('.customProfitLossTable #tableExport.table.textCenterAlign tr')
+      for(let m = 0; m< trs.length; m++) {
+          let tds = $(trs[m]).find('td');
+          for(let n = 0; n< tds.length; n++ ) {
+              if($(tds[n]).is(':first-child') == true) {
+                  $(tds[n]).attr('style', 'min-width: 10px !important; width: 60px !important; padding: 0px 5px !important; white-space: unset')
+              }else {
+                  $(tds[n]).attr('style', 'min-width: 10px !important; padding: 0px 5px !important; white-space: unset')
+              }
+          }
+          let ths = $(trs[m]).find('th');
+          for(let n = 0; n< ths.length; n++ ) {
+              if($(ths[n]).hasClass('textLeftTxt') == true) {
+                  $(ths[n]).attr('style', 'min-width: 10px !important; width: 60px !important; padding: 0px 5px !important; white-space: unset')
+              }else {
+                  $(ths[n]).attr('style', 'min-width: 10px !important; padding: 0px 5px !important; white-space: unset')
+              }
+          }
+      }
+
+
+      var opt = {
+        margin: 0,
+        filename: "Profit and Loss Report.pdf",
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2
+        },
+        jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait'
+        }
+      };
+      let source = targetElement;
+
+      async function getAttachments () {
+        return new Promise(async(resolve, reject)=> {
+          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+            let pdfObject = "";
+            let base64data = dataObject.split(',')[1];
+            pdfObject = {
+              filename: "profit and loss report.pdf",
+              content: base64data,
+              encoding: 'base64'
+            }
+            let attachments = [];
+            attachments.push(pdfObject);
+            resolve(attachments)
+          })
+        })
+      }
+
+      async function checkBasedOnType() {
+        return new Promise(async(resolve, reject)=>{
+
+          let values = [];
+          let basedOnTypeStorages = Object.keys(localStorage);
+          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split("_")[2];
+            return (
+              storage.includes("BasedOnType_")
+              // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
+            );
+          });
+          let i = basedOnTypeStorages.length;
+          if (i > 0) {
+            while (i--) {
+              values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+          }
+          for (let j = 0; j<values.length; j++) {
+            let value = values[j]
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr("protocal")
+              ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+              : "http://" + $(location).attr("hostname");
+            if (reportData.BasedOnType.includes("P")) {
+              if (reportData.FormID == 1) {
+                let formIds = reportData.FormIDs.split(",");
+                if (formIds.includes("129")) {
+                  reportData.FormID = 129;
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              } else {
+                if (reportData.FormID == 129) {
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+
+                }
+              }
+            }
+            if(j == values.length -1) {resolve()}
+          }
+
+        })
+      }
+      await checkBasedOnType();
+      $('.fullScreenSpin').css('display', 'none')
+      document.title = "Profit and Loss Report";
       $(".printReport").print({
         title: document.title + " | Profit and Loss | " + loggedCompany,
-        noPrintSelector: ".addSummaryEditor",
-        mediaPrint: false,
+        noPrintSelector: ".addSummaryEditor, .excludeButton",
+        exportOptions: {
+          stripHtml: false,
+        },
       });
+      targetElement.style.width = "100%";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "0px";
+      targetElement.style.fontSize = "1rem";
 
-      setTimeout(function () {
-        $("a").attr("href", "#");
-        $('.nplLayoutSelector').css('display', 'inline-block');
-      }, 100);
+
     }, delayTimeAfterSound);
-    $('.fullScreenSpin').css('display', 'none');
   },
   "click .btnExportReportProfit": function () {
     $(".fullScreenSpin").css("display", "inline-block");

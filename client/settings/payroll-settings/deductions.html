@@ -24,29 +24,6 @@
                                 </a>
                             </div>
                         </div>
-                        <style>
-                            #tblDeductions{
-                                width: 100% !important;
-                            }
-                            #tblDeductions .colDeductionsNames{
-                                width: 20%!important;
-                            }
-                            #tblDeductions .colDeductionsType{
-                                width: 17%!important;
-                            }
-                            #tblDeductions .colDeductionsDisplayName{
-                                width: 17%!important;
-                            }
-                            #tblDeductions .colDeductionsAmount{
-                                width: 17%!important;
-                            }
-                            #tblDeductions .colDeductionsAccounts{
-                                width: 17%!important;
-                            }
-                            #tblDeductions .colStatus{
-                                width: 10%!important;
-                            }
-                        </style>
                         {{> datatablelist
                             tablename="tblDeductions"
                             apiName=apiFunction5
@@ -92,7 +69,7 @@
             </div>
         </div>
     </div> 
-    <div class="modal fade" id="noneModal" tabindex="-1" role="dialog" aria-labelledby="noneLabel" aria-hidden="true" style="z-index:999999">
+    <div class="modal fade" id="noneModal" tabindex="-1" role="dialog" aria-labelledby="noneLabel" aria-hidden="true" style="z-index:9999">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -122,20 +99,12 @@
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                {{> default_input 
-                                    label="Deduction Type" 
-                                    classes="customEditableSelect" 
-                                    id="edtDeductionType" 
-                                    name="edtDeductionType" 
-                                    defaultValue="" 
-                                    type="search"
-                                }}
-                                <!-- <label for="edtDeductionName">Deduction Type</label>
+                                <label for="edtDeductionName">Deduction Type</label>
                                 <select type="search" name="edtDeductionType" class="form-control customEditableSelect" id="edtDeductionType">
                                     <option value="Nones">Nones</option>
                                     <option value="Workplace Giving">Workplace Giving</option>
                                     <option value="Union / Association Fees">Union / Association Fees</option>
-                                </select> -->
+                                </select>
                             </div>
                         </div>
                         <div class="col-12">

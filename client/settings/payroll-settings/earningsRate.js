@@ -77,6 +77,10 @@ Template.earningRateSettings.onCreated(function() {
 });
 
 Template.earningRateSettings.onRendered(function() {
+    $('#edtEarningsType').editableSelect('add', function(item){
+        $(this).val(item.id);
+        $(this).text(item.name);
+    });
   const templateObject = Template.instance();
   const dataTableList = [];
   var splashArrayEarningList = new Array();
@@ -140,11 +144,6 @@ Template.earningRateSettings.onRendered(function() {
 
         await templateObject.earningTypes.set(earningTypes);
 
-        setTimeout(function () {
-            for(var i=0; i<earningTypes.length; i++){
-                $('#edtEarningsType').editableSelect('add', earningTypes[i].value);
-            }
-        }, 100);
     }
 
 
@@ -1002,7 +1001,7 @@ Template.earningRateSettings.onRendered(function() {
         let description = table.find(".productDesc").text() ||'';
         // let searchFilterID = templateObject.currentDrpDownID.get()
         let searchFilterID = $('#selectLineID').val();
-        // $('#' + searchFilterID).val(name);
+        $('#' + searchFilterID).val(name);
         $("#edtDeductionAccountID").val(accountID);
         // $("#edtDeductionDesctiption").val(description);
         $('#accountListModal').modal('toggle');

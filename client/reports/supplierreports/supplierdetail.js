@@ -33,21 +33,21 @@ Template.supplierdetail.onRendered(() => {
   templateObject.init_reset_data = function () {
     let reset_data = [];
     reset_data = [
-      { index: 1, label: 'Supplier', class: 'colSupplierID', active: true, display: true, width: "150" },
-      { index: 2, label: 'PO No', class: 'colContactName', active: true, display: true, width: "150" },
-      { index: 3, label: 'Trans Type', class: 'colPhone', active: true, display: true, width: "150" },
-      { index: 4, label: 'Product ID', class: 'colMobile', active: true, display: true, width: "150" },
-      { index: 5, label: 'Product Desc', class: 'colFaxNumber', active: true, display: true, width: "150" },
-      { index: 6, label: 'Cost (ex)', class: 'colARBalance text-right', active: true, display: true, width: "150" },
-      { index: 7, label: 'Tax', class: 'colAPBalance text-right', active: true, display: true, width: "150" },
-      { index: 8, label: 'Cost (inc)', class: 'colBalance text-right', active: true, display: true, width: "150" },
-      { index: 9, label: 'Tax Code', class: 'colStreet text-right', active: true, display: true, width: "150" },
-      { index: 10, label: 'Qty Ordered', class: 'colSubburb text-right', active: true, display: true, width: "150" },
-      { index: 11, label: 'Qty Received', class: 'colState text-right', active: true, display: true, width: "150" },
-      { index: 12, label: 'Qty BO', class: 'colPostcode text-right', active: true, display: true, width: "150" },
-      { index: 13, label: 'ETA Date', class: 'colCountry', active: true, display: true, width: "150" },
-      { index: 14, label: 'Order Date', class: 'colBankAccountName', active: true, display: true, width: "150" },
-      { index: 15, label: 'Received Date', class: 'colBankAccountBSB', active: true, display: true, width: "150" },
+      { index: 1, label: 'Supplier', class: 'colAccountID', active: true, display: true, width: "150" },
+      { index: 2, label: 'PO No', class: 'colAccountName', active: true, display: true, width: "150" },
+      { index: 3, label: 'Trans Type', class: 'colAccountNo', active: true, display: true, width: "150" },
+      { index: 4, label: 'Product ID', class: 'colAccounts', active: true, display: true, width: "150" },
+      { index: 5, label: 'Product Desc', class: 'colAmountEx', active: true, display: true, width: "150" },
+      { index: 6, label: 'Cost (ex)', class: 'colAmountInc', active: true, display: true, width: "150" },
+      { index: 7, label: 'Tax', class: 'colChequeNumber', active: true, display: true, width: "150" },
+      { index: 8, label: 'Cost (inc)', class: 'colDepartment', active: true, display: true, width: "150" },
+      { index: 9, label: 'Tax Code', class: 'colClassID', active: true, display: true, width: "150" },
+      { index: 10, label: 'Qty Ordered', class: 'colProductDescription', active: true, display: true, width: "150" },
+      { index: 11, label: 'Qty Received', class: 'colCreditEx', active: true, display: true, width: "150" },
+      { index: 12, label: 'Qty BO', class: 'colCreditInc', active: true, display: true, width: "150" },
+      { index: 13, label: 'ETA Date', class: 'colDate', active: true, display: true, width: "150" },
+      { index: 14, label: 'Order Date', class: 'colDebitsEx', active: true, display: true, width: "150" },
+      { index: 15, label: 'Received Date', class: 'colDebitsInc', active: true, display: true, width: "150" },
     ];
     templateObject.supplierdetailth.set(reset_data);
   }
@@ -74,7 +74,7 @@ Template.supplierdetail.onRendered(() => {
 
   templateObject.getSupplierDetailData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateTo);
+    templateObject.setDateAs(dateFrom);
     getVS1Data('SupplierDetailsReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -110,93 +110,122 @@ Template.supplierdetail.onRendered(() => {
       deleteFilter = false;
     };
 
-    for (let i = 0; i < data.tsupplierproduct.length; i++) {
+    for (let i = 0; i < data.tgeneralledgerreport.length; i++) {
       var dataList = [
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Supplier Name"] || "", "text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Purchase Order Number"] || "","text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Transaction Type"] || "","text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["ProductID"] || "","text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Product Description"] || "","text-primary"),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tsupplierproduct[i]["Line Cost (Ex)"] || ""),"text-success"),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tsupplierproduct[i]["Line Tax"] || ""),"text-success"),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tsupplierproduct[i]["Line Cost (Inc)"] || ""),"text-success"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Tax Code"] || "","text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Ordered"] || "","text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["Shipped"] || "","text-primary"),
-        GlobalFunctions.generateSpan(data.tsupplierproduct[i]["BackOrder"] || "","text-primary"),
-        GlobalFunctions.generateSpan(GlobalFunctions.formatDate(data.tsupplierproduct[i]["ETADate"] || ""),"text-primary"),
-        GlobalFunctions.generateSpan(GlobalFunctions.formatDate(data.tsupplierproduct[i]["Order Date"] || ""),"text-primary"),
-        GlobalFunctions.generateSpan(GlobalFunctions.formatDate(data.tsupplierproduct[i]["ReceivedDate"] || ""),"text-primary"),
+        data.tgeneralledgerreport[i].ACCOUNTID || "",
+        data.tgeneralledgerreport[i].ACCOUNTNAME || "",
+        data.tgeneralledgerreport[i].ACCOUNTNUMBER || "",
+        data.tgeneralledgerreport[i].ACCOUNTS || "",
+        data.tgeneralledgerreport[i].AMOUNTEX || "",
+        data.tgeneralledgerreport[i].AMOUNTINC || "",
+        data.tgeneralledgerreport[i].CHEQUENUMBER || "",
+        data.tgeneralledgerreport[i].CLASS || "",
+        data.tgeneralledgerreport[i].CLASSID || "",
+        data.tgeneralledgerreport[i]["CLIENT NAME"] || "",
+        data.tgeneralledgerreport[i].CREDITSEX || "",
+        data.tgeneralledgerreport[i].CREDITSINC || "",
+        data.tgeneralledgerreport[i].DATE || "",
+        data.tgeneralledgerreport[i].DEBITSEX || "",
+        data.tgeneralledgerreport[i].DEBITSINC || "",
+        data.tgeneralledgerreport[i].DETAILS || "",
+        data.tgeneralledgerreport[i].FIXEDASSETID || "",
+        data.tgeneralledgerreport[i].GLOBALREF || "",
+        data.tgeneralledgerreport[i].ID || "",
+        data.tgeneralledgerreport[i].MEMO || "",
+        data.tgeneralledgerreport[i].PAYMENTID || "",
+        data.tgeneralledgerreport[i].PREPAYMENTID || "",
+        data.tgeneralledgerreport[i].PRODUCTDESCRIPTION || "",
+        data.tgeneralledgerreport[i].PRODUCTNAME || "",
+        data.tgeneralledgerreport[i].PURCHASEORDERID || "",
+        data.tgeneralledgerreport[i].REFERENCENO || "",
+        data.tgeneralledgerreport[i].REPNAME || "",
+        data.tgeneralledgerreport[i].SALEID || "",
+        data.tgeneralledgerreport[i].TAXCODE || "",
+        data.tgeneralledgerreport[i].TAXRATE || "",
+        data.tgeneralledgerreport[i].TYPE || "",
+
       ];
       splashArrayBalanceSheetReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
     }
 
+
+    if (templateObject.transactiondatatablerecords.get()) {
+      setTimeout(function () {
+        MakeNegative();
+      }, 100);
+    }
+    //$('.fullScreenSpin').css('display','none');
+
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tblgeneralledger').DataTable({
         data: splashArrayBalanceSheetReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
         columnDefs: [
           {
             targets: 0,
-            className: "colSupplierID",
+            className: "colAccountID",
           },
           {
             targets: 1,
-            className: "colContactName"
+            className: "colAccountName"
           },
           {
             targets: 2,
-            className: "colPhone"
+            className: "colAccountNo"
           },
           {
             targets: 3,
-            className: "colMobile ",
+            className: "colAccounts hiddenColumn",
           },
           {
             targets: 4,
-            className: "colFaxNumber ",
+            className: "colAmountEx hiddenColumn",
           },
           {
             targets: 5,
-            className: "colARBalance text-right",
+            className: "colAmountInc hiddenColumn",
           },
           {
             targets: 6,
-            className: "colAPBalance text-right",
+            className: "colChequeNumber hiddenColumn",
           },
           {
             targets: 7,
-            className: "colBalance text-right",
+            className: "colDepartment",
           },
           {
             targets: 8,
-            className: "colStreet text-right",
+            className: "colClassID",
           },
           {
             targets: 9,
-            className: "colSubburb text-right",
+            className: "colProductDescription",
           },
           {
             targets: 10,
-            className: "colState text-right ",
+            className: "colCreditEx hiddenColumn",
           },
           {
             targets: 11,
-            className: "colPostcode text-right ",
+            className: "colCreditInc hiddenColumn",
           },
           {
             targets: 12,
-            className: "colCountry",
+            className: "colDate",
           },
           {
             targets: 13,
-            className: "colBankAccountName ",
+            className: "colDebitsEx hiddenColumn",
           },
           {
             targets: 14,
-            className: "colBankAccountBSB ",
+            className: "colDebitsInc hiddenColumn",
+          },
+          {
+            targets: 15,
+            className: "colDetails hiddenColumn",
           },
         ],
         select: true,
@@ -213,6 +242,7 @@ Template.supplierdetail.onRendered(() => {
 
       }).on('page', function () {
         setTimeout(function () {
+          MakeNegative();
         }, 100);
       }).on('column-reorder', function () {
 
@@ -230,6 +260,7 @@ Template.supplierdetail.onRendered(() => {
           $(".fullScreenSpin").css("display", "none");
         }
         setTimeout(function () {
+          MakeNegative();
         }, 100);
       });
       $(".fullScreenSpin").css("display", "none");
@@ -596,14 +627,12 @@ Template.supplierdetail.events({
     // var dateTo = new Date($("#dateTo").datepicker("getDate"));
     // await templateObject.setReportOptions(false, dateFrom, dateTo);
     // //LoadingOverlay.hide();
-    $(".fullScreenSpin").css("display", "inline-block");
-    clearData('SupplierDetailsReport').then(function(){
-      templateObject.getSupplierDetailData(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-        false
-      );
-    })
+
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    );
   },
   // "click #lastMonth": async function () {
   //   LoadingOverlay.show();
@@ -660,15 +689,12 @@ Template.supplierdetail.events({
     // localStorage.setItem('VS1SupplierDetail_Report', '');
 
     let templateObject = Template.instance();
-    $(".fullScreenSpin").css("display", "inline-block");
-
+    LoadingOverlay.show();
+    localStorage.setItem("VS1SupplierDetail_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set("Current Date");
     templateObject.setReportOptions(true);
-    clearData('SupplierDetailsReport').then(function(){
-      templateObject.getSupplierDetailData(null, null, true);
-    })
   },
 
   // CURRENCY MODULE //
@@ -737,14 +763,11 @@ Template.supplierdetail.events({
    * This is the new way to handle any modification on the date fields
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
-    $(".fullScreenSpin").css("display", "inline-block");
-    clearData('SupplierDetailsReport').then(function(){
-      templateObject.getSupplierDetailData(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-        false
-      );
-    })
+    templateObject.loadReport(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    );
     templateObject.dateAsAt.set($('#dateTo').val());
   },
   ...Datehandler.getDateRangeEvents()

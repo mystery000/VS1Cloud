@@ -59,9 +59,10 @@ Template.deductionSettings.onCreated(function() {
 });
 
 Template.deductionSettings.onRendered(function() {
-    $('#edtDeductionType').editableSelect('add', 'Nones');
-    $('#edtDeductionType').editableSelect('add', 'Workplace Giving');
-    $('#edtDeductionType').editableSelect('add', 'Union / Association Fees');
+    $('#edtDeductionType').editableSelect('add', function(item){
+        $(this).val(item.id);
+        $(this).text(item.name);
+    });
     const templateObject = Template.instance();
     var splashArrayDeductionList = new Array();
 

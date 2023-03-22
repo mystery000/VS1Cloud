@@ -44,7 +44,7 @@ Template.stockmovementreport.onRendered(() => {
     let reset_data = [];
     reset_data = [
       { index: 1, label: 'Product', class: 'colProductID', active: true, display: true, width: "200" },
-      { index: 2, label: 'Trans Date', class: 'colTrType', active: true, display: true, width: "150" },
+      { index: 2, label: 'Trans Date', class: 'colTrType', active: true, display: true, width: "100" },
       { index: 3, label: 'Trans Type', class: 'colTrNo', active: true, display: true, width: "100" },
       { index: 4, label: 'Trans No', class: 'colOpening', active: true, display: true, width: "100" },
       { index: 5, label: 'Opening Qty', class: 'colCurrent', active: true, display: true, width: "100" },
@@ -105,36 +105,24 @@ Template.stockmovementreport.onRendered(() => {
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
     false
   );
-  templateObject.displayReportData = async function (tableData) {
+  templateObject.displayReportData = async function (data) {
     var splashArrayReport = new Array();
     let deleteFilter = false;
-    let data = tableData;
-    function sortFunction(a, b) {
-      if(a.fields.Lines == undefined)  return 0;
-      else if(b.fields.Lines == undefined)  return 1;
-      else
-        return (a.fields.Lines[0].fields.ProductName < b.fields.Lines[0].fields.ProductName) ? -1 : 1;
-    }
-    data.tstockmovement.sort(sortFunction);
-    let productName = '';
+
     for (let i = 0; i < data.tstockmovement.length; i++) {
-      if(data.tstockmovement[i].fields.Lines == undefined)  continue;
-      if(productName != data.tstockmovement[i].fields.Lines[0].fields.ProductName) {
-        var dataList = [
-          GlobalFunctions.generateSpan(data.tstockmovement[i].fields.Lines[0].fields.ProductName, "table-cells text-bold"),
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-          "",
-        ];
-        splashArrayReport.push(dataList);
-        productName = data.tstockmovement[i].fields.Lines[0].fields.ProductName;
-      }
-      for (let j = 0; j < data.tstockmovement[i].fields.Lines.length; j++){
+      var dataList = [
+        GlobalFunctions.generateSpan(data.tstockmovement[i].fields.Lines[0].fields.ProductName, "table-cells text-bold"),
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+      ];
+      splashArrayReport.push(dataList);
+      for (let j = 0; j < 1; j++){
         let tmp = data.tstockmovement[i].fields.Lines[j].fields.Qty;
         dataList = [
           "",
@@ -161,7 +149,7 @@ Template.stockmovementreport.onRendered(() => {
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport1').DataTable({
+      $('#tableExport').DataTable({
         data: splashArrayReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -766,24 +754,21 @@ Template.stockmovementreport.events({
   //   await templateObject.setReportOptions(true);
   // },
   "click #ignoreDate": (e, templateObject) => {
-
-    clearData('TProductMovementList').then(function(){
-      templateObject.getReportData(
-          null,
-          null,
-          true
-      )
-    })
+    localStorage.setItem("VS1StockMovement_Report", "");
+    templateObject.getStockMovementReportData(
+      null,
+      null,
+      true
+    )
   },
   "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
-    clearData('TProductMovementList').then(function(){
-      templateObject.getReportData(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-          false
-      )
-    })
+    localStorage.setItem("VS1StockMovement_Report", "");
+    templateObject.getStockMovementReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    )
   },
   ...Datehandler.getDateRangeEvents(),
   // CURRENCY MODULE //

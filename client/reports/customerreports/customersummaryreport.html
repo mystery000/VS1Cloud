@@ -3,7 +3,63 @@
         <div class="table-responsive">
             <table class="table table-sm" id="tableExport" name="tableExport">
                 <thead>
+                <!-- <tr class="table-active customDoubleTableHeading">
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th style="min-width: 200px;">Address</th>
+                        <th>City</th>
+                        <th>ZIP</th>
+                        <th>State</th>
 
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Total</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Gross Profit</th>
+                        <th class="text-center text-center{{countActive currencyList}}" colspan="{{countActive currencyList}}">Margin</th>
+                    </tr> -->
+                <!--
+                    {{#if isOnlyDefaultActive equal "false" }}
+                        <tr class="table-active tblAvoid">
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+                            <th></th>
+
+                            {{#if currencyList}}
+                    {{#each c in currencyList }}
+                        {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                    {{/each}}
+                {{/if}}
+
+                    {{#if currencyList}}
+                        {{#each c in currencyList }}
+                            {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                        {{/each}}
+                    {{/if}}
+
+                    {{#if currencyList}}
+                        {{#each c in currencyList }}
+                            {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                        {{/each}}
+                    {{/if}}
+                    {{#if currencyList}}
+                        {{#each c in currencyList }}
+                            {{# if c.active}}
+                                        <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                                    {{/if}}
+                        {{/each}}
+                    {{/if}}
+
+
+
+                        </tr>
+                    {{/if}} -->
                 <tr class="table-active">
                     {{#if customersummaryreportth}}
                         {{#each c in customersummaryreportth }}
@@ -16,7 +72,21 @@
                 </tr>
                 </thead>
                 <tbody>
-
+                    {{#if transactiondatatablerecords}}
+                        {{#each items in transactiondatatablerecords}}
+                            <tr>
+                                {{#each item in items}}
+                                    <td class="{{item.indent}}">
+                                        <span class={{item.className}}>{{item.string}}</span>
+                                    </td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr class="odd" style="text-align: center;">
+                            <td valign="top" colspan="7" class="dataTables_empty text-left">No data available in table</td>
+                        </tr>
+                    {{/if}}
                 </tbody>
             </table>
         </div>

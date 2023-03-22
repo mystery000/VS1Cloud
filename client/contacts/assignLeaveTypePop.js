@@ -125,8 +125,22 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#edtTfnExemption').editableSelect().on('blur.editable-select', async function (e, li) {
             $("#edtTaxFileNumber").val("");
         });
-        $('#onTerminationUnusedBalance').editableSelect('add', 'Not Paid Out');
-        $('#onTerminationUnusedBalance').editableSelect('add', 'Paid Out');
+        $('#edtEmploymentBasis').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#edtResidencyStatus').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#leaveCalcMethodSelect').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
+        $('#onTerminationUnusedBalance').editableSelect('add', function(item){
+            $(this).val(item.id);
+            $(this).text(item.name);
+        });
         $('#onTerminationUnusedBalance').editableSelect().on('blur.editable-select', async function (e, li) {
             let onTerminationUnusedBalance = $('#onTerminationUnusedBalance').val();
             if( onTerminationUnusedBalance == '1' || onTerminationUnusedBalance == 'Paid Out'){
@@ -145,10 +159,7 @@ Template.assignLeaveTypePop.onCreated(function () {
             $(this).val(item.id);
             $(this).text(item.name);
         });
-        $('#leaveCalcMethodSelect').editableSelect('add', 'Fixed Amount Each Period');
-        $('#leaveCalcMethodSelect').editableSelect('add', 'Manually Recorded Rate');
-        $('#leaveCalcMethodSelect').editableSelect('add', 'No Calculation Required');
-        $('#leaveCalcMethodSelect').editableSelect('add', 'Based on Ordinary Earnings');
+        $('#leaveCalcMethodSelect').editableSelect();
         $('#leaveCalcMethodSelect').editableSelect().on('blur.editable-select', async function (e, li) {
             let leaveCalcMethod = e.target.value || '';
             switch(leaveCalcMethod){

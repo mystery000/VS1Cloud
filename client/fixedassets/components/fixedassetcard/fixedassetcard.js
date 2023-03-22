@@ -8,11 +8,11 @@ import './fixedassetcard.html';
 import { Template } from 'meteor/templating';
 
 let sideBarService = new SideBarService();
+let accountService = new AccountService();
 let fixedAssetService = new FixedAssetService();
 
 Template.fixedassetcard.onCreated(function () {
   const templateObject = Template.instance();
-  templateObject.currency = new ReactiveVar('$');
   templateObject.currentAssetID = new ReactiveVar(0);
   templateObject.currentAssetName = new ReactiveVar('');
   templateObject.currentAssetCode = new ReactiveVar('');
@@ -171,34 +171,41 @@ Template.fixedassetcard.onRendered(function () {
 
   let currentAssetID = parseInt(FlowRouter.current().queryParams.assetId || '0');
   templateObject.currentAssetID.set(currentAssetID);
+
   if (currentAssetID > 0) {
     getVS1Data("TFixedAssets").then(function (dataObject) {
       if (dataObject.length == 0) {
-        fixedAssetService.getTFixedAssetsList().then(function (data) {
-          findFixedAssetByID(data, currentAssetID);
+        fixedAssetService.getTFixedAssetByNameOrID(currentAssetID).then((data) => {
+          const assetData = data.tfixedassets;
+          if (assetData.length > 0) {
+            const assetInfo = assetData[0].fields;
+            initializeCard(assetInfo);
+          }
+          $(".fullScreenSpin").css("display", "none");
+        }).catch((err) => {
+          $(".fullScreenSpin").css("display", "none");
         });
-      }
-      else {
-        const workData = JSON.parse(dataObject[0].data);
-        findFixedAssetByID(workData, currentAssetID);
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == currentAssetID);
+        if (assetData.length > 0) {
+          const assetInfo = assetData[0].fields;
+          initializeCard(assetInfo);
+        }
       }
     }).catch(function (err) {
-      // fixedAssetService.getTFixedAssetsList().then(function (data) {
-      //   console.log('TFixedAssets InoDDb');
-      //   addVS1Data('TFixedAssets', JSON.stringify(data));
-      //   findFixedAssetByID(data, currentAsset);
-      // }).catch(function (err) {
-      //   $(".fullScreenSpin").css("display", "none");
-      // });
+      fixedAssetService.getTFixedAssetByNameOrID(currentAssetID).then((data) => {
+        const assetData = data.tfixedassets;
+        if (assetData.length > 0) {
+          const assetInfo = assetData[0].fields;
+          initializeCard(assetInfo);
+        }
+      }).catch((err) => {
+        $(".fullScreenSpin").css("display", "none");
+      });;
     });
-  }
 
-  function findFixedAssetByID(data, assetID) { 
-    const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == assetID);
-    if (assetData.length > 0) {
-      const assetInfo = assetData[0].fields;
-      initializeCard(assetInfo);
-    }
+
   }
 
   $(document).on("click", "#tblFixedAssetType tbody tr", function(e) {
@@ -341,7 +348,7 @@ Template.fixedassetcard.onRendered(function () {
     $('input#edtInsuranceByName').val(assetInfo.CUSTFLD7);
     templateObject.edtInsuranceById.set(assetInfo.InsuredBy);
 
-    let planList = assetInfo.fixedassetsdepreciationdetails, depPlanList = [];
+    const planList = assetInfo.fixedassetsdepreciationdetails1, depPlanList = [];
     for (let i = 0; i < planList.length; i++) {
       const info = planList[i].fields;
       const plan = {
@@ -353,21 +360,6 @@ Template.fixedassetcard.onRendered(function () {
       depPlanList.push(plan);
     }
     templateObject.deprecitationPlans.set(depPlanList);
-
-    planList = assetInfo.fixedassetsdepreciationdetails;
-    depPlanList = [];
-
-    for (i = 0; i < planList.length; i++) {
-      const info = planList[i].fields;
-      const plan = {
-        year: info.Year,
-        depreciation: info.Depreciation,
-        accDepreciation: info.TotalDepreciation,
-        bookValue: info.BookValue
-      };
-      depPlanList.push(plan);
-    }
-    templateObject.deprecitationPlans2.set(depPlanList);
   }
   function getDatePickerForm(dateStr) {
     const date = new Date(dateStr);
@@ -383,9 +375,7 @@ Template.fixedassetcard.onRendered(function () {
 Template.fixedassetcard.events({
   "click button.btnSave": function() {
     const templateObject = Template.instance();
-    const depPlans = templateObject.deprecitationPlans.get(),
-        depPlans2 = templateObject.deprecitationPlans.get(), 
-        planList = new Array(), planList2 = new Array();
+    const depPlans = templateObject.deprecitationPlans.get(), planList = new Array();
     for (let i = 0; i < depPlans.length; i++) {
       const plan = {
         type: 'TFixedAssetsDepreciationDetails1',
@@ -397,18 +387,6 @@ Template.fixedassetcard.events({
         }
       }
       planList.push(plan);
-    }
-    for (i = 0; i < depPlans2.length; i++) {
-      const plan = {
-        type: 'TFixedAssetsDepreciationDetails2',
-        fields: {
-          "Year": depPlans2[i].year.toString(),
-          "Depreciation": depPldepPlans2ans[i].depreciation,
-          "TotalDepreciation": depPlans2[i].accDepreciation,
-          "BookValue": depPlans2[i].bookValue
-        }
-      }
-      planList2.push(plan);
     }
     let newFixedAsset = {
       "type":"TFixedAssets",
@@ -443,8 +421,7 @@ Template.fixedassetcard.events({
         DepreciationOption2: templateObject.edtDepreciationType2.get(),
         FixedAssetCostAccountID: templateObject.edtCostAssetAccount.get(),
         FixedAssetCostAccountID2: templateObject.edtCostAssetAccount2.get(),
-        fixedassetsdepreciationdetails: planList,
-        fixedassetsdepreciationdetails2: planList2,
+        fixedassetsdepreciationdetails1: planList,
         CUSTFLD6: templateObject.editBankAccount.get().toString(),
         CUSTFLD8: templateObject.editBankAccount2.get().toString(),
         FixedAssetDepreciationAccountID: templateObject.edtDepreciationAssetAccount.get(),
@@ -589,7 +566,6 @@ Template.fixedassetcard.events({
 
     const enterAmountFlag = templateObject.chkEnterAmount2.get();
     const totalDepreciationVal = enterAmountFlag ? (salvage * businessPercent / 100) : accumulateDepVal;
-
     if (totalDepreciationVal == 0) {
       Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans2.set([]);
@@ -600,7 +576,6 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans2.set([]);
       return;
     }
-    console.log('depreciation2', totalDepreciationVal);
     if (!enterAmountFlag && yearEnding !== 0) {
       startYear = yearEnding - life + 1;
     }
@@ -712,9 +687,6 @@ Template.fixedassetcard.events({
 });
 
 Template.fixedassetcard.helpers({
-  currency: () => {
-    return Template.instance().currency.get();
-  },
   chkEnterAmount: () => {
     return Template.instance().chkEnterAmount.get();
   },
@@ -738,9 +710,6 @@ Template.fixedassetcard.helpers({
   },
   deprecitationPlans:() => {
     return Template.instance().deprecitationPlans.get();
-  },
-  deprecitationPlans2:() => {
-    return Template.instance().deprecitationPlans2.get();
   },
   assetID: () => {
     return Template.instance().currentAssetID.get();

@@ -79,7 +79,7 @@ Template.trialbalance.onRendered(() => {
 
   templateObject.getTrialBalanceData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateTo);
+    templateObject.setDateAs(dateFrom);
     getVS1Data('TTrialBalanceReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getTrialBalanceDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -200,7 +200,7 @@ Template.trialbalance.onRendered(() => {
     ]);
     templateObject.transactiondatatablerecords.set(trialBalanceReport);
     setTimeout(function () {
-      $('#trialbalance').DataTable({
+      $('#trialbalance1').DataTable({
         data: trialBalanceReport,
         searching: false,
         "bSort" : false,
@@ -1120,20 +1120,121 @@ Template.trialbalance.events({
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block')
     playPrintAudio();
-    setTimeout(function () {
-      $("a").attr("href", "/");
+    setTimeout(async function(){
+      let targetElement = document.getElementsByClassName('printReport')[0];
+      targetElement.style.width = "210mm";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "20px";
+      targetElement.style.height = "fit-content";
+      targetElement.style.fontSize = "13.33px";
+      targetElement.style.color = "#000000";
+      targetElement.style.overflowX = "visible";
+      let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
+      let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
+      for (let k = 0; k< targetTds.length; k++) {
+        $(targetTds[k]).attr('style', 'min-width: 0px !important')
+        $(targetTds[k]).attr('style', 'max-width: 130px !important')
+      }
+      for (let j = 0; j< targetThs.length; j++) {
+        $(targetThs[j]).attr('style', 'min-width: 0px !important')
+        $(targetThs[j]).attr('style', 'max-width: 130px !important')
+      }
+
+      let docTitle = "Trial Balance.pdf";
+
+
+      var opt = {
+        margin: 0,
+        filename: docTitle,
+        image: {
+          type: 'jpeg',
+          quality: 0.98
+        },
+        html2canvas: {
+          scale: 2
+        },
+        jsPDF: {
+          unit: 'in',
+          format: 'a4',
+          orientation: 'portrait'
+        }
+      };
+      let source = targetElement;
+
+      async function getAttachments () {
+        return new Promise(async(resolve, reject)=> {
+          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+            let pdfObject = "";
+            let base64data = dataObject.split(',')[1];
+            pdfObject = {
+              filename: docTitle,
+              content: base64data,
+              encoding: 'base64'
+            }
+            let attachments = [];
+            attachments.push(pdfObject);
+            resolve(attachments)
+          })
+        })
+      }
+
+      async function checkBasedOnType() {
+        return new Promise(async(resolve, reject)=>{
+          let values = [];
+          let basedOnTypeStorages = Object.keys(localStorage);
+          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split("_")[2];
+            return (
+                storage.includes("BasedOnType_")
+                // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
+            );
+          });
+          let i = basedOnTypeStorages.length;
+          if (i > 0) {
+            while (i--) {
+              values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+          }
+          for(let j = 0; j < values.length; j ++) {
+            let value = values[j]
+            let reportData = JSON.parse(value);
+            reportData.HostURL = $(location).attr("protocal")
+                ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
+                : "http://" + $(location).attr("hostname");
+            if (reportData.BasedOnType.includes("P")) {
+              if (reportData.FormID == 1) {
+                let formIds = reportData.FormIDs.split(",");
+                if (formIds.includes("140")) {
+                  reportData.FormID = 140;
+                  reportData.attachments = await getAttachments()
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              } else {
+                if (reportData.FormID == 140){
+                  reportData.attachments = await getAttachments();
+                  Meteor.call("sendNormalEmail", reportData);
+                  resolve()
+                }
+              }
+            }
+            if(j == values.length -1) {resolve()}
+          }
+        })
+      }
+
+      await checkBasedOnType();
+      $('.fullScreenSpin').css('display', 'none');
+      targetElement.style.width = "100%";
+      targetElement.style.backgroundColor = "#ffffff";
+      targetElement.style.padding = "0px";
+      targetElement.style.fontSize = "1rem";
       document.title = "Trial Balance Report";
       $(".printReport").print({
-        title: document.title + " | Trial  Balance Report | " + loggedCompany,
+        title: document.title + " | Trial Balance | " + loggedCompany,
         noPrintSelector: ".addSummaryEditor",
-        mediaPrint: false,
       });
-      setTimeout(function () {
-        $("a").attr("href", "#");
-      }, 100);
     }, delayTimeAfterSound);
-    $('.fullScreenSpin').css('display', 'none')
-
   },
   /*"click .btnSpreadSheetLink": function() {
     LoadingOverlay.show();
@@ -1347,16 +1448,12 @@ Template.trialbalance.events({
     // templateObject.dateAsAt.set("Current Date");
     // await templateObject.setReportOptions(true);
     // // $(".fullScreenSpin").css("display", "none");
-    $(".fullScreenSpin").css("display", "inline-block");
-    clearData('TTrialBalanceReport').then(function(){
 
-      templateObject.getTrialBalanceData(
-          null,
-          null,
-          true
-      );
-    })
-
+    templateObject.loadReport(
+        null,
+        null,
+        true
+    );
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -1556,14 +1653,11 @@ Template.trialbalance.events({
    * This is the new way to handle any modification on the date fields
    */
   "change #dateTo, change #dateFrom": (e, templateObject) => {
-    $(".fullScreenSpin").css("display", "inline-block");
-    clearData('TTrialBalanceReport').then(function(){
-      templateObject.getTrialBalanceData(
-          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-          false
-      );
-    })
+    templateObject.loadReport(
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+        false
+    );
   },
   ...Datehandler.getDateRangeEvents()
 });

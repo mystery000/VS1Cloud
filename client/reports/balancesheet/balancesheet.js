@@ -53,7 +53,7 @@ Template.balancesheetreport.onRendered(() => {
             // { index: 8, label: 'Total ~Assets &~Liabilities', class: 'colTotalAssets', active: true, display: true, width: "200" },
             // { index: 9, label: 'Total Current~Assets &~Liabilities', class: 'colTotalCurrentAssets', active: true, display: true, width: "300" },
             // { index: 10, label: 'TypeID', class: 'colTypeID', active: true, display: true, width: "85" },
-            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "370" },
+            { index: 1, label: '', class: 'colAccountTree', active: true, display: true, width: "400" },
             { index: 2, label: 'Sub Account Totals', class: 'colSubAccountTotals text-right', active: true, display: true, width: "" },
             { index: 3, label: 'Header Account Totals', class: 'colHeaderAccountTotals text-right', active: true, display: true, width: "" },
         ]
@@ -68,8 +68,8 @@ Template.balancesheetreport.onRendered(() => {
     templateObject.initDate = () => {
         Datehandler.initOneMonth();
     };
-    templateObject.setDateAs = (dateTo = null) => {
-        templateObject.dateAsAt.set((dateTo) ? moment(dateTo).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
+    templateObject.setDateAs = (dateFrom = null) => {
+        templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
     };
     templateObject.initDate();
 
@@ -80,7 +80,7 @@ Template.balancesheetreport.onRendered(() => {
     let currentMonth = moment(date).format("DD/MM/YYYY");
     templateObject.currentMonth.set(currentMonth);
 
-    templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateTo').val()));
+    templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
 
     templateObject.getBalanceSheetData = async function (dateAsOf, ignoreDate = false) {
         getVS1Data('BalanceSheetReport').then(function (dataObject) {
@@ -113,7 +113,7 @@ Template.balancesheetreport.onRendered(() => {
         });
     }
     templateObject.getBalanceSheetData(
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
         false
     );
     templateObject.displayBalanceSheetData = async function (data) {
@@ -191,7 +191,7 @@ Template.balancesheetreport.onRendered(() => {
         }
 
         setTimeout(function () {
-            $('#tblBalanceSheet').DataTable({
+            $('#tblBalanceSheet1').DataTable({
                 data: splashArrayBalanceSheetReport,
                 searching: false,
                 "bSort" : false,
@@ -336,7 +336,7 @@ Template.balancesheetreport.helpers({
 
 
         // Get the selected date
-        let dateTo = $("#dateTo").val();
+        let dateTo = $("#dateFrom").val();
         const day = dateTo.split("/")[0];
         const m = dateTo.split("/")[1];
         const y = dateTo.split("/")[2];
@@ -682,7 +682,7 @@ Template.balancesheetreport.events({
         let templateObject = Template.instance();
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
-        $("#dateTo").attr("readonly", true);
+        $("#dateFrom").attr("readonly", true);
         templateObject.getBalanceRefreshData(null, true);
     },
     "change .edtReportDates": (e) => {
@@ -690,7 +690,7 @@ Template.balancesheetreport.events({
         LoadingOverlay.show();
         localStorage.setItem("VS1BalanceSheet_Report", "");
         templateObject.getBalanceRefreshData(
-            GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+            GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
             false
         )
     },

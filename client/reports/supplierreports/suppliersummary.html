@@ -3,6 +3,62 @@
     <div class="table-responsive">
         <table class="table table-sm" id="tableExport" name="tableExport">
             <thead>
+                <!-- <tr class="table-active customDoubleTableHeading">
+                    <th>Supplier</th>
+                    <th>PO No</th>
+                    <th>Trans Type</th>
+                    <th>Product ID</th>
+                    <th>Product Desc</th>
+                    <th colspan="{{countActive currencyList}}" class="text-center">Cost (ex)</th>
+                    <th colspan="{{countActive currencyList}}" class="text-center">Tax</th>
+                    <th colspan="{{countActive currencyList}}" class="text-center">Cost (inc)</th>
+                    <th class="text-right">Tax Code</th>
+                    <th class="text-right">Qty Ordered</th>
+                    <th class="text-right">Qty Received</th>
+                    <th class="text-right">Qty BO</th>
+                    <th>ETA Date</th>
+                    <th>Order Date</th>
+                    <th>Received Date</th>
+                </tr>
+
+                {{#if isOnlyDefaultActive equal "false" }}
+                    <tr class="table-active tblAvoid customDoubleTableHeading">
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                    {{#if currencyList}}
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+
+                        {{#each c in currencyList }}
+                        {{# if c.active}}
+                            <th class="text-right" active="{{ c.active }}">{{ c.code }}</th>
+                        {{/if}}
+                        {{/each}}
+                    {{/if}}
+
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+
+                    </tr>
+                {{/if}} -->
                 <tr class="table-active">
                     {{#each c in suppliersummaryth}}
                     {{#if c.display}}

@@ -68,9 +68,7 @@ Template.leaveTypeSettings.onRendered(function() {
         // $('#edtPayPeriod').editableSelect('add','Weekly');
         // $('#edtPayPeriod').editableSelect('add','Monthly');
 
-        $('#edtLeaveType').editableSelect('add','Paid Leave');
-        $('#edtLeaveType').editableSelect('add','Unpaid Leave');
-        
+
         $("#edtFirstPayDate").datepicker({
             showOn: 'button',
             buttonText: 'Show Date',
@@ -376,10 +374,10 @@ Template.leaveTypeSettings.onRendered(function() {
                 $('#dropdownleaveID').val(dropDownID);
                 let searchName = e.target.value || '';
                 if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-                    $('#leaveTypeSettingsModal').modal('toggle');
+                    $('#leaveTypeSettingsModal').modal('show');
                 } else {
                     if (searchName.replace(/\s/g, '') == '') {
-                        $('#leaveTypeSettingsModal').modal('toggle');
+                        $('#leaveTypeSettingsModal').modal('show');
                         return false;
                     }
 

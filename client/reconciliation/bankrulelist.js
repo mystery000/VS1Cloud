@@ -438,7 +438,7 @@ Template.bankrulelist.onRendered(function() {
 
 Template.bankrulelist.events({
     'click #btnBankRule':function(event){
-        FlowRouter.go('/newbankrule');
+        window.open('/newbankrule','_self');
     },
     'click .chkDatatable' : function(event){
         const columns = $('#tblbankrulelist th');
