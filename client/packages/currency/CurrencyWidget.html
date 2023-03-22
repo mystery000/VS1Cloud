@@ -1,6 +1,6 @@
 <template name="CurrencyWidget">
     {{#if isCurrencyEnable}}
-
+    <div class="d-flex align-items-center col-12 col-md-12 col-lg-8 col-xl-4">
     {{#if onlyCurrencyField}}
     <style>
         .currency-module {
@@ -152,6 +152,7 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
         {{> CountryModal}}
+    </div>
     </div>
     {{/if}}
 </template>
