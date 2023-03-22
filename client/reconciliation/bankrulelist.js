@@ -47,7 +47,7 @@ Template.bankrulelist.onRendered(function() {
         var table = $(this);
         let bankName = table.find(".colBankName").text();
         if(bankName){
-            window.open('/newbankrule?preview=1&bankaccountid=1&bankaccountname=' + bankName,'_self');
+            FlowRouter.go('/newbankrule?preview=1&bankaccountid=1&bankaccountname=' + bankName,'_self');
         }
     });
 });

@@ -165,7 +165,6 @@ Template.newbankrule.onRendered(function () {
       let BankDescription = table.find(".colDescription").text();
       let BankID = $('#tblBankName tr').index(this);
       templateObject.bankDescription.set(BankDescription);
-      console.log(BankDescription);
       $('#bankNameModal').modal('hide');
       $('#bankAccountName').val(BankName);
       $('#bankAccountID').val(BankID);
@@ -205,41 +204,6 @@ Template.newbankrule.onRendered(function () {
         );
     }
   }
-
-  $(document).on("click", ".newbankrule #tblAccountListPop tbody tr", function (e) {
-    $(".colAccountName").removeClass("boldtablealertsborder");
-    $(".colAccount").removeClass("boldtablealertsborder");
-    const table = $(this);
-    let accountname = table.find(".colAccountName").text();
-    let accountId = table.find(".colAccountID").text();
-    $("#bankAccountListModal").modal("toggle");
-    $("#bankAccountName").val(accountname);
-    $("#bankAccountID").val(accountId);
-    $("#tblAccount_filter .form-control-sm").val("");
-    if (
-      FlowRouter.current().queryParams.preview &&
-      FlowRouter.current().queryParams.bankaccountname ===
-        $("#bankAccountName").val()
-    ) {
-      let tmp = localStorage.getItem("BankStatement");
-      if (tmp) templateObject.importData.set(JSON.parse(tmp));
-      else templateObject.importData.set([]);
-    } else {
-      templateObject.importData.set([]);
-    }
-    getVS1Data("VS1_BankRule")
-      .then(function (dataObject) {
-        if (dataObject.length) {
-          let data = JSON.parse(dataObject[0].data);
-          templateObject.bankRuleData.set(
-            data[accountname] ? data[accountname] : []
-          );
-        }
-      })
-      .catch(function (err) {
-        errorSaveCb(err);
-      });
-  });
 });
 
 Template.newbankrule.events({
@@ -299,7 +263,7 @@ Template.newbankrule.events({
     } else {
       let accountName = $("#bankAccountName").val();
       let bankID = $("#bankAccountID").val();
-      let bankDescription = bankNameList[bankID]['description'];
+      let bankDescription = document.getElementById('tblBankName').rows[bankID].cells[1].innerHTML;
       let today = new Date();
       let saveData = {
         bankname: accountName,
@@ -307,7 +271,6 @@ Template.newbankrule.events({
         bankRuleData: bankRuleData,
         date: GlobalFunctions.formatDate(today),
       };
-      console.log(saveData);
       getVS1Data("VS1_BankRule")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
