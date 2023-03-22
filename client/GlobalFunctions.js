@@ -91,7 +91,51 @@ export default class GlobalFunctions {
     return '-$' + this.covert2Comma(-number);
   }
   static generateSpan(string, className = "", indent = ""){
-    //return `&lt;span class='${className}'&gt;${string}&lt;/span&gt;`
-    return {string: string, className: className, indent: indent};
+    // return `&lt;span class='${className}'&gt;${string}&lt;/span&gt;`
+    if(indent)
+      return `<a class='${className}' href='${indent}'> ${string}</a>`
+    return `<span class='${className}'> ${string}</span>`
+    //return {string: string, className: className, indent: indent};
+  }
+  static redirectionType(item) {
+    if (item.type === 'PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else if (item.type === 'Invoice') {
+      return '/invoicecard?id=' + item.saleId;
+    } else if (item.type === 'Bill') {
+      return '/billcard?id=' + item.Id;
+    } else if (item.type === 'Cheque') {
+      return '/chequecard?id=' + item.Id;
+    } else if (item.type === 'Un-Invoiced PO') {
+      return '/purchaseordercard?id=' + item.Id;
+    } else if (item.type === 'Supplier Payment') {
+      return '/supplierpaymentcard?id=' + item.paymentId;
+    } else if (item.type === 'Customer Payment') {
+      return '/paymentcard?id=' + item.paymentId;
+    } else if (item.type === 'Refund') {
+      return 'refundcard?id=' + item.saleId;
+    } else if (item.type === 'Closing Date Summary') {
+      return '#noInfoFound';
+    } else if (item.type === 'Stock Transfer') {
+      return '#noInfoFound';
+    } else if (item.type === 'Stock Adjustment') {
+      return '/stockadjustmentcard?id=' + item.paymentId;
+    } else if (item.type === 'Fixed Asset Depreciation') {
+      return '#noInfoFound';
+    } else if (item.type === 'Cash Sale') {
+      return '#noInfoFound';
+    } else if (item.type === 'Journal Entry') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll Accrued Leave') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll Nett Wages') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll PAYG Tax') {
+      return '#noInfoFound';
+    } else if (item.type === 'Payroll Superannuation') {
+      return '#noInfoFound';
+    } else {
+      return '#noInfoFound';
+    }
   }
 }
