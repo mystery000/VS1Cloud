@@ -15,6 +15,8 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './internal_transaction_list_with_switchbox.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import CachedHttp from "../../lib/global/CachedHttp";
+import erpObject from "../../lib/global/erp-objects";
 
 let appointmentService = new AppointmentService();
 let sideBarService = new SideBarService();
@@ -52,6 +54,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     const tableHeaderList = [];
     let globalID;
 
+    templateObject.timeFormat = function(hours) {
+        var decimalTime = parseFloat(hours).toFixed(2);
+        decimalTime = decimalTime * 60 * 60;
+        var hours = Math.floor((decimalTime / (60 * 60)));
+        decimalTime = decimalTime - (hours * 60 * 60);
+        var minutes = Math.abs(decimalTime / 60);
+        decimalTime = decimalTime - (minutes * 60);
+        hours = ("0" + hours).slice(-2);
+        minutes = ("0" + Math.round(minutes)).slice(-2);
+        let time = hours + ":" + minutes;
+        return time;
+    }
+
     if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     };
@@ -67,7 +82,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             if ($(this).text() == "Full") $(this).addClass("text-fullyPaid");
             if ($(this).text() == "Part") $(this).addClass("text-partialPaid");
             if ($(this).text() == "Rec") $(this).addClass("text-reconciled");
-
+            if ($(this).text() == "Processed") $(this).addClass("text-completed");
         });
     };
 
@@ -292,6 +307,27 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
                 { index: 7, label: 'From BSB', class: 'colFromBsb', active: true, display: true, width: "100" },
                 { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "100" },
+            ];
+        } else if (currenttablename == "tblTimeSheet") {
+            reset_data = [
+                { index: 0, label: 'ID', class: 'colID', active: true, display: true, width: "100" },
+                { index: 1, label: 'Employee', class: 'colName', active: true, display: true, width: "100" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                { index: 3, label: 'Job', class: 'colJob', active: true, display: true, width: "150" },
+                { index: 4, label: 'Product', class: 'colRate', active: true, display: true, width: "150" },
+                { index: 5, label: 'HiddenHours', class: 'colRegHours hiddenColumn', active: false, display: true, width: "100" },
+                { index: 6, label: 'Clocked Hours', class: 'colClockHours', active: true, display: true, width: "100" },
+                { index: 6, label: 'Hours', class: 'colRegHoursOne', active: true, display: true, width: "100" },
+                { index: 7, label: 'Overtime', class: 'colOvertime', active: true, display: true, width: "100" },
+                { index: 8, label: 'Double', class: 'colDouble', active: true, display: true, width: "100" },
+                { index: 9, label: 'Additional', class: 'colAdditional', active: true, display: true, width: "100" },
+                { index: 10, label: 'Tips', class: 'colPaycheckTips', active: true, display: true, width: "100" },
+                { index: 11, label: 'Technical Notes', class: 'colNotes', active: true, display: true, width: "100" },
+                { index: 12, label: 'Break', class: 'colDescription', active: true, display: true, width: "100" },
+                { index: 13, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+                { index: 14, label: 'Invoiced', class: 'colInvoiced hiddenColumn', active: false, display: true, width: "100" },
+                { index: 15, label: 'Hourly Rate', class: 'colHourlyrate hiddenColumn', active: false, display: true, width: "100" },
+                { index: 16, label: 'View', class: 'colView', active: true, display: true, width: "100" },
             ];
         }
         templateObject.reset_data.set(reset_data);
@@ -2241,6 +2277,427 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getTimeSheetListData = async function(deleteFilter = false, datefrom="", dateto="") { //GET Data here from Web API or IndexDB
+        let dataTableList = [];
+        let fromDate = datefrom == "" ? moment().subtract(reportsloadMonths, 'month').format('DD/MM/YYYY') : datefrom;
+        let toDate = dateto == "" ? moment().format("DD/MM/YYYY") : dateto;
+        fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+fromDate.split("/")[0]+" 00:00:01");
+        toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+toDate.split("/")[0]+" 23:59:59");
+
+        getVS1Data('TTimeSheet').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
+                    return await sideBarService.getAllTimeSheetList();
+                }, {
+                    useIndexDb: true,
+                    useLocalStorage: false,
+                    fallBackToLocal: true,
+                    forceOverride: false,
+                    validate: cachedResponse => {
+                        return true;
+                    }
+                });
+                await addVS1Data('TTimeSheet', JSON.stringify(data.response));
+                data = data.response;
+                for (let i = 0; i < data.ttimesheet.length; i++) {
+                    let sort_date = data.ttimesheet[i].fields.TimeSheetDate == "" ? "1770-01-01" : data.ttimesheet[i].fields.TimeSheetDate;
+                    sort_date = new Date(sort_date);
+                    if (sort_date >= fromDate && sort_date <= toDate ) {
+                        if(!deleteFilter){
+                            if(data.ttimesheet[i].fields.Active == true){
+                                dataTableList.push(data.ttimesheet[i]);
+                            }
+                        }
+                        else{
+                            dataTableList.push(data.ttimesheet[i]);
+                        }
+                    }
+                }
+                templateObject.displayTimeSheetListData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let i = 0; i < data.ttimesheet.length; i++) {
+                    let sort_date = data.ttimesheet[i].fields.TimeSheetDate == "" ? "1770-01-01" : data.ttimesheet[i].fields.TimeSheetDate;
+                    sort_date = new Date(sort_date);
+                    if (sort_date >= fromDate && sort_date <= toDate ) {
+                        if(!deleteFilter){
+                            if(data.ttimesheet[i].fields.Active == true){
+                                dataTableList.push(data.ttimesheet[i]);
+                            }
+                        }
+                        else{
+                            dataTableList.push(data.ttimesheet[i]);
+                        }
+                    }
+                }
+                templateObject.displayTimeSheetListData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
+            }
+        }).catch(async function (err) {
+            let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
+                return await sideBarService.getAllTimeSheetList();
+            }, {
+                useIndexDb: true,
+                useLocalStorage: false,
+                fallBackToLocal: true,
+                forceOverride: false,
+                validate: cachedResponse => {
+                    return true;
+                }
+            });
+            await addVS1Data('TTimeSheet', JSON.stringify(data.response));
+            data = data.response;
+            for (let i = 0; i < data.ttimesheet.length; i++) {
+                let sort_date = data.ttimesheet[i].fields.TimeSheetDate == "" ? "1770-01-01" : data.ttimesheet[i].fields.TimeSheetDate;
+                sort_date = new Date(sort_date);
+                if (sort_date >= fromDate && sort_date <= toDate ) {
+                    if(!deleteFilter){
+                        if(data.ttimesheet[i].fields.Active == true){
+                            dataTableList.push(data.ttimesheet[i]);
+                        }
+                    }
+                    else{
+                        dataTableList.push(data.ttimesheet[i]);
+                    }
+                }
+            }
+            templateObject.displayTimeSheetListData(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"));
+        });
+    }
+
+    templateObject.displayTimeSheetListData = async function(data, deleteFilter, fromDate="", toDate="") {
+        var splashArrayTimeSheetList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+        let chkBox;
+        
+        for (let t = 0; t < data.length; t++) {
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data[t].fields.ID +
+                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data[t].fields.ID +
+                '"></label></div>'; //switchbox
+            let sortdate = data[t].fields.TimeSheetDate != '' ? moment(data[t].fields.TimeSheetDate).format("YYYY/MM/DD") : data[t].fields.TimeSheetDate;
+            let timesheetdate = data[t].fields.TimeSheetDate != '' ? moment(data[t].fields.TimeSheetDate).format("DD/MM/YYYY") : data[t].fields.TimeSheetDate;
+            let hoursFormatted = templateObject.timeFormat(data[t].fields.Hours) || '';
+            let description = '';
+            let lineEmpID = '';
+            if (data[t].fields.Logs) {
+                if (Array.isArray(data[t].fields.Logs)) {
+                    // It is array
+                    lineEmpID = data[t].fields.Logs[0].fields.EmployeeID || '';
+                    description = data[t].fields.Logs[data[t].fields.Logs.length - 1].fields.Description || '';
+                } else {
+                    lineEmpID = data[t].fields.Logs.fields.EmployeeID || '';
+                    description = data[t].fields.Logs.fields.Description || '';
+                }
+            }
+            let checkStatus = data[t].fields.Status || 'Unprocessed';
+            var dataTimeSheet = [
+                chkBox,
+                data[t].fields.ID || "",
+                data[t].fields.EmployeeName || "",
+                '<span style="display:none;">' + sortdate + '</span> ' + timesheetdate || '',
+                data[t].fields.Job || '',
+                data[t].fields.ServiceName || '',
+                data[t].fields.Hours || '',
+                '<input class="colRegHours highlightInput" type="number" value="' + data[t].fields.Hours + '"><span class="colRegHours" style="display: none;">' + data[t].fields.Hours + '</span>' || '',
+                '<input class="colRegHoursOne highlightInput" type="text" value="' + hoursFormatted + '" autocomplete="off">' || '',
+                '<input class="colOvertime highlightInput" type="number" value="0"><span class="colOvertime" style="display: none;">0</span>' || '',
+                '<input class="colDouble highlightInput" type="number" value="0"><span class="colDouble" style="display: none;">0</span>' || '',
+                '<input class="colAdditional highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colAdditional" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                '<input class="colPaycheckTips highlightInput cashamount" type="text" value="' + Currency + '0.00' + '"><span class="colPaycheckTips" style="display: none;">' + Currency + '0.00' + '</span>' || '',
+                data[t].fields.Notes || '',
+                description || '',
+                checkStatus || '',
+                "",
+                data[t].fields.HourlyRate || '',
+                '<a href="/timesheettimelog?id=' + data[t].fields.ID + '" class="btn btn-sm btn-success btnTimesheetListOne" style="width: 36px;" id="" autocomplete="off"><i class="far fa-clock"></i></a>' || ''
+            ];
+
+            if(!deleteFilter){
+                if(data[t].fields.Active == true){
+                    splashArrayTimeSheetList.push(dataTimeSheet);
+                }
+            }
+            else{
+                splashArrayTimeSheetList.push(dataTimeSheet);
+            }
+        }
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        //$('.fullScreenSpin').css('display','none');
+
+        setTimeout(async function() {
+            //$('#'+currenttablename).removeClass('hiddenColumn');
+            $('#' + currenttablename).DataTable({
+                data: templateObject.transactiondatatablerecords.get(),
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-7'f><'col-sm-12 col-md-5 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: "colChkBox pointer",
+                        orderable: false,
+                        // width: "50px",
+                    },
+                    {
+                        className: "colID",
+                        targets: 1,
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
+                    },
+                    {
+                        className: "colName",
+                        targets: 2,
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[2]);
+                            $(td).closest("tr").addClass("dnd-moved");
+                        }
+                    },
+                    {
+                        className: "colDate",
+                        targets: 3,
+                    },
+                    {
+                        className: "colJob",
+                        targets: 4,
+                    },
+                    {
+                        className: "colProduct",
+                        targets: 5,
+                    },
+                    {
+                        className: "colRegHours hiddenColumn",
+                        targets: 6,
+                    },
+                    {
+                        className: "colClockHours",
+                        targets: 7,
+                    },
+                    {
+                        className: "colRegHoursOne",
+                        targets: 8,
+                    },
+                    {
+                        className: "colOvertime",
+                        targets: 9,
+                    },
+                    {
+                        className: "colDouble",
+                        targets: 10,
+                    },
+                    {
+                        className: "colAdditional",
+                        targets: 11,
+                    },
+                    {
+                        className: "colPaycheckTips",
+                        targets: 12,
+                    },
+                    {
+                        className: "colNotes",
+                        targets: 13,
+                    },
+                    {
+                        className: "colDescription",
+                        targets: 14,
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 15,
+                    },
+                    {
+                        className: "colInvoiced hiddenColumn",
+                        targets: 16,
+                    },
+                    {
+                        className: "colHourlyrate hiddenColumn",
+                        targets: 17,
+                    },
+                    {
+                        className: "colView",
+                        targets: 18,
+                    },
+                ],
+                // buttons: [
+                //     {
+                //         extend: 'csvHtml5',
+                //         text: '',
+                //         download: 'open',
+                //         className: "btntabletocsv hiddenColumn",
+                //         filename: "Products List",
+                //         orientation:'portrait',
+                //         exportOptions: {
+                //             columns: ':visible'
+                //         }
+                //     },{
+                //         extend: 'print',
+                //         download: 'open',
+                //         className: "btntabletopdf hiddenColumn",
+                //         text: '',
+                //         title: 'Lead Status Settings',
+                //         filename: "Products List",
+                //         exportOptions: {
+                //             columns: ':visible',
+                //             stripHtml: false
+                //         }
+                //     },
+                //     {
+                //         extend: 'excelHtml5',
+                //         title: '',
+                //         download: 'open',
+                //         className: "btntabletoexcel hiddenColumn",
+                //         filename: "Products List",
+                //         orientation:'portrait',
+                //         exportOptions: {
+                //             columns: ':visible'
+                //         }
+                //
+                //     }
+                // ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                // "order": [[1, "asc"]],
+                order: false,
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        //var splashArrayCustomerListDupp = new Array();
+                        let dataLenght = oSettings._iDisplayLength;
+                        let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                        // sideBarService.getDepartmentDataList(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+                        //     for (let j = 0; j < dataObjectnew.tdeptclasslist.length; j++) {
+                        //         let deptFName = '';
+                        //         let linestatus = '';
+                        //         let chkBox;
+                        //         if (dataObjectnew.tdeptclasslist[j].Active == true) {
+                        //             linestatus = "";
+                        //         } else if (dataObjectnew.tdeptclasslist[j].Active == false) {
+                        //             linestatus = "In-Active";
+                        //         };
+
+                        //         chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + dataObjectnew.tdeptclasslist[j].ClassID +
+                        //             '"><label class="custom-control-label chkBox pointer" for="formCheck-' + dataObjectnew.tdeptclasslist[j].ClassID +
+                        //             '"></label></div>'; //switchbox
+
+                        //         var dataListDupp = [
+                        //             chkBox,
+                        //             dataObjectnew.tdeptclasslist[j].ID || "",
+                        //             dataObjectnew.tdeptclasslist[j].ClassName || "",
+                        //             dataObjectnew.tdeptclasslist[j].Description || "",
+                        //             dataObjectnew.tdeptclasslist[j].ClassGroup || "",
+                        //             dataObjectnew.tdeptclasslist[j].ClassName,
+                        //             dataObjectnew.tdeptclasslist[j].Level1 || "",
+                        //             dataObjectnew.tdeptclasslist[j].SiteCode || "",
+                        //             linestatus
+                        //         ];
+
+                        //         splashArrayDepartmentsList.push(dataListDupp);
+                        //     }
+                        //     let uniqueChars = [...new Set(splashArrayDepartmentsList)];
+                        //     templateObject.transactiondatatablerecords.set(uniqueChars);
+                        //     var datatable = $('#' + currenttablename).DataTable();
+                        //     datatable.clear();
+                        //     datatable.rows.add(uniqueChars);
+                        //     datatable.draw(false);
+                        //     setTimeout(function() {
+                        //         $('#' + currenttablename).dataTable().fnPageChange('last');
+                        //     }, 400);
+
+                        //     checkBoxClickByName();
+                        //     $('.fullScreenSpin').css('display', 'none');
+                        // }).catch(function(err) {
+                        //     $('.fullScreenSpin').css('display', 'none');
+                        // });
+
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: {
+                    search: "",
+                    searchPlaceholder: "Search List..."
+                },
+                "fnInitComplete": function(oSettings) {
+                    if (deleteFilter == true) {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    
+                    $(".colDateFilter").empty();
+                    $("#dateFrom").val(fromDate);
+                    $("#dateTo").val(toDate);
+                    checkBoxClickByName();
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+
+        }, 0);
+
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
 
     //Check URL to make right call.
     if (currenttablename == "tblInventoryCheckbox") {
@@ -2259,6 +2716,12 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         templateObject.getLotNumbersData();
     } else if (currenttablename == "tblEftExportCheckbox") {
         // templateObject.getEftExportData();
+    } else if (currenttablename == "tblTimeSheet") {
+        $("#dateFrom").val(moment().subtract(reportsloadMonths, 'month').format('DD/MM/YYYY'));
+        $("#dateTo").val(moment().format('DD/MM/YYYY'));
+        const datefrom = $("#dateFrom").val();
+        const dateto = $("#dateTo").val();
+        templateObject.getTimeSheetListData(false, datefrom, dateto);
     }
     tableResize();
 
@@ -2444,9 +2907,14 @@ Template.internal_transaction_list_with_switchbox.events({
             templateObject.getDepartmentsData(true);
         } else if (currenttablename == "tblTransactionTypeCheckbox") {
             templateObject.getTransactionTypeData(true);
-        } else if (currentTablename == "tblEftExportCheckbox") {
+        } else if (currenttablename == "tblEftExportCheckbox") {
             await clearData('TABADetailRecord');
             templateObject.getEftExportData(true);
+        } else if (currenttablename == "tblTimeSheet") {
+            await clearData('TTimeSheet');
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getTimeSheetListData(true, datefrom, dateto);
         }
 
     },
@@ -2473,11 +2941,15 @@ Template.internal_transaction_list_with_switchbox.events({
             templateObject.getDepartmentsData(false);
         } else if (currenttablename == "tblTransactionTypeCheckbox") {
             templateObject.getTransactionTypeData(false);
-        } else if (currentTablename == "tblEftExportCheckbox") {
+        } else if (currenttablename == "tblEftExportCheckbox") {
             await clearData('TABADetailRecord');
             templateObject.getEftExportData(false);
+        } else if (currenttablename == "tblTimeSheet") {
+            await clearData('TTimeSheet');
+            const datefrom = $("#dateFrom").val();
+            const dateto = $("#dateTo").val();
+            templateObject.getTimeSheetListData(false, datefrom, dateto);
         }
-
     },
     'change .custom-range': async function(event) {
         const tableHandler = new TableHandler();
