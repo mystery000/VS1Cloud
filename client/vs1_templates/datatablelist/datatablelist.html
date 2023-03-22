@@ -207,11 +207,12 @@
 
             .dtTemplate th{
               overflow:hidden;
+              text-overflow: ellipsis;
               white-space:nowrap;
             }
 
         </style>
-        <table id="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tablename}}">
+        <table id="{{tablename}}" name="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tablename}}">
             <thead>
                 <!-- <tr class="dnd-moved">
                     {{#each displayfield in displayfields}}
