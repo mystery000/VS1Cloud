@@ -97,13 +97,13 @@ Template.fixedAssetListTable.events({
     fixedAssetService.getTFixedAssetsList().then(function (data) {
       addVS1Data("TFixedAssets", JSON.stringify(data))
         .then(function (datareturn) {
-          window.open("/fixedassetlist", "_self");
+          Meteor._reload.reload();
         })
         .catch(function (err) {
-          window.open("/fixedassetlist", "_self");
+          Meteor._reload.reload();
         });
     }).catch(function (err) {
-      window.open("/fixedassetlist", "_self");
+      Meteor._reload.reload();
     });
   },
 

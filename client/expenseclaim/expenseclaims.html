@@ -16,7 +16,35 @@
                     </div>
                 </div> -->
                 <div>        <div class="card-body p-5 rounded">
-                  {{> non_transactional_list tablename="tblAccountOverview"}}
+          <div class="table-responsive">
+            <table id="tblAccountOverview" style="width:100%" class="table table-striped table-bordered tblAccountOverview">
+              <thead>
+                <tr class="dnd-moved">
+                  <th>Receipt</th>
+                  <th>Receipt From</th>
+                  <th>Receipt Date</th>
+                  <th>Date Entered</th>
+                  <th>Items</th>
+                  <th>Status</th>
+                  <th>Amount</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="dnd-moved">
+                  <td contenteditable="false">Tiger Nixon</td>
+                  <td contenteditable="false">System Architect</td>
+                  <td contenteditable="false" class="edtQty">Edinburgh</td>
+                  <td contenteditable="false">61</td>
+                  <td contenteditable="false">2011/04/25</td>
+                  <td contenteditable="false"></td>
+                  <td contenteditable="false"></td>
+                  <td><span class="table-remove btnRemove"><button type="button"
+                  class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
 
 
