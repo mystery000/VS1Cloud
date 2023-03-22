@@ -25,7 +25,7 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.flash';
 import 'datatables.net-buttons/js/buttons.print';
 import 'jszip';
-
+import '../../lib/global/colResizable.js';
 // let _jsZip = jszip;
 
 
@@ -274,7 +274,7 @@ Template.datatablelist.onRendered(async function () {
                 //     } else if(params[i] == 'limitCount') {
                 //         params[i] = initialReportLoad
                 //     } else if(params[i] == 'deleteFilter') {
-                //         params[i] == deleteFilter
+                //         params[i] = deleteFilter
                 //     }
                 // }
                 getVS1Data(indexDBName).then(function (dataObject) {
@@ -329,7 +329,7 @@ Template.datatablelist.onRendered(async function () {
                         } else if (params[i] == 'limitCount') {
                             params[i] = initialReportLoad
                         } else if (params[i] == 'deleteFilter') {
-                            params[i] == deleteFilter
+                            params[i] = deleteFilter
                         }
                     }
                     templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
@@ -443,7 +443,7 @@ Template.datatablelist.onRendered(async function () {
                 // aoColumns:acolDef,
                 //columns: acolDef,
                 columnDefs: colDef,
-                deferRender: true,
+                // deferRender: true,
                 buttons: [{
                     extend: 'csvHtml5',
                     text: '',
@@ -517,7 +517,7 @@ Template.datatablelist.onRendered(async function () {
                 ],
 
                 // autoWidth: false,
-                fixedColumns: true,
+                // fixedColumns: true,
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -525,7 +525,7 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: true,
+                responsive: false,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 // "autoWidth": false,
                 action: function () {
@@ -571,7 +571,7 @@ Template.datatablelist.onRendered(async function () {
                             } else if (params[i] == 'limitCount') {
                                 params[i] = initialDatatableLoad
                             } else if (params[i] == 'deleteFilter') {
-                                params[i] == deleteFilter
+                                params[i] = deleteFilter
                             }
                         }
                         let that = templateObject.data.service;
