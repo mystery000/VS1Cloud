@@ -2198,26 +2198,6 @@ Template.journalentrycard.helpers({
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
-    test: function(id, value){
-
-        setTimeout(() => {
-            let obj = $("#select-department-" + id);
-
-            obj.editableSelect();
-
-            $(".select-department").editableSelect()
-                .on('click.editable-select', function(e, li) {
-                    var $earch = $(this);
-                    var offset = $earch.offset();
-                    var deptDataName = e.target.value || '';
-                    $('#edtDepartmentID').val('');
-
-                    $("#selected-department").val(e.target.id);
-
-                    $('#departmentModal').modal('toggle');
-                });
-        }, 1000);
-    },
     onloadedLineCustomerJob: function(){
 
         setTimeout(() => {
@@ -2430,7 +2410,7 @@ Template.journalentrycard.helpers({
 });
 
 Template.journalentrycard.events({
-    'click #tblDepartmentList11 tbody tr': function(e){
+    'click #tblDepartmentList_frmj tbody tr': function(e){
         let val = $(e.target.parentElement).find(".colDeptClassName").text();
         let selectedId = $("#selected-department").val();
 

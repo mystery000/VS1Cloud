@@ -571,6 +571,10 @@ import './vs1_templates/title_list_pop/title_list_pop.js';
 import './expenseclaim/expenseclaims.html';
 /* Stefan */
 
+/* Damien */
+import './vs1_templates/transaction_temp/transaction_frm_journal.js';
+/* Damien */
+
 /* Arthlo */
 import './js/Api/Model/PayrollSettingsOvertimes.js';
 import './vs1_templates/transaction_temp/transaction_line.js';
