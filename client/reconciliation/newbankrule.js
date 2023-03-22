@@ -8,11 +8,10 @@ import LoadingOverlay from "../LoadingOverlay";
 import { Template } from "meteor/templating";
 import "./newbankrule.html";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
-
+import Datehandler from "../DateHandler.js"
+import GlobalFunctions from "../GlobalFunctions.js";
 let accountService = new AccountService();
-
 const successSaveCb = () => {
-  // LoadingOverlay.hide();
   playSaveAudio();
   swal({
     title: "Bank Rule Successfully Saved",
@@ -27,10 +26,10 @@ const successSaveCb = () => {
     localStorage.removeItem("enteredURL");
     return;
   }
+  FlowRouter.go('/bankrulelist');
 };
 
 const errorSaveCb = (err) => {
-  // LoadingOverlay.hide();
   swal("Something went wrong", "", "error");
 };
 
@@ -132,6 +131,7 @@ Template.newbankrule.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.bankRuleData = new ReactiveVar([]);
   templateObject.bankNames = new ReactiveVar([]);
+  templateObject.bankDescription = new ReactiveVar();
   templateObject.importData = new ReactiveVar([]);
 });
 
@@ -143,42 +143,32 @@ Template.newbankrule.onRendered(function () {
   $("#bankAccountName")
     .editableSelect()
     .on("click.editable-select", function (e, li) {
-      const $each = $(this);
-      const offset = $each.offset();
-      let accountDataName = e.target.value || "";
-      if (e.pageX > offset.left + $each.width() - 8) {
-        // X button 16px wide?
-        openBankAccountListModal();
+      var $earch = $(this);
+      var offset = $earch.offset();
+      var bankName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#bankNameModal").modal("show");
+        $(".fullScreenSpin").css("display", "none");
+
       } else {
-        if (accountDataName.replace(/\s/g, "") != "") {
-          getVS1Data("TAccountVS1")
-            .then(function (dataObject) {
-              if (dataObject.length == 0) {
-                setOneAccountByName(accountDataName);
-              } else {
-                let data = JSON.parse(dataObject[0].data);
-                let added = false;
-                for (let a = 0; a < data.taccountvs1.length; a++) {
-                  if (
-                    data.taccountvs1[a].fields.AccountName == accountDataName
-                  ) {
-                    added = true;
-                    setBankAccountData(data, a);
-                  }
-                }
-                if (!added) {
-                  setOneAccountByName(accountDataName);
-                }
-              }
-            })
-            .catch(function (err) {
-              setOneAccountByName(accountDataName);
-            });
-          $("#addAccountModal").modal("toggle");
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#bankNameModal").modal("show");
         } else {
-          openBankAccountListModal();
+          $("#bankNameModal").modal("show");
         }
       }
+    });
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".colBankName").text();
+      let BankDescription = table.find(".colDescription").text();
+      let BankID = $('#tblBankName tr').index(this);
+      templateObject.bankDescription.set(BankDescription);
+      console.log(BankDescription);
+      $('#bankNameModal').modal('hide');
+      $('#bankAccountName').val(BankName);
+      $('#bankAccountID').val(BankID);
     });
 
   if (FlowRouter.current().queryParams.bankaccountname) {
@@ -190,8 +180,9 @@ Template.newbankrule.onRendered(function () {
       .then(function (dataObject) {
         if (dataObject.length) {
           let data = JSON.parse(dataObject[0].data);
-          if (data[accountname])
-            return templateObject.bankRuleData.set(data[accountname]);
+          for(let i = 0 ; i < data.vs1_bankrule.length; i ++)
+            if(data.vs1_bankrule.bankname == accountname)
+              return templateObject.bankRuleData.set(data.vs1_bankrule[i].bankname);
         }
       })
       .catch(function (err) {
@@ -300,22 +291,27 @@ Template.newbankrule.events({
   },
 
   "click .btnSave": function (event) {
-    let tmp = Template.instance().bankRuleData.get();
-    if (tmp.length === 0) {
+    let bankRuleData = Template.instance().bankRuleData.get();
+    if (bankRuleData.length === 0) {
       swal("Please add columns", "", "error");
     } else if ($("#bankAccountName").val() === "") {
       swal("Please select bank account", "", "error");
     } else {
-      // LoadingOverlay.show();
-      let accountId = $("#bankAccountID").val();
-      let accountname = $("#bankAccountName").val();
+      let accountName = $("#bankAccountName").val();
+      let bankID = $("#bankAccountID").val();
+      let bankDescription = bankNameList[bankID]['description'];
+      let today = new Date();
       let saveData = {
-        [accountname]: Template.instance().bankRuleData.get(),
+        bankname: accountName,
+        description: bankDescription,
+        bankRuleData: bankRuleData,
+        date: GlobalFunctions.formatDate(today),
       };
+      console.log(saveData);
       getVS1Data("VS1_BankRule")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
-            addVS1Data("VS1_BankRule", JSON.stringify(saveData))
+            addVS1Data("VS1_BankRule", JSON.stringify({vs1_bankrule: [saveData]}))
               .then(function (datareturn) {
                 successSaveCb();
               })
@@ -324,7 +320,9 @@ Template.newbankrule.events({
               });
           } else {
             let data = JSON.parse(dataObject[0].data);
-            data[accountname] = saveData[accountname];
+            if(data.vs1_bankrule.length == undefined)
+              data = {vs1_bankrule: [data]};
+            data.vs1_bankrule.push(saveData);
             addVS1Data("VS1_BankRule", JSON.stringify(data))
               .then(function (datareturn) {
                 successSaveCb();
