@@ -92,6 +92,10 @@ Template.currencydropdown.helpers({
   currency: () => {
     return CountryAbbr;
   },
-  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
-
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
+  checkLabel : () => {
+    if(FlowRouter.current().path.includes("customerscard")) return 'Foreign Currency';
+    else if(FlowRouter.current().path.includes("supplierscard")) return 'Foreign Currency';
+    return 'Currency';
+  }
 });
