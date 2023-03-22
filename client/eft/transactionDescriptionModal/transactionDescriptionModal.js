@@ -1,8 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
-import { Template } from 'meteor/templating';
-import './transactionDescriptionModal.html'
-import {BankNameService} from "../../lib/global/bank-names";
-import {SideBarService} from "../../js/sidebar-service";
+import { Template } from "meteor/templating";
+import "./transactionDescriptionModal.html";
+import { SideBarService } from "../../js/sidebar-service";
 
 let sideBarService = new SideBarService();
 Template.transactionDescriptionModal.onCreated(function () {
@@ -11,17 +10,28 @@ Template.transactionDescriptionModal.onCreated(function () {
 
   templateObject.tableheaderrecords = new ReactiveVar([]);
 
-  templateObject.getDataTableList = function(data) {
-    let dataList = [
-      data[0],
-      data[1]
-    ];
+  templateObject.getDataTableList = function (data) {
+    let dataList = [data[0], data[1]];
     return dataList;
-  }
+  };
 
   let headerStructure = [
-    {index: 0, label: "ID", class: "colID", width: "30", active: true, display: true},
-    {index: 1, label: "Transaction Description", class: "colTransactionDescription", width: "300", active: true, display: true},
+    {
+      index: 0,
+      label: "ID",
+      class: "colID",
+      width: "30",
+      active: true,
+      display: true,
+    },
+    {
+      index: 1,
+      label: "Transaction Description",
+      class: "colTransactionDescription",
+      width: "300",
+      active: true,
+      display: true,
+    },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -29,7 +39,12 @@ Template.transactionDescriptionModal.onCreated(function () {
 Template.transactionDescriptionModal.onRendered(function () {
   let templateObject = Template.instance();
 
-  let splashArrayTransactionDescriptionList = [['', 'Payroll'], ['', 'Supplier'], ['', 'Insurance'], ['', 'Accounting']]
+  let splashArrayTransactionDescriptionList = [
+    ["", "Payroll"],
+    ["", "Supplier"],
+    ["", "Insurance"],
+    ["", "Accounting"],
+  ];
   // $('#tblTransactionDescription').dataTable({
   //   data: splashArrayTransactionDescriptionList,
   //   "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -53,52 +68,47 @@ Template.transactionDescriptionModal.onRendered(function () {
   //     $("<button class='btn btn-primary btnRefreshTransactionDescription' type='button' id='btnRefreshTransactionDescription' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTransactionDescription_filter");
   //   }
   // });
-
 });
 
-Template.transactionDescriptionModal.events({
-
-});
+Template.transactionDescriptionModal.events({});
 
 Template.transactionDescriptionModal.helpers({
-
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
 
-  apiFunction:function() {
+  apiFunction: function () {
     let sideBarService = new SideBarService();
     return sideBarService.getTransactionDescription;
   },
 
-  searchAPI: function() {
+  searchAPI: function () {
     let sideBarService = new SideBarService();
     return sideBarService.getTransactionDescription;
   },
 
-  service: ()=>{
+  service: () => {
     let sideBarService = new SideBarService();
     return sideBarService;
-
   },
 
   datahandler: function () {
     let templateObject = Template.instance();
-    return function(data) {
-      let dataReturn =  templateObject.getDataTableList(data)
-      return dataReturn
-    }
+    return function (data) {
+      let dataReturn = templateObject.getDataTableList(data);
+      return dataReturn;
+    };
   },
 
-  exDataHandler: function() {
+  exDataHandler: function () {
     let templateObject = Template.instance();
-    return function(data) {
-      let dataReturn =  templateObject.getDataTableList(data)
-      return dataReturn
-    }
+    return function (data) {
+      let dataReturn = templateObject.getDataTableList(data);
+      return dataReturn;
+    };
   },
 
-  apiParams: function() {
+  apiParams: function () {
     return [];
   },
 });

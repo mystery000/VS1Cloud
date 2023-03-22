@@ -1838,6 +1838,16 @@ authenticatedRoutes.route('/newbankrule', {
     }
 });
 
+authenticatedRoutes.route('/newstatementrule', {
+    name: 'newstatementrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newstatementrule'
+        });
+    }
+});
+
+
 authenticatedRoutes.route('/bankrulelist', {
     name: 'bankrulelist',
     action() {

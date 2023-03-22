@@ -1,352 +1,366 @@
-import { ReactiveVar } from 'meteor/reactive-var';
-import { Random } from 'meteor/random';
-import { AccountService } from '../accounts/account-service.js';
-import { EftService } from './eft-service';
-import { Template } from 'meteor/templating';
-import './eft.html';
+import { ReactiveVar } from "meteor/reactive-var";
+import { Random } from "meteor/random";
+import { AccountService } from "../accounts/account-service.js";
+import { EftService } from "./eft-service";
+import { Template } from "meteor/templating";
+import "./transactionCodeModal/transactionCodeModal.html";
+import "./eft.html";
 
 let accountService = new AccountService();
 let eftService = new EftService();
-let selectLineId
+let selectLineId;
 
 Template.eft_export.onCreated(function () {
-    let templateObject = Template.instance();
-    templateObject.eftOptionsList = new ReactiveVar([]);    
-    templateObject.transactionDescriptions = new ReactiveVar([]);
-    templateObject.eftRowId = new ReactiveVar(null);
-    templateObject.tabadescriptiverecordList = new ReactiveVar([]);
-    templateObject.tabadetailrecordList = new ReactiveVar([]);
+  let templateObject = Template.instance();
+  templateObject.eftOptionsList = new ReactiveVar([]);
+  templateObject.transactionDescriptions = new ReactiveVar([]);
+  templateObject.eftRowId = new ReactiveVar(null);
+  templateObject.tabadescriptiverecordList = new ReactiveVar([]);
+  templateObject.tabadetailrecordList = new ReactiveVar([]);
 });
 
 Template.eft_export.onRendered(function () {
-    let templateObject = Template.instance();
-    // tempcode
-    templateObject.eftRowId.set(Random.id());
+  let templateObject = Template.instance();
+  // tempcode
+  templateObject.eftRowId.set(Random.id());
 
-    templateObject.transactionDescriptions.set([
-        {
-            value: 'payroll',
-            label: 'Payroll',
-        },
-        {
-            value: 'supplier',
-            label: 'Supplier',
-        },
-        {
-            value: 'insurance',
-            label: 'Insurance',
-        },
-    ]);
+  templateObject.transactionDescriptions.set([
+    {
+      value: "payroll",
+      label: "Payroll",
+    },
+    {
+      value: "supplier",
+      label: "Supplier",
+    },
+    {
+      value: "insurance",
+      label: "Insurance",
+    },
+  ]);
 
-    $(() => {
-        setTimeout(() => {
-            let currentDate = moment(new Date()).format('DD/MM/YYYY');
-            $('.eftProcessingDate').datepicker({
-                showOn: 'button',
-                buttonText: 'Show Date',
-                buttonImageOnly: true,
-                buttonImage: '/img/imgCal2.png',
-                constrainInput: false,
-                dateFormat: 'yy/mm/dd',
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '-90:+10',
-                onSelect: function (dateText, inst) {
-                    // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
-                },
-            });
-            $(".eftProcessingDate").val(currentDate);
-            $('#accountListModal').modal('show');
-        }, 3000);
-    })
+  $(() => {
+    setTimeout(() => {
+      let currentDate = moment(new Date()).format("DD/MM/YYYY");
+      $(".eftProcessingDate").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        constrainInput: false,
+        dateFormat: "yy/mm/dd",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+        onSelect: function (dateText, inst) {
+          // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+        },
+      });
+      $(".eftProcessingDate").val(currentDate);
+      $("#accountListModal").modal("show");
+    }, 3000);
+  });
 
-    templateObject.loadTabaDescriptiveRecord = () => {
-        let descriptiveList = [];
-        getVS1Data('TABADescriptiveRecord')
+  templateObject.loadTabaDescriptiveRecord = () => {
+    let descriptiveList = [];
+    getVS1Data("TABADescriptiveRecord")
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
+          eftService.getTABADescriptiveRecord().then(function (data) {
+            for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
+              descriptiveList.push(data.tabadescriptiverecord[i].fields);
+            }
+            templateObject.tabadescriptiverecordList.set(descriptiveList);
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
+            descriptiveList.push(data.tabadescriptiverecord[i].fields);
+          }
+          templateObject.tabadescriptiverecordList.set(descriptiveList);
+        }
+      })
+      .catch(function (err) {
+        eftService.getTABADescriptiveRecord().then(function (data) {
+          for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
+            descriptiveList.push(data.tabadescriptiverecord[i].fields);
+          }
+          templateObject.tabadescriptiverecordList.set(descriptiveList);
+        });
+      });
+  };
+  // templateObject.loadTabaDescriptiveRecord();
+
+  templateObject.loadTABADetailRecord = () => {
+    let descriptiveList = [];
+    getVS1Data("TABADetailRecord")
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
+          eftService.getTABADetailRecord().then(function (data) {
+            for (let i = 0; i < data.tabadetailrecord.length; i++) {
+              descriptiveList.push(data.tabadetailrecord[i].fields);
+            }
+            templateObject.tabadetailrecordList.set(descriptiveList);
+          });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          for (let i = 0; i < data.tabadetailrecord.length; i++) {
+            descriptiveList.push(data.tabadetailrecord[i].fields);
+          }
+          templateObject.tabadetailrecordList.set(descriptiveList);
+        }
+      })
+      .catch(function (err) {
+        eftService.getTABADetailRecord().then(function (data) {
+          for (let i = 0; i < data.tabadetailrecord.length; i++) {
+            descriptiveList.push(data.tabadetailrecord[i].fields);
+          }
+          templateObject.tabadetailrecordList.set(descriptiveList);
+        });
+      });
+  };
+  // templateObject.loadTABADetailRecord();
+
+  templateObject.loadTabaDescriptiveRecordById = (accountId) => {
+    let descriptiveList = [];
+    try {
+      eftService.getTABADescriptiveRecordById(accountId).then(function (data) {
+        for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
+          descriptiveList.unshift(data.tabadescriptiverecord[i].fields);
+        }
+        templateObject.tabadescriptiverecordList.set(descriptiveList);
+        if (descriptiveList.length) {
+          $("#sltBankName").val(descriptiveList[0].UserBankName);
+          $("#eftProcessingDate").val(descriptiveList[0].ProcessingDate);
+          $("#eftUserName").val(descriptiveList[0].DirectEntryUserName);
+          $("#eftNumberUser").val(descriptiveList[0].DirectEntryUserID);
+          $("#sltTransactionDescription").val(
+            descriptiveList[0].TransactionDescription
+          );
+        }
+        $(".fullScreenSpin").css("display", "none");
+      });
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+    }
+  };
+
+  templateObject.loadTABADetailRecordById = (accountId) => {
+    let descriptiveList = [];
+    try {
+      eftService.getTABADetailRecordById(accountId).then(function (data) {
+        for (let i = 0; i < data.tabadetailrecord.length; i++) {
+          descriptiveList.push(data.tabadetailrecord[i].fields);
+        }
+        templateObject.tabadetailrecordList.set(descriptiveList);
+        $(".fullScreenSpin").css("display", "none");
+      });
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+    }
+  };
+
+  $("#sltBankAccountName").editableSelect();
+
+  $("#sltBankAccountName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      let accountService = new AccountService();
+      const accountTypeList = [];
+      var accountDataName = e.target.value || "";
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#accountListModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+      } else {
+        if (accountDataName.replace(/\s/g, "") != "") {
+          getVS1Data("TAccountVS1")
             .then(function (dataObject) {
-                if (dataObject.length === 0) {
-                    eftService.getTABADescriptiveRecord().then(function (data) {
-                        for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
-                            descriptiveList.push(data.tabadescriptiverecord[i].fields);
-                        }
-                        templateObject.tabadescriptiverecordList.set(descriptiveList);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
-                        descriptiveList.push(data.tabadescriptiverecord[i].fields);
-                    }
-                    templateObject.tabadescriptiverecordList.set(descriptiveList);
+              if (dataObject.length == 0) {
+                accountService
+                  .getOneAccountByName(accountDataName)
+                  .then(function (data) {
+                    setTimeout(function () {
+                      $("#addNewAccount").modal("show");
+                    }, 500);
+                  })
+                  .catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                  });
+              } else {
+                let data = JSON.parse(dataObject[0].data);
+                var added = false;
+                let fullAccountTypeName = "";
+
+                for (let a = 0; a < data.taccountvs1.length; a++) {
+                  if (
+                    data.taccountvs1[a].fields.AccountName === accountDataName
+                  ) {
+                    setTimeout(function () {
+                      $("#addNewAccount").modal("show");
+                    }, 500);
+                  }
                 }
+                if (!added) {
+                  accountService
+                    .getOneAccountByName(accountDataName)
+                    .then(function (data) {
+                      setTimeout(function () {
+                        $("#addNewAccount").modal("show");
+                      }, 500);
+                    })
+                    .catch(function (err) {
+                      $(".fullScreenSpin").css("display", "none");
+                    });
+                }
+              }
             })
             .catch(function (err) {
-                eftService.getTABADescriptiveRecord().then(function (data) {
-                    for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
-                        descriptiveList.push(data.tabadescriptiverecord[i].fields);
-                    }
-                    templateObject.tabadescriptiverecordList.set(descriptiveList);
+              accountService
+                .getOneAccountByName(accountDataName)
+                .then(function (data) {
+                  setTimeout(function () {
+                    $("#addNewAccount").modal("show");
+                  }, 500);
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
                 });
             });
-    };
-    // templateObject.loadTabaDescriptiveRecord();
-
-    templateObject.loadTABADetailRecord = () => {
-        let descriptiveList = [];
-        getVS1Data('TABADetailRecord')
-            .then(function (dataObject) {
-                if (dataObject.length === 0) {
-                    eftService.getTABADetailRecord().then(function (data) {
-                        for (let i = 0; i < data.tabadetailrecord.length; i++) {
-                            descriptiveList.push(data.tabadetailrecord[i].fields);
-                        }
-                        templateObject.tabadetailrecordList.set(descriptiveList);
-                    });
-                } else {
-                    let data = JSON.parse(dataObject[0].data);
-                    for (let i = 0; i < data.tabadetailrecord.length; i++) {
-                        descriptiveList.push(data.tabadetailrecord[i].fields);
-                    }
-                    templateObject.tabadetailrecordList.set(descriptiveList);
-                }
-            })
-            .catch(function (err) {
-                eftService.getTABADetailRecord().then(function (data) {
-                    for (let i = 0; i < data.tabadetailrecord.length; i++) {
-                        descriptiveList.push(data.tabadetailrecord[i].fields);
-                    }
-                    templateObject.tabadetailrecordList.set(descriptiveList);
-                });
-            });
-    };
-    // templateObject.loadTABADetailRecord();
-
-    templateObject.loadTabaDescriptiveRecordById = (accountId) => {
-        let descriptiveList = [];
-        try {
-            eftService.getTABADescriptiveRecordById(accountId).then(function (data) {
-                for (let i = 0; i < data.tabadescriptiverecord.length; i++) {
-                    descriptiveList.unshift(data.tabadescriptiverecord[i].fields);
-                }
-                templateObject.tabadescriptiverecordList.set(descriptiveList);
-                if (descriptiveList.length) {
-                    $('#sltBankName').val(descriptiveList[0].UserBankName);
-                    $('#eftProcessingDate').val(descriptiveList[0].ProcessingDate);
-                    $('#eftUserName').val(descriptiveList[0].DirectEntryUserName);
-                    $('#eftNumberUser').val(descriptiveList[0].DirectEntryUserID);
-                    $('#sltTransactionDescription').val(descriptiveList[0].TransactionDescription);
-                }
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } catch (error) {
-            $('.fullScreenSpin').css('display', 'none');
+          $("#addAccountModal").modal("toggle");
+        } else {
+          $("#accountListModal").modal();
         }
-    };
+      }
+    });
 
-    templateObject.loadTABADetailRecordById = (accountId) => {
-        let descriptiveList = [];
-        try {
-            eftService.getTABADetailRecordById(accountId).then(function (data) {
-                for (let i = 0; i < data.tabadetailrecord.length; i++) {
-                    descriptiveList.push(data.tabadetailrecord[i].fields);
-                }
-                templateObject.tabadetailrecordList.set(descriptiveList);
-                $('.fullScreenSpin').css('display', 'none');
-            });
-        } catch (error) {
-            $('.fullScreenSpin').css('display', 'none');
+  $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+    $(".colAccount").removeClass("boldtablealertsborder");
+    var table = $(this);
+    let colAccountID = table.find(".colAccountId").text();
+    if (colAccountID) {
+      $(".fullScreenSpin").css("display", "inline-block");
+      $("#eftaccountid").val(colAccountID).trigger("change");
+      // templateObject.loadTABADetailRecordById(colAccountID);
+      templateObject.loadTabaDescriptiveRecordById(colAccountID);
+    }
+
+    let lineProductName = table.find(".colAccountName").text();
+    let lineProductDesc = table.find(".colDescription").text();
+    let lineAccoutNo = table.find(".colAccountNo").text();
+    let lineBankName =
+      localStorage.getItem("vs1companyBankName") ||
+      table.find(".colAccountNo").text() ||
+      "";
+    $("#accountListModal").modal("toggle");
+    $("#sltBankAccountName").val(lineProductName);
+    $("#sltBankName").val(lineBankName);
+  });
+
+  $("#sltBankName").editableSelect();
+  $("#sltBankName")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      var bankName = e.target.value || "";
+
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#bankNameModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#bankNameModal").modal("toggle");
+        } else {
+          $("#bankNameModal").modal();
         }
-    };
+      }
+    });
 
-    $('#sltBankAccountName').editableSelect();
+  $(document).on("click", "#tblBankName tbody tr", function (e) {
+    var table = $(this);
+    let BankName = table.find(".colBankName").text();
+    $("#bankNameModal").modal("toggle");
+    $("#sltBankName").val(BankName);
+  });
 
-    $('#sltBankAccountName')
-        .editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            let accountService = new AccountService();
-            const accountTypeList = [];
-            var accountDataName = e.target.value || '';
-            if (e.pageX > offset.left + $earch.width() - 8) {
-                $('#accountListModal').modal();
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                if (accountDataName.replace(/\s/g, '') != '') {
-                    getVS1Data('TAccountVS1')
-                        .then(function (dataObject) {
-                            if (dataObject.length == 0) {
-                                accountService
-                                    .getOneAccountByName(accountDataName)
-                                    .then(function (data) {
-                                        setTimeout(function () {
-                                            $('#addNewAccount').modal('show');
-                                        }, 500);
-                                    })
-                                    .catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-                            } else {
-                                let data = JSON.parse(dataObject[0].data);
-                                var added = false;
-                                let fullAccountTypeName = '';
+  $("#sltTransactionDescription").editableSelect();
+  $("#sltTransactionDescription")
+    .editableSelect()
+    .on("click.editable-select", function (e, li) {
+      var $earch = $(this);
+      var offset = $earch.offset();
+      var bankName = e.target.value || "";
 
-                                for (let a = 0; a < data.taccountvs1.length; a++) {
-                                    if (data.taccountvs1[a].fields.AccountName === accountDataName) {
-                                        setTimeout(function () {
-                                            $('#addNewAccount').modal('show');
-                                        }, 500);
-                                    }
-                                }
-                                if (!added) {
-                                    accountService
-                                        .getOneAccountByName(accountDataName)
-                                        .then(function (data) {
-                                            setTimeout(function () {
-                                                $('#addNewAccount').modal('show');
-                                            }, 500);
-                                        })
-                                        .catch(function (err) {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                        });
-                                }
-                            }
-                        })
-                        .catch(function (err) {
-                            accountService
-                                .getOneAccountByName(accountDataName)
-                                .then(function (data) {
-                                    setTimeout(function () {
-                                        $('#addNewAccount').modal('show');
-                                    }, 500);
-                                })
-                                .catch(function (err) {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                });
-                        });
-                    $('#addAccountModal').modal('toggle');
-                } else {
-                    $('#accountListModal').modal();
-                }
-            }
-        });
-
-    $(document).on('click', '#tblAccountListPop tbody tr', function (e) {
-        $('.colAccount').removeClass('boldtablealertsborder');
-        var table = $(this);
-        let colAccountID = table.find('.colAccountId').text();
-        if (colAccountID) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            $('#eftaccountid').val(colAccountID).trigger('change')
-            // templateObject.loadTABADetailRecordById(colAccountID);
-            templateObject.loadTabaDescriptiveRecordById(colAccountID);
+      if (e.pageX > offset.left + $earch.width() - 8) {
+        $("#transactionDescriptionModal").modal();
+        $(".fullScreenSpin").css("display", "none");
+      } else {
+        if (bankName.replace(/\s/g, "") != "") {
+          $("#transactionDescriptionModal").modal("toggle");
+        } else {
+          $("#transactionDescriptionModal").modal();
         }
-
-        let lineProductName = table.find('.colAccountName').text();
-        let lineProductDesc = table.find('.colDescription').text();
-        let lineAccoutNo = table.find('.colAccountNo').text();
-        let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";
-        $('#accountListModal').modal('toggle');
-        $('#sltBankAccountName').val(lineProductName);
-        $('#sltBankName').val(lineBankName)
+      }
     });
 
-    $('#sltBankName').editableSelect();
-    $('#sltBankName')
-        .editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var bankName = e.target.value || '';
+  $(document).on("click", "#tblTransactionDescription tbody tr", function (e) {
+    var table = $(this);
+    let transactionDescription = table
+      .find(".colTransactionDescription")
+      .text();
+    $("#transactionDescriptionModal").modal("toggle");
+    $("#sltTransactionDescription").val(transactionDescription);
+  });
 
-            if (e.pageX > offset.left + $earch.width() - 8) {
-                $('#bankNameModal').modal();
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                if (bankName.replace(/\s/g, '') != '') {
-                    $('#bankNameModal').modal('toggle');
-                } else {
-                    $('#bankNameModal').modal();
-                }
-            }
-        });
+  $(document).on(
+    "click",
+    "#tblEftExportCheckbox input.sltTransactionCode",
+    function (e) {
+      selectLineId = $(this).closest("tr").attr("id");
+      $("#transactionCodeModal").modal("show");
+    }
+  );
 
-    $(document).on('click', '#tblBankName tbody tr', function (e) {
-        var table = $(this);
-        let BankName = table.find('.colBankName').text();
-        $('#bankNameModal').modal('toggle');
-        $('#sltBankName').val(BankName);
-    });
-
-    $('#sltTransactionDescription').editableSelect();
-    $('#sltTransactionDescription')
-        .editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var bankName = e.target.value || '';
-
-            if (e.pageX > offset.left + $earch.width() - 8) {
-                $('#transactionDescriptionModal').modal();
-                $('.fullScreenSpin').css('display', 'none');
-            } else {
-                if (bankName.replace(/\s/g, '') != '') {
-                    $('#transactionDescriptionModal').modal('toggle');
-                } else {
-                    $('#transactionDescriptionModal').modal();
-                }
-            }
-        });
-
-    $(document).on('click', '#tblTransactionDescription tbody tr', function (e) {
-        var table = $(this);
-        let transactionDescription = table.find('.colTransactionDescription').text();
-        $('#transactionDescriptionModal').modal('toggle');
-        $('#sltTransactionDescription').val(transactionDescription);
-    });
-
-    $(document).on('click', '#tblEftExportCheckbox input.sltTransactionCode', function(e) {
-        selectLineId = $(this).closest('tr').attr('id')
-        $('#transactionCodeModal').modal('show');
-    })
-
-    $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
-        var table = $(this);
-        let transactionDescription = table.find('.colTransactionCode').text();        
-        $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
-        $('#transactionCodeModal').modal('toggle');
-    });
+  $(document).on("click", "#tblTransactionCode tbody tr", function (e) {
+    var table = $(this);
+    let transactionDescription = table.find(".colTransactionCode").text();
+    $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
+    $("#transactionCodeModal").modal("toggle");
+  });
 });
 
 Template.eft_export.events({
-    'click .btnOptionsEft': () => {
-        $('#eftOptionsModal').modal('toggle');
-    },
+  "click .btnOptionsEft": () => {
+    $("#eftOptionsModal").modal("toggle");
+  },
 
-    'click .btnSelectAllEft': () => {
-        $('.isApply').prop('checked', true);
-    },
+  "click .btnSelectAllEft": () => {
+    $(".isApply").prop("checked", true);
+  },
 
-    'click .btnCancelEftExport': (e) => {
-        playCancelAudio();
-        setTimeout(function () {
-            $('#eftExportModal').modal('hide');
-        }, delayTimeAfterSound);
-    },
+  "click .btnCancelEftExport": (e) => {
+    playCancelAudio();
+    setTimeout(function () {
+      $("#eftExportModal").modal("hide");
+    }, delayTimeAfterSound);
+  },
 
-    'click .addNewEftRow': (e) => {
-        e.preventDefault();
-        let tokenid = Random.id();
+  "click .addNewEftRow": (e) => {
+    e.preventDefault();
+    let tokenid = Random.id();
 
-        let transactionCodes = `
+    let transactionCodes = `
       <select class="form-control pointer sltTransactionCode">
         <option value=""></option>
         <option value="">Debit Items</option>
         <option value="">Credit Items</option>
       </select>
     `;
-        $('#eftExportTableBody').append(`
+    $("#eftExportTableBody").append(`
       <tr id="${tokenid}">
         <td class="colApply">
           <input type="checkbox" class="isApply" />
@@ -380,168 +394,171 @@ Template.eft_export.events({
         </td>
       </tr>
     `);
-    },
+  },
 
-    'click .btnEftRemove': function (event) {
-        try {
-            var targetID = $(event.target).closest('tr').attr('id');
-            $(event.target).closest('tr').remove();
-            $('#eftExportTable #' + targetID).remove();
-        } catch (error) {}
-    },
+  "click .btnEftRemove": function (event) {
+    try {
+      var targetID = $(event.target).closest("tr").attr("id");
+      $(event.target).closest("tr").remove();
+      $("#eftExportTable #" + targetID).remove();
+    } catch (error) {}
+  },
 
-    'keypress .eftInputAmount': (e) => {
-        if (e.which === 13) {
-        }
-    },
+  "keypress .eftInputAmount": (e) => {
+    if (e.which === 13) {
+    }
+  },
 
-    'change .eftInputAmount': function (e) {
-        let sum = 0;
-        $('.eftInputAmount').each(function () {
-            let val = parseFloat($(this).val());
-            if (isNaN(val)) {
-                $(this).val('');
-                val = 0;
+  "change .eftInputAmount": function (e) {
+    let sum = 0;
+    $(".eftInputAmount").each(function () {
+      let val = parseFloat($(this).val());
+      if (isNaN(val)) {
+        $(this).val("");
+        val = 0;
+      }
+      sum += val;
+    });
+    $("#totalAmount").html(sum.toFixed(2));
+  },
+
+  "click .btnDoEftExport": (e) => {
+    playSaveAudio();
+    setTimeout(function () {
+      let sltAccountType = $("#sltBankAccountName").val() || "";
+      let sltBankName = $("#sltBankName").val() || "";
+      let eftProcessingDate = $("#eftProcessingDate").val() || "";
+      let eftUserName = $("#eftUserName").val() || "";
+      let eftNumberUser = $("#eftNumberUser").val() || "";
+      let sltTransactionDescription =
+        $("#sltTransactionDescription").val() || "";
+
+      if (!sltAccountType) {
+        swal("Please input Account Name", "", "error");
+        return false;
+      } else if (!sltBankName) {
+        swal("Please input Bank Name", "", "error");
+        return false;
+      } else if (!eftProcessingDate) {
+        swal("Please input Processing Date", "", "error");
+        return false;
+      } else if (!eftUserName) {
+        swal("Please input User Name", "", "error");
+        return false;
+        // } else if (!eftNumberUser) {
+        //     swal('Please input Number of User', '', 'error');
+        //     return false;
+      } else if (!sltTransactionDescription) {
+        swal("Please input Transaction Description", "", "error");
+        return false;
+      }
+      eftNumberUser =
+        eftNumberUser.length >= 6
+          ? eftNumberUser
+          : "0".repeat(6 - eftNumberUser.length) + eftNumberUser;
+      var arrData = [];
+      var eftData = "";
+      $("#tblEftExportCheckbox tbody tr").each(function () {
+        var currentRow = $(this);
+        var accountName = "";
+        var colBsb = "";
+        var colAccountNo = "";
+        var colTransactionCode = "";
+        var colLodgement = "";
+        var colAmount = "";
+        var colFromBsb = "";
+        var colFromAccountNo = "";
+
+        currentRow
+          .find("td.colChkBox")
+          .find("input")
+          .each(function () {
+            if (this.checked) {
+              accountName = currentRow.find("td.colAccountName").text();
+              colBsb = currentRow.find("td.colBsb").text();
+              colAccountNo = currentRow.find("td.colAccountNo").text();
+              currentRow
+                .find("td.colTransactionCode")
+                .find("select")
+                .each(function () {
+                  colTransactionCode = this.value;
+                });
+              colLodgement = currentRow.find("td.colLodgement").text();
+              colAmount = currentRow.find("td.colAmount").text();
+              colFromBsb = currentRow.find("td.colFromBsb").text();
+              colFromAccountNo = currentRow.find("td.colFromAccountNo").text();
+              eftData +=
+                colBsb +
+                " " +
+                colAccountNo +
+                " " +
+                accountName +
+                "                 " +
+                colLodgement +
+                colFromBsb +
+                " " +
+                colFromAccountNo +
+                "Payroll Account" +
+                " " +
+                "00000000" +
+                "\n";
+
+              var obj = {};
+              obj.accountName = accountName;
+              obj.bsb = colBsb;
+              obj.accountNo = colAccountNo;
+              obj.transactionCode = colTransactionCode;
+              obj.lodgement = colLodgement;
+              obj.amount = colAmount;
+              obj.fromBsb = colFromBsb;
+              obj.fromAccountNo = colFromAccountNo;
+
+              arrData.push(obj);
             }
-            sum += val;
-        });
-        $('#totalAmount').html(sum.toFixed(2));
-    },
+          });
+      });
 
-    'click .btnDoEftExport': (e) => {
-        playSaveAudio();
-        setTimeout(function () {
-            let sltAccountType = $('#sltBankAccountName').val() || "";
-            let sltBankName = $('#sltBankName').val() || "";
-            let eftProcessingDate = $('#eftProcessingDate').val() || "";
-            let eftUserName = $('#eftUserName').val() || "";
-            let eftNumberUser = $('#eftNumberUser').val() || "";
-            let sltTransactionDescription = $('#sltTransactionDescription').val() || "";
+      $(".fullScreenSpin").css("display", "inline-block");
+      const link = document.createElement("a");
+      const content =
+        "0                 01" +
+        sltBankName +
+        "       " +
+        sltAccountType +
+        "           " +
+        eftNumberUser +
+        sltTransactionDescription +
+        "     " +
+        moment(eftProcessingDate).format("DDMMYY") +
+        // eftUserName +
+        "\n" +
+        eftData;
+      const file = new Blob([content], { type: "text/plain" });
+      link.href = URL.createObjectURL(file);
+      link.download = "eft" + new Date().getTime() + ".aba";
+      link.click();
+      URL.revokeObjectURL(link.href);
+      $(".fullScreenSpin").css("display", "none");
 
-            if (!sltAccountType) {
-                swal('Please input Account Name', '', 'error');
-                return false;
-            } else if (!sltBankName) {
-                swal('Please input Bank Name', '', 'error');
-                return false;
-            } else if (!eftProcessingDate) {
-                swal('Please input Processing Date', '', 'error');
-                return false;
-            } else if (!eftUserName) {
-                swal('Please input User Name', '', 'error');
-                return false;
-            // } else if (!eftNumberUser) {
-            //     swal('Please input Number of User', '', 'error');
-            //     return false;
-            } else if (!sltTransactionDescription) {
-                swal('Please input Transaction Description', '', 'error');
-                return false;
-            }
-            eftNumberUser =
-                eftNumberUser.length >= 6 ? eftNumberUser : '0'.repeat(6 - eftNumberUser.length) + eftNumberUser;
-            var arrData = [];
-            var eftData = '';
-            $('#tblEftExportCheckbox tbody tr').each(function () {
-                var currentRow = $(this);
-                var accountName = '';
-                var colBsb = '';
-                var colAccountNo = '';
-                var colTransactionCode = '';
-                var colLodgement = '';
-                var colAmount = '';
-                var colFromBsb = '';
-                var colFromAccountNo = '';
-
-                currentRow
-                    .find('td.colChkBox')
-                    .find('input')
-                    .each(function () {
-                        if (this.checked) {
-                            accountName = currentRow.find('td.colAccountName').text()
-                            colBsb = currentRow.find('td.colBsb').text()
-                            colAccountNo = currentRow.find('td.colAccountNo').text()
-                            currentRow
-                                .find('td.colTransactionCode')
-                                .find('select')
-                                .each(function () {
-                                    colTransactionCode = this.value;
-                                });
-                            colLodgement = currentRow.find('td.colLodgement').text()
-                            colAmount = currentRow.find('td.colAmount').text()
-                            colFromBsb = currentRow.find('td.colFromBsb').text()
-                            colFromAccountNo = currentRow.find('td.colFromAccountNo').text()
-                            eftData +=
-                                colBsb +
-                                ' ' +
-                                colAccountNo +
-                                ' ' +
-                                accountName +
-                                '                 ' +
-                                colLodgement +
-                                colFromBsb +
-                                ' ' +
-                                colFromAccountNo +
-                                'Payroll Account' +
-                                ' ' +
-                                '00000000' +
-                                '\n';
-
-                            var obj = {};
-                            obj.accountName = accountName;
-                            obj.bsb = colBsb;
-                            obj.accountNo = colAccountNo;
-                            obj.transactionCode = colTransactionCode;
-                            obj.lodgement = colLodgement;
-                            obj.amount = colAmount;
-                            obj.fromBsb = colFromBsb;
-                            obj.fromAccountNo = colFromAccountNo;
-
-                            arrData.push(obj);
-                        }
-                    });
-            });
-
-            $('.fullScreenSpin').css('display', 'inline-block');
-            const link = document.createElement('a');
-            const content =
-                '0                 01' +
-                sltBankName +
-                '       ' +
-                sltAccountType +
-                '           ' +
-                eftNumberUser +
-                sltTransactionDescription +
-                '     ' +
-                moment(eftProcessingDate).format('DDMMYY') +
-                // eftUserName +
-                '\n' +
-                eftData;
-            const file = new Blob([content], { type: 'text/plain' });
-            link.href = URL.createObjectURL(file);
-            link.download = 'eft' + new Date().getTime() + '.aba';
-            link.click();
-            URL.revokeObjectURL(link.href);
-            $('.fullScreenSpin').css('display', 'none');
-
-            return true;
-        }, delayTimeAfterSound);
-    },
+      return true;
+    }, delayTimeAfterSound);
+  },
 });
 
 Template.eft_export.helpers({
-    transactionDescriptions: () => {
-        return Template.instance().transactionDescriptions.get();
-    },
+  transactionDescriptions: () => {
+    return Template.instance().transactionDescriptions.get();
+  },
 
-    eftRowId: () => {
-        return Template.instance().eftRowId.get();
-    },
+  eftRowId: () => {
+    return Template.instance().eftRowId.get();
+  },
 
-    tabadescriptiverecordList: () => {
-        return Template.instance().tabadescriptiverecordList.get();
-    },
+  tabadescriptiverecordList: () => {
+    return Template.instance().tabadescriptiverecordList.get();
+  },
 
-    tabadetailrecordList: () => {
-        return Template.instance().tabadetailrecordList.get();
-    },
+  tabadetailrecordList: () => {
+    return Template.instance().tabadetailrecordList.get();
+  },
 });

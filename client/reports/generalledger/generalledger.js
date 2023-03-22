@@ -679,7 +679,7 @@ Template.generalledger.onRendered(() => {
       { index: 2, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "105" },
       { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "120" },
       { index: 4, label: 'Client Name', class: 'colProductDescription', active: true, display: true, width: "220" },
-      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "200" },
+      { index: 5, label: 'Type', class: 'colType', active: true, display: true, width: "120" },
       { index: 6, label: 'Debits', class: 'colDebitsEx text-right', active: true, display: true, width: "130" },
       { index: 7, label: 'Credits', class: 'colCreditEx text-right', active: true, display: true, width: "130" },
       { index: 8, label: 'Amount', class: 'colAmountEx text-right', active: true, display: true, width: "130" },
@@ -714,8 +714,8 @@ Template.generalledger.onRendered(() => {
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
-  templateObject.setDateAs = (dateFrom = null) => {
-    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
+  templateObject.setDateAs = (dateTo = null) => {
+    templateObject.dateAsAt.set((dateTo) ? moment(dateTo).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
   templateObject.initDate();
 
@@ -729,7 +729,7 @@ Template.generalledger.onRendered(() => {
 
   templateObject.getGeneralLedgerData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateFrom);
+    templateObject.setDateAs(dateTo);
     getVS1Data('TGeneralLedgerReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getGeneralLedgerDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -756,28 +756,7 @@ Template.generalledger.onRendered(() => {
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
   );
-  templateObject.displayGeneralLedgerData = async function (data) {
-    var splashArrayBalanceSheetReport = new Array();
-    let deleteFilter = false;
-    if (data.Params.Search.replace(/\s/g, "") == "") {
-      deleteFilter = true;
-    } else {
-      deleteFilter = false;
-    };
-    for (let i = 0; i < data.tgeneralledgerreport.length; i++) {
-      var dataList = [
-        data.tgeneralledgerreport[i].ACCOUNTNAME || "",
-        data.tgeneralledgerreport[i].ACCOUNTNUMBER || "",
-        data.tgeneralledgerreport[i].DATE || "",
-        data.tgeneralledgerreport[i]["CLIENT NAME"] || "",
-        data.tgeneralledgerreport[i].TYPE || "",
-        data.tgeneralledgerreport[i].DEBITSEX || "",
-        data.tgeneralledgerreport[i].CREDITSEX || "",
-        data.tgeneralledgerreport[i].AMOUNTEX || "",
-      ];
-      splashArrayBalanceSheetReport.push(dataList);
-      // templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
-    }
+  templateObject.generateReportData = function(splashArrayBalanceSheetReport){
     //Xiao Jang fixed
     splashArrayBalanceSheetReport.sort(GlobalFunctions.sortFunction);
 
@@ -786,7 +765,7 @@ Template.generalledger.onRendered(() => {
     let balanceSheetReport = [];
     let symDollar = '$';
     balanceSheetReport.push([
-        GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
+      GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
       "",
       "",
       "",
@@ -827,28 +806,27 @@ Template.generalledger.onRendered(() => {
       }
       T_AccountName = splashArrayBalanceSheetReport[i][0];
       splashArrayBalanceSheetReport[i][0] = "";
-      if(splashArrayBalanceSheetReport[i][5] != "" || splashArrayBalanceSheetReport[i][6] != "") {
-        let tmpDate = new Date(splashArrayBalanceSheetReport[i][2]);
-        splashArrayBalanceSheetReport[i][2] = `${GlobalFunctions.convert2Digit(tmpDate.getDate())}/${GlobalFunctions.convert2Digit(tmpDate.getMonth() + 1)}/${tmpDate.getFullYear()}`;
+      let tmpDate = new Date(splashArrayBalanceSheetReport[i][2]);
+      splashArrayBalanceSheetReport[i][2] = `${GlobalFunctions.convert2Digit(tmpDate.getDate())}/${GlobalFunctions.convert2Digit(tmpDate.getMonth() + 1)}/${tmpDate.getFullYear()}`;
+      let redirectionItem = {Id: splashArrayBalanceSheetReport[i][8], type: splashArrayBalanceSheetReport[i][4]};
+      splashArrayBalanceSheetReport[i][1] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][1], "text-primary", GlobalFunctions.redirectionType(redirectionItem));
+      splashArrayBalanceSheetReport[i][2] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][2], "text-primary", GlobalFunctions.redirectionType(redirectionItem));
+      splashArrayBalanceSheetReport[i][3] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][3], "text-primary", GlobalFunctions.redirectionType(redirectionItem));
+      splashArrayBalanceSheetReport[i][4] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][4], "text-primary", GlobalFunctions.redirectionType(redirectionItem));
+      let tmp;
+      tmp = splashArrayBalanceSheetReport[i][5] - 0;
+      credit += tmp; //credit
+      splashArrayBalanceSheetReport[i][5] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary",  GlobalFunctions.redirectionType(redirectionItem)) : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", GlobalFunctions.redirectionType(redirectionItem));
 
-        splashArrayBalanceSheetReport[i][1] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][1], "text-primary");
-        splashArrayBalanceSheetReport[i][2] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][2], "text-primary");
-        splashArrayBalanceSheetReport[i][3] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][3], "text-primary");
-        splashArrayBalanceSheetReport[i][4] = GlobalFunctions.generateSpan(splashArrayBalanceSheetReport[i][4], "text-primary");
-        let tmp;
-        tmp = splashArrayBalanceSheetReport[i][5] - 0;
-        credit += tmp; //credit
-        splashArrayBalanceSheetReport[i][5] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
+      tmp = splashArrayBalanceSheetReport[i][6] - 0;
+      debit += tmp; //debit
+      splashArrayBalanceSheetReport[i][6] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", GlobalFunctions.redirectionType(redirectionItem)) : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", GlobalFunctions.redirectionType(redirectionItem));
 
-        tmp = splashArrayBalanceSheetReport[i][6] - 0;
-        debit += tmp; //debit
-        splashArrayBalanceSheetReport[i][6] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
-
-        tmp = splashArrayBalanceSheetReport[i][7] - 0;
-        total += tmp; //total
-        splashArrayBalanceSheetReport[i][7] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
-        balanceSheetReport.push(splashArrayBalanceSheetReport[i]);
-      }
+      tmp = splashArrayBalanceSheetReport[i][7] - 0;
+      total += tmp; //total
+      splashArrayBalanceSheetReport[i][7] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", GlobalFunctions.redirectionType(redirectionItem)) : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", GlobalFunctions.redirectionType(redirectionItem));
+      splashArrayBalanceSheetReport[i].splice(8, 1);
+      balanceSheetReport.push(splashArrayBalanceSheetReport[i]);
     }
     balanceSheetReport.push([
       GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
@@ -861,7 +839,7 @@ Template.generalledger.onRendered(() => {
       total >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total), "text-danger text-bold", "text-right"),
     ]);
     creditSum += (credit - 0), debitSum += (debit - 0);
-    totalSum = (creditSum - debitSum);
+    totalSum = 0;
     balanceSheetReport.push([
       GlobalFunctions.generateSpan(`Grand Total`, "table-cells text-bold"),
       "",
@@ -872,6 +850,33 @@ Template.generalledger.onRendered(() => {
       debitSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "text-danger text-bold", "text-right"),
       totalSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum), "text-danger text-bold", "text-right"),
     ]);
+    return balanceSheetReport;
+  }
+  templateObject.displayGeneralLedgerData = async function (data) {
+    var splashArrayBalanceSheetReport = new Array();
+    let deleteFilter = false;
+    if (data.Params.Search.replace(/\s/g, "") == "") {
+      deleteFilter = true;
+    } else {
+      deleteFilter = false;
+    };
+    if(data.tgeneralledgerreport == undefined)  data.tgeneralledgerreport = [];
+    for (let i = 0; i < data.tgeneralledgerreport.length; i++) {
+      var dataList = [
+        data.tgeneralledgerreport[i].ACCOUNTNAME || "",
+        data.tgeneralledgerreport[i].ACCOUNTNUMBER || "",
+        data.tgeneralledgerreport[i].DATE || "",
+        data.tgeneralledgerreport[i]["CLIENT NAME"] || "",
+        data.tgeneralledgerreport[i].TYPE || "",
+        data.tgeneralledgerreport[i].DEBITSEX || "",
+        data.tgeneralledgerreport[i].CREDITSEX || "",
+        data.tgeneralledgerreport[i].AMOUNTEX || "",
+        data.tgeneralledgerreport[i].PURCHASEORDERID || "",
+      ];
+      splashArrayBalanceSheetReport.push(dataList);
+      // templateObject.transactiondatatablerecords.set(splashArrayBalanceSheetReport);
+    }
+    let balanceSheetReport = templateObject.generateReportData(splashArrayBalanceSheetReport);
     templateObject.transactiondatatablerecords.set(balanceSheetReport);
     if (templateObject.transactiondatatablerecords.get()) {
       setTimeout(function () {
@@ -879,7 +884,7 @@ Template.generalledger.onRendered(() => {
       }, 100);
     }
     setTimeout(function () {
-      $('#tblgeneralledger1').DataTable({
+      $('#tblgeneralledger').DataTable({
         data: balanceSheetReport,
         searching: false,
         "bSort" : false,
@@ -921,91 +926,6 @@ Template.generalledger.onRendered(() => {
             targets: 7,
             className: "colAmountEx text-center0",
           },
-          // {
-          //   targets: 3,
-          //   className: "colAccounts hiddenColumn",
-          // },
-
-          // {
-          //   targets: 6,
-          //   className: "colChequeNumber hiddenColumn",
-          // },
-          // {
-          //   targets: 7,
-          //   className: "colDepartment",
-          // },
-          // {
-          //   targets: 8,
-          //   className: "colClassID",
-          // },
-          // {
-          //   targets: 9,
-          //   className: "colProductDescription",
-          // },
-
-
-
-          // {
-          //   targets: 15,
-          //   className: "colDetails hiddenColumn",
-          // },
-          // {
-          //   targets: 16,
-          //   className: "colFixedAssetID hiddenColumn",
-          // },
-          // {
-          //   targets: 17,
-          //   className: "colGlobalRef",
-          // },
-          // {
-          //   targets: 18,
-          //   className: "colID hiddenColumn",
-          // },
-          // {
-          //   targets: 19,
-          //   className: "colMemo hiddenColumn",
-          // },
-          // {
-          //   targets: 20,
-          //   className: "colPaymentID hiddenColumn",
-          // },
-          // {
-          //   targets: 21,
-          //   className: "colPrepaymentID hiddenColumn",
-          // },
-          // {
-          //   targets: 9,
-          //   className: "colCredit",
-          // },
-          // {
-          //   targets: 23,
-          //   className: "colProductID hiddenColumn",
-          // },
-          // {
-          //   targets: 24,
-          //   className: "colPurchaseOrderID",
-          // },
-          // {
-          //   targets: 25,
-          //   className: "colRefNo hiddenColumn",
-          // },
-          // {
-          //   targets: 26,
-          //   className: "colRepName",
-          // },
-          // {
-          //   targets: 27,
-          //   className: "colSaleID hiddenColumn",
-          // },
-          // {
-          //   targets: 28,
-          //   className: "colTaxCode hiddenColumn",
-          // },
-          // {
-          //   targets: 29,
-          //   className: "colTaxRate hiddenColumn",
-          // },
-
         ],
         select: true,
         destroy: true,
@@ -1021,7 +941,6 @@ Template.generalledger.onRendered(() => {
         action: function () {
           $('#' + currenttablename).DataTable().ajax.reload();
         },
-
       }).on('page', function () {
         setTimeout(function () {
           // MakeNegative();
@@ -1209,21 +1128,25 @@ Template.generalledger.events({
     }
   },
   "click #ignoreDate": (e, templateObject) => {
-    localStorage.setItem("VS1GeneralLedger_Report", "");
-    templateObject.getGeneralLedgerReports(
-        null,
-        null,
-        true
-    )
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData('TGeneralLedgerReport').then(function(){
+      templateObject.getGeneralLedgerData(
+          null,
+          null,
+          true
+      );
+    })
   },
-  "change #dateTo, change #dateFrom": (e) => {
+  "change #dateTo, change #dateFrom": (e) => {alert();
     let templateObject = Template.instance();
-    localStorage.setItem("VS1GeneralLedger_Report", "");
-    templateObject.getGeneralLedgerReports(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-        false
-    )
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData('TGeneralLedgerReport').then(function() {
+      templateObject.getGeneralLedgerData(
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          false
+      );
+    });
   },
   ...Datehandler.getDateRangeEvents(),
   // "change #dateTo": function () {
@@ -1327,24 +1250,24 @@ Template.generalledger.events({
     localStorage.setItem("VS1GeneralLedger_Report", "");
     Meteor._reload.reload();
   },
-  // "click td a": function (event) {
-  //   let redirectid = $(event.target).closest("tr").attr("id");
+  "click td a": function (event) {
+    let redirectid = $(event.target).closest("tr").attr("id");
 
-  //   let transactiontype = $(event.target).closest("tr").attr("class");
+    let transactiontype = $(event.target).closest("tr").attr("class");
 
-  //   if (redirectid && transactiontype) {
-  //     if (transactiontype === "Bill") {
-  //       window.open("/billcard?id=" + redirectid, "_self");
-  //     } else if (transactiontype === "PO") {
-  //       window.open("/purchaseordercard?id=" + redirectid, "_self");
-  //     } else if (transactiontype === "Credit") {
-  //       window.open("/creditcard?id=" + redirectid, "_self");
-  //     } else if (transactiontype === "Supplier Payment") {
-  //       window.open("/supplierpaymentcard?id=" + redirectid, "_self");
-  //     }
-  //   }
-  //   // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-  // },
+    if (redirectid && transactiontype) {
+      if (transactiontype === "Bill") {
+        window.open("/billcard?id=" + redirectid, "_self");
+      } else if (transactiontype === "PO") {
+        window.open("/purchaseordercard?id=" + redirectid, "_self");
+      } else if (transactiontype === "Credit") {
+        window.open("/creditcard?id=" + redirectid, "_self");
+      } else if (transactiontype === "Supplier Payment") {
+        window.open("/supplierpaymentcard?id=" + redirectid, "_self");
+      }
+    }
+    // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+  },
   // "click .btnPrintReport": function (event) {
   //   $('.fullScreenSpin').css('display', 'inline-block')
   //   playPrintAudio();
@@ -1466,15 +1389,23 @@ Template.generalledger.events({
   "click .btnPrintReport": function (event) {
     playPrintAudio();
     setTimeout(function () {
+      $(".dataTables_length").hide();
+      $(".dataTables_info").hide();
+      $(".dataTables_paginate").hide();
+
+
       $("a").attr("href", "/");
-      document.title = "Balance Sheet Report";
+      document.title = "General Ledger Report";
       $(".printReport").print({
-        title: document.title + " | Balance Sheet | " + loggedCompany,
+        title: document.title + " | General Ledger Report | " + loggedCompany,
         noPrintSelector: ".addSummaryEditor",
         mediaPrint: false,
       });
 
       setTimeout(function () {
+        $(".dataTables_length").show();
+        $(".dataTables_info").show();
+        $(".dataTables_paginate").show();
         $("a").attr("href", "#");
       }, 100);
     }, delayTimeAfterSound);
@@ -1502,28 +1433,6 @@ Template.generalledger.events({
     const filename = loggedCompany + "-General Ledger" + ".csv";
     utilityService.exportReportToCsvTable("tblgeneralledger", filename, "csv");
     let rows = [];
-    // reportService.getGeneralLedgerDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {
-    //     if(data.tgeneralledgerreport){
-    //         rows[0] = ['Account Name','Type', 'No.', 'Client Name', 'Memo', 'Amount', 'Debits', 'Credit'];
-    //         data.tgeneralledgerreport.forEach(function (e, i) {
-    //             rows.push([
-    //               data.tgeneralledgerreport[i].ACCOUNTNAME,
-    //               data.tgeneralledgerreport[i].TYPE,
-    //               data.tgeneralledgerreport[i].ID,
-    //               data.tgeneralledgerreport[i]["CLIENT NAME"],
-    //               data.tgeneralledgerreport[i].MEMO,
-    //               data.tgeneralledgerreport[i].DATE !=''? moment(data.tgeneralledgerreport[i].DATE).format("DD/MM/YYYY"): data.tgeneralledgerreport[i].DATE,
-    //               utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].AMOUNTINC) || '0.00',
-    //               utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].DEBITSEX) || '0.00',
-    //               utilityService.modifynegativeCurrencyFormat(data.tgeneralledgerreport[i].CREDITSEX) || '0.00']);
-    //         });
-    //         setTimeout(function () {
-    //             utilityService.exportReportToCsv(rows, filename, 'xls');
-    //             $('.fullScreenSpin').css('display','none');
-    //         }, 1000);
-    //     }
-    //
-    // });
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -1695,47 +1604,7 @@ Template.generalledger.helpers({
     }
     return false;
   },
-  redirectionType(item) {
-    if (item.type === 'PO') {
-      return '/purchaseordercard?id=' + item.Id;
-    } else if (item.type === 'Invoice') {
-      return '/invoicecard?id=' + item.saleId;
-    } else if (item.type === 'Bill') {
-      return '/billcard?id=' + item.Id;
-    } else if (item.type === 'Cheque') {
-      return '/chequecard?id=' + item.Id;
-    } else if (item.type === 'Un-Invoiced PO') {
-      return '/purchaseordercard?id=' + item.Id;
-    } else if (item.type === 'Supplier Payment') {
-      return '/supplierpaymentcard?id=' + item.paymentId;
-    } else if (item.type === 'Customer Payment') {
-      return '/paymentcard?id=' + item.paymentId;
-    } else if (item.type === 'Refund') {
-      return 'refundcard?id=' + item.saleId;
-    } else if (item.type === 'Closing Date Summary') {
-      return '#noInfoFound';
-    } else if (item.type === 'Stock Transfer') {
-      return '#noInfoFound';
-    } else if (item.type === 'Stock Adjustment') {
-      return '/stockadjustmentcard?id=' + item.paymentId;
-    } else if (item.type === 'Fixed Asset Depreciation') {
-      return '#noInfoFound';
-    } else if (item.type === 'Cash Sale') {
-      return '#noInfoFound';
-    } else if (item.type === 'Journal Entry') {
-      return '#noInfoFound';
-    } else if (item.type === 'Payroll Accrued Leave') {
-      return '#noInfoFound';
-    } else if (item.type === 'Payroll Nett Wages') {
-      return '#noInfoFound';
-    } else if (item.type === 'Payroll PAYG Tax') {
-      return '#noInfoFound';
-    } else if (item.type === 'Payroll Superannuation') {
-      return '#noInfoFound';
-    } else {
-      return '#noInfoFound';
-    }
-  },
+
   isOnlyDefaultActive() {
     const array = Template.instance().currencyList.get();
     if (array.length == 0) {

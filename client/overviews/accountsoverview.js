@@ -257,7 +257,7 @@ Template.accountsoverview.onRendered(function() {
         var customerpage = 0;
         getVS1Data('TAccountVS1List').then(function(dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                sideBarService.getAllTAccountVS1List('All', 0, deleteFilter, typeFilter).then(async function(data) {
                     if(typeFilter == 'all') {
                         await addVS1Data('TAccountVS1List', JSON.stringify(data));
                     }
@@ -268,7 +268,7 @@ Template.accountsoverview.onRendered(function() {
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 if(typeFilter != 'all') {
-                    sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+                    sideBarService.getAllTAccountVS1List('All', 0, deleteFilter, typeFilter).then(async function(data) {
                         templateObject.displayAccountsOverviewListData(data);
                     })
                 }else {
@@ -276,7 +276,7 @@ Template.accountsoverview.onRendered(function() {
                 }
             }
         }).catch(function(err) {
-            sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
+            sideBarService.getAllTAccountVS1List('All', 0, deleteFilter, typeFilter).then(async function(data) {
                 if(typeFilter == 'all') {
                     await addVS1Data('TAccountVS1List', JSON.stringify(data));
                 }
@@ -388,70 +388,6 @@ Template.accountsoverview.onRendered(function() {
                         $('.paginate_button.page-item.next').addClass('disabled');
                     }
 
-                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
-                            for (let j = 0; j < dataObjectnew.taccountvs1list.length; j++) {
-                                if (!isNaN(dataObjectnew.taccountvs1list[j].Balance)) {
-                                    accBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.taccountvs1list[j].Balance) || 0.0;
-                                } else {
-                                    accBalance = Currency + "0.00";
-                                }
-                                if (dataObjectnew.taccountvs1list[j].ReceiptCategory && dataObjectnew.taccountvs1list[j].ReceiptCategory != '') {
-                                    usedCategories.push(dataObjectnew.taccountvs1list[j].fields);
-                                }
-                                let linestatus = '';
-                                if (dataObjectnew.taccountvs1list[j].Active == true) {
-                                    linestatus = "";
-                                } else if (dataObjectnew.taccountvs1list[j].Active == false) {
-                                    linestatus = "In-Active";
-                                };
-
-                                var dataListDupp = [
-                                    dataObjectnew.taccountvs1list[j].AccountID || "",
-                                    dataObjectnew.taccountvs1list[j].AccountName || "",
-                                    dataObjectnew.taccountvs1list[j].Description || "",
-                                    dataObjectnew.taccountvs1list[j].AccountNumber || "",
-                                    dataObjectnew.taccountvs1list[j].AccountType || "",
-                                    accBalance || '',
-                                    dataObjectnew.taccountvs1list[j].TaxCode || '',
-                                    dataObjectnew.taccountvs1list[j].BankName || '',
-                                    dataObjectnew.taccountvs1list[j].BankAccountName || '',
-                                    dataObjectnew.taccountvs1list[j].BSB || '',
-                                    dataObjectnew.taccountvs1list[j].BankAccountNumber || "",
-                                    dataObjectnew.taccountvs1list[j].CarNumber || "",
-                                    dataObjectnew.taccountvs1list[j].ExpiryDate || "",
-                                    dataObjectnew.taccountvs1list[j].CVC || "",
-                                    dataObjectnew.taccountvs1list[j].Extra || "",
-                                    dataObjectnew.taccountvs1list[j].BankNumber || "",
-                                    dataObjectnew.taccountvs1list[j].IsHeader || false,
-                                    dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
-                                    dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
-                                    linestatus,
-                                    dataObjectnew.taccountvs1list[j].Level1 || "",
-                                    dataObjectnew.taccountvs1list[j].Level2 || "",
-                                    dataObjectnew.taccountvs1list[j].Level3 || "",
-                                ];
-
-                                splashArrayAccountsOverview.push(dataListDupp);
-                            }
-                            let uniqueChars = [...new Set(splashArrayAccountsOverview)];
-                            templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + currenttablename).DataTable();
-                            datatable.clear();
-                            datatable.rows.add(uniqueChars);
-                            datatable.draw(false);
-                            setTimeout(function() {
-                                $('#' + currenttablename).dataTable().fnPageChange('last');
-                            }, 400);
-
-                            $('.fullScreenSpin').css('display', 'none');
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-
-                    });
                     setTimeout(function() {
                         makeNegativeGlobal();
                     }, 100);
@@ -742,7 +678,7 @@ Template.accountsoverview.onRendered(function() {
 
                     $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
                         $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+                        sideBarService.getAllTAccountVS1List('All', oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
                             for (let j = 0; j < dataObjectnew.taccountvs1list.length; j++) {
                                 if (!isNaN(dataObjectnew.taccountvs1list[j].Balance)) {
                                     accBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.taccountvs1list[j].Balance) || 0.0;

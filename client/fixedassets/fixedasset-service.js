@@ -4,10 +4,10 @@ export class FixedAssetService extends BaseService {
     let options = {
       ListType: "Detail",
       Search: "Active=true",
-      LimitCount: parseInt(limitcount),
-      LimitFrom: parseInt(limitfrom),
+      LimitCount: parseInt(limitcount) || 0,
+      LimitFrom: parseInt(limitfrom) || 0,
     };
-    if(deleteFilter) options.Search = "";
+    if (deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TFixedAssetsList, options);
   }
 
