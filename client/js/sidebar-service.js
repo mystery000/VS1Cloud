@@ -1154,7 +1154,16 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAccountVS1, options);
   }
 
+  // Alex: add for bank rec {
+  getTAccountVS1ListForBankCCard(limitcount, limitfrom, deleteFilter) {
+    return this.getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, 'Bank,CCard');
+  }
+  // @}
+
   getAllTAccountVS1List(limitcount, limitfrom, deleteFilter, typeFilter = 'all', useReceiptClaim) {
+    // Alex: add for bank rec {
+    let typeFilterList = typeFilter.split(',');
+    // @}
     let options = {};
     if(deleteFilter == "" || deleteFilter == false || deleteFilter == null || deleteFilter == undefined){
       if (limitcount == "All") {
@@ -1172,9 +1181,9 @@ export class SideBarService extends BaseService {
           LimitFrom: parseInt(limitfrom),
         };
       }
-      // if(typeFilter != 'all') {
-      //   options.Search = options.Search + ` and AccountType='${typeFilter}'`
-      // }
+      if(typeFilter != 'all') {
+        options.Search = options.Search + ` and AccountType IN (${"'" + typeFilterList.join("','") + "'"})`
+      }
       if (useReceiptClaim) {
         options.Search = options.Search + ` and AllowExpenseClaim=true`
       }
@@ -1192,9 +1201,9 @@ export class SideBarService extends BaseService {
           LimitFrom: parseInt(limitfrom),
         };
       }
-      // if(typeFilter != 'all') {
-      //   options.Search = `AccountType='${typeFilter}'`
-      // }
+      if(typeFilter != 'all') {
+        options.Search = `AccountType IN (${"'" + typeFilterList.join("','") + "'"})`
+      }
       if (useReceiptClaim) {
         if (options.Search)
           options.Search = options.Search + ` and AllowExpenseClaim=true`
