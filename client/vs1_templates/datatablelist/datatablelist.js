@@ -222,6 +222,15 @@ Template.datatablelist.onRendered(async function () {
         return new Promise((resolve, reject) => {
             // resolve(templateObject.data.apiName(initialDatatableLoad, 0, false))
             if (templateObject.data.istransaction == false) {
+              if (templateObject.data.typefilter) {//Martin Tony
+                    let that = templateObject.data.service;
+                    let params = [initialDatatableLoad, 0, deleteFilter, templateObject.data.typefilter]
+                    templateObject.data.apiName.apply(that, params).then(function (dataReturn) {
+                        resolve(dataReturn)
+                    })
+                    return
+                }
+
                 getVS1Data(indexDBName).then(function (dataObject) {
                     if (dataObject.length == 0) {
                         let that = templateObject.data.service;
@@ -390,7 +399,7 @@ Template.datatablelist.onRendered(async function () {
                 }
             }
             if (isEx == false) {
-                for (let i = 0; i < data[indexDBLowercase].length; i++) {
+                for (let i = 0; i < data[indexDBLowercase]?.length; i++) {
                     let dataList = templateObject.data.datahandler(data[indexDBLowercase][i])
                     if(dataList.length != 0) {
                       if(templateObject.data.isMultipleRows){
@@ -443,6 +452,8 @@ Template.datatablelist.onRendered(async function () {
                 // aoColumns:acolDef,
                 //columns: acolDef,
                 columnDefs: colDef,
+                // fixedColumns: true ,
+                "ordering": false,
                 // deferRender: true,
                 buttons: [{
                     extend: 'csvHtml5',
@@ -516,7 +527,7 @@ Template.datatablelist.onRendered(async function () {
                     }
                 ],
 
-                // autoWidth: false,
+                "autoWidth": false, // might need this
                 // fixedColumns: true,
                 select: true,
                 destroy: true,
@@ -525,9 +536,9 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: false,
+                responsive: true,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
-                // "autoWidth": false,
+                //"autoWidth": false,
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
@@ -607,12 +618,10 @@ Template.datatablelist.onRendered(async function () {
                       };
 
                       if(templateObject.data.viewConvertedButton == true){
-                        // if (data.Params.Search == "IsBill = true and IsCheque != true") {
-                          $("<button class='btn btn-danger btnHideConverted' type='button' id='btnHideConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #f6c23e !important;border-color: #f6c23e!important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Converted</button>").insertAfter('#' + currenttablename + '_filter');
-                          $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #1cc88a !important;border-color: #1cc88a!important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + currenttablename + '_filter');
-                        // }else{
-                        //   $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + currenttablename + '_filter');
-                        // }
+                         $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #1cc88a !important;border-color: #1cc88a!important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + currenttablename + '_filter');
+                      };
+                      if(templateObject.data.hideConvertedButton == true){
+                        $("<button class='btn btn-danger btnHideConverted' type='button' id='btnHideConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #f6c23e !important;border-color: #f6c23e!important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Converted</button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
                       if(templateObject.data.showPlusButtonCRM == true){
@@ -623,8 +632,9 @@ Template.datatablelist.onRendered(async function () {
                                 <a class="dropdown-item btnAddLineTask pointer" id="btnAddLineTask">+ Task</a>
                             </div>
                         </div>`).insertAfter('#' + currenttablename + '_filter');
-                      }else if(templateObject.data.showPlusButton == true){
-                        $("<button class='btn btn-primary "+showPlusButtonClass+"' id='"+showPlusButtonClass+"' name='"+showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='#"+showPlusButtonDataTarget+"' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                      }
+                      if(templateObject.data.showPlusButton == true){
+                        $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='.edtCustomer_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
 
@@ -641,6 +651,9 @@ Template.datatablelist.onRendered(async function () {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    if(typeof templateObject.data.callBack == 'function'){//Alexei
+                      templateObject.data.callBackFunc();
+                    }
                 },
                 "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = 0;
@@ -744,7 +757,7 @@ Template.datatablelist.onRendered(async function () {
                         className:items[i]?.label?.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
                         // className: items[i].class,
                         title:items[i].label,
-                        width:items[i].width+'px'
+                        width:items[i].width
                     };
 
                     let aitem = {
