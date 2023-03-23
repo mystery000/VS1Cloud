@@ -589,13 +589,16 @@ Template.shippingdocket.onRendered(function() {
     });
 
     getVS1Data('TInvoiceBackOrder').then(function(dataObject) {
+        // console.log(dataObject);
         if (dataObject.length == 0) {
             templateObject.getShippingDocts();
         } else {
             let data = JSON.parse(dataObject[0].data);
+            // console.log(data);
             var added = false;
             for (let d = 0; d < data.tinvoicebackorder.length; d++) {
                 if (parseInt(data.tinvoicebackorder[d].fields.ID) === parseInt(salesID)) {
+                    console.log(data.tinvoicebackorder[d]);
                     added = true;
                     templateObject.getAllClients();
                     let lineItems = [];
