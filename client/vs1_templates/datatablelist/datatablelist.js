@@ -443,6 +443,8 @@ Template.datatablelist.onRendered(async function () {
                 // aoColumns:acolDef,
                 //columns: acolDef,
                 columnDefs: colDef,
+                // fixedColumns: true ,
+                "ordering": false,
                 // deferRender: true,
                 buttons: [{
                     extend: 'csvHtml5',
@@ -516,7 +518,7 @@ Template.datatablelist.onRendered(async function () {
                     }
                 ],
 
-                // autoWidth: false,
+                "autoWidth": false, // might need this
                 // fixedColumns: true,
                 select: true,
                 destroy: true,
@@ -525,9 +527,9 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: false,
+                responsive: true,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
-                // "autoWidth": false,
+                //"autoWidth": false,
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
@@ -621,8 +623,9 @@ Template.datatablelist.onRendered(async function () {
                                 <a class="dropdown-item btnAddLineTask pointer" id="btnAddLineTask">+ Task</a>
                             </div>
                         </div>`).insertAfter('#' + currenttablename + '_filter');
-                      }else if(templateObject.data.showPlusButton == true){
-                        $("<button class='btn btn-primary "+showPlusButtonClass+"' id='"+showPlusButtonClass+"' name='"+showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='#"+showPlusButtonDataTarget+"' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                      }
+                      if(templateObject.data.showPlusButton == true){
+                        $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='.edtCustomer_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
 
@@ -639,6 +642,9 @@ Template.datatablelist.onRendered(async function () {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    if(typeof templateObject.data.callBack == 'function'){//Alexei
+                      templateObject.data.callBackFunc();
+                    }
                 },
                 "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = 0;
@@ -742,7 +748,7 @@ Template.datatablelist.onRendered(async function () {
                         className:items[i]?.label?.includes('#') == false ? items[i].class : items[i].class + ' hiddenColumn',
                         // className: items[i].class,
                         title:items[i].label,
-                        width:items[i].width+'px'
+                        width:items[i].width
                     };
 
                     let aitem = {
