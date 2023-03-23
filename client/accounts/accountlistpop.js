@@ -65,7 +65,7 @@ Template.accountlistpop.onCreated(() => {
             accBalance = Currency + "0.00";
         }
         if (data.ReceiptCategory && data.ReceiptCategory != '') {
-            usedCategories.push(data.fields);
+            // usedCategories.push(data.fields);    
         }
         let linestatus = '';
         if (data.Active == true) {

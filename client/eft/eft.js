@@ -405,7 +405,7 @@ Template.eft_export.events({
 
     'click .btnDoEftExport': (e) => {
         playSaveAudio();
-        setTimeout(function () {
+        setTimeout(async function () {
             let sltAccountType = $('#sltBankAccountName').val() || "";
             let sltBankName = $('#sltBankName').val() || "";
             let eftProcessingDate = $('#eftProcessingDate').val() || "";
@@ -432,6 +432,14 @@ Template.eft_export.events({
                 swal('Please input Transaction Description', '', 'error');
                 return false;
             }
+            let currentEftFilesCreatedData = await getVS1Data('TEftFilesCreated');
+            if (currentEftFilesCreatedData && currentEftFilesCreatedData.length) {
+                let saveEftFilesCreateData = JSON.parse(currentEftFilesCreatedData[0].data)
+                let newId = Random.id()
+                saveEftFilesCreateData = {teftfilescreated: [...saveEftFilesCreateData.teftfilescreated, 
+                    [newId, sltAccountType, sltBankName, eftProcessingDate, eftUserName, sltTransactionDescription]]}
+                await addVS1Data('TEftFilesCreated', JSON.stringify(saveEftFilesCreateData))
+            }            
             eftNumberUser =
                 eftNumberUser.length >= 6 ? eftNumberUser : '0'.repeat(6 - eftNumberUser.length) + eftNumberUser;
             var arrData = [];
