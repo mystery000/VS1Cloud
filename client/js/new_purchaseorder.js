@@ -1048,7 +1048,7 @@ Template.purchaseordercard.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
+        let fx = $('.sltCurrency').val();
         var comment = $('#txaComment').val();
         var parking_instruction = $('#txapickmemo').val();
         var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
@@ -1370,7 +1370,7 @@ Template.purchaseordercard.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
+        let fx = $('.sltCurrency').val();
         var comment = $('#txaComment').val();
         var parking_instruction = $('#txapickmemo').val();
         var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
@@ -2654,13 +2654,13 @@ Template.purchaseordercard.onRendered(() => {
                             let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
                             $('#edtSupplierName').val(data.fields.SupplierName);
                             templateObject.CleintName.set(data.fields.SupplierName);
-                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                            $('.sltCurrency').val(data.fields.ForeignExchangeCode);
                             $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
-                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                            FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2811,10 +2811,10 @@ Template.purchaseordercard.onRendered(() => {
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
                                                 pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
-                                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
-                                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
-                                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
-                                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                                fixedAssetID: useData[d].fields.Lines[i].CustomField1 || 0,
+                                                costTypeID: useData[d].fields.Lines[i].CustomField2 || 0,
+                                                fixedAssetName: useData[d].fields.Lines[i].CustomField3 || '',
+                                                costTypeName: useData[d].fields.Lines[i].CustomField4 || '',
                                             };
 
                                             lineItemsTable.push(dataListTable);
@@ -2842,10 +2842,10 @@ Template.purchaseordercard.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
-                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
-                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
-                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                            fixedAssetID: useData[d].fields.Lines[i].CustomField1 || 0,
+                                            costTypeID: useData[d].fields.Lines[i].CustomField2 || 0,
+                                            fixedAssetName: useData[d].fields.Lines[i].CustomField3 || '',
+                                            costTypeName: useData[d].fields.Lines[i].CustomField4 || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -2906,14 +2906,14 @@ Template.purchaseordercard.onRendered(() => {
 
                                 $('#edtSupplierName').val(useData[d].fields.SupplierName);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
-                                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                 $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
 
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 $('#shipvia').val(useData[d].fields.Shipping);
-                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                                FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -3175,13 +3175,13 @@ Template.purchaseordercard.onRendered(() => {
 
                                 $('#edtSupplierName').val(data.fields.SupplierName);
                                 templateObject.CleintName.set(data.fields.SupplierName);
-                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                                $('.sltCurrency').val(data.fields.ForeignExchangeCode);
                                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                                 $('#sltTerms').val(data.fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
-                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                                FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -3439,13 +3439,13 @@ Template.purchaseordercard.onRendered(() => {
 
                         $('#edtSupplierName').val(data.fields.SupplierName);
                         templateObject.CleintName.set(data.fields.SupplierName);
-                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                        $('.sltCurrency').val(data.fields.ForeignExchangeCode);
                         $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
-                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                        FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3657,13 +3657,13 @@ Template.purchaseordercard.onRendered(() => {
 
                 $('#edtSupplierName').val(data.fields.SupplierName);
                 templateObject.CleintName.set(data.fields.SupplierName);
-                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
+                $('.sltCurrency').val(data.fields.ForeignExchangeCode);
                 $('#exchange_rate').val(data.fields.ForeignExchangeRate);
                 $('#sltTerms').val(data.fields.TermsName);
                 $('#sltDept').val(getDepartmentVal);
                 $('#sltStatus').val(data.fields.OrderStatus);
                 $('#shipvia').val(data.fields.Shipping);
-                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                 templateObject.attachmentCount.set(0);
                 if (data.fields.Attachments) {
@@ -3981,7 +3981,7 @@ Template.purchaseordercard.onRendered(() => {
     let table;
     $(document).ready(function() {
         $('#edtSupplierName').editableSelect();
-        $('#sltCurrency').editableSelect();
+        $('.sltCurrency').editableSelect();
         $('#sltTerms').editableSelect();
         $('#sltDept').editableSelect();
         $('#sltStatus').editableSelect();
@@ -4069,7 +4069,7 @@ Template.purchaseordercard.onRendered(() => {
     // });
 
     // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
-    //     $('#sltCurrency').val($(this).find(".colCode").text());
+    //     $('.sltCurrency').val($(this).find(".colCode").text());
     //     $('#currencyModal').modal('toggle');
 
     //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
@@ -6358,7 +6358,7 @@ Template.purchaseordercard.onRendered(() => {
         mediaQuery(x);
         x.addListener(mediaQuery)
     }, 10);
-    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+    FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 });
 
 Template.purchaseordercard.onRendered(function() {

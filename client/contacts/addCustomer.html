@@ -1404,7 +1404,7 @@
                                   {{> toggle_button className="chkGlobalSettings" id="customer_stop_credit_toggle"
                                   width="131px" for="customer_stop_credit_toggle" displayName="Stop Credit"}}
                                 </div>
-                                  <div class="col-6 col-md-2" style="padding: 0;">
+                                  <div class="col-6 col-md-2" style="padding: 0;" data-toggle="tooltip" title="Selection required for Foreign Customers only" data-placement="bottom">
                                       {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode =
                                               record.foreignExchangeCode}}
                                   </div>
