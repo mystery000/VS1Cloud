@@ -34,7 +34,7 @@ Template.taxsummaryreport.onCreated(() => {
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
     templateObject.reportOptions = new ReactiveVar([]);
-
+    templateObject.currencyRecord = new ReactiveVar([]);
     // Currency related vars //
     templateObject.currencyList = new ReactiveVar([]);
     templateObject.activeCurrencyList = new ReactiveVar([]);
@@ -44,7 +44,22 @@ Template.taxsummaryreport.onCreated(() => {
 Template.taxsummaryreport.onRendered(() => {
     LoadingOverlay.show();
     const templateObject = Template.instance();
-
+    templateObject.init_reset_data = function () {
+        let reset_data = [
+            { index: 1, label: 'TaxCode', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 2, label: 'INPUTS Ex (Purchases)', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 3, label: 'INPUTS Inc (Purchases)', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 4, label: 'OUTPUTS Ex  (Sales)', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 5, label: 'OUTPUTS Inc (Sales)', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 6, label: 'Total Net', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 7, label: 'Total Tax', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 8, label: 'TaxRate', class: 'colAccountName', active: true, display: true, width: "100" },
+            { index: 9, label: 'Total Tax1', class: 'colAccountName', active: false, display: true, width: "100" },
+            { index: 10, label: 'ID', class: 'colAccountName', active: false, display: true, width: "100" },
+        ];
+        templateObject.currencyRecord.set(reset_data);
+    }
+    templateObject.init_reset_data();
     // let salesOrderTable;
     // var splashArray = new Array();
     // var today = moment().format('DD/MM/YYYY');
@@ -99,8 +114,8 @@ Template.taxsummaryreport.onRendered(() => {
         Datehandler.initOneMonth();
     };
 
-    templateObject.setDateAs = ( dateFrom = null ) => {
-        templateObject.dateAsAt.set( ( dateFrom )? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
+    templateObject.setDateAs = ( dateTo = null ) => {
+        templateObject.dateAsAt.set( ( dateTo )? moment(dateTo).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY") )
     };
 
 
@@ -130,11 +145,29 @@ Template.taxsummaryreport.onRendered(() => {
         $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
         await templateObject.reportOptions.set(defaultOptions);
         // await templateObject.getTaxSummaryReports(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
-        await templateObject.loadReport(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate);
-
+        templateObject.getTaxData(defaultOptions.fromDate, defaultOptions.toDate, defaultOptions.ignoreDate)
 
     };
 
+    templateObject.getTaxData = async function (dateFrom, dateTo, ignoreDate = false) {
+        getVS1Data('TTaxSummaryReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                let data = templateObject.loadReport(dateFrom, dateTo, ignoreDate);
+                addVS1Data('TTaxSummaryReport', JSON.stringify(data)).then(function(){
+                    templateObject.displayTaxData(data);
+                })
+
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayTaxData(data);
+            }
+        }).catch(function (err) {
+            let data = templateObject.loadReport(dateFrom, dateTo, ignoreDate);
+            addVS1Data('TTaxSummaryReport', JSON.stringify(data)).then(function(){
+                templateObject.displayTaxData(data);
+            })
+        });
+    }
 
 
     templateObject.loadReport = async(dateFrom, dateTo, ignoreDate = false) => {
@@ -142,7 +175,7 @@ Template.taxsummaryreport.onRendered(() => {
         // document.getElementById("subTaxCode").checked = false;
         LoadingOverlay.show();
 
-        const _data = await CachedHttp.get("TTaxSummaryReport", async() => {
+        const _data = await CachedHttp.get("TTaxSummaryReport", async () => {
             return await reportService.getTaxSummaryData(dateFrom, dateTo, ignoreDate);
         }, {
             requestParams: {
@@ -162,7 +195,10 @@ Template.taxsummaryreport.onRendered(() => {
             }
         });
 
-        let data = _data.response;
+        return _data.response;
+    }
+
+    templateObject.displayTaxData = function(data){
 
         if (data.ttaxsummaryreport) {
             const taxSummaryReport = data.ttaxsummaryreport;
@@ -1173,11 +1209,11 @@ Template.taxsummaryreport.onRendered(() => {
     // var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
     // let getDateFrom = currentDate2.getFullYear() + "-" + (currentDate2.getMonth()) + "-" + currentDate2.getDate();
     // // templateObject.getTaxSummaryReports(getDateFrom, getLoadDate, false);
-    templateObject.loadReport(
+    templateObject.getTaxData(
         GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
         GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
         false);
-    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) )
+    templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateTo').val()) )
 
     templateObject.getDepartments = function() {
             let deptrecords = [];
@@ -1194,13 +1230,9 @@ Template.taxsummaryreport.onRendered(() => {
 
                 }
             });
-
         }
         // templateObject.getAllProductData();
     templateObject.getDepartments();
-
-
-
 
 });
 
@@ -1234,19 +1266,22 @@ Template.taxsummaryreport.events({
         }
     },
     "click #ignoreDate":  (e, templateObject) => {
-        localStorage.setItem("VS1TaxSummary_Report", "");
-        templateObject.loadReport(
-          null, 
-          null, 
-          true
-        );
+        clearData('TTaxSummaryReport').then(function(){
+            templateObject.getTaxData(
+                null,
+                null,
+                true
+            );
+        })
     },
     "change #dateTo, change #dateFrom": (e, templateObject) => {
-        templateObject.loadReport(
-            GlobalFunctions.convertYearMonthDay($('#dateFrom').val()), 
-            GlobalFunctions.convertYearMonthDay($('#dateTo').val()), 
-            false
-        );
+        clearData('TTaxSummaryReport').then(function(){
+            templateObject.getTaxData(
+                GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+                GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+                true
+            );
+        })
     },
     ...Datehandler.getDateRangeEvents(),
     'click .btnRefresh': function() {
@@ -1266,11 +1301,22 @@ Template.taxsummaryreport.events({
             //templateObject.dateAsAt.set(formatDate);
             if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
                 // templateObject.getTaxSummaryReports('', '', true);
-                templateObject.loadReport('', '', true);
+                clearData('TTaxSummaryReport').then(function(){
+                    templateObject.getTaxData(
+                        '',
+                        '',
+                        true
+                    );
+                })
                 templateObject.dateAsAt.set('Current Date');
             } else {
-                // templateObject.getTaxSummaryReports(formatDateFrom, formatDateTo, false);
-                templateObject.loadReport(formatDateFrom, formatDateTo, false);
+                clearData('TTaxSummaryReport').then(function(){
+                    templateObject.getTaxData(
+                        formatDateFrom,
+                        formatDateTo,
+                        false
+                    );
+                })
                 templateObject.dateAsAt.set(formatDate);
             }
         }, 100);
@@ -1492,24 +1538,23 @@ Template.taxsummaryreport.events({
         }
     },
     'click #mainTaxCode': function(event) {
-        const reportData = Template.instance().mainReportRecords.get();
+        const reportData = $('#subTaxCode').prop("checked") ? Template.instance().mainReportRecords.get() : Template.instance().subReportRecords.get();
         Template.instance().reportRecords.set(reportData);
-        const grandData = Template.instance().mainGrandRecords.get();
+        const grandData = $('#subTaxCode').prop("checked") ? Template.instance().mainGrandRecords.get() : Template.instance().subGrandRecords.get();
         Template.instance().grandRecords.set(grandData);
-        Template.instance().isSub.set(false);
+        Template.instance().isSub.set(!$('#subTaxCode').prop("checked"));
         Template.instance().stylizeForm();
-
+        $('#subTaxCode').prop('checked', !$('#subTaxCode').prop("checked"));
     },
     'click #subTaxCode': function(event) {
-        const reportData = Template.instance().subReportRecords.get();
+        const reportData = $('#mainTaxCode').prop("checked") ? Template.instance().subReportRecords.get() : Template.instance().mainReportRecords.get();
         Template.instance().reportRecords.set(reportData);
-        const grandData = Template.instance().subGrandRecords.get();
+        const grandData = $('#mainTaxCode').prop("checked") ? Template.instance().subGrandRecords.get() : Template.instance().mainGrandRecords.get();
         Template.instance().grandRecords.set(grandData);
-        Template.instance().isSub.set(true);
+        Template.instance().isSub.set($('#mainTaxCode').prop("checked"));
         Template.instance().stylizeForm();
+        $('#mainTaxCode').prop('checked', !$('#mainTaxCode').prop("checked"));
     },
-
-
     // CURRENCY MODULE //
     ...FxGlobalFunctions.getEvents(),
     "click .currency-modal-save": (e) => {
@@ -1565,6 +1610,9 @@ Template.taxsummaryreport.events({
 });
 
 Template.taxsummaryreport.helpers({
+    currencyRecord: () => {
+        return Template.instance().currencyRecord.get();
+    },
     records: () => {
         return Template.instance().records.get();
         //   .sort(function(a, b){
