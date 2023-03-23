@@ -57,7 +57,8 @@ Template.statementlist.onCreated(function () {
         return dataList;
     }
     let headerStructure = [
-        { index: 0, label: "", class: "colSaleDate", active: true, display: true, width: "50" },
+        { index: 0, label: `<div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
+        for="formCheck-All"></label></div>`, class: "colChkBox", active: true, display: true, width: "50" },
         { index: 1, label: "Company", class: "colSalesNo", active: true, display: true, width: "200" },
         { index: 2, label: "Job Name", class: "colDueDate", active: true, display: true, width: "200" },
         { index: 3, label: "Balance", class: "colCustomer", active: true, display: true, width: "100" },
@@ -3054,14 +3055,5 @@ Template.statementlist.helpers({
         let dataReturn = templateObject.getExData(data);
         return dataReturn
       }
-    },
-    
-    callBackFunc: function() {
-        return function(data) {
-            // return "callback function is good";
-            $("th.colSaleDate").html(`<div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
-            for="formCheck-All"></label></div>`);
-        }
     }
-
 });
