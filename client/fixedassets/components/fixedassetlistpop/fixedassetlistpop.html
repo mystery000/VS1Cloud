@@ -43,8 +43,28 @@
     <div class="col-12">
       <div class="card mb-3">
         <div class="card-body">
-<!--          {{> non_transactional_list tablename = "tblFixedAssetList"}}-->
-            {{> fixedAssetListTable }}
+          <style>
+            td.colAmountEx, td.colTax, td.colAmount{
+                  text-align: right !important;
+              }
+          </style>
+          {{>datatablelist
+            tablename="tblFixedAssetList"
+            apiName= apiFunction
+            indexeddbname = 'TFixedAssets'
+            tableheaderrecords = tableheaderrecords
+            exportfilename = 'Fixed Assets List'
+            istransaction = false
+            apiParams= apiParams
+            datahandler = datahandler
+            service=service
+            lowercaseDataName='tfixedassetslist'
+            exportfilename='Fixed Assets List'
+            exIndexDBName = 'tfixedassetsex'
+            exdatahandler = exDataHandler
+            searchAPI = searchAPI
+            orderby = '[[ 0, "asc" ]]'
+        }}
         </div>
       </div>
     </div>

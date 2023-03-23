@@ -87,7 +87,7 @@
               </div>
 
               <div class="d-xl-flex justify-content-xl-end align-items-xl-start">
-                {{> export_import_print_display_button tablename="tblFixedAssetList"}}
+                {{> export_import_print_display_button Import="hiddenButton" tablename="tblFixedAssetList"}}
               </div>
             {{/if}}
           <div class="modal fade" role="dialog" tabindex="-1" id="importFixedAssetModal">
@@ -157,36 +157,14 @@
           </div>
         </div>
 
-
-
-        {{#if equals isHideButton false}}
-            <div class="card-body">
-                <style>
-                    td.colReplacementCost, td.colPurchCost, td.colQty, td.colEstimatedValue, td.colBusinessUse{
-                        text-align: right !important;
-                    }
-                </style>
-
-                {{>datatablelist
-                        tablename="tblFixedAssetList"
-                        apiName= apiFunction
-                        indexeddbname = 'TFixedAssetsList'
-                        tableheaderrecords = tableheaderrecords
-                        exportfilename = 'Fixed Assets List'
-                        istransaction = false
-                        apiParams= apiParams
-                        datahandler = datahandler
-                        service=service
-                        lowercaseDataName='tfixedassetslist'
-                        exIndexDBName = 'tfixedassetslist'
-                        exdatahandler = exDataHandler
-                        searchAPI = searchAPI
-                }}
-            </div>
-        {{/if}}
-        {{#if isHideButton}}
+        <div class="card-body">
+            <style>
+                td.colReplacementCost, td.colPurchCost, td.colQty, td.colEstimatedValue, td.colBusinessUse{
+                    text-align: right !important;
+                }
+            </style>
             {{>datatablelist
-                    tablename=id
+                    tablename="tblFixedAssetList"
                     apiName= apiFunction
                     indexeddbname = 'TFixedAssetsList'
                     tableheaderrecords = tableheaderrecords
@@ -200,7 +178,8 @@
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
             }}
-        {{/if}}
+<!--          {{> non_transactional_list tablename = "tblFixedAssetList"}}-->
+        </div>
       </div>
     </div>
   </div>
