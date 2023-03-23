@@ -85,10 +85,12 @@ Template.allreports.onCreated(function() {
 
     templateObject.isSupplierList = new ReactiveVar(false);
     templateObject.isSupplierSummaryReport = new ReactiveVar(false);
+    templateObject.isPrimaryAccountant = new ReactiveVar(false);
 });
 Template.allreports.onRendered(() => {
     let templateObject = Template.instance();
-
+    if (localStorage.getItem('vs1companyBankAccountName') === localStorage.getItem('VS1Accountant'))
+        templateObject.isPrimaryAccountant.set(true)
     let isBalanceSheet;
     getVS1Data("BalanceSheetReport").then(function (dataObject) {
         if (dataObject.length === 0) {
@@ -2026,6 +2028,9 @@ Template.allreports.helpers({
             // return (a.saledate.toUpperCase() < b.saledate.toUpperCase()) ? 1 : -1;
         });
     },
+    isPrimaryAccountant: () => {
+        return Template.instance().isPrimaryAccountant.get()
+    }
 });
 
 Template.registerHelper('equals', function(a, b) {
