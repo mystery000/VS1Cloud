@@ -2126,17 +2126,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let fullAccountTypeName = "";
         let accBalance = "";
         let deleteFilter = false;
-        let chkBoxId;
-        let chkBox;
-
+        
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
-            chkBoxId = "f-" + lineData.ID || lineData.Id;
-            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            let chkBoxId = "f-" + lineData.ID || lineData.Id;
+            let chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);            
             var dataList = [
                 chkBox,
                 lineData.ID || lineData.Id || "",
-                lineData.AccountName || "",
+                `<input
+                    class="form-control pointer sltEftTblAccountName es-input bg-white"
+                    value="${lineData.AccountName || ""}"                    
+                />`,                 
                 lineData.BSB || "___-___",
                 lineData.CreditDebitAccountNumber || "",
                 `<input
@@ -2144,7 +2146,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     value="Credit"                    
                 />`,
                 lineData.LodgementReferences || "",
-                lineData.Amount || "",
+                amount,
                 lineData.UsersBSB || "___-___",
                 lineData.UsersAccountNumber || "",
             ];

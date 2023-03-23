@@ -23,21 +23,6 @@ Template.eft_export.onRendered(function () {
     // tempcode
     templateObject.eftRowId.set(Random.id());
 
-    templateObject.transactionDescriptions.set([
-        {
-            value: 'payroll',
-            label: 'Payroll',
-        },
-        {
-            value: 'supplier',
-            label: 'Supplier',
-        },
-        {
-            value: 'insurance',
-            label: 'Insurance',
-        },
-    ]);
-
     $(() => {
         setTimeout(() => {
             let currentDate = moment(new Date()).format('DD/MM/YYYY');
@@ -58,8 +43,9 @@ Template.eft_export.onRendered(function () {
                 },
             });
             $(".eftProcessingDate").val(currentDate);
+            $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))
             $('#accountListModal').modal('show');
-        }, 3000);
+        }, 5000);
     })
 
     templateObject.loadTabaDescriptiveRecord = () => {
@@ -170,6 +156,7 @@ Template.eft_export.onRendered(function () {
             const accountTypeList = [];
             var accountDataName = e.target.value || '';
             if (e.pageX > offset.left + $earch.width() - 8) {
+                selectLineId = undefined
                 $('#accountListModal').modal();
                 $('.fullScreenSpin').css('display', 'none');
             } else {
@@ -233,23 +220,26 @@ Template.eft_export.onRendered(function () {
         });
 
     $(document).on('click', '#tblAccountListPop tbody tr', function (e) {
-        $('.colAccount').removeClass('boldtablealertsborder');
         var table = $(this);
         let colAccountID = table.find('.colAccountId').text();
-        if (colAccountID) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            $('#eftaccountid').val(colAccountID).trigger('change')
-            // templateObject.loadTABADetailRecordById(colAccountID);
-            templateObject.loadTabaDescriptiveRecordById(colAccountID);
-        }
-
         let lineProductName = table.find('.colAccountName').text();
-        let lineProductDesc = table.find('.colDescription').text();
-        let lineAccoutNo = table.find('.colAccountNo').text();
-        let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";
+        if (selectLineId === undefined) {
+            $('.colAccount').removeClass('boldtablealertsborder');            
+            if (colAccountID) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                $('#eftaccountid').val(colAccountID).trigger('change')
+                // templateObject.loadTABADetailRecordById(colAccountID);
+                templateObject.loadTabaDescriptiveRecordById(colAccountID);
+            }        
+            let lineProductDesc = table.find('.colDescription').text();
+            let lineAccoutNo = table.find('.colAccountNo').text();
+            let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";            
+            $('#sltBankAccountName').val(lineProductName);
+            $('#sltBankName').val(lineBankName)
+        } else {
+            $(`tr#${selectLineId} .sltEftTblAccountName`).val(lineProductName);
+        }        
         $('#accountListModal').modal('toggle');
-        $('#sltBankAccountName').val(lineProductName);
-        $('#sltBankName').val(lineBankName)
     });
 
     $('#sltBankName').editableSelect();
@@ -317,6 +307,11 @@ Template.eft_export.onRendered(function () {
         $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
     });
+
+    $(document).on('click', '#tblEftExportCheckbox input.sltEftTblAccountName', function(e) {
+        selectLineId = $(this).closest('tr').attr('id')
+        $('#accountListModal').modal('show');
+    })
 });
 
 Template.eft_export.events({
