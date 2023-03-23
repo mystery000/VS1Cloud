@@ -441,10 +441,10 @@ Template.process_clock_template.events({
             type = $('#break').val();
         } else if ($('#lunch').is(":checked")) {
             type = $('#lunch').val();
-        } else if ($('#switchclockon').is(":checked")) {
-            type = $('#switchclockon').val();
-        } else if ($('#switchclockoff').is(":checked")) {
-            type = $('#switchclockoff').val();
+        } else if ($('#clockonswitch').is(":checked")) {
+            type = $('#clockonswitch').val();
+        } else if ($('#clockoffswitch').is(":checked")) {
+            type = $('#clockoffswitch').val();
         }else {
             swal({
                 title: 'Please Select Option',
