@@ -776,10 +776,10 @@ Template.organisationsettings.events({
       await saveAccountantDetail()
       organisationService
         .saveOrganisationSetting(objDetails)
-        .then(function (data) {
+        .then(async function (data) {
           // Bert.alert('<strong>'+ 'Organisation details successfully updated!'+'</strong>!', 'success');
           // swal('Organisation details successfully updated!', '', 'success');
-
+          await clearData('TCompanyInfo')
           localStorage.setItem("tradingName", tradingName);
           localStorage.setItem("VS1Accountant", sltAccountant);
           localStorage.setItem("yearEnd", sltYearEnd);
