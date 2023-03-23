@@ -5287,7 +5287,7 @@ Template.payrolloverview.events({
         .then(function (dataReturnRes) {
           $("#updateID").val(dataReturnRes.fields.ID);
           sideBarService.getAllTimeSheetList().then(function (data) {
-            Bert.alert(
+            alert(
               $("#employee_name").val() + " you are now Clocked On",
               "now-success"
             );
@@ -5297,7 +5297,7 @@ Template.payrolloverview.events({
             $("#employeeStatusField")
               .addClass("statusClockedOn")
               .text("Clocked On");
-            Bert.alert(
+            alert(
               $("#employee_name").val() + " you are now Clocked On",
               "now-success"
             );
