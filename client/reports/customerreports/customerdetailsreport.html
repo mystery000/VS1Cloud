@@ -5,28 +5,13 @@
             <thead class="table-active">
                         {{#each c in customerdetailsreportth}}
                         {{#if c.display}}
-                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">
+                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left; width:{{c.width}}px">
                                 {{c.label}}
                             </th>
                         {{/if}}
                       {{/each}}
             </thead>
             <tbody>
-                {{#if transactiondatatablerecords}}
-                    {{#each items in transactiondatatablerecords}}
-                        <tr>
-                            {{#each item in items}}
-                                <td>
-                                    {{item}}
-                                </td>
-                            {{/each}}
-                        </tr>
-                    {{/each}}
-                {{else}}
-                    <tr class="odd" style="text-align: center;">
-                        <td valign="top" colspan="11" class="dataTables_empty text-left">No data available in table</td>
-                    </tr>
-                {{/if}}
             </tbody>
         </table>
     </div>
