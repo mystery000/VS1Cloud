@@ -3,9 +3,10 @@ import { Random } from 'meteor/random';
 import { AccountService } from '../accounts/account-service.js';
 import { EftService } from './eft-service';
 import { Template } from 'meteor/templating';
+import { UtilityService } from '../utility-service.js';
 import './eft.html';
 
-let accountService = new AccountService();
+let utilityService = new UtilityService();
 let eftService = new EftService();
 let selectLineId
 
@@ -23,7 +24,7 @@ Template.eft_export.onRendered(function () {
     // tempcode
     templateObject.eftRowId.set(Random.id());
 
-    $(() => {
+    $(() => utilityService.waitForElm("#accountListModal tbody td").then(() => {
         setTimeout(() => {
             let currentDate = moment(new Date()).format('DD/MM/YYYY');
             $('.eftProcessingDate').datepicker({
@@ -45,8 +46,9 @@ Template.eft_export.onRendered(function () {
             $(".eftProcessingDate").val(currentDate);
             $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))
             $('#accountListModal').modal('show');
-        }, 5000);
-    })
+        });
+    }))
+    
 
     templateObject.loadTabaDescriptiveRecord = () => {
         let descriptiveList = [];

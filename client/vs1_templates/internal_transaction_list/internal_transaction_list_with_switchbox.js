@@ -89,7 +89,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     function getColumnDefs(idIndex = 1) {
         let columnData = [{
             targets: 0,
-            className: "colChkBox pointer",
+            className: "colChkBox pointer px-0",
             orderable: false,
             width: "15px",
         }];
@@ -2130,7 +2130,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
             let chkBoxId = "f-" + lineData.ID || lineData.Id;
-            let chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            let chkBox = '<div class="custom-control custom-switch chkBox pointer text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
             let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);            
             var dataList = [
                 chkBox,
