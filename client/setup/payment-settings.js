@@ -25,7 +25,9 @@ Template.wizard_payment.onCreated(() => {
     let dataList = [
         data.PayMethodID || '',
         data.Name || '',
-        data.IsCreditCard || '',
+        data.IsCreditCard 
+          ? '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '" checked=""><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>'
+          : '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '"><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>',
         data.Status || '',
     ];
     return dataList;
@@ -35,7 +37,9 @@ Template.wizard_payment.onCreated(() => {
     var dataList = [
       data.PayMethodID || '',
       data.Name || '',
-      data.IsCreditCard || '',
+      data.IsCreditCard 
+        ? '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '" checked=""><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>'
+        : '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '"><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>',
       data.Status || '',
     ];
     return dataList
