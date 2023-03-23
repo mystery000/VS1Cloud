@@ -662,6 +662,12 @@ Template.accountlistpop.helpers({
 
     apiFunction:function() {
         let sideBarService = new SideBarService();
+        // Alex: add for bank rec {
+        const templateObject = Template.instance();
+        if (templateObject.data.typefilter == 'bankccard') {
+            return sideBarService.getTAccountVS1ListForBankCCard;
+        }
+        // @}
         return sideBarService.getAllTAccountVS1List;
     },
 
