@@ -187,7 +187,7 @@
                               background-color: #e74a3b !important; color:#fff;
                             }
                         </style>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                             </div>
@@ -220,8 +220,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <table id="tblInvoicelistemail" name="tblInvoicelistemail" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
+                        </div> -->
+                        <!-- <table id="tblInvoicelistemail" name="tblInvoicelistemail" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th chkBox" style="width:15px;"><div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll" for="formCheck-All"></label></div></th>
@@ -268,7 +268,22 @@
                                 {{/if}}
 
                             </tbody>
-                        </table>
+                        </table> -->
+                        {{>datatablelist
+                            tablename="tblInvoicelistemail"
+                            apiName= apiFunction
+                            indexeddbname = 'TInvoiceEx'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Email Invoice List'
+                            istransaction = true
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tinvoiceex'
+                            exIndexDBName = 'tinvoiceex'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                        }}
                     </div>
                 </div>
             </div>
