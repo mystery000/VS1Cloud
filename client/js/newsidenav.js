@@ -2417,6 +2417,17 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+
+
+  'click #sideprocessclockonoff': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/process_clock_list');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
+
+
   'click #sidenavproductionplanner': function (event) {
     event.preventDefault();
     FlowRouter.go('/productionplanner');
