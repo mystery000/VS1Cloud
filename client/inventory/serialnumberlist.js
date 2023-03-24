@@ -42,13 +42,13 @@ Template.serialnumberlist.onCreated(function() {
         { index: 0, label: "Serial Number", class: "colSerialNumber", active: true, display: true, width: "100" },
         { index: 1, label: "Product Name", class: "colProductName", active: true, display: true, width: "150" },
         { index: 2, label: "Sales Description", class: "colSalesDescription", active: true, display: true, width: "150" },
-        { index: 3, label: "Status", class: "colStatus", active: true, display: true, width: "85" },
-        { index: 4, label: "Qty", class: "colQty", active: true, display: true, width: "80" },
-        { index: 5, label: "Date", class: "colDate", active: true, display: true, width: "100" },
-        { index: 6, label: "Transaction", class: "colTransaction", active: true, display: true, width: "100" },
-        { index: 7, label: "Department", class: "colDepartment", active: true, display: true, width: "100" },
-        { index: 8, label: "Bin", class: "colBin", active: true, display: true, width: "100" },
-        { index: 9, label: "Barcode", class: "colBarcode", active: true, display: true, width: "100" },
+        { index: 3, label: "Qty", class: "colQty", active: true, display: true, width: "80" },
+        { index: 4, label: "Date", class: "colDate", active: true, display: true, width: "100" },
+        { index: 5, label: "Transaction", class: "colTransaction", active: true, display: true, width: "100" },
+        { index: 6, label: "Department", class: "colDepartment", active: true, display: true, width: "100" },
+        { index: 7, label: "Bin", class: "colBin", active: true, display: true, width: "100" },
+        { index: 8, label: "Barcode", class: "colBarcode", active: true, display: true, width: "100" },
+        { index: 9, label: "Status", class: "colStatus", active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
