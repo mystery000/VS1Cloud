@@ -7622,10 +7622,21 @@ Template.calender.events({
     },
     'click .btnSaveIgnoreSMS': function() {
         playSaveAudio();
-        setTimeout(function() {
-            $('#chkSMSCustomer').prop('checked', false);
-            $('#chkSMSUser').prop('checked', false);
-            $("#frmAppointment").trigger('submit');
+        setTimeout(async function() {
+            $("#chkSMSCustomer").prop("checked", false);
+            $("#chkSMSUser").prop("checked", false);
+            let emailCustomer = $("#customerEmail").is(":checked");
+            let emailUser = $("#userEmail").is(":checked");
+            $("#saveAppointmentModal").modal("hide");
+            $("#event-modal").modal("hide");
+            if (emailCustomer || emailUser) {
+                await sendAppointmentEmail();
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
+            } else {
+                $("#btnAppointmentSubmit").click();
+                // $("#frmAppointment").trigger("submit");
+            }
         }, delayTimeAfterSound);
     },
     'click #btnCloseStopAppointmentModal': function() {
@@ -7637,18 +7648,17 @@ Template.calender.events({
     'click #btnCloseSaveAppointmentModal': function() {
         $('#saveAppointmentModal').modal("hide");
     },
-    'click #btnSaveAppointmentSubmit': async function(e) {
-        playSaveAudio();
+    "click #btnSaveAppointmentSubmit": async function(e) {
         e.preventDefault();
-        let templateObject = Template.instance();
-        setTimeout(async function() {
-
-            const smsCustomer = $('#chkSMSCustomer').is(':checked');
-            const smsUser = $('#chkSMSUser').is(':checked');
-            const customerPhone = $('#mobile').val();
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            let sendSMSRes = true;
-            /*
+        const templateObject = Template.instance();
+        const smsCustomer = $("#chkSMSCustomer").is(":checked");
+        const smsUser = $("#chkSMSUser").is(":checked");
+        const customerPhone = $("#mobile").val();
+        var emailCustomer = $("#customerEmail").is(":checked");
+        var emailUser = $("#userEmail").is(":checked");
+        const smsSettings = templateObject.defaultSMSSettings.get();
+        let sendSMSRes = true;
+        /*
             if (createAppointment == false) {
                 $('.modal-backdrop').css('display', 'none');
                 $('.fullScreenSpin').css('display', 'none');
@@ -7665,44 +7675,62 @@ Template.calender.events({
                 return false;
             };*/
 
-            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ""));
-                if (!sendSMSRes.success) {
-                    swal({
-                        title: 'Oops...',
-                        text: sendSMSRes.message,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try again'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#saveAppointmentModal').modal("hide");
-                        } else {
-                            // window.open("/appointments", '_self');
-                        }
-                    });
-                } else {
-                    localStorage.setItem('smsId', sendSMSRes.sid);
-                    $('#saveAppointmentModal').modal("hide");
-                    swal({
-                        title: 'SMS was sent successfully',
-                        text: "SMS was sent successfully",
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.value) {
-                            $("#event-modal").modal("hide");
-                        } else {
-                            // window.open("/appointments", '_self');
-                        }
-                    });
-                    $("#frmAppointment").trigger('submit');
-                }
+        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
+            sendSMSRes = await templateObject.sendSMSMessage("save","+" + customerPhone.replace("+", ""));
+            if (!sendSMSRes.success) {
+                swal({
+                    title: "Oops...",
+                    text: sendSMSRes.message,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try again",
+                }).then((result) => {
+                    if (result.value) {
+                        $("#saveAppointmentModal").modal("hide");
+                    } else {
+                        // window.open('/appointments', '_self');
+                    }
+                });
             } else {
-                $("#frmAppointment").trigger('submit');
+                localStorage.setItem("smsId", sendSMSRes.sid);
+                $("#saveAppointmentModal").modal("hide");
+                swal({
+                    title: "SMS was sent successfully",
+                    text: "SMS was sent successfully",
+                    type: "success",
+                    showCancelButton: false,
+                    confirmButtonText: "Ok",
+                }).then((result) => {
+                    if (result.value) {
+                        $("#event-modal").modal("hide");
+                    } else {
+                        // window.open('/appointments', '_self');
+                    }
+                });
+                if (emailCustomer || emailUser) {
+                    await sendAppointmentEmail();
+                    // $("#frmAppointment").trigger("submit");
+					console.log('Submitting Appointment form1')
+                    $("#btnAppointmentSubmit").click();
+                } else {
+                    // $("#frmAppointment").trigger("submit");
+					console.log('Submitting Appointment form2')
+                    $("#btnAppointmentSubmit").click();
+                }
             }
-        }, delayTimeAfterSound);
+        } else {
+			$("#event-modal").modal("hide");
+            if (emailCustomer || emailUser) {
+                await sendAppointmentEmail();
+                // $("#frmAppointment").trigger("submit");
+				console.log('Submitting Appointment form3')
+                $("#btnAppointmentSubmit").click();
+            } else {
+                // $("#frmAppointment").trigger("submit");
+				console.log('Submitting Appointment form4')
+                $("#btnAppointmentSubmit").click();
+            }
+        }
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {
@@ -9275,8 +9303,11 @@ Template.registerHelper('and', (a, b) => {
     return a && b;
 });
 
-const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
+openAppointModalDirectly = (leadid, templateObject, auto = false) => {
     let contactService = new ContactService();
+    $("#frmAppointment")[0].reset();
+    // templateObject.getAllProductData();
+    $(".paused").hide();
     if (FlowRouter.current().queryParams.leadid) {
         contactService.getOneLeadDataEx(leadid).then(function(data) {
             // return;
@@ -9284,26 +9315,39 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
+            document.getElementById("employee_name").value =
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            document.getElementById("address").value = data.fields.Street.replace(
+                /(?:\r\n|\r|\n)/g,
+                ", "
+            );
             if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
+                document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
             if (auto == true) {
                 let dateStart = getRegalTime();
-                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
-                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
+                let startTime =
+                    ("0" + dateStart.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime =
+                    ("0" + dateEnd.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
+                let appointmentService = new AppointmentService();
                 getVS1Data("TAppointment").then(function(dataObject) {
                     if(dataObject.length == 0){
                         let appointmentService = new AppointmentService();
@@ -9352,7 +9396,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 // if(checkIncludeAllProducts ==  true){
                 // templateObject.getAllProductData();
                 // }else{
-                //   if(getEmployeeID != ""){
+                //   if(getEmployeeID != ''){
                 //     templateObject.getAllSelectedProducts(getEmployeeID);
                 //   }else{
                 //     templateObject.getAllProductData();
@@ -9364,114 +9408,54 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             }
             $("#customerListModal").modal("hide");
             $("#event-modal").modal();
-        })
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
+        });
     } else if (FlowRouter.current().queryParams.customerid) {
         contactService.getOneCustomerDataEx(leadid).then((data) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
+            document.getElementById("employee_name").value =
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            document.getElementById("address").value = data.fields.Street.replace(
+                /(?:\r\n|\r|\n)/g,
+                ", "
+            );
             if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
+                document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
             if (auto == true) {
                 let dateStart = getRegalTime();
-                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
-                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                document.getElementById("startTime").value = startTime;
-                document.getElementById("endTime").value = endTime;
-            }
-            if ($("#updateID").val() == "") {
-                getVS1Data("TAppointment").then(function(dataObject) {
-                    if(dataObject.length == 0){
-                        let appointmentService = new AppointmentService();
-                        appointmentService.getAllAppointmentListCount().then(function(data) {
-                            if (data.tappointmentex.length > 0) {
-                                let max = 1;
-                                for (let i = 0; i < data.tappointmentex.length; i++) {
-                                    if (data.tappointmentex[i].Id > max) {
-                                        max = data.tappointmentex[i].Id;
-                                    }
-                                }
-                                document.getElementById("appID").value = max + 1;
-                            } else {
-                                document.getElementById("appID").value = 1;
-                            }
-                        });
-                    }else{
-                        let data = JSON.parse(dataObject[0].data);
-                        if (data.tappointmentex.length > 0) {
-                            let max = 1;
-                            for (let i = 0; i < data.tappointmentex.length; i++) {
-                                if (data.tappointmentex[i].Id > max) {
-                                    max = data.tappointmentex[i].Id;
-                                }
-                            }
-                            document.getElementById("appID").value = max + 1;
-                        } else {
-                            document.getElementById("appID").value = 1;
-                        }
-                    }
-                })
-                if (getEmployeeID != "") {
-                    var filterEmpData = getAllEmployeeData.filter(empdData => {
-                        return empdData.id == getEmployeeID;
-                    });
-                    if (filterEmpData) {
-                        if (filterEmpData[0].custFld8 == "false") {
-                            templateObject.getAllSelectedProducts(getEmployeeID);
-                        } else {
-                            templateObject.getAllProductData();
-                        }
-                    } else {
-                        templateObject.getAllProductData();
-                    }
-                }
-                // if(checkIncludeAllProducts ==  true){
-                // templateObject.getAllProductData();
-                // }else{
-                //   if(getEmployeeID != ""){
-                //     templateObject.getAllSelectedProducts(getEmployeeID);
-                //   }else{
-                //     templateObject.getAllProductData();
-                //   }
-                //
-                // }
-
-                //templateObject.getAllProductData();
-            }
-            $("#customerListModal").modal("hide");
-            $("#event-modal").modal();
-        })
-    } else if (FlowRouter.current().queryParams.supplierid) {
-        contactService.getOneSupplierDataEx(leadid).then((data) => {
-            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-            let getAllEmployeeData = templateObject.employeerecords.get() || "";
-            let getEmployeeID = templateObject.empID.get() || "";
-            document.getElementById("customer").value = data.fields.ClientName;
-            document.getElementById("phone").value = data.fields.Phone;
-            document.getElementById("mobile").value = data.fields.Mobile;
-            document.getElementById("state").value = data.fields.State;
-            document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ", ");
-            if (localStorage.getItem("CloudAppointmentNotes") == true) {
-                document.getElementById("txtNotes").value = data.fields.Notes;
-            }
-            document.getElementById("suburb").value = data.fields.Suburb;
-            document.getElementById("zip").value = data.fields.Postcode;
-            if (auto == true) {
-                let dateStart = getRegalTime();
-                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
-                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
+                let startTime =
+                    ("0" + dateStart.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime =
+                    ("0" + dateEnd.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
             }
@@ -9524,7 +9508,119 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 // if(checkIncludeAllProducts ==  true){
                 // templateObject.getAllProductData();
                 // }else{
-                //   if(getEmployeeID != ""){
+                //   if(getEmployeeID != ''){
+                //     templateObject.getAllSelectedProducts(getEmployeeID);
+                //   }else{
+                //     templateObject.getAllProductData();
+                //   }
+                //
+                // }
+
+                //templateObject.getAllProductData();
+            }
+            $("#customerListModal").modal("hide");
+            $("#event-modal").modal();
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
+        });
+    } else if (FlowRouter.current().queryParams.supplierid) {
+        contactService.getOneSupplierDataEx(leadid).then((data) => {
+            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
+            let getAllEmployeeData = templateObject.employeerecords.get() || "";
+            let getEmployeeID = templateObject.empID.get() || "";
+            document.getElementById("employee_name").value =
+                localStorage.getItem("mySessionEmployee");
+            document.getElementById("customer").value = data.fields.ClientName;
+            document.getElementById("phone").value = data.fields.Phone;
+            document.getElementById("mobile").value = data.fields.Mobile;
+            document.getElementById("state").value = data.fields.State;
+            document.getElementById("country").value = data.fields.Country;
+            document.getElementById("address").value = data.fields.Street.replace(
+                /(?:\r\n|\r|\n)/g,
+                ", "
+            );
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
+                document.getElementById("txtNotes").value = data.fields.Notes;
+                document.getElementById("txtNotes-1").value = data.fields.Notes;
+            }
+            document.getElementById("suburb").value = data.fields.Suburb;
+            document.getElementById("zip").value = data.fields.Postcode;
+            if (auto == true) {
+                let dateStart = getRegalTime();
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
+                let startTime =
+                    ("0" + dateStart.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime =
+                    ("0" + dateEnd.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                document.getElementById("startTime").value = startTime;
+                document.getElementById("endTime").value = endTime;
+            }
+            if ($("#updateID").val() == "") {
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
+                            }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
+                        }
+                    }
+                })
+                if (getEmployeeID != "") {
+                    var filterEmpData = getAllEmployeeData.filter((empdData) => {
+                        return empdData.id == getEmployeeID;
+                    });
+                    if (filterEmpData) {
+                        if (filterEmpData[0].custFld8 == "false") {
+                            templateObject.getAllSelectedProducts(getEmployeeID);
+                        } else {
+                            templateObject.getAllProductData();
+                        }
+                    } else {
+                        templateObject.getAllProductData();
+                    }
+                }
+                // if(checkIncludeAllProducts ==  true){
+                // templateObject.getAllProductData();
+                // }else{
+                //   if(getEmployeeID != ''){
                 //     templateObject.getAllSelectedProducts(getEmployeeID);
                 //   }else{
                 //     templateObject.getAllProductData();

@@ -11455,7 +11455,6 @@ Template.appointments.onRendered(function() {
 							}
 						}
                     }
-					console.log('smsSettings-1:',smsSettings)
                     templateObject.defaultSMSSettings.set(smsSettings);
                 }
             })
@@ -11495,7 +11494,6 @@ Template.appointments.onRendered(function() {
 						}
 					}
                 }
-				console.log('smsSettings-2:',smsSettings)
                 templateObject.defaultSMSSettings.set(smsSettings);
             }
         }
@@ -15714,18 +15712,12 @@ Template.appointments.events({
                     const employeeName = $("#employee_name").val();
                     const companyName = localStorage.getItem("vs1companyName");
                     const productService = $("#product-list").val();
-					console.log('accountName:',accountName)
-					console.log('employeeName:',employeeName)
-					console.log('companyName:',companyName)
-					console.log('productService:',productService)
-					console.log('templateObject.defaultSMSSettings:',templateObject.defaultSMSSettings.get())
                     const stopAppointmentSMS = templateObject.defaultSMSSettings
                         .get()
                         .stopAppointmentSMSMessage.replace("[Customer Name]", accountName)
                         .replace("[Employee Name]", employeeName)
                         .replace("[Company Name]", companyName)
                         .replace("[Product/Service]", productService);
-						console.log('stopAppointmentSMS:',stopAppointmentSMS)
                     $("#stopAppointmentSMSMessage").val(stopAppointmentSMS);
                 }
             } else {
@@ -15900,25 +15892,25 @@ Template.appointments.events({
             }
         }, delayTimeAfterSound);
     },
-    "click .btnSaveIgnoreSMS": async function() {
-        playSaveAudio();
-        setTimeout(async function() {
-            $("#chkSMSCustomer").prop("checked", false);
-            $("#chkSMSUser").prop("checked", false);
-            let emailCustomer = $("#customerEmail").is(":checked");
-            let emailUser = $("#userEmail").is(":checked");
-            $("#saveAppointmentModal").modal("hide");
-            $("#event-modal").modal("hide");
-            if (emailCustomer || emailUser) {
-                await sendAppointmentEmail();
-                // $("#frmAppointment").trigger("submit");
-                $("#btnAppointmentSubmit").click();
-            } else {
-                $("#btnAppointmentSubmit").click();
-                // $("#frmAppointment").trigger("submit");
-            }
-        }, delayTimeAfterSound);
-    },
+    // "click .btnSaveIgnoreSMS": async function() {
+    //     playSaveAudio();
+    //     setTimeout(async function() {
+    //         $("#chkSMSCustomer").prop("checked", false);
+    //         $("#chkSMSUser").prop("checked", false);
+    //         let emailCustomer = $("#customerEmail").is(":checked");
+    //         let emailUser = $("#userEmail").is(":checked");
+    //         $("#saveAppointmentModal").modal("hide");
+    //         $("#event-modal").modal("hide");
+    //         if (emailCustomer || emailUser) {
+    //             await sendAppointmentEmail();
+    //             // $("#frmAppointment").trigger("submit");
+    //             $("#btnAppointmentSubmit").click();
+    //         } else {
+    //             $("#btnAppointmentSubmit").click();
+    //             // $("#frmAppointment").trigger("submit");
+    //         }
+    //     }, delayTimeAfterSound);
+    // },
     "click #btnCloseStopAppointmentModal": function() {
         $("#stopAppointmentModal").modal("hide");
     },
@@ -15928,90 +15920,90 @@ Template.appointments.events({
     "click #btnCloseSaveAppointmentModal": function() {
         $("#saveAppointmentModal").modal("hide");
     },
-    "click #btnSaveAppointmentSubmit": async function(e) {
-        e.preventDefault();
-        const templateObject = Template.instance();
-        const smsCustomer = $("#chkSMSCustomer").is(":checked");
-        const smsUser = $("#chkSMSUser").is(":checked");
-        const customerPhone = $("#mobile").val();
-        var emailCustomer = $("#customerEmail").is(":checked");
-        var emailUser = $("#userEmail").is(":checked");
-        const smsSettings = templateObject.defaultSMSSettings.get();
-        let sendSMSRes = true;
-        /*
-            if (createAppointment == false) {
-                $('.modal-backdrop').css('display', 'none');
-                $('.fullScreenSpin').css('display', 'none');
-                swal({
-                    title: 'Oops...',
-                    text: "You don't have access to create a new Appointment",
-                    type: 'error',
-                    showCancelButton: false,
-                    confirmButtonText: 'OK'
-                }).then((result) => {
-                    if (result.value) {}
-                    else if (result.dismiss === 'cancel') {}
-                });
-                return false;
-            };*/
+    // "click #btnSaveAppointmentSubmit": async function(e) {
+    //     e.preventDefault();
+    //     const templateObject = Template.instance();
+    //     const smsCustomer = $("#chkSMSCustomer").is(":checked");
+    //     const smsUser = $("#chkSMSUser").is(":checked");
+    //     const customerPhone = $("#mobile").val();
+    //     var emailCustomer = $("#customerEmail").is(":checked");
+    //     var emailUser = $("#userEmail").is(":checked");
+    //     const smsSettings = templateObject.defaultSMSSettings.get();
+    //     let sendSMSRes = true;
+    //     /*
+    //         if (createAppointment == false) {
+    //             $('.modal-backdrop').css('display', 'none');
+    //             $('.fullScreenSpin').css('display', 'none');
+    //             swal({
+    //                 title: 'Oops...',
+    //                 text: "You don't have access to create a new Appointment",
+    //                 type: 'error',
+    //                 showCancelButton: false,
+    //                 confirmButtonText: 'OK'
+    //             }).then((result) => {
+    //                 if (result.value) {}
+    //                 else if (result.dismiss === 'cancel') {}
+    //             });
+    //             return false;
+    //         };*/
 
-        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-            sendSMSRes = await templateObject.sendSMSMessage("save","+" + customerPhone.replace("+", ""));
-            if (!sendSMSRes.success) {
-                swal({
-                    title: "Oops...",
-                    text: sendSMSRes.message,
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: "Try again",
-                }).then((result) => {
-                    if (result.value) {
-                        $("#saveAppointmentModal").modal("hide");
-                    } else {
-                        // window.open('/appointments', '_self');
-                    }
-                });
-            } else {
-                localStorage.setItem("smsId", sendSMSRes.sid);
-                $("#saveAppointmentModal").modal("hide");
-                swal({
-                    title: "SMS was sent successfully",
-                    text: "SMS was sent successfully",
-                    type: "success",
-                    showCancelButton: false,
-                    confirmButtonText: "Ok",
-                }).then((result) => {
-                    if (result.value) {
-                        $("#event-modal").modal("hide");
-                    } else {
-                        // window.open('/appointments', '_self');
-                    }
-                });
-                if (emailCustomer || emailUser) {
-                    await sendAppointmentEmail();
-                    // $("#frmAppointment").trigger("submit");
-					console.log('Submitting Appointment form1')
-                    $("#btnAppointmentSubmit").click();
-                } else {
-                    // $("#frmAppointment").trigger("submit");
-					console.log('Submitting Appointment form2')
-                    $("#btnAppointmentSubmit").click();
-                }
-            }
-        } else {
-			$("#event-modal").modal("hide");
-            if (emailCustomer || emailUser) {
-                await sendAppointmentEmail();
-                // $("#frmAppointment").trigger("submit");
-				console.log('Submitting Appointment form3')
-                $("#btnAppointmentSubmit").click();
-            } else {
-                // $("#frmAppointment").trigger("submit");
-				console.log('Submitting Appointment form4')
-                $("#btnAppointmentSubmit").click();
-            }
-        }
-    },
+    //     if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
+    //         sendSMSRes = await templateObject.sendSMSMessage("save","+" + customerPhone.replace("+", ""));
+    //         if (!sendSMSRes.success) {
+    //             swal({
+    //                 title: "Oops...",
+    //                 text: sendSMSRes.message,
+    //                 type: "error",
+    //                 showCancelButton: false,
+    //                 confirmButtonText: "Try again",
+    //             }).then((result) => {
+    //                 if (result.value) {
+    //                     $("#saveAppointmentModal").modal("hide");
+    //                 } else {
+    //                     // window.open('/appointments', '_self');
+    //                 }
+    //             });
+    //         } else {
+    //             localStorage.setItem("smsId", sendSMSRes.sid);
+    //             $("#saveAppointmentModal").modal("hide");
+    //             swal({
+    //                 title: "SMS was sent successfully",
+    //                 text: "SMS was sent successfully",
+    //                 type: "success",
+    //                 showCancelButton: false,
+    //                 confirmButtonText: "Ok",
+    //             }).then((result) => {
+    //                 if (result.value) {
+    //                     $("#event-modal").modal("hide");
+    //                 } else {
+    //                     // window.open('/appointments', '_self');
+    //                 }
+    //             });
+    //             if (emailCustomer || emailUser) {
+    //                 await sendAppointmentEmail();
+    //                 // $("#frmAppointment").trigger("submit");
+	// 				console.log('Submitting Appointment form1')
+    //                 $("#btnAppointmentSubmit").click();
+    //             } else {
+    //                 // $("#frmAppointment").trigger("submit");
+	// 				console.log('Submitting Appointment form2')
+    //                 $("#btnAppointmentSubmit").click();
+    //             }
+    //         }
+    //     } else {
+	// 		$("#event-modal").modal("hide");
+    //         if (emailCustomer || emailUser) {
+    //             await sendAppointmentEmail();
+    //             // $("#frmAppointment").trigger("submit");
+	// 			console.log('Submitting Appointment form3')
+    //             $("#btnAppointmentSubmit").click();
+    //         } else {
+    //             // $("#frmAppointment").trigger("submit");
+	// 			console.log('Submitting Appointment form4')
+    //             $("#btnAppointmentSubmit").click();
+    //         }
+    //     }
+    // },
     "change #chkSMSCustomer": function() {
         if ($("#chkSMSCustomer").is(":checked")) {
             const templateObject = Template.instance();
@@ -16024,127 +16016,127 @@ Template.appointments.events({
             templateObject.checkSMSSettings();
         }
     },
-    "click #btnEndActualTime": function() {
-        const templateObject = Template.instance();
-        var appointmentData = templateObject.appointmentrecords.get();
-        let id = $("#updateID").val();
-		console.log('appointmentData:',appointmentData)
-		console.log('id:',id)
-        var result = appointmentData.filter((apmt) => {
-            return apmt.id == id;
-        });
-		console.log('result[0]:',result[0])
-        let paused = result[0].isPaused || "";
-        if (paused == "Paused") {
-            swal({
-                title: "Can't Stop Job",
-                text: 'This Job is Currently Paused, click "OK" to go back and click "Start" to Continue the Job',
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Ok",
-            });
-        } else {
-            if (document.getElementById("tActualStartTime").value == "") {} else {
-                document.getElementById("tActualEndTime").value =
-                    moment().startOf("hour").format("HH") +
-                    ":" +
-                    moment().startOf("minute").format("mm");
-                const selectedProduct = document.getElementById("product-list").value;
-                const notes = document.getElementById("txtNotes").value;
+    // "click #btnEndActualTime": function() {
+    //     const templateObject = Template.instance();
+    //     var appointmentData = templateObject.appointmentrecords.get();
+    //     let id = $("#updateID").val();
+	// 	console.log('appointmentData:',appointmentData)
+	// 	console.log('id:',id)
+    //     var result = appointmentData.filter((apmt) => {
+    //         return apmt.id == id;
+    //     });
+	// 	console.log('result[0]:',result[0])
+    //     let paused = result[0].isPaused || "";
+    //     if (paused == "Paused") {
+    //         swal({
+    //             title: "Can't Stop Job",
+    //             text: 'This Job is Currently Paused, click "OK" to go back and click "Start" to Continue the Job',
+    //             type: "warning",
+    //             showCancelButton: true,
+    //             confirmButtonText: "Ok",
+    //         });
+    //     } else {
+    //         if (document.getElementById("tActualStartTime").value == "") {} else {
+    //             document.getElementById("tActualEndTime").value =
+    //                 moment().startOf("hour").format("HH") +
+    //                 ":" +
+    //                 moment().startOf("minute").format("mm");
+    //             const selectedProduct = document.getElementById("product-list").value;
+    //             const notes = document.getElementById("txtNotes").value;
 
-                // $("#customerListModal").modal("show");
-                $("#stopAppointment").modal("show");
+    //             // $("#customerListModal").modal("show");
+    //             $("#stopAppointment").modal("show");
 
-                // swal({
-                //   title: "Stop Appointment",
-                //   text: "Once an appointment has ended, it cannot be restarted.",
-                //   type: "warning",
-                //   showCancelButton: true,
-                //   confirmButtonText: "End Appointment",
-                //   width: "700px",
-                //   input: "text",
-                //   inputValue:
-                //     "Associated Product / Service " +
-                //     selectedProduct +
-                //     " and Notes " +
-                //     notes +
-                //     "",
-                // }).then(async (result) => {
-                //   if (result.value) {
-                //     let date1 = document.getElementById("dtSODate").value;
-                //     let date2 = document.getElementById("dtSODate2").value;
-                //     date1 = templateObject.dateFormat(date1);
-                //     date2 = templateObject.dateFormat(date2);
-                //     var endTime = new Date(
-                //       date2 +
-                //         " " +
-                //         document.getElementById("tActualEndTime").value +
-                //         ":00"
-                //     );
-                //     var startTime = new Date(
-                //       date1 +
-                //         " " +
-                //         document.getElementById("tActualStartTime").value +
-                //         ":00"
-                //     );
-                //     document.getElementById("txtActualHoursSpent").value = parseFloat(
-                //       templateObject.diff_hours(endTime, startTime)
-                //     ).toFixed(2);
+    //             // swal({
+    //             //   title: "Stop Appointment",
+    //             //   text: "Once an appointment has ended, it cannot be restarted.",
+    //             //   type: "warning",
+    //             //   showCancelButton: true,
+    //             //   confirmButtonText: "End Appointment",
+    //             //   width: "700px",
+    //             //   input: "text",
+    //             //   inputValue:
+    //             //     "Associated Product / Service " +
+    //             //     selectedProduct +
+    //             //     " and Notes " +
+    //             //     notes +
+    //             //     "",
+    //             // }).then(async (result) => {
+    //             //   if (result.value) {
+    //             //     let date1 = document.getElementById("dtSODate").value;
+    //             //     let date2 = document.getElementById("dtSODate2").value;
+    //             //     date1 = templateObject.dateFormat(date1);
+    //             //     date2 = templateObject.dateFormat(date2);
+    //             //     var endTime = new Date(
+    //             //       date2 +
+    //             //         " " +
+    //             //         document.getElementById("tActualEndTime").value +
+    //             //         ":00"
+    //             //     );
+    //             //     var startTime = new Date(
+    //             //       date1 +
+    //             //         " " +
+    //             //         document.getElementById("tActualStartTime").value +
+    //             //         ":00"
+    //             //     );
+    //             //     document.getElementById("txtActualHoursSpent").value = parseFloat(
+    //             //       templateObject.diff_hours(endTime, startTime)
+    //             //     ).toFixed(2);
 
-                //     //TODO: Stop Appointment SMS sent here
-                //     const customerPhone = $("#mobile").val();
-                //     const smsCustomer = $("#chkSMSCustomer").is(":checked");
-                //     const smsUser = $("#chkSMSUser").is(":checked");
-                //     const smsSettings = templateObject.defaultSMSSettings.get();
-                //     let sendSMSRes = true;
-                //     if (
-                //       (smsCustomer || smsUser) &&
-                //       customerPhone != "0" &&
-                //       smsSettings.twilioAccountId
-                //     ) {
-                //       sendSMSRes = await templateObject.sendSMSMessage(
-                //         "stop",
-                //         "+" + customerPhone.replace("+", "")
-                //       );
-                //       if (!sendSMSRes.success) {
-                //         swal({
-                //           title: "Oops...",
-                //           text: sendSMSRes.message,
-                //           type: "error",
-                //           showCancelButton: false,
-                //           confirmButtonText: "Try again",
-                //         }).then((result) => {
-                //           if (result.value) {
-                //             $("#startAppointmentModal").modal("hide");
-                //           }
-                //         });
-                //       } else {
-                //         localStorage.setItem("smsId", sendSMSRes.sid);
-                //         swal({
-                //           title: "SMS was sent successfully",
-                //           text: "SMS was sent successfully",
-                //           type: "success",
-                //           showCancelButton: false,
-                //           confirmButtonText: "Ok",
-                //         });
-                //         $("#btnCloseStopAppointmentModal").trigger("click");
-                //         $("#frmAppointment").trigger("submit");
-                //       }
-                //     } else {
-                //       $("#btnCloseStopAppointmentModal").trigger("click");
-                //       $("#frmAppointment").trigger("submit");
-                //     }
-                //   } else if (result.dismiss === "cancel") {
-                //     document.getElementById("tActualEndTime").value = "";
-                //     document.getElementById("txtActualHoursSpent").value = "0";
-                //   } else {
-                //     document.getElementById("tActualEndTime").value = "";
-                //     document.getElementById("txtActualHoursSpent").value = "0";
-                //   }
-                // });
-            }
-        }
-    },
+    //             //     //TODO: Stop Appointment SMS sent here
+    //             //     const customerPhone = $("#mobile").val();
+    //             //     const smsCustomer = $("#chkSMSCustomer").is(":checked");
+    //             //     const smsUser = $("#chkSMSUser").is(":checked");
+    //             //     const smsSettings = templateObject.defaultSMSSettings.get();
+    //             //     let sendSMSRes = true;
+    //             //     if (
+    //             //       (smsCustomer || smsUser) &&
+    //             //       customerPhone != "0" &&
+    //             //       smsSettings.twilioAccountId
+    //             //     ) {
+    //             //       sendSMSRes = await templateObject.sendSMSMessage(
+    //             //         "stop",
+    //             //         "+" + customerPhone.replace("+", "")
+    //             //       );
+    //             //       if (!sendSMSRes.success) {
+    //             //         swal({
+    //             //           title: "Oops...",
+    //             //           text: sendSMSRes.message,
+    //             //           type: "error",
+    //             //           showCancelButton: false,
+    //             //           confirmButtonText: "Try again",
+    //             //         }).then((result) => {
+    //             //           if (result.value) {
+    //             //             $("#startAppointmentModal").modal("hide");
+    //             //           }
+    //             //         });
+    //             //       } else {
+    //             //         localStorage.setItem("smsId", sendSMSRes.sid);
+    //             //         swal({
+    //             //           title: "SMS was sent successfully",
+    //             //           text: "SMS was sent successfully",
+    //             //           type: "success",
+    //             //           showCancelButton: false,
+    //             //           confirmButtonText: "Ok",
+    //             //         });
+    //             //         $("#btnCloseStopAppointmentModal").trigger("click");
+    //             //         $("#frmAppointment").trigger("submit");
+    //             //       }
+    //             //     } else {
+    //             //       $("#btnCloseStopAppointmentModal").trigger("click");
+    //             //       $("#frmAppointment").trigger("submit");
+    //             //     }
+    //             //   } else if (result.dismiss === "cancel") {
+    //             //     document.getElementById("tActualEndTime").value = "";
+    //             //     document.getElementById("txtActualHoursSpent").value = "0";
+    //             //   } else {
+    //             //     document.getElementById("tActualEndTime").value = "";
+    //             //     document.getElementById("txtActualHoursSpent").value = "0";
+    //             //   }
+    //             // });
+    //         }
+    //     }
+    // },
     "click #btnCloseStopAppointment": function() {
         document.getElementById("tActualEndTime").value = "";
         document.getElementById("txtActualHoursSpent").value = "0";
