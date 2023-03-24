@@ -102,7 +102,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         targets: index + 1,
                         createdCell: function (td, cellData, rowData, row, col) {
                             $(td).closest('tr').attr('id', rowData[idIndex]);
-                            $(td).closest('tr').addClass('dnd-moved');
+                            // $(td).closest('tr').addClass('dnd-moved');
                         },
                         width: `${item.width}px`
                     });
@@ -828,7 +828,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 linestatus = "In-Active";
             };
 
-            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tdeptclasslist[i].ClassID +
                 '"></label></div>'; //switchbox
 
@@ -1074,7 +1074,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             });
             $(".fullScreenSpin").css("display", "none");
 
-        }, 0);
+        }, 2000);
 
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
@@ -2130,7 +2130,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
             let chkBoxId = "f-" + lineData.ID || lineData.Id;
-            let chkBox = '<div class="custom-control custom-switch chkBox pointer text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            let chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
             let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);            
             var dataList = [
                 chkBox,
@@ -2218,23 +2218,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
-                "fnInitComplete": function(oSettings) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = oSettings._iDisplayLength;
-                    let customerSearch = $('#' + currenttablename + '_filter input').val();
-
-                    let uniqueChars = [...new Set(splashArrayaccountsList)];
-                    templateObject.transactiondatatablerecords.set(uniqueChars);
-                    var datatable = $('#' + currenttablename).DataTable();
-                    datatable.clear();
-                    datatable.rows.add(uniqueChars);
-                    datatable.draw(false);
-                    setTimeout(function() {
-                        $('#' + currenttablename).dataTable().fnPageChange('first');
-                    }, 400);
-                    checkBoxClickByName();
-
-                    $('.fullScreenSpin').css('display', 'none');
+                "fnInitComplete": function(oSettings) {                    
                     $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                     if (data?.Params?.Search?.replace(/\s/g, "") == "") {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -2242,6 +2226,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    checkBoxClickByName();
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data?.length || 0; //get count from API data
@@ -2790,6 +2775,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
 
     $('#eftaccountid').on('change', function(event) {
         if (currenttablename == "tblEftExportCheckbox") templateObject.getEftExportData()
+        tableResize()
     })
 });
 
