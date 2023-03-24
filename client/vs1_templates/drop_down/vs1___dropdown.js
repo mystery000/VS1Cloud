@@ -125,7 +125,6 @@ Template.vs1___dropdown.events({
         let modal = $(event.target).closest('.modal.fade.show')
         let label = templateObject.data.label;
         let value = $(event.target).closest('tr').find('.'+colName).text();
-
         let objectId = $(event.target).closest('tr').find('.colID')?.text();
 
         let email = $(event.target).closest('tr').find('.colEmail')?.text();
@@ -137,6 +136,7 @@ Template.vs1___dropdown.events({
         // $('#'+id).val(value)
         let target = templateObject.targetEle.get();
         $(target).val(value)
+        // $(target).val("test")
         $(modal).modal('hide');    
         // $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
         // setTimeout(function() {

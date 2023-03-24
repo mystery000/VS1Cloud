@@ -183,7 +183,6 @@ export default class FxGlobalFunctions {
           let value = $(mainElement).children().length > 0
             ? $(mainElement).find("input").val()
             : $(mainElement).text();
-
           value = FxGlobalFunctions.convertToForeignAmount(value, rate, FxGlobalFunctions.getCurrentCurrencySymbol());
 
           if (targetElement.children().length > 0) {
