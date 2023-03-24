@@ -1405,6 +1405,9 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
             }
         }
 
+        #colEmployeeList{margin-right: 20px;}
+        #colCalendar{width: 100px;flex: 1;}
+
         @media screen and (max-width: 1366px) {
             .fc-toolbar-chunk>* {
                 margin: 0px;
@@ -1604,7 +1607,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                     user-select: none;
                 }
             </style>
-            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb" style="">
+            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb1" style="">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary font-weight-bold m-0">Employees</h6>
                 </div>
@@ -1685,10 +1688,15 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 #sidebarToggleAppointments:hover {
                     background-color: #eaecf4;
                 }
-
-                #calendar .fc-header-toolbar{padding-top: 5px;}
+                #calendar{overflow: auto;}
+                #calendar .fc-header-toolbar{
+                    padding-top: 5px;
+                    width: 1420px;
+                    overflow: hidden;
+                    justify-content: flex-start;
+                }
             </style>
-            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb" style="">
+            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb2" style="">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary font-weight-bold m-0">Calendar</h6>
                 </div>

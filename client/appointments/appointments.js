@@ -11769,6 +11769,9 @@ Template.appointments.onRendered(function() {
                     $(ui.element[0])
                         .parents(".sortable-chart-widget-js")
                         .addClass("resizeAfterChart");
+                    $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", "auto");
+                    $(ui.element[0]).parents(".sortable-chart-widget-js").css("flex", "none");
+
                     // Restrict width more than 100
                     if (ChartHandler.calculateWidth(ui.element[0]) >= 100) {
                         $(this).resizable("option", "maxWidth", ui.size.width);
@@ -11809,6 +11812,17 @@ Template.appointments.onRendered(function() {
                             width: chartWidth,
                             height: chartHeight
                         }));
+                    }
+
+                    let id = ui.element[0].id;
+                    if(id == 'newcardb1'){
+                        $("#colCalendar").css("flex", "1");
+                        $("#colCalendar").css("width", "0");
+                        $("#newcardb2").css("width", "auto");
+                    }else{
+                        $("#colEmployeeList").css("flex", "1");
+                        $("#colEmployeeList").css("width", "0");
+                        $("#newcardb1").css("width", "auto");
                     }
                 },
             });
