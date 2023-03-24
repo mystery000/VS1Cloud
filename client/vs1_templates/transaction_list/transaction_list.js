@@ -154,7 +154,20 @@ Template.transaction_list.onRendered(function() {
                 { index: 15, label: 'Hourly Rate', class: 'colHourlyrate hiddenColumn', active: false, display: true, width: "100" },
                 { index: 16, label: 'View', class: 'colView', active: true, display: true, width: "100" },
             ]
-        } else if (currenttablename === "tblchequelist") {
+        }else if(currenttablename === "tblProcessClockList"){
+            reset_data = [
+                 { index: 0, label: ' ', class: 'colCheckbox', active: true, display: true, width: "30" },
+                 { index: 1, label: 'EmployeeID', class: 'colEmpID', active: true, display: true, width: "100" },
+                 { index: 2, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "200" },
+                 { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
+                 { index: 4, label: 'Workorder Number', class: 'colWorkorder', active: true, display: true, width: "150" },
+                 { index: 5, label: 'Process', class: 'colProcess', active: true, display: true, width: "150" },
+                 { index: 6, label: 'Product', class: 'colProduct', active: true, display: true, width: "100" },
+                 { index: 7, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "100" },
+                 { index: 8, label: 'Note', class: 'colNote', active: true, display: true, width: "100" },
+                 { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+            ]
+         }else if (currenttablename === "tblchequelist") {
             reset_data = [
                 { index: 0, label: 'ID', class:'ID', active: false, display: false, width: "0" },
                 { index: 1, label: "Order Date", class: "OrderDate", active: true, display: true, width: "100" },
@@ -2428,6 +2441,261 @@ Template.transaction_list.onRendered(function() {
         $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
 
+    templateObject.getProcessClockList = function(){
+        getVS1Data('TVS1Workorder').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                // let data = await CachedHttp.get(erpObject.TVS1Workorder, async() => {
+                //     return await sideBarService.getAllTimeSheetList();
+                // }, {
+                //     useIndexDb: true,
+                //     useLocalStorage: false,
+                //     fallBackToLocal: true,
+                //     forceOverride: refresh,
+                //     validate: cachedResponse => {
+                //         return true;
+                //     }
+                // });
+                // await addVS1Data('TVS1Workorder', JSON.stringify(data));
+                // templateObject.displayProcessClockList(data);
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayProcessClockList(data);
+            }
+        }).catch(async function (err) {
+            // let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
+            //     return await sideBarService.getAllTimeSheetList();
+            // }, {
+            //     useIndexDb: true,
+            //     useLocalStorage: false,
+            //     fallBackToLocal: true,
+            //     forceOverride: refresh,
+            //     validate: cachedResponse => {
+            //         return true;
+            //     }
+            // });
+            // await addVS1Data('TTimeSheet', JSON.stringify(data));
+            // templateObject.displayProcessClockList(data);
+        });
+    }
+
+    templateObject.displayProcessClockList = function(data){
+       
+        let splashArrayProcessClockList = new Array();
+        let workorderdata = data.tvs1workorder;
+        let bomData;
+        let tempData;
+    
+      //  console.log(data);
+
+
+        for (let t = 0; t < workorderdata.length; t++) {
+
+              bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);
+              
+              
+              let bomdetails = JSON.parse(bomData.Details);
+
+            
+              for(let i = 0; i < bomdetails.length; i++) {
+                tempData = [
+                    '',
+                    workorderdata[t].fields.EmployeeID || i,
+                    workorderdata[t].fields.EmployeeName || 'Dene Mill',
+                    workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                    workorderdata[t].fields.ID || '',
+                    bomdetails[i].process || '',
+                    workorderdata[t].fields.ProductName || '',
+                    workorderdata[t].fields.TrackedTime || 0,
+
+                    workorderdata[t].fields.Note || '',
+
+                    workorderdata[t].fields.Status || ''                  
+
+
+                ];
+
+              splashArrayProcessClockList.push(tempData);
+
+
+
+             }
+
+           
+        }
+
+
+        templateObject.datatablerecords.set(splashArrayProcessClockList);
+
+        if (templateObject.datatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+
+        setTimeout(function() {
+            $('#tblProcessClockList').DataTable({
+                data: splashArrayProcessClockList,
+                columnDefs: [
+                    {
+                        targets: 0,
+                        className: "colSortDate hiddenColumn",
+                        width: "50px",
+                    },
+                    {
+                        targets: 1,
+                        data: null,
+                        render: function(data, type, row, meta) {
+                          return '<input type="checkbox">';
+                        },
+                        checkboxes: {
+                          selectRow: true
+                        },
+                        width: "30px"
+                      }
+                   
+                ],
+                "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                buttons: [{
+                    extend: 'csvHtml5',
+                    text: '',
+                    download: 'open',
+                    className: "btntabletocsv hiddenColumn",
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    orientation: 'portrait',
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                }, {
+                    extend: 'print',
+                    download: 'open',
+                    className: "btntabletopdf hiddenColumn",
+                    text: '',
+                    title: 'Pay Leave To Review',
+                    filename: "Pay Leave To Review - " + moment().format(),
+                    exportOptions: {
+                        columns: ':visible'
+                    }
+                },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Pay Leave To Review - " + moment().format(),
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialReportDatatableLoad,
+                "bLengthChange": false,
+                lengthMenu: [ [initialReportDatatableLoad, -1], [initialReportDatatableLoad, "All"] ],
+                info: true,
+                responsive: false,
+                "order": [[ 0, "desc" ],[ 2, "desc" ]],
+                action: function() {
+                    $('#tblProcessClockList').DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function (oSettings) {
+                    let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblProcessClockList_ellipsis').addClass('disabled');
+
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                            $('.paginate_button.page-item.previous').addClass('disabled');
+                            $('.paginate_button.page-item.next').addClass('disabled');
+                        }
+                    } else {}
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container())
+                        .on('click', function () {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            let dataLenght = oSettings._iDisplayLength;
+                            var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                            var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                            let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                            let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+                            if(data.Params.IgnoreDates == true){
+                            
+                            } else{
+
+                            }
+                        });
+
+                    setTimeout(function () {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "",searchPlaceholder: "Search List..." },
+                "fnInitComplete": function () {
+                    this.fnPageChange('last');
+                    if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter("#tblTimeSheet_filter");
+                    }else{
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter("#tblTimeSheet_filter");
+                    }
+                    $("<button class='btn btn-primary btnRefreshTimeSheet' type='button' id='btnRefreshTimeSheet' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTimeSheet_filter");
+
+                    $('.myvarFilterForm').appendTo(".colDateFilter");
+                },
+                "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data?.Params?.Count || 0; //get count from API data
+
+                    return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+                let draftRecord = templateObject.datatablerecords.get();
+                templateObject.datatablerecords.set(draftRecord);
+
+            }).on('column-reorder', function() {
+
+            });
+            $('.fullScreenSpin').css('display', 'none');
+
+        }, 0);
+
+        var columns = $('#tblProcessClockList th');
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+        templateObject.tableheaderrecords.set(tableHeaderList);
+        $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    }
+
     templateObject.getChequeListData = function() {
         getVS1Data('TChequeList').then(function(dataObject) {
             if (dataObject.length == 0) {
@@ -3430,7 +3698,9 @@ Template.transaction_list.onRendered(function() {
         templateObject.getPayrollLeaveData("");
     }else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetListData()
-    } else if (currenttablename === "tblchequelist") {
+    } else if (currenttablename === "tblProcessClockList"){
+        templateObject.getProcessClockList()
+    }else if (currenttablename === "tblchequelist") {
         templateObject.getChequeListData()
     }else if (currenttablename === "tblappointmentlist"){
         templateObject.getAllAppointmentListData();

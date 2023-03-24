@@ -420,6 +420,9 @@ import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 import './settings/inventory-setting/inventorySettings.js';
 import './settings/UOM-Settings/adduompop.js';
+import './eft/transactionCodeModal/transactionCodeModal.js';
+import './eft/eftFilesCreated/eftFilesCreated.js';
+import './eft/eftBankRuleList/eftBankRuleList.js';
 /* Martin */
 
 /* AlexV */
@@ -645,7 +648,7 @@ import './reports/exeincome/exeincome.js';
 import './reports/exeperformance/exeperformance.js';
 import './reports/exeposition/exeposition.js';
 import './reports/exeprofitability/exeprofitability.js';
-// import './reconciliation/newstatementrule.js';
+import './reconciliation/newstatementrule.js';
 import './vs1_templates/template_buttons/report_export_import_print_display_button.js';
 /* Scott */
 

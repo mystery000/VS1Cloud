@@ -89,7 +89,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     function getColumnDefs(idIndex = 1) {
         let columnData = [{
             targets: 0,
-            className: "colChkBox pointer",
+            className: "colChkBox pointer px-0",
             orderable: false,
             width: "15px",
         }];
@@ -723,9 +723,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                 checkBoxClick();
                                 $('.fullScreenSpin').css('display', 'none');
                             }
-                            
+
                         })
-                        
+
                     });
                     setTimeout(function() {
                         MakeNegative();
@@ -1232,7 +1232,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 "fnInitComplete": function(oSettings) {
                     $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
-                    if (data.Params.Search.replace(/\s/g, "") == "") {
+                    if (data && data.Params && data.Params.Search && data.Params.Search.replace(/\s/g, "") == "") {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -2126,17 +2126,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let fullAccountTypeName = "";
         let accBalance = "";
         let deleteFilter = false;
-        let chkBoxId;
-        let chkBox;
-
+        
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
-            chkBoxId = "f-" + lineData.ID || lineData.Id;
-            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            let chkBoxId = "f-" + lineData.ID || lineData.Id;
+            let chkBox = '<div class="custom-control custom-switch chkBox pointer text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
+            let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);            
             var dataList = [
                 chkBox,
                 lineData.ID || lineData.Id || "",
-                lineData.AccountName || "",
+                `<input
+                    class="form-control pointer sltEftTblAccountName es-input bg-white"
+                    value="${lineData.AccountName || ""}"                    
+                />`,                 
                 lineData.BSB || "___-___",
                 lineData.CreditDebitAccountNumber || "",
                 `<input
@@ -2144,7 +2146,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     value="Credit"                    
                 />`,
                 lineData.LodgementReferences || "",
-                lineData.Amount || "",
+                amount,
                 lineData.UsersBSB || "___-___",
                 lineData.UsersAccountNumber || "",
             ];
@@ -2369,7 +2371,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let chkBox;
-        
+
         for (let t = 0; t < data.length; t++) {
             chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data[t].fields.ID +
                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data[t].fields.ID +
@@ -2656,7 +2658,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-                    
+
                     $(".colDateFilter").empty();
                     $("#dateFrom").val(fromDate);
                     $("#dateTo").val(toDate);
