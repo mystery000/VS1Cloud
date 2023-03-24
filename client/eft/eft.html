@@ -118,7 +118,11 @@
                             class="icon ion-android-more-horizontal"></i></a> -->
                 </div>
             </div>
-
+            <style>
+                td.colAmount {
+                    text-align: right !important;
+                }
+            </style>
             <div class="card-body p-3 rounded" style="margin: 0px 16px">
                 {{> internal_transaction_list_with_switchbox tablename="tblEftExportCheckbox"}}
             </div>

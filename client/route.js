@@ -2315,6 +2315,24 @@ authenticatedRoutes.route('/eft', {
   }
 })
 
+authenticatedRoutes.route('/eftfilescreated', {
+    name: 'eftFilesCreated',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'eftFilesCreated'
+        })
+    }
+})
+
+authenticatedRoutes.route('/eftbankrulelist', {
+    name: 'eftBankRuleList',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'eftBankRuleList'
+        })
+    }
+})
+
 authenticatedRoutes.route('/workordercard', {
     name: 'new_workorder',
     action() {
