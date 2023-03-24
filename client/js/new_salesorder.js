@@ -90,52 +90,9 @@ Template.new_salesorder.onCreated(function () {
   templateObject.products = new ReactiveVar([]);
   templateObject.hasFollow = new ReactiveVar(false);
   templateObject.customerRecord = new ReactiveVar();
+
   templateObject.currencyData = new ReactiveVar();
 
-  templateObject.getCurrencies = async function () {
-    let currencyData = [];
-    let dataObject = await getVS1Data("TCurrencyList");
-    if (dataObject.length == 0) {
-      taxRateService.getCurrencies().then(function (data) {
-        for (let i in data.tcurrencylist) {
-          let currencyObj = {
-            id: data.tcurrencylist[i].Id || "",
-            currency: data.tcurrencylist[i].Currency || "",
-            currencySellRate: data.tcurrencylist[i].SellRate || "",
-            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
-            currencyCode: data.tcurrencylist[i].Code || "",
-          };
-
-          currencyData.push(currencyObj);
-        }
-        templateObject.currencyData.set(currencyData);
-      });
-    } else {
-      let data = JSON.parse(dataObject[0].data);
-      let useData = data.tcurrencylist;
-      for (let i in useData) {
-        let currencyObj = {
-          id: data.tcurrencylist[i].Id || "",
-          currency: data.tcurrencylist[i].Currency || "",
-          currencySellRate: data.tcurrencylist[i].SellRate || "",
-          currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
-          currencyCode: data.tcurrencylist[i].Code || "",
-        };
-
-        currencyData.push(currencyObj)
-      }
-      templateObject.currencyData.set(currencyData);
-    }
-  }
-  templateObject.getCurrencyRate = (currency, type) => {
-    let currencyData = templateObject.currencyData.get();
-    for(let i = 0; i <currencyData.length; i++) {
-      if(currencyData[i].currencyCode == currency) {
-        if (type == 0) return currencyData[i].currencySellRate;
-        else return currencyData[i].currencyBuyRate;
-      }
-    };
-  };
 
   // Methods
   templateObject.hasFollowings = async function () {
@@ -2322,7 +2279,7 @@ Template.new_salesorder.onCreated(function () {
     var getso_id = url.split('?id=');
     var currentSalesOrder = getso_id[getso_id.length - 1];
     let uploadedItems = templateObject.uploadedFiles.get();
-    var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     let ForeignExchangeRate = $('#exchange_rate').val() || 0;
     let foreignCurrencyFields = {}
     if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -2429,12 +2386,58 @@ Template.new_salesorder.onCreated(function () {
 
     }, delayTimeAfterSound);
   }
+
+  templateObject.getCurrencies = async function () {
+    let currencyData = [];
+    let dataObject = await getVS1Data("TCurrencyList");
+    if (dataObject.length == 0) {
+      taxRateService.getCurrencies().then(function (data) {
+        for (let i in data.tcurrencylist) {
+          let currencyObj = {
+            id: data.tcurrencylist[i].Id || "",
+            currency: data.tcurrencylist[i].Currency || "",
+            currencySellRate: data.tcurrencylist[i].SellRate || "",
+            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+            currencyCode: data.tcurrencylist[i].Code || "",
+          };
+
+          currencyData.push(currencyObj);
+        }
+        templateObject.currencyData.set(currencyData);
+      });
+    } else {
+      let data = JSON.parse(dataObject[0].data);
+      let useData = data.tcurrencylist;
+      for (let i in useData) {
+        let currencyObj = {
+          id: data.tcurrencylist[i].Id || "",
+          currency: data.tcurrencylist[i].Currency || "",
+          currencySellRate: data.tcurrencylist[i].SellRate || "",
+          currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+          currencyCode: data.tcurrencylist[i].Code || "",
+        };
+
+        currencyData.push(currencyObj)
+      }
+      templateObject.currencyData.set(currencyData);
+    }
+  }
+
+  templateObject.getCurrencyRate = (currency, type) => {
+    let currencyData = templateObject.currencyData.get();
+    for(let i = 0; i <currencyData.length; i++) {
+      if(currencyData[i].currencyCode == currency) {
+        if (type == 0) return currencyData[i].currencySellRate;
+        else return currencyData[i].currencyBuyRate;
+      }
+    };
+  };
 });
 
 Template.new_salesorder.onRendered(function () {
   let templateObject = Template.instance();
-  templateObject.getCurrencies();
 
+  templateObject.getCurrencies();
   templateObject.hasFollowings();
   templateObject.getAllClients();
   templateObject.getOrganisationDetails();
@@ -2720,7 +2723,7 @@ Template.new_salesorder.onRendered(function () {
 
               $('#edtCustomerName').val(data.fields.CustomerName);
               templateObject.CleintName.set(data.fields.CustomerName);
-              $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+              $('#sltCurrency').val(data.fields.ForeignExchangeCode);
               //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
               $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
               $('#sltStatus').val(data.fields.SalesStatus);
@@ -2985,8 +2988,8 @@ Template.new_salesorder.onRendered(function () {
 
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                 templateObject.CleintName.set(useData[d].fields.CustomerName);
-                $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
                 $('#exchange_rate').val(templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 1));
                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                 $('#sltTerms').val(useData[d].fields.TermsName);
@@ -3290,7 +3293,7 @@ Template.new_salesorder.onRendered(function () {
             };
             $('#edtCustomerName').val(data.fields.CustomerName);
             templateObject.CleintName.set(data.fields.CustomerName);
-            $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
             //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
             $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
             $('#sltStatus').val(data.fields.SalesStatus);
@@ -3494,7 +3497,7 @@ Template.new_salesorder.onRendered(function () {
     }, 1000);
   });
   // $(document).on("click", "#tblCurrencyPopList tbody tr", function (e) {
-  //   $('.sltCurrency').val($(this).find(".colCode").text());
+  //   $('#sltCurrency').val($(this).find(".colCode").text());
   //   $('#currencyModal').modal('toggle');
 
   //   $('#tblCurrencyPopList_filter .form-control-sm').val('');
@@ -3526,7 +3529,7 @@ Template.new_salesorder.onRendered(function () {
   $(document).ready(function () {
     $('#edtCustomerName').editableSelect();
     $('#sltStatus').editableSelect();
-    $('.sltCurrency').editableSelect();
+    $('#sltCurrency').editableSelect();
     $('#sltTerms').editableSelect();
     $('#sltDept').editableSelect();
     $('#addRow').on('click', function () {
@@ -4252,7 +4255,7 @@ Template.new_salesorder.onRendered(function () {
           }
         });
 
-    // $('.sltCurrency').editableSelect()
+    // $('#sltCurrency').editableSelect()
     //   .on('click.editable-select', function (e, li) {
     //     var $earch = $(this);
     //     var offset = $earch.offset();
@@ -5543,7 +5546,7 @@ Template.new_salesorder.onRendered(function () {
     x.addListener(mediaQuery)
   }, 10);
 
-  FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
+  FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
 
 });
 
@@ -5950,7 +5953,7 @@ Template.new_salesorder.helpers({
     var getso_id = url.split('?id=');
     var currentSalesOrder = getso_id[getso_id.length - 1];
 
-    var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     let ForeignExchangeRate = $('#exchange_rate').val() || 0;
     if (FxGlobalFunctions.isCurrencyEnabled()) {
       foreignCurrencyFields = {
@@ -7751,7 +7754,7 @@ Template.new_salesorder.events({
         var getso_id = url.split('?id=');
         var currentSalesOrder = getso_id[getso_id.length - 1];
 
-        var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
         let ForeignExchangeRate = $('#exchange_rate').val() || 0;
         let foreignCurrencyFields = {}
         if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -8486,7 +8489,7 @@ Template.new_salesorder.events({
           var getso_id = url.split('?id=');
           var currentSalesOrder = getso_id[getso_id.length - 1];
           let uploadedItems = templateObject.uploadedFiles.get();
-          var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+          var currencyCode = $("#sltCurrency").val() || CountryAbbr;
           let ForeignExchangeRate = $('#exchange_rate').val() || 0;
           let foreignCurrencyFields = {}
           if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -9064,7 +9067,7 @@ Template.new_salesorder.events({
       var getso_id = url.split('?id=');
       var currentSalesOrder = getso_id[getso_id.length - 1];
       let uploadedItems = templateObject.uploadedFiles.get();
-      var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+      var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       let ForeignExchangeRate = $('#exchange_rate').val() || 0;
       let foreignCurrencyFields = {}
       if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -10565,8 +10568,8 @@ Template.new_salesorder.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
-  'change .sltCurrency': (e, ui) => {
-    if ($(".sltCurrency").val() && $(".sltCurrency").val() != defaultCurrencyCode) {
+  'change #sltCurrency': (e, ui) => {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
       ui.isForeignEnabled.set(true);
       FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);

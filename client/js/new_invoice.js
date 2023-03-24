@@ -97,6 +97,7 @@ Template.new_invoice.onCreated(function () {
   templateObject.customerRecord = new ReactiveVar();
   templateObject.headerfields = new ReactiveVar();
   templateObject.headerbuttons = new ReactiveVar();
+
   templateObject.currencyData = new ReactiveVar();
 
   function formatDate (date) {
@@ -3227,7 +3228,6 @@ Template.new_invoice.onCreated(function () {
 
     }, delayTimeAfterSound);
   }
-
   templateObject.getCurrencies = async function () {
     let currencyData = [];
     let dataObject = await getVS1Data("TCurrencyList");
@@ -3263,6 +3263,7 @@ Template.new_invoice.onCreated(function () {
       templateObject.currencyData.set(currencyData);
     }
   }
+
   templateObject.getCurrencyRate = (currency, type) => {
     let currencyData = templateObject.currencyData.get();
     for(let i = 0; i <currencyData.length; i++) {
@@ -3278,7 +3279,6 @@ Template.new_invoice.onRendered(function () {
 
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
-
   templateObject.getCurrencies();
 
   templateObject.hasFollowings = async function() {

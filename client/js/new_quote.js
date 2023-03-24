@@ -86,8 +86,8 @@ Template.new_quote.onCreated(() => {
   templateObject.hasFollow = new ReactiveVar(false);
 
   templateObject.customerRecord = new ReactiveVar();
-
   templateObject.currencyData = new ReactiveVar();
+
   // Methods
 
   templateObject.hasFollowings = async function () {
@@ -713,6 +713,7 @@ Template.new_quote.onCreated(() => {
       templateObject.currencyData.set(currencyData);
     }
   }
+
   templateObject.getCurrencyRate = (currency, type) => {
     let currencyData = templateObject.currencyData.get();
     for(let i = 0; i <currencyData.length; i++) {
@@ -726,8 +727,8 @@ Template.new_quote.onCreated(() => {
 
 Template.new_quote.onRendered(() => {
   let templateObject = Template.instance();
-
   templateObject.getCurrencies();
+
   templateObject.hasFollowings();
   $('#edtFrequencyDetail').css('display', 'none');
   $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
