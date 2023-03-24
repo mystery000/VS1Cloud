@@ -78,48 +78,21 @@
                         </tbody>
                     </table>
                 </div> -->
-                <style>
-                    #tblSerialNumberList .colSerialNumber{
-                        width: 8%!important
-                    }
-                    #tblSerialNumberList .colProductName{
-                        width: 14%!important
-                    }
-                    #tblSerialNumberList .colDescription{
-                        width: 14%!important
-                    }
-                    #tblSerialNumberList .colStatus{
-                        width: 10%!important
-                    }
-                    #tblSerialNumberList .colQty{
-                        width: 8%!important
-                    }
-                    #tblSerialNumberList .colDate{
-                        width: 8%!important
-                    }
-                    #tblSerialNumberList .colTransaction{
-                        width: 8%!important
-                    }
-                    #tblSerialNumberList .colDepartment{
-                        width: 14%!important
-                    }
-                    #tblSerialNumberList .colBin{
-                        width: 8%!important
-                    }
-                    #tblSerialNumberList .colBarcode{
-                        width: 8%!important
-                    }
-
-                    #tblSerialNumberList_length{display: none;
-                </style>
-
-                <div style ="margin-bottom: -20px;">
-                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm" style="margin-bottom: -45px; width: fit-content">
-                        {{> transaction_list_date}}
-                    </div>
-                </div>
-
-                {{> non_transactional_list tablename = "tblSerialNumberList"}}
+                {{>datatablelist
+                    tablename="tblSerialNumberList"
+                    apiName= apiFunction
+                    indexeddbname = 'TSerialNumberListCurrentReport'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Serial Number List'
+                    istransaction = true
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tserialnumberlistcurrentreport'
+                    exIndexDBName = 'tserialnumberlistcurrentreport'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+                }}
             </div>
         </div>
     </div>
