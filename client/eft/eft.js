@@ -3,9 +3,10 @@ import { Random } from 'meteor/random';
 import { AccountService } from '../accounts/account-service.js';
 import { EftService } from './eft-service';
 import { Template } from 'meteor/templating';
+import { UtilityService } from '../utility-service.js';
 import './eft.html';
 
-let accountService = new AccountService();
+let utilityService = new UtilityService();
 let eftService = new EftService();
 let selectLineId
 
@@ -23,22 +24,7 @@ Template.eft_export.onRendered(function () {
     // tempcode
     templateObject.eftRowId.set(Random.id());
 
-    templateObject.transactionDescriptions.set([
-        {
-            value: 'payroll',
-            label: 'Payroll',
-        },
-        {
-            value: 'supplier',
-            label: 'Supplier',
-        },
-        {
-            value: 'insurance',
-            label: 'Insurance',
-        },
-    ]);
-
-    $(() => {
+    $(() => utilityService.waitForElm("#accountListModal tbody td").then(() => {
         setTimeout(() => {
             let currentDate = moment(new Date()).format('DD/MM/YYYY');
             $('.eftProcessingDate').datepicker({
@@ -58,9 +44,11 @@ Template.eft_export.onRendered(function () {
                 },
             });
             $(".eftProcessingDate").val(currentDate);
+            $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))
             $('#accountListModal').modal('show');
-        }, 3000);
-    })
+        });
+    }))
+    
 
     templateObject.loadTabaDescriptiveRecord = () => {
         let descriptiveList = [];
@@ -170,6 +158,7 @@ Template.eft_export.onRendered(function () {
             const accountTypeList = [];
             var accountDataName = e.target.value || '';
             if (e.pageX > offset.left + $earch.width() - 8) {
+                selectLineId = undefined
                 $('#accountListModal').modal();
                 $('.fullScreenSpin').css('display', 'none');
             } else {
@@ -233,23 +222,26 @@ Template.eft_export.onRendered(function () {
         });
 
     $(document).on('click', '#tblAccountListPop tbody tr', function (e) {
-        $('.colAccount').removeClass('boldtablealertsborder');
         var table = $(this);
         let colAccountID = table.find('.colAccountId').text();
-        if (colAccountID) {
-            $('.fullScreenSpin').css('display', 'inline-block');
-            $('#eftaccountid').val(colAccountID).trigger('change')
-            // templateObject.loadTABADetailRecordById(colAccountID);
-            templateObject.loadTabaDescriptiveRecordById(colAccountID);
-        }
-
         let lineProductName = table.find('.colAccountName').text();
-        let lineProductDesc = table.find('.colDescription').text();
-        let lineAccoutNo = table.find('.colAccountNo').text();
-        let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";
+        if (selectLineId === undefined) {
+            $('.colAccount').removeClass('boldtablealertsborder');            
+            if (colAccountID) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                $('#eftaccountid').val(colAccountID).trigger('change')
+                // templateObject.loadTABADetailRecordById(colAccountID);
+                templateObject.loadTabaDescriptiveRecordById(colAccountID);
+            }        
+            let lineProductDesc = table.find('.colDescription').text();
+            let lineAccoutNo = table.find('.colAccountNo').text();
+            let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";            
+            $('#sltBankAccountName').val(lineProductName);
+            $('#sltBankName').val(lineBankName)
+        } else {
+            $(`tr#${selectLineId} .sltEftTblAccountName`).val(lineProductName);
+        }        
         $('#accountListModal').modal('toggle');
-        $('#sltBankAccountName').val(lineProductName);
-        $('#sltBankName').val(lineBankName)
     });
 
     $('#sltBankName').editableSelect();
@@ -317,6 +309,11 @@ Template.eft_export.onRendered(function () {
         $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
     });
+
+    $(document).on('click', '#tblEftExportCheckbox input.sltEftTblAccountName', function(e) {
+        selectLineId = $(this).closest('tr').attr('id')
+        $('#accountListModal').modal('show');
+    })
 });
 
 Template.eft_export.events({
@@ -410,7 +407,7 @@ Template.eft_export.events({
 
     'click .btnDoEftExport': (e) => {
         playSaveAudio();
-        setTimeout(function () {
+        setTimeout(async function () {
             let sltAccountType = $('#sltBankAccountName').val() || "";
             let sltBankName = $('#sltBankName').val() || "";
             let eftProcessingDate = $('#eftProcessingDate').val() || "";
@@ -437,6 +434,14 @@ Template.eft_export.events({
                 swal('Please input Transaction Description', '', 'error');
                 return false;
             }
+            let currentEftFilesCreatedData = await getVS1Data('TEftFilesCreated');
+            if (currentEftFilesCreatedData && currentEftFilesCreatedData.length) {
+                let saveEftFilesCreateData = JSON.parse(currentEftFilesCreatedData[0].data)
+                let newId = Random.id()
+                saveEftFilesCreateData = {teftfilescreated: [...saveEftFilesCreateData.teftfilescreated, 
+                    [newId, sltAccountType, sltBankName, eftProcessingDate, eftUserName, sltTransactionDescription]]}
+                await addVS1Data('TEftFilesCreated', JSON.stringify(saveEftFilesCreateData))
+            }            
             eftNumberUser =
                 eftNumberUser.length >= 6 ? eftNumberUser : '0'.repeat(6 - eftNumberUser.length) + eftNumberUser;
             var arrData = [];
