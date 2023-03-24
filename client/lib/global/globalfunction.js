@@ -627,6 +627,24 @@ batchUpdateCall = function (url, flag = false) {
     }
 };
 
+/**
+ * Damien
+ * Date Format Function
+ * params
+ *   dateStr: javascript date string
+ * return
+ *   converted date with correct date format based on company country ( the country got from localStorage )
+* */
+formatDateByCountry = function(dateStr){
+    let country = localStorage.getItem('vs1companyCountry');
+
+    if(country == 'United States'){
+        return moment(dateStr).format('MM/DD/YYYY');
+    }else{
+        return moment(dateStr).format('DD/MM/YYYY');
+    }
+};
+
 getHour24 = function (timeString) {
   let time = null;
   let timeSplit = timeString.split(':'),
