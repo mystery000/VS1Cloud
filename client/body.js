@@ -341,6 +341,7 @@ import './settings/manufacturingsettings/manufacturingsettings.js';
 import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
+import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -419,6 +420,9 @@ import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 import './settings/inventory-setting/inventorySettings.js';
 import './settings/UOM-Settings/adduompop.js';
+import './eft/transactionCodeModal/transactionCodeModal.js';
+import './eft/eftFilesCreated/eftFilesCreated.js';
+import './eft/eftBankRuleList/eftBankRuleList.js';
 /* Martin */
 
 /* AlexV */
@@ -517,7 +521,11 @@ import './inventory/serialnumberview.js';
 import './popUps/deleteprogresspopup.js';
 import './reports/profitandloss/nplEditLayoutScreenModal.js';
 import './reports/profitandloss/nplAddGroupScreenModal.js';
-// import './popUps/editServiceCheckerModal.js';
+import './popUps/editServiceCheckerModal.js';
+import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
+import './payroll/clockonoff/employeeclockonoff.js';
+import './reports/buildcost/buildcostreport';
+import './reports/worksheet/worksheetreport.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -640,6 +648,8 @@ import './reports/exeincome/exeincome.js';
 import './reports/exeperformance/exeperformance.js';
 import './reports/exeposition/exeposition.js';
 import './reports/exeprofitability/exeprofitability.js';
+import './reconciliation/newstatementrule.js';
+import './vs1_templates/template_buttons/report_export_import_print_display_button.js';
 /* Scott */
 
 /* Mainstar */
