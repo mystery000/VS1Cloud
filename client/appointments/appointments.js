@@ -19234,14 +19234,14 @@ Template.appointments.events({
             }
         }
     },
-    // "click #btnCreateAppointmentRequest": function(event){
-    //     $("#appointmentLeaveConfirmModal").modal("hide");
-    //     $("#customerListModal").modal();
-    // },
-    // "click #btnCreateLeaveRequest": function(event){
-    //     $("#appointmentLeaveConfirmModal").modal("hide");
-    //     $("#customerListModal").modal();
-    // },
+    "click #btnCreateAppointmentRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+    "click #btnCreateLeaveRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
 });
 
 Template.appointments.helpers({

@@ -9179,14 +9179,6 @@ Template.calender.events({
         let templateObject = Template.instance();
         templateObject.saveUpdatedEvents();
     },
-    "click #btnCreateAppointmentRequest": function(event){
-        $("#appointmentLeaveConfirmModal").modal("hide");
-        $("#customerListModal").modal();
-    },
-    "click #btnCreateLeaveRequest": function(event){
-        $("#appointmentLeaveConfirmModal").modal("hide");
-        $("#customerListModal").modal();
-    },
 });
 
 Template.calender.helpers({
