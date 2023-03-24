@@ -657,7 +657,8 @@ import './inventory/binlocations/binlocations.js';
 /* Mainstar */
 
 /* Damien Begin */
-import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js';
+import './vs1_templates/transaction_temp/transaction_frm_journal.js';
 /* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
