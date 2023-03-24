@@ -2484,7 +2484,8 @@ Template.transaction_list.onRendered(function() {
         let workorderdata = data.tvs1workorder;
         let bomData;
         let tempData;
-    //    console.log(data);
+    
+      //  console.log(data);
 
 
         for (let t = 0; t < workorderdata.length; t++) {
