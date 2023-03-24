@@ -465,23 +465,11 @@ Template.calender.onRendered(function() {
     }
 
     if (FlowRouter.current().queryParams.leadid) {
-        openAppointModalDirectly(
-            FlowRouter.current().queryParams.leadid, 
-            templateObject, 
-            true
-        );
+        openAppointModalDirectly( FlowRouter.current().queryParams.leadid,templateObject,true);
     } else if (FlowRouter.current().queryParams.customerid) {
-        openAppointModalDirectly(
-            FlowRouter.current().queryParams.customerid, 
-            templateObject, 
-            true
-        );
+        openAppointModalDirectly(FlowRouter.current().queryParams.customerid,templateObject,true);
     } else if (FlowRouter.current().queryParams.supplierid) {
-        openAppointModalDirectly(
-            FlowRouter.current().queryParams.supplierid, 
-            templateObject, 
-            true
-        );
+        openAppointModalDirectly(FlowRouter.current().queryParams.supplierid,templateObject,true);
     }
 
     getVS1Data("TERPPreference").then(function(dataObject) {
@@ -780,7 +768,8 @@ Template.calender.onRendered(function() {
                 allocation: {
                     text: "Allocations",
                     click: function() {
-                        $("#allocationModal").modal();
+                        console.log('Show Allocations2 on Calendar')
+                        $("#allocationModal").modal('show');
                     },
                 },
                 ...refreshButton,
@@ -1165,6 +1154,7 @@ Template.calender.onRendered(function() {
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
+                console.log('Drop in renderCalendar')
                 let hoursSpent;
                 let appointmentHours;
                 let endTime;
@@ -1313,7 +1303,7 @@ Template.calender.onRendered(function() {
             if (child1 != null) {
                 const parent1 = child1.parentNode;
                 $(parent1).css("min-width", 714).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
+                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center").css('clear','both');
             }
 
             let url = window.location.href;
@@ -1326,6 +1316,7 @@ Template.calender.onRendered(function() {
     };
 
     templateObject.renderNormalCalendar = function() {
+        console.log('------ renderNormalCalendar on the Calendar ------')
         let calendarSet = templateObject.globalSettings.get();
         let hideDays = "";
         let slotMin = "06:00:00";
@@ -1380,7 +1371,8 @@ Template.calender.onRendered(function() {
                 allocation: {
                     text: "Allocations",
                     click: function() {
-                        $("#allocationModal").modal();
+                        console.log('Show Allocations1 on Calendar')
+                        $("#allocationModal").modal('toggle');
                     },
                 },
                 ...refreshButton,
@@ -1464,9 +1456,10 @@ Template.calender.onRendered(function() {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
-                    calendar.gotoDate(info.start);
-                    $(".fc-timeGridDay-button").trigger("click");
+                    $("#appointmentLeaveConfirmModal").modal("toggle");
+                    // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
+                    // calendar.gotoDate(info.start);
+                    // $(".fc-timeGridDay-button").trigger("click");
                 }
             },
             eventClick: function(info) {
@@ -1656,7 +1649,6 @@ Template.calender.onRendered(function() {
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
                 if (info.event._def.publicId != "") {
-
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
                     let eventDropID = info.event._def.publicId || "0";
@@ -1669,9 +1661,11 @@ Template.calender.onRendered(function() {
                     let index = appointmentData.map(function(e) {
                         return e.id;
                     }).indexOf(parseInt(eventDropID));
+                    console.log('resourceData:',resourceData)
                     let resourceIndex = resourceData.map(function(e) {
                         return e.employeeName;
                     }).indexOf(appointmentData[index].employeename);
+                    console.log('resourceIndex:',resourceIndex)
                     const result = appointmentData.filter((apmt) => {
                         return apmt.id == eventDropID;
                     });
@@ -1734,10 +1728,10 @@ Template.calender.onRendered(function() {
                         // });
                     }
                 }
-
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
+                console.log('drop in renderNormalCalendar')
                 let hoursSpent;
                 let appointmentHours;
                 let endTime;
@@ -2444,6 +2438,7 @@ Template.calender.onRendered(function() {
     };
 
     function setAppointmentData(data) {
+        console.log('setAppointmentData')
         let result;
         let employeeColor;
         let jobs;
@@ -2669,29 +2664,29 @@ Template.calender.onRendered(function() {
         let currentDay = moment().format("dddd");
         let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        // $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-        // $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-        // $('#here_table thead tr').append('<th class="employeeName"></th>');
+        $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+        $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+        $('#here_table thead tr').append('<th class="employeeName"></th>');
 
-        // for (let w = 0; w < daysOfTheWeek.length; w++) {
-        //     if (daysOfTheWeek[w] === "Sunday") {
-        //         if ($('#showSunday').is(":checked")) {
-        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-        //         } else {
-        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-        //         }
-        //     } else if (daysOfTheWeek[w] === "Saturday") {
-        //         if ($('#showSaturday').is(":checked")) {
-        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-        //         } else {
-        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-        //         }
-        //     } else {
-        //         $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-        //     }
-        // }
+        for (let w = 0; w < daysOfTheWeek.length; w++) {
+            if (daysOfTheWeek[w] === "Sunday") {
+                if ($('#showSunday').is(":checked")) {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                } else {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                }
+            } else if (daysOfTheWeek[w] === "Saturday") {
+                if ($('#showSaturday').is(":checked")) {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                } else {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                }
+            } else {
+                $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+            }
+        }
 
-        // $('#here_table').append('</tr ></thead >');
+        $('#here_table').append('</tr ></thead >');
         for (let i = 0; i <= weekResults[0].dates.length; i++) {
             days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
         }
@@ -2909,7 +2904,7 @@ Template.calender.onRendered(function() {
                     //allEmp.push(dataList);
                 }
             }
-            // let tableRowData = [];
+            let tableRowData = [];
             let sundayRowData = [];
             let mondayRowData = [];
             let splashArrayMonday = [];
@@ -2995,35 +2990,36 @@ Template.calender.onRendered(function() {
                     }
                 }
 
-                // if ($('#showSaturday').is(":checked")) {
-                //     saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                // } else {
-                //     saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                // }
+                if ($('#showSaturday').is(":checked")) {
+                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                } else {
+                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                }
 
-                // if ($('#showSunday').is(":checked")) {
-                //     sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                // } else {
-                //     sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                // }
+                if ($('#showSunday').is(":checked")) {
+                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                } else {
+                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                }
 
-                // tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                //     '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                //     sundayStatus + "" +
-                //     '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                //     '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                //     '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                //     '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                //     '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                //     saturdayStatus + "" +
-                //     '</tr>';
-                // tableRowData.push(tableRow);
+                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+                    sundayStatus + "" +
+                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+                    saturdayStatus + "" +
+                    '</tr>';
+                tableRowData.push(tableRow);
 
             }
-            //setTimeout(function () {
-            // $('#here_table table').append(tableRowData);
-            //}, 500);
-            //templateObject.employeerecords.set(allEmp);
+            setTimeout(function () {
+            $('#here_table table').append(tableRowData);
+            }, 500);
+            templateObject.employeerecords.set(allEmp);
+            console.log('resourceChat:',resourceChat)
             templateObject.resourceAllocation.set(resourceChat);
             templateObject.resourceJobs.set(resourceJob);
             templateObject.resourceDates.set(days);
@@ -3205,6 +3201,7 @@ Template.calender.onRendered(function() {
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
+                console.log('drop in renderCalendar of SetInitCalendar')
                 let hoursSpent;
                 let appointmentHours;
                 let endTime;
@@ -3971,6 +3968,7 @@ Template.calender.onRendered(function() {
     }, false);
 
     document.addEventListener("drop", function(event) {
+        console.log('--- Drop Event on the Calendar Template ---')
         let appointmentService = new AppointmentService();
         event.preventDefault();
         draggedTd = $(event.target).closest('td');
@@ -4056,7 +4054,23 @@ Template.calender.onRendered(function() {
                     themeSystem: "bootstrap",
                     initialView: "dayGridMonth",
                     hiddenDays: hideDays, // hide Sunday and Saturday
+                    // customButtons: {
+                    //     appointments: {
+                    //         text: "Appointment List",
+                    //         click: function() {
+                    //             //window.open("/appointmentlist", '_self');
+                    //             FlowRouter.go("/appointmentlist");
+                    //         }
+                    //     },
+                    //     ...refreshButton
+                    // },
                     customButtons: {
+                        newappointment: {
+                            text: "New Appointment",
+                            click: function() {
+                                // FlowRouter.go("/appointmentlist");
+                            },
+                        },
                         appointments: {
                             text: "Appointment List",
                             click: function() {
@@ -4064,13 +4078,26 @@ Template.calender.onRendered(function() {
                                 FlowRouter.go("/appointmentlist");
                             }
                         },
-                        ...refreshButton
+                        allocation: {
+                            text: "Allocations",
+                            click: function() {
+                                console.log('Show Allocations3 on Calendar')
+                                $("#allocationModal").modal('show');
+                            },
+                        },
+                        ...refreshButton,
+                        ...settingsModalButton,
                     },
                     headerToolbar: {
-                        left: 'prev,next appointments refresh',
-                        center: 'title',
-                        right: ""
+                        left: "prev,next today newappointment appointments allocation refresh",
+                        center: "",
+                        right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
                     },
+                    // headerToolbar: {
+                    //     left: 'prev,next appointments refresh',
+                    //     center: 'title',
+                    //     right: ""
+                    // },
                     slotMinTime: slotMin,
                     slotMaxTime: slotMax,
                     initialDate: begunDate,
@@ -4293,6 +4320,7 @@ Template.calender.onRendered(function() {
                     },
                     //Triggers modal once external object is dropped to calender.
                     drop: function(event) {
+                        console.log('drop in drop')
                         let draggedEmployeeID = templateObject.empID.get();
                         let calendarData = templateObject.employeeOptions.get();
                         let calendarSet = templateObject.globalSettings.get();
@@ -4629,7 +4657,8 @@ Template.calender.onRendered(function() {
         });
     });
 
-    //TODO: Get SMS settings here
+    // TODO: Get SMS settings here
+    
     const smsSettings = {
         twilioAccountId: "",
         twilioAccountToken: "",
@@ -4660,100 +4689,100 @@ Template.calender.onRendered(function() {
 
     });*/
 
-    getVS1Data("TERPPreference").then(function(dataObject) {
-        if (dataObject.length == 0) {
-            smsService.getSMSSettings().then((result) => {
-                addVS1Data("TERPPreference", JSON.stringify(result));
-                if (result.terppreference.length > 0) {
-                    for (let i = 0; i < result.terppreference.length; i++) {
-                        switch (result.terppreference[i].PrefName) {
-                            case "VS1SMSID":
-                                smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1SMSToken":
-                                smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1SMSPhone":
-                                smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1HEADERSMSMSG":
-                                smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1SAVESMSMSG":
-                                smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1STARTSMSMSG":
-                                smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1STOPSMSMSG":
-                                smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                        }
-                    }
-                    templateObject.defaultSMSSettings.set(smsSettings);
-                }
-            });
-        } else {
-            let result = JSON.parse(dataObject[0].data);
-            if (result.terppreference.length > 0) {
-                for (let i = 0; i < result.terppreference.length; i++) {
-                    switch (result.terppreference[i].PrefName) {
-                        case "VS1SMSID":
-                            smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SMSToken":
-                            smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SMSPhone":
-                            smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1HEADERSMSMSG":
-                            smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SAVESMSMSG":
-                            smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1STARTSMSMSG":
-                            smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1STOPSMSMSG":
-                            smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                    }
-                }
-                templateObject.defaultSMSSettings.set(smsSettings);
-            }
-        }
-    }).catch(function(err) {
-        smsService.getSMSSettings().then((result) => {
-            addVS1Data("TERPPreference", JSON.stringify(result));
-            if (result.terppreference.length > 0) {
-                for (let i = 0; i < result.terppreference.length; i++) {
-                    switch (result.terppreference[i].PrefName) {
-                        case "VS1SMSID":
-                            smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SMSToken":
-                            smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SMSPhone":
-                            smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1HEADERSMSMSG":
-                            smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SAVESMSMSG":
-                            smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1STARTSMSMSG":
-                            smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1STOPSMSMSG":
-                            smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
-                    }
-                }
-                templateObject.defaultSMSSettings.set(smsSettings);
-            }
-        });
-    });
+    // getVS1Data("TERPPreference").then(function(dataObject) {
+    //     if (dataObject.length == 0) {
+    //         smsService.getSMSSettings().then((result) => {
+    //             addVS1Data("TERPPreference", JSON.stringify(result));
+    //             if (result.terppreference.length > 0) {
+    //                 for (let i = 0; i < result.terppreference.length; i++) {
+    //                     switch (result.terppreference[i].PrefName) {
+    //                         case "VS1SMSID":
+    //                             smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+    //                             break;
+    //                         case "VS1SMSToken":
+    //                             smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+    //                             break;
+    //                         case "VS1SMSPhone":
+    //                             smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
+    //                             break;
+    //                         case "VS1HEADERSMSMSG":
+    //                             smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                             break;
+    //                         case "VS1SAVESMSMSG":
+    //                             smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                             break;
+    //                         case "VS1STARTSMSMSG":
+    //                             smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                             break;
+    //                         case "VS1STOPSMSMSG":
+    //                             smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                     }
+    //                 }
+    //                 templateObject.defaultSMSSettings.set(smsSettings);
+    //             }
+    //         });
+    //     } else {
+    //         let result = JSON.parse(dataObject[0].data);
+    //         if (result.terppreference.length > 0) {
+    //             for (let i = 0; i < result.terppreference.length; i++) {
+    //                 switch (result.terppreference[i].PrefName) {
+    //                     case "VS1SMSID":
+    //                         smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1SMSToken":
+    //                         smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1SMSPhone":
+    //                         smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1HEADERSMSMSG":
+    //                         smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1SAVESMSMSG":
+    //                         smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1STARTSMSMSG":
+    //                         smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1STOPSMSMSG":
+    //                         smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                 }
+    //             }
+    //             templateObject.defaultSMSSettings.set(smsSettings);
+    //         }
+    //     }
+    // }).catch(function(err) {
+    //     smsService.getSMSSettings().then((result) => {
+    //         addVS1Data("TERPPreference", JSON.stringify(result));
+    //         if (result.terppreference.length > 0) {
+    //             for (let i = 0; i < result.terppreference.length; i++) {
+    //                 switch (result.terppreference[i].PrefName) {
+    //                     case "VS1SMSID":
+    //                         smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1SMSToken":
+    //                         smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1SMSPhone":
+    //                         smsSettings.twilioTelephoneNumber = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1HEADERSMSMSG":
+    //                         smsSettings.headerAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1SAVESMSMSG":
+    //                         smsSettings.saveAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1STARTSMSMSG":
+    //                         smsSettings.startAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                         break;
+    //                     case "VS1STOPSMSMSG":
+    //                         smsSettings.stopAppointmentSMSMessage = result.terppreference[i].Fieldvalue;
+    //                 }
+    //             }
+    //             templateObject.defaultSMSSettings.set(smsSettings);
+    //         }
+    //     });
+    // });
 
     templateObject.sendSMSMessage = async function(type, phoneNumber) {
             return new Promise(async(resolve, reject) => {
@@ -5961,6 +5990,7 @@ Template.calender.events({
         }
     },
     'click #prev': async function() {
+        console.log('Clicked prev button')
         let templateObject = Template.instance();
         let changeAppointmentView = templateObject.appointmentrecords.get();
 
@@ -6196,30 +6226,30 @@ Template.calender.events({
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            // $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-            // $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-            // $('#here_table thead tr').append('<th class="employeeName"></th>');
-            // for (let w = 0; w < daysOfTheWeek.length; w++) {
-            //     if (daysOfTheWeek[w] === "Sunday") {
-            //         if ($('#showSunday').is(":checked")) {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-            //         } else {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-            //         }
+            $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+            $('#here_table thead tr').append('<th class="employeeName"></th>');
+            for (let w = 0; w < daysOfTheWeek.length; w++) {
+                if (daysOfTheWeek[w] === "Sunday") {
+                    if ($('#showSunday').is(":checked")) {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    }
 
-            //     } else if (daysOfTheWeek[w] === "Saturday") {
-            //         if ($('#showSaturday').is(":checked")) {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-            //         } else {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-            //         }
-            //     } else {
-            //         $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-            //     }
+                } else if (daysOfTheWeek[w] === "Saturday") {
+                    if ($('#showSaturday').is(":checked")) {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                    }
+                } else {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+                }
 
-            // }
+            }
 
-            // let tableRowData = [];
+            let tableRowData = [];
             let sundayRowData = [];
             let mondayRowData = [];
             let splashArrayMonday = [];
@@ -6326,32 +6356,32 @@ Template.calender.events({
 
                 }
 
-                // if ($('#showSaturday').is(":checked")) {
-                //     saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                // } else {
-                //     saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                // }
+                if ($('#showSaturday').is(":checked")) {
+                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                } else {
+                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                }
 
-                // if ($('#showSunday').is(":checked")) {
-                //     sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                // } else {
-                //     sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                // }
+                if ($('#showSunday').is(":checked")) {
+                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                } else {
+                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                }
 
-                // tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                //     '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                //     sundayStatus + "" +
-                //     '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                //     '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                //     '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                //     '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                //     '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                //     saturdayStatus + "" +
-                //     '</tr>';
-                // tableRowData.push(tableRow);
+                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+                    sundayStatus + "" +
+                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+                    saturdayStatus + "" +
+                    '</tr>';
+                tableRowData.push(tableRow);
 
             }
-            // $('#here_table table').append(tableRowData);
+            $('#here_table table').append(tableRowData);
 
             $('.sunday').attr("id", dayPrev[0]);
             $('.monday').attr("id", dayPrev[1]);
@@ -6391,6 +6421,7 @@ Template.calender.events({
 
     },
     'click #next': function() {
+        console.log('Clicked next button')
         let templateObject = Template.instance();
         let seeOwnAllocations = localStorage.getItem('CloudAppointmentSeeOwnAllocationsOnly') || false;
         let seeOwnAppointments = localStorage.getItem('CloudAppointmentSeeOwnAppointmentsOnly__') || true;
@@ -6592,30 +6623,30 @@ Template.calender.events({
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            // $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-            // $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-            // $('#here_table thead tr').append('<th class="employeeName"></th>');
+            $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+            $('#here_table thead tr').append('<th class="employeeName"></th>');
 
-            // for (let w = 0; w < daysOfTheWeek.length; w++) {
-            //     if (daysOfTheWeek[w] === "Sunday") {
-            //         if ($('#showSunday').is(":checked")) {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-            //         } else {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-            //         }
+            for (let w = 0; w < daysOfTheWeek.length; w++) {
+                if (daysOfTheWeek[w] === "Sunday") {
+                    if ($('#showSunday').is(":checked")) {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    }
 
-            //     } else if (daysOfTheWeek[w] === "Saturday") {
-            //         if ($('#showSaturday').is(":checked")) {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-            //         } else {
-            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-            //         }
-            //     } else {
-            //         $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-            //     }
-            // }
+                } else if (daysOfTheWeek[w] === "Saturday") {
+                    if ($('#showSaturday').is(":checked")) {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                    }
+                } else {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+                }
+            }
 
-            // let tableRowData = [];
+            let tableRowData = [];
             let sundayRowData = [];
             let mondayRowData = [];
             let splashArrayMonday = [];
@@ -6722,32 +6753,32 @@ Template.calender.events({
 
                 }
 
-                // if ($('#showSaturday').is(":checked")) {
-                //     saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                // } else {
-                //     saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                // }
+                if ($('#showSaturday').is(":checked")) {
+                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                } else {
+                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                }
 
-                // if ($('#showSunday').is(":checked")) {
-                //     sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                // } else {
-                //     sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                // }
+                if ($('#showSunday').is(":checked")) {
+                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                } else {
+                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                }
 
-                // tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                //     '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                //     sundayStatus + "" +
-                //     '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                //     '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                //     '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                //     '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                //     '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                //     saturdayStatus + "" +
-                //     '</tr>';
-                // tableRowData.push(tableRow);
+                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+                    sundayStatus + "" +
+                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+                    saturdayStatus + "" +
+                    '</tr>';
+                tableRowData.push(tableRow);
 
             }
-            // $('#here_table table').append(tableRowData);
+            $('#here_table table').append(tableRowData);
 
             $('.sunday').attr("id", dayNext[0]);
             $('.monday').attr("id", dayNext[1]);
@@ -6789,6 +6820,7 @@ Template.calender.events({
 
         }
     },
+    
     'click .checkclose': function() {
         const templateObject = Template.instance();
         if (templateObject.checkRefresh.get() == true || $('#updateID').val() == "") {
@@ -7538,6 +7570,7 @@ Template.calender.events({
                         if (result.value) {
                             $('#chkSMSCustomer').prop('checked', false);
                             $('#chkSMSUser').prop('checked', false);
+                            console.log('Click SaveAppointmentSubmit')
                             $('#btnSaveAppointmentSubmit').trigger('click');
                         }
                     })
@@ -7589,10 +7622,21 @@ Template.calender.events({
     },
     'click .btnSaveIgnoreSMS': function() {
         playSaveAudio();
-        setTimeout(function() {
-            $('#chkSMSCustomer').prop('checked', false);
-            $('#chkSMSUser').prop('checked', false);
-            $("#frmAppointment").trigger('submit');
+        setTimeout(async function() {
+            $("#chkSMSCustomer").prop("checked", false);
+            $("#chkSMSUser").prop("checked", false);
+            let emailCustomer = $("#customerEmail").is(":checked");
+            let emailUser = $("#userEmail").is(":checked");
+            $("#saveAppointmentModal").modal("hide");
+            $("#event-modal").modal("hide");
+            if (emailCustomer || emailUser) {
+                await sendAppointmentEmail();
+                // $("#frmAppointment").trigger("submit");
+                $("#btnAppointmentSubmit").click();
+            } else {
+                $("#btnAppointmentSubmit").click();
+                // $("#frmAppointment").trigger("submit");
+            }
         }, delayTimeAfterSound);
     },
     'click #btnCloseStopAppointmentModal': function() {
@@ -7604,18 +7648,17 @@ Template.calender.events({
     'click #btnCloseSaveAppointmentModal': function() {
         $('#saveAppointmentModal').modal("hide");
     },
-    'click #btnSaveAppointmentSubmit': async function(e) {
-        playSaveAudio();
+    "click #btnSaveAppointmentSubmit": async function(e) {
         e.preventDefault();
-        let templateObject = Template.instance();
-        setTimeout(async function() {
-
-            const smsCustomer = $('#chkSMSCustomer').is(':checked');
-            const smsUser = $('#chkSMSUser').is(':checked');
-            const customerPhone = $('#mobile').val();
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            let sendSMSRes = true;
-            /*
+        const templateObject = Template.instance();
+        const smsCustomer = $("#chkSMSCustomer").is(":checked");
+        const smsUser = $("#chkSMSUser").is(":checked");
+        const customerPhone = $("#mobile").val();
+        var emailCustomer = $("#customerEmail").is(":checked");
+        var emailUser = $("#userEmail").is(":checked");
+        const smsSettings = templateObject.defaultSMSSettings.get();
+        let sendSMSRes = true;
+        /*
             if (createAppointment == false) {
                 $('.modal-backdrop').css('display', 'none');
                 $('.fullScreenSpin').css('display', 'none');
@@ -7632,44 +7675,62 @@ Template.calender.events({
                 return false;
             };*/
 
-            if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                sendSMSRes = await templateObject.sendSMSMessage('save', '+' + customerPhone.replace('+', ""));
-                if (!sendSMSRes.success) {
-                    swal({
-                        title: 'Oops...',
-                        text: sendSMSRes.message,
-                        type: 'error',
-                        showCancelButton: false,
-                        confirmButtonText: 'Try again'
-                    }).then((result) => {
-                        if (result.value) {
-                            $('#saveAppointmentModal').modal("hide");
-                        } else {
-                            // window.open("/appointments", '_self');
-                        }
-                    });
-                } else {
-                    localStorage.setItem('smsId', sendSMSRes.sid);
-                    $('#saveAppointmentModal').modal("hide");
-                    swal({
-                        title: 'SMS was sent successfully',
-                        text: "SMS was sent successfully",
-                        type: 'success',
-                        showCancelButton: false,
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        if (result.value) {
-                            $("#event-modal").modal("hide");
-                        } else {
-                            // window.open("/appointments", '_self');
-                        }
-                    });
-                    $("#frmAppointment").trigger('submit');
-                }
+        if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
+            sendSMSRes = await templateObject.sendSMSMessage("save","+" + customerPhone.replace("+", ""));
+            if (!sendSMSRes.success) {
+                swal({
+                    title: "Oops...",
+                    text: sendSMSRes.message,
+                    type: "error",
+                    showCancelButton: false,
+                    confirmButtonText: "Try again",
+                }).then((result) => {
+                    if (result.value) {
+                        $("#saveAppointmentModal").modal("hide");
+                    } else {
+                        // window.open('/appointments', '_self');
+                    }
+                });
             } else {
-                $("#frmAppointment").trigger('submit');
+                localStorage.setItem("smsId", sendSMSRes.sid);
+                $("#saveAppointmentModal").modal("hide");
+                swal({
+                    title: "SMS was sent successfully",
+                    text: "SMS was sent successfully",
+                    type: "success",
+                    showCancelButton: false,
+                    confirmButtonText: "Ok",
+                }).then((result) => {
+                    if (result.value) {
+                        $("#event-modal").modal("hide");
+                    } else {
+                        // window.open('/appointments', '_self');
+                    }
+                });
+                if (emailCustomer || emailUser) {
+                    await sendAppointmentEmail();
+                    // $("#frmAppointment").trigger("submit");
+					console.log('Submitting Appointment form1')
+                    $("#btnAppointmentSubmit").click();
+                } else {
+                    // $("#frmAppointment").trigger("submit");
+					console.log('Submitting Appointment form2')
+                    $("#btnAppointmentSubmit").click();
+                }
             }
-        }, delayTimeAfterSound);
+        } else {
+			$("#event-modal").modal("hide");
+            if (emailCustomer || emailUser) {
+                await sendAppointmentEmail();
+                // $("#frmAppointment").trigger("submit");
+				console.log('Submitting Appointment form3')
+                $("#btnAppointmentSubmit").click();
+            } else {
+                // $("#frmAppointment").trigger("submit");
+				console.log('Submitting Appointment form4')
+                $("#btnAppointmentSubmit").click();
+            }
+        }
     },
     'change #chkSMSCustomer': function() {
         if ($('#chkSMSCustomer').is(':checked')) {
@@ -9142,6 +9203,7 @@ Template.calender.events({
 
     },
     'click .btn-auto-save': function(event) {
+        console.log('Clicked Save button')
         let templateObject = Template.instance();
         templateObject.saveUpdatedEvents();
     },
@@ -9241,8 +9303,11 @@ Template.registerHelper('and', (a, b) => {
     return a && b;
 });
 
-const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
+openAppointModalDirectly = (leadid, templateObject, auto = false) => {
     let contactService = new ContactService();
+    $("#frmAppointment")[0].reset();
+    // templateObject.getAllProductData();
+    $(".paused").hide();
     if (FlowRouter.current().queryParams.leadid) {
         contactService.getOneLeadDataEx(leadid).then(function(data) {
             // return;
@@ -9250,26 +9315,39 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
+            document.getElementById("employee_name").value =
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            document.getElementById("address").value = data.fields.Street.replace(
+                /(?:\r\n|\r|\n)/g,
+                ", "
+            );
             if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
+                document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
             if (auto == true) {
                 let dateStart = getRegalTime();
-                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
-                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
+                let startTime =
+                    ("0" + dateStart.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime =
+                    ("0" + dateEnd.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
+                let appointmentService = new AppointmentService();
                 getVS1Data("TAppointment").then(function(dataObject) {
                     if(dataObject.length == 0){
                         let appointmentService = new AppointmentService();
@@ -9318,7 +9396,7 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 // if(checkIncludeAllProducts ==  true){
                 // templateObject.getAllProductData();
                 // }else{
-                //   if(getEmployeeID != ""){
+                //   if(getEmployeeID != ''){
                 //     templateObject.getAllSelectedProducts(getEmployeeID);
                 //   }else{
                 //     templateObject.getAllProductData();
@@ -9330,114 +9408,54 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             }
             $("#customerListModal").modal("hide");
             $("#event-modal").modal();
-        })
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
+        });
     } else if (FlowRouter.current().queryParams.customerid) {
         contactService.getOneCustomerDataEx(leadid).then((data) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
+            document.getElementById("employee_name").value =
+                localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ', ');
+            document.getElementById("address").value = data.fields.Street.replace(
+                /(?:\r\n|\r|\n)/g,
+                ", "
+            );
             if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
+                document.getElementById("txtNotes-1").value = data.fields.Notes;
             }
             document.getElementById("suburb").value = data.fields.Suburb;
             document.getElementById("zip").value = data.fields.Postcode;
             if (auto == true) {
                 let dateStart = getRegalTime();
-                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
-                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                document.getElementById("startTime").value = startTime;
-                document.getElementById("endTime").value = endTime;
-            }
-            if ($("#updateID").val() == "") {
-                getVS1Data("TAppointment").then(function(dataObject) {
-                    if(dataObject.length == 0){
-                        let appointmentService = new AppointmentService();
-                        appointmentService.getAllAppointmentListCount().then(function(data) {
-                            if (data.tappointmentex.length > 0) {
-                                let max = 1;
-                                for (let i = 0; i < data.tappointmentex.length; i++) {
-                                    if (data.tappointmentex[i].Id > max) {
-                                        max = data.tappointmentex[i].Id;
-                                    }
-                                }
-                                document.getElementById("appID").value = max + 1;
-                            } else {
-                                document.getElementById("appID").value = 1;
-                            }
-                        });
-                    }else{
-                        let data = JSON.parse(dataObject[0].data);
-                        if (data.tappointmentex.length > 0) {
-                            let max = 1;
-                            for (let i = 0; i < data.tappointmentex.length; i++) {
-                                if (data.tappointmentex[i].Id > max) {
-                                    max = data.tappointmentex[i].Id;
-                                }
-                            }
-                            document.getElementById("appID").value = max + 1;
-                        } else {
-                            document.getElementById("appID").value = 1;
-                        }
-                    }
-                })
-                if (getEmployeeID != "") {
-                    var filterEmpData = getAllEmployeeData.filter(empdData => {
-                        return empdData.id == getEmployeeID;
-                    });
-                    if (filterEmpData) {
-                        if (filterEmpData[0].custFld8 == "false") {
-                            templateObject.getAllSelectedProducts(getEmployeeID);
-                        } else {
-                            templateObject.getAllProductData();
-                        }
-                    } else {
-                        templateObject.getAllProductData();
-                    }
-                }
-                // if(checkIncludeAllProducts ==  true){
-                // templateObject.getAllProductData();
-                // }else{
-                //   if(getEmployeeID != ""){
-                //     templateObject.getAllSelectedProducts(getEmployeeID);
-                //   }else{
-                //     templateObject.getAllProductData();
-                //   }
-                //
-                // }
-
-                //templateObject.getAllProductData();
-            }
-            $("#customerListModal").modal("hide");
-            $("#event-modal").modal();
-        })
-    } else if (FlowRouter.current().queryParams.supplierid) {
-        contactService.getOneSupplierDataEx(leadid).then((data) => {
-            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
-            let getAllEmployeeData = templateObject.employeerecords.get() || "";
-            let getEmployeeID = templateObject.empID.get() || "";
-            document.getElementById("customer").value = data.fields.ClientName;
-            document.getElementById("phone").value = data.fields.Phone;
-            document.getElementById("mobile").value = data.fields.Mobile;
-            document.getElementById("state").value = data.fields.State;
-            document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g, ", ");
-            if (localStorage.getItem("CloudAppointmentNotes") == true) {
-                document.getElementById("txtNotes").value = data.fields.Notes;
-            }
-            document.getElementById("suburb").value = data.fields.Suburb;
-            document.getElementById("zip").value = data.fields.Postcode;
-            if (auto == true) {
-                let dateStart = getRegalTime();
-                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000)
-                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
+                let startTime =
+                    ("0" + dateStart.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime =
+                    ("0" + dateEnd.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
             }
@@ -9490,7 +9508,119 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 // if(checkIncludeAllProducts ==  true){
                 // templateObject.getAllProductData();
                 // }else{
-                //   if(getEmployeeID != ""){
+                //   if(getEmployeeID != ''){
+                //     templateObject.getAllSelectedProducts(getEmployeeID);
+                //   }else{
+                //     templateObject.getAllProductData();
+                //   }
+                //
+                // }
+
+                //templateObject.getAllProductData();
+            }
+            $("#customerListModal").modal("hide");
+            $("#event-modal").modal();
+            setTimeout(() => {
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 100);
+        });
+    } else if (FlowRouter.current().queryParams.supplierid) {
+        contactService.getOneSupplierDataEx(leadid).then((data) => {
+            let checkIncludeAllProducts = templateObject.includeAllProducts.get();
+            let getAllEmployeeData = templateObject.employeerecords.get() || "";
+            let getEmployeeID = templateObject.empID.get() || "";
+            document.getElementById("employee_name").value =
+                localStorage.getItem("mySessionEmployee");
+            document.getElementById("customer").value = data.fields.ClientName;
+            document.getElementById("phone").value = data.fields.Phone;
+            document.getElementById("mobile").value = data.fields.Mobile;
+            document.getElementById("state").value = data.fields.State;
+            document.getElementById("country").value = data.fields.Country;
+            document.getElementById("address").value = data.fields.Street.replace(
+                /(?:\r\n|\r|\n)/g,
+                ", "
+            );
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
+                document.getElementById("txtNotes").value = data.fields.Notes;
+                document.getElementById("txtNotes-1").value = data.fields.Notes;
+            }
+            document.getElementById("suburb").value = data.fields.Suburb;
+            document.getElementById("zip").value = data.fields.Postcode;
+            if (auto == true) {
+                let dateStart = getRegalTime();
+                let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
+                let startTime =
+                    ("0" + dateStart.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime =
+                    ("0" + dateEnd.getHours()).toString().slice(-2) +
+                    ":" +
+                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                document.getElementById("startTime").value = startTime;
+                document.getElementById("endTime").value = endTime;
+            }
+            if ($("#updateID").val() == "") {
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
+                            }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
+                        }
+                    }
+                })
+                if (getEmployeeID != "") {
+                    var filterEmpData = getAllEmployeeData.filter((empdData) => {
+                        return empdData.id == getEmployeeID;
+                    });
+                    if (filterEmpData) {
+                        if (filterEmpData[0].custFld8 == "false") {
+                            templateObject.getAllSelectedProducts(getEmployeeID);
+                        } else {
+                            templateObject.getAllProductData();
+                        }
+                    } else {
+                        templateObject.getAllProductData();
+                    }
+                }
+                // if(checkIncludeAllProducts ==  true){
+                // templateObject.getAllProductData();
+                // }else{
+                //   if(getEmployeeID != ''){
                 //     templateObject.getAllSelectedProducts(getEmployeeID);
                 //   }else{
                 //     templateObject.getAllProductData();
