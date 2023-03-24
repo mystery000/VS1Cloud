@@ -128,7 +128,7 @@
 <!--                        </style>-->
 <!--                        <div class="d-flex align-items-center">-->
                             {{#if currency}}
-                                {{#if equals clientType 'Customer'}}
+                                {{#if equals Category 'purchase'}}
                                     {{> CurrencyWidget rate="sell" trans="true"}}
                                 {{else}}
                                     {{> CurrencyWidget rate="buy" row="true"}}
