@@ -33,9 +33,11 @@ Template.bankNameModal.onRendered(function () {
       var eftTable = $(this).closest("tr");
       let eftBankName = eftTable.find('.colBankName').text();
       let eftDescription = eftTable.find('.colDescription').text();
-      $('#edtBankName').val(eftBankName);
-      $('#edtDescription').val(eftDescription);
+      // $('#eftOptionsModal').modal('toggle');
+      $('#eftBankName').val(eftBankName);
+      $('#eftDescription').val(eftDescription);
   });
+
 });
 
 
