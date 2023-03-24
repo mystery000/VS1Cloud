@@ -85,7 +85,7 @@ Template.calender.onCreated(function() {
 async function sendAppointmentEmail() {
     let customerEmailCheck = $(".customerEmail").is(":checked") ? true : false;
     let userEmailCheck = $(".userEmail").is(":checked") ? true : false;
-    var emailText = $("#saveAppointmentSMSMessage").val()||"";
+    var emailText = $("#saveAppointmentSMSMessage").val()||'';
     // Send email to the customer
 
     if (customerEmailCheck == true) {
@@ -123,14 +123,14 @@ async function sendAppointmentEmail() {
                     // '                </tr>' +
                     '                <tr>' +
                     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                    '                        ' + emailText + "" +
+                    '                        ' + emailText + '' +
                     '                    </td>' +
                     '                </tr>' +
                     '                <tr>' +
                     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
                     '                        Kind regards,' +
                     '                        <br>' +
-                    '                        ' + mailFromName + "" +
+                    '                        ' + mailFromName + '' +
                     '                    </td>' +
                     '                </tr>' +
                     '            </table>' +
@@ -157,8 +157,8 @@ async function sendAppointmentEmail() {
                     from: "" + mailFromName + " <" + mailFrom + ">",
                     to: customerEmail,
                     subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
+                    text: '',
+                    html: htmlmailBodyCustomer,
                 },
                 function(error, result) {
                     if (error && error.error === "error") {
@@ -217,14 +217,14 @@ async function sendAppointmentEmail() {
                     // '                </tr>' +
                     '                <tr>' +
                     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 10px 0;">' +
-                    '                        ' + emailText + "" +
+                    '                        ' + emailText + '' +
                     '                    </td>' +
                     '                </tr>' +
                     '                <tr>' +
                     '                    <td style="color: #153643; font-family: Arial, sans-serif; font-size: 16px; line-height: 20px; padding: 20px 0 30px 0;">' +
                     '                        Kind regards,' +
                     '                        <br>' +
-                    '                        ' + mailFromName + "" +
+                    '                        ' + mailFromName + '' +
                     '                    </td>' +
                     '                </tr>' +
                     '            </table>' +
@@ -251,7 +251,7 @@ async function sendAppointmentEmail() {
                     from: "" + mailFromName + " <" + mailFrom + ">",
                     to: employeeEmail,
                     subject: mailSubject,
-                    text: "",
+                    text: '',
                     html: htmlmailBodyEmployee,
                 },
                 function(error, result) {
@@ -1924,11 +1924,9 @@ Template.calender.onRendered(function() {
                     let index = appointmentData.map(function(e) {
                         return e.id;
                     }).indexOf(parseInt(eventDropID));
-                    console.log('resourceData:',resourceData)
                     let resourceIndex = resourceData.map(function(e) {
                         return e.employeeName;
                     }).indexOf(appointmentData[index].employeename);
-                    console.log('resourceIndex:',resourceIndex)
                     const result = appointmentData.filter((apmt) => {
                         return apmt.id == eventDropID;
                     });
