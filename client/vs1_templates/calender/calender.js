@@ -516,7 +516,7 @@ Template.calender.onRendered(function() {
                             }
                         }
 
-                        if (JSON.parse(seeOwnAppointments) == true) {
+                        if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
                             if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
                                 var dataList = {
                                     id: data.temployee[i].fields.ID || "",
@@ -609,7 +609,7 @@ Template.calender.onRendered(function() {
                         }
                     }
 
-                    if (JSON.parse(seeOwnAppointments) == true) {
+                    if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
                         if (
                             useData[i].fields.EmployeeName ==
                             localStorage.getItem("mySessionEmployee")
@@ -684,7 +684,7 @@ Template.calender.onRendered(function() {
                                 templateObject.includeAllProducts.set(false);
                             }
                         }
-                        if (JSON.parse(seeOwnAppointments) == true) {
+                        if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
                             if (
                                 data.temployee[i].fields.EmployeeName ==
                                 localStorage.getItem("mySessionEmployee")
@@ -2182,7 +2182,7 @@ Template.calender.onRendered(function() {
 
         $("#appointmentDate").val(moment(new Date()).format("DD/MM/YYYY"));
 
-        if (seeOwnAppointments == true) {
+        if (JSON.parse(seeOwnAppointments) == true) {
             $("#chkmyAppointments").prop('checked', true);
         } else {
             $("#chkmyAppointments").prop('checked', false);
@@ -2367,7 +2367,7 @@ Template.calender.onRendered(function() {
                     templateObject.includeAllProducts.set(false);
                 }
             }
-            if (seeOwnAppointments == true) {
+            if (JSON.parse(seeOwnAppointments) == true) {
                 if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
                     dataList = {
                         id: data.temployee[i].fields.ID || "",
@@ -2798,7 +2798,7 @@ Template.calender.onRendered(function() {
                 description: getAddress,
                 color: appColor
             };
-            if (seeOwnAppointments == true) {
+            if (JSON.parse(seeOwnAppointments) == true) {
                 if (data.tappointmentex[i].fields.TrainerName == localStorage.getItem("mySessionEmployee")) {
                     eventData.push(dataList);
                     appointmentList.push(appointment)
@@ -3046,7 +3046,7 @@ Template.calender.onRendered(function() {
 
             if (resourceChat.length > 0) {
                 if (date >= startWeek && date <= endWeek) {
-                    if (seeOwnAppointments == true) {
+                    if (JSON.parse(seeOwnAppointments) == true) {
                         if (data.tappointmentex[t].fields.TrainerName == localStorage.getItem("mySessionEmployee")) {
                             let found = resourceChat.some(emp => emp.employeeName == data.tappointmentex[t].fields.TrainerName);
                             if (!found) {
@@ -3114,7 +3114,7 @@ Template.calender.onRendered(function() {
                 }
             } else {
                 if (date >= startWeek && date <= endWeek) {
-                    if (seeOwnAppointments == true) {
+                    if (JSON.parse(seeOwnAppointments) == true) {
                         if (data.tappointmentex[t].fields.TrainerName == localStorage.getItem("mySessionEmployee")) {
                             let resourceColor = templateObject.employeerecords.get();
                             result = resourceColor.filter(apmtColor => {
@@ -5154,7 +5154,7 @@ Template.calender.onRendered(function() {
         $("#chkmyAppointments").attr('checked',true);
       });
     $(document).on("click", "#chkmyAppointments", function(e) {
-        if (seeOwnAppointments == true) {
+        if (JSON.parse(seeOwnAppointments) == true) {
             Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', false);
         } else {
             Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', true);
@@ -6349,7 +6349,7 @@ Template.calender.events({
                 let date = new Date(changeAppointmentView[a].startDate.split(" ")[0]);
                 if (resourceChat.length > 0) {
                     if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
+                        if (JSON.parse(seeOwnAppointments) == true) {
                             if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
                                 let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
                                 if (!found) {
@@ -6419,7 +6419,7 @@ Template.calender.events({
                     }
                 } else {
                     if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
+                        if (JSON.parse(seeOwnAppointments) == true) {
                             if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
                                 let resourceColor = templateObject.employeerecords.get();
                                 var result = resourceColor.filter(apmtColor => {
@@ -6751,7 +6751,7 @@ Template.calender.events({
 
                 if (resourceChat.length > 0) {
                     if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
+                        if (JSON.parse(seeOwnAppointments) == true) {
                             if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
                                 let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
                                 if (!found) {
@@ -6816,7 +6816,7 @@ Template.calender.events({
 
                 } else {
                     if (date >= startWeek && date <= endWeek) {
-                        if (seeOwnAppointments == true) {
+                        if (JSON.parse(seeOwnAppointments) == true) {
                             if (changeAppointmentView[a].employeename == localStorage.getItem("mySessionEmployee")) {
                                 let resourceColor = templateObject.employeerecords.get();
                                 var result = resourceColor.filter(apmtColor => {
