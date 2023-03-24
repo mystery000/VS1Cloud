@@ -2556,3 +2556,12 @@ authenticatedRoutes.route('/worksheetreport', {
         });
     }
 });
+
+authenticatedRoutes.route('/invoicetemp', {
+    name: 'invoice_temp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'invoice_temp'
+        });
+    }
+});
