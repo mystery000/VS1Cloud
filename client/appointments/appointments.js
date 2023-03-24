@@ -15988,6 +15988,7 @@ Template.appointments.events({
                 }
             }
         } else {
+			$("#event-modal").modal("hide");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
                 // $("#frmAppointment").trigger("submit");
@@ -19233,14 +19234,14 @@ Template.appointments.events({
             }
         }
     },
-    "click #btnCreateAppointmentRequest": function(event){
-        $("#appointmentLeaveConfirmModal").modal("hide");
-        $("#customerListModal").modal();
-    },
-    "click #btnCreateLeaveRequest": function(event){
-        $("#appointmentLeaveConfirmModal").modal("hide");
-        $("#customerListModal").modal();
-    },
+    // "click #btnCreateAppointmentRequest": function(event){
+    //     $("#appointmentLeaveConfirmModal").modal("hide");
+    //     $("#customerListModal").modal();
+    // },
+    // "click #btnCreateLeaveRequest": function(event){
+    //     $("#appointmentLeaveConfirmModal").modal("hide");
+    //     $("#customerListModal").modal();
+    // },
 });
 
 Template.appointments.helpers({

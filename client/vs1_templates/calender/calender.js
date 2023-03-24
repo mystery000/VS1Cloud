@@ -1456,9 +1456,10 @@ Template.calender.onRendered(function() {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
-                    calendar.gotoDate(info.start);
-                    $(".fc-timeGridDay-button").trigger("click");
+                    $("#appointmentLeaveConfirmModal").modal("toggle");
+                    // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
+                    // calendar.gotoDate(info.start);
+                    // $(".fc-timeGridDay-button").trigger("click");
                 }
             },
             eventClick: function(info) {
@@ -9177,6 +9178,14 @@ Template.calender.events({
         console.log('Clicked Save button')
         let templateObject = Template.instance();
         templateObject.saveUpdatedEvents();
+    },
+    "click #btnCreateAppointmentRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+    "click #btnCreateLeaveRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
     },
 });
 
