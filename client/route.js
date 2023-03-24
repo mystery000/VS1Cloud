@@ -1487,6 +1487,16 @@ authenticatedRoutes.route('/clockOnOff', {
     }
 });
 
+authenticatedRoutes.route('/process_clock_list', {
+    name: 'process_clock_template',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'process_clock_template'
+        });
+    }
+});
+
+
 authenticatedRoutes.route('/squareapi', {
     name: 'squareapi',
     action() {

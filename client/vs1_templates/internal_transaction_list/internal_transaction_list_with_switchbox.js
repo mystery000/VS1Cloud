@@ -723,9 +723,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                 checkBoxClick();
                                 $('.fullScreenSpin').css('display', 'none');
                             }
-                            
+
                         })
-                        
+
                     });
                     setTimeout(function() {
                         MakeNegative();
@@ -1232,7 +1232,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 },
                 "fnInitComplete": function(oSettings) {
                     $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
-                    if (data.Params.Search.replace(/\s/g, "") == "") {
+                    if (data && data.Params && data.Params.Search && data.Params.Search.replace(/\s/g, "") == "") {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -2356,7 +2356,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let chkBox;
-        
+
         for (let t = 0; t < data.length; t++) {
             chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data[t].fields.ID +
                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data[t].fields.ID +
@@ -2643,7 +2643,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
-                    
+
                     $(".colDateFilter").empty();
                     $("#dateFrom").val(fromDate);
                     $("#dateTo").val(toDate);

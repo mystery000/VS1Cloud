@@ -135,12 +135,13 @@ export class ContactService extends BaseService {
 
     getAllEmployeesData(limitcount, limitfrom, deleteFilter) {
         let options = {
-            PropertyList: "ID,GlobalRef,DefaultClassName,EmployeeName,EmployeeNo,FirstName,LastName,Phone,Email,Active,Street,Country,CustFld1,CustFld2,CustFld3,CustFld4,CustFld5",
-            select: "[Active]=true",
+            //PropertyList: "ID,GlobalRef,DefaultClassName,EmployeeName,EmployeeNo,FirstName,LastName,Phone,Email,Active,Street,Country,CustFld1,CustFld2,CustFld3,CustFld4,CustFld5",
+            //select: "[Active]=true",
+            Search:"Active=true",
             LimitCount: parseInt(limitcount),
             LimitFrom: parseInt(limitfrom),
         };
-        if(deleteFilter) options.select = "";
+        if(deleteFilter) options.Search = "";
         return this.getList(this.ERPObjects.TEmployeeList, options);
     }
 
