@@ -19257,7 +19257,8 @@ Template.appointments.events({
     },
     "click #btnCreateLeaveRequest": function(event){
         $("#appointmentLeaveConfirmModal").modal("hide");
-        $("#customerListModal").modal();
+        // $("#customerListModal").modal();
+		$('#newLeaveRequestModal').modal('show');
     },
 });
 

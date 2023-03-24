@@ -1905,6 +1905,45 @@ Template.calender.onRendered(function() {
                         }
                     }, 200);
                     // this.$body.addClass('modal-open');
+                }else{
+                    let splitId = id.split(":");
+
+                    // FlowRouter.go("/employeescard?id=" + splitId[1]);
+                    setTimeout(function() {
+                        // $('.payrollTab').tab('show');
+                        // $('a[href="#leave"]').tab('show');
+
+                        // $('#removeLeaveRequestBtn').show();
+                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                        var getLeaveInfo = leaveemployeerecords.filter((leave) => {
+                            return (
+                                splitId[2] ==
+                                leave.ID
+                            );
+                        });
+
+                        if (getLeaveInfo.length > 0) {
+                            $('#removeLeaveRequestBtn').show();
+                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
+                            $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
+                            $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
+                            $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
+                            $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                            $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
+                            $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
+                            $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
+                            $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
+                            $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
+                            setTimeout(function() {
+                                $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
+                            }, 200);
+                            $('#newLeaveRequestModal').modal('show');
+                        }
+
+                        $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                            // window.open("/appointments", "_self");
+                        });
+                    }, 1000);
                 }
             },
             editable: true,
