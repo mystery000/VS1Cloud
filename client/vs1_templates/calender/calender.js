@@ -1379,6 +1379,7 @@ Template.calender.onRendered(function() {
                         });
                         let tempEvents = templateObject.changedEvents.get();
                         templateObject.updateEvents(objectData)
+                        $(".fullScreenSpin").css("display", "none");
                         // appointmentService.saveAppointment(objectData).then(function(data) {
                         //     appointmentData[index].startDate = startDate + " " + startTime;
                         //     appointmentData[index].endDate = endDate + " " + endTime;
@@ -1963,7 +1964,7 @@ Template.calender.onRendered(function() {
                         });
                         let tempEvents = templateObject.changedEvents.get();
                         templateObject.updateEvents(objectData)
-
+                        $(".fullScreenSpin").css("display", "none");
                         // appointmentService.saveAppointment(objectData).then(function(data) {
                         //     appointmentData[index].startDate = startDate + " " + startTime;
                         //     appointmentData[index].endDate = endDate + " " + endTime;
@@ -3302,7 +3303,6 @@ Template.calender.onRendered(function() {
             $('#here_table table').append(tableRowData);
             }, 500);
             templateObject.employeerecords.set(allEmp);
-            console.log('resourceChat:',resourceChat)
             templateObject.resourceAllocation.set(resourceChat);
             templateObject.resourceJobs.set(resourceJob);
             templateObject.resourceDates.set(days);
