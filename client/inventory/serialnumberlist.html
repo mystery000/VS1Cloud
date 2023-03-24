@@ -120,7 +120,21 @@
                     </div>
                 </div>
 
-                {{> non_transactional_list tablename = "tblSerialNumberList"}}
+                {{>datatablelist
+                        tablename="tblSerialNumberList"
+                        apiName= apiFunction
+                        indexeddbname = 'TSerialNumberListCurrentReport'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Serial Number List'
+                        istransaction = true
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tserialnumberlistcurrentreport'
+                        exIndexDBName = 'tserialnumberlistcurrentreport'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                }}
             </div>
         </div>
     </div>

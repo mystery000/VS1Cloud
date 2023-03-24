@@ -1068,7 +1068,7 @@
                                         <div class="col-4">
                                             <div class="row">
                                                 <div class="col-8 form-group">
-                                                    <label style="">Deparment</label>
+                                                    <label style="">Department</label>
                                                     {{> vs1_dropdown id='sltdepartment' name='sltdepartment' value=bindept type='search' classes='es-input'}}
                                                 </div>
                                                 <div class="col-4 form-group">
@@ -1588,7 +1588,6 @@
                                             </div>
                                           </div>
                                         </div>
-<!--                                        {{> departmentModal}}-->
                                       </div>
 
                                     <!-- {{>recentTransactionTable productID=productID type="all"}} -->
@@ -2121,9 +2120,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-        {{> departmentpop}}
-    </div>
+    {{> departmentModal}}
     <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
         {{> newdepartmentpop}}
     </div>
