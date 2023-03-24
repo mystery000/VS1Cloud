@@ -11425,35 +11425,37 @@ Template.appointments.onRendered(function() {
             smsService.getSMSSettings().then((result) => {
                 if (result.terppreference.length > 0) {
                     for (let i = 0; i < result.terppreference.length; i++) {
-                        switch (result.terppreference[i].PrefName) {
-                            case "VS1SMSID":
-                                smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1SMSToken":
-                                smsSettings.twilioAccountToken =
-                                    result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1SMSPhone":
-                                smsSettings.twilioTelephoneNumber =
-                                    result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1HEADERSMSMSG":
-                                smsSettings.headerAppointmentSMSMessage =
-                                    result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1SAVESMSMSG":
-                                smsSettings.saveAppointmentSMSMessage =
-                                    result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1STARTSMSMSG":
-                                smsSettings.startAppointmentSMSMessage =
-                                    result.terppreference[i].Fieldvalue;
-                                break;
-                            case "VS1STOPSMSMSG":
-                                smsSettings.stopAppointmentSMSMessage =
-                                    result.terppreference[i].Fieldvalue;
-                        }
+						if(result.terppreference[i].Fieldvalue && result.terppreference[i].Fieldvalue !== ""){
+							switch (result.terppreference[i].PrefName) {
+								case "VS1SMSID":
+									smsSettings.twilioAccountId = result.terppreference[i].Fieldvalue;
+									break;
+								case "VS1SMSToken":
+									smsSettings.twilioAccountToken = result.terppreference[i].Fieldvalue;
+									break;
+								case "VS1SMSPhone":
+									smsSettings.twilioTelephoneNumber =
+										result.terppreference[i].Fieldvalue;
+									break;
+								case "VS1HEADERSMSMSG":
+									smsSettings.headerAppointmentSMSMessage =
+										result.terppreference[i].Fieldvalue;
+									break;
+								case "VS1SAVESMSMSG":
+									smsSettings.saveAppointmentSMSMessage =
+										result.terppreference[i].Fieldvalue;
+									break;
+								case "VS1STARTSMSMSG":
+									smsSettings.startAppointmentSMSMessage =
+										result.terppreference[i].Fieldvalue;
+									break;
+								case "VS1STOPSMSMSG":
+									smsSettings.stopAppointmentSMSMessage =
+										result.terppreference[i].Fieldvalue;
+							}
+						}
                     }
+					console.log('smsSettings-1:',smsSettings)
                     templateObject.defaultSMSSettings.set(smsSettings);
                 }
             })
@@ -11462,35 +11464,38 @@ Template.appointments.onRendered(function() {
             let data = JSON.parse(dataObject[0].data);
             if (data.terppreference.length > 0) {
                 for (let i = 0; i < data.terppreference.length; i++) {
-                    switch (data.terppreference[i].PrefName) {
-                        case "VS1SMSID":
-                            smsSettings.twilioAccountId = data.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SMSToken":
-                            smsSettings.twilioAccountToken =
-                                data.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SMSPhone":
-                            smsSettings.twilioTelephoneNumber =
-                                data.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1HEADERSMSMSG":
-                            smsSettings.headerAppointmentSMSMessage =
-                                data.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1SAVESMSMSG":
-                            smsSettings.saveAppointmentSMSMessage =
-                                data.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1STARTSMSMSG":
-                            smsSettings.startAppointmentSMSMessage =
-                                data.terppreference[i].Fieldvalue;
-                            break;
-                        case "VS1STOPSMSMSG":
-                            smsSettings.stopAppointmentSMSMessage =
-                                data.terppreference[i].Fieldvalue;
-                    }
+					if(data.terppreference[i].Fieldvalue && data.terppreference[i].Fieldvalue !== ""){
+						switch (data.terppreference[i].PrefName) {
+							case "VS1SMSID":
+								smsSettings.twilioAccountId = data.terppreference[i].Fieldvalue;
+								break;
+							case "VS1SMSToken":
+								smsSettings.twilioAccountToken =
+									data.terppreference[i].Fieldvalue;
+								break;
+							case "VS1SMSPhone":
+								smsSettings.twilioTelephoneNumber =
+									data.terppreference[i].Fieldvalue;
+								break;
+							case "VS1HEADERSMSMSG":
+								smsSettings.headerAppointmentSMSMessage =
+									data.terppreference[i].Fieldvalue;
+								break;
+							case "VS1SAVESMSMSG":
+								smsSettings.saveAppointmentSMSMessage =
+									data.terppreference[i].Fieldvalue;
+								break;
+							case "VS1STARTSMSMSG":
+								smsSettings.startAppointmentSMSMessage =
+									data.terppreference[i].Fieldvalue;
+								break;
+							case "VS1STOPSMSMSG":
+								smsSettings.stopAppointmentSMSMessage =
+									data.terppreference[i].Fieldvalue;
+						}
+					}
                 }
+				console.log('smsSettings-2:',smsSettings)
                 templateObject.defaultSMSSettings.set(smsSettings);
             }
         }
@@ -15709,12 +15714,18 @@ Template.appointments.events({
                     const employeeName = $("#employee_name").val();
                     const companyName = localStorage.getItem("vs1companyName");
                     const productService = $("#product-list").val();
+					console.log('accountName:',accountName)
+					console.log('employeeName:',employeeName)
+					console.log('companyName:',companyName)
+					console.log('productService:',productService)
+					console.log('templateObject.defaultSMSSettings:',templateObject.defaultSMSSettings.get())
                     const stopAppointmentSMS = templateObject.defaultSMSSettings
                         .get()
                         .stopAppointmentSMSMessage.replace("[Customer Name]", accountName)
                         .replace("[Employee Name]", employeeName)
                         .replace("[Company Name]", companyName)
                         .replace("[Product/Service]", productService);
+						console.log('stopAppointmentSMS:',stopAppointmentSMS)
                     $("#stopAppointmentSMSMessage").val(stopAppointmentSMS);
                 }
             } else {
@@ -16017,10 +16028,12 @@ Template.appointments.events({
         const templateObject = Template.instance();
         var appointmentData = templateObject.appointmentrecords.get();
         let id = $("#updateID").val();
+		console.log('appointmentData:',appointmentData)
+		console.log('id:',id)
         var result = appointmentData.filter((apmt) => {
             return apmt.id == id;
         });
-
+		console.log('result[0]:',result[0])
         let paused = result[0].isPaused || "";
         if (paused == "Paused") {
             swal({
