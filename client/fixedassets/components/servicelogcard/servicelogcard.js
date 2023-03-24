@@ -20,7 +20,7 @@ Template.servicelogcard.onRendered(function () {
   let templateObject = Template.instance();
 
   templateObject.getFixedAssetsList = function () {
-    getVS1Data("TFixedAssets").then(function (dataObject) {
+    getVS1Data("TFixedAssetsList").then(function (dataObject) {
       if (dataObject.length == 0) {
         fixedAssetService.getTFixedAssetsList().then(function (data) {
           setFixedAssetsList(data);
@@ -45,7 +45,7 @@ Template.servicelogcard.onRendered(function () {
 
   function setFixedAssetsList(data) {
     const dataTableList = [];
-    for (const asset of data.tfixedassets) {
+    for (const asset of data.tfixedassetslist) {
       const dataList = {
         id: asset.fields.ID || "",
         assetname: asset.fields.AssetName || "",
