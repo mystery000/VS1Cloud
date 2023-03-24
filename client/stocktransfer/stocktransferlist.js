@@ -27,6 +27,41 @@ Template.stocktransferlist.onRendered(function() {
     const dataTableList = [];
     const tableHeaderList = [];
 
+    templateObject.getDataTableList = function(data){
+        let dataList = [
+            data.fields.ID || '',
+            data.fields.EmployeeName || '',
+            data.fields.CreationDate !=''? moment(data.fields.CreationDate).format("YYYY/MM/DD"): data.fields.CreationDate,
+            data.fields.CreationDate !=''? moment(data.fields.CreationDate).format("DD/MM/YYYY"): data.fields.CreationDate,
+            data.fields.DateTransferred !=''? moment(data.fields.DateTransferred).format("DD/MM/YYYY"): data.fields.DateTransferred,
+            data.fields.AccountName || '',
+            //totalcostex: totalCostEx || 0.00,
+            '',
+            '',
+            data.fields.TransferFromClassName || '',
+            data.fields.Notes || '',
+            data.fields.Processed
+        ];
+        return dataList;
+    }
+
+    templateObject.getExData = function(data){
+        let dataList = [
+            data.fields.ID || '',
+            data.fields.EmployeeName || '',
+            data.fields.CreationDate !=''? moment(data.fields.CreationDate).format("YYYY/MM/DD"): data.fields.CreationDate,
+            data.fields.CreationDate !=''? moment(data.fields.CreationDate).format("DD/MM/YYYY"): data.fields.CreationDate,
+            data.fields.DateTransferred !=''? moment(data.fields.DateTransferred).format("DD/MM/YYYY"): data.fields.DateTransferred,
+            data.fields.AccountName || '',
+            //totalcostex: totalCostEx || 0.00,
+            '',
+            '',
+            data.fields.TransferFromClassName || '',
+            data.fields.Notes || '',
+            data.fields.Processed
+        ];
+        return dataList
+    }
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
@@ -1169,5 +1204,36 @@ Template.stocktransferlist.helpers({
         var currentDate = new Date();
         var begunDate = moment(currentDate).format("DD/MM/YYYY");
         return begunDate;
+    },
+    apiFunction:function() { // do not use arrow function
+        return sideBarService.getAllStockTransferEntry
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllStockTransferEntry
+    },
+
+    apiParams: function() {
+        return ['initialDataLoad', 0];
+    },
+
+    service: ()=>{
+        return sideBarService;
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn = templateObject.getExData(data);
+            return dataReturn
+        }
     }
 });
