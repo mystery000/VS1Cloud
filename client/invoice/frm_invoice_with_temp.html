@@ -1,0 +1,149 @@
+<template name="invoice_temp">
+
+    <style>
+        @media screen and (max-width: 387px) {
+          .btnSettings {
+            padding: 0px !important;
+            font-size: 16px !important;
+          }
+          h2 {
+            font-size: 24px;
+          }
+        }
+  
+        @media screen and (max-height: 450px) and (max-width: 950px) {
+          .colPaid {
+            display: block !important;
+          }
+          #colBalanceDue {
+            /* display: none !important; */
+          }
+        }
+  
+        @media screen and (max-width: 450px) {
+          .btnTransaction {
+            width: 80% !important;
+          }
+  
+          .payNow {
+            margin-right: 8px !important;
+          }
+  
+          .btnMakePayment {
+            margin-left: 8px !important;
+          }
+  
+          .colBtn {
+            padding: 0px;
+          }
+  
+          .colPaid {
+            display: block !important;
+          }
+  
+          #colBalanceDue {
+            /* display: none !important; */
+          }
+        }
+  
+        .templateItem {
+          display: inline-flex !important;
+  
+        }
+  
+        .btnPreviewTemplate {
+          padding: 6px;
+          cursor: pointer;
+        }
+  
+        .btnPreviewTemplate:hover {
+          background-color: #f8f9fc;
+        }
+  
+        #tblInvoiceLine_length,
+        #tblInvoiceLine_filter {
+          display: none;
+        }
+  
+        .colUnitPriceEx,
+        .colUnitPriceInc,
+        .colAmountEx,
+        .colAmountInc {
+          cursor: pointer;
+        }
+        .lead {
+            font-size: 25px;
+            font-weight: 500;
+            margin: 0px;
+            color: #696969;
+            float: right;
+          }
+  
+        .leadTotal {
+          font-weight: 800 !important;
+        }
+  
+        .leadHidden {
+          visibility: hidden;
+          height: 0px !important;
+        }
+  
+        @media screen and (min-width: 1366px) {
+          .colComments {
+            padding-right: 2.5rem;
+          }
+        }
+  
+        @media screen and (max-width: 450px) {
+          .desktopButtons {
+            display: none;
+          }
+  
+          .mobileButtons {
+            display: flex !important;
+          }
+        }
+  
+        .paidIcon {
+          animation: blink 2s ease-in infinite;
+          -webkit-animation: blink 2s ease-in infinite;
+        }
+      </style>
+    {{> transaction_card
+        exIndexDBName='TInvoiceEx'
+        exLowercaseName='tinvoiceex'
+        oneExAPIName=oneExAPIName
+        service=service
+        setTransData=setTransData
+        initialRecords=initialRecords
+        includeClient=true 
+        includeAddress=true 
+        Category='invoice' 
+        TranascationType='Invoice' 
+        clientType='Customer' 
+        payment=true 
+        headerfields=headerfields 
+        headerbuttons=headerbuttons 
+        currency=true
+        balanceDue=invoicerecord.balanceDue
+        isPaid=invoicerecord.ispaid
+        data=invoicerecord
+        gridTableId='tblInvoiceLine'
+        printTableId='invoice_print'
+
+
+        tablename="tblInvoiceLine"
+        isForeignEnabled=isForeignEnabled
+        canShowBackOrder=true
+        canShowUOM=true
+        includeBOnShippedQty=includeBOnShippedQty
+        isBatchSerialNoTracking=isBatchSerialNoTracking
+        getDefaultCurrency=getDefaultCurrency
+        mainselector='lineProductName'
+        selectorfield='colProductName'
+
+        footerFields = footerFields
+        AttachmentCount=attachmentCount
+        typeName = 'Invoices'
+    }}
+</template>
