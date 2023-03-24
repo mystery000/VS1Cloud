@@ -341,8 +341,29 @@
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <table id="subTaxList" style="width:100%" class="dataTable table table-hover table-striped table-bordered subTaxList">
+                                        <style>
+                                            td.colAmountEx, td.colTax, td.colAmount{
+                                                text-align: right !important;
+                                            }
+                                        </style>
+                                        {{>datatablelist
+                                            tablename="subTaxList1"
+                                            apiName= apiFunction
+                                            indexeddbname = 'TSubTaxVS1'
+                                            tableheaderrecords = tableheaderrecords
+                                            exportfilename = 'Sub Tax List'
+                                            istransaction = false
+                                            apiParams= apiParams
+                                            datahandler = datahandler
+                                            service=service
+                                            lowercaseDataName='tsubtaxcode'
+                                            exportfilename='Sub Tax List'
+                                            exIndexDBName = 'TSubTaxVS1'
+                                            exdatahandler = exDataHandler
+                                            searchAPI = searchAPI
+                                            orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
+                                        }}
+                                        <!-- <table id="subTaxList" style="width:100%" class="dataTable table table-hover table-striped table-bordered subTaxList">
                                             <thead>
                                                 <tr class="dnd-moved">
                                                     <th class="th colCode" style="width: 100px">Code</th>
@@ -365,7 +386,7 @@
 
                                             </tbody>
 
-                                        </table>
+                                        </table> -->
                                     </div>
                                 </div>
                                 <div class="row no-gutters">

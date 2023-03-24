@@ -18,6 +18,41 @@ Template.wizard_payment.onCreated(() => {
   templateObject.includeCreditCard = new ReactiveVar(false);
   templateObject.includeAccountID = new ReactiveVar(false);
   templateObject.accountID = new ReactiveVar();
+  templateObject.tableheaderrecords = new ReactiveVar([]);
+  
+  templateObject.getDataTableList = function(data){
+
+    let dataList = [
+        data.PayMethodID || '',
+        data.Name || '',
+        data.IsCreditCard 
+          ? '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '" checked=""><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>'
+          : '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '"><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>',
+        data.Status || '',
+    ];
+    return dataList;
+  }
+  
+  templateObject.getExData = function(data){
+    var dataList = [
+      data.PayMethodID || '',
+      data.Name || '',
+      data.IsCreditCard 
+        ? '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '" checked=""><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>'
+        : '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '"><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>',
+      data.Status || '',
+    ];
+    return dataList
+  }
+  
+  let headerStructure = [
+    { index: 0, label: "ID", class: "colPayMethodID", active: true, display: true, width: "0" },
+    { index: 1, label: "Payment Method Name", class: "colName", active: true, display: true, width: "250" },
+    { index: 2, label: "Is Credit Card", class: "colIsCreditCard", active: true, display: true, width: "180" },
+    { index: 3, label: "Status", class: "colStatus", active: true, display: true, width: "200" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
+
   templateObject.loadStripe = () => {
     let url = window.location.href;
     if (url.indexOf("?code") > 0) {
@@ -456,4 +491,38 @@ Template.wizard_payment.helpers({
     return Template.instance().includeCreditCard.get();
   },
 
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() { // do not use arrow function
+    return organisationService.getOrganisationDetail
+  },
+
+  searchAPI: function() {
+    return organisationService.getOrganisationDetail
+  },
+
+  apiParams: function() {
+    return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+  },
+
+  service: ()=>{
+    return organisationService;
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn = templateObject.getExData(data);
+      return dataReturn
+    }
+  }
 })
