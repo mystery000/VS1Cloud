@@ -551,6 +551,8 @@ import './vs1_templates/vs1_select/default_select.html'
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
 import './vs1_templates/transaction_list/transaction_list.js';
+import './packages/currency/editcurrencypop.js';
+
 
 // import 'datatables.net';
 // import 'datatables.net-bs';

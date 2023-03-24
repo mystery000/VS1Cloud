@@ -3401,7 +3401,7 @@ export class SideBarService extends BaseService {
       ListType: "Detail",
       select: "[Active]=true",
     };
-    return this.getList(this.ERPObjects.TCurrency, options);
+    return this.getList(this.ERPObjects.TCurrencyList, options);
   }
 
   getCurrencyDataList(limitcount, limitfrom, deleteFilter) {

@@ -376,14 +376,14 @@ export class TaxRateService extends BaseService {
             PropertyList: "Code,CurrencyDesc,Currency,BuyRate,SellRate,Active,CurrencySymbol,ID",
             select: "[Country]=" + Country
         };
-        return this.getList(this.ERPObjects.TCurrency, options);
+        return this.getList(this.ERPObjects.TCurrencyList, options);
     }
     saveCurrency(data) {
-        return this.POST(this.ERPObjects.TCurrency, data);
+        return this.POST(this.ERPObjects.TCurrencyList, data);
     }
 
     saveCurrencies(data) {
-        return this.POST(this.ERPObjects.TCurrency, data);
+        return this.POST(this.ERPObjects.TCurrencyList, data);
     }
 
     getDepartment() {
