@@ -79,22 +79,26 @@
                         #tblAccountListPop .colStatus{
                             width: 8%!important;
                         }
+                        td.colBalance, td.colTaxCode{
+                            text-align: right !important;
+                        }
                     </style>
                     {{>datatablelist
-                        tablename="tblAccountListPop"
-                        apiName= apiFunction
-                        indexeddbname = 'TAccountVS1List'
-                        tableheaderrecords = tableheaderrecords
-                        exportfilename = 'Account List'
-                        istransaction = false
-                        apiParams= apiParams
-                        datahandler = datahandler
-                        service=service
-                        lowercaseDataName='taccountvs1list'
-                        exIndexDBName = 'taccountvs1list'
-                        exdatahandler = exDataHandler
-                        searchAPI = searchAPI
-                        typefilter=typefilter
+                            tablename="tblAccountListPop"
+                            apiName= apiFunction
+                            indexeddbname = 'TAccountVS1List'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Account List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='taccountvs1list'
+                            exIndexDBName = 'taccountvs1list'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            orderby = 1
+                            orderdesc = 'asc'
                     }}
                 </div>
             </div>

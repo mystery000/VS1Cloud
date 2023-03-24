@@ -36,8 +36,8 @@ Template.popemployeelist.onCreated(function(){
             data.CustFld1 || '',
             data.CustFld2 || '',
             data.Street || '',
+            data.EmployeeID || '',
             data.Active ? "" : "In-Active",
-            data.ID || '',
             //custFld3: data.CustFld3 || '',
             //custFld4: data.CustFld4 || ''
         ];
@@ -53,11 +53,11 @@ Template.popemployeelist.onCreated(function(){
         { index: 5, label: 'Email', class: 'colEmail', active: true, display: true, width: "100" },
         { index: 6, label: 'Department', class: 'colDepartment', active: true, display: true, width: "100" },
         { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
-        { index: 8, label: '#Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "80" },
-        { index: 9, label: '#Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "80" },
+        { index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "80" },
+        { index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "80" },
         { index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: "100" },
-        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
-        { index: 12, label: '#ID', class: 'colID', active: false, display: false, width: "30" },
+        { index: 11, label: 'ID', class: 'colID', active: false, display: false, width: "30" },
+        { index: 12, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -600,7 +600,7 @@ Template.popemployeelist.onRendered(function() {
     //templateObject.getEmployees();
 
     $('#tblEmployeelistpop tbody').on( 'click', 'tr', function () {
-    var listData = $(this).closest('tr').find('.colID');
+    var listData = $(this).closest('tr').find('.colID').text();
     if(listData){
       FlowRouter.go('/employeescard?addvs1user=true&id=' + listData);
     }
@@ -984,17 +984,17 @@ Template.popemployeelist.helpers({
 },
 
     apiFunction:function() {
-        let contactService = new ContactService();
-        return contactService.getAllEmployeesData;
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTEmployeeList;
     },
 
     searchAPI: function() {
-        return contactService.getAllEmployeesDataVS1ByName;
+        return sideBarService.getAllEmployeesDataVS1ByName;
     },
 
     service: ()=>{
-        let contactService = new ContactService();
-        return contactService;
+        let sideBarService = new SideBarService();
+        return sideBarService;
 
     },
 
