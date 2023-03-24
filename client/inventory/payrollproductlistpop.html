@@ -41,30 +41,21 @@
                               width: 15% !important;
                           }
                       </style>
-                      <table id="tblInventoryPayrollService" class="table table-striped table-bordered tblInventoryPayrollService">
-                          <thead>
-                              <tr class="dnd-moved">
-                                  <th class="th chkBox" style="width:15px!important;">
-                                        <div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
-                                                for="formCheck-All"></label></div>
-                                  </th>
-                                  <th class="thProductName" style="width: 20% !important;">Product Name</th>
-                                  <th>Sales Description</th>
-                                  <th class="thColBarcode">Barcode</th>
-                                  <th class="thCostPrice" style="width: 8% !important;text-align: left!important;">Cost Price</th>
-                                  <th class="thSalesPrice" style="width: 8% !important;text-align: left!important;">Sale Price</th>
-                                  <th class="thQty" style="width: 8% !important;">Quantity</th>
-                                  <th class="thTax" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
-                                  <th class="thProuctPOPID hiddenColumn">Prouct ID</th>
-                                  <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
-                                  <!-- <th class="thColBarcode hiddenColumn">Prouct Barcode</th> -->
-                                  <th class="thSalesPriceInc hiddenColumn">Sale Price Inc</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-
-                          </tbody>
-                      </table>
+                        {{>datatablelist
+                            tablename="tblInventoryPayrollService"
+                            apiName= apiFunction
+                            indexeddbname = 'TProductVS1'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Product List'
+                            istransaction = true
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tproductvs1'
+                            exIndexDBName = 'tproductvs1'
+                            showPlusButton = true
+                            orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
+                        }}
                   </div>
               </div>
           </div>
