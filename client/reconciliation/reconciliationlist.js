@@ -35,7 +35,7 @@ Template.reconciliationlist.onCreated(function(){
             closeBalance || 0.00,
             data.EmployeeName || '',
             data.Notes || '',
-            data.Finished ? "Processed" : "On Hold",
+            data.Finished ? "Processed" : "On-Hold",
             data.Deleted ? "Deleted" : "",
             // onhold: data.OnHold || false,
             // finished: data.Finished || false,

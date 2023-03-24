@@ -10,7 +10,7 @@
                     name="selectCountryLineID" readonly>
                 <div class="card-body p-1 rounded">
                     <div class="table-responsive">
-                        <style>
+                        <!-- <style>
                             .colCountry {
                                 width: 5%;
                             }
@@ -42,7 +42,30 @@
 
                                 {{/each}}
                             </tbody>
-                        </table>
+                        </table> -->
+                        <style>
+                            td.colCountry{
+                                width: 5%;
+                            }
+                        </style>
+                       
+                        {{>datatablelist
+                            tablename="tblCountryPopList"
+                            apiName= apiFunction
+                            indexeddbname = 'TCountries'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Country Pop List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tcountries'
+                            exIndexDBName = 'tcountries'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            
+                        }}
+                    
                     </div>
                 </div>
             </div>
