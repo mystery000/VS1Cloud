@@ -2960,7 +2960,7 @@ Template.purchaseordercard.onRendered(async () => {
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                                 //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
-                                let currencyRate = templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0)
+                                let currencyRate = templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 0)
                                 $('#exchange_rate').val(currencyRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
