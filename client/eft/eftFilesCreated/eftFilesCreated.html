@@ -1,0 +1,65 @@
+<template name="eftFilesCreated">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-4">
+                <header class="pt-2 pb-3 d-flex">
+                    <h2 class="mr-1">EFT Files Created {{> helpbutton}}</h2>
+                </header>
+            </div>
+            <div class="col-12 col-md-4 divLogged">
+                {{> loggedcompanyoverview}}
+            </div>
+        </div>
+
+        <div class="row d-xl-flex flex-row justify-content-xl-center">
+            <div class="col-8 d-xl-flex flex-grow-1 align-items-xl-start">
+                <button id="btnRefresh" class="btn btn-primary btnRefresh" type="button" style="margin: 14px;"><i class="la la-lightbulb-o" style="margin-right: 5px;"></i>Refresh</button>
+                <div class="btn-group" style="margin: 14px;">
+                    <button type="button" class="btn btn-primary btnEftBankRuleList" name="btnEftBankRuleList"><i class="fas fa-list-ul" style="margin-right: 5px;"></i>EFT Bank Rule List</button>
+                    <button class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-expanded="false" type="button"></button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item btnEftBankRuleList pointer" id="">EFT Bank Rule List</a>
+                        <a class="dropdown-item btnEftNewBankRule pointer" id="">+ EFT Create New Bank Rule</a>
+                    </div>
+                </div>
+                <button id="btnEftCreateNewFile" class="btn btn-primary btnEft" type="button" style="margin: 14px;"><i class="fas fa-ruler-combined" style="margin-right: 5px;"></i>EFT Create New File</button>                
+            </div>
+            <div class="col-4 d-xl-flex justify-content-xl-end align-items-end">
+                {{> spreadsheet_link templateName="EFT Files Created"}}
+                {{> export_import_print_display_button Import="hiddenButton" tablename="tblEftFilesCreated"}}
+            </div>
+        </div>
+        <div class="row">
+            <div class="card-body p-3 rounded" style="padding-top: 0px !important; width: 100%;">
+                <div class="table-responsive">
+                    <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+
+                        </div>
+                    </div>
+                    {{>datatablelist
+                        tablename="tblEftFilesCreated"
+                        apiName= apiFunction
+                        indexeddbname = 'TEftFilesCreated'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'EFT Files Created'
+                        istransaction = true
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='teftfilescreated'
+                        exIndexDBName = 'teftfilescreated'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                    }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        modalDraggable();
+    </script>   
+</template>
