@@ -92,9 +92,9 @@ Template.appointments.onCreated(function() {
     templateObject.repeatDays.set(dayObj);
     templateObject.toupdatelogid = new ReactiveVar();
     templateObject.isAccessLevels = new ReactiveVar();
-    // templateObject.productFees = new ReactiveVar();
+    templateObject.productFees = new ReactiveVar();
     templateObject.extraProductFees = new ReactiveVar([]);
-    // templateObject.leaveemployeerecords = new ReactiveVar([]);
+    templateObject.leaveemployeerecords = new ReactiveVar([]);
 
     // templateObject.customerRecord = new ReactiveVar();
 
