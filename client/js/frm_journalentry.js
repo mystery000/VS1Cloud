@@ -130,14 +130,14 @@ Template.journalentrycard.onCreated(() => {
     }
 
     let headerStructure = [
-        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "40" },
-        { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "60" },
-        { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "60" },
-        { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "60" },
-        { index: 4, label: "Balance", class: "colBalance", active: true, display: true, width: "60" },
-        { index: 5, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "60" },
-        { index: 6, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
-        { index: 7, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
+        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "20" },
+        { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "120" },
+        { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "120" },
+        { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "100" },
+        { index: 4, label: "Balance", class: "colBalance", active: true, display: true, width: "90" },
+        { index: 5, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "115" },
+        { index: 6, label: "Notes", class: "colNotes", active: true, display: true, width: "100" },
+        { index: 7, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 
@@ -172,7 +172,7 @@ Template.journalentrycard.onCreated(() => {
         { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: true, display: true, width: "250" },
         { index: 5, label: 'Department Tree', class: 'colDeptTree', active: true, display: true, width: "250" },
         { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
-        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords_d.set(headerStructure_d);
 });
