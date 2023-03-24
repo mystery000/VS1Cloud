@@ -551,8 +551,6 @@ import './vs1_templates/vs1_select/default_select.html'
 import './packages/currency/FxCurrencyHistory.js';
 import './packages/currency/FxGlobalFunctions.js';
 import './vs1_templates/transaction_list/transaction_list.js';
-import './packages/currency/editcurrencypop.js';
-
 
 // import 'datatables.net';
 // import 'datatables.net-bs';
@@ -659,8 +657,7 @@ import './inventory/binlocations/binlocations.js';
 /* Mainstar */
 
 /* Damien Begin */
-import './vs1_templates/transaction_type_modal/transaction_type_modal.js';
-import './vs1_templates/transaction_temp/transaction_frm_journal.js';
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
 /* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';
