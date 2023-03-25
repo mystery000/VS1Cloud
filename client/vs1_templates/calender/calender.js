@@ -490,6 +490,7 @@ Template.calender.onRendered(function() {
                 leaveArr.push(fields);
             });
         }
+        console.log('leaveArr:',leaveArr)
         templateObject.leaveemployeerecords.set(leaveArr);
 
         getVS1Data("TEmployee").then(async function(dataObject) {
@@ -734,7 +735,7 @@ Template.calender.onRendered(function() {
                 .catch(function(err) {});
         });
     };
-
+    templateObject.getEmployeesList();
     getVS1Data("TERPPreference").then(function(dataObject) {
         if (dataObject.length == 0) {
             appointmentService.getGlobalSettings().then(function(data) {
@@ -2332,23 +2333,6 @@ Template.calender.onRendered(function() {
         return hoursVal + ":" + minutes;
     };
 
-    templateObject.getEmployeesList = function() {
-        getVS1Data('TEmployee').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                contactService.getAllEmployeeSideData().then(function(data) {
-                    setAllEmployeeSideData(data);
-                }).catch(function(err) {});
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                setAllEmployeeSideData(data);
-            }
-        }).catch(function(err) {
-            contactService.getAllEmployeeSideData().then(function(data) {
-                setAllEmployeeSideData(data);
-            }).catch(function(err) {});
-        });
-    };
-
     function setAllEmployeeSideData(data) {
         let dataList;
         let lineItems = [];
@@ -2690,7 +2674,7 @@ Template.calender.onRendered(function() {
 
     let hideSun = "";
     let hideSat = "";
-    templateObject.getEmployeesList();
+    
     templateObject.getAllProductData();
     getVS1Data('TAppointmentPreferences').then(function(dataObject) {
         let employeeSettings = [];
@@ -2823,7 +2807,40 @@ Template.calender.onRendered(function() {
             }
 
         }
+        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+        console.log('leaveemployeerecords:',leaveemployeerecords)
+        for (let i = 0; i < leaveemployeerecords.length; i++) {
+            employeeColor = allEmp.filter((apmt) => {
+                return (apmt.id == leaveemployeerecords[i].EmployeeID);
+            });
 
+            if (employeeColor.length > 0) {
+                appColor = employeeColor[0].color || "#00a3d3";
+                leaveEmpName = employeeColor[0].employeeName;
+            } else {
+                appColor = "#00a3d3";
+                leaveEmpName = "";
+            }
+
+            dataList = {
+                id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                title: leaveEmpName,
+                // "<br>" +
+                // street +
+                // "<br>" +
+                // surbub +
+                // "<br>" +
+                // state +
+                // " " +
+                // zip,
+                start: leaveemployeerecords[i].StartDate || "",
+                end: leaveemployeerecords[i].EndDate || "",
+                description: leaveemployeerecords[i].Description || "",
+                color: appColor,
+            };
+
+            eventData.push(dataList);
+        }
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);
 
