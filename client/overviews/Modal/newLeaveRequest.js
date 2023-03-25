@@ -589,7 +589,7 @@ Template.newLeaveRequestModal.events({
                         const jsonResponse = await ApiResponse.json();
                         await templateObject.saveLeaveRequestLocalDB();
                         await templateObject.getLeaveRequests();
-                        console.log('OK')
+
                         $('#newLeaveRequestModal').modal('hide');
                         $('#edtLeaveTypeofRequestID, #edtLeaveTypeofRequest, #edtLeaveDescription, #edtLeavePayPeriod, #edtLeaveHours, #edtLeavePayStatus').val('');
                         $('.fullScreenSpin').css('display', 'none');
@@ -606,7 +606,7 @@ Template.newLeaveRequestModal.events({
                             }
                         }); 
 
-                        // window.open("/appointments", "_self");
+                        window.open("/appointments", "_self");
                     } 
                     else 
                     {

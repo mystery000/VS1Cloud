@@ -1077,30 +1077,11 @@ Template.calender.onRendered(function() {
                 let dateStart = new Date(info.start);
                 let dateStartForEndTime = new Date(info.start);
                 let dateEnd = new Date(info.end);
-                let startDate = 
-                    ("0" + dateStart.getDate()).toString().slice(-2) + 
-                    "/" + 
-                    ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + 
-                    "/" + 
-                    dateStart.getFullYear();
-                let endDate = 
-                    ("0" + dateEnd.getDate()).toString().slice(-2) + 
-                    "/" + 
-                    ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + 
-                    "/" + 
-                    dateEnd.getFullYear();
-                dateStartForEndTime.setHours(
-                    dateStartForEndTime.getHours() + calendarSet.DefaultApptDuration || 
-                    "02:00"
-                );
-                let startTime = 
-                    ("0" + dateStart.getHours()).toString().slice(-2) + 
-                    ":" + 
-                    ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime = 
-                    ("0" + dateEnd.getHours()).toString().slice(-2) + 
-                    ":" + 
-                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let startDate = ("0" + dateStart.getDate()).toString().slice(-2) + "/" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "/" + dateStart.getFullYear();
+                let endDate = ("0" + dateEnd.getDate()).toString().slice(-2) + "/" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "/" + dateEnd.getFullYear();
+                dateStartForEndTime.setHours(dateStartForEndTime.getHours() + calendarSet.DefaultApptDuration || "02:00");
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("dtSODate").value = startDate;
                 document.getElementById("dtSODate2").value = endDate;
                 document.getElementById("startTime").value = startTime;
@@ -1118,20 +1099,11 @@ Template.calender.onRendered(function() {
                 templateObject.uploadedFiles.set("");
                 templateObject.uploadedFile.set("");
                 if (FlowRouter.current().queryParams.leadid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.leadid, 
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid,templateObject);
                 } else if (FlowRouter.current().queryParams.customerid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.customerid, 
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid,templateObject);
                 } else if (FlowRouter.current().queryParams.supplierid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.supplierid, 
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid,templateObject);
                 } else {
                     $("#appointmentLeaveConfirmModal").modal("toggle");
                     // $("#customerListModal").modal();
@@ -2764,7 +2736,6 @@ Template.calender.onRendered(function() {
     };
 
     function setAppointmentData(data) {
-        console.log('setAppointmentData')
         let result;
         let employeeColor;
         let jobs;
@@ -2773,6 +2744,7 @@ Template.calender.onRendered(function() {
         let appColor = '#00a3d3';
         let dataColor = "";
         let allEmp = templateObject.employeerecords.get();
+        console.log('setAppointmentData:',allEmp)
         let mySessionEmployee = localStorage.getItem("mySessionEmployee");
         for (let i = 0; i < data.tappointmentex.length; i++) {
             employeeColor = allEmp.filter(apmt => {
