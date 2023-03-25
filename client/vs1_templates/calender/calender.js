@@ -1133,10 +1133,11 @@ Template.calender.onRendered(function() {
                         templateObject
                     );
                 } else {
+                    $("#appointmentLeaveConfirmModal").modal("toggle");
                     // $("#customerListModal").modal();
-                    $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
-                    calendar.gotoDate(info.start);
-                    $(".fc-timeGridDay-button").trigger("click");
+                    // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
+                    // calendar.gotoDate(info.start);
+                    // $(".fc-timeGridDay-button").trigger("click");
                 }
             },
             eventClick: function(info) {
@@ -3463,9 +3464,10 @@ Template.calender.onRendered(function() {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
                     // $("#customerListModal").modal();
-                    $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
-                    calendar.gotoDate(info.start);
-                    $(".fc-timeGridDay-button").trigger("click");
+                    $("#appointmentLeaveConfirmModal").modal("toggle");
+                    // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
+                    // calendar.gotoDate(info.start);
+                    // $(".fc-timeGridDay-button").trigger("click");
                 }
             },
             eventDrop: function(info) {
@@ -4472,9 +4474,10 @@ Template.calender.onRendered(function() {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                         } else {
                             // $("#customerListModal").modal();
-                            $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
-                            calendar.gotoDate(info.start);
-                            $(".fc-timeGridDay-button").trigger("click");
+                            $("#appointmentLeaveConfirmModal").modal("toggle");
+                            // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
+                            // calendar.gotoDate(info.start);
+                            // $(".fc-timeGridDay-button").trigger("click");
                         }
                     },
                     eventClick: function(info) {
