@@ -147,20 +147,15 @@ Template.customerselector.onRendered(function() {
 
 
     templateObject.setCustomerInfo = function(selectedTaxCodeName) {
-
         let taxcodeList = templateObject.taxraterecords.get();
-        let $tblrows = $("#"+templateObject.data.gridTableId+" tbody tr");
+        let $tblrows = $("#"+templateObject.data.lineTableId+" tbody tr");
         let $printrows = $("."+templateObject.data.printTableId+" tbody tr");
         let selectedCustomer = $("#edtCustomerName").val();
 
         let taxRate = "";
-          // getCustDetails = customers.filter((customer) => {
-          //   return customer.customername == selectedCustomer;
-          // });
           taxRate = taxcodeList.filter((taxrate) => {
             return taxrate.codename == selectedTaxCodeName;
           });
-
           if (taxRate.length > 0) {
             let rate = taxRate[0].coderate;
             let code = selectedTaxCodeName || "E";
@@ -390,11 +385,11 @@ Template.customerselector.onRendered(function() {
       });
     }
 
-    templateObject. setSupplierInfo = function(){
+    templateObject.setSupplierInfo = function(){
 
         let utilityService = new UtilityService();
         let taxcodeList = templateObject.taxraterecords.get();
-        let $tblrows = $("#"+templateObject.data.gridTableId+" tbody tr");
+        let $tblrows = $("#"+templateObject.data.lineTableId+" tbody tr");
 
         let lineAmount = 0;
         let subGrandTotal = 0;
