@@ -484,13 +484,13 @@ Template.calender.onRendered(function() {
         } else {
             data = JSON.parse(dataObject[0].data);
         }
+        console.log("data.tleavrequest:",data.tleavrequest)
         if (data.tleavrequest.length > 0) {
             data.tleavrequest.forEach((item) => {
                 const fields = item.fields;
                 leaveArr.push(fields);
             });
         }
-        console.log('leaveArr:',leaveArr)
         templateObject.leaveemployeerecords.set(leaveArr);
 
         getVS1Data("TEmployee").then(async function(dataObject) {
@@ -1307,8 +1307,9 @@ Template.calender.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                console.log('appointments-render-calendar-eventDrop')
-                if (info.event._def.publicId != "") {
+                console.log('eventDrop in renderCalendar')
+                const pattern = /leave/;
+                if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
                     $(".fullScreenSpin").css("display", "inline-block");
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
@@ -1634,7 +1635,10 @@ Template.calender.onRendered(function() {
                 } else {
                     let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                     var leaveFlag = false;
-                    let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+                    let empID = $(event.draggedEl.childNodes[2].childNodes[5]).attr('id').split("_")[1];
+                    // let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
+                    console.log('empID:',empID)
+                    console.log('leaveemployeerecords:',leaveemployeerecords)
                     templateObject.empID.set(empID);
                     leaveemployeerecords.forEach((item) => {
                         if (item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)) {
@@ -1699,7 +1703,7 @@ Template.calender.onRendered(function() {
     };
 
     templateObject.renderNormalCalendar = function() {
-        console.log('------- renderNormalCalendar on the Appointments -----------')
+        console.log('------- renderNormalCalendar -----------')
         let calendarSet = templateObject.globalSettings.get();
         let hideDays = "";
         let slotMin = "06:00:00";
@@ -2136,8 +2140,11 @@ Template.calender.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                console.log('EventDrop:',info.event)
-                if (info.event._def.publicId != "") {
+                console.log('eventDrop in renderNormalCalendar')
+                const pattern = /leave/;
+                console.log('OMG:',info.event)
+                if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
+                    console.log('Moved Appointments')
                     $(".fullScreenSpin").css("display", "inline-block");
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
@@ -2169,8 +2176,7 @@ Template.calender.onRendered(function() {
                             return e.id;
                         })
                         .indexOf(parseInt(eventDropID));
-                    let resourceIndex = resourceData
-                        .map(function(e) {
+                    let resourceIndex = resourceData.map(function(e) {
                             return e.employeeName;
                         })
                         .indexOf(appointmentData[index].employeename);
@@ -2395,22 +2401,16 @@ Template.calender.onRendered(function() {
                             event.dateStr.substr(event.dateStr.length - 5),
                             "HH:mm"
                         ).format("HH:mm");
-                        var endTime = moment(startTime, "HH:mm")
-                            .add(appointmentHours.substr(0, 2), "hours")
-                            .format("HH:mm");
+                        var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
                         document.getElementById("endTime").value = endTime;
                         var hoursSpent = moment(appointmentHours, "hours").format("HH");
-                        let hoursFormattedStartTime =
-                            templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
-                        document.getElementById("txtBookedHoursSpent").value =
-                            hoursFormattedStartTime;
+                        let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
+                        document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                     }
 
                     if (empData.length > 0) {
-                        document.getElementById("product-list").value =
-                            empData[empData.length - 1].DefaultServiceProduct || "";
-                        document.getElementById("product-list-1").value =
-                            empData[empData.length - 1].DefaultServiceProduct || "";
+                        document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
+                        document.getElementById("product-list-1").value = empData[empData.length - 1].DefaultServiceProduct || "";
                         // $('#product-list').prepend('<option value=' + empData[0].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
                         // $("#product-list")[0].options[0].selected = true;
                     } else {
@@ -2423,39 +2423,26 @@ Template.calender.onRendered(function() {
                     }
                 }
 
-                var endTime = moment(
-                    document.getElementById("dtSODate2").value +
-                    " " +
-                    document.getElementById("endTime").value
-                ).format("DD/MM/YYYY HH:mm");
-                var startTime = moment(
-                    document.getElementById("dtSODate2").value +
-                    " " +
-                    document.getElementById("startTime").value
-                ).format("DD/MM/YYYY HH:mm");
+                var endTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("endTime").value).format("DD/MM/YYYY HH:mm");
+                var startTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("startTime").value).format("DD/MM/YYYY HH:mm");
                 templateObject.attachmentCount.set("");
                 templateObject.uploadedFiles.set("");
                 templateObject.uploadedFile.set("");
 
                 if (FlowRouter.current().queryParams.leadid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.leadid,
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid,templateObject);
                 } else if (FlowRouter.current().queryParams.customerid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.customerid,
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid,templateObject);
                 } else if (FlowRouter.current().queryParams.supplierid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.supplierid,
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid,templateObject);
                 } else {
+                    console.log('Checking on Leave status')
                     let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                     var leaveFlag = false;
                     let empID = $(event.draggedEl.childNodes[2].childNodes[5]).attr('id').split("_")[1];
+                    console.log('empID:',empID)
+                    console.log('event.dateStr:',event.dateStr)
+                    console.log('leaveemployeerecords:',leaveemployeerecords)
                     templateObject.empID.set(empID);
                     leaveemployeerecords.forEach((item) => {
                         if (item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)) {
@@ -3242,7 +3229,6 @@ Template.calender.onRendered(function() {
         let appColor = '#00a3d3';
         let dataColor = "";
         let allEmp = templateObject.employeerecords.get();
-        console.log('setAppointmentData:',allEmp)
         let mySessionEmployee = localStorage.getItem("mySessionEmployee");
         for (let i = 0; i < data.tappointmentex.length; i++) {
             employeeColor = allEmp.filter(apmt => {
@@ -3322,7 +3308,6 @@ Template.calender.onRendered(function() {
 
         }
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-        console.log('leaveemployeerecords:',leaveemployeerecords)
         for (let i = 0; i < leaveemployeerecords.length; i++) {
             employeeColor = allEmp.filter((apmt) => {
                 return (apmt.id == leaveemployeerecords[i].EmployeeID);
@@ -3356,6 +3341,7 @@ Template.calender.onRendered(function() {
             eventData.push(dataList);
         }
         templateObject.appointmentrecords.set(appointmentList);
+        console.log('eventData:',eventData)
         templateObject.eventdata.set(eventData);
 
         updateCalendarData = eventData
@@ -3974,8 +3960,9 @@ Template.calender.onRendered(function() {
                 }
             },
             eventDrop: function(info) {
-                if (info.event._def.publicId != "") {
-
+                console.log('eventDrop in setInitCalendarData')
+                const pattern = /leave/;
+                if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
                     let eventDropID = info.event._def.publicId || "0";
@@ -4798,7 +4785,7 @@ Template.calender.onRendered(function() {
     }, false);
 
     document.addEventListener("drop", function(event) {
-        console.log('--- Drop Event on the Calendar Template ---')
+        console.log('--- Normal drop event ---')
         let appointmentService = new AppointmentService();
         event.preventDefault();
         draggedTd = $(event.target).closest('td');
@@ -5094,8 +5081,9 @@ Template.calender.onRendered(function() {
                     dayMaxEvents: true, // allow "more" link when too many events
                     //Triggers modal once event is moved to another date within the calendar.
                     eventDrop: function(info) {
-                        if (info.event._def.publicId != "") {
-
+                        console.log('eventDrop in Normal Drop')
+                        const pattern = /leave/;
+                        if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
                             let appointmentData = templateObject.appointmentrecords.get();
                             let resourceData = templateObject.resourceAllocation.get();
                             let eventDropID = info.event._def.publicId || "0";

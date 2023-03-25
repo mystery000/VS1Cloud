@@ -520,7 +520,8 @@ Template.newLeaveRequestModal.events({
         setTimeout(async function() {
 
             let currentId     = $("#edtEmpID").val();
-            let employeeID    = (!isNaN(currentId.id)) ? currentId.id : 0;
+            console.log('currentId:',currentId)
+            let employeeID    = (!isNaN(currentId)) ? currentId : 0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
             let Leave         = $('#edtLeaveTypeofRequest').val();
@@ -561,7 +562,7 @@ Template.newLeaveRequestModal.events({
 
                 let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
                 let dbEndDate   = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
-
+                console.log('employeeID:',employeeID)
                 let leaveRequestSettings = new LeaveRequest({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
