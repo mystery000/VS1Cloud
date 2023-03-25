@@ -21,6 +21,7 @@ Template.transactiongrid.onCreated(function(){
 });
 Template.transactiongrid.onRendered(function() {
     let templateObject = Template.instance();
+    
     let currenttranstablename = templateObject.data.tablename||"";
     let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking.toString() === "true";
     let includeBOnShippedQty = templateObject.data.includeBOnShippedQty.toString() === "true";
@@ -205,7 +206,7 @@ Template.transactiongrid.onRendered(function() {
         await templateObject.displayfields.set(custFields);
         $('.dataTable').resizable();
     }
-    
+    console.log("########", templateObject.data.recordLineItems)
 });
 Template.transactiongrid.events({
     "click .btnOpenTranSettings": async function (event, template) {

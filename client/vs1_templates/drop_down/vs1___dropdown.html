@@ -5,11 +5,11 @@
         class="form-control vs1dropdown {{classes}} {{id}}" 
         id="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
         name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" 
-        custid=" " 
+        custid="{{custid}}"
         custtaxcode=" " 
         disabled = "{{disabled}}"
         suppid=" "
-        style="background-color:rgb(255, 255, 255); cursor: pointer; {{#if noBorder}}border: 0; outline:0; padding-top:0; padding-bottom:0; line-height:1.2;{{/if}}">
+        style="background-color:rgb(255, 255, 255); cursor: pointer; {{#if noBorder}}border: 0; outline:0; padding-top:0; padding-bottom:0; line-height:1.2; background-color: transparent{{/if}}">
     </select>
     <div class="modal fade vs1_dropdown_modal" id="{{modalId}}">
         {{#if innerModal}}

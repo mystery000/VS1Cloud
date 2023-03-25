@@ -7,10 +7,12 @@ import { ContactService } from '../../../contacts/contact-service';
 import { UtilityService } from '../../../utility-service';
 import FxGlobalFunctions from "../../../packages/currency/FxGlobalFunctions";
 import { cloneDeep } from 'lodash';
+import { SalesBoardService } from '../../../js/sales-service';
 
 let sideBarService = new SideBarService();
 let contactService = new ContactService();
 let utilityService = new UtilityService();
+let salesService = new SalesBoardService();
 Template.transaction_card.onCreated(function () {
   let templateObject = Template.instance();
   templateObject.transactionrecord = new ReactiveVar();
@@ -20,6 +22,7 @@ Template.transaction_card.onCreated(function () {
   templateObject.clientrecords = new ReactiveVar();
   templateObject.selectedLineId = new ReactiveVar('');
   templateObject.taxraterecords = new ReactiveVar();
+  templateObject.taxcodes = new ReactiveVar();
 })
 
 Template.transaction_card.onRendered(async function () {
@@ -215,6 +218,7 @@ Template.transaction_card.onRendered(async function () {
     $(".fullScreenSpin").css("display", "none");
     if(data) {
       let record = templateObject.data.setTransData(data);
+      console.log("&&&&&&&&&&", record)
       templateObject.transactionrecord.set(record)
     }
   }

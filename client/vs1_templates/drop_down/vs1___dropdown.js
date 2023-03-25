@@ -45,19 +45,21 @@ Template.vs1___dropdown.onRendered(async function(){
         })
     }
     await setEditableSelect();
-    if(templateObject.data.data) {
-        $('#'+id).val(templateObject.data.data);
-    }
-    if(templateObject.data.email) {
-        let label = templateObject.data.label;
-        let clientEmailInput = 'edtCustomerEmail';
-        if(label == 'Supplier') {
-            clientEmailInput = 'edtSupplierEmail';
+    setTimeout(()=>{
+        if(templateObject.data.data) {
+            $('#'+id+"[custid='"+templateObject.data.custid+"']").val(templateObject.data.data);
         }
-        let email = templateObject.data.email;
-        $('#'+clientEmailInput).val(email)
-     
-    }
+        if(templateObject.data.email) {
+            let label = templateObject.data.label;
+            let clientEmailInput = 'edtCustomerEmail';
+            if(label == 'Supplier') {
+                clientEmailInput = 'edtSupplierEmail';
+            }
+            let email = templateObject.data.email;
+            $('#'+clientEmailInput).val(email)
+         
+        }
+    }, 1000)
     // $('#'+id).editableSelect().on('click', function(event) {
     $(document).on('click', '#'+id, function(event, li) {
         event.preventDefault();
