@@ -940,18 +940,18 @@ Template.calender.onRendered(function() {
             }
         }
         if(updatedTimeLogs){
-            console.log('updatedTimeLogs:',updatedTimeLogs)
-            let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
-            if(timeLogData?.length !== 0){
-                for(var i = 0; i< timeLogData.length; i++){
-                    await appointmentService.saveTimeLog(timeLogData[i]);
+            if(updatedTimeLogs[0] && updatedTimeLogs[0].data){
+                let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
+                if(timeLogData?.length !== 0){
+                    for(var i = 0; i< timeLogData.length; i++){
+                        await appointmentService.saveTimeLog(timeLogData[i]);
+                    }
+                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                        addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                    })
                 }
-                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
-                })
             }
         }
-       
     }
 
     templateObject.updateEvents = async (updatedEvent) => {
