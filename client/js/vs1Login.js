@@ -824,6 +824,7 @@ Template.vs1login.onRendered(function () {
             }
           } else {
               let dataReturnRes = JSON.parse(dataObject[0].data);
+              console.log("dataReturnRes", dataReturnRes)
               templateObject.checkVS1_Dashboard(isSameUserLogin,dataReturnRes);
           }
       }).catch(function(err) {

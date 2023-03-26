@@ -45,19 +45,21 @@ Template.vs1___dropdown.onRendered(async function(){
         })
     }
     await setEditableSelect();
-    if(templateObject.data.data) {
-        $('#'+id).val(templateObject.data.data);
-    }
-    if(templateObject.data.email) {
-        let label = templateObject.data.label;
-        let clientEmailInput = 'edtCustomerEmail';
-        if(label == 'Supplier') {
-            clientEmailInput = 'edtSupplierEmail';
+    setTimeout(()=>{
+        if(templateObject.data.data) {
+            $('#'+id+"[custid='"+templateObject.data.custid+"']").val(templateObject.data.data);
         }
-        let email = templateObject.data.email;
-        $('#'+clientEmailInput).val(email)
-     
-    }
+        if(templateObject.data.email) {
+            let label = templateObject.data.label;
+            let clientEmailInput = 'edtCustomerEmail';
+            if(label == 'Supplier') {
+                clientEmailInput = 'edtSupplierEmail';
+            }
+            let email = templateObject.data.email;
+            $('#'+clientEmailInput).val(email)
+         
+        }
+    }, 1000)
     // $('#'+id).editableSelect().on('click', function(event) {
     $(document).on('click', '#'+id, function(event, li) {
         event.preventDefault();
@@ -125,7 +127,6 @@ Template.vs1___dropdown.events({
         let modal = $(event.target).closest('.modal.fade.show')
         let label = templateObject.data.label;
         let value = $(event.target).closest('tr').find('.'+colName).text();
-
         let objectId = $(event.target).closest('tr').find('.colID')?.text();
 
         let email = $(event.target).closest('tr').find('.colEmail')?.text();
@@ -137,6 +138,7 @@ Template.vs1___dropdown.events({
         // $('#'+id).val(value)
         let target = templateObject.targetEle.get();
         $(target).val(value)
+        // $(target).val("test")
         $(modal).modal('hide');    
         // $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
         // setTimeout(function() {
