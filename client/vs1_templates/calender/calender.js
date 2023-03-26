@@ -5304,38 +5304,39 @@ Template.calender.onRendered(function() {
     
 
     function setSMSSettings(data){
-        for (let i = 0; i < data.terppreference.length; i++) {
-            if(data.terppreference[i].Fieldvalue && data.terppreference[i].Fieldvalue !== ""){
-                switch (data.terppreference[i].PrefName) {
+        for (let i = 0; i < data.length; i++) {
+            if(data[i].Fieldvalue && data[i].Fieldvalue !== ""){
+                switch (data[i].PrefName) {
                     case "VS1SMSID":
-                        smsSettings.twilioAccountId = data.terppreference[i].Fieldvalue;
+                        smsSettings.twilioAccountId = data[i].Fieldvalue;
                         break;
                     case "VS1SMSToken":
                         smsSettings.twilioAccountToken =
-                            data.terppreference[i].Fieldvalue;
+                            data[i].Fieldvalue;
                         break;
                     case "VS1SMSPhone":
                         smsSettings.twilioTelephoneNumber =
-                            data.terppreference[i].Fieldvalue;
+                            data[i].Fieldvalue;
                         break;
                     case "VS1HEADERSMSMSG":
                         smsSettings.headerAppointmentSMSMessage =
-                            data.terppreference[i].Fieldvalue;
+                            data[i].Fieldvalue;
                         break;
                     case "VS1SAVESMSMSG":
                         smsSettings.saveAppointmentSMSMessage =
-                            data.terppreference[i].Fieldvalue;
+                            data[i].Fieldvalue;
                         break;
                     case "VS1STARTSMSMSG":
                         smsSettings.startAppointmentSMSMessage =
-                            data.terppreference[i].Fieldvalue;
+                            data[i].Fieldvalue;
                         break;
                     case "VS1STOPSMSMSG":
                         smsSettings.stopAppointmentSMSMessage =
-                            data.terppreference[i].Fieldvalue;
+                            data[i].Fieldvalue;
                 }
             }
         }
+        console.log('smsSettings:',smsSettings)
         templateObject.defaultSMSSettings.set(smsSettings);
     }
 
@@ -8320,6 +8321,7 @@ Template.calender.events({
         $('#btnEndActualTime').trigger('click');
     },
     "click #btnSaveAppointment": async function() {
+        console.log('templateObject.defaultSMSSettings:',templateObject.defaultSMSSettings)
         playSaveAudio();
         const templateObject = Template.instance();
         setTimeout(async function() {
@@ -8387,6 +8389,7 @@ Template.calender.events({
                             $("#country").val();
                         const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                         const productService = $("#product-list").val();
+                        console.log('templateObject.defaultSMSSettings:',templateObject.defaultSMSSettings.get())
                         const saveAppointmentSMS = templateObject.defaultSMSSettings
                             .get()
                             .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
