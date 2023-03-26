@@ -2646,7 +2646,9 @@ Template.calender.onRendered(function() {
     }
 
     function drawProductTable(data){
+        let productlist = [];
         let dataList = {};
+        const splashArrayProductServiceListGet = [];
         let getallinvproducts = templateObject.allnoninvproducts.get();
         if (data.trepservices.length > 0) {
             for (let i = 0; i < data.trepservices.length; i++) {
@@ -2690,9 +2692,7 @@ Template.calender.onRendered(function() {
     }
    
     templateObject.getAllSelectedProducts = function(employeeID) {
-        let productlist = [];
         templateObject.datatablerecords.set([]);
-        const splashArrayProductServiceListGet = [];
         //$('#product-list').editableSelect('clear');
         getVS1Data("TRepServices").then(function(dataObject){
             if (dataObject.length == 0) {
@@ -5336,7 +5336,6 @@ Template.calender.onRendered(function() {
                 }
             }
         }
-        console.log('smsSettings:',smsSettings)
         templateObject.defaultSMSSettings.set(smsSettings);
     }
 
@@ -8321,7 +8320,6 @@ Template.calender.events({
         $('#btnEndActualTime').trigger('click');
     },
     "click #btnSaveAppointment": async function() {
-        console.log('templateObject.defaultSMSSettings:',templateObject.defaultSMSSettings)
         playSaveAudio();
         const templateObject = Template.instance();
         setTimeout(async function() {
@@ -8495,7 +8493,6 @@ Template.calender.events({
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
                 // $("#frmAppointment").trigger("submit");
-                console.log('Oops:',$('#frmAppointment')[0])
                 $("#btnAppointmentSubmit").click();
             } else {
                 $("#btnAppointmentSubmit").click();
@@ -8627,7 +8624,6 @@ Template.calender.events({
                 confirmButtonText: 'Ok'
             })
         } else {
-            console.log('document.getElementById("tActualStartTime").value:',document.getElementById("tActualStartTime").value)
             if (document.getElementById("tActualStartTime").value == "") {} else {
                 document.getElementById("tActualEndTime").value = moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm');
                 swal({
