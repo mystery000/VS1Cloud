@@ -940,6 +940,7 @@ Template.calender.onRendered(function() {
             }
         }
         if(updatedTimeLogs){
+            console.log('updatedTimeLogs:',updatedTimeLogs)
             let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
             if(timeLogData?.length !== 0){
                 for(var i = 0; i< timeLogData.length; i++){
@@ -975,6 +976,7 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
+        console.log('renderCalendar')
         let calendarSet = templateObject.globalSettings.get();
         var calendarEl = document.getElementById("calendar");
         var currentDate = new Date();
@@ -4287,7 +4289,6 @@ Template.calender.onRendered(function() {
         if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
             //$("#btnHold").prop("disabled", true);
         }
-		console.log('overridesettings:',overridesettings)
         if (overridesettings[0]?.override == "false") {
             document.getElementById("product-list").value =
                 calendarSet.defaultProduct || "";
@@ -8156,6 +8157,7 @@ Template.calender.events({
         }
     },
     "click #btnStartAppointment": function() {
+        console.log('btnStartAppointment')
         const templateObject = Template.instance();
 
         let empID = templateObject.empID.get();
@@ -8172,7 +8174,7 @@ Template.calender.events({
                 leaveFlag = true;
             }
         });
-
+        console.log('leaveFlag:',leaveFlag)
         if (!leaveFlag) {
             templateObject.checkSMSSettings();
             const smsCustomer = $("#chkSMSCustomer").is(":checked");
@@ -8387,7 +8389,6 @@ Template.calender.events({
                             $("#country").val();
                         const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                         const productService = $("#product-list").val();
-                        console.log('templateObject.defaultSMSSettings:',templateObject.defaultSMSSettings.get())
                         const saveAppointmentSMS = templateObject.defaultSMSSettings
                             .get()
                             .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
