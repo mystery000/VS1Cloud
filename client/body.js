@@ -342,9 +342,7 @@ import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
-import './vs1_templates/transaction_temp/transaction_footer/transactionfooter.js';
-import './vs1_templates/transaction_temp/transaction_template/transaction_card.js';
-import './invoice/frm_invoice.js';
+
 
 /* Jeyhun */
 

@@ -536,7 +536,7 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: false,
+                responsive: true,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 //"autoWidth": false,
                 action: function () {
