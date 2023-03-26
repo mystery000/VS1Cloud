@@ -1535,9 +1535,8 @@ Template.calender.onRendered(function() {
                 info.el.children[0].setAttribute("data-toggle", "tooltip");
                 info.el.children[0].setAttribute("title", info.event.extendedProps.description);
                 setTimeout(function() {
-                    console.log('tooltip')
                     $('[data-toggle="tooltip"]').tooltip({ html: true });
-                }, 100);
+                }, 500);
             },
             eventContent: function(event) {
                 let title = document.createElement("p");
@@ -2255,9 +2254,8 @@ Template.calender.onRendered(function() {
                 info.el.children[0].setAttribute("data-toggle", "tooltip");
                 info.el.children[0].setAttribute("title", info.event.extendedProps.description);
                 setTimeout(function() {
-                    console.log('Tootip in normalCalendar')
                     $('[data-toggle="tooltip"]').tooltip({ html: true });
-                }, 100);
+                }, 500);
             },
             eventContent: function(event) {
 
@@ -4991,7 +4989,7 @@ Template.calender.onRendered(function() {
                             title.style.overflow = "hidden";
                             setTimeout(function() {
                                 $('[data-toggle="tooltip"]').tooltip({ html: true });
-                            }, 100);
+                            }, 500);
                         } else {
                             title.innerHTML = event.timeText + " " + event.event.title;
                         }
