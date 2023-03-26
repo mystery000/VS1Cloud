@@ -22,6 +22,7 @@ Template.transactiongrid.onCreated(function(){
 Template.transactiongrid.onRendered(function() {
     let templateObject = Template.instance();
     
+    
     let currenttranstablename = templateObject.data.tablename||"";
     let isBatchSerialNoTracking = templateObject.data.isBatchSerialNoTracking.toString() === "true";
     let includeBOnShippedQty = templateObject.data.includeBOnShippedQty.toString() === "true";
