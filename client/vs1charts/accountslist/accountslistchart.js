@@ -31,7 +31,6 @@ Template.accountslistchart.onCreated(() => {
     templateObject.selectedFile = new ReactiveVar();
     templateObject.isBankAccount = new ReactiveVar();
     templateObject.isBankAccount.set(false);
-
     templateObject.getDataTableList = function (data) {
         let accBalance;
 
@@ -41,7 +40,7 @@ Template.accountslistchart.onCreated(() => {
             accBalance = Currency + "0.00";
         }
         if (data.ReceiptCategory && data.ReceiptCategory != '') {
-            usedCategories.push(data.fields);
+            // usedCategories.push(data.fields);
         }
         let linestatus = '';
         if (data.Active == true) {
