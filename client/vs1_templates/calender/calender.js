@@ -3547,6 +3547,7 @@ Template.calender.onRendered(function() {
     }
 
     function setInitCalendarData() {
+        console.log('setInitCalendarData:',setInitCalendarData)
         $('.fullScreenSpin').css('display', 'none');
         const calendarEl = document.getElementById("calendar");
         const currentDate = new Date();
@@ -5312,28 +5313,22 @@ Template.calender.onRendered(function() {
                         smsSettings.twilioAccountId = data[i].Fieldvalue;
                         break;
                     case "VS1SMSToken":
-                        smsSettings.twilioAccountToken =
-                            data[i].Fieldvalue;
+                        smsSettings.twilioAccountToken = data[i].Fieldvalue;
                         break;
                     case "VS1SMSPhone":
-                        smsSettings.twilioTelephoneNumber =
-                            data[i].Fieldvalue;
+                        smsSettings.twilioTelephoneNumber = data[i].Fieldvalue;
                         break;
                     case "VS1HEADERSMSMSG":
-                        smsSettings.headerAppointmentSMSMessage =
-                            data[i].Fieldvalue;
+                        smsSettings.headerAppointmentSMSMessage = data[i].Fieldvalue;
                         break;
                     case "VS1SAVESMSMSG":
-                        smsSettings.saveAppointmentSMSMessage =
-                            data[i].Fieldvalue;
+                        smsSettings.saveAppointmentSMSMessage = data[i].Fieldvalue;
                         break;
                     case "VS1STARTSMSMSG":
-                        smsSettings.startAppointmentSMSMessage =
-                            data[i].Fieldvalue;
+                        smsSettings.startAppointmentSMSMessage = data[i].Fieldvalue;
                         break;
                     case "VS1STOPSMSMSG":
-                        smsSettings.stopAppointmentSMSMessage =
-                            data[i].Fieldvalue;
+                        smsSettings.stopAppointmentSMSMessage = data[i].Fieldvalue;
                 }
             }
         }
