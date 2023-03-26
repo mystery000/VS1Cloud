@@ -9538,6 +9538,7 @@ Template.appointments.onRendered(function() {
     //     if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
     //         //$("#btnHold").prop("disabled", true);
     //     }
+	// 	console.log('overridesettings:',overridesettings)
     //     if (overridesettings[0].override == "false") {
     //         document.getElementById("product-list").value =
     //             calendarSet.defaultProduct || "";

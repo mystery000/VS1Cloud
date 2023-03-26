@@ -2853,11 +2853,8 @@ Template.calender.onRendered(function() {
             if (data.tleavrequest.length > 0) {
                 data.tleavrequest.forEach((item) => {
                     const fields = item.fields;
-                    const parsedDate = utilityService.getStartDateWithSpecificFormat(
-                        fields.StartDate
-                    );
+                    const parsedDate = utilityService.getStartDateWithSpecificFormat(fields.StartDate);
                     const appointmentDate = document.getElementById("dtSODate").value;
-
                     if (parsedDate === appointmentDate) {
                         result = true;
                     }
@@ -2875,11 +2872,9 @@ Template.calender.onRendered(function() {
         let employeeSettings = [];
         if (dataObject.length == 0) {
             appointmentService.getCalendarsettings().then(function(data) {
-
                 if (data.tappointmentpreferences.length > 0) {
                     templateObject.employeeOptions.set(data.tappointmentpreferences);
                 }
-
             }).catch(function(err) {});
         } else {
             let data = JSON.parse(dataObject[0].data);
@@ -3523,7 +3518,7 @@ Template.calender.onRendered(function() {
 
             }
             setTimeout(function () {
-            $('#here_table table').append(tableRowData);
+                $('#here_table table').append(tableRowData);
             }, 500);
             templateObject.employeerecords.set(allEmp);
             templateObject.resourceAllocation.set(resourceChat);
@@ -4259,6 +4254,119 @@ Template.calender.onRendered(function() {
             $('#newProductModal').modal("show");
         }, 500);
     }
+
+    $(document).on("click", "#tblEmployeelist tbody tr", function(e) {
+        let employeeName = $(this).find(".colEmployeeName").text() || '';
+        let employeeID = $(this).find(".colID").text() || '';
+        templateObject.empID.set(employeeID);
+        let draggedEmployeeID = templateObject.empID.get();
+        let calendarData = templateObject.employeeOptions.get();
+        let calendarSet = templateObject.globalSettings.get();
+        let employees = templateObject.employeerecords.get();
+        console.log('employees:',employees)
+        console.log('draggedEmployeeID:',draggedEmployeeID)
+        let overridesettings = employees.filter((employeeData) => {
+            return employeeData.id == parseInt(draggedEmployeeID);
+        });
+
+        let empData = calendarData.filter((calendarOpt) => {
+            return calendarOpt.EmployeeID == parseInt(draggedEmployeeID);
+        });
+
+        document.getElementById("frmAppointment").reset();
+        $(".paused").hide();
+        $("#btnHold").prop("disabled", false);
+        $("#btnStartAppointment").prop("disabled", false);
+        $("#btnStopAppointment").prop("disabled", false);
+        $("#startTime").prop("disabled", false);
+        $("#endTime").prop("disabled", false);
+        $("#tActualStartTime").prop("disabled", false);
+        $("#tActualEndTime").prop("disabled", false);
+        $("#txtActualHoursSpent").prop("disabled", false);
+
+        if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+            //$("#btnHold").prop("disabled", true);
+        }
+		console.log('overridesettings:',overridesettings)
+        if (overridesettings[0]?.override == "false") {
+            document.getElementById("product-list").value =
+                calendarSet.defaultProduct || "";
+            document.getElementById("product-list-1").value =
+                calendarSet.defaultProduct || "";
+        } else if (overridesettings[0]?.override == "true") {
+            if (empData.length > 0) {
+                document.getElementById("product-list").value =
+                    empData[empData.length - 1].DefaultServiceProduct || "";
+                document.getElementById("product-list-1").value =
+                    empData[empData.length - 1].DefaultServiceProduct || "";
+            } else {
+                document.getElementById("product-list").value =
+                    calendarSet.defaultProduct || "";
+                document.getElementById("product-list-1").value =
+                    calendarSet.defaultProduct || "";
+            }
+        } else {
+            if (templateObject.empDuration.get() != "") {
+                var endTime = moment(startTime, "HH:mm")
+                    .add(parseInt(templateObject.empDuration.get()), "hours")
+                    .format("HH:mm");
+                document.getElementById("endTime").value = endTime;
+                let hoursFormattedStartTime =
+                    templateObject.timeFormat(templateObject.empDuration.get()) || "";
+                document.getElementById("txtBookedHoursSpent").value =
+                    hoursFormattedStartTime;
+            } else {
+                var appointmentHours = moment(
+                    event.dateStr.substr(event.dateStr.length - 5),
+                    "HH:mm"
+                ).format("HH:mm");
+                var endTime = moment(startTime, "HH:mm")
+                    .add(appointmentHours.substr(0, 2), "hours")
+                    .format("HH:mm");
+                document.getElementById("endTime").value = endTime;
+                var hoursSpent = moment(appointmentHours, "hours").format("HH");
+                let hoursFormattedStartTime =
+                    templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
+                document.getElementById("txtBookedHoursSpent").value =
+                    hoursFormattedStartTime;
+            }
+
+            if (empData.length > 0) {
+                document.getElementById("product-list").value =
+                    empData[empData.length - 1].DefaultServiceProduct || "";
+                document.getElementById("product-list-1").value =
+                    empData[empData.length - 1].DefaultServiceProduct || "";
+                // $('#product-list').prepend('<option value=' + empData[0].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
+                // $("#product-list")[0].options[0].selected = true;
+            } else {
+                document.getElementById("product-list").value =
+                    calendarSet.defaultProduct || "";
+                document.getElementById("product-list-1").value =
+                    calendarSet.defaultProduct || "";
+                // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
+                // $("#product-list")[0].options[0].selected = true;
+            }
+        }
+
+        $('#employee_name').val(employeeName);
+        $('#employeeListModal').modal('toggle');
+        $("#btnCopyOptions").attr("disabled", true);
+        $("#event-modal").modal();
+        setTimeout(() => {
+            if (localStorage.getItem("smsCustomerAppt") == "false") {
+                $("#chkSMSCustomer").prop("checked", false);
+            }
+            if (localStorage.getItem("smsUserAppt") == "false") {
+                $("#chkSMSUser").prop("checked", false);
+            }
+            if (localStorage.getItem("emailCustomerAppt") == "false") {
+                $("#customerEmail").prop("checked", false);
+            }
+            if (localStorage.getItem("emailUserAppt") == "false") {
+                $("#userEmail").prop("checked", false);
+            }
+        }, 100);
+    });
 
     /* On clik Inventory Line */
     $(document).on("click", "#tblInventoryPayrollService tbody tr", function(e) {
