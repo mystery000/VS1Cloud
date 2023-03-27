@@ -53,12 +53,12 @@ Template.journalentrylist.onCreated(function(){
 
   let headerStructure = [
     { index: 0, label: 'Transaction Date', class:'colTransactionDate', active: true, display: true, width: "135" },
-    { index: 1, label: 'Entry No', class:'colEntryNo', active: true, display: true, width: "100" },
+    { index: 1, label: 'Entry No', class:'colEntryNo text-right', active: true, display: true, width: "100" },
     { index: 2, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "170" },
     { index: 3, label: 'Department', class:'colDepartmentName', active: true, display: true, width: "180" },
-    { index: 4, label: 'Debit Amount', class:'colDebitAmount', active: true, display: true, width: "150" },
-    { index: 5, label: 'Credit Amount', class:'colCreditAmount', active: true, display: true, width: "150" },
-    { index: 6, label: 'Tax Amount', class:'colTaxAmount', active: true, display: true, width: "150" },
+    { index: 4, label: 'Debit Amount', class:'colDebitAmount text-right', active: true, display: true, width: "150" },
+    { index: 5, label: 'Credit Amount', class:'colCreditAmount text-right', active: true, display: true, width: "150" },
+    { index: 6, label: 'Tax Amount', class:'colTaxAmount text-right', active: true, display: true, width: "150" },
     { index: 7, label: 'Status', class:'colStatus', active: true, display: true, width: "100" },
     { index: 8, label: 'Memo', class:'colMemo', active: true, display: true, width: "200" },
   ];
