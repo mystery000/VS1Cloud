@@ -2331,48 +2331,62 @@ Template.calender.onRendered(function() {
                             "" + '<p class="text-nowrap text-truncate" style="margin: 0px;">' +
                             appointmentData[index].accountname + "</p>" + "" + "</div>" + "" + "</div>";
                         let day = moment(startDate).format("dddd").toLowerCase();
-                        appointmentService.saveAppointment(objectData).then(function(data) {
-                            appointmentData[index].startDate = startDate + " " + startTime;
-                            appointmentData[index].endDate = endDate + " " + endTime;
-                            templateObject.appointmentrecords.set(appointmentData);
-                            $(".droppable #" + eventDropID).remove();
-                            $("#" + nameid + " ." + day + " .droppable").append(job);
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == nameid) {
-                                    $(this).attr("id", $(this).attr("id").replace("-", " "));
-                                }
-                            });
-                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                    } else {
-                                        window.open("/appointments", "_self");
-                                    }
-                                })
-                                .catch(function(err) {
-                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                    } else {
-                                        window.open("/appointments", "_self");
-                                    }
-                                });
-                            })
-                            .catch(function(err) {
-                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                                } else {
-                                    window.open("/appointments", "_self");
-                                }
-                            });
-                        })
-                        .catch(function(err) {
-                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                            } else {
-                                window.open("/appointments", "_self");
+
+                        templateObject.updateEvents(objectData)
+                        appointmentData[index].startDate = startDate + " " + startTime;
+                        appointmentData[index].endDate = endDate + " " + endTime;
+                        templateObject.appointmentrecords.set(appointmentData);
+                        $(".droppable #" + eventDropID).remove();
+                        $("#" + nameid + " ." + day + " .droppable").append(job);
+                        $("#allocationTable tbody tr").each(function() {
+                            if (this.id == nameid) {
+                                $(this).attr("id", $(this).attr("id").replace("-", " "));
                             }
                         });
+                        $(".fullScreenSpin").css("display", "none");
+
+                        // appointmentService.saveAppointment(objectData).then(function(data) {
+                        //     appointmentData[index].startDate = startDate + " " + startTime;
+                        //     appointmentData[index].endDate = endDate + " " + endTime;
+                        //     templateObject.appointmentrecords.set(appointmentData);
+                        //     $(".droppable #" + eventDropID).remove();
+                        //     $("#" + nameid + " ." + day + " .droppable").append(job);
+                        //     $("#allocationTable tbody tr").each(function() {
+                        //         if (this.id == nameid) {
+                        //             $(this).attr("id", $(this).attr("id").replace("-", " "));
+                        //         }
+                        //     });
+                        //     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                        //         addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
+                        //             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //                 window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //             } else {
+                        //                 window.open("/appointments", "_self");
+                        //             }
+                        //         })
+                        //         .catch(function(err) {
+                        //             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //                 window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //             } else {
+                        //                 window.open("/appointments", "_self");
+                        //             }
+                        //         });
+                        //     })
+                        //     .catch(function(err) {
+                        //         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //             window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //         } else {
+                        //             window.open("/appointments", "_self");
+                        //         }
+                        //     });
+                        // })
+                        // .catch(function(err) {
+                        //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //         window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //     } else {
+                        //         window.open("/appointments", "_self");
+                        //     }
+                        // });
                     }
                 }
                 // if (!confirm("is this okay?")) {
@@ -2384,7 +2398,7 @@ Template.calender.onRendered(function() {
         calendar.render();
 
         // $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:170px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked="checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
-        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:192px; float: right; margin:8px 0px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left;margin:auto;"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:192px; float: right;margin: 8px auto;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
         new Draggable(draggableEl, {
@@ -2404,8 +2418,9 @@ Template.calender.onRendered(function() {
         $("#appointmentDate").css("fontSize", "24px");
         $("#appointmentDate").css("padding", "0px");
         $("#appointmentDate").css("border", "0px");
-        $("#appointmentDate").css("margin-left", "20px");
+        // $("#appointmentDate").css("margin-left", "20px");
         $("#appointmentDate").css("height", "40px");
+        $("#appointmentDate").css("text-align", "center");
         $("#appointmentDate").css("cursor", "pointer");
         $("#appointmentDate").css("background-color", "white");
         $("#appointmentDate").css("outline", "none");
@@ -2449,7 +2464,9 @@ Template.calender.onRendered(function() {
                 const parent1 = child1.parentNode;
                 $(parent1).css("min-width", 714).css("text-align", "center");
                 $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
-                $(child2.parentNode).css("min-width", 418);
+                // $(child2.parentNode).css("min-width", 418);
+                $(child2.parentNode).css("display","flex" ).css("flex-wrap",'wrap');
+                $('#appointmentDate').css('')
             }
 
             let url = window.location.href;
@@ -3836,7 +3853,6 @@ Template.calender.onRendered(function() {
                 };
             }
         });
-        //}
     }
 
     templateObject.getAllClients = function() {
