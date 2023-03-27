@@ -9,6 +9,7 @@ import FxGlobalFunctions from "../../../packages/currency/FxGlobalFunctions";
 import { cloneDeep } from 'lodash';
 import { SalesBoardService } from '../../../js/sales-service';
 import LoadingOverlay from '../../../LoadingOverlay';
+import { Random } from "meteor/random";
 
 let sideBarService = new SideBarService();
 let contactService = new ContactService();
@@ -1617,7 +1618,7 @@ Template.transaction_card.onRendered(async function () {
       }
     }
   }
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
+  $(document).on("click", ".tblInventory tbody tr", async function (e) {
     $(".colProductName").removeClass("boldtablealertsborder");
     let selectLineID = $("#selectLineID").val();
     let taxcodeList = await templateObject.taxraterecords.get();
@@ -1768,7 +1769,7 @@ Template.transaction_card.onRendered(async function () {
           utilityService.modifynegativeCurrencyFormat(lineAmount)
         );
       }
-      $("#productListModal").modal("toggle");
+      $("#productListModal").modal("hide");
       let subGrandTotalNet = 0;
       let taxGrandTotalNet = 0;
       $tblrows.each(function (index) {
@@ -2075,9 +2076,6 @@ Template.transaction_card.onRendered(async function () {
       });
     }
   });
-
-
-
 
 
 })
@@ -3192,8 +3190,49 @@ Template.transaction_card.events({
   },
 
   "click .lineProductName, keydown .lineProductName": function (event) {
+    // if($(event.target).val() == '') {
+      // $('#productlistmodal').modal('show')
+    // }
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectLineID").val(targetID);
+  },
+
+  'click #addRow': function(event) {
+    let templateObject = Template.instance();
+    let tokenid = Random.id();
+    let tempRecord = cloneDeep(templateObject.transactionrecord.get());
+    let lineItems = tempRecord.LineItems;
+    lineItems.push({
+      DiscountPercent: 0,
+      SalesLinesCustField1: "",
+      TaxRate: "",
+      TaxTotal: "",
+      TotalAmt: "",
+      TotalAmtInc: "",
+      UnitOfMeasure: "",
+      curTotalAmt: "",
+      description: "",
+      expirydates:"",
+      item: "",
+      lineCost: "",
+      lineID: tokenid,
+      lotnumbers: "",
+      qtybo: 0,
+      qtyordered: 0,
+      qtyshipped: 0,
+      quantity: 0,
+      serialnumbers: "",
+      taxCode: "",
+      taxRate: "",
+      unitPrice: "",
+      unitPriceInc: "" , 
+    })
+    tempRecord.LineItems = lineItems;
+    templateObject.transactionrecord.set(tempRecord);
+    setTimeout(()=>{
+      $('#'+templateObject.data.gridTableId+ ' tbody>tr:last').attr('id', tokenid);
+      $('#'+templateObject.data.gridTableId+ ' tbody>tr:last td .lineProductName').trigger('click')
+    }, 2000)
   }
 
 

@@ -14,9 +14,9 @@
     <div class="modal fade vs1_dropdown_modal" id="{{modalId}}">
         {{#if innerModal}}
             {{#if listTemp}}
-                {{> Template.dynamic template=listTemp}}
+                {{> Template.dynamic template=listTemp data=listparam}}
             {{/if}}
-        {{else}}
+    {{else}}
             <div class="modal-dialog modal-xl  modal-dialog-scrollable" role="document" style="max-width: 90vw">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="modal-body">
                         {{#if listTemp}}
-                        {{> Template.dynamic template=listTemp}}
+                        {{> Template.dynamic template=listTemp data=listparam}}
                         {{/if}}
                     </div>
                 </div>

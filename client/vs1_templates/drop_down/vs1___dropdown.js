@@ -114,6 +114,10 @@ Template.vs1___dropdown.helpers({
         let templateObject = Template.instance();
         let listempname = templateObject.data.list_template_name;
         return listempname
+    },
+    listparam:()=>{
+        let obj = {custid: Template.instance().data.custid}
+        return obj
     }
 })
 

@@ -412,68 +412,70 @@ Template.transactiongrid.events({
         }, delayTimeAfterSound);
     },
 
-    "click #addRow": (e, ui) => {
-        let templateObject = Template.instance();
-        let tablename = templateObject.data.tablename;
-        let mainSelector = templateObject.data.mainselector;
-        let selectorField = templateObject.data.selectorfield
-        var getTableFields = [$("#"+tablename+" >tbody >tr >."+mainSelector+"")];
-        var checkEmptyFields;
+    // "click #addRow": (e, ui) => {
+    //     let templateObject = Template.instance();
+    //     let tablename = templateObject.data.tablename;
+    //     let mainSelector = templateObject.data.mainselector;
+    //     let selectorField = templateObject.data.selectorfield
+    //     var getTableFields = [$("#"+tablename+" >tbody >tr >."+mainSelector+"")];
+    //     var checkEmptyFields;
     
-        for (var i = 0; i < getTableFields.length; i++) {
-          checkEmptyFields = getTableFields[i].filter(function (i, element) {
-            return $.trim($(this).val()) === "";
-          });
-        }
-        if (!checkEmptyFields.length) {
-          var rowData = $("#"+tablename+" >tbody>tr:last").clone(true);
-          let tokenid = Random.id();
-          $(".lineProductName", rowData).val("");
-          $(".lineProductDesc", rowData).text("");
-          $(".lineAccountName", rowData).val("");
-          $(".lineMemo", rowData).text("")
-          $(".lineQty", rowData).val("");
-          $(".lineOrdered", rowData).val("");
-          $(".lineBackOrder", rowData).val("");
-          $(".lineUnitPrice", rowData).val("");
-          $(".lineCustomerJob", rowData).val("");
-          $(".lineAmt", rowData).text("");
-          $(".lineTaxCode", rowData).val("");
-          $(".lineTaxAmount", rowData).text("");
-          $(".lineDiscount", rowData).val("");
-          $(".colSerialNo", rowData).removeAttr("data-lotnumbers");
-          $(".colSerialNo", rowData).removeAttr("data-expirydates");
-          $(".colSerialNo", rowData).removeAttr("data-serialnumbers");
-          // $(".lineProductName", rowData).attr("prodid", '');
+    //     for (var i = 0; i < getTableFields.length; i++) {
+    //       checkEmptyFields = getTableFields[i].filter(function (i, element) {
+    //         return $.trim($(this).val()) === "";
+    //       });
+    //     }
+    //     if (!checkEmptyFields.length) {
+    //       var rowData = $("#"+tablename+" >tbody>tr:last").clone(true);
+    //       let tokenid = Random.id();
+    //       $(".lineProductName", rowData).val("");
+    //       $(".lineProductName", rowData).attr('custid', '');
+    //       $('.vs1_dropdown_modal', rowData).remove();
+    //       $(".lineProductDesc", rowData).text("");
+    //       $(".lineAccountName", rowData).val("");
+    //       $(".lineMemo", rowData).text("")
+    //       $(".lineQty", rowData).val("");
+    //       $(".lineOrdered", rowData).val("");
+    //       $(".lineBackOrder", rowData).val("");
+    //       $(".lineUnitPrice", rowData).val("");
+    //       $(".lineCustomerJob", rowData).val("");
+    //       $(".lineAmt", rowData).text("");
+    //       $(".lineTaxCode", rowData).val("");
+    //       $(".lineTaxAmount", rowData).text("");
+    //       $(".lineDiscount", rowData).val("");
+    //       $(".colSerialNo", rowData).removeAttr("data-lotnumbers");
+    //       $(".colSerialNo", rowData).removeAttr("data-expirydates");
+    //       $(".colSerialNo", rowData).removeAttr("data-serialnumbers");
+    //       // $(".lineProductName", rowData).attr("prodid", '');
     
-          rowData.attr("id", tokenid);
-          $("#"+tablename+" >tbody").append(rowData);
+    //       rowData.attr("id", tokenid);
+    //       $("#"+tablename+" >tbody").append(rowData);
     
-          if ($("#printID").attr("id") != "") {
-            var rowData1 = $(".invoice_print tbody>tr:last").clone(true);
-            $("#lineProductName", rowData1).text("");
-            $("#lineProductDesc", rowData1).text("");
-            $("#lineQty", rowData1).text("");
-            $("#lineOrdered", rowData1).text("");
-            $("#lineUnitPrice", rowData1).text("");
+    //       if ($("#printID").attr("id") != "") {
+    //         var rowData1 = $(".invoice_print tbody>tr:last").clone(true);
+    //         $("#lineProductName", rowData1).text("");
+    //         $("#lineProductDesc", rowData1).text("");
+    //         $("#lineQty", rowData1).text("");
+    //         $("#lineOrdered", rowData1).text("");
+    //         $("#lineUnitPrice", rowData1).text("");
     
-            $("#lineTaxAmount", rowData1).text("");
-            $("#lineAmt", rowData1).text("");
-            rowData1.attr("id", tokenid);
-            $(".invoice_print tbody").append(rowData1);
-          }
-          setTimeout(function () {
-            $("#" + tokenid + " ."+mainSelector+"").trigger("click");
-          }, 200);
-        } else {
-          $("#"+tablename+" >tbody >tr").each(function (index) {
-            var $tblrow = $(this);
-            if ($tblrow.find("."+mainSelector).val() == "") {
-              $tblrow.find("."+selectorField+"").addClass("boldtablealertsborder");
-            }
-          });
-        }
-    },
+    //         $("#lineTaxAmount", rowData1).text("");
+    //         $("#lineAmt", rowData1).text("");
+    //         rowData1.attr("id", tokenid);
+    //         $(".invoice_print tbody").append(rowData1);
+    //       }
+    //       setTimeout(function () {
+    //         $("#" + tokenid + " ."+mainSelector+"").trigger("click");
+    //       }, 200);
+    //     } else {
+    //       $("#"+tablename+" >tbody >tr").each(function (index) {
+    //         var $tblrow = $(this);
+    //         if ($tblrow.find("."+mainSelector).val() == "") {
+    //           $tblrow.find("."+selectorField+"").addClass("boldtablealertsborder");
+    //         }
+    //       });
+    //     }
+    // },
 
     'change .chkLineGrid': async function (event) {
         event.preventDefault();
