@@ -106,7 +106,6 @@ Template.paymentoverview.onCreated(function() {
     }, 10);
 
     templateObject.getDataTableList = function(data) {
-        console.log('DATA ~~~~~~~~~~~~~~~~~~~~~~~', data);
         let amount = utilityService.modifynegativeCurrencyFormat(data.PaymentAmount) || 0.00;
         let bankAccount = data.BankAccount;
         if (bankAccount == "Accounts Receivable") {
