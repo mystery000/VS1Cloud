@@ -1487,6 +1487,16 @@ authenticatedRoutes.route('/clockOnOff', {
     }
 });
 
+authenticatedRoutes.route('/process_clock_list', {
+    name: 'process_clock_template',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'process_clock_template'
+        });
+    }
+});
+
+
 authenticatedRoutes.route('/squareapi', {
     name: 'squareapi',
     action() {
@@ -2313,6 +2323,24 @@ authenticatedRoutes.route('/eft', {
           yield: 'eft_export'
       })
   }
+})
+
+authenticatedRoutes.route('/eftfilescreated', {
+    name: 'eftFilesCreated',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'eftFilesCreated'
+        })
+    }
+})
+
+authenticatedRoutes.route('/eftbankrulelist', {
+    name: 'eftBankRuleList',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'eftBankRuleList'
+        })
+    }
 })
 
 authenticatedRoutes.route('/workordercard', {
