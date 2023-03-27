@@ -234,7 +234,7 @@ FlowRouter.triggers.exit([
         "employeescard", "leadscard", "supplierscard", "journalentrycard", "fixedassetcard", "bom_setup",
         "servicelogcard", "new_process", "stockadjustmentcard", "paymentcard", "supplierpaymentcard",
         "purchaseordercard", "billcard", "creditcard", "allreports", "new_quote", "new_salesorder",
-        "new_invoice", "refundcard","appointments"
+        "new_invoice", "refundcard","appointments","dashboardsalesmanager","dashboardsales"
     ]});
 
 authenticatedRoutes.route('/accounttransactions', {

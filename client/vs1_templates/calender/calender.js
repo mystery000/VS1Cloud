@@ -1729,6 +1729,7 @@ Template.calender.onRendered(function() {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
+                    console.log('++++++++++++++++')
                      $("#appointmentLeaveConfirmModal").modal("toggle");
                     // $("#customerListModal").modal();
                 }
@@ -2466,7 +2467,6 @@ Template.calender.onRendered(function() {
                 $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center");
                 // $(child2.parentNode).css("min-width", 418);
                 $(child2.parentNode).css("display","flex" ).css("flex-wrap",'wrap');
-                $('#appointmentDate').css('')
             }
 
             let url = window.location.href;
@@ -3916,6 +3916,18 @@ Template.calender.onRendered(function() {
     $(document).ready(function() {
         $('#customer').editableSelect();
         $('#product-list').editableSelect();
+    });
+
+    $(document).on("click", ".addExtraProduct", function(e) {
+        $("#productListModal1").modal("toggle");
+        setTimeout(function() {
+            $("#tblInventoryCheckbox_filter .form-control-sm").focus();
+            $("#tblInventoryCheckbox_filter .form-control-sm").val("");
+            $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
+            var datatable = $("#tblInventoryCheckbox").DataTable();
+            datatable.draw();
+            $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
+        }, 500);
     });
 
     $('#customer').editableSelect().on('click.editable-select', function(e, li) {
@@ -10582,6 +10594,15 @@ Template.calender.events({
             $("#btnAppointmentSubmit").click();
         }
     },
+    "click #btnCreateAppointmentRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        $("#customerListModal").modal();
+    },
+    "click #btnCreateLeaveRequest": function(event){
+        $("#appointmentLeaveConfirmModal").modal("hide");
+        // $("#customerListModal").modal();
+		$('#newLeaveRequestModal').modal('show');
+    },
 });
 
 Template.calender.helpers({
@@ -10639,7 +10660,7 @@ Template.calender.helpers({
         return Template.instance().createAppointment || false;
     },
     accessStartStopOnly: () => {
-        return Template.instance().createAppointment || false;
+        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
     },
     addAttachment: () => {
         return localStorage.getItem("CloudAppointmentAddAttachment") || false;

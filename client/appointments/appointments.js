@@ -9619,71 +9619,71 @@ Template.appointments.onRendered(function() {
     //     }, 100);
     // });
 
-    $(document).on("click", ".addExtraProduct", function(e) {
-        $("#productListModal1").modal("toggle");
-        // var targetID = $(event.target).closest("tr").attr("id");
-        // $("#selectLineID").val(targetID);
-        // var getTableFields = [$("#tblInvoiceLine tbody tr .lineProductName")];
-        // var checkEmptyFields;
+    // $(document).on("click", ".addExtraProduct", function(e) {
+    //     $("#productListModal1").modal("toggle");
+    //     // var targetID = $(event.target).closest("tr").attr("id");
+    //     // $("#selectLineID").val(targetID);
+    //     // var getTableFields = [$("#tblInvoiceLine tbody tr .lineProductName")];
+    //     // var checkEmptyFields;
 
-        // for (var i = 0; i < getTableFields.length; i++) {
-        //   checkEmptyFields = getTableFields[i].filter(function (i, element) {
-        //     return $.trim($(this).val()) === "";
-        //   });
-        // }
-        // if (!checkEmptyFields.length) {
-        //   var rowData = $("#tblInvoiceLine tbody>tr:last").clone(true);
-        //   let tokenid = Random.id();
-        //   $(".lineProductName", rowData).val("");
-        //   $(".lineProductDesc", rowData).text("");
-        //   $(".lineQty", rowData).val("");
-        //   $(".lineOrdered", rowData).val("");
-        //   $(".lineBo", rowData).val("");
-        //   $(".lineUnitPrice", rowData).val("");
-        //   $(".lineAmt", rowData).text("");
-        //   $(".lineTaxCode", rowData).val("");
-        //   $(".lineTaxAmount", rowData).text("");
-        //   $(".lineDiscount", rowData).text("");
-        //   // $(".lineProductName", rowData).attr("prodid", '');
+    //     // for (var i = 0; i < getTableFields.length; i++) {
+    //     //   checkEmptyFields = getTableFields[i].filter(function (i, element) {
+    //     //     return $.trim($(this).val()) === "";
+    //     //   });
+    //     // }
+    //     // if (!checkEmptyFields.length) {
+    //     //   var rowData = $("#tblInvoiceLine tbody>tr:last").clone(true);
+    //     //   let tokenid = Random.id();
+    //     //   $(".lineProductName", rowData).val("");
+    //     //   $(".lineProductDesc", rowData).text("");
+    //     //   $(".lineQty", rowData).val("");
+    //     //   $(".lineOrdered", rowData).val("");
+    //     //   $(".lineBo", rowData).val("");
+    //     //   $(".lineUnitPrice", rowData).val("");
+    //     //   $(".lineAmt", rowData).text("");
+    //     //   $(".lineTaxCode", rowData).val("");
+    //     //   $(".lineTaxAmount", rowData).text("");
+    //     //   $(".lineDiscount", rowData).text("");
+    //     //   // $(".lineProductName", rowData).attr("prodid", '');
 
-        //   rowData.attr("id", tokenid);
-        //   $("#tblInvoiceLine tbody").append(rowData);
+    //     //   rowData.attr("id", tokenid);
+    //     //   $("#tblInvoiceLine tbody").append(rowData);
 
-        //   if ($("#printID").attr("id") != "") {
-        //     var rowData1 = $(".invoice_print tbody>tr:last").clone(true);
-        //     $("#lineProductName", rowData1).text("");
-        //     $("#lineProductDesc", rowData1).text("");
-        //     $("#lineQty", rowData1).text("");
-        //     $("#lineOrdered", rowData1).text("");
-        //     $("#lineUnitPrice", rowData1).text("");
+    //     //   if ($("#printID").attr("id") != "") {
+    //     //     var rowData1 = $(".invoice_print tbody>tr:last").clone(true);
+    //     //     $("#lineProductName", rowData1).text("");
+    //     //     $("#lineProductDesc", rowData1).text("");
+    //     //     $("#lineQty", rowData1).text("");
+    //     //     $("#lineOrdered", rowData1).text("");
+    //     //     $("#lineUnitPrice", rowData1).text("");
 
-        //     $("#lineTaxAmount", rowData1).text("");
-        //     $("#lineAmt", rowData1).text("");
-        //     rowData1.attr("id", tokenid);
-        //     $(".invoice_print tbody").append(rowData1);
-        //   }
-        //   setTimeout(function () {
-        //     $("#" + tokenid + " .lineProductName").trigger("click");
-        //   }, 200);
-        // } else {
-        //   $("#tblInvoiceLine tbody tr").each(function (index) {
-        //     var $tblrow = $(this);
-        //     if ($tblrow.find(".lineProductName").val() == "") {
-        //       $tblrow.find(".colProductName").addClass("boldtablealertsborder");
-        //     }
-        //   });
-        // }
+    //     //     $("#lineTaxAmount", rowData1).text("");
+    //     //     $("#lineAmt", rowData1).text("");
+    //     //     rowData1.attr("id", tokenid);
+    //     //     $(".invoice_print tbody").append(rowData1);
+    //     //   }
+    //     //   setTimeout(function () {
+    //     //     $("#" + tokenid + " .lineProductName").trigger("click");
+    //     //   }, 200);
+    //     // } else {
+    //     //   $("#tblInvoiceLine tbody tr").each(function (index) {
+    //     //     var $tblrow = $(this);
+    //     //     if ($tblrow.find(".lineProductName").val() == "") {
+    //     //       $tblrow.find(".colProductName").addClass("boldtablealertsborder");
+    //     //     }
+    //     //   });
+    //     // }
 
-        setTimeout(function() {
-            $("#tblInventoryCheckbox_filter .form-control-sm").focus();
-            $("#tblInventoryCheckbox_filter .form-control-sm").val("");
-            $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
+    //     setTimeout(function() {
+    //         $("#tblInventoryCheckbox_filter .form-control-sm").focus();
+    //         $("#tblInventoryCheckbox_filter .form-control-sm").val("");
+    //         $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
 
-            var datatable = $("#tblInventoryCheckbox").DataTable();
-            datatable.draw();
-            $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
-        }, 500);
-    });
+    //         var datatable = $("#tblInventoryCheckbox").DataTable();
+    //         datatable.draw();
+    //         $("#tblInventoryCheckbox_filter .form-control-sm").trigger("input");
+    //     }, 500);
+    // });
 
     // $(document).on("click", "#tblInventoryCheckbox tbody tr", async function (e) {
     //   $(".colProductName").removeClass("boldtablealertsborder");
@@ -19253,15 +19253,6 @@ Template.appointments.events({
             }
         }
     },
-    "click #btnCreateAppointmentRequest": function(event){
-        $("#appointmentLeaveConfirmModal").modal("hide");
-        $("#customerListModal").modal();
-    },
-    "click #btnCreateLeaveRequest": function(event){
-        $("#appointmentLeaveConfirmModal").modal("hide");
-        // $("#customerListModal").modal();
-		$('#newLeaveRequestModal').modal('show');
-    },
 });
 
 Template.appointments.helpers({
@@ -19322,9 +19313,6 @@ Template.appointments.helpers({
         return Template.instance().appointmentrecords.get();
     },
     accessOnHold: () => {
-        return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
-    },
-    accessStartStopOnly: () => {
         return localStorage.getItem("CloudAppointmentStartStopAccessLevel") || false;
     },
     addAttachment: () => {
