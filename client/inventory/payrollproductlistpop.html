@@ -13,7 +13,7 @@
   -->
               <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
               <div class="card-body p-1 rounded">
-                  <div class="table-responsive">
+                  <!-- <div class="table-responsive"> -->
                       <style>
                           .th.chkBox {
                               width: 2% !important;
@@ -40,6 +40,9 @@
                           .thColBarcode {
                               width: 15% !important;
                           }
+                          th.colCostPrice, th.colSalesPrice, th.colQuantity {
+                              text-align: left!important;
+                          }
                       </style>
                         {{>datatablelist
                             tablename="tblInventoryPayrollService"
@@ -56,7 +59,7 @@
                             showPlusButton = true
                             orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
                         }}
-                  </div>
+                  <!-- </div> -->
               </div>
           </div>
           <!-- <div class="modal-footer"><button class="btn btn-success btnSaveProducts"  id="btnSaveProducts" type="button">Save</button></div> -->

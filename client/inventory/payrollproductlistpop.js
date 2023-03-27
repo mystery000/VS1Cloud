@@ -67,6 +67,7 @@ Template.payrollproductlistpop.onCreated(() => {
 
     templateObject.getDataTableList = function(data) {
         let dataList = [
+            '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.fields.ID+'"></label></div>',
             data.fields.ProductName || '-',  
             data.fields.SalesDescription || '',
             data.fields.BARCODE || '',
@@ -79,12 +80,13 @@ Template.payrollproductlistpop.onCreated(() => {
     }
 
     let headerStructure = [
+        { index: 0, label: "", class: "colChkBox", active: false, display: true, width: "0" },
         { index: 1, label: "Product Name", class: "colProductName", active: true, display: true, width: "50" },
         { index: 2, label: "Sales Description", class: "colSalesDescription", active: true, display: true, width: "150" },
         { index: 3, label: "Barcode", class: "colBarcode", active: true, display: true, width: "70" },
-        { index: 4, label: "Cost Price", class: "colCostPrice", active: true, display: true, width: "100" },
-        { index: 5, label: "Sales Price", class: "colSalesPrice", active: true, display: true, width: "100" },
-        { index: 6, label: "Quantity", class: "colQuantity", active: true, display: true, width: "100" },
+        { index: 4, label: "Cost Price", class: "colCostPrice text-right", active: true, display: true, width: "100" },
+        { index: 5, label: "Sales Price", class: "colSalesPrice text-right", active: true, display: true, width: "100" },
+        { index: 6, label: "Quantity", class: "colQuantity text-right", active: true, display: true, width: "100" },
         { index: 7, label: "Tax Rate", class: "colTaxRate", active: true, display: true, width: "100" },
         { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
     ];
