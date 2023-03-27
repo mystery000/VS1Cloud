@@ -98,25 +98,23 @@ Template.new_invoice.onCreated(function () {
   templateObject.headerfields = new ReactiveVar();
   templateObject.headerbuttons = new ReactiveVar();
 
-  templateObject.currencyData = new ReactiveVar();
-
   function formatDate (date) {
     return moment(date).format('DD/MM/YYYY');
   }
   let transactionheaderfields = [
-    {label: "Sales Date", type:"date", readonly: false, value: formatDate(new Date())},
-    {label: "P.O.Number", type:'default', id: 'ponumber', value: '', readonly: false},
-    {label: 'Terms', type: 'search', id: 'sltTerms', listModalId:'termsList_modal', listModalTemp: 'termlistpop', colName: 'colName', editModalId: 'newTerms_modal', editModalTemp:'newtermspop', editable: true},
-    {label: 'Status', type: 'search', id: 'sltStatus', listModalId:'statusPop_modal', listModalTemp: 'statuspop', colName: 'colStatusName', editModalId: 'newStatusPop_modal', editModalTemp:'newstatuspop', editable: true},
-    {label: 'Reference', type: 'defailt', id:'edtRef', value: '', readonly: false},
-    {label: 'Department', type: 'search', id: 'sltDept', listModalId:'department_modal', listModalTemp: 'departmentpop', colName: 'colDeptName', editModalId: 'newDepartment_modal', editModalTemp:'newdepartmentpop', editable: true},
+      {label: "Sales Date", type:"date", readonly: false, value: formatDate(new Date())},
+      {label: "P.O.Number", type:'default', id: 'ponumber', value: '', readonly: false},
+      {label: 'Terms', type: 'search', id: 'sltTerms', listModalId:'termsList_modal', listModalTemp: 'termlistpop', colName: 'colName', editModalId: 'newTerms_modal', editModalTemp:'newtermspop', editable: true},
+      {label: 'Status', type: 'search', id: 'sltStatus', listModalId:'statusPop_modal', listModalTemp: 'statuspop', colName: 'colStatusName', editModalId: 'newStatusPop_modal', editModalTemp:'newstatuspop', editable: true},
+      {label: 'Reference', type: 'defailt', id:'edtRef', value: '', readonly: false},
+      {label: 'Department', type: 'search', id: 'sltDept', listModalId:'department_modal', listModalTemp: 'departmentpop', colName: 'colDeptName', editModalId: 'newDepartment_modal', editModalTemp:'newdepartmentpop', editable: true},
   ]
   templateObject.headerfields.set(transactionheaderfields);
 
   let transactionheaderbuttons = [
-    {label: "Pay Now", class:'btnTransaction payNow', id:'btnPayNow', bsColor:'success', icon:'dollar-sign'},
-    {label: "Payment", class:'btnTransaction btnMakePayment', id:'btnPayment', bsColor:'primary'},
-    {label: "Copy Invoice", class:'btnTransaction copyInvoice', id:'btnCopyInvoice', bsColor:'primary'}
+      {label: "Pay Now", class:'btnTransaction payNow', id:'btnPayNow', bsColor:'success', icon:'dollar-sign'},
+      {label: "Payment", class:'btnTransaction btnMakePayment', id:'btnPayment', bsColor:'primary'},
+      {label: "Copy Invoice", class:'btnTransaction copyInvoice', id:'btnCopyInvoice', bsColor:'primary'}
   ]
   templateObject.headerbuttons.set(transactionheaderbuttons)
 
@@ -207,23 +205,23 @@ Template.new_invoice.onCreated(function () {
   templateObject.getLastInvoiceData = async function () {
     let lastDepartment = defaultDept || "";
     salesService
-        .getLastInvoiceID()
-        .then(function (data) {
-          let latestInvoiceId;
-          if (data.tinvoice.length > 0) {
-            lastInvoice = data.tinvoice[data.tinvoice.length - 1];
-            latestInvoiceId = lastInvoice.Id;
-          } else {
-            latestInvoiceId = 0;
-          }
-          newInvoiceId = latestInvoiceId + 1;
-          setTimeout(function () {
-            $("#sltDept").val(lastDepartment);
-          }, 50);
-        })
-        .catch(function (err) {
+      .getLastInvoiceID()
+      .then(function (data) {
+        let latestInvoiceId;
+        if (data.tinvoice.length > 0) {
+          lastInvoice = data.tinvoice[data.tinvoice.length - 1];
+          latestInvoiceId = lastInvoice.Id;
+        } else {
+          latestInvoiceId = 0;
+        }
+        newInvoiceId = latestInvoiceId + 1;
+        setTimeout(function () {
           $("#sltDept").val(lastDepartment);
-        });
+        }, 50);
+      })
+      .catch(function (err) {
+        $("#sltDept").val(lastDepartment);
+      });
   };
 
 
@@ -242,8 +240,8 @@ Template.new_invoice.onCreated(function () {
           street3: data.tcustomervs1[i].fields.Street3 || " ",
           suburb: data.tcustomervs1[i].fields.Suburb || " ",
           statecode: data.tcustomervs1[i].fields.State +
-              " " +
-              data.tcustomervs1[i].fields.Postcode || " ",
+            " " +
+            data.tcustomervs1[i].fields.Postcode || " ",
           country: data.tcustomervs1[i].fields.Country || " ",
           termsName: data.tcustomervs1[i].fields.TermsName || "",
           taxCode: data.tcustomervs1[i].fields.TaxCodeName || "E",
@@ -255,10 +253,10 @@ Template.new_invoice.onCreated(function () {
     }
     templateObject.clientrecords.set(clientList);
     if (!(FlowRouter.current().queryParams.id ||
-        FlowRouter.current().queryParams.customerid ||
-        FlowRouter.current().queryParams.copyquid ||
-        FlowRouter.current().queryParams.copyinvid ||
-        FlowRouter.current().queryParams.copysoid)
+      FlowRouter.current().queryParams.customerid ||
+      FlowRouter.current().queryParams.copyquid ||
+      FlowRouter.current().queryParams.copyinvid ||
+      FlowRouter.current().queryParams.copysoid)
     ) {
       setTimeout(function () {
         $("#edtCustomerName").trigger("click");
@@ -268,26 +266,26 @@ Template.new_invoice.onCreated(function () {
 
   templateObject.getAllClients = function () {
     getVS1Data("TCustomerVS1")
-        .then(function (dataObject) {
-          if (dataObject.length === 0) {
-            sideBarService.getAllCustomersDataVS1("All").then(function (data) {
-              templateObject.setClientVS1(data);
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            templateObject.setClientVS1(data);
-          }
-        })
-        .catch(function (err) {
+      .then(function (dataObject) {
+        if (dataObject.length === 0) {
           sideBarService.getAllCustomersDataVS1("All").then(function (data) {
             templateObject.setClientVS1(data);
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          templateObject.setClientVS1(data);
+        }
+      })
+      .catch(function (err) {
+        sideBarService.getAllCustomersDataVS1("All").then(function (data) {
+          templateObject.setClientVS1(data);
         });
+      });
   };
 
   /**
-   *  Should be updated with indexeddb
-   */
+ *  Should be updated with indexeddb
+ */
   templateObject.getOrganisationDetails = function () {
     let account_id = localStorage.getItem("vs1companyStripeID") || "";
     let stripe_fee = localStorage.getItem("vs1companyStripeFeeMethod") || "apply";
@@ -297,33 +295,8 @@ Template.new_invoice.onCreated(function () {
   templateObject.getAllLeadStatuss = function () {
     const statusList = [];
     getVS1Data("TLeadStatusType")
-        .then(function (dataObject) {
-          if (dataObject.length == 0) {
-            salesService.getAllLeadStatus().then(function (data) {
-              for (let i in data.tleadstatustype) {
-                let leadrecordObj = {
-                  orderstatus: data.tleadstatustype[i].TypeName || " ",
-                };
-
-                statusList.push(leadrecordObj);
-              }
-              templateObject.statusrecords.set(statusList);
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.tleadstatustype;
-            for (let i in useData) {
-              let leadrecordObj = {
-                orderstatus: useData[i].TypeName || " ",
-              };
-
-              statusList.push(leadrecordObj);
-            }
-            templateObject.statusrecords.set(statusList);
-          }
-        })
-        .catch(function (err) {
-          const templateObject = Template.instance();
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
           salesService.getAllLeadStatus().then(function (data) {
             for (let i in data.tleadstatustype) {
               let leadrecordObj = {
@@ -334,160 +307,185 @@ Template.new_invoice.onCreated(function () {
             }
             templateObject.statusrecords.set(statusList);
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tleadstatustype;
+          for (let i in useData) {
+            let leadrecordObj = {
+              orderstatus: useData[i].TypeName || " ",
+            };
+
+            statusList.push(leadrecordObj);
+          }
+          templateObject.statusrecords.set(statusList);
+        }
+      })
+      .catch(function (err) {
+        const templateObject = Template.instance();
+        salesService.getAllLeadStatus().then(function (data) {
+          for (let i in data.tleadstatustype) {
+            let leadrecordObj = {
+              orderstatus: data.tleadstatustype[i].TypeName || " ",
+            };
+
+            statusList.push(leadrecordObj);
+          }
+          templateObject.statusrecords.set(statusList);
         });
+      });
   };
   templateObject.getDepartments = function () {
     const deptrecords = [];
     getVS1Data("TDeptClass")
-        .then(function (dataObject) {
-          if (dataObject.length == 0) {
-            salesService.getDepartment().then(function (data) {
-              for (let i in data.tdeptclass) {
-                let deptrecordObj = {
-                  department: data.tdeptclass[i].DeptClassName || " ",
-                };
-                deptrecords.push(deptrecordObj);
-                templateObject.deptrecords.set(deptrecords);
-              }
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.tdeptclass;
-            for (let i in useData) {
-              let deptrecordObj = {
-                department: useData[i].DeptClassName || " ",
-              };
-
-              deptrecords.push(deptrecordObj);
-              templateObject.deptrecords.set(deptrecords);
-            }
-          }
-        })
-        .catch(function (err) {
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
           salesService.getDepartment().then(function (data) {
-            const templateObject = Template.instance()
             for (let i in data.tdeptclass) {
               let deptrecordObj = {
                 department: data.tdeptclass[i].DeptClassName || " ",
               };
-
               deptrecords.push(deptrecordObj);
               templateObject.deptrecords.set(deptrecords);
             }
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tdeptclass;
+          for (let i in useData) {
+            let deptrecordObj = {
+              department: useData[i].DeptClassName || " ",
+            };
+
+            deptrecords.push(deptrecordObj);
+            templateObject.deptrecords.set(deptrecords);
+          }
+        }
+      })
+      .catch(function (err) {
+        salesService.getDepartment().then(function (data) {
+          const templateObject = Template.instance()
+          for (let i in data.tdeptclass) {
+            let deptrecordObj = {
+              department: data.tdeptclass[i].DeptClassName || " ",
+            };
+
+            deptrecords.push(deptrecordObj);
+            templateObject.deptrecords.set(deptrecords);
+          }
         });
+      });
   };
 
   templateObject.getTerms = function () {
     const termrecords = [];
     getVS1Data("TTermsVS1")
-        .then(function (dataObject) {
-          if (dataObject.length == 0) {
-            salesService.getTermVS1().then(function (data) {
-              for (let i in data.ttermsvs1) {
-                let termrecordObj = {
-                  termsname: data.ttermsvs1[i].TermsName || " ",
-                  isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
-                };
-
-                if (data.ttermsvs1[i].isSalesdefault == true) {
-                  localStorage.setItem(
-                      "ERPTermsSales",
-                      data.ttermsvs1[i].TermsName || "COD"
-                  );
-                  templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
-                }
-
-                termrecords.push(termrecordObj);
-                templateObject.termrecords.set(termrecords);
-              }
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.ttermsvs1;
-            for (let i in useData) {
-              let termrecordObj = {
-                termsname: useData[i].TermsName || " ",
-                isSalesdefault: useData[i].isSalesdefault || ""
-              };
-              if (useData[i].isSalesdefault == true) {
-                templateObject.defaultsaleterm.set(useData[i].TermsName);
-              }
-
-              termrecords.push(termrecordObj);
-              templateObject.termrecords.set(termrecords);
-            }
-          }
-        })
-        .catch(function (err) {
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
           salesService.getTermVS1().then(function (data) {
             for (let i in data.ttermsvs1) {
               let termrecordObj = {
                 termsname: data.ttermsvs1[i].TermsName || " ",
                 isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
               };
+
               if (data.ttermsvs1[i].isSalesdefault == true) {
                 localStorage.setItem(
-                    "ERPTermsSales",
-                    data.ttermsvs1[i].TermsName || "COD"
+                  "ERPTermsSales",
+                  data.ttermsvs1[i].TermsName || "COD"
                 );
                 templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
               }
+
               termrecords.push(termrecordObj);
               templateObject.termrecords.set(termrecords);
             }
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.ttermsvs1;
+          for (let i in useData) {
+            let termrecordObj = {
+              termsname: useData[i].TermsName || " ",
+              isSalesdefault: useData[i].isSalesdefault || ""
+            };
+            if (useData[i].isSalesdefault == true) {
+              templateObject.defaultsaleterm.set(useData[i].TermsName);
+            }
+
+            termrecords.push(termrecordObj);
+            templateObject.termrecords.set(termrecords);
+          }
+        }
+      })
+      .catch(function (err) {
+        salesService.getTermVS1().then(function (data) {
+          for (let i in data.ttermsvs1) {
+            let termrecordObj = {
+              termsname: data.ttermsvs1[i].TermsName || " ",
+              isSalesdefault: data.ttermsvs1[i].isSalesdefault || ""
+            };
+            if (data.ttermsvs1[i].isSalesdefault == true) {
+              localStorage.setItem(
+                "ERPTermsSales",
+                data.ttermsvs1[i].TermsName || "COD"
+              );
+              templateObject.defaultsaleterm.set(data.ttermsvs1[i].TermsName);
+            }
+            termrecords.push(termrecordObj);
+            templateObject.termrecords.set(termrecords);
+          }
         });
+      });
   };
 
   /**
-   * Should be updated with indexeddb
-   */
+ * Should be updated with indexeddb
+ */
   templateObject.getAllSelectPaymentData = function () {
     let customerName = $("#edtCustomerName").val() || "";
     salesService
-        .getCheckPaymentDetailsByName(customerName)
-        .then(function (data) {
-          const dataTableList = [];
-          for (let i = 0; i < data.tcustomerpayment.length; i++) {
-            let amount =
-                utilityService.modifynegativeCurrencyFormat(
-                    data.tcustomerpayment[i].fields.Amount
-                ) || 0.0;
-            let applied =
-                utilityService.modifynegativeCurrencyFormat(
-                    data.tcustomerpayment[i].fields.Applied
-                ) || 0.0;
-            let balance =
-                utilityService.modifynegativeCurrencyFormat(
-                    data.tcustomerpayment[i].fields.Balance
-                ) || 0.0;
-            var dataList = {
-              id: data.tcustomerpayment[i].fields.ID || "",
-              sortdate: data.tcustomerpayment[i].fields.PaymentDate != "" ?
-                  moment(data.tcustomerpayment[i].fields.PaymentDate).format(
-                      "YYYY/MM/DD"
-                  ) : data.tcustomerpayment[i].fields.PaymentDate,
-              paymentdate: data.tcustomerpayment[i].fields.PaymentDate != "" ?
-                  moment(data.tcustomerpayment[i].fields.PaymentDate).format(
-                      "DD/MM/YYYY"
-                  ) : data.tcustomerpayment[i].fields.PaymentDate,
-              customername: data.tcustomerpayment[i].fields.CompanyName || "",
-              paymentamount: amount || 0.0,
-              applied: applied || 0.0,
-              balance: balance || 0.0,
-              lines: data.tcustomerpayment[i].fields.Lines,
-              bankaccount: data.tcustomerpayment[i].fields.AccountName || "",
-              department: data.tcustomerpayment[i].fields.DeptClassName || "",
-              refno: data.tcustomerpayment[i].fields.ReferenceNo || "",
-              paymentmethod: data.tcustomerpayment[i].fields.PaymentMethodName || "",
-              notes: data.tcustomerpayment[i].fields.Notes || "",
-            };
-            dataTableList.push(dataList);
-          }
-          templateObject.selectedcustomerpayrecords.set(dataTableList);
-        })
-        .catch(function (err) { });
+      .getCheckPaymentDetailsByName(customerName)
+      .then(function (data) {
+        const dataTableList = [];
+        for (let i = 0; i < data.tcustomerpayment.length; i++) {
+          let amount =
+            utilityService.modifynegativeCurrencyFormat(
+              data.tcustomerpayment[i].fields.Amount
+            ) || 0.0;
+          let applied =
+            utilityService.modifynegativeCurrencyFormat(
+              data.tcustomerpayment[i].fields.Applied
+            ) || 0.0;
+          let balance =
+            utilityService.modifynegativeCurrencyFormat(
+              data.tcustomerpayment[i].fields.Balance
+            ) || 0.0;
+          var dataList = {
+            id: data.tcustomerpayment[i].fields.ID || "",
+            sortdate: data.tcustomerpayment[i].fields.PaymentDate != "" ?
+              moment(data.tcustomerpayment[i].fields.PaymentDate).format(
+                "YYYY/MM/DD"
+              ) : data.tcustomerpayment[i].fields.PaymentDate,
+            paymentdate: data.tcustomerpayment[i].fields.PaymentDate != "" ?
+              moment(data.tcustomerpayment[i].fields.PaymentDate).format(
+                "DD/MM/YYYY"
+              ) : data.tcustomerpayment[i].fields.PaymentDate,
+            customername: data.tcustomerpayment[i].fields.CompanyName || "",
+            paymentamount: amount || 0.0,
+            applied: applied || 0.0,
+            balance: balance || 0.0,
+            lines: data.tcustomerpayment[i].fields.Lines,
+            bankaccount: data.tcustomerpayment[i].fields.AccountName || "",
+            department: data.tcustomerpayment[i].fields.DeptClassName || "",
+            refno: data.tcustomerpayment[i].fields.ReferenceNo || "",
+            paymentmethod: data.tcustomerpayment[i].fields.PaymentMethodName || "",
+            notes: data.tcustomerpayment[i].fields.Notes || "",
+          };
+          dataTableList.push(dataList);
+        }
+        templateObject.selectedcustomerpayrecords.set(dataTableList);
+      })
+      .catch(function (err) { });
   };
 
   /**
@@ -524,7 +522,7 @@ Template.new_invoice.onCreated(function () {
       }).then((result) => {
         if (result.value) {
           // if (error === checkResponseError) {
-          // window.open("/", "_self");
+            // window.open("/", "_self");
           // }
         } else if (result.dismiss === "cancel") { }
       });
@@ -541,65 +539,65 @@ Template.new_invoice.onCreated(function () {
     let lineItemsTable = [];
     let currencySymbol = Currency;
     let totalInc = currencySymbol + "" +
-        data.fields.TotalAmountInc.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        });
+      data.fields.TotalAmountInc.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      });
     let totalDiscount = utilityService
-        .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        });
+      .modifynegativeCurrencyFormat(data.fields.TotalDiscount)
+      .toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      });
     let subTotal =
-        currencySymbol +
-        "" +
-        data.fields.TotalAmount.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        });
+      currencySymbol +
+      "" +
+      data.fields.TotalAmount.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      });
     let totalTax =
-        currencySymbol +
-        "" +
-        data.fields.TotalTax.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        });
+      currencySymbol +
+      "" +
+      data.fields.TotalTax.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      });
     let totalBalance = utilityService
-        .modifynegativeCurrencyFormat(data.fields.TotalBalance)
-        .toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        });
+      .modifynegativeCurrencyFormat(data.fields.TotalBalance)
+      .toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      });
 
     let totalPaidAmount =
-        currencySymbol +
-        "" +
-        data.fields.TotalPaid.toLocaleString(undefined, {
-          minimumFractionDigits: 2,
-        });
+      currencySymbol +
+      "" +
+      data.fields.TotalPaid.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+      });
     if (data.fields.Lines != null) {
       if (data.fields.Lines.length) {
         for (let i = 0; i < data.fields.Lines.length; i++) {
           let AmountGbp =
-              currencySymbol +
-              "" +
-              data.fields.Lines[
-                  i
-                  ].fields.TotalLineAmount.toLocaleString(undefined, {
-                minimumFractionDigits: 2,
-              });
+            currencySymbol +
+            "" +
+            data.fields.Lines[
+              i
+            ].fields.TotalLineAmount.toLocaleString(undefined, {
+              minimumFractionDigits: 2,
+            });
           let currencyAmountGbp =
-              currencySymbol +
-              "" +
-              data.fields.Lines[i].fields.TotalLineAmount.toFixed(
-                  2
-              );
+            currencySymbol +
+            "" +
+            data.fields.Lines[i].fields.TotalLineAmount.toFixed(
+              2
+            );
           let TaxTotalGbp =
-              utilityService.modifynegativeCurrencyFormat(
-                  data.fields.Lines[i].fields.LineTaxTotal
-              );
+            utilityService.modifynegativeCurrencyFormat(
+              data.fields.Lines[i].fields.LineTaxTotal
+            );
           let TaxRateGbp = (
-              data.fields.Lines[i].fields.LineTaxRate * 100
+            data.fields.Lines[i].fields.LineTaxRate * 100
           ).toFixed(2);
 
           let SalesLinesCustField1Val = (
-              data.fields.Lines[i].fields.SalesLinesCustField1
+            data.fields.Lines[i].fields.SalesLinesCustField1
           );
 
           let serialno = "";
@@ -622,47 +620,47 @@ Template.new_invoice.onCreated(function () {
             id: data.fields.Lines[i].fields.ID || "",
             item: data.fields.Lines[i].fields.ProductName || "",
             description: data.fields.Lines[i].fields.ProductDescription ||
-                "",
+              "",
             quantity: data.fields.Lines[i].fields.UOMOrderQty || 0,
             qtyordered: data.fields.Lines[i].fields.UOMOrderQty || 0,
             qtyshipped: data.fields.Lines[i].fields.UOMQtyShipped || 0,
             qtybo: data.fields.Lines[i].fields.UOMQtyBackOrder || 0,
             UnitOfMeasure: data.fields.Lines[i].fields.UnitOfMeasure || defaultUOM,
             unitPrice: utilityService
-                .modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.OriginalLinePrice
-                )
-                .toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                }) || 0,
+              .modifynegativeCurrencyFormat(
+                data.fields.Lines[i].fields.OriginalLinePrice
+              )
+              .toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }) || 0,
             unitPriceInc: utilityService
-                .modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.OriginalLinePriceInc
-                )
-                .toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                }) || 0,
+              .modifynegativeCurrencyFormat(
+                data.fields.Lines[i].fields.OriginalLinePriceInc
+              )
+              .toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }) || 0,
             TotalAmt: utilityService
-                .modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.TotalLineAmount
-                )
-                .toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                }) || 0,
+              .modifynegativeCurrencyFormat(
+                data.fields.Lines[i].fields.TotalLineAmount
+              )
+              .toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }) || 0,
             TotalAmtInc: utilityService
-                .modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.TotalLineAmountInc
-                )
-                .toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                }) || 0,
+              .modifynegativeCurrencyFormat(
+                data.fields.Lines[i].fields.TotalLineAmountInc
+              )
+              .toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }) || 0,
             lineCost: utilityService
-                .modifynegativeCurrencyFormat(
-                    data.fields.Lines[i].fields.LineCost
-                )
-                .toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                }) || 0,
+              .modifynegativeCurrencyFormat(
+                data.fields.Lines[i].fields.LineCost
+              )
+              .toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+              }) || 0,
             taxRate: (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2) || 0,
             taxCode: data.fields.Lines[i].fields.LineTaxCode || "",
             curTotalAmt: currencyAmountGbp || currencySymbol + "0",
@@ -698,19 +696,19 @@ Template.new_invoice.onCreated(function () {
         }
       } else {
         let AmountGbp =
-            data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
-                undefined, {
-                  minimumFractionDigits: 2,
-                }
-            );
+          data.fields.Lines.fields.TotalLineAmountInc.toLocaleString(
+            undefined, {
+            minimumFractionDigits: 2,
+          }
+          );
         let currencyAmountGbp =
-            currencySymbol +
-            "" +
-            data.fields.Lines.fields.TotalLineAmount.toFixed(2);
+          currencySymbol +
+          "" +
+          data.fields.Lines.fields.TotalLineAmount.toFixed(2);
         let TaxTotalGbp =
-            utilityService.modifynegativeCurrencyFormat(
-                data.fields.Lines.fields.LineTaxTotal
-            );
+          utilityService.modifynegativeCurrencyFormat(
+            data.fields.Lines.fields.LineTaxTotal
+          );
         let TaxRateGbp = (data.fields.Lines.fields.LineTaxRate * 100).toFixed(2);
         lineItemObj = {
           lineID: Random.id(),
@@ -780,11 +778,10 @@ Template.new_invoice.onCreated(function () {
     $("#edtCustomerName").val(data.fields.CustomerName);
     $("#sltStatus").val(data.fields.SalesStatus);
     $("#sltDept").val(data.fields.SaleClassName);
-    $(".sltCurrency").val(data.fields.ForeignExchangeCode);
+    $("#sltCurrency").val(data.fields.ForeignExchangeCode);
     FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
-    //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
-    $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
+    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
     $("#sltTerms").val(data.fields.TermsName);
     templateObject.CleintName.set(data.fields.CustomerName);
 
@@ -838,15 +835,15 @@ Template.new_invoice.onCreated(function () {
         $tblrow.find("td").attr("disabled", "disabled");
         $tblrow.find("td").css("background-color", "#eaecf4");
         $tblrow
-            .find("td .table-remove")
-            .removeClass("btnRemove");
+          .find("td .table-remove")
+          .removeClass("btnRemove");
       });
     }
     templateObject.invoicerecord.set(invoicerecord);
 
     templateObject.selectedCurrency.set(invoicerecord.currency);
     templateObject.inputSelectedCurrency.set(
-        invoicerecord.currency
+      invoicerecord.currency
     );
   }
 
@@ -1177,24 +1174,24 @@ Template.new_invoice.onCreated(function () {
 
     $("#templatePreviewModal #subtotal_total").text("Sub total");
     $("#templatePreviewModal #subtotal_totalPrint").text(
-        object_invoce[0]["subtotal"]
+      object_invoce[0]["subtotal"]
     );
 
     $("#templatePreviewModal #grandTotal").text("Grand total");
     $("#templatePreviewModal #totalTax_totalPrint").text(
-        object_invoce[0]["gst"]
+      object_invoce[0]["gst"]
     );
 
     $("#templatePreviewModal #grandTotalPrint").text(
-        object_invoce[0]["total"]
+      object_invoce[0]["total"]
     );
 
     $("#templatePreviewModal #totalBalanceDuePrint").text(
-        object_invoce[0]["bal_due"]
+      object_invoce[0]["bal_due"]
     );
 
     $("#templatePreviewModal #paid_amount").text(
-        object_invoce[0]["paid_amount"]
+      object_invoce[0]["paid_amount"]
     );
   }
 
@@ -1253,16 +1250,16 @@ Template.new_invoice.onCreated(function () {
     }
 
     $("#templatePreviewModal #subtotal_totalPrint2").text(
-        object_invoce[0]["subtotal"]
+      object_invoce[0]["subtotal"]
     );
     $("#templatePreviewModal #grandTotalPrint2").text(
-        object_invoce[0]["total"]
+      object_invoce[0]["total"]
     );
     $("#templatePreviewModal #totalBalanceDuePrint2").text(
-        object_invoce[0]["bal_due"]
+      object_invoce[0]["bal_due"]
     );
     $("#templatePreviewModal #paid_amount2").text(
-        object_invoce[0]["paid_amount"]
+      object_invoce[0]["paid_amount"]
     );
   }
 
@@ -1320,13 +1317,13 @@ Template.new_invoice.onCreated(function () {
     }
 
     $("#templatePreviewModal #subtotal_totalPrint3").text(
-        object_invoce[0]["subtotal"]
+      object_invoce[0]["subtotal"]
     );
     $("#templatePreviewModal #totalTax_totalPrint3").text(
-        object_invoce[0]["gst"]
+      object_invoce[0]["gst"]
     );
     $("#templatePreviewModal #totalBalanceDuePrint3").text(
-        object_invoce[0]["bal_due"]
+      object_invoce[0]["bal_due"]
     );
   }
 
@@ -1382,18 +1379,18 @@ Template.new_invoice.onCreated(function () {
     var customfield3 = $("#edtSaleCustField3").val() || "  ";
 
     var customfieldlabel1 =
-        $(".lblCustomField1").first().text() || "Custom Field 1";
+      $(".lblCustomField1").first().text() || "Custom Field 1";
     var customfieldlabel2 =
-        $(".lblCustomField2").first().text() || "Custom Field 2";
+      $(".lblCustomField2").first().text() || "Custom Field 2";
     var customfieldlabel3 =
-        $(".lblCustomField3").first().text() || "Custom Field 3";
+      $(".lblCustomField3").first().text() || "Custom Field 3";
     let balancedue = $("#totalBalanceDue").html() || 0;
     let tax = $("#subtotal_tax").html() || 0;
     let customer = $("#edtCustomerName").val();
     let name = $("#firstname").val();
     let surname = $("#lastname").val();
     let dept = $("#sltDept").val();
-    let fx = $(".sltCurrency").val();
+    let fx = $("#sltCurrency").val();
     var comment = $("#txaComment").val();
     var subtotal_tax = $("#subtotal_tax").html() || Currency + 0;
     var total_paid = $("#totalPaidAmt").html() || Currency + 0;
@@ -1412,7 +1409,7 @@ Template.new_invoice.onCreated(function () {
       let tddescription = $(this).find('.lineProductDesc').text();
       let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
       if(tdpqa){
-        tddescription += " " + tdpqa;
+          tddescription += " " + tdpqa;
       }
 
       const tdQty = $(this).find('.lineQty').val();
@@ -1426,8 +1423,8 @@ Template.new_invoice.onCreated(function () {
       let qty = targetRow.find(".lineQty").val() || 0;
       let price = targetRow.find(".colUnitPriceExChange").val() || 0;
       const taxDetail = templateObject.taxcodes
-          .get()
-          .find((v) => v.CodeName === targetTaxCode);
+        .get()
+        .find((v) => v.CodeName === targetTaxCode);
 
       if (taxDetail) {
         let priceTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
@@ -1471,61 +1468,61 @@ Template.new_invoice.onCreated(function () {
     stringQuery = "?";
     for (let l = 0; l < lineItems.length; l++) {
       stringQuery =
-          stringQuery +
-          "product" +
-          l +
-          "=" +
-          lineItems[l].description +
-          "&price" +
-          l +
-          "=" +
-          lineItems[l].unitPrice +
-          "&qty" +
-          l +
-          "=" +
-          lineItems[l].quantity +
-          "&";
+        stringQuery +
+        "product" +
+        l +
+        "=" +
+        lineItems[l].description +
+        "&price" +
+        l +
+        "=" +
+        lineItems[l].unitPrice +
+        "&qty" +
+        l +
+        "=" +
+        lineItems[l].quantity +
+        "&";
     }
     stringQuery =
-        stringQuery +
-        "tax=" +
-        tax +
-        "&total=" +
-        grandTotal +
-        "&customer=" +
-        customer +
-        "&name=" +
-        name +
-        "&surname=" +
-        surname +
-        "&quoteid=" +
-        invoice_data.id +
-        "&transid=" +
-        stripe_id +
-        "&feemethod=" +
-        stripe_fee_method +
-        "&company=" +
-        company +
-        "&vs1email=" +
-        vs1User +
-        "&customeremail=" +
-        customerEmail +
-        "&type=Invoice&url=" +
-        window.location.href +
-        "&server=" +
-        erpGet.ERPIPAddress +
-        "&username=" +
-        erpGet.ERPUsername +
-        "&token=" +
-        erpGet.ERPPassword +
-        "&session=" +
-        erpGet.ERPDatabase +
-        "&port=" +
-        erpGet.ERPPort +
-        "&dept=" +
-        dept +
-        "&currency=" +
-        currencyname;
+      stringQuery +
+      "tax=" +
+      tax +
+      "&total=" +
+      grandTotal +
+      "&customer=" +
+      customer +
+      "&name=" +
+      name +
+      "&surname=" +
+      surname +
+      "&quoteid=" +
+      invoice_data.id +
+      "&transid=" +
+      stripe_id +
+      "&feemethod=" +
+      stripe_fee_method +
+      "&company=" +
+      company +
+      "&vs1email=" +
+      vs1User +
+      "&customeremail=" +
+      customerEmail +
+      "&type=Invoice&url=" +
+      window.location.href +
+      "&server=" +
+      erpGet.ERPIPAddress +
+      "&username=" +
+      erpGet.ERPUsername +
+      "&token=" +
+      erpGet.ERPPassword +
+      "&session=" +
+      erpGet.ERPDatabase +
+      "&port=" +
+      erpGet.ERPPort +
+      "&dept=" +
+      dept +
+      "&currency=" +
+      currencyname;
     if (stripe_id != "") {
       $(".linkText").attr("href", stripeGlobalURL + stringQuery);
     } else {
@@ -1569,11 +1566,11 @@ Template.new_invoice.onCreated(function () {
         bal_due: balancedue,
         bsb: Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
         account: Template.new_invoice.__helpers
-            .get("vs1companyBankAccountNo")
-            .call(),
+          .get("vs1companyBankAccountNo")
+          .call(),
         swift: Template.new_invoice.__helpers
-            .get("vs1companyBankSwiftCode")
-            .call(),
+          .get("vs1companyBankSwiftCode")
+          .call(),
         data: array_data,
         customfield1: "NA",
         customfield2: "NA",
@@ -1621,11 +1618,11 @@ Template.new_invoice.onCreated(function () {
         bal_due: balancedue,
         bsb: Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
         account: Template.new_invoice.__helpers
-            .get("vs1companyBankAccountNo")
-            .call(),
+          .get("vs1companyBankAccountNo")
+          .call(),
         swift: Template.new_invoice.__helpers
-            .get("vs1companyBankSwiftCode")
-            .call(),
+          .get("vs1companyBankSwiftCode")
+          .call(),
         data: array_data,
         customfield1: customfield1,
         customfield2: customfield2,
@@ -1673,11 +1670,11 @@ Template.new_invoice.onCreated(function () {
         bal_due: balancedue,
         bsb: Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
         account: Template.new_invoice.__helpers
-            .get("vs1companyBankAccountNo")
-            .call(),
+          .get("vs1companyBankAccountNo")
+          .call(),
         swift: Template.new_invoice.__helpers
-            .get("vs1companyBankSwiftCode")
-            .call(),
+          .get("vs1companyBankSwiftCode")
+          .call(),
         data: array_data,
         customfield1: customfield1,
         customfield2: customfield2,
@@ -1737,18 +1734,18 @@ Template.new_invoice.onCreated(function () {
     var customfield3 = $("#edtSaleCustField3").val() || "  ";
 
     var customfieldlabel1 =
-        $(".lblCustomField1").first().text() || "Custom Field 1";
+      $(".lblCustomField1").first().text() || "Custom Field 1";
     var customfieldlabel2 =
-        $(".lblCustomField2").first().text() || "Custom Field 2";
+      $(".lblCustomField2").first().text() || "Custom Field 2";
     var customfieldlabel3 =
-        $(".lblCustomField3").first().text() || "Custom Field 3";
+      $(".lblCustomField3").first().text() || "Custom Field 3";
     let balancedue = $("#totalBalanceDue").html() || 0;
     let tax = $("#subtotal_tax").html() || 0;
     let customer = $("#edtCustomerName").val();
     let name = $("#firstname").val();
     let surname = $("#lastname").val();
     let dept = $("#sltDept").val();
-    let fx = $(".sltCurrency").val();
+    let fx = $("#sltCurrency").val();
     var comment = $("#txaComment").val();
     var subtotal_tax = $("#subtotal_tax").html() || Currency + 0;
     var total_paid = $("#totalPaidAmt").html() || Currency + 0;
@@ -1798,61 +1795,61 @@ Template.new_invoice.onCreated(function () {
     stringQuery = "?";
     for (let l = 0; l < lineItems.length; l++) {
       stringQuery =
-          stringQuery +
-          "product" +
-          l +
-          "=" +
-          lineItems[l].description +
-          "&price" +
-          l +
-          "=" +
-          lineItems[l].unitPrice +
-          "&qty" +
-          l +
-          "=" +
-          lineItems[l].quantity +
-          "&";
+        stringQuery +
+        "product" +
+        l +
+        "=" +
+        lineItems[l].description +
+        "&price" +
+        l +
+        "=" +
+        lineItems[l].unitPrice +
+        "&qty" +
+        l +
+        "=" +
+        lineItems[l].quantity +
+        "&";
     }
     stringQuery =
-        stringQuery +
-        "tax=" +
-        tax +
-        "&total=" +
-        grandTotal +
-        "&customer=" +
-        customer +
-        "&name=" +
-        name +
-        "&surname=" +
-        surname +
-        "&quoteid=" +
-        invoice_data.id +
-        "&transid=" +
-        stripe_id +
-        "&feemethod=" +
-        stripe_fee_method +
-        "&company=" +
-        company +
-        "&vs1email=" +
-        vs1User +
-        "&customeremail=" +
-        customerEmail +
-        "&type=Invoice&url=" +
-        window.location.href +
-        "&server=" +
-        erpGet.ERPIPAddress +
-        "&username=" +
-        erpGet.ERPUsername +
-        "&token=" +
-        erpGet.ERPPassword +
-        "&session=" +
-        erpGet.ERPDatabase +
-        "&port=" +
-        erpGet.ERPPort +
-        "&dept=" +
-        dept +
-        "&currency=" +
-        currencyname;
+      stringQuery +
+      "tax=" +
+      tax +
+      "&total=" +
+      grandTotal +
+      "&customer=" +
+      customer +
+      "&name=" +
+      name +
+      "&surname=" +
+      surname +
+      "&quoteid=" +
+      invoice_data.id +
+      "&transid=" +
+      stripe_id +
+      "&feemethod=" +
+      stripe_fee_method +
+      "&company=" +
+      company +
+      "&vs1email=" +
+      vs1User +
+      "&customeremail=" +
+      customerEmail +
+      "&type=Invoice&url=" +
+      window.location.href +
+      "&server=" +
+      erpGet.ERPIPAddress +
+      "&username=" +
+      erpGet.ERPUsername +
+      "&token=" +
+      erpGet.ERPPassword +
+      "&session=" +
+      erpGet.ERPDatabase +
+      "&port=" +
+      erpGet.ERPPort +
+      "&dept=" +
+      dept +
+      "&currency=" +
+      currencyname;
     if (stripe_id != "") {
       $(".linkText").attr("href", stripeGlobalURL + stringQuery);
     } else {
@@ -1895,11 +1892,11 @@ Template.new_invoice.onCreated(function () {
         bal_due: balancedue,
         bsb: Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
         account: Template.new_invoice.__helpers
-            .get("vs1companyBankAccountNo")
-            .call(),
+          .get("vs1companyBankAccountNo")
+          .call(),
         swift: Template.new_invoice.__helpers
-            .get("vs1companyBankSwiftCode")
-            .call(),
+          .get("vs1companyBankSwiftCode")
+          .call(),
         data: array_data,
         customfield1: "NA",
         customfield2: "NA",
@@ -1947,11 +1944,11 @@ Template.new_invoice.onCreated(function () {
         bal_due: balancedue,
         bsb: Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
         account: Template.new_invoice.__helpers
-            .get("vs1companyBankAccountNo")
-            .call(),
+          .get("vs1companyBankAccountNo")
+          .call(),
         swift: Template.new_invoice.__helpers
-            .get("vs1companyBankSwiftCode")
-            .call(),
+          .get("vs1companyBankSwiftCode")
+          .call(),
         data: array_data,
         customfield1: customfield1,
         customfield2: customfield2,
@@ -1999,11 +1996,11 @@ Template.new_invoice.onCreated(function () {
         bal_due: balancedue,
         bsb: Template.new_invoice.__helpers.get("vs1companyBankBSB").call(),
         account: Template.new_invoice.__helpers
-            .get("vs1companyBankAccountNo")
-            .call(),
+          .get("vs1companyBankAccountNo")
+          .call(),
         swift: Template.new_invoice.__helpers
-            .get("vs1companyBankSwiftCode")
-            .call(),
+          .get("vs1companyBankSwiftCode")
+          .call(),
         data: array_data,
         customfield1: customfield1,
         customfield2: customfield2,
@@ -2063,11 +2060,11 @@ Template.new_invoice.onCreated(function () {
     var customfield3 = $("#edtSaleCustField3").val() || "  ";
 
     var customfieldlabel1 =
-        $(".lblCustomField1").first().text() || "Custom Field 1";
+      $(".lblCustomField1").first().text() || "Custom Field 1";
     var customfieldlabel2 =
-        $(".lblCustomField2").first().text() || "Custom Field 2";
+      $(".lblCustomField2").first().text() || "Custom Field 2";
     var customfieldlabel3 =
-        $(".lblCustomField3").first().text() || "Custom Field 3";
+      $(".lblCustomField3").first().text() || "Custom Field 3";
     let balancedue = $("#totalBalanceDue").html() || 0;
     let tax = $("#subtotal_tax").html() || 0;
     let customer = $("#edtCustomerName").val();
@@ -2112,61 +2109,61 @@ Template.new_invoice.onCreated(function () {
     stringQuery = "?";
     for (let l = 0; l < lineItems.length; l++) {
       stringQuery =
-          stringQuery +
-          "product" +
-          l +
-          "=" +
-          lineItems[l].description +
-          "&price" +
-          l +
-          "=" +
-          lineItems[l].unitPrice +
-          "&qty" +
-          l +
-          "=" +
-          lineItems[l].quantity +
-          "&";
+        stringQuery +
+        "product" +
+        l +
+        "=" +
+        lineItems[l].description +
+        "&price" +
+        l +
+        "=" +
+        lineItems[l].unitPrice +
+        "&qty" +
+        l +
+        "=" +
+        lineItems[l].quantity +
+        "&";
     }
     stringQuery =
-        stringQuery +
-        "tax=" +
-        tax +
-        "&total=" +
-        grandTotal +
-        "&customer=" +
-        customer +
-        "&name=" +
-        name +
-        "&surname=" +
-        surname +
-        "&quoteid=" +
-        invoice_data.id +
-        "&transid=" +
-        stripe_id +
-        "&feemethod=" +
-        stripe_fee_method +
-        "&company=" +
-        company +
-        "&vs1email=" +
-        vs1User +
-        "&customeremail=" +
-        customerEmail +
-        "&type=Invoice&url=" +
-        window.location.href +
-        "&server=" +
-        erpGet.ERPIPAddress +
-        "&username=" +
-        erpGet.ERPUsername +
-        "&token=" +
-        erpGet.ERPPassword +
-        "&session=" +
-        erpGet.ERPDatabase +
-        "&port=" +
-        erpGet.ERPPort +
-        "&dept=" +
-        dept +
-        "&currency=" +
-        currencyname;
+      stringQuery +
+      "tax=" +
+      tax +
+      "&total=" +
+      grandTotal +
+      "&customer=" +
+      customer +
+      "&name=" +
+      name +
+      "&surname=" +
+      surname +
+      "&quoteid=" +
+      invoice_data.id +
+      "&transid=" +
+      stripe_id +
+      "&feemethod=" +
+      stripe_fee_method +
+      "&company=" +
+      company +
+      "&vs1email=" +
+      vs1User +
+      "&customeremail=" +
+      customerEmail +
+      "&type=Invoice&url=" +
+      window.location.href +
+      "&server=" +
+      erpGet.ERPIPAddress +
+      "&username=" +
+      erpGet.ERPUsername +
+      "&token=" +
+      erpGet.ERPPassword +
+      "&session=" +
+      erpGet.ERPDatabase +
+      "&port=" +
+      erpGet.ERPPort +
+      "&dept=" +
+      dept +
+      "&currency=" +
+      currencyname;
     if (stripe_id != "") {
       $(".linkText").attr("href", stripeGlobalURL + stringQuery);
     } else {
@@ -2386,8 +2383,8 @@ Template.new_invoice.onCreated(function () {
     }
     let file = "Invoice.pdf";
     if (
-        $(".printID").attr("id") != undefined ||
-        $(".printID").attr("id") != ""
+      $(".printID").attr("id") != undefined ||
+      $(".printID").attr("id") != ""
     ) {
       if (template_title == "Invoices") {
         file = "Invoice-" + invoice_data_info.id + ".pdf";
@@ -2416,17 +2413,17 @@ Template.new_invoice.onCreated(function () {
     };
 
     html2pdf()
-        .set(opt)
-        .from(source)
-        .save()
-        .then(function () {
-          $("#html-2-pdfwrapper_new").css("display", "none");
-          $("#html-2-pdfwrapper_invoice").css("display", "none");
-          $("#html-2-pdfwrapper_invoice2").css("display", "none");
-          $("#html-2-pdfwrapper_invoice3").css("display", "none");
-          $("#printModal").modal('hide');
-          LoadingOverlay.hide();
-        });
+      .set(opt)
+      .from(source)
+      .save()
+      .then(function () {
+        $("#html-2-pdfwrapper_new").css("display", "none");
+        $("#html-2-pdfwrapper_invoice").css("display", "none");
+        $("#html-2-pdfwrapper_invoice2").css("display", "none");
+        $("#html-2-pdfwrapper_invoice3").css("display", "none");
+        $("#printModal").modal('hide');
+        LoadingOverlay.hide();
+      });
     return true;
   };
 
@@ -2434,105 +2431,77 @@ Template.new_invoice.onCreated(function () {
     const splashArrayTaxRateList = [];
     const taxCodesList = [];
     getVS1Data("TTaxcodeVS1")
-        .then(function (dataObject) {
-          if (dataObject.length == 0) {
-            salesService.getTaxCodesDetailVS1().then(function (data) {
-              const taxCodes = data.ttaxcodevs1;
-              templateObject.taxcodes.set(taxCodes);
-              for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                let dataList = [
-                  data.ttaxcodevs1[i].Id || "",
-                  data.ttaxcodevs1[i].CodeName || "",
-                  data.ttaxcodevs1[i].Description || "-",
-                  taxRate || 0,
-                ];
-
-                let taxcoderecordObj = {
-                  codename: data.ttaxcodevs1[i].CodeName || " ",
-                  coderate: taxRate || " ",
-                };
-                taxCodesList.push(taxcoderecordObj);
-                splashArrayTaxRateList.push(dataList);
-              }
-              templateObject.taxraterecords.set(taxCodesList);
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.ttaxcodevs1;
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
+          salesService.getTaxCodesDetailVS1().then(function (data) {
             const taxCodes = data.ttaxcodevs1;
             templateObject.taxcodes.set(taxCodes);
-            for (let i = 0; i < useData.length; i++) {
-              let taxRate = (useData[i].Rate * 100).toFixed(2);
-              var dataList = [
-                useData[i].Id || "",
-                useData[i].CodeName || "",
-                useData[i].Description || "-",
+            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+              let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+              let dataList = [
+                data.ttaxcodevs1[i].Id || "",
+                data.ttaxcodevs1[i].CodeName || "",
+                data.ttaxcodevs1[i].Description || "-",
                 taxRate || 0,
               ];
 
               let taxcoderecordObj = {
-                codename: useData[i].CodeName || " ",
+                codename: data.ttaxcodevs1[i].CodeName || " ",
                 coderate: taxRate || " ",
               };
               taxCodesList.push(taxcoderecordObj);
               splashArrayTaxRateList.push(dataList);
             }
             templateObject.taxraterecords.set(taxCodesList);
-          }
-        })
-        .catch(function () {
-          salesService.getTaxCodesDetailVS1().then(function (data) {
-            taxCodes = data.ttaxcodevs1;
-            templateObject.taxcodes.set(taxCodes);
-            for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-              let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-              var dataList = [
-                data.ttaxcodevs1[i].Id || "",
-                data.ttaxcodevs1[i].CodeName || "",
-                data.ttaxcodevs1[i].Description || "-",
-                taxRate || 0,
-              ];
-              splashArrayTaxRateList.push(dataList);
-            }
-            templateObject.taxraterecords.set(taxCodesList);
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.ttaxcodevs1;
+          const taxCodes = data.ttaxcodevs1;
+          templateObject.taxcodes.set(taxCodes);
+          for (let i = 0; i < useData.length; i++) {
+            let taxRate = (useData[i].Rate * 100).toFixed(2);
+            var dataList = [
+              useData[i].Id || "",
+              useData[i].CodeName || "",
+              useData[i].Description || "-",
+              taxRate || 0,
+            ];
+
+            let taxcoderecordObj = {
+              codename: useData[i].CodeName || " ",
+              coderate: taxRate || " ",
+            };
+            taxCodesList.push(taxcoderecordObj);
+            splashArrayTaxRateList.push(dataList);
+          }
+          templateObject.taxraterecords.set(taxCodesList);
+        }
+      })
+      .catch(function () {
+        salesService.getTaxCodesDetailVS1().then(function (data) {
+          taxCodes = data.ttaxcodevs1;
+          templateObject.taxcodes.set(taxCodes);
+          for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+            let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+            var dataList = [
+              data.ttaxcodevs1[i].Id || "",
+              data.ttaxcodevs1[i].CodeName || "",
+              data.ttaxcodevs1[i].Description || "-",
+              taxRate || 0,
+            ];
+            splashArrayTaxRateList.push(dataList);
+          }
+          templateObject.taxraterecords.set(taxCodesList);
         });
+      });
   };
 
   templateObject.getSubTaxCodes = function () {
     let subTaxTableList = [];
     getVS1Data("TSubTaxVS1")
-        .then(function (dataObject) {
-          if (dataObject.length == 0) {
-            taxRateService.getSubTaxCode().then(function (data) {
-              for (let i = 0; i < data.tsubtaxcode.length; i++) {
-                var dataList = {
-                  id: data.tsubtaxcode[i].Id || "",
-                  codename: data.tsubtaxcode[i].Code || "-",
-                  description: data.tsubtaxcode[i].Description || "-",
-                  category: data.tsubtaxcode[i].Category || "-",
-                };
-                subTaxTableList.push(dataList);
-              }
-              templateObject.subtaxcodes.set(subTaxTableList);
-            });
-          } else {
-            let data = JSON.parse(dataObject[0].data);
-            let useData = data.tsubtaxcode;
-            for (let i = 0; i < useData.length; i++) {
-              var dataList = {
-                id: useData[i].Id || "",
-                codename: useData[i].Code || "-",
-                description: useData[i].Description || "-",
-                category: useData[i].Category || "-",
-              };
-              subTaxTableList.push(dataList);
-            }
-            templateObject.subtaxcodes.set(subTaxTableList);
-          }
-        })
-        .catch(function (err) {
+      .then(function (dataObject) {
+        if (dataObject.length == 0) {
           taxRateService.getSubTaxCode().then(function (data) {
             for (let i = 0; i < data.tsubtaxcode.length; i++) {
               var dataList = {
@@ -2545,7 +2514,35 @@ Template.new_invoice.onCreated(function () {
             }
             templateObject.subtaxcodes.set(subTaxTableList);
           });
+        } else {
+          let data = JSON.parse(dataObject[0].data);
+          let useData = data.tsubtaxcode;
+          for (let i = 0; i < useData.length; i++) {
+            var dataList = {
+              id: useData[i].Id || "",
+              codename: useData[i].Code || "-",
+              description: useData[i].Description || "-",
+              category: useData[i].Category || "-",
+            };
+            subTaxTableList.push(dataList);
+          }
+          templateObject.subtaxcodes.set(subTaxTableList);
+        }
+      })
+      .catch(function (err) {
+        taxRateService.getSubTaxCode().then(function (data) {
+          for (let i = 0; i < data.tsubtaxcode.length; i++) {
+            var dataList = {
+              id: data.tsubtaxcode[i].Id || "",
+              codename: data.tsubtaxcode[i].Code || "-",
+              description: data.tsubtaxcode[i].Description || "-",
+              category: data.tsubtaxcode[i].Category || "-",
+            };
+            subTaxTableList.push(dataList);
+          }
+          templateObject.subtaxcodes.set(subTaxTableList);
         });
+      });
   };
 
   // in this function, we'll handle the new line to add
@@ -2606,7 +2603,7 @@ Template.new_invoice.onCreated(function () {
         },
       };
       resolve(
-          html2pdf().set(opt).from(source).toPdf().output("datauristring")
+        html2pdf().set(opt).from(source).toPdf().output("datauristring")
       );
     });
   }
@@ -2627,8 +2624,8 @@ Template.new_invoice.onCreated(function () {
 
     let mailFromName = localStorage.getItem("vs1companyName");
     let mailFrom =
-        localStorage.getItem("VS1OrgEmail") ||
-        localStorage.getItem("VS1AdminUserName");
+      localStorage.getItem("VS1OrgEmail") ||
+      localStorage.getItem("VS1AdminUserName");
     let customerEmailName = $("#edtCustomerName").val();
     let checkEmailData = $("#edtCustomerEmail").val();
     let grandtotal = $("#grandTotal").html();
@@ -2645,318 +2642,318 @@ Template.new_invoice.onCreated(function () {
     const stripeGlobalURL = ""
 
     let mailSubject =
-        "Invoice " +
-        erpInvoiceId +
-        " from " +
-        mailFromName +
-        " for " +
-        customerEmailName;
+      "Invoice " +
+      erpInvoiceId +
+      " from " +
+      mailFromName +
+      " for " +
+      customerEmailName;
     var htmlmailBody =
-        '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-        "        <tr>" +
-        '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-        '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-        '                    <table class="main">' +
-        "                        <tr>" +
-        '                            <td class="wrapper">' +
-        '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-        "                                    <tr>" +
-        '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-        '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
-        erpInvoiceId +
-        " Details</span>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        '                                    <tr style="height: 16px;"></tr>' +
-        "                                    <tr>" +
-        "                                        <td>" +
-        '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-        "                                        </td>" +
-        "                                    </tr>" +
-        '                                    <tr style="height: 48px;"></tr>' +
-        '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-        '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-        '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
-        emailDueDate +
-        "</p>" +
-        '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
-        grandtotal +
-        "</p>" +
-        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-        "                                                <tbody>" +
-        "                                                    <tr>" +
-        '                                                        <td align="center" style="padding-bottom: 15px;">' +
-        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-        "                                                                <tbody>" +
-        "                                                                    <tr>" +
-        '                                                                        <td> <a href="' +
-        stripeGlobalURL +
-        "" +
-        stringQuery +
-        '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-        "                                                                    </tr>" +
-        "                                                                </tbody>" +
-        "                                                            </table>" +
-        "                                                        </td>" +
-        "                                                    </tr>" +
-        "                                                </tbody>" +
-        "                                            </table>" +
-        '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-        "                                        </td>" +
-        "                                    </tr>" +
-        "                                    <tr>" +
-        '                                        <td class="content-block" style="padding: 16px 32px;">' +
-        '                                            <p style="font-size: 18px;">Dear ' +
-        customerEmailName +
-        ",</p>" +
-        '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-        '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-        '                                            <p style="font-size: 18px;">' +
-        mailFromName +
-        "</p>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        '                                    <tr style="background-color: #ededed;">' +
-        '                                        <td class="content-block" style="padding: 16px 32px;">' +
-        '                                            <div style="width: 100%; padding: 16px 0px;">' +
-        '                                                <div style="width: 50%; float: left;">' +
-        '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-        "                                                </div>" +
-        '                                                <div style="width: 50%; float: right;">' +
-        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-        customerEmailName +
-        "</p>" +
-        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-        customerBillingAddress +
-        "</p>" +
-        "                                                </div>" +
-        "                                            </div>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        '                                    <tr style="background-color: #ededed;">' +
-        '                                        <td class="content-block" style="padding: 16px 32px;">' +
-        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-        '                                            <div style="width: 100%; padding: 16px 0px;">' +
-        '                                                <div style="width: 50%; float: left;">' +
-        '                                                    <p style="font-size: 18px;">Terms</p>' +
-        "                                                </div>" +
-        '                                                <div style="width: 50%; float: right;">' +
-        '                                                    <p style="font-size: 16px;">' +
-        customerTerms +
-        "</p>" +
-        "                                                </div>" +
-        "                                            </div>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        "                                    <tr>" +
-        '                                        <td class="content-block" style="padding: 16px 32px;">' +
-        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-        '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-        '                                                <div style="width: 50%; float: left;">' +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-        "                                                </div>" +
-        '                                                <div style="width: 50%; float: right; text-align: right;">' +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-        customerSubtotal +
-        "</p>" +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-        customerTax +
-        "</p>" +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-        customerNett +
-        "</p>" +
-        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-        customerTotal +
-        "</p>" +
-        "                                                </div>" +
-        "                                            </div>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        "                                    <tr>" +
-        '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-        "                                                <tbody>" +
-        "                                                    <tr>" +
-        '                                                        <td align="center">' +
-        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-        "                                                                <tbody>" +
-        "                                                                    <tr>" +
-        '                                                                        <td> <a href="' +
-        stripeGlobalURL +
-        "" +
-        stringQuery +
-        '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-        "                                                                    </tr>" +
-        "                                                                </tbody>" +
-        "                                                            </table>" +
-        "                                                        </td>" +
-        "                                                    </tr>" +
-        "                                                </tbody>" +
-        "                                            </table>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        "                                    <tr>" +
-        '                                        <td class="content-block" style="padding: 16px 32px;">' +
-        '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-        "                                        </td>" +
-        "                                    </tr>" +
-        "                                    <tr>" +
-        "                                        <td>" +
-        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-        "                                                <tbody>" +
-        "                                                    <tr>" +
-        '                                                        <td align="center">' +
-        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-        "                                                                <tbody>" +
-        "                                                                    <tr>" +
-        '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-        "                                                                    </tr>" +
-        "                                                                </tbody>" +
-        "                                                            </table>" +
-        "                                                        </td>" +
-        "                                                    </tr>" +
-        "                                                </tbody>" +
-        "                                            </table>" +
-        "                                        </td>" +
-        "                                    </tr>" +
-        "                                </table>" +
-        "                            </td>" +
-        "                        </tr>" +
-        "                    </table>" +
-        '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-        '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-        "                            <tr>" +
-        '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-        '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
-        mailFromName +
-        "</span>" +
-        "                                    <br>" +
-        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-        "                                </td>" +
-        "                            </tr>" +
-        "                        </table>" +
-        "                    </div>" +
-        "                </div>" +
-        "            </td>" +
-        "        </tr>" +
-        "    </table>";
+      '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+      "        <tr>" +
+      '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+      '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+      '                    <table class="main">' +
+      "                        <tr>" +
+      '                            <td class="wrapper">' +
+      '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+      "                                    <tr>" +
+      '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+      '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
+      erpInvoiceId +
+      " Details</span>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      '                                    <tr style="height: 16px;"></tr>' +
+      "                                    <tr>" +
+      "                                        <td>" +
+      '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+      "                                        </td>" +
+      "                                    </tr>" +
+      '                                    <tr style="height: 48px;"></tr>' +
+      '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+      '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+      '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
+      emailDueDate +
+      "</p>" +
+      '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
+      grandtotal +
+      "</p>" +
+      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+      "                                                <tbody>" +
+      "                                                    <tr>" +
+      '                                                        <td align="center" style="padding-bottom: 15px;">' +
+      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+      "                                                                <tbody>" +
+      "                                                                    <tr>" +
+      '                                                                        <td> <a href="' +
+      stripeGlobalURL +
+      "" +
+      stringQuery +
+      '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+      "                                                                    </tr>" +
+      "                                                                </tbody>" +
+      "                                                            </table>" +
+      "                                                        </td>" +
+      "                                                    </tr>" +
+      "                                                </tbody>" +
+      "                                            </table>" +
+      '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+      "                                        </td>" +
+      "                                    </tr>" +
+      "                                    <tr>" +
+      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+      '                                            <p style="font-size: 18px;">Dear ' +
+      customerEmailName +
+      ",</p>" +
+      '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+      '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+      '                                            <p style="font-size: 18px;">' +
+      mailFromName +
+      "</p>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      '                                    <tr style="background-color: #ededed;">' +
+      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+      '                                            <div style="width: 100%; padding: 16px 0px;">' +
+      '                                                <div style="width: 50%; float: left;">' +
+      '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+      "                                                </div>" +
+      '                                                <div style="width: 50%; float: right;">' +
+      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+      customerEmailName +
+      "</p>" +
+      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+      customerBillingAddress +
+      "</p>" +
+      "                                                </div>" +
+      "                                            </div>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      '                                    <tr style="background-color: #ededed;">' +
+      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+      '                                            <div style="width: 100%; padding: 16px 0px;">' +
+      '                                                <div style="width: 50%; float: left;">' +
+      '                                                    <p style="font-size: 18px;">Terms</p>' +
+      "                                                </div>" +
+      '                                                <div style="width: 50%; float: right;">' +
+      '                                                    <p style="font-size: 16px;">' +
+      customerTerms +
+      "</p>" +
+      "                                                </div>" +
+      "                                            </div>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      "                                    <tr>" +
+      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+      '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+      '                                                <div style="width: 50%; float: left;">' +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+      "                                                </div>" +
+      '                                                <div style="width: 50%; float: right; text-align: right;">' +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+      customerSubtotal +
+      "</p>" +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+      customerTax +
+      "</p>" +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+      customerNett +
+      "</p>" +
+      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+      customerTotal +
+      "</p>" +
+      "                                                </div>" +
+      "                                            </div>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      "                                    <tr>" +
+      '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+      "                                                <tbody>" +
+      "                                                    <tr>" +
+      '                                                        <td align="center">' +
+      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+      "                                                                <tbody>" +
+      "                                                                    <tr>" +
+      '                                                                        <td> <a href="' +
+      stripeGlobalURL +
+      "" +
+      stringQuery +
+      '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+      "                                                                    </tr>" +
+      "                                                                </tbody>" +
+      "                                                            </table>" +
+      "                                                        </td>" +
+      "                                                    </tr>" +
+      "                                                </tbody>" +
+      "                                            </table>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      "                                    <tr>" +
+      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+      '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+      "                                        </td>" +
+      "                                    </tr>" +
+      "                                    <tr>" +
+      "                                        <td>" +
+      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+      "                                                <tbody>" +
+      "                                                    <tr>" +
+      '                                                        <td align="center">' +
+      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+      "                                                                <tbody>" +
+      "                                                                    <tr>" +
+      '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+      "                                                                    </tr>" +
+      "                                                                </tbody>" +
+      "                                                            </table>" +
+      "                                                        </td>" +
+      "                                                    </tr>" +
+      "                                                </tbody>" +
+      "                                            </table>" +
+      "                                        </td>" +
+      "                                    </tr>" +
+      "                                </table>" +
+      "                            </td>" +
+      "                        </tr>" +
+      "                    </table>" +
+      '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+      '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+      "                            <tr>" +
+      '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+      '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
+      mailFromName +
+      "</span>" +
+      "                                    <br>" +
+      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+      "                                </td>" +
+      "                            </tr>" +
+      "                        </table>" +
+      "                    </div>" +
+      "                </div>" +
+      "            </td>" +
+      "        </tr>" +
+      "    </table>";
 
     if (
-        $(".chkEmailCopy").is(":checked") &&
-        $(".chkEmailRep").is(":checked")
+      $(".chkEmailCopy").is(":checked") &&
+      $(".chkEmailRep").is(":checked")
     ) {
       Meteor.call(
-          "sendEmail", {
-            from: "" + mailFromName + " <" + mailFrom + ">",
-            to: checkEmailData,
-            subject: mailSubject,
-            text: "",
-            html: htmlmailBody,
-            attachments: attachment,
-          },
-          function (error, result) {
-            if (error && error.error === "error") {
-            } else {
-              $("#html-Invoice-pdfwrapper").css("display", "none");
-              swal({
-                title: "SUCCESS",
-                text: "Email Sent To Customer: " + checkEmailData + " ",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-              }).then((result) => {
-              });
-            }
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: checkEmailData,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+      },
+        function (error, result) {
+          if (error && error.error === "error") {
+          } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+              title: "SUCCESS",
+              text: "Email Sent To Customer: " + checkEmailData + " ",
+              type: "success",
+              showCancelButton: false,
+              confirmButtonText: "OK",
+            }).then((result) => {
+            });
           }
+        }
       );
 
       Meteor.call(
-          "sendEmail", {
-            from: "" + mailFromName + " <" + mailFrom + ">",
-            to: mailFrom,
-            subject: mailSubject,
-            text: "",
-            html: htmlmailBody,
-            attachments: attachment,
-          },
-          function (error, result) {
-            if (error && error.error === "error") {
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: mailFrom,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+      },
+        function (error, result) {
+          if (error && error.error === "error") {
 
-            } else {
-              $("#html-Invoice-pdfwrapper").css("display", "none");
-              swal({
-                title: "SUCCESS",
-                text: "Email Sent To Customer: " +
-                    checkEmailData +
-                    " and User: " +
-                    mailFrom +
-                    "",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-              }).then((result) => {
-                if (result.value) {
-                  window.open(url, "_self");
-                } else if (result.dismiss === "cancel") { }
-              });
-            }
+          } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+              title: "SUCCESS",
+              text: "Email Sent To Customer: " +
+                checkEmailData +
+                " and User: " +
+                mailFrom +
+                "",
+              type: "success",
+              showCancelButton: false,
+              confirmButtonText: "OK",
+            }).then((result) => {
+              if (result.value) {
+                window.open(url, "_self");
+              } else if (result.dismiss === "cancel") { }
+            });
           }
+        }
       );
     } else if ($(".chkEmailCopy").is(":checked") || isforced) {
       Meteor.call(
-          "sendEmail", {
-            from: "" + mailFromName + " <" + mailFrom + ">",
-            to: checkEmailData,
-            subject: mailSubject,
-            text: "",
-            html: htmlmailBody,
-            attachments: attachment,
-          },
-          function (error, result) {
-            if (error && error.error === "error") {
-            } else {
-              $("#html-Invoice-pdfwrapper").css("display", "none");
-              swal({
-                title: "SUCCESS",
-                text: "Email Sent To Customer: " + checkEmailData + " ",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-              }).then((result) => {
-              });
-            }
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: checkEmailData,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+      },
+        function (error, result) {
+          if (error && error.error === "error") {
+          } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+              title: "SUCCESS",
+              text: "Email Sent To Customer: " + checkEmailData + " ",
+              type: "success",
+              showCancelButton: false,
+              confirmButtonText: "OK",
+            }).then((result) => {
+            });
           }
+        }
       );
     } else if ($(".chkEmailRep").is(":checked")) {
       Meteor.call(
-          "sendEmail", {
-            from: "" + mailFromName + " <" + mailFrom + ">",
-            to: mailFrom,
-            subject: mailSubject,
-            text: "",
-            html: htmlmailBody,
-            attachments: attachment,
-          },
-          function (error, result) {
-            if (error && error.error === "error") {
-            } else {
-              $("#html-Invoice-pdfwrapper").css("display", "none");
-              swal({
-                title: "SUCCESS",
-                text: "Email Sent To User: " + mailFrom + " ",
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "OK",
-              });
-            }
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: mailFrom,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+      },
+        function (error, result) {
+          if (error && error.error === "error") {
+          } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+              title: "SUCCESS",
+              text: "Email Sent To User: " + mailFrom + " ",
+              type: "success",
+              showCancelButton: false,
+              confirmButtonText: "OK",
+            });
           }
+        }
       );
     } else {
       // window.open(url, "_self");
@@ -2970,11 +2967,11 @@ Template.new_invoice.onCreated(function () {
     let lineItemObjForm = {};
     var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
     let saleDate =
-        saledateTime.getFullYear() +
-        "-" +
-        (saledateTime.getMonth() + 1) +
-        "-" +
-        saledateTime.getDate();
+      saledateTime.getFullYear() +
+      "-" +
+      (saledateTime.getMonth() + 1) +
+      "-" +
+      saledateTime.getDate();
     let checkBackOrder = templateObject.includeBOnShippedQty.get();
     $("#tblInvoiceLine > tbody > tr").each(function () {
       var lineID = this.id;
@@ -3063,7 +3060,7 @@ Template.new_invoice.onCreated(function () {
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
     let uploadedItems = templateObject.uploadedFiles.get();
-    var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
     let ForeignExchangeRate = $('#exchange_rate').val() || 0;
     var objDetails = "";
     let termname = $('#sltTerms').val() || '';
@@ -3133,7 +3130,7 @@ Template.new_invoice.onCreated(function () {
       $("#html-2-pdfwrapper").css("display", "block");
       var invoices = $('input[name="Invoices"]:checked').val();
       var invoices_back_order = $(
-          'input[name="Invoice Back Orders"]:checked'
+        'input[name="Invoice Back Orders"]:checked'
       ).val();
       var delivery_docket = $('input[name="Delivery Docket"]:checked').val();
       let emid = localStorage.getItem("mySessionEmployeeLoggedID");
@@ -3146,14 +3143,14 @@ Template.new_invoice.onCreated(function () {
 
       $(".pdfCustomerName").html($("#edtCustomerName").val());
       $(".pdfCustomerAddress").html(
-          $("#txabillingAddress")
-              .val()
-              .replace(/[\r\n]/g, "<br />")
+        $("#txabillingAddress")
+          .val()
+          .replace(/[\r\n]/g, "<br />")
       );
       $("#printcomment").html(
-          $("#txaComment")
-              .val()
-              .replace(/[\r\n]/g, "<br />")
+        $("#txaComment")
+          .val()
+          .replace(/[\r\n]/g, "<br />")
       );
       var ponumber = $("#ponumber").val() || ".";
       $(".po").text(ponumber);
@@ -3161,21 +3158,21 @@ Template.new_invoice.onCreated(function () {
       var invoice_type = FlowRouter.current().queryParams.type;
       if (invoice_type == "bo") {
         if (
-            $("#print_Invoices_back_orders").is(":checked") ||
-            $("#print_Invoices_back_orders_second").is(":checked")
+          $("#print_Invoices_back_orders").is(":checked") ||
+          $("#print_Invoices_back_orders_second").is(":checked")
         ) {
           printTemplate.push("Invoice Back Orders");
         }
       } else {
         if (
-            $("#print_invoice").is(":checked") ||
-            $("#print_invoice_second").is(":checked")
+          $("#print_invoice").is(":checked") ||
+          $("#print_invoice_second").is(":checked")
         ) {
           printTemplate.push("Invoices");
         }
         if (
-            $("#print_delivery_docket").is(":checked") ||
-            $("#print_delivery_docket_second").is(":checked")
+          $("#print_delivery_docket").is(":checked") ||
+          $("#print_delivery_docket_second").is(":checked")
         ) {
           printTemplate.push("Delivery Docket");
         }
@@ -3192,17 +3189,17 @@ Template.new_invoice.onCreated(function () {
             template_number = $("input[name=Invoices]:checked").val();
           } else if (printTemplate[i] == "Delivery Docket") {
             template_number = $(
-                'input[name="Delivery Docket"]:checked'
+              'input[name="Delivery Docket"]:checked'
             ).val();
           } else if (printTemplate[i] == "Invoice Back Orders") {
             template_number = $(
-                'input[name="Invoice Back Orders"]:checked'
+              'input[name="Invoice Back Orders"]:checked'
             ).val();
           } else { }
 
           let result = await templateObject.exportSalesToPdf(
-              printTemplate[i],
-              template_number
+            printTemplate[i],
+            template_number
           );
           if (result == true) { }
         }
@@ -3228,58 +3225,13 @@ Template.new_invoice.onCreated(function () {
 
     }, delayTimeAfterSound);
   }
-  templateObject.getCurrencies = async function () {
-    let currencyData = [];
-    let dataObject = await getVS1Data("TCurrencyList");
-    if (dataObject.length == 0) {
-      taxRateService.getCurrencies().then(function (data) {
-        for (let i in data.tcurrencylist) {
-          let currencyObj = {
-            id: data.tcurrencylist[i].Id || "",
-            currency: data.tcurrencylist[i].Currency || "",
-            currencySellRate: data.tcurrencylist[i].SellRate || "",
-            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
-            currencyCode: data.tcurrencylist[i].Code || "",
-          };
 
-          currencyData.push(currencyObj);
-        }
-        templateObject.currencyData.set(currencyData);
-      });
-    } else {
-      let data = JSON.parse(dataObject[0].data);
-      let useData = data.tcurrencylist;
-      for (let i in useData) {
-        let currencyObj = {
-          id: data.tcurrencylist[i].Id || "",
-          currency: data.tcurrencylist[i].Currency || "",
-          currencySellRate: data.tcurrencylist[i].SellRate || "",
-          currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
-          currencyCode: data.tcurrencylist[i].Code || "",
-        };
-
-        currencyData.push(currencyObj)
-      }
-      templateObject.currencyData.set(currencyData);
-    }
-  }
-
-  templateObject.getCurrencyRate = (currency, type) => {
-    let currencyData = templateObject.currencyData.get();
-    for(let i = 0; i <currencyData.length; i++) {
-      if(currencyData[i].currencyCode == currency) {
-        if (type == 0) return currencyData[i].currencySellRate;
-        else return currencyData[i].currencyBuyRate;
-      }
-    };
-  };
 });
 
 Template.new_invoice.onRendered(function () {
 
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
-  templateObject.getCurrencies();
 
   templateObject.hasFollowings = async function() {
     let salesService = new SalesBoardService();
@@ -3287,10 +3239,10 @@ Template.new_invoice.onRendered(function () {
     var getso_id = url.split('?id=');
     var currentInvoice = getso_id[getso_id.length - 1];
     if (getso_id[1]) {
-      currentInvoice = parseInt(currentInvoice);
-      var quoteData = await salesService.getOneInvoicedataEx(currentInvoice);
-      var isRepeated = quoteData.fields.RepeatedFrom;
-      templateObject.hasFollow.set(isRepeated);
+        currentInvoice = parseInt(currentInvoice);
+        var quoteData = await salesService.getOneInvoicedataEx(currentInvoice);
+        var isRepeated = quoteData.fields.RepeatedFrom;
+        templateObject.hasFollow.set(isRepeated);
     }
   }
   templateObject.hasFollowings();
@@ -3310,8 +3262,8 @@ Template.new_invoice.onRendered(function () {
   templateObject.getTerms();
 
   if (
-      FlowRouter.current().queryParams.id ||
-      FlowRouter.current().queryParams.customerid
+    FlowRouter.current().queryParams.id ||
+    FlowRouter.current().queryParams.customerid
   ) {
     templateObject.getAllSelectPaymentData();
   } else {
@@ -3495,17 +3447,17 @@ Template.new_invoice.onRendered(function () {
   }
 
   if (
-      $(".printID").attr("id") == undefined ||
-      $(".printID").attr("id") != undefined ||
-      $(".printID").attr("id") != ""
+    $(".printID").attr("id") == undefined ||
+    $(".printID").attr("id") != undefined ||
+    $(".printID").attr("id") != ""
   ) {
     var duedate = new Date();
     let dueDate =
-        ("0" + duedate.getDate()).slice(-2) +
-        "/" +
-        ("0" + (duedate.getMonth() + 1)).slice(-2) +
-        "/" +
-        duedate.getFullYear();
+      ("0" + duedate.getDate()).slice(-2) +
+      "/" +
+      ("0" + (duedate.getMonth() + 1)).slice(-2) +
+      "/" +
+      duedate.getFullYear();
     $(".due").text(dueDate);
   }
 
@@ -3529,8 +3481,8 @@ Template.new_invoice.onRendered(function () {
       $("#" + selectLineID + " .lineTaxRate").text(lineTaxRate || 0);
       $("#" + selectLineID + " .lineTaxCode").val(lineTaxCode);
       if (
-          $(".printID").attr("id") != undefined ||
-          $(".printID").attr("id") != ""
+        $(".printID").attr("id") != undefined ||
+        $(".printID").attr("id") != ""
       ) {
         $("#" + selectLineID + " #lineTaxCode").text(lineTaxCode);
       }
@@ -3570,39 +3522,39 @@ Template.new_invoice.onRendered(function () {
           if (!isNaN(discountTotal)) {
             subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
             document.getElementById("subtotal_discount").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
           }
           $tblrow
-              .find(".lineTaxAmount")
-              .text(
-                  utilityService.modifynegativeCurrencyFormat(
-                      taxTotalWithDiscountTotalLine
-                  )
-              );
+            .find(".lineTaxAmount")
+            .text(
+              utilityService.modifynegativeCurrencyFormat(
+                taxTotalWithDiscountTotalLine
+              )
+            );
 
           let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
           let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
           let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
           $tblrow
-              .find(".colUnitPriceExChange")
-              .val(
-                  utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
-              );
+            .find(".colUnitPriceExChange")
+            .val(
+              utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
+            );
           $tblrow
-              .find(".colUnitPriceIncChange")
-              .val(
-                  utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-              );
+            .find(".colUnitPriceIncChange")
+            .val(
+              utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+            );
 
           if (!isNaN(subTotal)) {
             $tblrow
-                .find(".colAmountEx")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+              .find(".colAmountEx")
+              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
             $tblrow
-                .find(".colAmountInc")
-                .text(
-                    utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
-                );
+              .find(".colAmountInc")
+              .text(
+                utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
+              );
             subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
             subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
             document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
@@ -3641,12 +3593,12 @@ Template.new_invoice.onRendered(function () {
         var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
         $printrows
-            .find("#lineTaxAmount")
-            .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+          .find("#lineTaxAmount")
+          .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
         if (!isNaN(subTotal)) {
           $printrows
-              .find("#lineAmt")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+            .find("#lineAmt")
+            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
           subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
           document.getElementById("subtotal_totalPrint").innerHTML = $("#subtotal_total").text();
         }
@@ -3751,286 +3703,286 @@ Template.new_invoice.onRendered(function () {
     });
 
 
-    // $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
-    //     var $earch = $(this);
-    //     var offset = $earch.offset();
-    //     var termsDataName = e.target.value || "";
-    //     $("#edtTermsID").val("");
-    //     if (e.pageX > offset.left + $earch.width() - 8) {
-    //       // X button 16px wide?
-    //       $("#termsListModal").modal("show");
-    //     } else {
-    //       if (termsDataName.replace(/\s/g, "") != "") {
-    //         $("#termModalHeader").text("Edit Terms");
-    //         getVS1Data("TTermsVS1")
-    //           .then(function (dataObject) {
-    //             //edit to test indexdb
-    //             if (dataObject.length == 0) {
-    //               $(".fullScreenSpin").css("display", "inline-block");
-    //               sideBarService.getTermsVS1().then(function (data) {
-    //                 for (let i in data.ttermsvs1) {
-    //                   if (data.ttermsvs1[i].TermsName === termsDataName) {
-    //                     $("#edtTermsID").val(data.ttermsvs1[i].Id);
-    //                     $("#edtDays").val(data.ttermsvs1[i].Days);
-    //                     $("#edtName").val(data.ttermsvs1[i].TermsName);
-    //                     $("#edtDesc").val(data.ttermsvs1[i].Description);
-    //                     if (data.ttermsvs1[i].IsEOM === true) {
-    //                       $("#isEOM").prop("checked", true);
-    //                     } else {
-    //                       $("#isEOM").prop("checked", false);
-    //                     }
-    //                     if (data.ttermsvs1[i].IsEOMPlus === true) {
-    //                       $("#isEOMPlus").prop("checked", true);
-    //                     } else {
-    //                       $("#isEOMPlus").prop("checked", false);
-    //                     }
-    //                     if (data.ttermsvs1[i].isSalesdefault === true) {
-    //                       $("#chkCustomerDef").prop("checked", true);
-    //                     } else {
-    //                       $("#chkCustomerDef").prop("checked", false);
-    //                     }
-    //                     if (data.ttermsvs1[i].isPurchasedefault === true) {
-    //                       $("#chkSupplierDef").prop("checked", true);
-    //                     } else {
-    //                       $("#chkSupplierDef").prop("checked", false);
-    //                     }
+  // $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     var termsDataName = e.target.value || "";
+  //     $("#edtTermsID").val("");
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       // X button 16px wide?
+  //       $("#termsListModal").modal("show");
+  //     } else {
+  //       if (termsDataName.replace(/\s/g, "") != "") {
+  //         $("#termModalHeader").text("Edit Terms");
+  //         getVS1Data("TTermsVS1")
+  //           .then(function (dataObject) {
+  //             //edit to test indexdb
+  //             if (dataObject.length == 0) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService.getTermsVS1().then(function (data) {
+  //                 for (let i in data.ttermsvs1) {
+  //                   if (data.ttermsvs1[i].TermsName === termsDataName) {
+  //                     $("#edtTermsID").val(data.ttermsvs1[i].Id);
+  //                     $("#edtDays").val(data.ttermsvs1[i].Days);
+  //                     $("#edtName").val(data.ttermsvs1[i].TermsName);
+  //                     $("#edtDesc").val(data.ttermsvs1[i].Description);
+  //                     if (data.ttermsvs1[i].IsEOM === true) {
+  //                       $("#isEOM").prop("checked", true);
+  //                     } else {
+  //                       $("#isEOM").prop("checked", false);
+  //                     }
+  //                     if (data.ttermsvs1[i].IsEOMPlus === true) {
+  //                       $("#isEOMPlus").prop("checked", true);
+  //                     } else {
+  //                       $("#isEOMPlus").prop("checked", false);
+  //                     }
+  //                     if (data.ttermsvs1[i].isSalesdefault === true) {
+  //                       $("#chkCustomerDef").prop("checked", true);
+  //                     } else {
+  //                       $("#chkCustomerDef").prop("checked", false);
+  //                     }
+  //                     if (data.ttermsvs1[i].isPurchasedefault === true) {
+  //                       $("#chkSupplierDef").prop("checked", true);
+  //                     } else {
+  //                       $("#chkSupplierDef").prop("checked", false);
+  //                     }
 
-    //                     break;
-    //                   }
-    //                 }
-    //                 $(".fullScreenSpin").css("display", "none");
-    //                 $("#newTermsModal").modal("show");
-    //               });
-    //             } else {
-    //               let data = JSON.parse(dataObject[0].data);
-    //               let useData = data.ttermsvs1;
-    //               for (let i in useData) {
-    //                 if (useData[i].TermsName === termsDataName) {
-    //                   $("#edtTermsID").val(useData[i].Id);
-    //                   $("#edtDays").val(useData[i].Days);
-    //                   $("#edtName").val(useData[i].TermsName);
-    //                   $("#edtDesc").val(useData[i].Description);
-    //                   if (useData[i].IsEOM === true) {
-    //                     $("#isEOM").prop("checked", true);
-    //                   } else {
-    //                     $("#isEOM").prop("checked", false);
-    //                   }
-    //                   if (useData[i].IsEOMPlus === true) {
-    //                     $("#isEOMPlus").prop("checked", true);
-    //                   } else {
-    //                     $("#isEOMPlus").prop("checked", false);
-    //                   }
-    //                   if (useData[i].isSalesdefault === true) {
-    //                     $("#chkCustomerDef").prop("checked", true);
-    //                   } else {
-    //                     $("#chkCustomerDef").prop("checked", false);
-    //                   }
-    //                   if (useData[i].isPurchasedefault === true) {
-    //                     $("#chkSupplierDef").prop("checked", true);
-    //                   } else {
-    //                     $("#chkSupplierDef").prop("checked", false);
-    //                   }
+  //                     break;
+  //                   }
+  //                 }
+  //                 $(".fullScreenSpin").css("display", "none");
+  //                 $("#newTermsModal").modal("show");
+  //               });
+  //             } else {
+  //               let data = JSON.parse(dataObject[0].data);
+  //               let useData = data.ttermsvs1;
+  //               for (let i in useData) {
+  //                 if (useData[i].TermsName === termsDataName) {
+  //                   $("#edtTermsID").val(useData[i].Id);
+  //                   $("#edtDays").val(useData[i].Days);
+  //                   $("#edtName").val(useData[i].TermsName);
+  //                   $("#edtDesc").val(useData[i].Description);
+  //                   if (useData[i].IsEOM === true) {
+  //                     $("#isEOM").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOM").prop("checked", false);
+  //                   }
+  //                   if (useData[i].IsEOMPlus === true) {
+  //                     $("#isEOMPlus").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOMPlus").prop("checked", false);
+  //                   }
+  //                   if (useData[i].isSalesdefault === true) {
+  //                     $("#chkCustomerDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkCustomerDef").prop("checked", false);
+  //                   }
+  //                   if (useData[i].isPurchasedefault === true) {
+  //                     $("#chkSupplierDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkSupplierDef").prop("checked", false);
+  //                   }
 
-    //                   break;
-    //                 }
-    //               }
-    //               $(".fullScreenSpin").css("display", "none");
-    //               $("#newTermsModal").modal("show");
-    //             }
-    //           })
-    //           .catch(function (err) {
-    //             $(".fullScreenSpin").css("display", "inline-block");
-    //             sideBarService.getTermsVS1().then(function (data) {
-    //               for (let i in data.ttermsvs1) {
-    //                 if (data.ttermsvs1[i].TermsName === termsDataName) {
-    //                   $("#edtTermsID").val(data.ttermsvs1[i].Id);
-    //                   $("#edtDays").val(data.ttermsvs1[i].Days);
-    //                   $("#edtName").val(data.ttermsvs1[i].TermsName);
-    //                   $("#edtDesc").val(data.ttermsvs1[i].Description);
-    //                   if (data.ttermsvs1[i].IsEOM === true) {
-    //                     $("#isEOM").prop("checked", true);
-    //                   } else {
-    //                     $("#isEOM").prop("checked", false);
-    //                   }
-    //                   if (data.ttermsvs1[i].IsEOMPlus === true) {
-    //                     $("#isEOMPlus").prop("checked", true);
-    //                   } else {
-    //                     $("#isEOMPlus").prop("checked", false);
-    //                   }
-    //                   if (data.ttermsvs1[i].isSalesdefault === true) {
-    //                     $("#chkCustomerDef").prop("checked", true);
-    //                   } else {
-    //                     $("#chkCustomerDef").prop("checked", false);
-    //                   }
-    //                   if (data.ttermsvs1[i].isPurchasedefault === true) {
-    //                     $("#chkSupplierDef").prop("checked", true);
-    //                   } else {
-    //                     $("#chkSupplierDef").prop("checked", false);
-    //                   }
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newTermsModal").modal("show");
+  //             }
+  //           })
+  //           .catch(function (err) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService.getTermsVS1().then(function (data) {
+  //               for (let i in data.ttermsvs1) {
+  //                 if (data.ttermsvs1[i].TermsName === termsDataName) {
+  //                   $("#edtTermsID").val(data.ttermsvs1[i].Id);
+  //                   $("#edtDays").val(data.ttermsvs1[i].Days);
+  //                   $("#edtName").val(data.ttermsvs1[i].TermsName);
+  //                   $("#edtDesc").val(data.ttermsvs1[i].Description);
+  //                   if (data.ttermsvs1[i].IsEOM === true) {
+  //                     $("#isEOM").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOM").prop("checked", false);
+  //                   }
+  //                   if (data.ttermsvs1[i].IsEOMPlus === true) {
+  //                     $("#isEOMPlus").prop("checked", true);
+  //                   } else {
+  //                     $("#isEOMPlus").prop("checked", false);
+  //                   }
+  //                   if (data.ttermsvs1[i].isSalesdefault === true) {
+  //                     $("#chkCustomerDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkCustomerDef").prop("checked", false);
+  //                   }
+  //                   if (data.ttermsvs1[i].isPurchasedefault === true) {
+  //                     $("#chkSupplierDef").prop("checked", true);
+  //                   } else {
+  //                     $("#chkSupplierDef").prop("checked", false);
+  //                   }
 
-    //                   break;
-    //                 }
-    //               }
-    //               $(".fullScreenSpin").css("display", "none");
-    //               $("#newTermsModal").modal("show");
-    //             });
-    //           });
-    //       } else {
-    //         $("#termsListModal").modal('show');
-    //         $("#termsList_filter .form-control-sm").focus();
-    //         $("#termsList_filter .form-control-sm").val("");
-    //         $("#termsList_filter .form-control-sm").trigger("input");
-    //         var datatable = $("#termsList").DataTable();
-    //         datatable.draw();
-    //         $("#termsList_filter .form-control-sm").trigger("input");
-    //       }
-    //     }
-    //   });
-    // $("#sltDept")
-    //   .editableSelect()
-    //   .on("click.editable-select", function (e, li) {
-    //     var $earch = $(this);
-    //     var offset = $earch.offset();
-    //     var deptDataName = e.target.value || "";
-    //     $("#edtDepartmentID").val("");
-    //     if (e.pageX > offset.left + $earch.width() - 8) {
-    //       // X button 16px wide?
-    //       $("#departmentModal").modal("toggle");
-    //     } else {
-    //       if (deptDataName.replace(/\s/g, "") != "") {
-    //         $("#newDeptHeader").text("Edit Department");
-    //         getVS1Data("TDeptClass")
-    //           .then(function (dataObject) {
-    //             if (dataObject.length == 0) {
-    //               $(".fullScreenSpin").css("display", "inline-block");
-    //               sideBarService.getDepartment().then(function (data) {
-    //                 for (let i = 0; i < data.tdeptclass.length; i++) {
-    //                   if (data.tdeptclass[i].DeptClassName === deptDataName) {
-    //                     $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-    //                     $("#edtNewDeptName").val(
-    //                       data.tdeptclass[i].DeptClassName
-    //                     );
-    //                     $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
-    //                     $("#edtDeptDesc").val(data.tdeptclass[i].Description);
-    //                   }
-    //                 }
-    //                 setTimeout(function () {
-    //                   $(".fullScreenSpin").css("display", "none");
-    //                   $("#newDepartmentModal").modal("toggle");
-    //                 }, 200);
-    //               });
-    //             } else {
-    //               let data = JSON.parse(dataObject[0].data);
-    //               for (let i = 0; i < data.tdeptclass.length; i++) {
-    //                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
-    //                   $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-    //                   $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
-    //                   $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
-    //                   $("#edtDeptDesc").val(data.tdeptclass[i].Description);
-    //                 }
-    //                 break;
-    //               }
-    //               $(".fullScreenSpin").css("display", "none");
-    //               $("#newDepartmentModal").modal("toggle");
-    //             }
-    //           })
-    //           .catch(function (err) {
-    //             $(".fullScreenSpin").css("display", "inline-block");
-    //             sideBarService.getDepartment().then(function (data) {
-    //               for (let i = 0; i < data.tdeptclass.length; i++) {
-    //                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
-    //                   $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-    //                   $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
-    //                   $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
-    //                   $("#edtDeptDesc").val(data.tdeptclass[i].Description);
-    //                 }
-    //                 break;
-    //               }
-    //               $(".fullScreenSpin").css("display", "none");
-    //               $("#newDepartmentModal").modal("toggle");
-    //             });
-    //           });
-    //       } else {
-    //         $("#departmentModal").modal();
-    //         setTimeout(function () {
-    //           $("#departmentList_filter .form-control-sm").focus();
-    //           $("#departmentList_filter .form-control-sm").val("");
-    //           $("#departmentList_filter .form-control-sm").trigger("input");
-    //           var datatable = $("#departmentList").DataTable();
-    //           datatable.draw();
-    //           $("#departmentList_filter .form-control-sm").trigger("input");
-    //         }, 500);
-    //       }
-    //     }
-    //   });
-    // $("#sltStatus")
-    //   .editableSelect()
-    //   .on("click.editable-select", function (e, li) {
-    //     var $earch = $(this);
-    //     var offset = $earch.offset();
-    //     $("#statusId").val("");
-    //     var statusDataName = e.target.value || "";
-    //     if (e.pageX > offset.left + $earch.width() - 8) {
-    //       // X button 16px wide?
-    //       $("#statusPopModal").modal("toggle");
-    //     } else {
-    //       if (statusDataName.replace(/\s/g, "") != "") {
-    //         $("#newStatusHeader").text("Edit Status");
-    //         $("#newStatus").val(statusDataName);
-    //         getVS1Data("TLeadStatusType")
-    //           .then(function (dataObject) {
-    //             if (dataObject.length == 0) {
-    //               $(".fullScreenSpin").css("display", "inline-block");
-    //               sideBarService.getAllLeadStatus().then(function (data) {
-    //                 for (let i in data.tleadstatustype) {
-    //                   if (data.tleadstatustype[i].TypeName === statusDataName) {
-    //                     $("#statusId").val(data.tleadstatustype[i].Id);
-    //                     break;
-    //                   }
-    //                 }
-    //                 $(".fullScreenSpin").css("display", "none");
-    //                 $("#newStatusPopModal").modal("toggle");
-    //               });
-    //             } else {
-    //               let data = JSON.parse(dataObject[0].data);
-    //               let useData = data.tleadstatustype;
-    //               for (let i in useData) {
-    //                 if (useData[i].TypeName === statusDataName) {
-    //                   $("#statusId").val(useData[i].Id);
-    //                   break;
-    //                 }
-    //               }
-    //               $(".fullScreenSpin").css("display", "none");
-    //               $("#newStatusPopModal").modal("toggle");
-    //             }
-    //           })
-    //           .catch(function (err) {
-    //             $(".fullScreenSpin").css("display", "inline-block");
-    //             sideBarService.getAllLeadStatus().then(function (data) {
-    //               for (let i in data.tleadstatustype) {
-    //                 if (data.tleadstatustype[i].TypeName === statusDataName) {
-    //                   $("#statusId").val(data.tleadstatustype[i].Id);
-    //                   break;
-    //                 }
-    //               }
-    //               $(".fullScreenSpin").css("display", "none");
-    //               $("#newStatusPopModal").modal("toggle");
-    //             });
-    //           });
-    //         $(".fullScreenSpin").css("display", "none");
-    //         $("#newStatusPopModal").modal("toggle");
-    //       } else {
-    //         $("#statusPopModal").modal();
-    //         $("#tblStatusPopList_filter .form-control-sm").focus();
-    //         $("#tblStatusPopList_filter .form-control-sm").val("");
-    //         $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-    //         var datatable = $("#tblStatusPopList").DataTable();
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newTermsModal").modal("show");
+  //             });
+  //           });
+  //       } else {
+  //         $("#termsListModal").modal('show');
+  //         $("#termsList_filter .form-control-sm").focus();
+  //         $("#termsList_filter .form-control-sm").val("");
+  //         $("#termsList_filter .form-control-sm").trigger("input");
+  //         var datatable = $("#termsList").DataTable();
+  //         datatable.draw();
+  //         $("#termsList_filter .form-control-sm").trigger("input");
+  //       }
+  //     }
+  //   });
+  // $("#sltDept")
+  //   .editableSelect()
+  //   .on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     var deptDataName = e.target.value || "";
+  //     $("#edtDepartmentID").val("");
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       // X button 16px wide?
+  //       $("#departmentModal").modal("toggle");
+  //     } else {
+  //       if (deptDataName.replace(/\s/g, "") != "") {
+  //         $("#newDeptHeader").text("Edit Department");
+  //         getVS1Data("TDeptClass")
+  //           .then(function (dataObject) {
+  //             if (dataObject.length == 0) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService.getDepartment().then(function (data) {
+  //                 for (let i = 0; i < data.tdeptclass.length; i++) {
+  //                   if (data.tdeptclass[i].DeptClassName === deptDataName) {
+  //                     $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+  //                     $("#edtNewDeptName").val(
+  //                       data.tdeptclass[i].DeptClassName
+  //                     );
+  //                     $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+  //                     $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+  //                   }
+  //                 }
+  //                 setTimeout(function () {
+  //                   $(".fullScreenSpin").css("display", "none");
+  //                   $("#newDepartmentModal").modal("toggle");
+  //                 }, 200);
+  //               });
+  //             } else {
+  //               let data = JSON.parse(dataObject[0].data);
+  //               for (let i = 0; i < data.tdeptclass.length; i++) {
+  //                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
+  //                   $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+  //                   $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
+  //                   $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+  //                   $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+  //                 }
+  //                 break;
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newDepartmentModal").modal("toggle");
+  //             }
+  //           })
+  //           .catch(function (err) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService.getDepartment().then(function (data) {
+  //               for (let i = 0; i < data.tdeptclass.length; i++) {
+  //                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
+  //                   $("#edtDepartmentID").val(data.tdeptclass[i].Id);
+  //                   $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
+  //                   $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
+  //                   $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+  //                 }
+  //                 break;
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newDepartmentModal").modal("toggle");
+  //             });
+  //           });
+  //       } else {
+  //         $("#departmentModal").modal();
+  //         setTimeout(function () {
+  //           $("#departmentList_filter .form-control-sm").focus();
+  //           $("#departmentList_filter .form-control-sm").val("");
+  //           $("#departmentList_filter .form-control-sm").trigger("input");
+  //           var datatable = $("#departmentList").DataTable();
+  //           datatable.draw();
+  //           $("#departmentList_filter .form-control-sm").trigger("input");
+  //         }, 500);
+  //       }
+  //     }
+  //   });
+  // $("#sltStatus")
+  //   .editableSelect()
+  //   .on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     $("#statusId").val("");
+  //     var statusDataName = e.target.value || "";
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       // X button 16px wide?
+  //       $("#statusPopModal").modal("toggle");
+  //     } else {
+  //       if (statusDataName.replace(/\s/g, "") != "") {
+  //         $("#newStatusHeader").text("Edit Status");
+  //         $("#newStatus").val(statusDataName);
+  //         getVS1Data("TLeadStatusType")
+  //           .then(function (dataObject) {
+  //             if (dataObject.length == 0) {
+  //               $(".fullScreenSpin").css("display", "inline-block");
+  //               sideBarService.getAllLeadStatus().then(function (data) {
+  //                 for (let i in data.tleadstatustype) {
+  //                   if (data.tleadstatustype[i].TypeName === statusDataName) {
+  //                     $("#statusId").val(data.tleadstatustype[i].Id);
+  //                     break;
+  //                   }
+  //                 }
+  //                 $(".fullScreenSpin").css("display", "none");
+  //                 $("#newStatusPopModal").modal("toggle");
+  //               });
+  //             } else {
+  //               let data = JSON.parse(dataObject[0].data);
+  //               let useData = data.tleadstatustype;
+  //               for (let i in useData) {
+  //                 if (useData[i].TypeName === statusDataName) {
+  //                   $("#statusId").val(useData[i].Id);
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newStatusPopModal").modal("toggle");
+  //             }
+  //           })
+  //           .catch(function (err) {
+  //             $(".fullScreenSpin").css("display", "inline-block");
+  //             sideBarService.getAllLeadStatus().then(function (data) {
+  //               for (let i in data.tleadstatustype) {
+  //                 if (data.tleadstatustype[i].TypeName === statusDataName) {
+  //                   $("#statusId").val(data.tleadstatustype[i].Id);
+  //                   break;
+  //                 }
+  //               }
+  //               $(".fullScreenSpin").css("display", "none");
+  //               $("#newStatusPopModal").modal("toggle");
+  //             });
+  //           });
+  //         $(".fullScreenSpin").css("display", "none");
+  //         $("#newStatusPopModal").modal("toggle");
+  //       } else {
+  //         $("#statusPopModal").modal();
+  //         $("#tblStatusPopList_filter .form-control-sm").focus();
+  //         $("#tblStatusPopList_filter .form-control-sm").val("");
+  //         $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+  //         var datatable = $("#tblStatusPopList").DataTable();
 
-    //         datatable.draw();
-    //         $("#tblStatusPopList_filter .form-control-sm").trigger("input");
-    //       }
-    //     }
-    //   });
+  //         datatable.draw();
+  //         $("#tblStatusPopList_filter .form-control-sm").trigger("input");
+  //       }
+  //     }
+  //   });
   });
 
   // $(document).on('click', '#edtCustomerName', function(e, li) {
@@ -4573,168 +4525,258 @@ Template.new_invoice.onRendered(function () {
   //   }
   // })
 
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
-    $(".colProductName").removeClass("boldtablealertsborder");
-    let selectLineID = $("#selectLineID").val();
-    let taxcodeList = await templateObject.taxraterecords.get();
-    let customers = await templateObject.clientrecords.get();
-    var table = $(this);
-    var $printrows = $(".invoice_print tbody tr");
-    let utilityService = new UtilityService();
-    let $tblrows = $("#tblInvoiceLine tbody tr");
-    let taxcode1 = "";
+    $(document).on("click", "#tblInventory tbody tr", async function (e) {
+      $(".colProductName").removeClass("boldtablealertsborder");
+      let selectLineID = $("#selectLineID").val();
+      let taxcodeList = await templateObject.taxraterecords.get();
+      let customers = await templateObject.clientrecords.get();
+      var table = $(this);
+      var $printrows = $(".invoice_print tbody tr");
+      let utilityService = new UtilityService();
+      let $tblrows = $("#tblInvoiceLine tbody tr");
+      let taxcode1 = "";
 
-    let selectedCust = $("#edtCustomerName").val();
-    let getCustDetails = "";
-    let lineTaxRate = "";
-    let taxRate = "";
-    if (selectedCust != "") {
-      getCustDetails = customers.filter((customer) => {
-        return customer.customername == selectedCust;
-      });
-    }
+      let selectedCust = $("#edtCustomerName").val();
+      let getCustDetails = "";
+      let lineTaxRate = "";
+      let taxRate = "";
+      if (selectedCust != "") {
+        getCustDetails = customers.filter((customer) => {
+          return customer.customername == selectedCust;
+        });
+      }
 
-    if (getCustDetails.length > 0) {
-      taxRate = taxcodeList.filter((taxrate) => {
-        return taxrate.codename == getCustDetails[0].taxCode || "";
-      });
-      if (taxRate.length > 0) {
-        if (taxRate.codename != "") {
-          lineTaxRate = taxRate[0].codename;
+      if (getCustDetails.length > 0) {
+        taxRate = taxcodeList.filter((taxrate) => {
+          return taxrate.codename == getCustDetails[0].taxCode || "";
+        });
+        if (taxRate.length > 0) {
+          if (taxRate.codename != "") {
+            lineTaxRate = taxRate[0].codename;
+          } else {
+            lineTaxRate = table.find(".taxrate").text();
+          }
         } else {
           lineTaxRate = table.find(".taxrate").text();
         }
-      } else {
-        lineTaxRate = table.find(".taxrate").text();
-      }
 
-      taxcode1 = getCustDetails[0].taxCode || "";
-    } else {
-      var customerTaxCode =
+        taxcode1 = getCustDetails[0].taxCode || "";
+      } else {
+        var customerTaxCode =
           $("#edtCustomerName").attr("custtaxcode").replace(/\s/g, "") || "";
-      taxRate = taxcodeList.filter((taxrate) => {
-        return taxrate.codename == customerTaxCode || "";
-      });
-      if (taxRate.length > 0) {
-        if (taxRate.codename != "") {
-          lineTaxRate = taxRate[0].codename;
+        taxRate = taxcodeList.filter((taxrate) => {
+          return taxrate.codename == customerTaxCode || "";
+        });
+        if (taxRate.length > 0) {
+          if (taxRate.codename != "") {
+            lineTaxRate = taxRate[0].codename;
+          } else {
+            lineTaxRate = table.find(".taxrate").text();
+          }
         } else {
           lineTaxRate = table.find(".taxrate").text();
         }
-      } else {
-        lineTaxRate = table.find(".taxrate").text();
+
+        taxcode1 = customerTaxCode || "";
       }
 
-      taxcode1 = customerTaxCode || "";
-    }
-
-    if (selectLineID) {
-      let lineProductName = table.find(".productName").text();
-      let lineProductDesc = table.find(".productDesc").text();
-      let lineUnitPrice = table.find(".salePrice").text();
-      let lineExtraSellPrice =
+      if (selectLineID) {
+        let lineProductName = table.find(".productName").text();
+        let lineProductDesc = table.find(".productDesc").text();
+        let lineUnitPrice = table.find(".salePrice").text();
+        let lineExtraSellPrice =
           JSON.parse(table.find(".colExtraSellPrice").text()) || null;
-      let getCustomerClientTypeName =
+        let getCustomerClientTypeName =
           $("#edtCustomerUseType").val() || "Default";
-      let getCustomerDiscount =
+        let getCustomerDiscount =
           parseFloat($("#edtCustomerUseDiscount").val()) || 0;
-      let getCustomerProductDiscount = 0;
-      let discountAmount = getCustomerDiscount;
-      if (lineExtraSellPrice != null) {
-        for (let e = 0; e < lineExtraSellPrice.length; e++) {
-          if (
+        let getCustomerProductDiscount = 0;
+        let discountAmount = getCustomerDiscount;
+        if (lineExtraSellPrice != null) {
+          for (let e = 0; e < lineExtraSellPrice.length; e++) {
+            if (
               lineExtraSellPrice[e].fields.ClientTypeName ===
               getCustomerClientTypeName
-          ) {
-            getCustomerProductDiscount =
+            ) {
+              getCustomerProductDiscount =
                 parseFloat(lineExtraSellPrice[e].fields.QtyPercent1) || 0;
-            if (getCustomerProductDiscount > getCustomerDiscount) {
-              discountAmount = getCustomerProductDiscount;
+              if (getCustomerProductDiscount > getCustomerDiscount) {
+                discountAmount = getCustomerProductDiscount;
+              }
+            }
+          }
+        } else {
+          discountAmount = getCustomerDiscount;
+        }
+
+        $("#" + selectLineID + " .lineDiscount").val(discountAmount);
+        let lineAmount = 0;
+        let subGrandTotal = 0;
+        let taxGrandTotal = 0;
+
+        let subDiscountTotal = 0; // New Discount
+        let taxGrandTotalPrint = 0;
+        if (taxcodeList) {
+          for (var i = 0; i < taxcodeList.length; i++) {
+            if (taxcodeList[i].codename == lineTaxRate) {
+              $("#" + selectLineID + " .lineTaxRate").text(
+                taxcodeList[i].coderate
+              );
             }
           }
         }
-      } else {
-        discountAmount = getCustomerDiscount;
-      }
 
-      $("#" + selectLineID + " .lineDiscount").val(discountAmount);
-      let lineAmount = 0;
-      let subGrandTotal = 0;
-      let taxGrandTotal = 0;
+        $("#" + selectLineID + " .lineProductName").val(lineProductName);
+        $("#" + selectLineID + " .lineProductDesc").text(lineProductDesc);
+        $("#" + selectLineID + " .lineOrdered").val(1);
+        $("#" + selectLineID + " .lineQty").val(1);
+        $("#" + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
 
-      let subDiscountTotal = 0; // New Discount
-      let taxGrandTotalPrint = 0;
-      if (taxcodeList) {
-        for (var i = 0; i < taxcodeList.length; i++) {
-          if (taxcodeList[i].codename == lineTaxRate) {
-            $("#" + selectLineID + " .lineTaxRate").text(
-                taxcodeList[i].coderate
-            );
+        if (
+          $(".printID").attr("id") == undefined ||
+          $(".printID").attr("id") != undefined ||
+          $(".printID").attr("id") != ""
+        ) {
+          $("#" + selectLineID + " #lineProductName").text(lineProductName);
+          $("#" + selectLineID + " #lineProductDesc").text(lineProductDesc);
+          $("#" + selectLineID + " #lineOrdered").text(1);
+          $("#" + selectLineID + " #lineQty").text(1);
+          $("#" + selectLineID + " #lineUnitPrice").text(lineUnitPrice);
+        }
+
+        if (lineTaxRate == "NT") {
+          lineTaxRate = "E";
+          $("#" + selectLineID + " .lineTaxCode").val(lineTaxRate);
+          if (
+            $(".printID").attr("id") != undefined ||
+            $(".printID").attr("id") != ""
+          ) {
+            $("#" + selectLineID + " #lineTaxCode").text(lineTaxRate);
+          }
+        } else {
+          $("#" + selectLineID + " .lineTaxCode").val(lineTaxRate);
+          if (
+            $(".printID").attr("id") != undefined ||
+            $(".printID").attr("id") != ""
+          ) {
+            $("#" + selectLineID + " #lineTaxCode").text(lineTaxRate);
           }
         }
-      }
 
-      $("#" + selectLineID + " .lineProductName").val(lineProductName);
-      $("#" + selectLineID + " .lineProductDesc").text(lineProductDesc);
-      $("#" + selectLineID + " .lineOrdered").val(1);
-      $("#" + selectLineID + " .lineQty").val(1);
-      $("#" + selectLineID + " .lineUnitPrice").val(lineUnitPrice);
-
-      if (
-          $(".printID").attr("id") == undefined ||
-          $(".printID").attr("id") != undefined ||
-          $(".printID").attr("id") != ""
-      ) {
-        $("#" + selectLineID + " #lineProductName").text(lineProductName);
-        $("#" + selectLineID + " #lineProductDesc").text(lineProductDesc);
-        $("#" + selectLineID + " #lineOrdered").text(1);
-        $("#" + selectLineID + " #lineQty").text(1);
-        $("#" + selectLineID + " #lineUnitPrice").text(lineUnitPrice);
-      }
-
-      if (lineTaxRate == "NT") {
-        lineTaxRate = "E";
-        $("#" + selectLineID + " .lineTaxCode").val(lineTaxRate);
-        if (
-            $(".printID").attr("id") != undefined ||
-            $(".printID").attr("id") != ""
-        ) {
-          $("#" + selectLineID + " #lineTaxCode").text(lineTaxRate);
-        }
-      } else {
-        $("#" + selectLineID + " .lineTaxCode").val(lineTaxRate);
-        if (
-            $(".printID").attr("id") != undefined ||
-            $(".printID").attr("id") != ""
-        ) {
-          $("#" + selectLineID + " #lineTaxCode").text(lineTaxRate);
-        }
-      }
-
-      lineAmount = 1 * Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
-      $("#" + selectLineID + " .lineAmt").text(
+        lineAmount = 1 * Number(lineUnitPrice.replace(/[^0-9.-]+/g, "")) || 0;
+        $("#" + selectLineID + " .lineAmt").text(
           utilityService.modifynegativeCurrencyFormat(lineAmount)
-      );
-      if (
+        );
+        if (
           $(".printID").attr("id") == undefined ||
           $(".printID").attr("id") != undefined ||
           $(".printID").attr("id") != ""
-      ) {
-        $("#" + selectLineID + " #lineAmt").text(
+        ) {
+          $("#" + selectLineID + " #lineAmt").text(
             utilityService.modifynegativeCurrencyFormat(lineAmount)
-        );
-      }
-      $("#productListModal").modal("toggle");
-      let subGrandTotalNet = 0;
-      let taxGrandTotalNet = 0;
-      $tblrows.each(function (index) {
-        var $tblrow = $(this);
-        let tdproduct = $tblrow.find(".lineProductName").val() || "";
-        if (tdproduct != "") {
-          var qty = $tblrow.find(".lineQty").val() || 0;
-          var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
-          var taxRate = $tblrow.find(".lineTaxCode").val();
+          );
+        }
+        $("#productListModal").modal("toggle");
+        let subGrandTotalNet = 0;
+        let taxGrandTotalNet = 0;
+        $tblrows.each(function (index) {
+          var $tblrow = $(this);
+          let tdproduct = $tblrow.find(".lineProductName").val() || "";
+          if (tdproduct != "") {
+            var qty = $tblrow.find(".lineQty").val() || 0;
+            var price = $tblrow.find(".colUnitPriceExChange").val() || 0;
+            var taxRate = $tblrow.find(".lineTaxCode").val();
+            var taxrateamount = 0;
+            if (taxcodeList) {
+              for (var i = 0; i < taxcodeList.length; i++) {
+                if (taxcodeList[i].codename == taxRate) {
+                  taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
+                }
+              }
+            }
+
+            var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+            var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
+            var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+            let lineTotalAmount = subTotal + taxTotal;
+
+            let lineDiscountTotal = lineDiscountPerc / 100;
+
+            var discountTotal = lineTotalAmount * lineDiscountTotal;
+            var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
+            var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
+            var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
+            var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
+            if (!isNaN(discountTotal)) {
+              subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
+
+              document.getElementById("subtotal_discount").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+            }
+            $tblrow
+              .find(".lineTaxAmount")
+              .text(
+                utilityService.modifynegativeCurrencyFormat(
+                  taxTotalWithDiscountTotalLine
+                )
+              );
+
+            let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
+            let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+            let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
+            $tblrow
+              .find(".colUnitPriceExChange")
+              .val(
+                utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
+              );
+            $tblrow
+              .find(".colUnitPriceIncChange")
+              .val(
+                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+              );
+
+            if (!isNaN(subTotal)) {
+              $tblrow
+                .find(".colAmountEx")
+                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+              $tblrow
+                .find(".colAmountInc")
+                .text(
+                  utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
+                );
+              subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
+              subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
+              document.getElementById("subtotal_total").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            }
+
+            if (!isNaN(taxTotal)) {
+              taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
+              taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
+              document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+            }
+
+            if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+              let GrandTotal = parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+              let GrandTotalNet = parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+              document.getElementById("subtotal_nett").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+              document.getElementById("grandTotal").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+              document.getElementById("balanceDue").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+              document.getElementById("totalBalanceDue").innerHTML =
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            }
+          }
+        });
+
+        $printrows.each(function (index) {
+          var $printrows = $(this);
+          var qty = $printrows.find("#lineQty").text() || 0;
+          var price = $printrows.find("#lineUnitPrice").text() || "0";
           var taxrateamount = 0;
+          var taxRate = $printrows.find("#lineTaxCode").text();
           if (taxcodeList) {
             for (var i = 0; i < taxcodeList.length; i++) {
               if (taxcodeList[i].codename == taxRate) {
@@ -4743,130 +4785,40 @@ Template.new_invoice.onRendered(function () {
             }
           }
 
-          var subTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-          var taxTotal = parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-          var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
-          let lineTotalAmount = subTotal + taxTotal;
-
-          let lineDiscountTotal = lineDiscountPerc / 100;
-
-          var discountTotal = lineTotalAmount * lineDiscountTotal;
-          var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
-          var subTotalWithDiscountTotalLine = subTotal - subTotalWithDiscount || 0;
-          var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
-          var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
-          if (!isNaN(discountTotal)) {
-            subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
-
-            document.getElementById("subtotal_discount").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
-          }
-          $tblrow
-              .find(".lineTaxAmount")
-              .text(
-                  utilityService.modifynegativeCurrencyFormat(
-                      taxTotalWithDiscountTotalLine
-                  )
-              );
-
-          let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
-          let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-          let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
-          $tblrow
-              .find(".colUnitPriceExChange")
-              .val(
-                  utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
-              );
-          $tblrow
-              .find(".colUnitPriceIncChange")
-              .val(
-                  utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-              );
-
-          if (!isNaN(subTotal)) {
-            $tblrow
-                .find(".colAmountEx")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-            $tblrow
-                .find(".colAmountInc")
-                .text(
-                    utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
-                );
-            subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
-            subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
-            document.getElementById("subtotal_total").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
-          }
-
-          if (!isNaN(taxTotal)) {
-            taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ? 0 : taxTotalWithDiscountTotalLine;
-            taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
-            document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
-          }
-
-          if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-            let GrandTotal = parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
-            let GrandTotalNet = parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
-            document.getElementById("subtotal_nett").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
-            document.getElementById("grandTotal").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            document.getElementById("balanceDue").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
-            document.getElementById("totalBalanceDue").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
-          }
-        }
-      });
-
-      $printrows.each(function (index) {
-        var $printrows = $(this);
-        var qty = $printrows.find("#lineQty").text() || 0;
-        var price = $printrows.find("#lineUnitPrice").text() || "0";
-        var taxrateamount = 0;
-        var taxRate = $printrows.find("#lineTaxCode").text();
-        if (taxcodeList) {
-          for (var i = 0; i < taxcodeList.length; i++) {
-            if (taxcodeList[i].codename == taxRate) {
-              taxrateamount = taxcodeList[i].coderate.replace("%", "") / 100;
-            }
-          }
-        }
-
-        var subTotal =
+          var subTotal =
             parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
-        var taxTotal =
+          var taxTotal =
             parseFloat(qty, 10) *
             Number(price.replace(/[^0-9.-]+/g, "")) *
             parseFloat(taxrateamount);
-        $printrows
+          $printrows
             .find("#lineTaxAmount")
             .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-        if (!isNaN(subTotal)) {
-          $printrows
+          if (!isNaN(subTotal)) {
+            $printrows
               .find("#lineAmt")
               .text(utilityService.modifynegativeCurrencyFormat(subTotal));
-          subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-          document.getElementById("subtotal_totalPrint").innerHTML =
+            subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
+            document.getElementById("subtotal_totalPrint").innerHTML =
               $("#subtotal_total").text();
-        }
+          }
 
-        if (!isNaN(taxTotal)) {
-          taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-          document.getElementById("totalTax_totalPrint").innerHTML =
+          if (!isNaN(taxTotal)) {
+            taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
+            document.getElementById("totalTax_totalPrint").innerHTML =
               utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
-        }
-        if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
-          document.getElementById("grandTotalPrint").innerHTML = $("#grandTotal").text();
-          document.getElementById("totalBalanceDuePrint").innerHTML = $("#totalBalanceDue").text();
-        }
-        e.stopImmediatePropagation();
-      });
-    }
+          }
+          if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
+            document.getElementById("grandTotalPrint").innerHTML = $("#grandTotal").text();
+            document.getElementById("totalBalanceDuePrint").innerHTML = $("#totalBalanceDue").text();
+          }
+          e.stopImmediatePropagation();
+        });
+      }
 
-    $("#tblInventory_filter .form-control-sm").val("");
-    $(".fullScreenSpin").css("display", "none");
-  });
+      $("#tblInventory_filter .form-control-sm").val("");
+      $(".fullScreenSpin").css("display", "none");
+    });
 
 });
 
@@ -4929,41 +4881,41 @@ Template.new_invoice.helpers({
   },
   deptrecords: () => {
     return Template.instance()
-        .deptrecords.get()
-        .sort(function (a, b) {
-          if (a.department == "NA") {
-            return 1;
-          } else if (b.department == "NA") {
-            return -1;
-          }
-          return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-        });
+      .deptrecords.get()
+      .sort(function (a, b) {
+        if (a.department == "NA") {
+          return 1;
+        } else if (b.department == "NA") {
+          return -1;
+        }
+        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+      });
   },
   termrecords: () => {
     return Template.instance()
-        .termrecords.get()
-        .sort(function (a, b) {
-          if (a.termsname == "NA") {
-            return 1;
-          } else if (b.termsname == "NA") {
-            return -1;
-          }
-          return a.termsname.toUpperCase() > b.termsname.toUpperCase() ? 1 : -1;
-        });
+      .termrecords.get()
+      .sort(function (a, b) {
+        if (a.termsname == "NA") {
+          return 1;
+        } else if (b.termsname == "NA") {
+          return -1;
+        }
+        return a.termsname.toUpperCase() > b.termsname.toUpperCase() ? 1 : -1;
+      });
   },
   clientrecords: () => {
     return Template.instance()
-        .clientrecords.get()
-        .sort(function (a, b) {
-          if (a.customername == "NA") {
-            return 1;
-          } else if (b.customername == "NA") {
-            return -1;
-          }
-          return a.customername.toUpperCase() > b.customername.toUpperCase() ?
-              1 :
-              -1;
-        });
+      .clientrecords.get()
+      .sort(function (a, b) {
+        if (a.customername == "NA") {
+          return 1;
+        } else if (b.customername == "NA") {
+          return -1;
+        }
+        return a.customername.toUpperCase() > b.customername.toUpperCase() ?
+          1 :
+          -1;
+      });
   },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
@@ -4988,17 +4940,17 @@ Template.new_invoice.helpers({
   },
   statusrecords: () => {
     return Template.instance()
-        .statusrecords.get()
-        .sort(function (a, b) {
-          if (a.orderstatus == "NA") {
-            return 1;
-          } else if (b.orderstatus == "NA") {
-            return -1;
-          }
-          return a.orderstatus.toUpperCase() > b.orderstatus.toUpperCase() ?
-              1 :
-              -1;
-        });
+      .statusrecords.get()
+      .sort(function (a, b) {
+        if (a.orderstatus == "NA") {
+          return 1;
+        } else if (b.orderstatus == "NA") {
+          return -1;
+        }
+        return a.orderstatus.toUpperCase() > b.orderstatus.toUpperCase() ?
+          1 :
+          -1;
+      });
   },
   includeBOnShippedQty: () => {
     return Template.instance().includeBOnShippedQty.get();
@@ -5048,12 +5000,12 @@ Template.new_invoice.helpers({
   isMobileDevices: () => {
     var isMobile = false;
     if (
-        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
-            navigator.userAgent
-        ) ||
-        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
-            navigator.userAgent.substr(0, 4)
-        )
+      /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(
+        navigator.userAgent
+      ) ||
+      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
+        navigator.userAgent.substr(0, 4)
+      )
     ) {
       isMobile = true;
     }
@@ -5070,27 +5022,27 @@ Template.new_invoice.helpers({
 
   productqtyrecords: () => {
     return Template.instance()
-        .productqtyrecords.get()
-        .sort(function (a, b) {
-          if (a.department == "NA") {
-            return 1;
-          } else if (b.department == "NA") {
-            return -1;
-          }
-          return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
-        });
+      .productqtyrecords.get()
+      .sort(function (a, b) {
+        if (a.department == "NA") {
+          return 1;
+        } else if (b.department == "NA") {
+          return -1;
+        }
+        return a.department.toUpperCase() > b.department.toUpperCase() ? 1 : -1;
+      });
   },
   productExtraSell: () => {
     return Template.instance()
-        .productExtraSell.get()
-        .sort(function (a, b) {
-          if (a.clienttype == "NA") {
-            return 1;
-          } else if (b.clienttype == "NA") {
-            return -1;
-          }
-          return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
-        });
+      .productExtraSell.get()
+      .sort(function (a, b) {
+        if (a.clienttype == "NA") {
+          return 1;
+        } else if (b.clienttype == "NA") {
+          return -1;
+        }
+        return a.clienttype.toUpperCase() > b.clienttype.toUpperCase() ? 1 : -1;
+      });
   },
   totaldeptquantity: () => {
     return Template.instance().totaldeptquantity.get();
@@ -5188,21 +5140,21 @@ Template.new_invoice.events({
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
     sideBarService
-        .getAllCustomFields()
-        .then(function (data) {
-          addVS1Data("TCustomFieldList", JSON.stringify(data))
-              .then(function (datareturn) {
-                Meteor._reload.reload();
-              })
-              .catch(function (err) {
-                Meteor._reload.reload();
-              });
-          templateObject.getSalesCustomFieldsList();
-          $(".fullScreenSpin").css("display", "none");
-        })
-        .catch(function (err) {
-          $(".fullScreenSpin").css("display", "none");
-        });
+      .getAllCustomFields()
+      .then(function (data) {
+        addVS1Data("TCustomFieldList", JSON.stringify(data))
+          .then(function (datareturn) {
+            Meteor._reload.reload();
+          })
+          .catch(function (err) {
+            Meteor._reload.reload();
+          });
+        templateObject.getSalesCustomFieldsList();
+        $(".fullScreenSpin").css("display", "none");
+      })
+      .catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
   },
   "click #edtSaleCustField1": function (event) {
     clickedInput = "one";
@@ -5238,7 +5190,7 @@ Template.new_invoice.events({
   "blur .lineProductDesc": function (event) {
     var targetID = $(event.target).closest("tr").attr("id");
     $("#" + targetID + " #lineProductDesc").text(
-        $("#" + targetID + " .lineProductDesc").text()
+      $("#" + targetID + " .lineProductDesc").text()
     );
   },
   "click .payNow": function (event) {
@@ -5281,61 +5233,61 @@ Template.new_invoice.events({
           let dept = $("#sltDept").val();
           for (let l = 0; l < lineItems.length; l++) {
             stringQuery =
-                stringQuery +
-                "product" +
-                l +
-                "=" +
-                lineItems[l].description +
-                "&price" +
-                l +
-                "=" +
-                lineItems[l].unitPrice +
-                "&qty" +
-                l +
-                "=" +
-                lineItems[l].quantity +
-                "&";
+              stringQuery +
+              "product" +
+              l +
+              "=" +
+              lineItems[l].description +
+              "&price" +
+              l +
+              "=" +
+              lineItems[l].unitPrice +
+              "&qty" +
+              l +
+              "=" +
+              lineItems[l].quantity +
+              "&";
           }
           stringQuery =
-              stringQuery +
-              "tax=" +
-              tax +
-              "&total=" +
-              total +
-              "&customer=" +
-              customer +
-              "&name=" +
-              name +
-              "&surname=" +
-              surname +
-              "&quoteid=" +
-              quoteData.id +
-              "&transid=" +
-              stripe_id +
-              "&feemethod=" +
-              stripe_fee_method +
-              "&company=" +
-              company +
-              "&vs1email=" +
-              vs1User +
-              "&customeremail=" +
-              customerEmail +
-              "&type=Invoice&url=" +
-              window.location.href +
-              "&server=" +
-              erpGet.ERPIPAddress +
-              "&username=" +
-              erpGet.ERPUsername +
-              "&token=" +
-              erpGet.ERPPassword +
-              "&session=" +
-              erpGet.ERPDatabase +
-              "&port=" +
-              erpGet.ERPPort +
-              "&dept=" +
-              dept +
-              "&currency=" +
-              currencyname;
+            stringQuery +
+            "tax=" +
+            tax +
+            "&total=" +
+            total +
+            "&customer=" +
+            customer +
+            "&name=" +
+            name +
+            "&surname=" +
+            surname +
+            "&quoteid=" +
+            quoteData.id +
+            "&transid=" +
+            stripe_id +
+            "&feemethod=" +
+            stripe_fee_method +
+            "&company=" +
+            company +
+            "&vs1email=" +
+            vs1User +
+            "&customeremail=" +
+            customerEmail +
+            "&type=Invoice&url=" +
+            window.location.href +
+            "&server=" +
+            erpGet.ERPIPAddress +
+            "&username=" +
+            erpGet.ERPUsername +
+            "&token=" +
+            erpGet.ERPPassword +
+            "&session=" +
+            erpGet.ERPDatabase +
+            "&port=" +
+            erpGet.ERPPort +
+            "&dept=" +
+            dept +
+            "&currency=" +
+            currencyname;
           window.open(stripeGlobalURL + stringQuery, "_self");
         } else {
           swal({
@@ -5355,7 +5307,7 @@ Template.new_invoice.events({
         let surname = $("#edtCustomerEmail").attr("customerlastname");
         let salesService = new SalesBoardService();
         let termname =
-            $("#sltTerms").val() || templateObject.defaultsaleterm.get();
+          $("#sltTerms").val() || templateObject.defaultsaleterm.get();
         if (termname === "") {
           swal({
             title: "Terms has not been selected!",
@@ -5389,11 +5341,11 @@ Template.new_invoice.events({
           var erpGet = erpDb();
           var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
           let saleDate =
-              saledateTime.getFullYear() +
-              "-" +
-              (saledateTime.getMonth() + 1) +
-              "-" +
-              saledateTime.getDate();
+            saledateTime.getFullYear() +
+            "-" +
+            (saledateTime.getMonth() + 1) +
+            "-" +
+            saledateTime.getDate();
           let checkBackOrder = templateObject.includeBOnShippedQty.get();
           $("#tblInvoiceLine > tbody > tr").each(function () {
             var lineID = this.id;
@@ -5480,7 +5432,7 @@ Template.new_invoice.events({
           var getso_id = url.split("?id=");
           var currentInvoice = getso_id[getso_id.length - 1];
           let uploadedItems = templateObject.uploadedFiles.get();
-          var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+          var currencyCode = $("#sltCurrency").val() || CountryAbbr;
           let ForeignExchangeRate = $('#exchange_rate').val() || 0;
           var objDetails = "";
           if (getso_id[1]) {
@@ -5536,497 +5488,497 @@ Template.new_invoice.events({
           }
 
           salesService
-              .saveInvoiceEx(objDetails)
-              .then(function (objDetails) {
-                let company = localStorage.getItem("vs1companyName");
-                let vs1User = localStorage.getItem("mySession");
-                let customerEmail = $("#edtCustomerEmail").val() || "";
-                let currencyname = CountryAbbr.toLowerCase();
-                let stringQuery = "?";
-                for (let l = 0; l < lineItems.length; l++) {
-                  stringQuery =
-                      stringQuery +
-                      "product" +
-                      l +
-                      "=" +
-                      lineItems[l].description +
-                      "&price" +
-                      l +
-                      "=" +
-                      lineItems[l].unitPrice +
-                      "&qty" +
-                      l +
-                      "=" +
-                      lineItems[l].quantity +
-                      "&";
-                }
+            .saveInvoiceEx(objDetails)
+            .then(function (objDetails) {
+              let company = localStorage.getItem("vs1companyName");
+              let vs1User = localStorage.getItem("mySession");
+              let customerEmail = $("#edtCustomerEmail").val() || "";
+              let currencyname = CountryAbbr.toLowerCase();
+              let stringQuery = "?";
+              for (let l = 0; l < lineItems.length; l++) {
                 stringQuery =
-                    stringQuery +
-                    "tax=" +
-                    tax +
-                    "&total=" +
-                    total +
-                    "&customer=" +
-                    customer +
-                    "&name=" +
-                    name +
-                    "&surname=" +
-                    surname +
-                    "&quoteid=" +
-                    objDetails.fields.ID +
-                    "&transid=" +
-                    stripe_id +
-                    "&feemethod=" +
-                    stripe_fee_method +
-                    "&company=" +
-                    company +
-                    "&vs1email=" +
-                    vs1User +
-                    "&customeremail=" +
-                    customerEmail +
-                    "&type=Invoice&url=" +
-                    window.location.href +
-                    "&server=" +
-                    erpGet.ERPIPAddress +
-                    "&username=" +
-                    erpGet.ERPUsername +
-                    "&token=" +
-                    erpGet.ERPPassword +
-                    "&session=" +
-                    erpGet.ERPDatabase +
-                    "&port=" +
-                    erpGet.ERPPort +
-                    "&dept=" +
-                    departement +
-                    "&currency=" +
-                    currencyname;
-                let url = stripeGlobalURL + stringQuery;
-                $("#html-Invoice-pdfwrapper").css("display", "block");
-                $(".pdfCustomerName").html($("#edtCustomerName").val());
-                $(".pdfCustomerAddress").html(
-                    $("#txabillingAddress")
-                        .val()
-                        .replace(/[\r\n]/g, "<br />")
-                );
+                  stringQuery +
+                  "product" +
+                  l +
+                  "=" +
+                  lineItems[l].description +
+                  "&price" +
+                  l +
+                  "=" +
+                  lineItems[l].unitPrice +
+                  "&qty" +
+                  l +
+                  "=" +
+                  lineItems[l].quantity +
+                  "&";
+              }
+              stringQuery =
+                stringQuery +
+                "tax=" +
+                tax +
+                "&total=" +
+                total +
+                "&customer=" +
+                customer +
+                "&name=" +
+                name +
+                "&surname=" +
+                surname +
+                "&quoteid=" +
+                objDetails.fields.ID +
+                "&transid=" +
+                stripe_id +
+                "&feemethod=" +
+                stripe_fee_method +
+                "&company=" +
+                company +
+                "&vs1email=" +
+                vs1User +
+                "&customeremail=" +
+                customerEmail +
+                "&type=Invoice&url=" +
+                window.location.href +
+                "&server=" +
+                erpGet.ERPIPAddress +
+                "&username=" +
+                erpGet.ERPUsername +
+                "&token=" +
+                erpGet.ERPPassword +
+                "&session=" +
+                erpGet.ERPDatabase +
+                "&port=" +
+                erpGet.ERPPort +
+                "&dept=" +
+                departement +
+                "&currency=" +
+                currencyname;
+              let url = stripeGlobalURL + stringQuery;
+              $("#html-Invoice-pdfwrapper").css("display", "block");
+              $(".pdfCustomerName").html($("#edtCustomerName").val());
+              $(".pdfCustomerAddress").html(
+                $("#txabillingAddress")
+                  .val()
+                  .replace(/[\r\n]/g, "<br />")
+              );
 
-                function generatePdfForMail(invoiceId) {
-                  let stripe_id = templateObject.accountID.get() || "";
-                  let file = "Invoice-" + invoiceId + ".pdf";
-                  return new Promise((resolve, reject) => {
-                    if (stripe_id != "") {
-                      $(".linkText").attr("href", stripeGlobalURL + stringQuery);
-                    } else {
-                      $(".linkText").attr("href", "#");
-                    }
-                    var source = document.getElementById(
-                        "html-Invoice-pdfwrapper"
-                    );
-                    var opt = {
-                      margin: 0,
-                      filename: file,
-                      image: {
-                        type: "jpeg",
-                        quality: 0.98,
-                      },
-                      html2canvas: {
-                        scale: 2,
-                      },
-                      jsPDF: {
-                        unit: "in",
-                        format: "a4",
-                        orientation: "portrait",
-                      },
-                    };
-                    resolve(
-                        html2pdf()
-                            .set(opt)
-                            .from(source)
-                            .toPdf()
-                            .output("datauristring")
-                    );
-                  });
-                }
-                async function addAttachment() {
-                  let attachment = [];
-                  let invoiceId = objDetails.fields.ID;
-                  let encodedPdf = await generatePdfForMail(invoiceId);
-                  let pdfObject = "";
-                  let base64data = encodedPdf.split(",")[1];
-                  pdfObject = {
-                    filename: "invoice-" + invoiceId + ".pdf",
-                    content: base64data,
-                    encoding: "base64",
-                  };
-                  attachment.push(pdfObject);
-                  let erpInvoiceId = objDetails.fields.ID;
-
-                  let mailFromName = localStorage.getItem("vs1companyName");
-                  let mailFrom =
-                      localStorage.getItem("VS1OrgEmail") ||
-                      localStorage.getItem("VS1AdminUserName");
-                  let customerEmailName = $("#edtCustomerName").val();
-                  let checkEmailData = $("#edtCustomerEmail").val();
-                  let grandtotal = $("#grandTotal").html();
-                  let emailDueDate = $("#dtDueDate").val();
-                  let customerBillingAddress = $("#txabillingAddress").val();
-                  let customerTerms = $("#sltTerms").val();
-
-                  let customerSubtotal = $("#subtotal_total").html();
-                  let customerTax = $("#subtotal_tax").html();
-                  let customerNett = $("#subtotal_nett").html();
-                  let customerTotal = $("#grandTotal").html();
-
-                  let mailSubject =
-                      "Invoice " +
-                      erpInvoiceId +
-                      " from " +
-                      mailFromName +
-                      " for " +
-                      customerEmailName;
-                  var htmlmailBody =
-                      '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                      "        <tr>" +
-                      '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                      '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                      '                    <table class="main">' +
-                      "                        <tr>" +
-                      '                            <td class="wrapper">' +
-                      '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                      "                                    <tr>" +
-                      '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                      '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
-                      erpInvoiceId +
-                      " Details</span>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      '                                    <tr style="height: 16px;"></tr>' +
-                      "                                    <tr>" +
-                      "                                        <td>" +
-                      '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      '                                    <tr style="height: 48px;"></tr>' +
-                      '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                      '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                      '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
-                      emailDueDate +
-                      "</p>" +
-                      '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
-                      grandtotal +
-                      "</p>" +
-                      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                      "                                                <tbody>" +
-                      "                                                    <tr>" +
-                      '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                      "                                                                <tbody>" +
-                      "                                                                    <tr>" +
-                      '                                                                        <td> <a href="' +
-                      stripeGlobalURL +
-                      "" +
-                      stringQuery +
-                      '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                      "                                                                    </tr>" +
-                      "                                                                </tbody>" +
-                      "                                                            </table>" +
-                      "                                                        </td>" +
-                      "                                                    </tr>" +
-                      "                                                </tbody>" +
-                      "                                            </table>" +
-                      '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      "                                    <tr>" +
-                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                      '                                            <p style="font-size: 18px;">Dear ' +
-                      customerEmailName +
-                      ",</p>" +
-                      '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                      '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                      '                                            <p style="font-size: 18px;">' +
-                      mailFromName +
-                      "</p>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      '                                    <tr style="background-color: #ededed;">' +
-                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                      '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                      '                                                <div style="width: 50%; float: left;">' +
-                      '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                      "                                                </div>" +
-                      '                                                <div style="width: 50%; float: right;">' +
-                      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-                      customerEmailName +
-                      "</p>" +
-                      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-                      customerBillingAddress +
-                      "</p>" +
-                      "                                                </div>" +
-                      "                                            </div>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      '                                    <tr style="background-color: #ededed;">' +
-                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                      '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                      '                                                <div style="width: 50%; float: left;">' +
-                      '                                                    <p style="font-size: 18px;">Terms</p>' +
-                      "                                                </div>" +
-                      '                                                <div style="width: 50%; float: right;">' +
-                      '                                                    <p style="font-size: 16px;">' +
-                      customerTerms +
-                      "</p>" +
-                      "                                                </div>" +
-                      "                                            </div>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      "                                    <tr>" +
-                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                      '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                      '                                                <div style="width: 50%; float: left;">' +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                      "                                                </div>" +
-                      '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                      customerSubtotal +
-                      "</p>" +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                      customerTax +
-                      "</p>" +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                      customerNett +
-                      "</p>" +
-                      '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                      customerTotal +
-                      "</p>" +
-                      "                                                </div>" +
-                      "                                            </div>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      "                                    <tr>" +
-                      '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                      "                                                <tbody>" +
-                      "                                                    <tr>" +
-                      '                                                        <td align="center">' +
-                      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                      "                                                                <tbody>" +
-                      "                                                                    <tr>" +
-                      '                                                                        <td> <a href="' +
-                      stripeGlobalURL +
-                      "" +
-                      stringQuery +
-                      '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                      "                                                                    </tr>" +
-                      "                                                                </tbody>" +
-                      "                                                            </table>" +
-                      "                                                        </td>" +
-                      "                                                    </tr>" +
-                      "                                                </tbody>" +
-                      "                                            </table>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      "                                    <tr>" +
-                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                      '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      "                                    <tr>" +
-                      "                                        <td>" +
-                      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                      "                                                <tbody>" +
-                      "                                                    <tr>" +
-                      '                                                        <td align="center">' +
-                      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                      "                                                                <tbody>" +
-                      "                                                                    <tr>" +
-                      '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                      "                                                                    </tr>" +
-                      "                                                                </tbody>" +
-                      "                                                            </table>" +
-                      "                                                        </td>" +
-                      "                                                    </tr>" +
-                      "                                                </tbody>" +
-                      "                                            </table>" +
-                      "                                        </td>" +
-                      "                                    </tr>" +
-                      "                                </table>" +
-                      "                            </td>" +
-                      "                        </tr>" +
-                      "                    </table>" +
-                      '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                      '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                      "                            <tr>" +
-                      '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                      '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
-                      mailFromName +
-                      "</span>" +
-                      "                                    <br>" +
-                      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                      "                                </td>" +
-                      "                            </tr>" +
-                      "                        </table>" +
-                      "                    </div>" +
-                      "                </div>" +
-                      "            </td>" +
-                      "        </tr>" +
-                      "    </table>";
-
-                  if (
-                      $(".chkEmailCopy").is(":checked") &&
-                      $(".chkEmailRep").is(":checked")
-                  ) {
-                    Meteor.call(
-                        "sendEmail", {
-                          from: "" + mailFromName + " <" + mailFrom + ">",
-                          to: checkEmailData,
-                          subject: mailSubject,
-                          text: "",
-                          html: htmlmailBody,
-                          attachments: attachment,
-                        },
-                        function (error, result) {
-                          if (error && error.error === "error") {
-                            FlowRouter.go("/invoicelist?success=true");
-                          }
-                        }
-                    );
-
-                    Meteor.call(
-                        "sendEmail", {
-                          from: "" + mailFromName + " <" + mailFrom + ">",
-                          to: mailFrom,
-                          subject: mailSubject,
-                          text: "",
-                          html: htmlmailBody,
-                          attachments: attachment,
-                        },
-                        function (error, result) {
-                          if (error && error.error === "error") {
-                            if (FlowRouter.current().queryParams.trans) {
-                              FlowRouter.go(
-                                  "/customerscard?id=" +
-                                  FlowRouter.current().queryParams.trans +
-                                  "&transTab=active"
-                              );
-                            } else {
-                              FlowRouter.go("/invoicelist?success=true");
-                            }
-                          } else {
-                            $("#html-Invoice-pdfwrapper").css("display", "none");
-                            swal({
-                              title: "SUCCESS",
-                              text: "Email Sent To Customer: " +
-                                  checkEmailData +
-                                  " and User: " +
-                                  mailFrom +
-                                  "",
-                              type: "success",
-                              showCancelButton: false,
-                              confirmButtonText: "OK",
-                            }).then((result) => {
-                              if (result.value) {
-                                window.open(url, "_self");
-                              } else if (result.dismiss === "cancel") { }
-                            });
-
-                            $(".fullScreenSpin").css("display", "none");
-                          }
-                        }
-                    );
-                  } else if ($(".chkEmailCopy").is(":checked")) {
-                    Meteor.call(
-                        "sendEmail", {
-                          from: "" + mailFromName + " <" + mailFrom + ">",
-                          to: checkEmailData,
-                          subject: mailSubject,
-                          text: "",
-                          html: htmlmailBody,
-                          attachments: attachment,
-                        },
-                        function (error, result) {
-                          if (error && error.error === "error") {
-                            FlowRouter.go("/invoicelist?success=true");
-                          } else {
-                            $("#html-Invoice-pdfwrapper").css("display", "none");
-                            swal({
-                              title: "SUCCESS",
-                              text: "Email Sent To Customer: " + checkEmailData + " ",
-                              type: "success",
-                              showCancelButton: false,
-                              confirmButtonText: "OK",
-                            }).then((result) => {
-                              if (result.value) {
-                                window.open(url, "_self");
-                              }
-                            });
-
-                            $(".fullScreenSpin").css("display", "none");
-                          }
-                        }
-                    );
-                  } else if ($(".chkEmailRep").is(":checked")) {
-                    Meteor.call(
-                        "sendEmail", {
-                          from: "" + mailFromName + " <" + mailFrom + ">",
-                          to: mailFrom,
-                          subject: mailSubject,
-                          text: "",
-                          html: htmlmailBody,
-                          attachments: attachment,
-                        },
-                        function (error, result) {
-                          if (error && error.error === "error") {
-                            FlowRouter.go("/invoicelist?success=true");
-                          } else {
-                            $("#html-Invoice-pdfwrapper").css("display", "none");
-                            swal({
-                              title: "SUCCESS",
-                              text: "Email Sent To User: " + mailFrom + " ",
-                              type: "success",
-                              showCancelButton: false,
-                              confirmButtonText: "OK",
-                            }).then((result) => {
-                              if (result.value) {
-                                window.open(url, "_self");
-                              }
-                            });
-
-                            $(".fullScreenSpin").css("display", "none");
-                          }
-                        }
-                    );
+              function generatePdfForMail(invoiceId) {
+                let stripe_id = templateObject.accountID.get() || "";
+                let file = "Invoice-" + invoiceId + ".pdf";
+                return new Promise((resolve, reject) => {
+                  if (stripe_id != "") {
+                    $(".linkText").attr("href", stripeGlobalURL + stringQuery);
                   } else {
-                    window.open(url, "_self");
+                    $(".linkText").attr("href", "#");
                   }
-                }
-                addAttachment();
-              })
-              .catch(function (err) {
-                $("#html-Invoice-pdfwrapper").css("display", "none");
-                swal({
-                  title: "Oooops...",
-                  text: err,
-                  type: "error",
-                  showCancelButton: false,
-                  confirmButtonText: "Try Again",
-                }).then((result) => {
-                  if (result.value) {
-                    if (err === checkResponseError) {
-                      window.open("/", "_self");
-                    }
-                  } else if (result.dismiss === "cancel") { }
+                  var source = document.getElementById(
+                    "html-Invoice-pdfwrapper"
+                  );
+                  var opt = {
+                    margin: 0,
+                    filename: file,
+                    image: {
+                      type: "jpeg",
+                      quality: 0.98,
+                    },
+                    html2canvas: {
+                      scale: 2,
+                    },
+                    jsPDF: {
+                      unit: "in",
+                      format: "a4",
+                      orientation: "portrait",
+                    },
+                  };
+                  resolve(
+                    html2pdf()
+                      .set(opt)
+                      .from(source)
+                      .toPdf()
+                      .output("datauristring")
+                  );
                 });
-                $(".fullScreenSpin").css("display", "none");
+              }
+              async function addAttachment() {
+                let attachment = [];
+                let invoiceId = objDetails.fields.ID;
+                let encodedPdf = await generatePdfForMail(invoiceId);
+                let pdfObject = "";
+                let base64data = encodedPdf.split(",")[1];
+                pdfObject = {
+                  filename: "invoice-" + invoiceId + ".pdf",
+                  content: base64data,
+                  encoding: "base64",
+                };
+                attachment.push(pdfObject);
+                let erpInvoiceId = objDetails.fields.ID;
+
+                let mailFromName = localStorage.getItem("vs1companyName");
+                let mailFrom =
+                  localStorage.getItem("VS1OrgEmail") ||
+                  localStorage.getItem("VS1AdminUserName");
+                let customerEmailName = $("#edtCustomerName").val();
+                let checkEmailData = $("#edtCustomerEmail").val();
+                let grandtotal = $("#grandTotal").html();
+                let emailDueDate = $("#dtDueDate").val();
+                let customerBillingAddress = $("#txabillingAddress").val();
+                let customerTerms = $("#sltTerms").val();
+
+                let customerSubtotal = $("#subtotal_total").html();
+                let customerTax = $("#subtotal_tax").html();
+                let customerNett = $("#subtotal_nett").html();
+                let customerTotal = $("#grandTotal").html();
+
+                let mailSubject =
+                  "Invoice " +
+                  erpInvoiceId +
+                  " from " +
+                  mailFromName +
+                  " for " +
+                  customerEmailName;
+                var htmlmailBody =
+                  '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+                  "        <tr>" +
+                  '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+                  '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+                  '                    <table class="main">' +
+                  "                        <tr>" +
+                  '                            <td class="wrapper">' +
+                  '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                  "                                    <tr>" +
+                  '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+                  '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
+                  erpInvoiceId +
+                  " Details</span>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  '                                    <tr style="height: 16px;"></tr>' +
+                  "                                    <tr>" +
+                  "                                        <td>" +
+                  '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  '                                    <tr style="height: 48px;"></tr>' +
+                  '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+                  '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+                  '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
+                  emailDueDate +
+                  "</p>" +
+                  '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
+                  grandtotal +
+                  "</p>" +
+                  '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                  "                                                <tbody>" +
+                  "                                                    <tr>" +
+                  '                                                        <td align="center" style="padding-bottom: 15px;">' +
+                  '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                  "                                                                <tbody>" +
+                  "                                                                    <tr>" +
+                  '                                                                        <td> <a href="' +
+                  stripeGlobalURL +
+                  "" +
+                  stringQuery +
+                  '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                  '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                  "                                                                    </tr>" +
+                  "                                                                </tbody>" +
+                  "                                                            </table>" +
+                  "                                                        </td>" +
+                  "                                                    </tr>" +
+                  "                                                </tbody>" +
+                  "                                            </table>" +
+                  '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  "                                    <tr>" +
+                  '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                  '                                            <p style="font-size: 18px;">Dear ' +
+                  customerEmailName +
+                  ",</p>" +
+                  '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+                  '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+                  '                                            <p style="font-size: 18px;">' +
+                  mailFromName +
+                  "</p>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  '                                    <tr style="background-color: #ededed;">' +
+                  '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                  '                                            <div style="width: 100%; padding: 16px 0px;">' +
+                  '                                                <div style="width: 50%; float: left;">' +
+                  '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+                  "                                                </div>" +
+                  '                                                <div style="width: 50%; float: right;">' +
+                  '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+                  customerEmailName +
+                  "</p>" +
+                  '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+                  customerBillingAddress +
+                  "</p>" +
+                  "                                                </div>" +
+                  "                                            </div>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  '                                    <tr style="background-color: #ededed;">' +
+                  '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                  '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                  '                                            <div style="width: 100%; padding: 16px 0px;">' +
+                  '                                                <div style="width: 50%; float: left;">' +
+                  '                                                    <p style="font-size: 18px;">Terms</p>' +
+                  "                                                </div>" +
+                  '                                                <div style="width: 50%; float: right;">' +
+                  '                                                    <p style="font-size: 16px;">' +
+                  customerTerms +
+                  "</p>" +
+                  "                                                </div>" +
+                  "                                            </div>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  "                                    <tr>" +
+                  '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                  '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                  '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+                  '                                                <div style="width: 50%; float: left;">' +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+                  "                                                </div>" +
+                  '                                                <div style="width: 50%; float: right; text-align: right;">' +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                  customerSubtotal +
+                  "</p>" +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                  customerTax +
+                  "</p>" +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                  customerNett +
+                  "</p>" +
+                  '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                  customerTotal +
+                  "</p>" +
+                  "                                                </div>" +
+                  "                                            </div>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  "                                    <tr>" +
+                  '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+                  '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                  '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                  "                                                <tbody>" +
+                  "                                                    <tr>" +
+                  '                                                        <td align="center">' +
+                  '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                  "                                                                <tbody>" +
+                  "                                                                    <tr>" +
+                  '                                                                        <td> <a href="' +
+                  stripeGlobalURL +
+                  "" +
+                  stringQuery +
+                  '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                  '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                  "                                                                    </tr>" +
+                  "                                                                </tbody>" +
+                  "                                                            </table>" +
+                  "                                                        </td>" +
+                  "                                                    </tr>" +
+                  "                                                </tbody>" +
+                  "                                            </table>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  "                                    <tr>" +
+                  '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                  '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  "                                    <tr>" +
+                  "                                        <td>" +
+                  '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                  "                                                <tbody>" +
+                  "                                                    <tr>" +
+                  '                                                        <td align="center">' +
+                  '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                  "                                                                <tbody>" +
+                  "                                                                    <tr>" +
+                  '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+                  "                                                                    </tr>" +
+                  "                                                                </tbody>" +
+                  "                                                            </table>" +
+                  "                                                        </td>" +
+                  "                                                    </tr>" +
+                  "                                                </tbody>" +
+                  "                                            </table>" +
+                  "                                        </td>" +
+                  "                                    </tr>" +
+                  "                                </table>" +
+                  "                            </td>" +
+                  "                        </tr>" +
+                  "                    </table>" +
+                  '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+                  '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                  "                            <tr>" +
+                  '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+                  '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
+                  mailFromName +
+                  "</span>" +
+                  "                                    <br>" +
+                  '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+                  '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+                  "                                </td>" +
+                  "                            </tr>" +
+                  "                        </table>" +
+                  "                    </div>" +
+                  "                </div>" +
+                  "            </td>" +
+                  "        </tr>" +
+                  "    </table>";
+
+                if (
+                  $(".chkEmailCopy").is(":checked") &&
+                  $(".chkEmailRep").is(":checked")
+                ) {
+                  Meteor.call(
+                    "sendEmail", {
+                    from: "" + mailFromName + " <" + mailFrom + ">",
+                    to: checkEmailData,
+                    subject: mailSubject,
+                    text: "",
+                    html: htmlmailBody,
+                    attachments: attachment,
+                  },
+                    function (error, result) {
+                      if (error && error.error === "error") {
+                        FlowRouter.go("/invoicelist?success=true");
+                      }
+                    }
+                  );
+
+                  Meteor.call(
+                    "sendEmail", {
+                    from: "" + mailFromName + " <" + mailFrom + ">",
+                    to: mailFrom,
+                    subject: mailSubject,
+                    text: "",
+                    html: htmlmailBody,
+                    attachments: attachment,
+                  },
+                    function (error, result) {
+                      if (error && error.error === "error") {
+                        if (FlowRouter.current().queryParams.trans) {
+                          FlowRouter.go(
+                            "/customerscard?id=" +
+                            FlowRouter.current().queryParams.trans +
+                            "&transTab=active"
+                          );
+                        } else {
+                          FlowRouter.go("/invoicelist?success=true");
+                        }
+                      } else {
+                        $("#html-Invoice-pdfwrapper").css("display", "none");
+                        swal({
+                          title: "SUCCESS",
+                          text: "Email Sent To Customer: " +
+                            checkEmailData +
+                            " and User: " +
+                            mailFrom +
+                            "",
+                          type: "success",
+                          showCancelButton: false,
+                          confirmButtonText: "OK",
+                        }).then((result) => {
+                          if (result.value) {
+                            window.open(url, "_self");
+                          } else if (result.dismiss === "cancel") { }
+                        });
+
+                        $(".fullScreenSpin").css("display", "none");
+                      }
+                    }
+                  );
+                } else if ($(".chkEmailCopy").is(":checked")) {
+                  Meteor.call(
+                    "sendEmail", {
+                    from: "" + mailFromName + " <" + mailFrom + ">",
+                    to: checkEmailData,
+                    subject: mailSubject,
+                    text: "",
+                    html: htmlmailBody,
+                    attachments: attachment,
+                  },
+                    function (error, result) {
+                      if (error && error.error === "error") {
+                        FlowRouter.go("/invoicelist?success=true");
+                      } else {
+                        $("#html-Invoice-pdfwrapper").css("display", "none");
+                        swal({
+                          title: "SUCCESS",
+                          text: "Email Sent To Customer: " + checkEmailData + " ",
+                          type: "success",
+                          showCancelButton: false,
+                          confirmButtonText: "OK",
+                        }).then((result) => {
+                          if (result.value) {
+                            window.open(url, "_self");
+                          }
+                        });
+
+                        $(".fullScreenSpin").css("display", "none");
+                      }
+                    }
+                  );
+                } else if ($(".chkEmailRep").is(":checked")) {
+                  Meteor.call(
+                    "sendEmail", {
+                    from: "" + mailFromName + " <" + mailFrom + ">",
+                    to: mailFrom,
+                    subject: mailSubject,
+                    text: "",
+                    html: htmlmailBody,
+                    attachments: attachment,
+                  },
+                    function (error, result) {
+                      if (error && error.error === "error") {
+                        FlowRouter.go("/invoicelist?success=true");
+                      } else {
+                        $("#html-Invoice-pdfwrapper").css("display", "none");
+                        swal({
+                          title: "SUCCESS",
+                          text: "Email Sent To User: " + mailFrom + " ",
+                          type: "success",
+                          showCancelButton: false,
+                          confirmButtonText: "OK",
+                        }).then((result) => {
+                          if (result.value) {
+                            window.open(url, "_self");
+                          }
+                        });
+
+                        $(".fullScreenSpin").css("display", "none");
+                      }
+                    }
+                  );
+                } else {
+                  window.open(url, "_self");
+                }
+              }
+              addAttachment();
+            })
+            .catch(function (err) {
+              $("#html-Invoice-pdfwrapper").css("display", "none");
+              swal({
+                title: "Oooops...",
+                text: err,
+                type: "error",
+                showCancelButton: false,
+                confirmButtonText: "Try Again",
+              }).then((result) => {
+                if (result.value) {
+                  if (err === checkResponseError) {
+                    window.open("/", "_self");
+                  }
+                } else if (result.dismiss === "cancel") { }
               });
+              $(".fullScreenSpin").css("display", "none");
+            });
         }
       }
     } else {
@@ -6093,11 +6045,11 @@ Template.new_invoice.events({
         }
 
         var subTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         var taxTotal =
-            parseFloat(qty, 10) *
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
+          parseFloat(qty, 10) *
+          Number(price.replace(/[^0-9.-]+/g, "")) *
+          parseFloat(taxrateamount);
         var lineDiscountPerc = parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
         let lineTotalAmount = subTotal + taxTotal;
         let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6111,62 +6063,62 @@ Template.new_invoice.events({
           document.getElementById("subtotal_discount").innerHTML = utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
         }
         $tblrow
-            .find(".lineTaxAmount")
-            .text(
-                utilityService.modifynegativeCurrencyFormat(
-                    taxTotalWithDiscountTotalLine
-                )
-            );
+          .find(".lineTaxAmount")
+          .text(
+            utilityService.modifynegativeCurrencyFormat(
+              taxTotalWithDiscountTotalLine
+            )
+          );
 
         let unitPriceIncCalc = Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) || 0;
         let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
         $tblrow
-            .find(".colUnitPriceExChange")
-            .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+          .find(".colUnitPriceExChange")
+          .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
         $tblrow
-            .find(".colUnitPriceIncChange")
-            .val(
-                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-            );
+          .find(".colUnitPriceIncChange")
+          .val(
+            utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+          );
 
         if (!isNaN(subTotal)) {
           $tblrow
-              .find(".colAmountEx")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+            .find(".colAmountEx")
+            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
           $tblrow
-              .find(".colAmountInc")
-              .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+            .find(".colAmountInc")
+            .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
           subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-              0 :
-              subTotalWithDiscountTotalLine;
+            0 :
+            subTotalWithDiscountTotalLine;
           subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
           document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
         }
 
         if (!isNaN(taxTotal)) {
           taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-              0 :
-              taxTotalWithDiscountTotalLine;
+            0 :
+            taxTotalWithDiscountTotalLine;
           taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
           document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
         }
 
         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
           let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
           let GrandTotalNet =
-              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+            parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
           document.getElementById("subtotal_nett").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
           document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("balanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("totalBalanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
         }
       }
     });
@@ -6185,33 +6137,33 @@ Template.new_invoice.events({
         }
       }
       var subTotal =
-          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
       var taxTotal =
-          parseFloat(qty, 10) *
-          Number(price.replace(/[^0-9.-]+/g, "")) *
-          parseFloat(taxrateamount);
+        parseFloat(qty, 10) *
+        Number(price.replace(/[^0-9.-]+/g, "")) *
+        parseFloat(taxrateamount);
       $printrows
-          .find("#lineTaxAmount")
-          .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+        .find("#lineTaxAmount")
+        .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
       if (!isNaN(subTotal)) {
         $printrows
-            .find("#lineAmt")
-            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+          .find("#lineAmt")
+          .text(utilityService.modifynegativeCurrencyFormat(subTotal));
         subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
         document.getElementById("subtotal_totalPrint").innerHTML =
-            $("#subtotal_total").text();
+          $("#subtotal_total").text();
       }
 
       if (!isNaN(taxTotal)) {
         taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
         document.getElementById("totalTax_totalPrint").innerHTML =
-            utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+          utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
       }
       if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
         document.getElementById("grandTotalPrint").innerHTML =
-            $("#grandTotal").text();
+          $("#grandTotal").text();
         document.getElementById("totalBalanceDuePrint").innerHTML =
-            $("#totalBalanceDue").text();
+          $("#totalBalanceDue").text();
       }
     });
   },
@@ -6263,13 +6215,13 @@ Template.new_invoice.events({
         }
 
         var subTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         var taxTotal =
-            parseFloat(qty, 10) *
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
+          parseFloat(qty, 10) *
+          Number(price.replace(/[^0-9.-]+/g, "")) *
+          parseFloat(taxrateamount);
         var lineDiscountPerc =
-            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+          parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
         let lineTotalAmount = subTotal + taxTotal;
 
         let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6277,74 +6229,74 @@ Template.new_invoice.events({
         var discountTotal = lineTotalAmount * lineDiscountTotal;
         var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
         var subTotalWithDiscountTotalLine =
-            subTotal - subTotalWithDiscount || 0;
+          subTotal - subTotalWithDiscount || 0;
         var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
         var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
         if (!isNaN(discountTotal)) {
           subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
           document.getElementById("subtotal_discount").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+            utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
         }
         $tblrow
-            .find(".lineTaxAmount")
-            .text(
-                utilityService.modifynegativeCurrencyFormat(
-                    taxTotalWithDiscountTotalLine
-                )
-            );
+          .find(".lineTaxAmount")
+          .text(
+            utilityService.modifynegativeCurrencyFormat(
+              taxTotalWithDiscountTotalLine
+            )
+          );
 
         let unitPriceIncCalc =
-            Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) ||
-            0;
+          Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) ||
+          0;
         let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
         $tblrow
-            .find(".colUnitPriceExChange")
-            .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+          .find(".colUnitPriceExChange")
+          .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
         $tblrow
-            .find(".colUnitPriceIncChange")
-            .val(
-                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-            );
+          .find(".colUnitPriceIncChange")
+          .val(
+            utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+          );
 
         if (!isNaN(subTotal)) {
           $tblrow
-              .find(".colAmountEx")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+            .find(".colAmountEx")
+            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
           $tblrow
-              .find(".colAmountInc")
-              .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+            .find(".colAmountInc")
+            .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
           subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-              0 :
-              subTotalWithDiscountTotalLine;
+            0 :
+            subTotalWithDiscountTotalLine;
           subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
           document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
         }
 
         if (!isNaN(taxTotal)) {
           taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-              0 :
-              taxTotalWithDiscountTotalLine;
+            0 :
+            taxTotalWithDiscountTotalLine;
           taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
           document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
         }
 
         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
           let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
           let GrandTotalNet =
-              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+            parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
           document.getElementById("subtotal_nett").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
           document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("balanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("totalBalanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
         }
       }
     });
@@ -6380,13 +6332,13 @@ Template.new_invoice.events({
         }
 
         var subTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         var taxTotal =
-            parseFloat(qty, 10) *
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
+          parseFloat(qty, 10) *
+          Number(price.replace(/[^0-9.-]+/g, "")) *
+          parseFloat(taxrateamount);
         var lineDiscountPerc =
-            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+          parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
         let lineTotalAmount = subTotal + taxTotal;
 
         let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6394,14 +6346,14 @@ Template.new_invoice.events({
         var discountTotal = lineTotalAmount * lineDiscountTotal;
         var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
         var subTotalWithDiscountTotalLine =
-            subTotal - subTotalWithDiscount || 0;
+          subTotal - subTotalWithDiscount || 0;
         var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
         var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
         if (!isNaN(discountTotal)) {
           subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
           document.getElementById("subtotal_discount").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+            utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
         }
         $tblrow.find(".lineTaxAmount").text(utilityService.modifynegativeCurrencyFormat(taxTotalWithDiscountTotalLine));
 
@@ -6417,7 +6369,7 @@ Template.new_invoice.events({
           subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ? 0 : subTotalWithDiscountTotalLine;
           subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
           document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
         }
 
         if (!isNaN(taxTotal)) {
@@ -6428,17 +6380,17 @@ Template.new_invoice.events({
 
         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
           let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
           let GrandTotalNet =
-              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+            parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
           document.getElementById("subtotal_nett").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
           document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("balanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("totalBalanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
         }
       }
     });
@@ -6457,33 +6409,33 @@ Template.new_invoice.events({
         }
       }
       var subTotal =
-          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
       var taxTotal =
-          parseFloat(qty, 10) *
-          Number(price.replace(/[^0-9.-]+/g, "")) *
-          parseFloat(taxrateamount);
+        parseFloat(qty, 10) *
+        Number(price.replace(/[^0-9.-]+/g, "")) *
+        parseFloat(taxrateamount);
       $printrows
-          .find("#lineTaxAmount")
-          .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+        .find("#lineTaxAmount")
+        .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
       if (!isNaN(subTotal)) {
         $printrows
-            .find("#lineAmt")
-            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+          .find("#lineAmt")
+          .text(utilityService.modifynegativeCurrencyFormat(subTotal));
         subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
         document.getElementById("subtotal_totalPrint").innerHTML =
-            $("#subtotal_total").text();
+          $("#subtotal_total").text();
       }
 
       if (!isNaN(taxTotal)) {
         taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
         document.getElementById("totalTax_totalPrint").innerHTML =
-            utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+          utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
       }
       if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
         document.getElementById("grandTotalPrint").innerHTML =
-            $("#grandTotal").text();
+          $("#grandTotal").text();
         document.getElementById("totalBalanceDuePrint").innerHTML =
-            $("#totalBalanceDue").text();
+          $("#totalBalanceDue").text();
       }
     });
   },
@@ -6493,18 +6445,18 @@ Template.new_invoice.events({
     if (!isNaN($(event.target).val())) {
       inputUnitPrice = parseFloat($(event.target).val()) || 0;
       $(event.target).val(
-          utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
+        utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
       );
     } else {
       inputUnitPrice =
-          Number(
-              $(event.target)
-                  .val()
-                  .replace(/[^0-9.-]+/g, "")
-          ) || 0;
+        Number(
+          $(event.target)
+            .val()
+            .replace(/[^0-9.-]+/g, "")
+        ) || 0;
 
       $(event.target).val(
-          utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
+        utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
       );
     }
     let templateObject = Template.instance();
@@ -6518,7 +6470,7 @@ Template.new_invoice.events({
     let taxGrandTotalPrint = 0;
 
     $("#" + targetID + " #lineUnitPrice").text(
-        $("#" + targetID + " .colUnitPriceExChange").val()
+      $("#" + targetID + " .colUnitPriceExChange").val()
     );
 
     let subGrandTotalNet = 0;
@@ -6536,19 +6488,19 @@ Template.new_invoice.events({
           for (var i = 0; i < taxcodeList.length; i++) {
             if (taxcodeList[i].codename == taxRate) {
               taxrateamount =
-                  taxcodeList[i].coderate.replace("%", "") / 100 || 0;
+                taxcodeList[i].coderate.replace("%", "") / 100 || 0;
             }
           }
         }
 
         var subTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         var taxTotal =
-            parseFloat(qty, 10) *
-            Number(price.replace(/[^0-9.-]+/g, "")) *
-            parseFloat(taxrateamount);
+          parseFloat(qty, 10) *
+          Number(price.replace(/[^0-9.-]+/g, "")) *
+          parseFloat(taxrateamount);
         var lineDiscountPerc =
-            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+          parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
         let lineTotalAmount = subTotal + taxTotal;
 
         let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6556,74 +6508,74 @@ Template.new_invoice.events({
         var discountTotal = lineTotalAmount * lineDiscountTotal;
         var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
         var subTotalWithDiscountTotalLine =
-            subTotal - subTotalWithDiscount || 0;
+          subTotal - subTotalWithDiscount || 0;
         var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
         var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
         if (!isNaN(discountTotal)) {
           subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
           document.getElementById("subtotal_discount").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+            utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
         }
         $tblrow
-            .find(".lineTaxAmount")
-            .text(
-                utilityService.modifynegativeCurrencyFormat(
-                    taxTotalWithDiscountTotalLine
-                )
-            );
+          .find(".lineTaxAmount")
+          .text(
+            utilityService.modifynegativeCurrencyFormat(
+              taxTotalWithDiscountTotalLine
+            )
+          );
 
         let unitPriceIncCalc =
-            Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) ||
-            0;
+          Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) ||
+          0;
         let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
         $tblrow
-            .find(".colUnitPriceExChange")
-            .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+          .find(".colUnitPriceExChange")
+          .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
         $tblrow
-            .find(".colUnitPriceIncChange")
-            .val(
-                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-            );
+          .find(".colUnitPriceIncChange")
+          .val(
+            utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+          );
 
         if (!isNaN(subTotal)) {
           $tblrow
-              .find(".colAmountEx")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+            .find(".colAmountEx")
+            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
           $tblrow
-              .find(".colAmountInc")
-              .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+            .find(".colAmountInc")
+            .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
           subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-              0 :
-              subTotalWithDiscountTotalLine;
+            0 :
+            subTotalWithDiscountTotalLine;
           subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
           document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
         }
 
         if (!isNaN(taxTotal)) {
           taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-              0 :
-              taxTotalWithDiscountTotalLine;
+            0 :
+            taxTotalWithDiscountTotalLine;
           taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
           document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
         }
 
         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
           let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
           let GrandTotalNet =
-              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+            parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
           document.getElementById("subtotal_nett").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
           document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("balanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("totalBalanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
         }
       }
     });
@@ -6643,33 +6595,33 @@ Template.new_invoice.events({
       }
 
       var subTotal =
-          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
       var taxTotal =
-          parseFloat(qty, 10) *
-          Number(price.replace(/[^0-9.-]+/g, "")) *
-          parseFloat(taxrateamount);
+        parseFloat(qty, 10) *
+        Number(price.replace(/[^0-9.-]+/g, "")) *
+        parseFloat(taxrateamount);
       $printrows
-          .find("#lineTaxAmount")
-          .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+        .find("#lineTaxAmount")
+        .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
       if (!isNaN(subTotal)) {
         $printrows
-            .find("#lineAmt")
-            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+          .find("#lineAmt")
+          .text(utilityService.modifynegativeCurrencyFormat(subTotal));
         subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
         document.getElementById("subtotal_totalPrint").innerHTML =
-            $("#subtotal_total").text();
+          $("#subtotal_total").text();
       }
 
       if (!isNaN(taxTotal)) {
         taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
         document.getElementById("totalTax_totalPrint").innerHTML =
-            utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+          utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
       }
       if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
         document.getElementById("grandTotalPrint").innerHTML =
-            $("#grandTotal").text();
+          $("#grandTotal").text();
         document.getElementById("totalBalanceDuePrint").innerHTML =
-            $("#totalBalanceDue").text();
+          $("#totalBalanceDue").text();
       }
     });
   },
@@ -6679,18 +6631,18 @@ Template.new_invoice.events({
     if (!isNaN($(event.target).val())) {
       inputUnitPrice = parseFloat($(event.target).val()) || 0;
       $(event.target).val(
-          utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
+        utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
       );
     } else {
       inputUnitPrice =
-          Number(
-              $(event.target)
-                  .val()
-                  .replace(/[^0-9.-]+/g, "")
-          ) || 0;
+        Number(
+          $(event.target)
+            .val()
+            .replace(/[^0-9.-]+/g, "")
+        ) || 0;
 
       $(event.target).val(
-          utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
+        utilityService.modifynegativeCurrencyFormat(inputUnitPrice)
       );
     }
     let templateObject = Template.instance();
@@ -6725,20 +6677,20 @@ Template.new_invoice.events({
         let taxRateAmountCalc = (parseFloat(taxrateamount) + 100) / 100;
 
         var subTotal =
-            (parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""))) /
-            taxRateAmountCalc || 0;
+          (parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""))) /
+          taxRateAmountCalc || 0;
         var taxTotal =
-            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) -
-            parseFloat(subTotal) || 0;
+          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) -
+          parseFloat(subTotal) || 0;
 
         var subTotalExQty =
-            parseFloat(price.replace(/[^0-9.-]+/g, "")) / taxRateAmountCalc || 0;
+          parseFloat(price.replace(/[^0-9.-]+/g, "")) / taxRateAmountCalc || 0;
         var taxTotalExQty =
-            parseFloat(price.replace(/[^0-9.-]+/g, "")) -
-            parseFloat(subTotalExQty) || 0;
+          parseFloat(price.replace(/[^0-9.-]+/g, "")) -
+          parseFloat(subTotalExQty) || 0;
 
         var lineDiscountPerc =
-            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+          parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
         let lineTotalAmount = subTotal + taxTotal;
 
         let lineDiscountTotal = lineDiscountPerc / 100;
@@ -6746,77 +6698,77 @@ Template.new_invoice.events({
         var discountTotal = lineTotalAmount * lineDiscountTotal;
         var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
         var subTotalWithDiscountTotalLine =
-            subTotal - subTotalWithDiscount || 0;
+          subTotal - subTotalWithDiscount || 0;
         var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
         var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
         if (!isNaN(discountTotal)) {
           subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
           document.getElementById("subtotal_discount").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+            utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
         }
         $tblrow
-            .find(".lineTaxAmount")
-            .text(
-                utilityService.modifynegativeCurrencyFormat(
-                    taxTotalWithDiscountTotalLine
-                )
-            );
+          .find(".lineTaxAmount")
+          .text(
+            utilityService.modifynegativeCurrencyFormat(
+              taxTotalWithDiscountTotalLine
+            )
+          );
 
         let lineUnitPriceIncVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
         let lineUnitPriceExVal = lineUnitPriceIncVal - taxTotalExQty || 0;
         $tblrow
-            .find(".colUnitPriceExChange")
-            .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+          .find(".colUnitPriceExChange")
+          .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
         $tblrow
-            .find(".colUnitPriceIncChange")
-            .val(
-                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-            );
+          .find(".colUnitPriceIncChange")
+          .val(
+            utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+          );
 
         if (!isNaN(subTotal)) {
           $tblrow
-              .find(".colAmountEx")
-              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+            .find(".colAmountEx")
+            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
           $tblrow
-              .find(".colAmountInc")
-              .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+            .find(".colAmountInc")
+            .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
           subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-              0 :
-              subTotalWithDiscountTotalLine;
+            0 :
+            subTotalWithDiscountTotalLine;
           subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
           document.getElementById("subtotal_total").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
         }
 
         if (!isNaN(taxTotal)) {
           taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-              0 :
-              taxTotalWithDiscountTotalLine;
+            0 :
+            taxTotalWithDiscountTotalLine;
           taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
           document.getElementById("subtotal_tax").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
         }
 
         if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
           let GrandTotal =
-              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+            parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
           let GrandTotalNet =
-              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+            parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
           document.getElementById("subtotal_nett").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+            utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
           document.getElementById("grandTotal").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("balanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
           document.getElementById("totalBalanceDue").innerHTML =
-              utilityService.modifynegativeCurrencyFormat(GrandTotal);
+            utilityService.modifynegativeCurrencyFormat(GrandTotal);
         }
       }
     });
 
     $("#" + targetID + " #lineUnitPrice").text(
-        $("#" + targetID + " .colUnitPriceExChange").val()
+      $("#" + targetID + " .colUnitPriceExChange").val()
     );
 
     $printrows.each(function (index) {
@@ -6834,33 +6786,33 @@ Template.new_invoice.events({
       }
 
       var subTotal =
-          parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
       var taxTotal =
-          parseFloat(qty, 10) *
-          Number(price.replace(/[^0-9.-]+/g, "")) *
-          parseFloat(taxrateamount);
+        parseFloat(qty, 10) *
+        Number(price.replace(/[^0-9.-]+/g, "")) *
+        parseFloat(taxrateamount);
       $printrows
-          .find("#lineTaxAmount")
-          .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+        .find("#lineTaxAmount")
+        .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
       if (!isNaN(subTotal)) {
         $printrows
-            .find("#lineAmt")
-            .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+          .find("#lineAmt")
+          .text(utilityService.modifynegativeCurrencyFormat(subTotal));
         subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
         document.getElementById("subtotal_totalPrint").innerHTML =
-            $("#subtotal_total").text();
+          $("#subtotal_total").text();
       }
 
       if (!isNaN(taxTotal)) {
         taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
         document.getElementById("totalTax_totalPrint").innerHTML =
-            utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+          utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
       }
       if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
         document.getElementById("grandTotalPrint").innerHTML =
-            $("#grandTotal").text();
+          $("#grandTotal").text();
         document.getElementById("totalBalanceDuePrint").innerHTML =
-            $("#totalBalanceDue").text();
+          $("#totalBalanceDue").text();
       }
     });
   },
@@ -6953,186 +6905,138 @@ Template.new_invoice.events({
         if (productDataName.replace(/\s/g, "") != "") {
           $(".fullScreenSpin").css("display", "inline-block");
           getVS1Data("TProductVS1")
-              .then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  sideBarService
-                      .getOneProductdatavs1byname(productDataName)
-                      .then(function (data) {
-                        $(".fullScreenSpin").css("display", "none");
-                        let productname = data.tproduct[0].fields.ProductName || "";
-                        let buyqty1cost =
-                            utilityService.modifynegativeCurrencyFormat(
-                                data.tproduct[0].fields.BuyQty1Cost
-                            ) || 0;
-                        let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
-                        let taxcodepurchase =
-                            data.tproduct[0].fields.TaxCodePurchase || "";
-                        let purchasedescription =
-                            data.tproduct[0].fields.PurchaseDescription || "";
-                        let sellqty1price =
-                            utilityService.modifynegativeCurrencyFormat(
-                                data.tproduct[0].fields.SellQty1Price
-                            ) || 0;
-                        let incomeaccount =
-                            data.tproduct[0].fields.IncomeAccount || "";
-                        let taxcodesales =
-                            data.tproduct[0].fields.TaxCodeSales || "";
-                        let salesdescription =
-                            data.tproduct[0].fields.SalesDescription || "";
-                        let barcode = data.tproduct[0].fields.BARCODE || "";
-                        $("#selectProductID")
-                            .val(data.tproduct[0].fields.ID)
-                            .trigger("change");
-                        $("#add-product-title").text("Edit Product");
-                        $("#edtproductname").val(productname);
-                        $("#edtsellqty1price").val(sellqty1price);
-                        $("#txasalesdescription").val(salesdescription);
-                        $("#sltsalesacount").val(incomeaccount);
-                        $("#slttaxcodesales").val(taxcodesales);
-                        $("#edtbarcode").val(barcode);
-                        $("#txapurchasedescription").val(purchasedescription);
-                        $("#sltcogsaccount").val(cogsaccount);
-                        $("#slttaxcodepurchase").val(taxcodepurchase);
-                        $("#edtbuyqty1cost").val(buyqty1cost);
+            .then(function (dataObject) {
+              if (dataObject.length == 0) {
+                sideBarService
+                  .getOneProductdatavs1byname(productDataName)
+                  .then(function (data) {
+                    $(".fullScreenSpin").css("display", "none");
+                    let productname = data.tproduct[0].fields.ProductName || "";
+                    let buyqty1cost =
+                      utilityService.modifynegativeCurrencyFormat(
+                        data.tproduct[0].fields.BuyQty1Cost
+                      ) || 0;
+                    let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                    let taxcodepurchase =
+                      data.tproduct[0].fields.TaxCodePurchase || "";
+                    let purchasedescription =
+                      data.tproduct[0].fields.PurchaseDescription || "";
+                    let sellqty1price =
+                      utilityService.modifynegativeCurrencyFormat(
+                        data.tproduct[0].fields.SellQty1Price
+                      ) || 0;
+                    let incomeaccount =
+                      data.tproduct[0].fields.IncomeAccount || "";
+                    let taxcodesales =
+                      data.tproduct[0].fields.TaxCodeSales || "";
+                    let salesdescription =
+                      data.tproduct[0].fields.SalesDescription || "";
+                    let barcode = data.tproduct[0].fields.BARCODE || "";
+                    $("#selectProductID")
+                      .val(data.tproduct[0].fields.ID)
+                      .trigger("change");
+                    $("#add-product-title").text("Edit Product");
+                    $("#edtproductname").val(productname);
+                    $("#edtsellqty1price").val(sellqty1price);
+                    $("#txasalesdescription").val(salesdescription);
+                    $("#sltsalesacount").val(incomeaccount);
+                    $("#slttaxcodesales").val(taxcodesales);
+                    $("#edtbarcode").val(barcode);
+                    $("#txapurchasedescription").val(purchasedescription);
+                    $("#sltcogsaccount").val(cogsaccount);
+                    $("#slttaxcodepurchase").val(taxcodepurchase);
+                    $("#edtbuyqty1cost").val(buyqty1cost);
 
-                        setTimeout(function () {
-                          $("#newProductModal").modal("show");
-                        }, 500);
-                      })
-                      .catch(function (err) {
-                        $(".fullScreenSpin").css("display", "none");
-                      });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  var added = false;
-
-                  for (let i = 0; i < data.tproductvs1.length; i++) {
-                    if (
-                        data.tproductvs1[i].fields.ProductName === productDataName
-                    ) {
-                      added = true;
-                      $(".fullScreenSpin").css("display", "none");
-
-                      let productname =
-                          data.tproductvs1[i].fields.ProductName || "";
-                      let buyqty1cost =
-                          utilityService.modifynegativeCurrencyFormat(
-                              data.tproductvs1[i].fields.BuyQty1Cost
-                          ) || 0;
-                      let cogsaccount =
-                          data.tproductvs1[i].fields.CogsAccount || "";
-                      let taxcodepurchase =
-                          data.tproductvs1[i].fields.TaxCodePurchase || "";
-                      let purchasedescription =
-                          data.tproductvs1[i].fields.PurchaseDescription || "";
-                      let sellqty1price =
-                          utilityService.modifynegativeCurrencyFormat(
-                              data.tproductvs1[i].fields.SellQty1Price
-                          ) || 0;
-                      let incomeaccount =
-                          data.tproductvs1[i].fields.IncomeAccount || "";
-                      let taxcodesales =
-                          data.tproductvs1[i].fields.TaxCodeSales || "";
-                      let salesdescription =
-                          data.tproductvs1[i].fields.SalesDescription || "";
-                      let barcode = data.tproductvs1[i].fields.BARCODE || "";
-                      $("#selectProductID")
-                          .val(data.tproductvs1[i].fields.ID)
-                          .trigger("change");
-                      $("#add-product-title").text("Edit Product");
-                      $("#edtproductname").val(productname);
-                      $("#edtsellqty1price").val(sellqty1price);
-                      $("#txasalesdescription").val(salesdescription);
-                      $("#sltsalesacount").val(incomeaccount);
-                      $("#slttaxcodesales").val(taxcodesales);
-                      $("#edtbarcode").val(barcode);
-                      $("#txapurchasedescription").val(purchasedescription);
-                      $("#sltcogsaccount").val(cogsaccount);
-                      $("#slttaxcodepurchase").val(taxcodepurchase);
-                      $("#edtbuyqty1cost").val(buyqty1cost);
-
+                    setTimeout(function () {
                       $("#newProductModal").modal("show");
-                    }
-                  }
-                  if (!added) {
-                    sideBarService
-                        .getOneProductdatavs1byname(productDataName)
-                        .then(function (data) {
-                          $(".fullScreenSpin").css("display", "none");
-                          let productname =
-                              data.tproduct[0].fields.ProductName || "";
-                          let buyqty1cost =
-                              utilityService.modifynegativeCurrencyFormat(
-                                  data.tproduct[0].fields.BuyQty1Cost
-                              ) || 0;
-                          let cogsaccount =
-                              data.tproduct[0].fields.CogsAccount || "";
-                          let taxcodepurchase =
-                              data.tproduct[0].fields.TaxCodePurchase || "";
-                          let purchasedescription =
-                              data.tproduct[0].fields.PurchaseDescription || "";
-                          let sellqty1price =
-                              utilityService.modifynegativeCurrencyFormat(
-                                  data.tproduct[0].fields.SellQty1Price
-                              ) || 0;
-                          let incomeaccount =
-                              data.tproduct[0].fields.IncomeAccount || "";
-                          let taxcodesales =
-                              data.tproduct[0].fields.TaxCodeSales || "";
-                          let salesdescription =
-                              data.tproduct[0].fields.SalesDescription || "";
-                          let barcode = data.tproduct[0].fields.BARCODE || "";
-                          $("#selectProductID")
-                              .val(data.tproduct[0].fields.ID)
-                              .trigger("change");
-                          $("#add-product-title").text("Edit Product");
-                          $("#edtproductname").val(productname);
-                          $("#edtsellqty1price").val(sellqty1price);
-                          $("#txasalesdescription").val(salesdescription);
-                          $("#sltsalesacount").val(incomeaccount);
-                          $("#slttaxcodesales").val(taxcodesales);
-                          $("#edtbarcode").val(barcode);
-                          $("#txapurchasedescription").val(purchasedescription);
-                          $("#sltcogsaccount").val(cogsaccount);
-                          $("#slttaxcodepurchase").val(taxcodepurchase);
-                          $("#edtbuyqty1cost").val(buyqty1cost);
+                    }, 500);
+                  })
+                  .catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                  });
+              } else {
+                let data = JSON.parse(dataObject[0].data);
+                var added = false;
 
-                          $("#newProductModal").modal("show");
-                        })
-                        .catch(function (err) {
-                          $(".fullScreenSpin").css("display", "none");
-                        });
+                for (let i = 0; i < data.tproductvs1.length; i++) {
+                  if (
+                    data.tproductvs1[i].fields.ProductName === productDataName
+                  ) {
+                    added = true;
+                    $(".fullScreenSpin").css("display", "none");
+
+                    let productname =
+                      data.tproductvs1[i].fields.ProductName || "";
+                    let buyqty1cost =
+                      utilityService.modifynegativeCurrencyFormat(
+                        data.tproductvs1[i].fields.BuyQty1Cost
+                      ) || 0;
+                    let cogsaccount =
+                      data.tproductvs1[i].fields.CogsAccount || "";
+                    let taxcodepurchase =
+                      data.tproductvs1[i].fields.TaxCodePurchase || "";
+                    let purchasedescription =
+                      data.tproductvs1[i].fields.PurchaseDescription || "";
+                    let sellqty1price =
+                      utilityService.modifynegativeCurrencyFormat(
+                        data.tproductvs1[i].fields.SellQty1Price
+                      ) || 0;
+                    let incomeaccount =
+                      data.tproductvs1[i].fields.IncomeAccount || "";
+                    let taxcodesales =
+                      data.tproductvs1[i].fields.TaxCodeSales || "";
+                    let salesdescription =
+                      data.tproductvs1[i].fields.SalesDescription || "";
+                    let barcode = data.tproductvs1[i].fields.BARCODE || "";
+                    $("#selectProductID")
+                      .val(data.tproductvs1[i].fields.ID)
+                      .trigger("change");
+                    $("#add-product-title").text("Edit Product");
+                    $("#edtproductname").val(productname);
+                    $("#edtsellqty1price").val(sellqty1price);
+                    $("#txasalesdescription").val(salesdescription);
+                    $("#sltsalesacount").val(incomeaccount);
+                    $("#slttaxcodesales").val(taxcodesales);
+                    $("#edtbarcode").val(barcode);
+                    $("#txapurchasedescription").val(purchasedescription);
+                    $("#sltcogsaccount").val(cogsaccount);
+                    $("#slttaxcodepurchase").val(taxcodepurchase);
+                    $("#edtbuyqty1cost").val(buyqty1cost);
+
+                    $("#newProductModal").modal("show");
                   }
                 }
-              })
-              .catch(function (err) {
-                sideBarService
+                if (!added) {
+                  sideBarService
                     .getOneProductdatavs1byname(productDataName)
                     .then(function (data) {
                       $(".fullScreenSpin").css("display", "none");
-                      let productname = data.tproduct[0].fields.ProductName || "";
+                      let productname =
+                        data.tproduct[0].fields.ProductName || "";
                       let buyqty1cost =
-                          utilityService.modifynegativeCurrencyFormat(
-                              data.tproduct[0].fields.BuyQty1Cost
-                          ) || 0;
-                      let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                        utilityService.modifynegativeCurrencyFormat(
+                          data.tproduct[0].fields.BuyQty1Cost
+                        ) || 0;
+                      let cogsaccount =
+                        data.tproduct[0].fields.CogsAccount || "";
                       let taxcodepurchase =
-                          data.tproduct[0].fields.TaxCodePurchase || "";
+                        data.tproduct[0].fields.TaxCodePurchase || "";
                       let purchasedescription =
-                          data.tproduct[0].fields.PurchaseDescription || "";
+                        data.tproduct[0].fields.PurchaseDescription || "";
                       let sellqty1price =
-                          utilityService.modifynegativeCurrencyFormat(
-                              data.tproduct[0].fields.SellQty1Price
-                          ) || 0;
+                        utilityService.modifynegativeCurrencyFormat(
+                          data.tproduct[0].fields.SellQty1Price
+                        ) || 0;
                       let incomeaccount =
-                          data.tproduct[0].fields.IncomeAccount || "";
-                      let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
+                        data.tproduct[0].fields.IncomeAccount || "";
+                      let taxcodesales =
+                        data.tproduct[0].fields.TaxCodeSales || "";
                       let salesdescription =
-                          data.tproduct[0].fields.SalesDescription || "";
+                        data.tproduct[0].fields.SalesDescription || "";
                       let barcode = data.tproduct[0].fields.BARCODE || "";
                       $("#selectProductID")
-                          .val(data.tproduct[0].fields.ID)
-                          .trigger("change");
+                        .val(data.tproduct[0].fields.ID)
+                        .trigger("change");
                       $("#add-product-title").text("Edit Product");
                       $("#edtproductname").val(productname);
                       $("#edtsellqty1price").val(sellqty1price);
@@ -7150,79 +7054,127 @@ Template.new_invoice.events({
                     .catch(function (err) {
                       $(".fullScreenSpin").css("display", "none");
                     });
-              });
+                }
+              }
+            })
+            .catch(function (err) {
+              sideBarService
+                .getOneProductdatavs1byname(productDataName)
+                .then(function (data) {
+                  $(".fullScreenSpin").css("display", "none");
+                  let productname = data.tproduct[0].fields.ProductName || "";
+                  let buyqty1cost =
+                    utilityService.modifynegativeCurrencyFormat(
+                      data.tproduct[0].fields.BuyQty1Cost
+                    ) || 0;
+                  let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                  let taxcodepurchase =
+                    data.tproduct[0].fields.TaxCodePurchase || "";
+                  let purchasedescription =
+                    data.tproduct[0].fields.PurchaseDescription || "";
+                  let sellqty1price =
+                    utilityService.modifynegativeCurrencyFormat(
+                      data.tproduct[0].fields.SellQty1Price
+                    ) || 0;
+                  let incomeaccount =
+                    data.tproduct[0].fields.IncomeAccount || "";
+                  let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
+                  let salesdescription =
+                    data.tproduct[0].fields.SalesDescription || "";
+                  let barcode = data.tproduct[0].fields.BARCODE || "";
+                  $("#selectProductID")
+                    .val(data.tproduct[0].fields.ID)
+                    .trigger("change");
+                  $("#add-product-title").text("Edit Product");
+                  $("#edtproductname").val(productname);
+                  $("#edtsellqty1price").val(sellqty1price);
+                  $("#txasalesdescription").val(salesdescription);
+                  $("#sltsalesacount").val(incomeaccount);
+                  $("#slttaxcodesales").val(taxcodesales);
+                  $("#edtbarcode").val(barcode);
+                  $("#txapurchasedescription").val(purchasedescription);
+                  $("#sltcogsaccount").val(cogsaccount);
+                  $("#slttaxcodepurchase").val(taxcodepurchase);
+                  $("#edtbuyqty1cost").val(buyqty1cost);
+
+                  $("#newProductModal").modal("show");
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            });
 
           setTimeout(function () {
             $("#dtDateTo")
-                .datepicker({
-                  showOn: "button",
-                  buttonText: "Show Date",
-                  buttonImageOnly: true,
-                  buttonImage: "/img/imgCal2.png",
-                  constrainInput: false,
-                  dateFormat: "d/mm/yy",
-                  showOtherMonths: true,
-                  selectOtherMonths: true,
-                  changeMonth: true,
-                  changeYear: true,
-                  yearRange: "-90:+10",
-                })
-                .keyup(function (e) {
-                  if (e.keyCode == 8 || e.keyCode == 46) {
-                    $("#dtDateTo,#dtDateFrom").val("");
-                  }
-                });
+              .datepicker({
+                showOn: "button",
+                buttonText: "Show Date",
+                buttonImageOnly: true,
+                buttonImage: "/img/imgCal2.png",
+                constrainInput: false,
+                dateFormat: "d/mm/yy",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-90:+10",
+              })
+              .keyup(function (e) {
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                  $("#dtDateTo,#dtDateFrom").val("");
+                }
+              });
 
             $("#dtDateFrom")
-                .datepicker({
-                  showOn: "button",
-                  buttonText: "Show Date",
-                  altField: "#dtDateFrom",
-                  buttonImageOnly: true,
-                  buttonImage: "/img/imgCal2.png",
-                  constrainInput: false,
-                  dateFormat: "d/mm/yy",
-                  showOtherMonths: true,
-                  selectOtherMonths: true,
-                  changeMonth: true,
-                  changeYear: true,
-                  yearRange: "-90:+10",
-                })
-                .keyup(function (e) {
-                  if (e.keyCode == 8 || e.keyCode == 46) {
-                    $("#dtDateTo,#dtDateFrom").val("");
-                  }
-                });
+              .datepicker({
+                showOn: "button",
+                buttonText: "Show Date",
+                altField: "#dtDateFrom",
+                buttonImageOnly: true,
+                buttonImage: "/img/imgCal2.png",
+                constrainInput: false,
+                dateFormat: "d/mm/yy",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "-90:+10",
+              })
+              .keyup(function (e) {
+                if (e.keyCode == 8 || e.keyCode == 46) {
+                  $("#dtDateTo,#dtDateFrom").val("");
+                }
+              });
 
             $(".ui-datepicker .ui-state-hihglight").removeClass(
-                "ui-state-highlight"
+              "ui-state-highlight"
             );
           }, 1000);
           //}
 
           templateObject.getProductClassQtyData = function () {
             productService
-                .getOneProductClassQtyData(currentProductID)
-                .then(function (data) {
-                  $(".fullScreenSpin").css("display", "none");
-                  let qtylineItems = [];
-                  let qtylineItemObj = {};
-                  let totaldeptquantity = 0;
+              .getOneProductClassQtyData(currentProductID)
+              .then(function (data) {
+                $(".fullScreenSpin").css("display", "none");
+                let qtylineItems = [];
+                let qtylineItemObj = {};
+                let totaldeptquantity = 0;
 
-                  for (let j in data.tproductclassquantity) {
-                    qtylineItemObj = {
-                      department: data.tproductclassquantity[j].DepartmentName || "",
-                      quantity: data.tproductclassquantity[j].InStockQty || 0,
-                    };
-                    totaldeptquantity += data.tproductclassquantity[j].InStockQty;
-                    qtylineItems.push(qtylineItemObj);
-                  }
-                  templateObject.productqtyrecords.set(qtylineItems);
-                  templateObject.totaldeptquantity.set(totaldeptquantity);
-                })
-                .catch(function (err) {
-                  $(".fullScreenSpin").css("display", "none");
-                });
+                for (let j in data.tproductclassquantity) {
+                  qtylineItemObj = {
+                    department: data.tproductclassquantity[j].DepartmentName || "",
+                    quantity: data.tproductclassquantity[j].InStockQty || 0,
+                  };
+                  totaldeptquantity += data.tproductclassquantity[j].InStockQty;
+                  qtylineItems.push(qtylineItemObj);
+                }
+                templateObject.productqtyrecords.set(qtylineItems);
+                templateObject.totaldeptquantity.set(totaldeptquantity);
+              })
+              .catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+              });
           };
         } else {
           $("#productListModal").modal("toggle");
@@ -7244,8 +7196,8 @@ Template.new_invoice.events({
   "click .lineTaxRate": function (event) {
     $("#tblInvoiceLine tbody tr .lineTaxRate").attr("data-toggle", "modal");
     $("#tblInvoiceLine tbody tr .lineTaxRate").attr(
-        "data-target",
-        "#taxRateListModal"
+      "data-target",
+      "#taxRateListModal"
     );
     var targetID = $(event.target).closest("tr").attr("id");
     $("#selectLineID").val(targetID);
@@ -7257,8 +7209,8 @@ Template.new_invoice.events({
     let price = targetRow.find(".colUnitPriceExChange").val() || 0;
     const tmpObj = Template.instance();
     const taxDetail = tmpObj.taxcodes
-        .get()
-        .find((v) => v.CodeName === targetTaxCode);
+      .get()
+      .find((v) => v.CodeName === targetTaxCode);
     const subTaxCodes = tmpObj.subtaxcodes.get();
 
     if (!taxDetail) {
@@ -7266,7 +7218,7 @@ Template.new_invoice.events({
     }
 
     let priceTotal =
-        parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
+      parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, ""));
     let taxTotal = priceTotal * parseFloat(taxDetail.Rate);
 
     let taxDetailTableData = [];
@@ -7287,7 +7239,7 @@ Template.new_invoice.events({
           lineDescription = line.Description;
         } else {
           lineDescription = subTaxCodes.find(
-              (v) => v.codename === line.SubTaxCode
+            (v) => v.codename === line.SubTaxCode
           );
           if (lineDescription) {
             lineDescription = lineDescription.description;
@@ -7319,34 +7271,34 @@ Template.new_invoice.events({
             orderable: true,
             targets: [0],
           },
-            {
-              className: "taxId",
-              targets: [1],
-            },
-            {
-              className: "taxCode",
-              targets: [2],
-            },
-            {
-              className: "taxRate text-right",
-              targets: [3],
-            },
-            {
-              className: "taxRateOn",
-              targets: [4],
-            },
-            {
-              className: "amountEx text-right",
-              targets: [5],
-            },
-            {
-              className: "tax text-right",
-              targets: [6],
-            },
-            {
-              className: "amountInc text-right",
-              targets: [7],
-            },
+          {
+            className: "taxId",
+            targets: [1],
+          },
+          {
+            className: "taxCode",
+            targets: [2],
+          },
+          {
+            className: "taxRate text-right",
+            targets: [3],
+          },
+          {
+            className: "taxRateOn",
+            targets: [4],
+          },
+          {
+            className: "amountEx text-right",
+            targets: [5],
+          },
+          {
+            className: "tax text-right",
+            targets: [6],
+          },
+          {
+            className: "amountInc text-right",
+            targets: [7],
+          },
           ],
           colReorder: true,
           pageLength: initialDatatableLoad,
@@ -7360,10 +7312,10 @@ Template.new_invoice.events({
           language: { search: "", searchPlaceholder: "Search List..." },
           fnInitComplete: function () {
             $(
-                "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+              "<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
             ).insertAfter("#tblTaxDetail_filter");
             $(
-                "<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+              "<button class='btn btn-primary btnRefreshTaxDetail' type='button' id='btnRefreshTaxDetail' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
             ).insertAfter("#tblTaxDetail_filter");
           },
         });
@@ -7377,8 +7329,8 @@ Template.new_invoice.events({
 
     $("#tblInvoiceLine tbody tr .lineTaxAmount").attr("data-toggle", "modal");
     $("#tblInvoiceLine tbody tr .lineTaxAmount").attr(
-        "data-target",
-        "#taxDetailModal"
+      "data-target",
+      "#taxDetailModal"
     );
   },
   "click .lineSerialNo, keydown .lineSerialNo": function (event) {
@@ -7428,76 +7380,76 @@ Template.new_invoice.events({
     } else {
       if (taxRateDataName.replace(/\s/g, "") != "") {
         getVS1Data("TTaxcodeVS1")
-            .then(function (dataObject) {
-              if (dataObject.length == 0) {
-                purchaseService
-                    .getTaxCodesVS1()
-                    .then(function (data) {
-                      for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                          $("#edtTaxNamePop").attr("readonly", true);
-                          let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                          var taxRateID = data.ttaxcodevs1[i].Id || "";
-                          var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                          var taxRateDesc = data.ttaxcodevs1[i].Description || "";
-                          $("#edtTaxID").val(taxRateID);
-                          $("#edtTaxNamePop").val(taxRateName);
-                          $("#edtTaxRatePop").val(taxRate);
-                          $("#edtTaxDescPop").val(taxRateDesc);
-                          setTimeout(function () {
-                            $("#newTaxRateModal").modal("toggle");
-                          }, 100);
-                        }
-                      }
-                    })
-                    .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "none");
-                    });
-              } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.ttaxcodevs1;
-                $(".taxcodepopheader").text("Edit Tax Rate");
-                for (let i = 0; i < useData.length; i++) {
-                  if (useData[i].CodeName === taxRateDataName) {
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              purchaseService
+                .getTaxCodesVS1()
+                .then(function (data) {
+                  for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                    if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
+                      $("#edtTaxNamePop").attr("readonly", true);
+                      let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                      var taxRateID = data.ttaxcodevs1[i].Id || "";
+                      var taxRateName = data.ttaxcodevs1[i].CodeName || "";
+                      var taxRateDesc = data.ttaxcodevs1[i].Description || "";
+                      $("#edtTaxID").val(taxRateID);
+                      $("#edtTaxNamePop").val(taxRateName);
+                      $("#edtTaxRatePop").val(taxRate);
+                      $("#edtTaxDescPop").val(taxRateDesc);
+                      setTimeout(function () {
+                        $("#newTaxRateModal").modal("toggle");
+                      }, 100);
+                    }
+                  }
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              let useData = data.ttaxcodevs1;
+              $(".taxcodepopheader").text("Edit Tax Rate");
+              for (let i = 0; i < useData.length; i++) {
+                if (useData[i].CodeName === taxRateDataName) {
+                  $("#edtTaxNamePop").attr("readonly", true);
+                  let taxRate = (useData[i].Rate * 100).toFixed(2);
+                  var taxRateID = useData[i].Id || "";
+                  var taxRateName = useData[i].CodeName || "";
+                  var taxRateDesc = useData[i].Description || "";
+                  $("#edtTaxID").val(taxRateID);
+                  $("#edtTaxNamePop").val(taxRateName);
+                  $("#edtTaxRatePop").val(taxRate);
+                  $("#edtTaxDescPop").val(taxRateDesc);
+                  $("#newTaxRateModal").modal("toggle");
+                }
+              }
+            }
+          })
+          .catch(function (err) {
+            purchaseService
+              .getTaxCodesVS1()
+              .then(function (data) {
+                for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+                  if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
                     $("#edtTaxNamePop").attr("readonly", true);
-                    let taxRate = (useData[i].Rate * 100).toFixed(2);
-                    var taxRateID = useData[i].Id || "";
-                    var taxRateName = useData[i].CodeName || "";
-                    var taxRateDesc = useData[i].Description || "";
+                    let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+                    var taxRateID = data.ttaxcodevs1[i].Id || "";
+                    var taxRateName = data.ttaxcodevs1[i].CodeName || "";
+                    var taxRateDesc = data.ttaxcodevs1[i].Description || "";
                     $("#edtTaxID").val(taxRateID);
                     $("#edtTaxNamePop").val(taxRateName);
                     $("#edtTaxRatePop").val(taxRate);
                     $("#edtTaxDescPop").val(taxRateDesc);
-                    $("#newTaxRateModal").modal("toggle");
+                    setTimeout(function () {
+                      $("#newTaxRateModal").modal("toggle");
+                    }, 100);
                   }
                 }
-              }
-            })
-            .catch(function (err) {
-              purchaseService
-                  .getTaxCodesVS1()
-                  .then(function (data) {
-                    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                      if (data.ttaxcodevs1[i].CodeName === taxRateDataName) {
-                        $("#edtTaxNamePop").attr("readonly", true);
-                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                        var taxRateID = data.ttaxcodevs1[i].Id || "";
-                        var taxRateName = data.ttaxcodevs1[i].CodeName || "";
-                        var taxRateDesc = data.ttaxcodevs1[i].Description || "";
-                        $("#edtTaxID").val(taxRateID);
-                        $("#edtTaxNamePop").val(taxRateName);
-                        $("#edtTaxRatePop").val(taxRate);
-                        $("#edtTaxDescPop").val(taxRateDesc);
-                        setTimeout(function () {
-                          $("#newTaxRateModal").modal("toggle");
-                        }, 100);
-                      }
-                    }
-                  })
-                  .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
-                  });
-            });
+              })
+              .catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+              });
+          });
       } else {
         $("#taxRateListModal").modal("toggle");
         var targetID = $(event.target).closest("tr").attr("id");
@@ -7543,88 +7495,88 @@ Template.new_invoice.events({
     } else {
       if (UOMDataName.replace(/\s/g, "") != "") {
         getVS1Data("TUnitOfMeasure")
-            .then(function (dataObject) {
-              if (dataObject.length == 0) {
-                sideBarService
-                    .getUOMVS1()
-                    .then(function (data) {
-                      for (let i = 0; i < data.tunitofmeasure.length; i++) {
-                        if (data.tunitofmeasure[i].fields.UOMName === UOMDataName) {
-                          $("#edtUOMNamePop").attr("readonly", true);
-                          let taxRate = (
-                              data.tunitofmeasure[i].fields.Rate * 100
-                          ).toFixed(2);
-                          var taxRateID = data.tunitofmeasure[i].fields.ID || "";
-                          var taxRateName =
-                              data.tunitofmeasure[i].fields.UOMName || "";
-                          var taxRateDesc =
-                              data.tunitofmeasure[i].fields.Description || "";
-                          $("#edtUOMID").val(taxRateID);
-                          $("#edtUOMNamePop").val(taxRateName);
-                          $("#edtTaxRatePop").val(taxRate);
-                          $("#edtTaxDescPop").val(taxRateDesc);
-                          setTimeout(function () {
-                            $("#newUOMModal").modal("toggle");
-                          }, 100);
-                        }
-                      }
-                    })
-                    .catch(function (err) {
-                      $(".fullScreenSpin").css("display", "none");
-                    });
-              } else {
-                let data = JSON.parse(dataObject[0].data);
-                $(".uompopheader").text("Edit Units Of Measure");
+          .then(function (dataObject) {
+            if (dataObject.length == 0) {
+              sideBarService
+                .getUOMVS1()
+                .then(function (data) {
+                  for (let i = 0; i < data.tunitofmeasure.length; i++) {
+                    if (data.tunitofmeasure[i].fields.UOMName === UOMDataName) {
+                      $("#edtUOMNamePop").attr("readonly", true);
+                      let taxRate = (
+                        data.tunitofmeasure[i].fields.Rate * 100
+                      ).toFixed(2);
+                      var taxRateID = data.tunitofmeasure[i].fields.ID || "";
+                      var taxRateName =
+                        data.tunitofmeasure[i].fields.UOMName || "";
+                      var taxRateDesc =
+                        data.tunitofmeasure[i].fields.Description || "";
+                      $("#edtUOMID").val(taxRateID);
+                      $("#edtUOMNamePop").val(taxRateName);
+                      $("#edtTaxRatePop").val(taxRate);
+                      $("#edtTaxDescPop").val(taxRateDesc);
+                      setTimeout(function () {
+                        $("#newUOMModal").modal("toggle");
+                      }, 100);
+                    }
+                  }
+                })
+                .catch(function (err) {
+                  $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+              let data = JSON.parse(dataObject[0].data);
+              $(".uompopheader").text("Edit Units Of Measure");
+              for (let i = 0; i < data.tunitofmeasure.length; i++) {
+                if (data.tunitofmeasure[i].fields.UOMName === UOMDataName) {
+                  $("#edtTaxNamePop").attr("readonly", true);
+                  let taxRate = (
+                    data.tunitofmeasure[i].fields.Rate * 100
+                  ).toFixed(2);
+                  var taxRateID = data.tunitofmeasure[i].fields.ID || "";
+                  var taxRateName = data.tunitofmeasure[i].fields.UOMName || "";
+                  var taxRateDesc =
+                    data.tunitofmeasure[i].fields.Description || "";
+                  $("#edtTaxID").val(taxRateID);
+                  $("#edtTaxNamePop").val(taxRateName);
+                  $("#edtTaxRatePop").val(taxRate);
+                  $("#edtUOMDescPop").val(taxRateDesc);
+                  setTimeout(function () {
+                    $("#newUOMModal").modal("toggle");
+                  }, 100);
+                }
+              }
+            }
+          })
+          .catch(function (err) {
+            sideBarService
+              .getUOMVS1()
+              .then(function (data) {
                 for (let i = 0; i < data.tunitofmeasure.length; i++) {
                   if (data.tunitofmeasure[i].fields.UOMName === UOMDataName) {
                     $("#edtTaxNamePop").attr("readonly", true);
                     let taxRate = (
-                        data.tunitofmeasure[i].fields.Rate * 100
+                      data.tunitofmeasure[i].fields.Rate * 100
                     ).toFixed(2);
                     var taxRateID = data.tunitofmeasure[i].fields.ID || "";
-                    var taxRateName = data.tunitofmeasure[i].fields.UOMName || "";
+                    var taxRateName =
+                      data.tunitofmeasure[i].fields.UOMName || "";
                     var taxRateDesc =
-                        data.tunitofmeasure[i].fields.Description || "";
+                      data.tunitofmeasure[i].fields.Description || "";
                     $("#edtTaxID").val(taxRateID);
                     $("#edtTaxNamePop").val(taxRateName);
                     $("#edtTaxRatePop").val(taxRate);
-                    $("#edtUOMDescPop").val(taxRateDesc);
+                    $("#edtTaxDescPop").val(taxRateDesc);
                     setTimeout(function () {
                       $("#newUOMModal").modal("toggle");
                     }, 100);
                   }
                 }
-              }
-            })
-            .catch(function (err) {
-              sideBarService
-                  .getUOMVS1()
-                  .then(function (data) {
-                    for (let i = 0; i < data.tunitofmeasure.length; i++) {
-                      if (data.tunitofmeasure[i].fields.UOMName === UOMDataName) {
-                        $("#edtTaxNamePop").attr("readonly", true);
-                        let taxRate = (
-                            data.tunitofmeasure[i].fields.Rate * 100
-                        ).toFixed(2);
-                        var taxRateID = data.tunitofmeasure[i].fields.ID || "";
-                        var taxRateName =
-                            data.tunitofmeasure[i].fields.UOMName || "";
-                        var taxRateDesc =
-                            data.tunitofmeasure[i].fields.Description || "";
-                        $("#edtTaxID").val(taxRateID);
-                        $("#edtTaxNamePop").val(taxRateName);
-                        $("#edtTaxRatePop").val(taxRate);
-                        $("#edtTaxDescPop").val(taxRateDesc);
-                        setTimeout(function () {
-                          $("#newUOMModal").modal("toggle");
-                        }, 100);
-                      }
-                    }
-                  })
-                  .catch(function (err) {
-                    $(".fullScreenSpin").css("display", "none");
-                  });
-            });
+              })
+              .catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+              });
+          });
       } else {
         $("#UOMListModal").modal("toggle");
         var targetID = $(event.target).closest("tr").attr("id");
@@ -7684,13 +7636,13 @@ Template.new_invoice.events({
     templateObject.print()
   },
   "keydown .lineQty, keydown .lineUnitPrice, keydown .lineOrdered": function (
-      event
+    event
   ) {
     if (
-        $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-        (event.keyCode === 65 &&
-            (event.ctrlKey === true || event.metaKey === true)) ||
-        (event.keyCode >= 35 && event.keyCode <= 40)
+      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+      (event.keyCode === 65 &&
+        (event.ctrlKey === true || event.metaKey === true)) ||
+      (event.keyCode >= 35 && event.keyCode <= 40)
     ) {
       return;
     }
@@ -7700,16 +7652,16 @@ Template.new_invoice.events({
     }
 
     if (
-        (event.keyCode >= 48 && event.keyCode <= 57) ||
-        (event.keyCode >= 96 && event.keyCode <= 105) ||
-        event.keyCode == 8 ||
-        event.keyCode == 9 ||
-        event.keyCode == 37 ||
-        event.keyCode == 39 ||
-        event.keyCode == 46 ||
-        event.keyCode == 190 ||
-        event.keyCode == 189 ||
-        event.keyCode == 109
+      (event.keyCode >= 48 && event.keyCode <= 57) ||
+      (event.keyCode >= 96 && event.keyCode <= 105) ||
+      event.keyCode == 8 ||
+      event.keyCode == 9 ||
+      event.keyCode == 37 ||
+      event.keyCode == 39 ||
+      event.keyCode == 46 ||
+      event.keyCode == 190 ||
+      event.keyCode == 189 ||
+      event.keyCode == 109
     ) { } else {
       event.preventDefault();
     }
@@ -7756,13 +7708,13 @@ Template.new_invoice.events({
             }
 
             var subTotal =
-                parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+              parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
             var taxTotal =
-                parseFloat(qty, 10) *
-                Number(price.replace(/[^0-9.-]+/g, "")) *
-                parseFloat(taxrateamount);
+              parseFloat(qty, 10) *
+              Number(price.replace(/[^0-9.-]+/g, "")) *
+              parseFloat(taxrateamount);
             var lineDiscountPerc =
-                parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+              parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
             let lineTotalAmount = subTotal + taxTotal;
 
             let lineDiscountTotal = lineDiscountPerc / 100;
@@ -7770,78 +7722,78 @@ Template.new_invoice.events({
             var discountTotal = lineTotalAmount * lineDiscountTotal;
             var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
             var subTotalWithDiscountTotalLine =
-                subTotal - subTotalWithDiscount || 0;
+              subTotal - subTotalWithDiscount || 0;
             var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
             var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
             if (!isNaN(discountTotal)) {
               subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
               document.getElementById("subtotal_discount").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
             }
             $tblrow
-                .find(".lineTaxAmount")
-                .text(
-                    utilityService.modifynegativeCurrencyFormat(
-                        taxTotalWithDiscountTotalLine
-                    )
-                );
+              .find(".lineTaxAmount")
+              .text(
+                utilityService.modifynegativeCurrencyFormat(
+                  taxTotalWithDiscountTotalLine
+                )
+              );
 
             let unitPriceIncCalc =
-                Number(price.replace(/[^0-9.-]+/g, "")) *
-                parseFloat(taxrateamount) || 0;
+              Number(price.replace(/[^0-9.-]+/g, "")) *
+              parseFloat(taxrateamount) || 0;
             let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
             let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
             $tblrow
-                .find(".colUnitPriceExChange")
-                .val(
-                    utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
-                );
+              .find(".colUnitPriceExChange")
+              .val(
+                utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal)
+              );
             $tblrow
-                .find(".colUnitPriceIncChange")
-                .val(
-                    utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-                );
+              .find(".colUnitPriceIncChange")
+              .val(
+                utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+              );
 
             if (!isNaN(subTotal)) {
               $tblrow
-                  .find(".colAmountEx")
-                  .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                .find(".colAmountEx")
+                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
               $tblrow
-                  .find(".colAmountInc")
-                  .text(
-                      utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
-                  );
+                .find(".colAmountInc")
+                .text(
+                  utilityService.modifynegativeCurrencyFormat(lineTotalAmount)
+                );
               subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-                  0 :
-                  subTotalWithDiscountTotalLine;
+                0 :
+                subTotalWithDiscountTotalLine;
               subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
               document.getElementById("subtotal_total").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+                utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
             }
 
             if (!isNaN(taxTotal)) {
               taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-                  0 :
-                  taxTotalWithDiscountTotalLine;
+                0 :
+                taxTotalWithDiscountTotalLine;
               taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
               document.getElementById("subtotal_tax").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+                utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
             }
 
             if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
               let GrandTotal =
-                  parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
               let GrandTotalNet =
-                  parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+                parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
               document.getElementById("subtotal_nett").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+                utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
               document.getElementById("grandTotal").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
               document.getElementById("balanceDue").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
               document.getElementById("totalBalanceDue").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(GrandTotal);
+                utilityService.modifynegativeCurrencyFormat(GrandTotal);
             }
           });
 
@@ -7859,35 +7811,35 @@ Template.new_invoice.events({
               }
             }
             var subTotal =
-                parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+              parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
             var taxTotal =
-                parseFloat(qty, 10) *
-                Number(price.replace(/[^0-9.-]+/g, "")) *
-                parseFloat(taxrateamount);
+              parseFloat(qty, 10) *
+              Number(price.replace(/[^0-9.-]+/g, "")) *
+              parseFloat(taxrateamount);
             $printrows
-                .find("#lineTaxAmount")
-                .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+              .find("#lineTaxAmount")
+              .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
             if (!isNaN(subTotal)) {
               $printrows
-                  .find("#lineAmt")
-                  .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+                .find("#lineAmt")
+                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
               subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
               document.getElementById("subtotal_totalPrint").innerHTML =
-                  $("#subtotal_total").text();
+                $("#subtotal_total").text();
             }
 
             if (!isNaN(taxTotal)) {
               taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
               document.getElementById("totalTax_totalPrint").innerHTML =
-                  utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+                utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
             }
             if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
               let GrandTotal =
-                  parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
               document.getElementById("grandTotalPrint").innerHTML =
-                  $("#grandTotal").text();
+                $("#grandTotal").text();
               document.getElementById("totalBalanceDuePrint").innerHTML =
-                  $("#totalBalanceDue").text();
+                $("#totalBalanceDue").text();
             }
           });
           return false;
@@ -7930,11 +7882,11 @@ Template.new_invoice.events({
             var fromDate = creationDate.substring(0, 10);
             var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingInvoices = await sideBarService.getAllTInvoiceListData(
-                fromDate,
-                toDate,
-                false,
-                initialReportLoad,
-                0
+              fromDate,
+              toDate,
+              false,
+              initialReportLoad,
+              0
             );
             var invList = followingInvoices.tinvoicelist;
             var j = 0;
@@ -7994,40 +7946,40 @@ Template.new_invoice.events({
         };
 
         salesService
-            .saveInvoiceEx(objDetails)
-            .then(function (objDetails) {
-              if (FlowRouter.current().queryParams.trans) {
-                FlowRouter.go(
-                    "/customerscard?id=" +
-                    FlowRouter.current().queryParams.trans +
-                    "&transTab=active"
-                );
-              } else {
-                FlowRouter.go("/invoicelist?success=true");
-              }
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  if (err === checkResponseError) {
-                    window.open("/", "_self");
-                  }
-                } else if (result.dismiss === "cancel") { }
-              });
-              $(".fullScreenSpin").css("display", "none");
+          .saveInvoiceEx(objDetails)
+          .then(function (objDetails) {
+            if (FlowRouter.current().queryParams.trans) {
+              FlowRouter.go(
+                "/customerscard?id=" +
+                FlowRouter.current().queryParams.trans +
+                "&transTab=active"
+              );
+            } else {
+              FlowRouter.go("/invoicelist?success=true");
+            }
+          })
+          .catch(function (err) {
+            swal({
+              title: "Oooops...",
+              text: err,
+              type: "error",
+              showCancelButton: false,
+              confirmButtonText: "Try Again",
+            }).then((result) => {
+              if (result.value) {
+                if (err === checkResponseError) {
+                  window.open("/", "_self");
+                }
+              } else if (result.dismiss === "cancel") { }
             });
+            $(".fullScreenSpin").css("display", "none");
+          });
       } else {
         if (FlowRouter.current().queryParams.trans) {
           FlowRouter.go(
-              "/customerscard?id=" +
-              FlowRouter.current().queryParams.trans +
-              "&transTab=active"
+            "/customerscard?id=" +
+            FlowRouter.current().queryParams.trans +
+            "&transTab=active"
           );
         } else {
           FlowRouter.go("/invoicelist?success=true");
@@ -8056,40 +8008,40 @@ Template.new_invoice.events({
         };
 
         salesService
-            .saveInvoiceEx(objDetails)
-            .then(function (objDetails) {
-              if (FlowRouter.current().queryParams.trans) {
-                FlowRouter.go(
-                    "/customerscard?id=" +
-                    FlowRouter.current().queryParams.trans +
-                    "&transTab=active"
-                );
-              } else {
-                FlowRouter.go("/invoicelist?success=true");
-              }
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  if (err === checkResponseError) {
-                    window.open("/", "_self");
-                  }
-                } else if (result.dismiss === "cancel") { }
-              });
-              $(".fullScreenSpin").css("display", "none");
+          .saveInvoiceEx(objDetails)
+          .then(function (objDetails) {
+            if (FlowRouter.current().queryParams.trans) {
+              FlowRouter.go(
+                "/customerscard?id=" +
+                FlowRouter.current().queryParams.trans +
+                "&transTab=active"
+              );
+            } else {
+              FlowRouter.go("/invoicelist?success=true");
+            }
+          })
+          .catch(function (err) {
+            swal({
+              title: "Oooops...",
+              text: err,
+              type: "error",
+              showCancelButton: false,
+              confirmButtonText: "Try Again",
+            }).then((result) => {
+              if (result.value) {
+                if (err === checkResponseError) {
+                  window.open("/", "_self");
+                }
+              } else if (result.dismiss === "cancel") { }
             });
+            $(".fullScreenSpin").css("display", "none");
+          });
       } else {
         if (FlowRouter.current().queryParams.trans) {
           FlowRouter.go(
-              "/customerscard?id=" +
-              FlowRouter.current().queryParams.trans +
-              "&transTab=active"
+            "/customerscard?id=" +
+            FlowRouter.current().queryParams.trans +
+            "&transTab=active"
           );
         } else {
           FlowRouter.go("/invoicelist?success=true");
@@ -8111,8 +8063,8 @@ Template.new_invoice.events({
         this.click;
 
         $("#" + selectLineID)
-            .closest("tr")
-            .remove();
+          .closest("tr")
+          .remove();
         $("#deleteLineModal").modal("toggle");
         let $tblrows = $("#tblInvoiceLine tbody tr");
         let $printrows = $(".invoice_print tbody tr");
@@ -8140,13 +8092,13 @@ Template.new_invoice.events({
           }
 
           var subTotal =
-              parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
           var taxTotal =
-              parseFloat(qty, 10) *
-              Number(price.replace(/[^0-9.-]+/g, "")) *
-              parseFloat(taxrateamount);
+            parseFloat(qty, 10) *
+            Number(price.replace(/[^0-9.-]+/g, "")) *
+            parseFloat(taxrateamount);
           var lineDiscountPerc =
-              parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
+            parseFloat($tblrow.find(".lineDiscount").val()) || 0; // New Discount
           let lineTotalAmount = subTotal + taxTotal;
 
           let lineDiscountTotal = lineDiscountPerc / 100;
@@ -8154,74 +8106,74 @@ Template.new_invoice.events({
           var discountTotal = lineTotalAmount * lineDiscountTotal;
           var subTotalWithDiscount = subTotal * lineDiscountTotal || 0;
           var subTotalWithDiscountTotalLine =
-              subTotal - subTotalWithDiscount || 0;
+            subTotal - subTotalWithDiscount || 0;
           var taxTotalWithDiscount = taxTotal * lineDiscountTotal || 0;
           var taxTotalWithDiscountTotalLine = taxTotal - taxTotalWithDiscount;
           if (!isNaN(discountTotal)) {
             subDiscountTotal += isNaN(discountTotal) ? 0 : discountTotal;
 
             document.getElementById("subtotal_discount").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
+              utilityService.modifynegativeCurrencyFormat(subDiscountTotal);
           }
           $tblrow
-              .find(".lineTaxAmount")
-              .text(
-                  utilityService.modifynegativeCurrencyFormat(
-                      taxTotalWithDiscountTotalLine
-                  )
-              );
+            .find(".lineTaxAmount")
+            .text(
+              utilityService.modifynegativeCurrencyFormat(
+                taxTotalWithDiscountTotalLine
+              )
+            );
 
           let unitPriceIncCalc =
-              Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) ||
-              0;
+            Number(price.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount) ||
+            0;
           let lineUnitPriceExVal = Number(price.replace(/[^0-9.-]+/g, "")) || 0;
           let lineUnitPriceIncVal = lineUnitPriceExVal + unitPriceIncCalc || 0;
           $tblrow
-              .find(".colUnitPriceExChange")
-              .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
+            .find(".colUnitPriceExChange")
+            .val(utilityService.modifynegativeCurrencyFormat(lineUnitPriceExVal));
           $tblrow
-              .find(".colUnitPriceIncChange")
-              .val(
-                  utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
-              );
+            .find(".colUnitPriceIncChange")
+            .val(
+              utilityService.modifynegativeCurrencyFormat(lineUnitPriceIncVal)
+            );
 
           if (!isNaN(subTotal)) {
             $tblrow
-                .find(".colAmountEx")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+              .find(".colAmountEx")
+              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
             $tblrow
-                .find(".colAmountInc")
-                .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
+              .find(".colAmountInc")
+              .text(utilityService.modifynegativeCurrencyFormat(lineTotalAmount));
             subGrandTotal += isNaN(subTotalWithDiscountTotalLine) ?
-                0 :
-                subTotalWithDiscountTotalLine;
+              0 :
+              subTotalWithDiscountTotalLine;
             subGrandTotalNet += isNaN(subTotal) ? 0 : subTotal;
             document.getElementById("subtotal_total").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
+              utilityService.modifynegativeCurrencyFormat(subGrandTotalNet);
           }
 
           if (!isNaN(taxTotal)) {
             taxGrandTotal += isNaN(taxTotalWithDiscountTotalLine) ?
-                0 :
-                taxTotalWithDiscountTotalLine;
+              0 :
+              taxTotalWithDiscountTotalLine;
             taxGrandTotalNet += isNaN(taxTotal) ? 0 : taxTotal;
             document.getElementById("subtotal_tax").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
+              utilityService.modifynegativeCurrencyFormat(taxGrandTotalNet);
           }
 
           if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
             let GrandTotal =
-                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
             let GrandTotalNet =
-                parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
+              parseFloat(subGrandTotalNet) + parseFloat(taxGrandTotalNet);
             document.getElementById("subtotal_nett").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
+              utilityService.modifynegativeCurrencyFormat(GrandTotalNet);
             document.getElementById("grandTotal").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+              utilityService.modifynegativeCurrencyFormat(GrandTotal);
             document.getElementById("balanceDue").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+              utilityService.modifynegativeCurrencyFormat(GrandTotal);
             document.getElementById("totalBalanceDue").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(GrandTotal);
+              utilityService.modifynegativeCurrencyFormat(GrandTotal);
           }
         });
 
@@ -8239,35 +8191,35 @@ Template.new_invoice.events({
             }
           }
           var subTotal =
-              parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
+            parseFloat(qty, 10) * Number(price.replace(/[^0-9.-]+/g, "")) || 0;
           var taxTotal =
-              parseFloat(qty, 10) *
-              Number(price.replace(/[^0-9.-]+/g, "")) *
-              parseFloat(taxrateamount);
+            parseFloat(qty, 10) *
+            Number(price.replace(/[^0-9.-]+/g, "")) *
+            parseFloat(taxrateamount);
           $printrows
-              .find("#lineTaxAmount")
-              .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
+            .find("#lineTaxAmount")
+            .text(utilityService.modifynegativeCurrencyFormat(taxTotal));
           if (!isNaN(subTotal)) {
             $printrows
-                .find("#lineAmt")
-                .text(utilityService.modifynegativeCurrencyFormat(subTotal));
+              .find("#lineAmt")
+              .text(utilityService.modifynegativeCurrencyFormat(subTotal));
             subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
             document.getElementById("subtotal_totalPrint").innerHTML =
-                $("#subtotal_total").text();
+              $("#subtotal_total").text();
           }
 
           if (!isNaN(taxTotal)) {
             taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
             document.getElementById("totalTax_totalPrint").innerHTML =
-                utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
+              utilityService.modifynegativeCurrencyFormat(taxGrandTotalPrint);
           }
           if (!isNaN(subGrandTotal) && !isNaN(taxGrandTotal)) {
             let GrandTotal =
-                parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
+              parseFloat(subGrandTotal) + parseFloat(taxGrandTotal);
             document.getElementById("grandTotalPrint").innerHTML =
-                $("#grandTotal").text();
+              $("#grandTotal").text();
             document.getElementById("totalBalanceDuePrint").innerHTML =
-                $("#totalBalanceDue").text();
+              $("#totalBalanceDue").text();
           }
         });
       } else {
@@ -8351,11 +8303,11 @@ Template.new_invoice.events({
         var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
 
         let saleDate =
-            saledateTime.getFullYear() +
-            "-" +
-            (saledateTime.getMonth() + 1) +
-            "-" +
-            saledateTime.getDate();
+          saledateTime.getFullYear() +
+          "-" +
+          (saledateTime.getMonth() + 1) +
+          "-" +
+          saledateTime.getDate();
 
         let checkBackOrder = templateObject.includeBOnShippedQty.get();
         $("#tblInvoiceLine > tbody > tr").each(function () {
@@ -8368,17 +8320,17 @@ Template.new_invoice.events({
 
           let tdunitprice = $("#" + lineID + " .colUnitPriceExChange").val();
           let tdtaxCode =
-              $("#" + lineID + " .lineTaxCode").val() || loggedTaxCodeSalesInc;
+            $("#" + lineID + " .lineTaxCode").val() || loggedTaxCodeSalesInc;
           let tdlineUnit = $("#" + lineID + " .lineUOM").text() || defaultUOM;
 
           let tdSerialNumber = $("#" + lineID + " .colSerialNo").attr(
-              "data-serialnumbers"
+            "data-serialnumbers"
           );
           let tdLotNumber = $("#" + lineID + " .colSerialNo").attr(
-              "data-lotnumbers"
+            "data-lotnumbers"
           );
           let tdLotExpiryDate = $("#" + lineID + " .colSerialNo").attr(
-              "data-expirydates"
+            "data-expirydates"
           );
           let tdSalesLineCustField1 = $("#" + lineID + " .colSalesLinesCustField1").text();
 
@@ -8465,9 +8417,9 @@ Template.new_invoice.events({
                   fields: {
                     Active: true,
                     BatchExpiryDate: new Date(
-                        parseInt(dates[0]),
-                        parseInt(dates[1]) - 1,
-                        parseInt(dates[2])
+                      parseInt(dates[0]),
+                      parseInt(dates[1]) - 1,
+                      parseInt(dates[2])
                     ).toISOString(),
                     Qty: 1,
                     BatchNo: lotNumbers[i],
@@ -8521,7 +8473,7 @@ Template.new_invoice.events({
         var getso_id = url.split("?id=");
         var currentInvoice = getso_id[getso_id.length - 1];
 
-        var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
         let ForeignExchangeRate = $('#exchange_rate').val() || 0;
         var objDetails = "";
         if (departement === "") {
@@ -8604,12 +8556,12 @@ Template.new_invoice.events({
         salesService.saveInvoiceEx(objDetails).then(function (objDetails) {
 
           sideBarService.getAllSerialNumber().then(async function(data) {
-            await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+              await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
           }).catch(function (err){
           });
 
           productService.getProductBatches().then(async function (data) {
-            await addVS1Data('TProductBatches', JSON.stringify(data));
+              await addVS1Data('TProductBatches', JSON.stringify(data));
           }).catch(function (err) {
           });
 
@@ -8628,67 +8580,67 @@ Template.new_invoice.events({
           var customerID = $("#edtCustomerEmail").attr("customerid");
           for (let l = 0; l < lineItems.length; l++) {
             stringQuery =
-                stringQuery +
-                "product" +
-                l +
-                "=" +
-                lineItems[l].description +
-                "&price" +
-                l +
-                "=" +
-                lineItems[l].unitPrice +
-                "&qty" +
-                l +
-                "=" +
-                lineItems[l].quantity +
-                "&";
+              stringQuery +
+              "product" +
+              l +
+              "=" +
+              lineItems[l].description +
+              "&price" +
+              l +
+              "=" +
+              lineItems[l].unitPrice +
+              "&qty" +
+              l +
+              "=" +
+              lineItems[l].quantity +
+              "&";
           }
           stringQuery =
-              stringQuery +
-              "tax=" +
-              tax +
-              "&total=" +
-              total +
-              "&customer=" +
-              customer +
-              "&name=" +
-              name +
-              "&surname=" +
-              surname +
-              "&quoteid=" +
-              objDetails.fields.ID +
-              "&transid=" +
-              stripe_id +
-              "&feemethod=" +
-              stripe_fee_method +
-              "&company=" +
-              company +
-              "&vs1email=" +
-              vs1User +
-              "&customeremail=" +
-              customerEmail +
-              "&type=Invoice&url=" +
-              window.location.href +
-              "&server=" +
-              erpGet.ERPIPAddress +
-              "&username=" +
-              erpGet.ERPUsername +
-              "&token=" +
-              erpGet.ERPPassword +
-              "&session=" +
-              erpGet.ERPDatabase +
-              "&port=" +
-              erpGet.ERPPort +
-              "&dept=" +
-              departement +
-              "&currency=" +
-              currencyname;
+            stringQuery +
+            "tax=" +
+            tax +
+            "&total=" +
+            total +
+            "&customer=" +
+            customer +
+            "&name=" +
+            name +
+            "&surname=" +
+            surname +
+            "&quoteid=" +
+            objDetails.fields.ID +
+            "&transid=" +
+            stripe_id +
+            "&feemethod=" +
+            stripe_fee_method +
+            "&company=" +
+            company +
+            "&vs1email=" +
+            vs1User +
+            "&customeremail=" +
+            customerEmail +
+            "&type=Invoice&url=" +
+            window.location.href +
+            "&server=" +
+            erpGet.ERPIPAddress +
+            "&username=" +
+            erpGet.ERPUsername +
+            "&token=" +
+            erpGet.ERPPassword +
+            "&session=" +
+            erpGet.ERPDatabase +
+            "&port=" +
+            erpGet.ERPPort +
+            "&dept=" +
+            departement +
+            "&currency=" +
+            currencyname;
           $("#html-Invoice-pdfwrapper").css("display", "block");
           $(".pdfCustomerName").html($("#edtCustomerName").val());
           $(".pdfCustomerAddress").html(
-              $("#txabillingAddress")
-                  .val()
-                  .replace(/[\r\n]/g, "<br />")
+            $("#txabillingAddress")
+              .val()
+              .replace(/[\r\n]/g, "<br />")
           );
           var ponumber = $("#ponumber").val() || ".";
           $(".po").text(ponumber);
@@ -8720,7 +8672,7 @@ Template.new_invoice.events({
                 },
               };
               resolve(
-                  html2pdf().set(opt).from(source).toPdf().output("datauristring")
+                html2pdf().set(opt).from(source).toPdf().output("datauristring")
               );
             });
           }
@@ -8742,8 +8694,8 @@ Template.new_invoice.events({
 
             let mailFromName = localStorage.getItem("vs1companyName");
             let mailFrom =
-                localStorage.getItem("VS1OrgEmail") ||
-                localStorage.getItem("VS1AdminUserName");
+              localStorage.getItem("VS1OrgEmail") ||
+              localStorage.getItem("VS1AdminUserName");
             let customerEmailName = $("#edtCustomerName").val();
             let checkEmailData = $("#edtCustomerEmail").val();
             let grandtotal = $("#grandTotal").html();
@@ -8757,269 +8709,269 @@ Template.new_invoice.events({
             let customerNett = $("#subtotal_nett").html();
             let customerTotal = $("#grandTotal").html();
             let mailSubject =
-                "Invoice " +
-                erpInvoiceId +
-                " from " +
-                mailFromName +
-                " for " +
-                customerEmailName;
+              "Invoice " +
+              erpInvoiceId +
+              " from " +
+              mailFromName +
+              " for " +
+              customerEmailName;
 
             var htmlmailBody =
-                '    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                "        <tr>" +
-                '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                '                    <table class="main">' +
-                "                        <tr>" +
-                '                            <td class="wrapper">' +
-                '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                "                                    <tr>" +
-                '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
-                erpInvoiceId +
-                " Details</span>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                '                                    <tr style="height: 16px;"></tr>' +
-                "                                    <tr>" +
-                "                                        <td>" +
-                '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                "                                        </td>" +
-                "                                    </tr>" +
-                '                                    <tr style="height: 48px;"></tr>' +
-                '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
-                emailDueDate +
-                "</p>" +
-                '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
-                grandtotal +
-                "</p>" +
-                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                "                                                <tbody>" +
-                "                                                    <tr>" +
-                '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                "                                                                <tbody>" +
-                "                                                                    <tr>" +
-                '                                                                        <td> <a href="' +
-                stripeGlobalURL +
-                "" +
-                stringQuery +
-                '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                "                                                                    </tr>" +
-                "                                                                </tbody>" +
-                "                                                            </table>" +
-                "                                                        </td>" +
-                "                                                    </tr>" +
-                "                                                </tbody>" +
-                "                                            </table>" +
-                '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                "                                        </td>" +
-                "                                    </tr>" +
-                "                                    <tr>" +
-                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                '                                            <p style="font-size: 18px;">Dear ' +
-                customerEmailName +
-                ",</p>" +
-                '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                '                                            <p style="font-size: 18px;">' +
-                mailFromName +
-                "</p>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                '                                    <tr style="background-color: #ededed;">' +
-                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                '                                                <div style="width: 50%; float: left;">' +
-                '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                "                                                </div>" +
-                '                                                <div style="width: 50%; float: right;">' +
-                '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-                customerEmailName +
-                "</p>" +
-                '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-                customerBillingAddress +
-                "</p>" +
-                "                                                </div>" +
-                "                                            </div>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                '                                    <tr style="background-color: #ededed;">' +
-                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                '                                                <div style="width: 50%; float: left;">' +
-                '                                                    <p style="font-size: 18px;">Terms</p>' +
-                "                                                </div>" +
-                '                                                <div style="width: 50%; float: right;">' +
-                '                                                    <p style="font-size: 18px;">' +
-                customerTerms +
-                "</p>" +
-                "                                                </div>" +
-                "                                            </div>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                "                                    <tr>" +
-                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                '                                                <div style="width: 50%; float: left;">' +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                "                                                </div>" +
-                '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                customerSubtotal +
-                "</p>" +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                customerTax +
-                "</p>" +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                customerNett +
-                "</p>" +
-                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                customerTotal +
-                "</p>" +
-                "                                                </div>" +
-                "                                            </div>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                "                                    <tr>" +
-                '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                "                                                <tbody>" +
-                "                                                    <tr>" +
-                '                                                        <td align="center">' +
-                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                "                                                                <tbody>" +
-                "                                                                    <tr>" +
-                '                                                                        <td> <a href="' +
-                stripeGlobalURL +
-                "" +
-                stringQuery +
-                '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                "                                                                    </tr>" +
-                "                                                                </tbody>" +
-                "                                                            </table>" +
-                "                                                        </td>" +
-                "                                                    </tr>" +
-                "                                                </tbody>" +
-                "                                            </table>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                "                                    <tr>" +
-                '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                "                                        </td>" +
-                "                                    </tr>" +
-                "                                    <tr>" +
-                "                                        <td>" +
-                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                "                                                <tbody>" +
-                "                                                    <tr>" +
-                '                                                        <td align="center">' +
-                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                "                                                                <tbody>" +
-                "                                                                    <tr>" +
-                '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                "                                                                    </tr>" +
-                "                                                                </tbody>" +
-                "                                                            </table>" +
-                "                                                        </td>" +
-                "                                                    </tr>" +
-                "                                                </tbody>" +
-                "                                            </table>" +
-                "                                        </td>" +
-                "                                    </tr>" +
-                "                                </table>" +
-                "                            </td>" +
-                "                        </tr>" +
-                "                    </table>" +
-                '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                "                            <tr>" +
-                '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
-                mailFromName +
-                "</span>" +
-                "                                    <br>" +
-                '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                "                                </td>" +
-                "                            </tr>" +
-                "                        </table>" +
-                "                    </div>" +
-                "                </div>" +
-                "            </td>" +
-                "        </tr>" +
-                "    </table>";
+              '    <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+              "        <tr>" +
+              '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+              '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+              '                    <table class="main">' +
+              "                        <tr>" +
+              '                            <td class="wrapper">' +
+              '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+              "                                    <tr>" +
+              '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+              '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
+              erpInvoiceId +
+              " Details</span>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              '                                    <tr style="height: 16px;"></tr>' +
+              "                                    <tr>" +
+              "                                        <td>" +
+              '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+              "                                        </td>" +
+              "                                    </tr>" +
+              '                                    <tr style="height: 48px;"></tr>' +
+              '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+              '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+              '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
+              emailDueDate +
+              "</p>" +
+              '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
+              grandtotal +
+              "</p>" +
+              '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+              "                                                <tbody>" +
+              "                                                    <tr>" +
+              '                                                        <td align="center" style="padding-bottom: 15px;">' +
+              '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+              "                                                                <tbody>" +
+              "                                                                    <tr>" +
+              '                                                                        <td> <a href="' +
+              stripeGlobalURL +
+              "" +
+              stringQuery +
+              '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+              '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+              "                                                                    </tr>" +
+              "                                                                </tbody>" +
+              "                                                            </table>" +
+              "                                                        </td>" +
+              "                                                    </tr>" +
+              "                                                </tbody>" +
+              "                                            </table>" +
+              '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+              "                                        </td>" +
+              "                                    </tr>" +
+              "                                    <tr>" +
+              '                                        <td class="content-block" style="padding: 16px 32px;">' +
+              '                                            <p style="font-size: 18px;">Dear ' +
+              customerEmailName +
+              ",</p>" +
+              '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+              '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+              '                                            <p style="font-size: 18px;">' +
+              mailFromName +
+              "</p>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              '                                    <tr style="background-color: #ededed;">' +
+              '                                        <td class="content-block" style="padding: 16px 32px;">' +
+              '                                            <div style="width: 100%; padding: 16px 0px;">' +
+              '                                                <div style="width: 50%; float: left;">' +
+              '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+              "                                                </div>" +
+              '                                                <div style="width: 50%; float: right;">' +
+              '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+              customerEmailName +
+              "</p>" +
+              '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+              customerBillingAddress +
+              "</p>" +
+              "                                                </div>" +
+              "                                            </div>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              '                                    <tr style="background-color: #ededed;">' +
+              '                                        <td class="content-block" style="padding: 16px 32px;">' +
+              '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+              '                                            <div style="width: 100%; padding: 16px 0px;">' +
+              '                                                <div style="width: 50%; float: left;">' +
+              '                                                    <p style="font-size: 18px;">Terms</p>' +
+              "                                                </div>" +
+              '                                                <div style="width: 50%; float: right;">' +
+              '                                                    <p style="font-size: 18px;">' +
+              customerTerms +
+              "</p>" +
+              "                                                </div>" +
+              "                                            </div>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              "                                    <tr>" +
+              '                                        <td class="content-block" style="padding: 16px 32px;">' +
+              '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+              '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+              '                                                <div style="width: 50%; float: left;">' +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+              "                                                </div>" +
+              '                                                <div style="width: 50%; float: right; text-align: right;">' +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+              customerSubtotal +
+              "</p>" +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+              customerTax +
+              "</p>" +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+              customerNett +
+              "</p>" +
+              '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+              customerTotal +
+              "</p>" +
+              "                                                </div>" +
+              "                                            </div>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              "                                    <tr>" +
+              '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+              '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+              '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+              "                                                <tbody>" +
+              "                                                    <tr>" +
+              '                                                        <td align="center">' +
+              '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+              "                                                                <tbody>" +
+              "                                                                    <tr>" +
+              '                                                                        <td> <a href="' +
+              stripeGlobalURL +
+              "" +
+              stringQuery +
+              '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+              '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+              "                                                                    </tr>" +
+              "                                                                </tbody>" +
+              "                                                            </table>" +
+              "                                                        </td>" +
+              "                                                    </tr>" +
+              "                                                </tbody>" +
+              "                                            </table>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              "                                    <tr>" +
+              '                                        <td class="content-block" style="padding: 16px 32px;">' +
+              '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+              "                                        </td>" +
+              "                                    </tr>" +
+              "                                    <tr>" +
+              "                                        <td>" +
+              '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+              "                                                <tbody>" +
+              "                                                    <tr>" +
+              '                                                        <td align="center">' +
+              '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+              "                                                                <tbody>" +
+              "                                                                    <tr>" +
+              '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+              "                                                                    </tr>" +
+              "                                                                </tbody>" +
+              "                                                            </table>" +
+              "                                                        </td>" +
+              "                                                    </tr>" +
+              "                                                </tbody>" +
+              "                                            </table>" +
+              "                                        </td>" +
+              "                                    </tr>" +
+              "                                </table>" +
+              "                            </td>" +
+              "                        </tr>" +
+              "                    </table>" +
+              '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+              '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+              "                            <tr>" +
+              '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+              '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
+              mailFromName +
+              "</span>" +
+              "                                    <br>" +
+              '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+              '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+              "                                </td>" +
+              "                            </tr>" +
+              "                        </table>" +
+              "                    </div>" +
+              "                </div>" +
+              "            </td>" +
+              "        </tr>" +
+              "    </table>";
 
             if (
-                $(".chkEmailCopy").is(":checked") &&
-                $(".chkEmailRep").is(":checked")
+              $(".chkEmailCopy").is(":checked") &&
+              $(".chkEmailRep").is(":checked")
             ) {
               Meteor.call(
-                  "sendEmail", {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: checkEmailData,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/invoicelist?success=true");
-                    } else { }
-                  }
+                "sendEmail", {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: checkEmailData,
+                subject: mailSubject,
+                text: "",
+                html: htmlmailBody,
+                attachments: attachment,
+              },
+                function (error, result) {
+                  if (error && error.error === "error") {
+                    FlowRouter.go("/invoicelist?success=true");
+                  } else { }
+                }
               );
 
               Meteor.call(
-                  "sendEmail", {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: mailFrom,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      if (FlowRouter.current().queryParams.trans) {
-                        FlowRouter.go(
-                            "/customerscard?id=" +
-                            FlowRouter.current().queryParams.trans +
-                            "&transTab=active"
-                        );
-                      } else {
-                        FlowRouter.go("/invoicelist?success=true");
-                      }
+                "sendEmail", {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: mailFrom,
+                subject: mailSubject,
+                text: "",
+                html: htmlmailBody,
+                attachments: attachment,
+              },
+                function (error, result) {
+                  if (error && error.error === "error") {
+                    if (FlowRouter.current().queryParams.trans) {
+                      FlowRouter.go(
+                        "/customerscard?id=" +
+                        FlowRouter.current().queryParams.trans +
+                        "&transTab=active"
+                      );
                     } else {
-                      $("#html-Invoice-pdfwrapper").css("display", "none");
-                      swal({
-                        title: "SUCCESS",
-                        text: "Email Sent To Customer: " +
-                            checkEmailData +
-                            " and User: " +
-                            mailFrom +
-                            "",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                      }).then((result) => {
-                        if (result.value) { } else if (result.dismiss === "cancel") { }
-                      });
-
-                      $(".fullScreenSpin").css("display", "none");
+                      FlowRouter.go("/invoicelist?success=true");
                     }
+                  } else {
+                    $("#html-Invoice-pdfwrapper").css("display", "none");
+                    swal({
+                      title: "SUCCESS",
+                      text: "Email Sent To Customer: " +
+                        checkEmailData +
+                        " and User: " +
+                        mailFrom +
+                        "",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "OK",
+                    }).then((result) => {
+                      if (result.value) { } else if (result.dismiss === "cancel") { }
+                    });
+
+                    $(".fullScreenSpin").css("display", "none");
                   }
+                }
               );
 
               let values = [];
@@ -9038,10 +8990,10 @@ Template.new_invoice.events({
               values.forEach((value) => {
                 let reportData = JSON.parse(value);
                 reportData.HostURL = $(location).attr("protocal") ?
-                    $(location).attr("protocal") +
-                    "://" +
-                    $(location).attr("hostname") :
-                    "http://" + $(location).attr("hostname");
+                  $(location).attr("protocal") +
+                  "://" +
+                  $(location).attr("hostname") :
+                  "http://" + $(location).attr("hostname");
                 reportData.attachments = attachment;
                 if (reportData.BasedOnType.includes("S")) {
                   if (reportData.FormID == 1) {
@@ -9058,42 +9010,42 @@ Template.new_invoice.events({
               });
             } else if ($(".chkEmailCopy").is(":checked")) {
               Meteor.call(
-                  "sendEmail", {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: checkEmailData,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/invoicelist?success=true");
-                    } else {
-                      $("#html-Invoice-pdfwrapper").css("display", "none");
-                      swal({
-                        title: "SUCCESS",
-                        text: "Email Sent To Customer: " + checkEmailData + " ",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                      }).then((result) => {
-                        if (result.value) {
-                          if (FlowRouter.current().queryParams.trans) {
-                            FlowRouter.go(
-                                "/customerscard?id=" +
-                                FlowRouter.current().queryParams.trans +
-                                "&transTab=active"
-                            );
-                          } else {
-                            FlowRouter.go("/invoicelist?success=true");
-                          }
-                        } else if (result.dismiss === "cancel") { }
-                      });
+                "sendEmail", {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: checkEmailData,
+                subject: mailSubject,
+                text: "",
+                html: htmlmailBody,
+                attachments: attachment,
+              },
+                function (error, result) {
+                  if (error && error.error === "error") {
+                    FlowRouter.go("/invoicelist?success=true");
+                  } else {
+                    $("#html-Invoice-pdfwrapper").css("display", "none");
+                    swal({
+                      title: "SUCCESS",
+                      text: "Email Sent To Customer: " + checkEmailData + " ",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "OK",
+                    }).then((result) => {
+                      if (result.value) {
+                        if (FlowRouter.current().queryParams.trans) {
+                          FlowRouter.go(
+                            "/customerscard?id=" +
+                            FlowRouter.current().queryParams.trans +
+                            "&transTab=active"
+                          );
+                        } else {
+                          FlowRouter.go("/invoicelist?success=true");
+                        }
+                      } else if (result.dismiss === "cancel") { }
+                    });
 
-                      $(".fullScreenSpin").css("display", "none");
-                    }
+                    $(".fullScreenSpin").css("display", "none");
                   }
+                }
               );
 
               let values = [];
@@ -9112,10 +9064,10 @@ Template.new_invoice.events({
               values.forEach((value) => {
                 let reportData = JSON.parse(value);
                 reportData.HostURL = $(location).attr("protocal") ?
-                    $(location).attr("protocal") +
-                    "://" +
-                    $(location).attr("hostname") :
-                    "http://" + $(location).attr("hostname");
+                  $(location).attr("protocal") +
+                  "://" +
+                  $(location).attr("hostname") :
+                  "http://" + $(location).attr("hostname");
                 reportData.attachments = attachment;
                 if (reportData.BasedOnType.includes("S")) {
                   if (reportData.FormID == 1) {
@@ -9132,42 +9084,42 @@ Template.new_invoice.events({
               });
             } else if ($(".chkEmailRep").is(":checked")) {
               Meteor.call(
-                  "sendEmail", {
-                    from: "" + mailFromName + " <" + mailFrom + ">",
-                    to: mailFrom,
-                    subject: mailSubject,
-                    text: "",
-                    html: htmlmailBody,
-                    attachments: attachment,
-                  },
-                  function (error, result) {
-                    if (error && error.error === "error") {
-                      FlowRouter.go("/invoicelist?success=true");
-                    } else {
-                      $("#html-Invoice-pdfwrapper").css("display", "none");
-                      swal({
-                        title: "SUCCESS",
-                        text: "Email Sent To User: " + mailFrom + " ",
-                        type: "success",
-                        showCancelButton: false,
-                        confirmButtonText: "OK",
-                      }).then((result) => {
-                        if (result.value) {
-                          if (FlowRouter.current().queryParams.trans) {
-                            FlowRouter.go(
-                                "/customerscard?id=" +
-                                FlowRouter.current().queryParams.trans +
-                                "&transTab=active"
-                            );
-                          } else {
-                            FlowRouter.go("/invoicelist?success=true");
-                          }
-                        } else if (result.dismiss === "cancel") { }
-                      });
+                "sendEmail", {
+                from: "" + mailFromName + " <" + mailFrom + ">",
+                to: mailFrom,
+                subject: mailSubject,
+                text: "",
+                html: htmlmailBody,
+                attachments: attachment,
+              },
+                function (error, result) {
+                  if (error && error.error === "error") {
+                    FlowRouter.go("/invoicelist?success=true");
+                  } else {
+                    $("#html-Invoice-pdfwrapper").css("display", "none");
+                    swal({
+                      title: "SUCCESS",
+                      text: "Email Sent To User: " + mailFrom + " ",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "OK",
+                    }).then((result) => {
+                      if (result.value) {
+                        if (FlowRouter.current().queryParams.trans) {
+                          FlowRouter.go(
+                            "/customerscard?id=" +
+                            FlowRouter.current().queryParams.trans +
+                            "&transTab=active"
+                          );
+                        } else {
+                          FlowRouter.go("/invoicelist?success=true");
+                        }
+                      } else if (result.dismiss === "cancel") { }
+                    });
 
-                      $(".fullScreenSpin").css("display", "none");
-                    }
+                    $(".fullScreenSpin").css("display", "none");
                   }
+                }
               );
 
               let values = [];
@@ -9186,10 +9138,10 @@ Template.new_invoice.events({
               values.forEach((value) => {
                 let reportData = JSON.parse(value);
                 reportData.HostURL = $(location).attr("protocal") ?
-                    $(location).attr("protocal") +
-                    "://" +
-                    $(location).attr("hostname") :
-                    "http://" + $(location).attr("hostname");
+                  $(location).attr("protocal") +
+                  "://" +
+                  $(location).attr("hostname") :
+                  "http://" + $(location).attr("hostname");
                 reportData.attachments = attachment;
                 if (reportData.BasedOnType.includes("S")) {
                   if (reportData.FormID == 1) {
@@ -9221,10 +9173,10 @@ Template.new_invoice.events({
               values.forEach((value) => {
                 let reportData = JSON.parse(value);
                 reportData.HostURL = $(location).attr("protocal") ?
-                    $(location).attr("protocal") +
-                    "://" +
-                    $(location).attr("hostname") :
-                    "http://" + $(location).attr("hostname");
+                  $(location).attr("protocal") +
+                  "://" +
+                  $(location).attr("hostname") :
+                  "http://" + $(location).attr("hostname");
                 reportData.attachments = attachment;
                 // reportData.attachments.push(attachment);
                 if (reportData.BasedOnType.includes("S")) {
@@ -9242,9 +9194,9 @@ Template.new_invoice.events({
               });
               if (FlowRouter.current().queryParams.trans) {
                 FlowRouter.go(
-                    "/customerscard?id=" +
-                    FlowRouter.current().queryParams.trans +
-                    "&transTab=active"
+                  "/customerscard?id=" +
+                  FlowRouter.current().queryParams.trans +
+                  "&transTab=active"
                 );
               } else {
                 FlowRouter.go("/invoicelist?success=true");
@@ -9253,22 +9205,22 @@ Template.new_invoice.events({
           }
           addAttachment();
         }).catch(function (err) {
-          $("#html-Invoice-pdfwrapper").css("display", "none");
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              if (err === checkResponseError) {
-                window.open("/", "_self");
-              }
-            } else if (result.dismiss === "cancel") { }
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+              title: "Oooops...",
+              text: err,
+              type: "error",
+              showCancelButton: false,
+              confirmButtonText: "Try Again",
+            }).then((result) => {
+              if (result.value) {
+                if (err === checkResponseError) {
+                  window.open("/", "_self");
+                }
+              } else if (result.dismiss === "cancel") { }
+            });
+            $(".fullScreenSpin").css("display", "none");
           });
-          $(".fullScreenSpin").css("display", "none");
-        });
       }
     }, delayTimeAfterSound);
   },
@@ -9596,10 +9548,10 @@ Template.new_invoice.events({
     let uploadedFilesArray = templateObj.uploadedFiles.get();
     let myFiles = $("#attachment-upload")[0].files;
     let uploadData = utilityService.attachmentUpload(
-        uploadedFilesArray,
-        myFiles,
-        saveToTAttachment,
-        lineIDForAttachment
+      uploadedFilesArray,
+      myFiles,
+      saveToTAttachment,
+      lineIDForAttachment
     );
     templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
     templateObj.attachmentCount.set(uploadData.totalAttachments);
@@ -9615,10 +9567,10 @@ Template.new_invoice.events({
 
     let myFiles = $("#img-attachment-upload")[0].files;
     let uploadData = utilityService.attachmentUpload(
-        uploadedFilesArray,
-        myFiles,
-        saveToTAttachment,
-        lineIDForAttachment
+      uploadedFilesArray,
+      myFiles,
+      saveToTAttachment,
+      lineIDForAttachment
     );
     templateObj.uploadedFiles.set(uploadData.uploadedFilesArray);
     templateObj.attachmentCount.set(uploadData.totalAttachments);
@@ -9630,19 +9582,19 @@ Template.new_invoice.events({
       tempObj.$("#confirm-action-" + attachmentID).remove();
     } else {
       let actionElement =
-          '<div class="confirm-action" id="confirm-action-' +
-          attachmentID +
-          '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' +
-          attachmentID +
-          '">' +
-          'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
+        '<div class="confirm-action" id="confirm-action-' +
+        attachmentID +
+        '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' +
+        attachmentID +
+        '">' +
+        'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
       tempObj.$("#attachment-name-" + attachmentID).append(actionElement);
     }
     tempObj.$("#new-attachment2-tooltip").show();
   },
   "click .file-name": function (event) {
     let attachmentID = parseInt(
-        event.currentTarget.parentNode.id.split("attachment-name-")[1]
+      event.currentTarget.parentNode.id.split("attachment-name-")[1]
     );
     let templateObj = Template.instance();
     let uploadedFiles = templateObj.uploadedFiles.get();
@@ -9650,44 +9602,44 @@ Template.new_invoice.events({
     let previewFile = {};
     let input = uploadedFiles[attachmentID].fields.Description;
     previewFile.link =
-        "data:" +
-        input +
-        ";base64," +
-        uploadedFiles[attachmentID].fields.Attachment;
+      "data:" +
+      input +
+      ";base64," +
+      uploadedFiles[attachmentID].fields.Attachment;
     previewFile.name = uploadedFiles[attachmentID].fields.AttachmentName;
     let type = uploadedFiles[attachmentID].fields.Description;
     if (type === "application/pdf") {
       previewFile.class = "pdf-class";
     } else if (
-        type === "application/msword" ||
-        type ===
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      type === "application/msword" ||
+      type ===
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     ) {
       previewFile.class = "docx-class";
     } else if (
-        type === "application/vnd.ms-excel" ||
-        type ===
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      type === "application/vnd.ms-excel" ||
+      type ===
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     ) {
       previewFile.class = "excel-class";
     } else if (
-        type === "application/vnd.ms-powerpoint" ||
-        type ===
-        "application/vnd.openxmlformats-officedocument.presentationml.presentation"
+      type === "application/vnd.ms-powerpoint" ||
+      type ===
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation"
     ) {
       previewFile.class = "ppt-class";
     } else if (
-        type === "application/vnd.oasis.opendocument.formula" ||
-        type === "text/csv" ||
-        type === "text/plain" ||
-        type === "text/rtf"
+      type === "application/vnd.oasis.opendocument.formula" ||
+      type === "text/csv" ||
+      type === "text/plain" ||
+      type === "text/rtf"
     ) {
       previewFile.class = "txt-class";
     } else if (
-        type === "application/zip" ||
-        type === "application/rar" ||
-        type === "application/x-zip-compressed" ||
-        type === "application/x-zip,application/x-7z-compressed"
+      type === "application/zip" ||
+      type === "application/rar" ||
+      type === "application/x-zip-compressed" ||
+      type === "application/x-zip,application/x-7z-compressed"
     ) {
       previewFile.class = "zip-class";
     } else {
@@ -9717,7 +9669,7 @@ Template.new_invoice.events({
     attachmentCount--;
     if (attachmentCount === 0) {
       let elementToAdd =
-          '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
+        '<div class="col inboxcol1"><img src="/icons/nofiles_icon.jpg" class=""></div> <div class="col inboxcol2"> <div>Upload  files or add files from the file library</div> <p style="color: #ababab;">Only users with access to your company can view these files</p></div>';
       $("#file-display").html(elementToAdd);
     }
     tempObj.attachmentCount.set(attachmentCount);
@@ -9784,11 +9736,11 @@ Template.new_invoice.events({
       var duedateTime = new Date($("#dtDueDate").datepicker("getDate"));
 
       let saleDate =
-          saledateTime.getFullYear() +
-          "-" +
-          (saledateTime.getMonth() + 1) +
-          "-" +
-          saledateTime.getDate();
+        saledateTime.getFullYear() +
+        "-" +
+        (saledateTime.getMonth() + 1) +
+        "-" +
+        saledateTime.getDate();
 
       let checkBackOrder = templateObject.includeBOnShippedQty.get();
       $("#tblInvoiceLine > tbody > tr").each(function () {
@@ -9883,7 +9835,7 @@ Template.new_invoice.events({
       var getso_id = url.split("?id=");
       var currentInvoice = getso_id[getso_id.length - 1];
       let uploadedItems = templateObject.uploadedFiles.get();
-      var currencyCode = $(".sltCurrency").val() || CountryAbbr;
+      var currencyCode = $("#sltCurrency").val() || CountryAbbr;
       let ForeignExchangeRate = $('#exchange_rate').val() || 0;
       var objDetails = "";
       if (getso_id[1]) {
@@ -9939,401 +9891,401 @@ Template.new_invoice.events({
       }
 
       salesService
-          .saveInvoiceEx(objDetails)
-          .then(function (objDetails) {
-            var customerID = $("#edtCustomerEmail").attr("customerid");
-            $("#html-Invoice-pdfwrapper").css("display", "block");
-            $(".pdfCustomerName").html($("#edtCustomerName").val());
-            $(".pdfCustomerAddress").html(
-                $("#txabillingAddress")
-                    .val()
-                    .replace(/[\r\n]/g, "<br />")
-            );
-            async function addAttachment() {
-              let attachment = [];
+        .saveInvoiceEx(objDetails)
+        .then(function (objDetails) {
+          var customerID = $("#edtCustomerEmail").attr("customerid");
+          $("#html-Invoice-pdfwrapper").css("display", "block");
+          $(".pdfCustomerName").html($("#edtCustomerName").val());
+          $(".pdfCustomerAddress").html(
+            $("#txabillingAddress")
+              .val()
+              .replace(/[\r\n]/g, "<br />")
+          );
+          async function addAttachment() {
+            let attachment = [];
 
-              let invoiceId = objDetails.fields.ID;
-              let encodedPdf = await generatePdfForMail(invoiceId);
-              let pdfObject = "";
-              var reader = new FileReader();
-              reader.readAsDataURL(encodedPdf);
-              reader.onloadend = function () {
-                var base64data = reader.result;
-                base64data = base64data.split(",")[1];
-                pdfObject = {
-                  filename: "invoice-" + invoiceId + ".pdf",
-                  content: base64data,
-                  encoding: "base64",
-                };
-                attachment.push(pdfObject);
-                let erpInvoiceId = objDetails.fields.ID;
-
-                let mailFromName = localStorage.getItem("vs1companyName");
-                let mailFrom =
-                    localStorage.getItem("VS1OrgEmail") ||
-                    localStorage.getItem("VS1AdminUserName");
-                let customerEmailName = $("#edtCustomerName").val();
-                let checkEmailData = $("#edtCustomerEmail").val();
-                let grandtotal = $("#grandTotal").html();
-                let amountDueEmail = $("#totalBalanceDue").html();
-                let emailDueDate = $("#dtDueDate").val();
-                let customerBillingAddress = $("#txabillingAddress").val();
-                let customerTerms = $("#sltTerms").val();
-
-                let customerSubtotal = $("#subtotal_total").html();
-                let customerTax = $("#subtotal_tax").html();
-                let customerNett = $("#subtotal_nett").html();
-                let customerTotal = $("#grandTotal").html();
-                let mailSubject =
-                    "Invoice " +
-                    erpInvoiceId +
-                    " from " +
-                    mailFromName +
-                    " for " +
-                    customerEmailName;
-                var htmlmailBody =
-                    ' <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                    "        <tr>" +
-                    '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                    '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                    '                    <table class="main">' +
-                    "                        <tr>" +
-                    '                            <td class="wrapper">' +
-                    '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                    "                                    <tr>" +
-                    '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                    '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
-                    erpInvoiceId +
-                    " Details</span>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    '                                    <tr style="height: 16px;"></tr>' +
-                    "                                    <tr>" +
-                    "                                        <td>" +
-                    '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    '                                    <tr style="height: 48px;"></tr>' +
-                    '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                    '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                    '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
-                    emailDueDate +
-                    "</p>" +
-                    '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
-                    grandtotal +
-                    "</p>" +
-                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                    "                                                <tbody>" +
-                    "                                                    <tr>" +
-                    '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                    "                                                                <tbody>" +
-                    "                                                                    <tr>" +
-                    '                                                                        <td> <a href="' +
-                    stripeGlobalURL +
-                    "" +
-                    stringQuery +
-                    '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                    '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                    "                                                                    </tr>" +
-                    "                                                                </tbody>" +
-                    "                                                            </table>" +
-                    "                                                        </td>" +
-                    "                                                    </tr>" +
-                    "                                                </tbody>" +
-                    "                                            </table>" +
-                    '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    "                                    <tr>" +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <p style="font-size: 18px;">Dear ' +
-                    customerEmailName +
-                    ",</p>" +
-                    '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                    '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                    '                                            <p style="font-size: 18px;">' +
-                    mailFromName +
-                    "</p>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    '                                    <tr style="background-color: #ededed;">' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                    '                                                <div style="width: 50%; float: left;">' +
-                    '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                    "                                                </div>" +
-                    '                                                <div style="width: 50%; float: right;">' +
-                    '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-                    customerEmailName +
-                    "</p>" +
-                    '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
-                    customerBillingAddress +
-                    "</p>" +
-                    "                                                </div>" +
-                    "                                            </div>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    '                                    <tr style="background-color: #ededed;">' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                    '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                    '                                                <div style="width: 50%; float: left;">' +
-                    '                                                    <p style="font-size: 18px;">Terms</p>' +
-                    "                                                </div>" +
-                    '                                                <div style="width: 50%; float: right;">' +
-                    '                                                    <p style="font-size: 18px;">' +
-                    customerTerms +
-                    "</p>" +
-                    "                                                </div>" +
-                    "                                            </div>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    "                                    <tr>" +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                    '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                    '                                                <div style="width: 50%; float: left;">' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                    "                                                </div>" +
-                    '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                    customerSubtotal +
-                    "</p>" +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                    customerTax +
-                    "</p>" +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                    customerNett +
-                    "</p>" +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' +
-                    customerTotal +
-                    "</p>" +
-                    "                                                </div>" +
-                    "                                            </div>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    "                                    <tr>" +
-                    '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                    "                                                <tbody>" +
-                    "                                                    <tr>" +
-                    '                                                        <td align="center">' +
-                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                    "                                                                <tbody>" +
-                    "                                                                    <tr>" +
-                    '                                                                        <td> <a href="' +
-                    stripeGlobalURL +
-                    "" +
-                    stringQuery +
-                    '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                    '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                    "                                                                    </tr>" +
-                    "                                                                </tbody>" +
-                    "                                                            </table>" +
-                    "                                                        </td>" +
-                    "                                                    </tr>" +
-                    "                                                </tbody>" +
-                    "                                            </table>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    "                                    <tr>" +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    "                                    <tr>" +
-                    "                                        <td>" +
-                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                    "                                                <tbody>" +
-                    "                                                    <tr>" +
-                    '                                                        <td align="center">' +
-                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                    "                                                                <tbody>" +
-                    "                                                                    <tr>" +
-                    '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                    "                                                                    </tr>" +
-                    "                                                                </tbody>" +
-                    "                                                            </table>" +
-                    "                                                        </td>" +
-                    "                                                    </tr>" +
-                    "                                                </tbody>" +
-                    "                                            </table>" +
-                    "                                        </td>" +
-                    "                                    </tr>" +
-                    "                                </table>" +
-                    "                            </td>" +
-                    "                        </tr>" +
-                    "                    </table>" +
-                    '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                    '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                    "                            <tr>" +
-                    '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                    '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
-                    mailFromName +
-                    "</span>" +
-                    "                                    <br>" +
-                    '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                    '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                    "                                </td>" +
-                    "                            </tr>" +
-                    "                        </table>" +
-                    "                    </div>" +
-                    "                </div>" +
-                    "            </td>" +
-                    "        </tr>" +
-                    "    </table>";
-
-                if (
-                    $(".chkEmailCopy").is(":checked") &&
-                    $(".chkEmailRep").is(":checked")
-                ) {
-                  Meteor.call(
-                      "sendEmail", {
-                        from: "" + mailFromName + " <" + mailFrom + ">",
-                        to: checkEmailData,
-                        subject: mailSubject,
-                        text: "",
-                        html: htmlmailBody,
-                        attachments: attachment,
-                      },
-                      function (error, result) {
-                        if (error && error.error === "error") { } else { }
-                      }
-                  );
-
-                  Meteor.call(
-                      "sendEmail", {
-                        from: "" + mailFromName + " <" + mailFrom + ">",
-                        to: mailFrom,
-                        subject: mailSubject,
-                        text: "",
-                        html: htmlmailBody,
-                        attachments: attachment,
-                      },
-                      function (error, result) {
-                        if (error && error.error === "error") { } else {
-                          $("#html-Invoice-pdfwrapper").css("display", "none");
-                          swal({
-                            title: "SUCCESS",
-                            text: "Email Sent To Customer: " +
-                                checkEmailData +
-                                " and User: " +
-                                mailFrom +
-                                "",
-                            type: "success",
-                            showCancelButton: false,
-                            confirmButtonText: "OK",
-                          }).then((result) => {
-                            if (result.value) { } else if (result.dismiss === "cancel") { }
-                          });
-                        }
-                      }
-                  );
-                } else if ($(".chkEmailCopy").is(":checked")) {
-                  Meteor.call(
-                      "sendEmail", {
-                        from: "" + mailFromName + " <" + mailFrom + ">",
-                        to: checkEmailData,
-                        subject: mailSubject,
-                        text: "",
-                        html: htmlmailBody,
-                        attachments: attachment,
-                      },
-                      function (error, result) {
-                        if (error && error.error === "error") { } else {
-                          $("#html-Invoice-pdfwrapper").css("display", "none");
-                          swal({
-                            title: "SUCCESS",
-                            text: "Email Sent To Customer: " + checkEmailData + " ",
-                            type: "success",
-                            showCancelButton: false,
-                            confirmButtonText: "OK",
-                          }).then((result) => {
-                            if (result.value) { } else if (result.dismiss === "cancel") { }
-                          });
-                        }
-                      }
-                  );
-                } else if ($(".chkEmailRep").is(":checked")) {
-                  Meteor.call(
-                      "sendEmail", {
-                        from: "" + mailFromName + " <" + mailFrom + ">",
-                        to: mailFrom,
-                        subject: mailSubject,
-                        text: "",
-                        html: htmlmailBody,
-                        attachments: attachment,
-                      },
-                      function (error, result) {
-                        if (error && error.error === "error") { } else {
-                          $("#html-Invoice-pdfwrapper").css("display", "none");
-                          swal({
-                            title: "SUCCESS",
-                            text: "Email Sent To User: " + mailFrom + " ",
-                            type: "success",
-                            showCancelButton: false,
-                            confirmButtonText: "OK",
-                          }).then((result) => {
-                            if (result.value) { } else if (result.dismiss === "cancel") { }
-                          });
-                        }
-                      }
-                  );
-                } else { }
+            let invoiceId = objDetails.fields.ID;
+            let encodedPdf = await generatePdfForMail(invoiceId);
+            let pdfObject = "";
+            var reader = new FileReader();
+            reader.readAsDataURL(encodedPdf);
+            reader.onloadend = function () {
+              var base64data = reader.result;
+              base64data = base64data.split(",")[1];
+              pdfObject = {
+                filename: "invoice-" + invoiceId + ".pdf",
+                content: base64data,
+                encoding: "base64",
               };
-            }
-            addAttachment();
+              attachment.push(pdfObject);
+              let erpInvoiceId = objDetails.fields.ID;
 
-            function generatePdfForMail(invoiceId) {
-              return new Promise((resolve, reject) => {
-                let doc = new jsPDF("p", "pt", "a4");
-                doc.setFontSize(18);
-                var source = document.getElementById("html-Invoice-pdfwrapper");
-                doc.addHTML(source, function () {
-                  resolve(doc.output("blob"));
-                  $("#html-Invoice-pdfwrapper").css("display", "none");
-                });
-              });
-            }
-            if (customerID !== " ") { }
-            let linesave = objDetails.fields.ID;
+              let mailFromName = localStorage.getItem("vs1companyName");
+              let mailFrom =
+                localStorage.getItem("VS1OrgEmail") ||
+                localStorage.getItem("VS1AdminUserName");
+              let customerEmailName = $("#edtCustomerName").val();
+              let checkEmailData = $("#edtCustomerEmail").val();
+              let grandtotal = $("#grandTotal").html();
+              let amountDueEmail = $("#totalBalanceDue").html();
+              let emailDueDate = $("#dtDueDate").val();
+              let customerBillingAddress = $("#txabillingAddress").val();
+              let customerTerms = $("#sltTerms").val();
 
-            sideBarService
-                .getAllInvoiceList(initialDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TInvoiceEx", JSON.stringify(data))
-                      .then(function (datareturn) {
-                        window.open("/paymentcard?invid=" + linesave, "_self");
-                      })
-                      .catch(function (err) {
-                        window.open("/paymentcard?invid=" + linesave, "_self");
+              let customerSubtotal = $("#subtotal_total").html();
+              let customerTax = $("#subtotal_tax").html();
+              let customerNett = $("#subtotal_nett").html();
+              let customerTotal = $("#grandTotal").html();
+              let mailSubject =
+                "Invoice " +
+                erpInvoiceId +
+                " from " +
+                mailFromName +
+                " for " +
+                customerEmailName;
+              var htmlmailBody =
+                ' <table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+                "        <tr>" +
+                '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+                '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+                '                    <table class="main">' +
+                "                        <tr>" +
+                '                            <td class="wrapper">' +
+                '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                "                                    <tr>" +
+                '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+                '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
+                erpInvoiceId +
+                " Details</span>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                '                                    <tr style="height: 16px;"></tr>' +
+                "                                    <tr>" +
+                "                                        <td>" +
+                '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+                "                                        </td>" +
+                "                                    </tr>" +
+                '                                    <tr style="height: 48px;"></tr>' +
+                '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+                '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+                '                                             <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
+                emailDueDate +
+                "</p>" +
+                '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
+                grandtotal +
+                "</p>" +
+                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                "                                                <tbody>" +
+                "                                                    <tr>" +
+                '                                                        <td align="center" style="padding-bottom: 15px;">' +
+                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                "                                                                <tbody>" +
+                "                                                                    <tr>" +
+                '                                                                        <td> <a href="' +
+                stripeGlobalURL +
+                "" +
+                stringQuery +
+                '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                "                                                                    </tr>" +
+                "                                                                </tbody>" +
+                "                                                            </table>" +
+                "                                                        </td>" +
+                "                                                    </tr>" +
+                "                                                </tbody>" +
+                "                                            </table>" +
+                '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+                "                                        </td>" +
+                "                                    </tr>" +
+                "                                    <tr>" +
+                '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                '                                            <p style="font-size: 18px;">Dear ' +
+                customerEmailName +
+                ",</p>" +
+                '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+                '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+                '                                            <p style="font-size: 18px;">' +
+                mailFromName +
+                "</p>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                '                                    <tr style="background-color: #ededed;">' +
+                '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                '                                            <div style="width: 100%; padding: 16px 0px;">' +
+                '                                                <div style="width: 50%; float: left;">' +
+                '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+                "                                                </div>" +
+                '                                                <div style="width: 50%; float: right;">' +
+                '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+                customerEmailName +
+                "</p>" +
+                '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+                customerBillingAddress +
+                "</p>" +
+                "                                                </div>" +
+                "                                            </div>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                '                                    <tr style="background-color: #ededed;">' +
+                '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                '                                            <div style="width: 100%; padding: 16px 0px;">' +
+                '                                                <div style="width: 50%; float: left;">' +
+                '                                                    <p style="font-size: 18px;">Terms</p>' +
+                "                                                </div>" +
+                '                                                <div style="width: 50%; float: right;">' +
+                '                                                    <p style="font-size: 18px;">' +
+                customerTerms +
+                "</p>" +
+                "                                                </div>" +
+                "                                            </div>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                "                                    <tr>" +
+                '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+                '                                                <div style="width: 50%; float: left;">' +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+                "                                                </div>" +
+                '                                                <div style="width: 50%; float: right; text-align: right;">' +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                customerSubtotal +
+                "</p>" +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                customerTax +
+                "</p>" +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                customerNett +
+                "</p>" +
+                '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+                customerTotal +
+                "</p>" +
+                "                                                </div>" +
+                "                                            </div>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                "                                    <tr>" +
+                '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+                '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                "                                                <tbody>" +
+                "                                                    <tr>" +
+                '                                                        <td align="center">' +
+                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                "                                                                <tbody>" +
+                "                                                                    <tr>" +
+                '                                                                        <td> <a href="' +
+                stripeGlobalURL +
+                "" +
+                stringQuery +
+                '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                "                                                                    </tr>" +
+                "                                                                </tbody>" +
+                "                                                            </table>" +
+                "                                                        </td>" +
+                "                                                    </tr>" +
+                "                                                </tbody>" +
+                "                                            </table>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                "                                    <tr>" +
+                '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+                "                                        </td>" +
+                "                                    </tr>" +
+                "                                    <tr>" +
+                "                                        <td>" +
+                '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                "                                                <tbody>" +
+                "                                                    <tr>" +
+                '                                                        <td align="center">' +
+                '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                "                                                                <tbody>" +
+                "                                                                    <tr>" +
+                '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+                "                                                                    </tr>" +
+                "                                                                </tbody>" +
+                "                                                            </table>" +
+                "                                                        </td>" +
+                "                                                    </tr>" +
+                "                                                </tbody>" +
+                "                                            </table>" +
+                "                                        </td>" +
+                "                                    </tr>" +
+                "                                </table>" +
+                "                            </td>" +
+                "                        </tr>" +
+                "                    </table>" +
+                '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+                '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                "                            <tr>" +
+                '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+                '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
+                mailFromName +
+                "</span>" +
+                "                                    <br>" +
+                '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+                '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+                "                                </td>" +
+                "                            </tr>" +
+                "                        </table>" +
+                "                    </div>" +
+                "                </div>" +
+                "            </td>" +
+                "        </tr>" +
+                "    </table>";
+
+              if (
+                $(".chkEmailCopy").is(":checked") &&
+                $(".chkEmailRep").is(":checked")
+              ) {
+                Meteor.call(
+                  "sendEmail", {
+                  from: "" + mailFromName + " <" + mailFrom + ">",
+                  to: checkEmailData,
+                  subject: mailSubject,
+                  text: "",
+                  html: htmlmailBody,
+                  attachments: attachment,
+                },
+                  function (error, result) {
+                    if (error && error.error === "error") { } else { }
+                  }
+                );
+
+                Meteor.call(
+                  "sendEmail", {
+                  from: "" + mailFromName + " <" + mailFrom + ">",
+                  to: mailFrom,
+                  subject: mailSubject,
+                  text: "",
+                  html: htmlmailBody,
+                  attachments: attachment,
+                },
+                  function (error, result) {
+                    if (error && error.error === "error") { } else {
+                      $("#html-Invoice-pdfwrapper").css("display", "none");
+                      swal({
+                        title: "SUCCESS",
+                        text: "Email Sent To Customer: " +
+                          checkEmailData +
+                          " and User: " +
+                          mailFrom +
+                          "",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                      }).then((result) => {
+                        if (result.value) { } else if (result.dismiss === "cancel") { }
                       });
+                    }
+                  }
+                );
+              } else if ($(".chkEmailCopy").is(":checked")) {
+                Meteor.call(
+                  "sendEmail", {
+                  from: "" + mailFromName + " <" + mailFrom + ">",
+                  to: checkEmailData,
+                  subject: mailSubject,
+                  text: "",
+                  html: htmlmailBody,
+                  attachments: attachment,
+                },
+                  function (error, result) {
+                    if (error && error.error === "error") { } else {
+                      $("#html-Invoice-pdfwrapper").css("display", "none");
+                      swal({
+                        title: "SUCCESS",
+                        text: "Email Sent To Customer: " + checkEmailData + " ",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                      }).then((result) => {
+                        if (result.value) { } else if (result.dismiss === "cancel") { }
+                      });
+                    }
+                  }
+                );
+              } else if ($(".chkEmailRep").is(":checked")) {
+                Meteor.call(
+                  "sendEmail", {
+                  from: "" + mailFromName + " <" + mailFrom + ">",
+                  to: mailFrom,
+                  subject: mailSubject,
+                  text: "",
+                  html: htmlmailBody,
+                  attachments: attachment,
+                },
+                  function (error, result) {
+                    if (error && error.error === "error") { } else {
+                      $("#html-Invoice-pdfwrapper").css("display", "none");
+                      swal({
+                        title: "SUCCESS",
+                        text: "Email Sent To User: " + mailFrom + " ",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                      }).then((result) => {
+                        if (result.value) { } else if (result.dismiss === "cancel") { }
+                      });
+                    }
+                  }
+                );
+              } else { }
+            };
+          }
+          addAttachment();
+
+          function generatePdfForMail(invoiceId) {
+            return new Promise((resolve, reject) => {
+              let doc = new jsPDF("p", "pt", "a4");
+              doc.setFontSize(18);
+              var source = document.getElementById("html-Invoice-pdfwrapper");
+              doc.addHTML(source, function () {
+                resolve(doc.output("blob"));
+                $("#html-Invoice-pdfwrapper").css("display", "none");
+              });
+            });
+          }
+          if (customerID !== " ") { }
+          let linesave = objDetails.fields.ID;
+
+          sideBarService
+            .getAllInvoiceList(initialDataLoad, 0)
+            .then(function (data) {
+              addVS1Data("TInvoiceEx", JSON.stringify(data))
+                .then(function (datareturn) {
+                  window.open("/paymentcard?invid=" + linesave, "_self");
                 })
                 .catch(function (err) {
                   window.open("/paymentcard?invid=" + linesave, "_self");
                 });
-          })
-          .catch(function (err) {
-            swal({
-              title: "Oooops...",
-              text: err,
-              type: "error",
-              showCancelButton: false,
-              confirmButtonText: "Try Again",
-            }).then((result) => {
-              if (result.value) {
-                if (err === checkResponseError) {
-                  window.open("/", "_self");
-                }
-              } else if (result.dismiss === "cancel") { }
+            })
+            .catch(function (err) {
+              window.open("/paymentcard?invid=" + linesave, "_self");
             });
-            $(".fullScreenSpin").css("display", "none");
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              if (err === checkResponseError) {
+                window.open("/", "_self");
+              }
+            } else if (result.dismiss === "cancel") { }
           });
+          $(".fullScreenSpin").css("display", "none");
+        });
     }
   },
   "click #btnViewPayment": async function () {
@@ -10344,7 +10296,7 @@ Template.new_invoice.events({
     var getso_id = url.split("?id=");
     var currentInvoice = getso_id[getso_id.length - 1];
     let paymentData =
-        (await salesService.getCheckPaymentLineByTransID(currentInvoice)) || "";
+      (await salesService.getCheckPaymentLineByTransID(currentInvoice)) || "";
 
     if (paymentData) {
       for (let x = 0; x < paymentData.tcustomerpaymentline.length; x++) {
@@ -10370,7 +10322,7 @@ Template.new_invoice.events({
     var currentInvoice = getso_id[getso_id.length - 1];
     let suppliername = $("#edtCustomerName").val() || "";
     let paymentData =
-        (await salesService.getCheckPaymentLineByTransID(currentInvoice)) || "";
+      (await salesService.getCheckPaymentLineByTransID(currentInvoice)) || "";
     if (paymentData) {
       for (let x = 0; x < paymentData.tcustomerpaymentline.length; x++) {
         if (paymentData.tcustomerpaymentline.length > 1) {
@@ -10385,8 +10337,8 @@ Template.new_invoice.events({
       setTimeout(function () {
         let selectPayID = selectedSupplierPaymentID;
         window.open(
-            "/customerpayment?payment=" + selectPayID + "&name=" + suppliername,
-            "_self"
+          "/customerpayment?payment=" + selectPayID + "&name=" + suppliername,
+          "_self"
         );
       }, 500);
     } else {
@@ -10399,9 +10351,9 @@ Template.new_invoice.events({
     setTimeout(function () {
       if (FlowRouter.current().queryParams.trans) {
         FlowRouter.go(
-            "/customerscard?id=" +
-            FlowRouter.current().queryParams.trans +
-            "&transTab=active"
+          "/customerscard?id=" +
+          FlowRouter.current().queryParams.trans +
+          "&transTab=active"
         );
       } else {
         history.back(1);
@@ -10493,9 +10445,9 @@ Template.new_invoice.events({
       $(".fullScreenSpin").css("display", "inline-block");
       var url = FlowRouter.current().path;
       if (
-          url.indexOf("?id=") > 0 ||
-          url.indexOf("?copyquid=") > 0 ||
-          url.indexOf("?copyinvid=")
+        url.indexOf("?id=") > 0 ||
+        url.indexOf("?copyquid=") > 0 ||
+        url.indexOf("?copyinvid=")
       ) {
         var getso_id = url.split("?id=");
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -10596,14 +10548,14 @@ Template.new_invoice.events({
               var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
               var oPost = new XMLHttpRequest();
               oPost.open(
-                  "POST",
-                  URLRequest +
-                  erpGet.ERPIPAddress +
-                  ":" +
-                  erpGet.ERPPort +
-                  "/" +
-                  'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
-                  true
+                "POST",
+                URLRequest +
+                erpGet.ERPIPAddress +
+                ":" +
+                erpGet.ERPPort +
+                "/" +
+                'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
+                true
               );
               oPost.setRequestHeader("database", erpGet.ERPDatabase);
               oPost.setRequestHeader("username", erpGet.ERPUsername);
@@ -10682,14 +10634,14 @@ Template.new_invoice.events({
             var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
             var oPost = new XMLHttpRequest();
             oPost.open(
-                "POST",
-                URLRequest +
-                erpGet.ERPIPAddress +
-                ":" +
-                erpGet.ERPPort +
-                "/" +
-                'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
-                true
+              "POST",
+              URLRequest +
+              erpGet.ERPIPAddress +
+              ":" +
+              erpGet.ERPPort +
+              "/" +
+              'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
+              true
             );
             oPost.setRequestHeader("database", erpGet.ERPDatabase);
             oPost.setRequestHeader("username", erpGet.ERPUsername);
@@ -10735,9 +10687,9 @@ Template.new_invoice.events({
         }
         if (!isEmailValid(checkEmailData)) {
           swal(
-              "The email field must be a valid email address !",
-              "",
-              "warning"
+            "The email field must be a valid email address !",
+            "",
+            "warning"
           );
 
           event.preventDefault();
@@ -10765,13 +10717,136 @@ Template.new_invoice.events({
         }
       });
       // if (!existProduct) {
-      if (selectedProductName == "") {
-        swal("You have to select Product.", "", "info");
-        event.preventDefault();
-        return false;
-      } else {
-        getVS1Data("TProductQtyList").then(function (dataObject) {
-          if (dataObject.length == 0) {
+        if (selectedProductName == "") {
+          swal("You have to select Product.", "", "info");
+          event.preventDefault();
+          return false;
+        } else {
+          getVS1Data("TProductQtyList").then(function (dataObject) {
+            if (dataObject.length == 0) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              });
+            }
+            else{
+              let data = JSON.parse(dataObject[0].data);
+              let existProductInfo = false;
+              for (let i = 0; i < data.tproductqtylist.length; i++) {
+                if(data.tproductqtylist[i].ProductName == selectedProductName){
+                  existProductInfo = true;
+                  if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                    return false;
+                  } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                }
+              }
+
+              if (!existProductInfo) {
+                productService.getProductStatus(selectedProductName).then(async function (data) {
+                  if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    return false;
+                  } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                });
+              }
+            }
+          }).catch(function (err) {
             productService.getProductStatus(selectedProductName).then(async function (data) {
               if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                 return false;
@@ -10809,55 +10884,132 @@ Template.new_invoice.events({
                 }, 200);
               }
             });
-          }
-          else{
-            let data = JSON.parse(dataObject[0].data);
-            let existProductInfo = false;
-            for (let i = 0; i < data.tproductqtylist.length; i++) {
-              if(data.tproductqtylist[i].ProductName == selectedProductName){
-                existProductInfo = true;
-                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
-                  return false;
-                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
-                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                  if(selectedLot != undefined && selectedLot != ""){
-                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                  }
-                  else{
-                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                  }
-                  setTimeout(function () {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $("#availableLotNumberModal").attr("data-row", row + 1);
-                    $("#availableLotNumberModal").modal("show");
-                  }, 200);
-                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
-                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                  if(selectedSN != undefined && selectedSN != ""){
-                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                  }
-                  else{
-                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                  }
-                  setTimeout(function () {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $("#availableSerialNumberModal").attr("data-row", row + 1);
-                    $('#availableSerialNumberModal').modal('show');
-                    if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
-                      $("#availableSerialNumberModal .btnSNCreate").show();
-                    }
-                    else{
-                      $("#availableSerialNumberModal .btnSNCreate").hide();
-                    }
-                  }, 200);
-                }
-              }
-            }
+          });
+        }
+      // }
+    }
+  },
+  "click .btnSnLotmodal": function (event) {
+    var target = event.target;
+    let selectedShipped = $(target).closest("tr").find(".lineShipped").val();
+    let selectedunit = $(target).closest("tr").find(".lineOrdered").val();
+    localStorage.setItem("productItem", selectedunit);
+    let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
+    localStorage.setItem("selectedProductName", selectedProductName);
 
-            if (!existProductInfo) {
+    let productService = new ProductService();
+    const templateObject = Template.instance();
+    const InvoiceData = templateObject.invoicerecord.get();
+    let existProduct = false;
+    if(parseInt(selectedShipped) > 0){
+      InvoiceData.LineItems.forEach(async (element) => {
+        if (element.item == selectedProductName) {
+          existProduct = true;
+        }
+      });
+      // if (!existProduct) {
+        if (selectedProductName == "") {
+          swal("You have to select Product.", "", "info");
+          event.preventDefault();
+          return false;
+        } else {
+          $(".fullScreenSpin").css("display", "inline-block");
+          getVS1Data("TProductQtyList").then(function (dataObject) {
+            if (dataObject.length == 0) {
               productService.getProductStatus(selectedProductName).then(async function (data) {
+                $(".fullScreenSpin").css("display", "none");
                 if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                  return false;
+                  var buttons = $("<div>")
+                  .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                  .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                  .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                  swal({
+                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                    type: "warning",
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    html: buttons,
+                    onOpen: function (dObj) {
+                      $('#trackSN').on('click',function () {
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "true",
+                            Batch: "false",
+                          },
+                        };
+
+                        productService.saveProductVS1(objDetails)
+                        .then(async function (objDetails) {
+                          sideBarService.getProductListVS1("All", 0)
+                            .then(async function (dataReload) {
+                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                              swal.close();
+                              $(target).click();
+                            })
+                            .catch(function (err) {
+                            });
+                        })
+                        .catch(function (err) {
+                          swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                          }).then((result) => {
+                            if (result.value) {
+                              // Meteor._reload.reload();
+                            } else if (result.dismiss === "cancel") {
+                            }
+                          });
+                        });
+                      });
+                      $('#trackLN').on('click',function () {
+                        swal.close();
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "false",
+                            Batch: "true",
+                          },
+                        };
+
+                        productService.saveProductVS1(objDetails)
+                        .then(async function (objDetails) {
+                          sideBarService.getProductListVS1("All", 0)
+                            .then(async function (dataReload) {
+                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                              swal.close();
+                              $(target).click();
+                            })
+                            .catch(function (err) {
+                            });
+                        })
+                        .catch(function (err) {
+                          swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                          }).then((result) => {
+                            if (result.value) {
+                              // Meteor._reload.reload();
+                            } else if (result.dismiss === "cancel") {
+                            }
+                          });
+                        });
+                      });
+                      $('#trackCancel').on('click',function () {
+                          swal.close();
+                      });
+                    }
+                  });
                 } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
                   let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
                   if(selectedLot != undefined && selectedLot != ""){
@@ -10893,84 +11045,280 @@ Template.new_invoice.events({
                 }
               });
             }
-          }
-        }).catch(function (err) {
-          productService.getProductStatus(selectedProductName).then(async function (data) {
-            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-              return false;
-            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-              let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-              if(selectedLot != undefined && selectedLot != ""){
-                shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-              }
-              else{
-                shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-              }
-              setTimeout(function () {
-                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                $("#availableLotNumberModal").attr("data-row", row + 1);
-                $("#availableLotNumberModal").modal("show");
-              }, 200);
-            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-              let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-              if(selectedSN != undefined && selectedSN != ""){
-                shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-              }
-              else{
-                shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-              }
-              setTimeout(function () {
-                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                $("#availableSerialNumberModal").attr("data-row", row + 1);
-                $('#availableSerialNumberModal').modal('show');
-                if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                  $("#availableSerialNumberModal .btnSNCreate").show();
-                }
-                else{
-                  $("#availableSerialNumberModal .btnSNCreate").hide();
-                }
-              }, 200);
-            }
-          });
-        });
-      }
-      // }
-    }
-  },
-  "click .btnSnLotmodal": function (event) {
-    var target = event.target;
-    let selectedShipped = $(target).closest("tr").find(".lineShipped").val();
-    let selectedunit = $(target).closest("tr").find(".lineOrdered").val();
-    localStorage.setItem("productItem", selectedunit);
-    let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
-    localStorage.setItem("selectedProductName", selectedProductName);
+            else{
+              let data = JSON.parse(dataObject[0].data);
+              let existProductInfo = false;
+              for (let i = 0; i < data.tproductqtylist.length; i++) {
+                if(data.tproductqtylist[i].ProductName == selectedProductName){
+                  $(".fullScreenSpin").css("display", "none");
+                  existProductInfo = true;
+                  if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                    var buttons = $("<div>")
+                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                    swal({
+                      title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                      type: "warning",
+                      showCancelButton: false,
+                      showConfirmButton: false,
+                      html: buttons,
+                      onOpen: function (dObj) {
+                        $('#trackSN').on('click',function () {
+                          objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
+                              Active: true,
+                              SNTracking: "true",
+                              Batch: "false",
+                            },
+                          };
 
-    let productService = new ProductService();
-    const templateObject = Template.instance();
-    const InvoiceData = templateObject.invoicerecord.get();
-    let existProduct = false;
-    if(parseInt(selectedShipped) > 0){
-      InvoiceData.LineItems.forEach(async (element) => {
-        if (element.item == selectedProductName) {
-          existProduct = true;
-        }
-      });
-      // if (!existProduct) {
-      if (selectedProductName == "") {
-        swal("You have to select Product.", "", "info");
-        event.preventDefault();
-        return false;
-      } else {
-        $(".fullScreenSpin").css("display", "inline-block");
-        getVS1Data("TProductQtyList").then(function (dataObject) {
-          if (dataObject.length == 0) {
+                          productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                        });
+                        $('#trackLN').on('click',function () {
+                          swal.close();
+                          objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
+                              Active: true,
+                              SNTracking: "false",
+                              Batch: "true",
+                            },
+                          };
+
+                          productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                        });
+                        $('#trackCancel').on('click',function () {
+                            swal.close();
+                        });
+                      }
+                    });
+                  } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                }
+              }
+
+              if(!existProductInfo){
+                productService.getProductStatus(selectedProductName).then(async function (data) {
+                  $(".fullScreenSpin").css("display", "none");
+                  if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                    var buttons = $("<div>")
+                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                    swal({
+                      title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                      type: "warning",
+                      showCancelButton: false,
+                      showConfirmButton: false,
+                      html: buttons,
+                      onOpen: function (dObj) {
+                        $('#trackSN').on('click',function () {
+                          objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
+                              Active: true,
+                              SNTracking: "true",
+                              Batch: "false",
+                            },
+                          };
+
+                          productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                        });
+                        $('#trackLN').on('click',function () {
+                          swal.close();
+                          objDetails = {
+                            type: "TProductVS1",
+                            fields: {
+                              ID: parseInt(data.tproductqtylist[i].PARTSID),
+                              Active: true,
+                              SNTracking: "false",
+                              Batch: "true",
+                            },
+                          };
+
+                          productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                        });
+                        $('#trackCancel').on('click',function () {
+                            swal.close();
+                        });
+                      }
+                    });
+                  } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                    if(selectedLot != undefined && selectedLot != ""){
+                      shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableLotNumberModal").attr("data-row", row + 1);
+                      $("#availableLotNumberModal").modal("show");
+                    }, 200);
+                  } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                    if(selectedSN != undefined && selectedSN != ""){
+                      shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                    }
+                    else{
+                      shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                    }
+                    setTimeout(function () {
+                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                      $("#availableSerialNumberModal").attr("data-row", row + 1);
+                      $('#availableSerialNumberModal').modal('show');
+                      if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                        $("#availableSerialNumberModal .btnSNCreate").show();
+                      }
+                      else{
+                        $("#availableSerialNumberModal .btnSNCreate").hide();
+                      }
+                    }, 200);
+                  }
+                });
+              }
+            }
+          }).catch(function (err) {
             productService.getProductStatus(selectedProductName).then(async function (data) {
               $(".fullScreenSpin").css("display", "none");
               if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                 var buttons = $("<div>")
-                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
                 swal({
                   title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
                   type: "warning",
@@ -10990,30 +11338,30 @@ Template.new_invoice.events({
                       };
 
                       productService.saveProductVS1(objDetails)
-                          .then(async function (objDetails) {
-                            sideBarService.getProductListVS1("All", 0)
-                                .then(async function (dataReload) {
-                                  await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                  swal.close();
-                                  $(target).click();
-                                })
-                                .catch(function (err) {
-                                });
+                      .then(async function (objDetails) {
+                        sideBarService.getProductListVS1("All", 0)
+                          .then(async function (dataReload) {
+                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                            swal.close();
+                            $(target).click();
                           })
                           .catch(function (err) {
-                            swal({
-                              title: "Oooops...",
-                              text: err,
-                              type: "error",
-                              showCancelButton: false,
-                              confirmButtonText: "Try Again",
-                            }).then((result) => {
-                              if (result.value) {
-                                // Meteor._reload.reload();
-                              } else if (result.dismiss === "cancel") {
-                              }
-                            });
                           });
+                      })
+                      .catch(function (err) {
+                        swal({
+                          title: "Oooops...",
+                          text: err,
+                          type: "error",
+                          showCancelButton: false,
+                          confirmButtonText: "Try Again",
+                        }).then((result) => {
+                          if (result.value) {
+                            // Meteor._reload.reload();
+                          } else if (result.dismiss === "cancel") {
+                          }
+                        });
+                      });
                     });
                     $('#trackLN').on('click',function () {
                       swal.close();
@@ -11028,33 +11376,33 @@ Template.new_invoice.events({
                       };
 
                       productService.saveProductVS1(objDetails)
-                          .then(async function (objDetails) {
-                            sideBarService.getProductListVS1("All", 0)
-                                .then(async function (dataReload) {
-                                  await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                  swal.close();
-                                  $(target).click();
-                                })
-                                .catch(function (err) {
-                                });
+                      .then(async function (objDetails) {
+                        sideBarService.getProductListVS1("All", 0)
+                          .then(async function (dataReload) {
+                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                            swal.close();
+                            $(target).click();
                           })
                           .catch(function (err) {
-                            swal({
-                              title: "Oooops...",
-                              text: err,
-                              type: "error",
-                              showCancelButton: false,
-                              confirmButtonText: "Try Again",
-                            }).then((result) => {
-                              if (result.value) {
-                                // Meteor._reload.reload();
-                              } else if (result.dismiss === "cancel") {
-                              }
-                            });
                           });
+                      })
+                      .catch(function (err) {
+                        swal({
+                          title: "Oooops...",
+                          text: err,
+                          type: "error",
+                          showCancelButton: false,
+                          confirmButtonText: "Try Again",
+                        }).then((result) => {
+                          if (result.value) {
+                            // Meteor._reload.reload();
+                          } else if (result.dismiss === "cancel") {
+                          }
+                        });
+                      });
                     });
                     $('#trackCancel').on('click',function () {
-                      swal.close();
+                        swal.close();
                     });
                   }
                 });
@@ -11092,404 +11440,8 @@ Template.new_invoice.events({
                 }, 200);
               }
             });
-          }
-          else{
-            let data = JSON.parse(dataObject[0].data);
-            let existProductInfo = false;
-            for (let i = 0; i < data.tproductqtylist.length; i++) {
-              if(data.tproductqtylist[i].ProductName == selectedProductName){
-                $(".fullScreenSpin").css("display", "none");
-                existProductInfo = true;
-                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
-                  var buttons = $("<div>")
-                      .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                      .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                      .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                  swal({
-                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                    type: "warning",
-                    showCancelButton: false,
-                    showConfirmButton: false,
-                    html: buttons,
-                    onOpen: function (dObj) {
-                      $('#trackSN').on('click',function () {
-                        objDetails = {
-                          type: "TProductVS1",
-                          fields: {
-                            ID: parseInt(data.tproductqtylist[i].PARTSID),
-                            Active: true,
-                            SNTracking: "true",
-                            Batch: "false",
-                          },
-                        };
-
-                        productService.saveProductVS1(objDetails)
-                            .then(async function (objDetails) {
-                              sideBarService.getProductListVS1("All", 0)
-                                  .then(async function (dataReload) {
-                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                    swal.close();
-                                    $(target).click();
-                                  })
-                                  .catch(function (err) {
-                                  });
-                            })
-                            .catch(function (err) {
-                              swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                              }).then((result) => {
-                                if (result.value) {
-                                  // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {
-                                }
-                              });
-                            });
-                      });
-                      $('#trackLN').on('click',function () {
-                        swal.close();
-                        objDetails = {
-                          type: "TProductVS1",
-                          fields: {
-                            ID: parseInt(data.tproductqtylist[i].PARTSID),
-                            Active: true,
-                            SNTracking: "false",
-                            Batch: "true",
-                          },
-                        };
-
-                        productService.saveProductVS1(objDetails)
-                            .then(async function (objDetails) {
-                              sideBarService.getProductListVS1("All", 0)
-                                  .then(async function (dataReload) {
-                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                    swal.close();
-                                    $(target).click();
-                                  })
-                                  .catch(function (err) {
-                                  });
-                            })
-                            .catch(function (err) {
-                              swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                              }).then((result) => {
-                                if (result.value) {
-                                  // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {
-                                }
-                              });
-                            });
-                      });
-                      $('#trackCancel').on('click',function () {
-                        swal.close();
-                      });
-                    }
-                  });
-                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
-                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                  if(selectedLot != undefined && selectedLot != ""){
-                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                  }
-                  else{
-                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                  }
-                  setTimeout(function () {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $("#availableLotNumberModal").attr("data-row", row + 1);
-                    $("#availableLotNumberModal").modal("show");
-                  }, 200);
-                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
-                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                  if(selectedSN != undefined && selectedSN != ""){
-                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                  }
-                  else{
-                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                  }
-                  setTimeout(function () {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $("#availableSerialNumberModal").attr("data-row", row + 1);
-                    $('#availableSerialNumberModal').modal('show');
-                    if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
-                      $("#availableSerialNumberModal .btnSNCreate").show();
-                    }
-                    else{
-                      $("#availableSerialNumberModal .btnSNCreate").hide();
-                    }
-                  }, 200);
-                }
-              }
-            }
-
-            if(!existProductInfo){
-              productService.getProductStatus(selectedProductName).then(async function (data) {
-                $(".fullScreenSpin").css("display", "none");
-                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                  var buttons = $("<div>")
-                      .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                      .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                      .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                  swal({
-                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                    type: "warning",
-                    showCancelButton: false,
-                    showConfirmButton: false,
-                    html: buttons,
-                    onOpen: function (dObj) {
-                      $('#trackSN').on('click',function () {
-                        objDetails = {
-                          type: "TProductVS1",
-                          fields: {
-                            ID: parseInt(data.tproductqtylist[i].PARTSID),
-                            Active: true,
-                            SNTracking: "true",
-                            Batch: "false",
-                          },
-                        };
-
-                        productService.saveProductVS1(objDetails)
-                            .then(async function (objDetails) {
-                              sideBarService.getProductListVS1("All", 0)
-                                  .then(async function (dataReload) {
-                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                    swal.close();
-                                    $(target).click();
-                                  })
-                                  .catch(function (err) {
-                                  });
-                            })
-                            .catch(function (err) {
-                              swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                              }).then((result) => {
-                                if (result.value) {
-                                  // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {
-                                }
-                              });
-                            });
-                      });
-                      $('#trackLN').on('click',function () {
-                        swal.close();
-                        objDetails = {
-                          type: "TProductVS1",
-                          fields: {
-                            ID: parseInt(data.tproductqtylist[i].PARTSID),
-                            Active: true,
-                            SNTracking: "false",
-                            Batch: "true",
-                          },
-                        };
-
-                        productService.saveProductVS1(objDetails)
-                            .then(async function (objDetails) {
-                              sideBarService.getProductListVS1("All", 0)
-                                  .then(async function (dataReload) {
-                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                    swal.close();
-                                    $(target).click();
-                                  })
-                                  .catch(function (err) {
-                                  });
-                            })
-                            .catch(function (err) {
-                              swal({
-                                title: "Oooops...",
-                                text: err,
-                                type: "error",
-                                showCancelButton: false,
-                                confirmButtonText: "Try Again",
-                              }).then((result) => {
-                                if (result.value) {
-                                  // Meteor._reload.reload();
-                                } else if (result.dismiss === "cancel") {
-                                }
-                              });
-                            });
-                      });
-                      $('#trackCancel').on('click',function () {
-                        swal.close();
-                      });
-                    }
-                  });
-                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                  if(selectedLot != undefined && selectedLot != ""){
-                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                  }
-                  else{
-                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                  }
-                  setTimeout(function () {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $("#availableLotNumberModal").attr("data-row", row + 1);
-                    $("#availableLotNumberModal").modal("show");
-                  }, 200);
-                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                  if(selectedSN != undefined && selectedSN != ""){
-                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                  }
-                  else{
-                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                  }
-                  setTimeout(function () {
-                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                    $("#availableSerialNumberModal").attr("data-row", row + 1);
-                    $('#availableSerialNumberModal').modal('show');
-                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                      $("#availableSerialNumberModal .btnSNCreate").show();
-                    }
-                    else{
-                      $("#availableSerialNumberModal .btnSNCreate").hide();
-                    }
-                  }, 200);
-                }
-              });
-            }
-          }
-        }).catch(function (err) {
-          productService.getProductStatus(selectedProductName).then(async function (data) {
-            $(".fullScreenSpin").css("display", "none");
-            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-              var buttons = $("<div>")
-                  .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                  .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                  .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-              swal({
-                title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                type: "warning",
-                showCancelButton: false,
-                showConfirmButton: false,
-                html: buttons,
-                onOpen: function (dObj) {
-                  $('#trackSN').on('click',function () {
-                    objDetails = {
-                      type: "TProductVS1",
-                      fields: {
-                        ID: parseInt(data.tproductqtylist[i].PARTSID),
-                        Active: true,
-                        SNTracking: "true",
-                        Batch: "false",
-                      },
-                    };
-
-                    productService.saveProductVS1(objDetails)
-                        .then(async function (objDetails) {
-                          sideBarService.getProductListVS1("All", 0)
-                              .then(async function (dataReload) {
-                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                swal.close();
-                                $(target).click();
-                              })
-                              .catch(function (err) {
-                              });
-                        })
-                        .catch(function (err) {
-                          swal({
-                            title: "Oooops...",
-                            text: err,
-                            type: "error",
-                            showCancelButton: false,
-                            confirmButtonText: "Try Again",
-                          }).then((result) => {
-                            if (result.value) {
-                              // Meteor._reload.reload();
-                            } else if (result.dismiss === "cancel") {
-                            }
-                          });
-                        });
-                  });
-                  $('#trackLN').on('click',function () {
-                    swal.close();
-                    objDetails = {
-                      type: "TProductVS1",
-                      fields: {
-                        ID: parseInt(data.tproductqtylist[i].PARTSID),
-                        Active: true,
-                        SNTracking: "false",
-                        Batch: "true",
-                      },
-                    };
-
-                    productService.saveProductVS1(objDetails)
-                        .then(async function (objDetails) {
-                          sideBarService.getProductListVS1("All", 0)
-                              .then(async function (dataReload) {
-                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                swal.close();
-                                $(target).click();
-                              })
-                              .catch(function (err) {
-                              });
-                        })
-                        .catch(function (err) {
-                          swal({
-                            title: "Oooops...",
-                            text: err,
-                            type: "error",
-                            showCancelButton: false,
-                            confirmButtonText: "Try Again",
-                          }).then((result) => {
-                            if (result.value) {
-                              // Meteor._reload.reload();
-                            } else if (result.dismiss === "cancel") {
-                            }
-                          });
-                        });
-                  });
-                  $('#trackCancel').on('click',function () {
-                    swal.close();
-                  });
-                }
-              });
-            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-              let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-              if(selectedLot != undefined && selectedLot != ""){
-                shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-              }
-              else{
-                shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-              }
-              setTimeout(function () {
-                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                $("#availableLotNumberModal").attr("data-row", row + 1);
-                $("#availableLotNumberModal").modal("show");
-              }, 200);
-            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-              let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-              if(selectedSN != undefined && selectedSN != ""){
-                shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-              }
-              else{
-                shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-              }
-              setTimeout(function () {
-                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                $("#availableSerialNumberModal").attr("data-row", row + 1);
-                $('#availableSerialNumberModal').modal('show');
-                if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                  $("#availableSerialNumberModal .btnSNCreate").show();
-                }
-                else{
-                  $("#availableSerialNumberModal .btnSNCreate").hide();
-                }
-              }, 200);
-            }
           });
-        });
-      }
+        }
       // }
     }
   },
@@ -11528,8 +11480,8 @@ Template.new_invoice.events({
     $("#clickedControl").val("three");
   },
 
-  'change .sltCurrency': (e, ui) => {
-    if ($(".sltCurrency").val() && $(".sltCurrency").val() != defaultCurrencyCode) {
+  'change #sltCurrency': (e, ui) => {
+    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
       ui.isForeignEnabled.set(true);
       FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);

@@ -326,7 +326,7 @@ export class ProductService extends BaseService {
             PropertyList: "AccountName,AccountTypeName",
             select: "[Active]=true"
         };
-        return this.getList(this.ERPObjects.TAccount, options);
+        return this.getList(this.ERPObjects.TAccountVS1, options);
     }
 
     getTaxCodes() {
