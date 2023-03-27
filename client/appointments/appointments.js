@@ -1273,131 +1273,59 @@ Template.appointments.onRendered(function() {
         getVS1Data("TCustomerVS1").then(function(dataObject) {
 			if (dataObject.length == 0) {
 				clientsService.getClientVS1().then(function(data) {
-					for (let i in data.tcustomervs1) {
-						let customerrecordObj = {
-							customerid: data.tcustomervs1[i].Id || " ",
-							customername: data.tcustomervs1[i].ClientName || " ",
-							customeremail: data.tcustomervs1[i].Email || " ",
-							street: data.tcustomervs1[i].Street.replace(/(?:\r\n|\r|\n)/g,", ") || " ",
-							street2: data.tcustomervs1[i].Street2 || " ",
-							street3: data.tcustomervs1[i].Street3 || " ",
-							suburb: data.tcustomervs1[i].Suburb || data.tcustomervs1[i].Street2,
-							phone: data.tcustomervs1[i].Phone || " ",
-							statecode: data.tcustomervs1[i].State + " " + data.tcustomervs1[i].Postcode || " ",
-							country: data.tcustomervs1[i].Country || " ",
-							termsName: data.tcustomervs1[i].TermsName || "",
-						};
-						//clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
-						clientList.push(customerrecordObj);
-
-						//$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
-					}
-					templateObject.clientrecords.set(clientList);
-					templateObject.clientrecords.set(
-						clientList.sort(function(a, b) {
-							if (a.customername == "NA") {
-								return 1;
-							} else if (b.customername == "NA") {
-								return -1;
-							}
-							return a.customername.toUpperCase() >
-								b.customername.toUpperCase() ?
-								1 :
-								-1;
-						})
-					);
-
-					for (var i = 0; i < clientList.length; i++) {
-						//$('#customer').editableSelect('add', clientList[i].customername);
-					}
+					templateObject.setAllClientsData(data)
 				});
 			} else {
 				let data = JSON.parse(dataObject[0].data);
-				let useData = data.tcustomervs1;
-				for (let i in useData) {
-					let customerrecordObj = {
-						customerid: useData[i].fields.ID || " ",
-						customername: useData[i].fields.ClientName || " ",
-						customeremail: useData[i].fields.Email || " ",
-						street: useData[i].fields.Street.replace(/(?:\r\n|\r|\n)/g, ", ") ||
-							" ",
-						street2: useData[i].fields.Street2 || " ",
-						street3: useData[i].fields.Street3 || " ",
-						suburb: useData[i].fields.Suburb || data.tcustomervs1[i].Street2,
-						phone: useData[i].fields.Phone || " ",
-						statecode: useData[i].fields.State + " " + useData[i].fields.Postcode ||
-							" ",
-						country: useData[i].fields.Country || " ",
-						termsName: useData[i].fields.TermsName || "",
-					};
-					//clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
-					clientList.push(customerrecordObj);
-
-					//$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
-				}
-				templateObject.clientrecords.set(clientList);
-				templateObject.clientrecords.set(
-					clientList.sort(function(a, b) {
-						if (a.customername == "NA") {
-							return 1;
-						} else if (b.customername == "NA") {
-							return -1;
-						}
-						return a.customername.toUpperCase() > b.customername.toUpperCase() ?
-							1 :
-							-1;
-					})
-				);
-
-				for (var i = 0; i < clientList.length; i++) {
-					//$('#customer').editableSelect('add', clientList[i].customername);
-				}
+				templateObject.setAllClientsData(data);
 			}
 		})
 		.catch(function() {
 			clientsService.getClientVS1().then(function(data) {
-				for (let i in data.tcustomervs1) {
-					let customerrecordObj = {
-						customerid: data.tcustomervs1[i].Id || " ",
-						customername: data.tcustomervs1[i].ClientName || " ",
-						customeremail: data.tcustomervs1[i].Email || " ",
-						street: data.tcustomervs1[i].Street.replace(/(?:\r\n|\r|\n)/g, ", ") ||
-							" ",
-						street2: data.tcustomervs1[i].Street2 || " ",
-						street3: data.tcustomervs1[i].Street3 || " ",
-						suburb: data.tcustomervs1[i].Suburb || data.tcustomervs1[i].Street2,
-						phone: data.tcustomervs1[i].Phone || " ",
-						statecode: data.tcustomervs1[i].State +
-							" " +
-							data.tcustomervs1[i].Postcode || " ",
-						country: data.tcustomervs1[i].Country || " ",
-						termsName: data.tcustomervs1[i].TermsName || "",
-					};
-					//clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
-					clientList.push(customerrecordObj);
-
-					//$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
-				}
-				templateObject.clientrecords.set(clientList);
-				templateObject.clientrecords.set(
-					clientList.sort(function(a, b) {
-						if (a.customername == "NA") {
-							return 1;
-						} else if (b.customername == "NA") {
-							return -1;
-						}
-						return a.customername.toUpperCase() > b.customername.toUpperCase() ?
-							1 :
-							-1;
-					})
-				);
-
-				for (var i = 0; i < clientList.length; i++) {
-					//$('#customer').editableSelect('add', clientList[i].customername);
-				}
+				templateObject.setAllClientsData(data)
 			});
 		});
     };
+
+	templateObject.setAllClientsData = function(data){
+		for (let i in data.tcustomervs1) {
+			let customerrecordObj = {
+				customerid: data.tcustomervs1[i].Id || " ",
+				customername: data.tcustomervs1[i].ClientName || " ",
+				customeremail: data.tcustomervs1[i].Email || " ",
+				street: data.tcustomervs1[i].Street.replace(/(?:\r\n|\r|\n)/g,", ") || " ",
+				street2: data.tcustomervs1[i].Street2 || " ",
+				street3: data.tcustomervs1[i].Street3 || " ",
+				suburb: data.tcustomervs1[i].Suburb || data.tcustomervs1[i].Street2,
+				phone: data.tcustomervs1[i].Phone || " ",
+				statecode: data.tcustomervs1[i].State + " " + data.tcustomervs1[i].Postcode || " ",
+				country: data.tcustomervs1[i].Country || " ",
+				termsName: data.tcustomervs1[i].TermsName || "",
+			};
+			//clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
+			clientList.push(customerrecordObj);
+
+			//$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
+		}
+		templateObject.clientrecords.set(clientList);
+		templateObject.clientrecords.set(
+			clientList.sort(function(a, b) {
+				if (a.customername == "NA") {
+					return 1;
+				} else if (b.customername == "NA") {
+					return -1;
+				}
+				return a.customername.toUpperCase() >
+					b.customername.toUpperCase() ?
+					1 :
+					-1;
+			})
+		);
+
+		for (var i = 0; i < clientList.length; i++) {
+			//$('#customer').editableSelect('add', clientList[i].customername);
+		}
+	}
 
     templateObject.updateEvents = async (updatedEvent) => {
         let tempEvents = await getVS1Data("TNewAppointment")
@@ -1440,22 +1368,6 @@ Template.appointments.onRendered(function() {
             addVS1Data("TAppointmentsTimeLog", JSON.stringify(data))
         }
     }
-
-    /* On clik Inventory Line */
-    $(document).on("click", "#tblInventoryPayrollService tbody tr", function() {
-        var tableProductService = $(this);
-
-        let lineProductName = tableProductService.find(".productName").text() || "";
-        $(".product-list").val(lineProductName);
-        $("#tblInventoryPayrollService_filter .form-control-sm").val("");
-        $("#productListModal").modal("toggle");
-
-        setTimeout(function() {
-            //$('#tblCustomerlist_filter .form-control-sm').focus();
-            $(".btnRefreshProduct").trigger("click");
-            $(".fullScreenSpin").css("display", "none");
-        }, 1000);
-    });
 
     $(document).on("click", "#tblInventory tbody tr", async function() {
         $(".colProductName").removeClass("boldtablealertsborder");

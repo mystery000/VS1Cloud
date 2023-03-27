@@ -105,9 +105,7 @@ async function sendAppointmentEmail() {
         if (customerEmail) {
             let mailSubject = "Appointment Email";
             let mailFromName = localStorage.getItem("vs1companyName");
-            let mailFrom =
-                localStorage.getItem("VS1OrgEmail") ||
-                localStorage.getItem("VS1AdminUserName");
+            let mailFrom = localStorage.getItem("VS1OrgEmail") || localStorage.getItem("VS1AdminUserName");
                 var htmlmailBodyCustomer = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
                     '    <tr>' +
                     '        <td align="center" bgcolor="#54c7e2" style="padding: 40px 0 30px 0;">' +
@@ -198,9 +196,7 @@ async function sendAppointmentEmail() {
         if (employeeEmail) {
             let mailSubject = "Appointment Email";
             let mailFromName = localStorage.getItem("vs1companyName");
-            let mailFrom =
-                localStorage.getItem("VS1OrgEmail") ||
-                localStorage.getItem("VS1AdminUserName");
+            let mailFrom = localStorage.getItem("VS1OrgEmail") || localStorage.getItem("VS1AdminUserName");
 
                 var htmlmailBodyEmployee = '<table align="center" border="0" cellpadding="0" cellspacing="0" width="600">' +
                     '    <tr>' +
@@ -2395,20 +2391,22 @@ Template.calender.onRendered(function() {
         $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left;margin:auto;"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:192px; float: right;margin: 8px auto;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         $('.fc-today-button').prop('disabled', false);
         let draggableEl = document.getElementById("external-events-list");
-        new Draggable(draggableEl, {
-            itemSelector: ".fc-event",
-            eventData: function(eventEl) {
-                $("#updateID").val("");
-                let employee = eventEl.textContent;
-                let empInit = employee.replace(/-?[0-9]*\.?[0-9]+/, "");
-                let employeeID = empInit.replace(/\D/g, "");
-                templateObject.empID.set(employeeID);
-                return {
-                    title: eventEl.innerText,
-                    duration: "0" + templateObject.empDuration.get() + ":00" || "01:00",
-                };
-            },
-        });
+        if(draggableEl){
+            new Draggable(draggableEl, {
+                itemSelector: ".fc-event",
+                eventData: function(eventEl) {
+                    $("#updateID").val("");
+                    let employee = eventEl.textContent;
+                    let empInit = employee.replace(/-?[0-9]*\.?[0-9]+/, "");
+                    let employeeID = empInit.replace(/\D/g, "");
+                    templateObject.empID.set(employeeID);
+                    return {
+                        title: eventEl.innerText,
+                        duration: "0" + templateObject.empDuration.get() + ":00" || "01:00",
+                    };
+                },
+            });
+        }
         $("#appointmentDate").css("fontSize", "24px");
         $("#appointmentDate").css("padding", "0px");
         $("#appointmentDate").css("border", "0px");
@@ -2454,6 +2452,7 @@ Template.calender.onRendered(function() {
         setTimeout(() => {
             const child1 = document.querySelector(".fc-appointments-button");
             const child2 = document.querySelector("#appointmentDate").parentNode;
+            console.log('OKKKKK')
             if (child1 != null) {
                 const parent1 = child1.parentNode;
                 $(parent1).css("min-width", 714).css("text-align", "center");

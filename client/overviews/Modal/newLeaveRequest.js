@@ -512,16 +512,11 @@ Template.newLeaveRequestModal.onRendered(() => {
 
 Template.newLeaveRequestModal.events({
     'click #btnSaveLeaveRequest': async function(event) {
-        
         playSaveAudio();
-
         let templateObject = Template.instance();
-        
         setTimeout(async function() {
-
             let currentId     = $("#edtEmpID").val();
-            console.log('currentId:',currentId)
-            let employeeID    = (!isNaN(currentId)) ? currentId : 0;
+            let employeeID    = (!isNaN(currentId) && parseInt(currentId) !== 0) ? currentId : localStorage.getItem("mySessionEmployeeLoggedID")? localStorage.getItem("mySessionEmployeeLoggedID"):0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
             let Leave         = $('#edtLeaveTypeofRequest').val();
