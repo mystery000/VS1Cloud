@@ -5138,7 +5138,7 @@ Template.onsuccesswaterfall.onRendered(function () {
                       $('.headerprogressbar').addClass('headerprogressbarShow');
                       $('.headerprogressbar').removeClass('headerprogressbarHidden');
                     }
-                    
+
                   } else if (Math.round(progressPercentage) >= 100) {
                     $('.checkmarkwrapper').removeClass("hide");
                     templateObject.dashboardRedirectOnLogin();

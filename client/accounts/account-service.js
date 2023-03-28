@@ -222,7 +222,7 @@ export class AccountService extends BaseService {
             PropertyList: "AccountName",
             select: "[Active]=true and [AccountTypeName]='BANK'"
         };
-        return this.getList(this.ERPObjects.TAccount, options);
+        return this.getList(this.ERPObjects.TAccountVS1, options);
     }
 
 }
