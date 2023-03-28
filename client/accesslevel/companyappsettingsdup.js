@@ -418,10 +418,12 @@ Template.companyappsettingsdup.onRendered(function () {
 Template.companyappsettingsdup.events({
     'click #refreshpagelist': function (event) {
         $('.fullScreenSpin').css('display', 'inline-block');
-        Meteor._reload.reload();
+        //Meteor._reload.reload();
+        window.location.reload();
     },
     'click .btnRefresh': function () {
-        Meteor._reload.reload();
+        //Meteor._reload.reload();
+        window.location.reload();
     },
     'click .essentialsdiv .chkSettings': function (event) {
         // Meteor._reload.reload();
@@ -468,8 +470,12 @@ Template.companyappsettingsdup.events({
             cancelButtonText: 'No'
         }).then((result) => {
             if (result.value) {
-                swal("Please select the employee from the list below.", "", "info");
                 $('#employeeListModal').modal('toggle');
+                swal("Please select the employee from the list below.", "", "info").then(function (result) {
+                    setTimeout(function() {
+                        $('#tblEmployeelistpop_filter .form-control-sm').get(0).focus()
+                    }, 500);
+                });
                 // result.dismiss can be 'overlay', 'cancel', 'close', 'esc', 'timer'
             } else if (result.dismiss === 'cancel') {
                 FlowRouter.go('/employeescard?addvs1user=true');

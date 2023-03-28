@@ -423,6 +423,9 @@ import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 import './settings/inventory-setting/inventorySettings.js';
 import './settings/UOM-Settings/adduompop.js';
+import './eft/transactionCodeModal/transactionCodeModal.js';
+import './eft/eftFilesCreated/eftFilesCreated.js';
+import './eft/eftBankRuleList/eftBankRuleList.js';
 /* Martin */
 
 /* AlexV */
@@ -657,7 +660,8 @@ import './inventory/binlocations/binlocations.js';
 /* Mainstar */
 
 /* Damien Begin */
-import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js';
+import './vs1_templates/transaction_temp/transaction_frm_journal.js';
 /* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

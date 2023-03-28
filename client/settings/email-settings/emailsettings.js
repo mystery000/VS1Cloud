@@ -201,22 +201,42 @@ Template.emailsettings.onCreated(function () {
 
     // For Correspondence List
     this.getDataTableList1 = function(data){
-        let dataList = [
-            data.fields.MessageId || "",
-            data.fields.Ref_Type || "",
-            data.fields.ReferenceTxt || "",
-            data.fields.MessageTo || "",
-            "", // Used On
-            data.fields.MessageAsString || "",
-            `
+        let dataList = [];
+
+        if(data.fields){
+            dataList = [
+                data.fields.MessageId || "",
+                data.fields.Ref_Type || "",
+                data.fields.ReferenceTxt || "",
+                data.fields.MessageTo || "",
+                "", // Used On
+                data.fields.MessageAsString || "",
+                `
                 <td class="colDelete d-flex align-items-center justify-content-center">
                     <button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'>
                         <i class='fa fa-remove'></i>
                     </button>
                 </td>
             `,
-        ]
-        // let dataList = [];
+            ]
+        }else{
+            dataList = [
+                data.MessageId || "",
+                data.Ref_Type || "",
+                data.ReferenceTxt || "",
+                data.MessageTo || "",
+                "", // Used On
+                data.MessageAsString || "",
+                `
+                <td class="colDelete d-flex align-items-center justify-content-center">
+                    <button class='btn btn-danger btn-rounded btn-sm my-0 btn-remove-raw'>
+                        <i class='fa fa-remove'></i>
+                    </button>
+                </td>
+            `,
+            ]
+        }
+
         return dataList;
     }
 
@@ -236,7 +256,7 @@ Template.emailsettings.onCreated(function () {
 
     // For Correspondence
     let headerStructure1  = [
-        { index: 0, label: '#ID', class: 'colProcessId', active: false, display: false, width: "10" },
+        { index: 0, label: '#ID', class: 'colID', active: false, display: false, width: "10" },
         { index: 1, label: 'Reference Letter Label', class: 'colLabel', active: true, display: true, width: "120" },
         { index: 2, label: 'Subject', class: 'colSubject', active: true, display: true, width: "84" },
         { index: 3, label: 'Recipient', class: 'colRecipient', active: true, display: true, width: "84" },
@@ -1751,6 +1771,20 @@ Template.emailsettings.onRendered(function () {
             employeeCorrespondences.sort((a, b) => a.Ref_Type.localeCompare(b.Ref_Type));
 
             templateObject.correspondences.set(employeeCorrespondences);
+
+            let splashDataArray = [];
+            for(let i = 0 ; i < employeeCorrespondences.length ; i ++){
+                let item = employeeCorrespondences[i];
+
+                item = templateObject.getDataTableList1(item);
+
+                splashDataArray.push(item);
+            }
+
+            var datatable = $('#tblCorrespondence').DataTable();
+            datatable.clear();
+            datatable.rows.add(splashDataArray);
+            datatable.draw(false);
         }
     };
 
