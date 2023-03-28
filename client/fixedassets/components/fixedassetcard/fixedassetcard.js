@@ -184,7 +184,6 @@ Template.fixedassetcard.onRendered(function () {
       }
     }).catch(function (err) {
       // fixedAssetService.getTFixedAssetsList().then(function (data) {
-      //   console.log('TFixedAssets InoDDb');
       //   addVS1Data('TFixedAssets', JSON.stringify(data));
       //   findFixedAssetByID(data, currentAsset);
       // }).catch(function (err) {
@@ -193,7 +192,7 @@ Template.fixedassetcard.onRendered(function () {
     });
   }
 
-  function findFixedAssetByID(data, assetID) { 
+  function findFixedAssetByID(data, assetID) {
     const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == assetID);
     if (assetData.length > 0) {
       const assetInfo = assetData[0].fields;
@@ -384,7 +383,7 @@ Template.fixedassetcard.events({
   "click button.btnSave": function() {
     const templateObject = Template.instance();
     const depPlans = templateObject.deprecitationPlans.get(),
-        depPlans2 = templateObject.deprecitationPlans.get(), 
+        depPlans2 = templateObject.deprecitationPlans.get(),
         planList = new Array(), planList2 = new Array();
     for (let i = 0; i < depPlans.length; i++) {
       const plan = {
@@ -507,10 +506,10 @@ Template.fixedassetcard.events({
 
     const accumulateDepVal = parseInt($('input#edtAccumulatedDepreciation').val()) || 0;
     const yearEnding = parseInt($('input#edtForYearEnding').val()) || 0;
-    
+
 
     const salvage = parseInt($('input#edtSalvage').val()) || 0;
-    
+
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
     let startYear = startDate.getFullYear();
 
@@ -577,10 +576,10 @@ Template.fixedassetcard.events({
 
     const accumulateDepVal = parseInt($('input#edtAccumulatedDepreciation2').val()) || 0;
     const yearEnding = parseInt($('input#edtForYearEnding2').val()) || 0;
-    
+
 
     const salvage = parseInt($('input#edtSalvage2').val()) || 0;
-    
+
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
     let startYear = startDate.getFullYear();
 
@@ -600,7 +599,6 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans2.set([]);
       return;
     }
-    console.log('depreciation2', totalDepreciationVal);
     if (!enterAmountFlag && yearEnding !== 0) {
       startYear = yearEnding - life + 1;
     }
