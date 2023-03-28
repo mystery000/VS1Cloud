@@ -2136,13 +2136,13 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 chkBox,
                 lineData.ID || lineData.Id || "",
                 `<input
-                    class="form-control pointer sltEftTblAccountName es-input bg-white"
+                    class="form-control pointer sltEftTblAccountName es-input bg-white highlightSelect"
                     value="${lineData.AccountName || ""}"                    
                 />`,                 
                 lineData.BSB || "___-___",
                 lineData.CreditDebitAccountNumber || "",
                 `<input
-                    class="form-control pointer sltTransactionCode es-input bg-white"
+                    class="form-control pointer sltTransactionCode es-input bg-white highlightSelect"
                     value="Credit"                    
                 />`,
                 lineData.LodgementReferences || "",
