@@ -7,17 +7,19 @@
     disabled
 -->
 <template name="vs1_dropdown">
-    <select 
-        type="{{type}}" 
-        class="form-control {{classes}}" 
+    <select
+        type="{{type}}"
+        class="form-control {{classes}}"
         id="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
-        name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" 
-        custid=" " 
-        custtaxcode=" " 
-        value = "{{value}}" 
+        name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
+        custid=" "
+        custtaxcode=" "
+        value = "{{value}}"
         disabled = "{{disabled}}"
         suppid=" "
-        style="background-color:rgb(255, 255, 255); cursor: pointer;">
+        style="background-color:rgb(255, 255, 255); cursor: pointer;"
+        onloadeddata="{{onloadeddata}}"
+    >
     </select>
     <input type="hidden" id="customer_id" value="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" >
 </template>

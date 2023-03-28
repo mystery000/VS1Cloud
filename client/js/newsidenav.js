@@ -2419,6 +2419,17 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+
+
+  'click #sideprocessclockonoff': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/process_clock_list');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
+
+
   'click #sidenavproductionplanner': function (event) {
     event.preventDefault();
     FlowRouter.go('/productionplanner');
@@ -3785,27 +3796,27 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
-  'click .sidenaveftfileslist': function (event) {
+  'click #sidenaveftfileslist': function (event) {
     event.preventDefault();
-    FlowRouter.go('/bankingoverview');
+    FlowRouter.go('/eftfilescreated');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
-  'click .sidenaveftnewfile': function (event) {
+  'click #sidenaveftnewfile': function (event) {
     event.preventDefault();
     FlowRouter.go('/eft');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
-  'click .sidenaveftbankrulelist': function (event) {
+  'click #sidenaveftbankrulelist': function (event) {
     event.preventDefault();
-    FlowRouter.go('/bankrulelist');
+    FlowRouter.go('/eftbankrulelist');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
-  'click .sidenaveftnewbankrule': function (event) {
+  'click #sidenaveftnewbankrule': function (event) {
     event.preventDefault();
-    FlowRouter.go('/newbankrule');
+    FlowRouter.go('/eftnewbankrule');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
