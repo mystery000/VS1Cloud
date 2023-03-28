@@ -38,7 +38,7 @@ Template.journalentrylist.onCreated(function(){
     }
 
     let dataList = [
-      moment(data.TransactionDate).format("DD/MM/YYYY") || data.TransactionDate,
+      '<span style="display:none;">' + (data.TransactionDate !=''? moment(data.TransactionDate).format("YYYY/MM/DD"): data.TransactionDate) + '</span>' +moment(data.TransactionDate).format("DD/MM/YYYY") || data.TransactionDate,
       data.GJID || "",
       data.AccountName || "",
       data.ClassName || "",
@@ -740,19 +740,37 @@ Template.journalentrylist.helpers({
     }
   },
   apiFunction:function() { // do not use arrow function
+    let sideBarService = new SideBarService();
     return sideBarService.getTJournalEntryListData
   },
+
+  searchAPI: function() {
+      return sideBarService.searchTJournalEntryListData;
+  },
+
+  service: ()=>{
+      let sideBarService = new SideBarService();
+      return sideBarService;
+
+  },
+
+  datahandler: function () {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getDataTableList(data)
+          return dataReturn
+      }
+  },
+
+  exDataHandler: function() {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getDataTableList(data)
+          return dataReturn
+      }
+  },
+
   apiParams: function() {
     return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
-  },
-  service: ()=>{
-    return sideBarService;
-  },
-  datahandler: function () {
-    let templateObject = Template.instance();
-    return function(data) {
-        let dataReturn =  templateObject.getDataTableList(data)
-        return dataReturn
-    }
   }
 });
