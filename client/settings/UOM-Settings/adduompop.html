@@ -24,7 +24,6 @@
             </div>
             <div class="modal-body">
                 <input type="hidden" class="form-control" id="uomSelected" name="uomSelected" style="display: none" />
-                {{#if record}}
                 <div class="row">
                     <div class="col-12 col-md-6">
                         <div class="form-group">
@@ -35,7 +34,6 @@
                                 id="edtUnitName"
                                 name="edtUnitName"
                                 autocomplete="off"
-                                value="{{record.unitName}}"
                             />
                             <input
                                 type="hidden"
@@ -43,7 +41,6 @@
                                 id="edtUOMID"
                                 name="edtUOMID"
                                 style="display: none"
-                                value="{{record.unitID}}"
                             />
                         </div>
                     </div>
@@ -56,7 +53,6 @@
                                 id="edtUnitMultiplier"
                                 name="edtUnitMultiplier"
                                 autocomplete="off"
-                                value="{{record.unitMutli}}"
                             />
                         </div>
                     </div>
@@ -90,29 +86,28 @@
                                 rows="3"
                                 id="txaUnitDescription"
                                 name="txaUnitDescription"
-                                value="{{record.unitDescription}}"
                             ></textarea>
                         </div>
                     </div>
                     <div class="col-12 col-md-6">
                         <div class="form-group" style="margin: 4px 8px">
                             <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px">
-                                <!-- {{#if equals includeSalesDefault true}} -->
+                                {{#if equals includeSalesDefault true}}
                                 <input
                                     class="custom-control-input chkBox swtSalesDefault"
                                     type="checkbox"
                                     id="swtSalesDefault"
                                     name="group1[]"
-                                    checked={{includeSalesDefault}}
+                                    checked
                                 />
-                                <!-- {{else}}
+                                {{else}}
                                 <input
                                     class="custom-control-input chkBox swtSalesDefault"
                                     type="checkbox"
                                     id="swtSalesDefault"
                                     name="group1[]"
                                 />
-                                {{/if}} -->
+                                {{/if}}
                                 <label class="custom-control-label chkBox" for="swtSalesDefault">Sales Default</label>
                             </div>
                         </div>
@@ -120,22 +115,22 @@
                     <div class="col-12 col-md-6">
                         <div class="form-group" style="margin: 4px 8px">
                             <div class="custom-control custom-switch chkBox" style="height: 38px; padding-top: 7px">
-                                <!-- {{#if equals includePurchaseDefault true}} -->
+                                {{#if equals includePurchaseDefault true}}
                                 <input
                                     class="custom-control-input chkBox swtPurchaseDefault"
                                     type="checkbox"
                                     id="swtPurchaseDefault"
                                     name="group1[]"
-                                    checked={{includePurchaseDefault}}
+                                    checked
                                 />
-                                <!-- {{else}}
+                                {{else}}
                                 <input
                                     class="custom-control-input chkBox swtPurchaseDefault"
                                     type="checkbox"
                                     id="swtPurchaseDefault"
                                     name="group1[]"
                                 />
-                                {{/if}} -->
+                                {{/if}}
                                 <label class="custom-control-label chkBox" for="swtPurchaseDefault"
                                     >Purchase Default</label
                                 >
@@ -224,7 +219,6 @@
                         </div>
                     </div>
                 </div>
-                {{/if}}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-success btnSaveUOM" type="button">
