@@ -13,6 +13,38 @@ Template.tripgroup.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.tripgrouprecords = new ReactiveVar();
+    templateObject.getDataTableList = function(data) {
+    let Delete="";
+        if (data.Delete=true){
+            Delete='<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>';
+        }else{
+        Delete="";
+        }   
+    let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+        var dataList = [
+        data.Id || ' ',
+        data.TripName || ' ',
+        data.Description || ' ',
+        Delete,
+        linestatus,
+    ];
+    return dataList;
+}
+
+let headerStructure = [
+    { index: 0, label: '#Id', class: 'colId', active: false, display: true, width: "30" },
+    { index: 1, label: 'Category Name', class: 'colName', active: true, display: true, width: "180" },
+    { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+    { index: 3, label: 'Delete', class: 'colDelete', active: true, display: true, width: "150" },
+    { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+];
+
+templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.tripgroup.onRendered(function() {
@@ -21,81 +53,104 @@ Template.tripgroup.onRendered(function() {
     let receiptService = new ReceiptService();
     const tripGroupList = [];
 
-    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tripGroupList', function(error, result){
-        if(error){
+    // Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tripGroupList', function(error, result){
+    //     if(error){
 
-        }else{
-            if(result){
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    $("th."+columnClass+"").html(columData);
-                    $("th."+columnClass+"").css('width',""+columnWidth+"px");
-                }
-            }
-        }
-    });
+    //     }else{
+    //         if(result){
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //                 $("th."+columnClass+"").html(columData);
+    //                 $("th."+columnClass+"").css('width',""+columnWidth+"px");
+    //             }
+    //         }
+    //     }
+    // });
 
-    templateObject.getTripGroupList = function(){
-        getVS1Data('TTripGroup').then(function (dataObject) {
-            if(dataObject.length == 0){
-                receiptService.getAllTripGroups().then(function(data){
-                    setTripGroup(data);
-                });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                setTripGroup(data);
-            }
-        }).catch(function (err) {
-            receiptService.getAllTripGroups().then(function(data){
-                setTripGroup(data);
-            });
-        });
-    };
-    function setTripGroup(data) {
-        for (let i in data.ttripgroup){
-            if (data.ttripgroup.hasOwnProperty(i)) {
-                let Obj = {
-                    id: data.ttripgroup[i].Id || ' ',
-                    tripName: data.ttripgroup[i].TripName || ' ',
-                    description: data.ttripgroup[i].Description || ' ',
-                };
-                tripGroupList.push(Obj);
-            }
-        }
-        templateObject.tripgrouprecords.set(tripGroupList);
-        $('.fullScreenSpin').css('display','none');
-    }
-    templateObject.getTripGroupList();
+    // templateObject.getTripGroupList = function(){
+    //     getVS1Data('TTripGroup').then(function (dataObject) {
+    //         if(dataObject.length == 0){
+    //             receiptService.getAllTripGroups().then(function(data){
+    //                 setTripGroup(data);
+    //             });
+    //         }else{
+    //             let data = JSON.parse(dataObject[0].data);
+    //             setTripGroup(data);
+    //         }
+    //     }).catch(function (err) {
+    //         receiptService.getAllTripGroups().then(function(data){
+    //             setTripGroup(data);
+    //         });
+    //     });
+    // };
+    // function setTripGroup(data) {
+    //     for (let i in data.ttripgroup){
+    //         if (data.ttripgroup.hasOwnProperty(i)) {
+    //             let Obj = {
+    //                 id: data.ttripgroup[i].Id || ' ',
+    //                 tripName: data.ttripgroup[i].TripName || ' ',
+    //                 description: data.ttripgroup[i].Description || ' ',
+    //             };
+    //             tripGroupList.push(Obj);
+    //         }
+    //     }
+    //     templateObject.tripgrouprecords.set(tripGroupList);
+    //     $('.fullScreenSpin').css('display','none');
+    // }
+    // templateObject.getTripGroupList();
 
-    $(document).on('click', '.table-remove', function() {
-        event.stopPropagation();
-        event.stopPropagation();
-        const targetID = $(event.target).closest('tr').attr('id'); // table row ID
-        $('#selectDeleteLineID').val(targetID);
-        $('#deleteLineModal').modal('toggle');
-        // if ($('.tripGroupList tbody>tr').length > 1) {
-        // // if(confirm("Are you sure you want to delete this row?")) {
-        // this.click;
-        // $(this).closest('tr').remove();
-        // //} else { }
-        // event.preventDefault();
-        // return false;
-        // }
-    });
+    // $(document).on('click', '.table-remove', function() {
+    //     event.stopPropagation();
+    //     event.stopPropagation();
+    //     const targetID = $(event.target).closest('tr').attr('id'); // table row ID
+    //     $('#selectDeleteLineID').val(targetID);
+    //     $('#deleteLineModal').modal('toggle');
+    //     // if ($('.tripGroupList tbody>tr').length > 1) {
+    //     // // if(confirm("Are you sure you want to delete this row?")) {
+    //     // this.click;
+    //     // $(this).closest('tr').remove();
+    //     // //} else { }
+    //     // event.preventDefault();
+    //     // return false;
+    //     // }
+    // });
 
-    $('#tripGroupList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
-        let ID = $(this).closest('tr').attr('id');
+    // $('#tripGroupList tbody').on( 'click', 'tr .colName, tr .colDescription', function () {
+    //     let ID = $(this).closest('tr').attr('id');
+    //     console.log("----->",ID);
+    //     if (ID) {
+    //         $('#add-tripgroup-title').text('Edit Trip-Group');
+    //         if (ID !== '') {
+    //             ID = Number(ID);
+    //             const tripGroupID = ID || '';
+    //             const tripGroupName = $(event.target).closest("tr").find(".colName").text() || '';
+                
+    //             const tripGroupDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
+    //             $('#edtTripGroupID').val(tripGroupID);
+    //             $('#edtTripGroupName').val(tripGroupName);
+    //             $('#edtTripGroupDesc').val(tripGroupDesc);
+    //             $('#tripGroupModal').modal('toggle');
+    //         }
+    //     }
+    // });
+});
+
+Template.tripgroup.events({
+    'click #tripGroupList tbody tr td.colName': function (event) {
+        let ID = $(event.target).closest('tr').find('td.colId').text();
+        console.log("----->",ID);
         if (ID) {
             $('#add-tripgroup-title').text('Edit Trip-Group');
             if (ID !== '') {
                 ID = Number(ID);
                 const tripGroupID = ID || '';
                 const tripGroupName = $(event.target).closest("tr").find(".colName").text() || '';
+                
                 const tripGroupDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
                 $('#edtTripGroupID').val(tripGroupID);
                 $('#edtTripGroupName').val(tripGroupName);
@@ -103,55 +158,80 @@ Template.tripgroup.onRendered(function() {
                 $('#tripGroupModal').modal('toggle');
             }
         }
-    });
-});
-
-Template.tripgroup.events({
-    'click .chkDatatable' : function(event){
-        const columns = $('#tripGroupList th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-        $.each(columns, function(i,v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-            if(v.innerText == columnDataValue){
-                if($(event.target).is(':checked')){
-                    $("."+replaceClass+"").css('display','table-cell');
-                    $("."+replaceClass+"").css('padding','.75rem');
-                    $("."+replaceClass+"").css('vertical-align','top');
-                }else{
-                    $("."+replaceClass+"").css('display','none');
-                }
-            }
-        });
     },
-    'click .btnOpenSettings' : function(event){
-        let templateObject = Template.instance();
-        const columns = $('#tripGroupList th');
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i,v) {
-            if(v.hidden == false){
-                columVisible =  true;
+   
+    'click #tripGroupList tbody tr td.colDescription': function (event) {
+        let ID = $(event.target).closest('tr').find('td.colId').text();
+        console.log("----->",ID);
+        if (ID) {
+            $('#add-tripgroup-title').text('Edit Trip-Group');
+            if (ID !== '') {
+                ID = Number(ID);
+                const tripGroupID = ID || '';
+                const tripGroupName = $(event.target).closest("tr").find(".colName").text() || '';
+                
+                const tripGroupDesc = $(event.target).closest("tr").find(".colDescription").text() || '';
+                $('#edtTripGroupID').val(tripGroupID);
+                $('#edtTripGroupName').val(tripGroupName);
+                $('#edtTripGroupDesc').val(tripGroupDesc);
+                $('#tripGroupModal').modal('toggle');
             }
-            if((v.className.includes("hiddenColumn"))){
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
+        }
+    },
+    // 'click .chkDatatable' : function(event){
+    //     const columns = $('#tripGroupList th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //     $.each(columns, function(i,v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //         if(v.innerText == columnDataValue){
+    //             if($(event.target).is(':checked')){
+    //                 $("."+replaceClass+"").css('display','table-cell');
+    //                 $("."+replaceClass+"").css('padding','.75rem');
+    //                 $("."+replaceClass+"").css('vertical-align','top');
+    //             }else{
+    //                 $("."+replaceClass+"").css('display','none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .btnOpenSettings' : function(event){
+    //     let templateObject = Template.instance();
+    //     const columns = $('#tripGroupList th');
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i,v) {
+    //         if(v.hidden == false){
+    //             columVisible =  true;
+    //         }
+    //         if((v.className.includes("hiddenColumn"))){
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || '',
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
+  
+    'click .table-remove':function(event){
+        event.stopPropagation();
+        event.stopPropagation();
+        const targetID = $(event.target).closest('tr').find('td.colId').text();; // table row ID
+        $('#selectDeleteLineID').val(targetID);
+        // console.log("----------->",$('#selectDeleteLineID').val(targetID));
+        $('#deleteLineModal').modal('toggle');
     },
     'click .btnRefresh': function () {
         $('.fullScreenSpin').css('display','inline-block');
@@ -172,8 +252,9 @@ Template.tripgroup.events({
         $('.fullScreenSpin').css('display','inline-block');
         
         let tripGroupId = $('#selectDeleteLineID').val();
+        // console.log("------>",tripGroupId);
         let objDetails = {
-            type: "TTripGroup",
+            type: "TTripGroupList",
             fields: {
                 Id: parseInt(tripGroupId),
                 Active: false
@@ -198,6 +279,7 @@ Template.tripgroup.events({
                 confirmButtonText: 'Try Again'
             }).then((result) => {
                 if (result.value) {
+                    console.log('-->',result.value);
                     Meteor._reload.reload();
                 } else if (result.dismiss === 'cancel') {
 
@@ -230,7 +312,7 @@ Template.tripgroup.events({
                     return false;
                 } else {
                     objDetails = {
-                        type: "TTripGroup",
+                        type: "TTripGroupList",
                         fields: {
                             Active: true,
                             TripName: tripGroupName,
@@ -241,7 +323,7 @@ Template.tripgroup.events({
                 }
             }).catch(function (err) {
                 objDetails = {
-                    type: "TTripGroup",
+                    type: "TTripGroupList",
                     fields: {
                         Active: true,
                         TripName: tripGroupName,
@@ -253,7 +335,7 @@ Template.tripgroup.events({
             });
         } else {
             objDetails = {
-                type: "TTripGroup",
+                type: "TTripGroupList",
                 fields: {
                     ID: parseInt(tripGroupID),
                     Active: true,
@@ -331,7 +413,42 @@ Template.tripgroup.helpers({
             return arr;
         }
     },
-    loggedCompany: () => {
-        return localStorage.getItem('mySession') || '';
-    }
+    // loggedCompany: () => {
+    //     return localStorage.getItem('mySession') || '';
+    // },
+    salesCloudPreferenceRec: () => {
+        return CloudPreference.findOne({
+            userid: localStorage.getItem('mycloudLogonID'),
+            PrefName: 'tripGroupList'
+        });
+    },
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getTripGroup;
+    },
+    searchAPI: function() {
+        return sideBarService.getTripGroupByName;
+    },
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+      },
+
 });
