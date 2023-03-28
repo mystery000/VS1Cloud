@@ -453,7 +453,7 @@ Template.datatablelist.onRendered(async function () {
                 //columns: acolDef,
                 columnDefs: colDef,
                 // fixedColumns: true ,
-                "ordering": false,
+                // "ordering": false,
                 // deferRender: true,
                 buttons: [{
                     extend: 'csvHtml5',
@@ -612,7 +612,7 @@ Template.datatablelist.onRendered(async function () {
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
                 "fnInitComplete": function (oSettings) {
-                    if (data.Params) {
+
                       if(templateObject.data.showCameraButton == true){
                         $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter('#' + currenttablename + '_filter');
                       };
@@ -637,7 +637,7 @@ Template.datatablelist.onRendered(async function () {
                         $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='.edtCustomer_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
-
+                      if (data.Params) {
                         if (data.Params.Search.replace(/\s/g, "") == "") {
                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                         } else {

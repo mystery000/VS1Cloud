@@ -261,7 +261,7 @@ Template.addcustomerpop.onRendered( async function() {
                     for (let i = 0; i < data.tclienttype.length; i++) {
                         clientType.push(data.tclienttype[i].fields.TypeName)
                     }
-                    clientType = _.sortBy(clientType);
+                    //clientType = _.sortBy(clientType);
                     templateObject.clienttypeList.set(clientType);
                 });
             } else {
@@ -270,7 +270,7 @@ Template.addcustomerpop.onRendered( async function() {
                 for (let i = 0; i < useData.length; i++) {
                     clientType.push(useData[i].fields.TypeName)
                 }
-                clientType = _.sortBy(clientType);
+                //clientType = _.sortBy(clientType);
                 templateObject.clienttypeList.set(clientType);
                 //$('.customerTypeSelect option:first').prop('selected', false);
                 $(".customerTypeSelect").attr('selectedIndex', 0);
@@ -281,7 +281,7 @@ Template.addcustomerpop.onRendered( async function() {
                 for (let i = 0; i < data.tclienttype.length; i++) {
                     clientType.push(data.tclienttype[i].fields.TypeName)
                 }
-                clientType = _.sortBy(clientType);
+                //clientType = _.sortBy(clientType);
                 templateObject.clienttypeList.set(clientType);
             });
         });
@@ -510,7 +510,7 @@ Template.addcustomerpop.onRendered( async function() {
                 discount: data.fields.Discount || 0,
                 jobclienttype: data.fields.ClientTypeName || '',
                 ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
-          
+
             };
         } else if (templateObject.data.id != undefined) {
             let data = await getCustomerFromID(templateObject.data.id)
@@ -599,7 +599,7 @@ Template.addcustomerpop.onRendered( async function() {
                 discount: data.fields.Discount || 0,
                 jobclienttype: data.fields.ClientTypeName || '',
                 ForeignExchangeCode: data.fields.ForeignExchangeCode || CountryAbbr,
-          
+
             };
         }
 
@@ -620,7 +620,7 @@ Template.addcustomerpop.onRendered( async function() {
                 $('.customerTab').addClass('active');
                 $('.customerTab').trigger('click');
             }
-    
+
         }, 500);
     }
 
