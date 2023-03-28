@@ -44,7 +44,7 @@
       <div class="card mb-3">
         <div class="row d-xl-flex flex-row justify-content-between" style="padding: 0px 20px; align-items: center;">
 
-            {{#if equals isHideButton false}}
+            <!-- {{#if equals isHideButton false}} -->
               <div class="flex-grow-1 mb-1">
                 {{> vs1_button
                   color='primary'
@@ -87,9 +87,10 @@
               </div>
 
               <div class="d-xl-flex justify-content-xl-end align-items-xl-start">
-                {{> export_import_print_display_button Import="hiddenButton" tablename="tblFixedAssetList"}}
+                {{> export_import_print_display_button tablename="tblFixedAssetList"}}
+                {{> import_template importformName="Fixed Assets List"}}
               </div>
-            {{/if}}
+            <!-- {{/if}} -->
           <div class="modal fade" role="dialog" tabindex="-1" id="importFixedAssetModal">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
