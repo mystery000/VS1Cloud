@@ -442,8 +442,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             } else if (data.tproductqtylist[i].Active == false) {
                 linestatus = "In-Active";
             };
-            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[i].PARTSID +
-                '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[i].PARTSID +
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="productCheck-' + data.tproductqtylist[i].PARTSID +
+                '"><label class="custom-control-label chkBox pointer" for="productCheck-' + data.tproductqtylist[i].PARTSID +
                 '"></label></div>'; //switchbox
 
             costprice = utilityService.modifynegativeCurrencyFormat(
@@ -632,8 +632,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                     } else if (dataObjectnew.tproductqtylist[j].Active == false) {
                                         linestatus = "In-Active";
                                     };
-                                    chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[j].PARTSID +
-                                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                    chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="productCheck-' + data.tproductqtylist[j].PARTSID +
+                                        '"><label class="custom-control-label chkBox pointer" for="productCheck-' + data.tproductqtylist[j].PARTSID +
                                         '"></label></div>'; //switchbox
 
                                     costprice = utilityService.modifynegativeCurrencyFormat(
@@ -685,8 +685,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                                     } else if (useData.tproductqtylist[j].Active == false) {
                                         linestatus = "In-Active";
                                     };
-                                    chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tproductqtylist[j].PARTSID +
-                                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[j].PARTSID +
+                                    chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="productCheck-' + data.tproductqtylist[j].PARTSID +
+                                        '"><label class="custom-control-label chkBox pointer" for="productCheck-' + data.tproductqtylist[j].PARTSID +
                                         '"></label></div>'; //switchbox
 
                                     costprice = utilityService.modifynegativeCurrencyFormat(
