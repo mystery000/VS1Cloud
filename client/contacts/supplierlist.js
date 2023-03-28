@@ -23,6 +23,63 @@ Template.supplierlist.onCreated(function() {
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar();
+
+
+    templateObject.getDataTableList = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.ExcessAmount) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.SupplierCreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
+        var dataList = [
+            data.Company || '',
+            data.Phone || '',
+            arBalance || 0.00,
+            creditBalance || 0.00,
+            balance || 0.00,
+            creditLimit || 0.00,
+            salesOrderBalance || 0.00,
+            data.Suburb || '',
+            data.Country || '',
+            data.Notes || '',
+            data.ClientID || '',
+            data.Active ? "" : "In-Active",
+            // data.Email || '',
+            // data.AccountNo || '',
+            // data.ClientNo || '',
+            // data.JobTitle || '',
+            // data.CUSTFLD1 || '',
+            // data.CUSTFLD2 || '',
+            // data.POState || '',
+            // data.Postcode || '',
+            // linestatus,
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+        { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+        { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+        { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+        { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "60" },
+        { index: 10, label: '#ID', class: 'colID', active: false, display: false, width: "20" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.supplierlist.onRendered(function() {
@@ -40,7 +97,7 @@ Template.supplierlist.onRendered(function() {
     }
 
     $('#tblSupplierlist tbody').on( 'click', 'tr', function () {
-        const listData = $(this).closest('tr').attr('id');
+        const listData = $(this).closest('tr').find('.colID').text();
         if(listData){
           let params = ''
           var queryParams = FlowRouter.current().queryParams;
@@ -277,7 +334,7 @@ Template.supplierlist.events({
                 var result = {};
                 workbook.SheetNames.forEach(function(sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -414,5 +471,40 @@ Template.supplierlist.helpers({
     },
     isSetupFinished: () => {
         return Template.instance().setupFinished.get();
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllSuppliersDataVS1List;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllSuppliersDataVS1ByName;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 });

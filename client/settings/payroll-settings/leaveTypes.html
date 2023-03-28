@@ -9,7 +9,42 @@
                 <div class="modal-body">
                     <input type="hidden" style="width: 100%; display:none;" id="dropdownleaveID" name="dropdownleaveID" />
                     <div class="card-body p-1 rounded">
-                        <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <a href="#leaveModal" data-toggle="modal">
+                                    {{> vs1_button
+                                        color='primary'
+                                        classes='float-right btnAddordinaryTimeLeave'
+                                        type='button'
+                                        id="btnAddordinaryTimeLeave"
+                                        iconName='plus'
+                                        title='New Leave Type'
+                                    }}
+                                </a>
+                            </div>
+                            <div class="col-12">
+                                <style>
+                                    #tblLeaves{
+                                        width: 100% !important;
+                                    }
+                                </style>
+                                {{> datatablelist
+                                    tablename="tblLeaves"
+                                    apiName=apiFunction7
+                                    indexeddbname='TPaidLeave'
+                                    tableheaderrecords=tableheaderrecords7
+                                    exportfilename='Leaves'
+                                    apiParams=apiParams7
+                                    datahandler=datahandler7
+                                    service=service7
+                                    lowercaseDataName='tpaidleave'
+                                    exIndexDBName='tpaidleave'
+                                    exdatahandler=exDataHandler7
+                                    searchAPI=searchAPI7
+                                }}
+                            </div>
+                        </div>
+                        <!-- <div class="table-responsive">
                             <table id="tblLeaves" style="width:100%" class="table table-striped table-bordered tblInventoryService">
                                 <thead>
                                     <tr class="dnd-moved">
@@ -26,7 +61,7 @@
 
                                 </tbody>
                             </table>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -48,37 +83,77 @@
                     <form class="row" id="leaveRateForm">
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtLeaveName">Leave Name</label>
-                                <input type="text" class="form-control" id="edtLeaveName">
+                                {{> default_input 
+                                    label="Leave Name" 
+                                    classes="edtLeaveName" 
+                                    id="edtLeaveName" 
+                                    name="edtLeaveName" 
+                                    defaultValue="" 
+                                    type="text"
+                                }}
+                                <!-- <label for="edtLeaveName">Leave Name</label>
+                                <input type="text" class="form-control" id="edtLeaveName"> -->
                                 <input type="hidden" id="leaveID" value="0"/>
                             </div>
                         </div>
                         <div class="col-12 mb-1">
                             <div class="form-group mb-0">
-                                <label for="edtLeaveType">Typers of Leave</label>
+                                {{> default_input 
+                                    label="Typers of Leave" 
+                                    classes="" 
+                                    id="edtLeaveType" 
+                                    name="edtLeaveType" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtLeaveType">Typers of Leave</label>
                                 <select id="edtLeaveType" class="form-control">
                                     <option value="Paid Leave">Paid Leave</option>
                                     <option value="Unpaid Leave">Unpaid Leave</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <div class="col-12 mb-1">
                             <div class="form-group mb-0">
-                                <label for="edtTypeOfUnits">Typers of Units</label>
-                                <input type="search"  style="cursor: pointer;" class="form-control" id="edtTypeOfUnits" name="edtTypeOfUnits" placeholder="Typers of Units">
+                                {{> default_input 
+                                    label="Types of Units" 
+                                    classes="edtTypeOfUnits" 
+                                    id="edtTypeOfUnits" 
+                                    name="edtTypeOfUnits" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtTypeOfUnits">Types of Units</label>
+                                <input type="search"  style="cursor: pointer;" class="form-control" id="edtTypeOfUnits" name="edtTypeOfUnits" placeholder="Types of Units"> -->
                             </div>
                             <span style="font-size: 12px;white-space: normal;line-height: 12px !important;display: inline-block;margin-top: 9px; ">The type of units by which leave entitlements are normally tracked. These are typically the same as the type of units used for the employee's ordinary earnings rate.</span>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtLeaveLoadingRate">Leave Loading Rate <span style="font-weight: 200;">(optional)</span></label>
-                                <input type="text" class="form-control" id="edtLeaveLoadingRate">
+                                {{> default_input 
+                                    label="Leave Loading Rate (optional)" 
+                                    classes="edtLeaveLoadingRate" 
+                                    id="edtLeaveLoadingRate" 
+                                    name="edtLeaveLoadingRate" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtLeaveLoadingRate">Leave Loading Rate <span style="font-weight: 200;">(optional)</span></label>
+                                <input type="text" class="form-control" id="edtLeaveLoadingRate"> -->
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtNormalEntitlement">Normal Entitlement <span style="font-weight: 200;">(optional)</span></label>
-                                <input type="text" class="form-control" id="edtNormalEntitlement">
+                                {{> default_input 
+                                    label="Normal Entitlement (optional)" 
+                                    classes="edtNormalEntitlement" 
+                                    id="edtNormalEntitlement" 
+                                    name="edtNormalEntitlement" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtNormalEntitlement">Normal Entitlement <span style="font-weight: 200;">(optional)</span></label>
+                                <input type="text" class="form-control" id="edtNormalEntitlement"> -->
                             </div>
                         </div>
                         <div class="col-12">
@@ -91,8 +166,26 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success saveLeave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                    {{> vs1_button
+                        color='success'
+                        classes='saveLeave'
+                        type='button'
+                        id="saveLeave"
+                        iconName='save'
+                        title='Save'
+                    }}
+                    <a data-dismiss="modal">
+                        {{> vs1_button
+                            color='secondary'
+                            classes=''
+                            type='button'
+                            id="btnCancel"
+                            iconName='close'
+                            title='Close'
+                        }}
+                    </a>
+                    <!-- <button type="button" class="btn btn-success saveLeave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                 </div>
             </div>
         </div>

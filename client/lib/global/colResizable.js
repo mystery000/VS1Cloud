@@ -38,7 +38,7 @@
 
 
 	//append required CSS rules
-    h.append("<style type='text/css'>  .JColResizer{table-layout:fixed;} .JCLRgrips{ height:0px; position:relative;margin-left: -12px} .JCLRgrip{margin-left:2px; position:absolute; z-index:5; } .JCLRgrip .JColResizer{position:absolute;background-color:red;filter:alpha(opacity=1);opacity:0;width:45px !important;left:-15px !important;height:100%;cursor: col-resize;top:0px} .JCLRLastGrip{position:absolute; width:1px; } .JCLRgripDrag{ border-left:1px dotted black;	} div.dataTables_wrapper .JCLRFlex{width:100%!important;} </style>");
+      h.append("<style type='text/css'>  .JColResizer{table-layout:fixed;} .JCLRgrips{ height:0px; position:relative;margin-left: -12px} .JCLRgrip{margin-left:2px; position:absolute; z-index:5; } .JCLRgrip .JColResizer{position:absolute;background-color:red;filter:alpha(opacity=1);opacity:0;width:45px !important;left:-5px !important;height:100%;cursor: col-resize;top:0px} .JCLRLastGrip{position:absolute; width:1px; } .JCLRgripDrag{ border-left:1px dotted black;    } div.dataTables_wrapper .JCLRFlex{width:100%;} </style>");
 
 
 	/**

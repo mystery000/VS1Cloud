@@ -10,7 +10,17 @@
 <template name="default_input">
   <div class="form-group">
     <label>{{label}}</label>
+    {{#if placeholder }}
     <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
-      value="{{defaultValue}}">
+      value="{{defaultValue}}" placeholder="{{placeholder}}" style="cursor: pointer;">
+    {{else}}
+      {{#if equals type "search" }}
+      <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
+        value="{{defaultValue}}" style="cursor: pointer;">
+      {{else}}
+      <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
+        value="{{defaultValue}}">
+      {{/if}}
+    {{/if}}
   </div>
 </template>

@@ -38,9 +38,9 @@ Template.supplierproductreport.onRendered(() => {
       { index: 3, label: 'Trans Type', class: 'colTransType', active: true, display: true, width: "150" },
       { index: 4, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "150" },
       { index: 5, label: 'Product Desc', class: 'colProductDesc', active: true, display: true, width: "150" },
-      { index: 6, label: 'Cost (ex)', class: 'colCostEX', active: true, display: true, width: "150" },
-      { index: 7, label: 'Tax', class: 'colTax', active: true, display: true, width: "150" },
-      { index: 8, label: 'Cost (inc)', class: 'colCostINC', active: true, display: true, width: "150" },
+      { index: 6, label: 'Cost (ex)', class: 'colCostEX text-right', active: true, display: true, width: "150" },
+      { index: 7, label: 'Tax', class: 'colTax text-right', active: true, display: true, width: "150" },
+      { index: 8, label: 'Cost (inc)', class: 'colCostINC text-right', active: true, display: true, width: "150" },
       { index: 9, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "150" },
       { index: 10, label: 'Qty Ordered', class: 'colOrdered', active: true, display: true, width: "150" },
       { index: 11, label: 'Qty Received', class: 'colReceived', active: true, display: true, width: "150" },
@@ -72,10 +72,24 @@ Template.supplierproductreport.onRendered(() => {
   // templateObject.currentMonth.set(currentMonth);
 
   // templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()));
-
+  templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
+    LoadingOverlay.show();
+    templateObject.setDateAs(dateTo);
+    let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
+      return await reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    await addVS1Data('TSupplierProduct', JSON.stringify(data.response));
+    templateObject.displayReportData(data.response);
+  }
   templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateFrom);
+    templateObject.setDateAs(dateTo);
     getVS1Data('TSupplierProduct').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -278,15 +292,15 @@ Template.supplierproductreport.onRendered(() => {
           },
           {
             targets: 5,
-            className: "colCostEX",
+            className: "colCostEX text-right",
           },
           {
             targets: 6,
-            className: "colTax",
+            className: "colTax text-right",
           },
           {
             targets: 7,
-            className: "colCostINC",
+            className: "colCostINC text-right",
           },
           {
             targets: 8,
@@ -505,19 +519,7 @@ Template.supplierproductreport.onRendered(() => {
 //     }
 //   }
 
-//   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
-//     LoadingOverlay.show();
-//     templateObject.setDateAs(dateFrom);
-//     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
-//       return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
-//     }, {
-//       useIndexDb: true,
-//       useLocalStorage: false,
-//       validate: (cachedResponse) => {
-//         return false;
-//       }
-//     });
-//     data = data.response;
+
 
 //     let reportSummary = data.tsupplierproduct.map(el => {
 //       let resultobj = {};
@@ -598,8 +600,9 @@ Template.supplierproductreport.onRendered(() => {
 Template.supplierproductreport.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    localStorage.setItem("VS1SupplierProduct_Report", "");
-    Meteor._reload.reload();
+    clearData('TProductReport').then(function(){
+      Meteor._reload.reload();
+    })
   },
   "click .btnExportReport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
@@ -768,12 +771,14 @@ Template.supplierproductreport.events({
     // localStorage.setItem('VS1SupplierProduct_Report', '');
 
     let templateObject = Template.instance();
-    LoadingOverlay.show();
-    localStorage.setItem("VS1SupplierProduct_Report", "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
     templateObject.dateAsAt.set(moment().format('DD/MM/YYYY'));
-    templateObject.loadReport(null, null, true);
+    $(".fullScreenSpin").css("display", "inline-block");
+
+    clearData('TSupplierProduct').then(function(){
+      templateObject.getReportData(null, null, true);
+    })
   },
 
   // CURRENCY MODULE //
@@ -842,11 +847,14 @@ Template.supplierproductreport.events({
    * This is the new way to handle any modification on the date fields
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
-    templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-    );
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData('TSupplierProduct').then(function(){
+      templateObject.getReportData(
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          false
+      );
+    })
   },
   ...Datehandler.getDateRangeEvents()
 });

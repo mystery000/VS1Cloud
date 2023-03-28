@@ -94,13 +94,13 @@ export class TaxRateService extends BaseService {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 RegionName: regionName,
                 ListType: "Detail",
-                select: "[Active]=" + activeFlag,
+                select: "[Active]=" + (activeFlag ? "true" : "false"),
             };
         }else{
             options = {
                 // PropertyList:"ID,CodeName,Description,LocationCategoryDesc,Rate,RegionName,Active",
                 ListType: "Detail",
-                select: "[Active]=" + activeFlag,
+                select: "[Active]=" + (activeFlag ? "true" : "false"),
             };
         }
 
@@ -392,6 +392,13 @@ export class TaxRateService extends BaseService {
             select: "[Active]=true",
         };
         return this.getList(this.ERPObjects.TDeptClass, options);
+    }
+
+    getOneDepartmentByName(keyword) {
+        let options = {
+            PropertyList: "ID,GlobalRef,KeyValue,DeptClassGroup,DeptClassName,Description,SiteCode,Active",
+            select: "[Active]=true and [DeptClassName]='"+keyword + "'",
+        }
     }
 
     getAccountantCategory() {

@@ -10,13 +10,13 @@ export default class ApiService {
    * @param {string} endpoint my-endpoint
    * @returns {URL}
    */
-   static getBaseUrl({ endpoint = null, isUrl = true}) {
+  static getBaseUrl({ endpoint = null, isUrl = true }) {
     let _url = `${URLRequest}${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/`;
-    if(endpoint != null) {
+    if (endpoint != null) {
       _url = `${URLRequest}${_IPADDRESS}:${_PORT}/${_ERP_BASE_API}/${endpoint}`;
     }
 
-    if(isUrl == true) return new URL(_url);
+    if (isUrl == true) return new URL(_url);
     return _url;
   }
 
@@ -25,7 +25,7 @@ export default class ApiService {
    * @returns {HeadersInit}
    */
   static getHeaders() {
-    var headers = {
+    let headers = {
       database: erpDb().ERPDatabase,
       username: erpDb().ERPUsername,
       password: erpDb().ERPPassword,
@@ -38,7 +38,7 @@ export default class ApiService {
    * @returns {HeadersInit}
    */
   static getPostHeaders() {
-    postHeaders = {
+    let postHeaders = {
       database: erpDb().ERPDatabase,
       username: erpDb().ERPUsername,
       password: erpDb().ERPPassword,

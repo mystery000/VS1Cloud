@@ -234,7 +234,7 @@ FlowRouter.triggers.exit([
         "employeescard", "leadscard", "supplierscard", "journalentrycard", "fixedassetcard", "bom_setup",
         "servicelogcard", "new_process", "stockadjustmentcard", "paymentcard", "supplierpaymentcard",
         "purchaseordercard", "billcard", "creditcard", "allreports", "new_quote", "new_salesorder",
-        "new_invoice", "refundcard"
+        "new_invoice", "refundcard","appointments"
     ]});
 
 authenticatedRoutes.route('/accounttransactions', {
@@ -805,6 +805,15 @@ authenticatedRoutes.route('/accesslevel', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'accesslevel'
+        });
+    }
+});
+
+authenticatedRoutes.route('/serviceChecker', {
+    name: 'serviceChecker',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'serviceChecker'
         });
     }
 });
@@ -1469,6 +1478,15 @@ authenticatedRoutes.route('/timesheettimelog', {
     }
 });
 
+authenticatedRoutes.route('/clockOnOff', {
+    name: 'clockOnOff',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'clockOnOff'
+        });
+    }
+});
+
 authenticatedRoutes.route('/squareapi', {
     name: 'squareapi',
     action() {
@@ -1819,6 +1837,16 @@ authenticatedRoutes.route('/newbankrule', {
         });
     }
 });
+
+authenticatedRoutes.route('/newstatementrule', {
+    name: 'newstatementrule',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'newstatementrule'
+        });
+    }
+});
+
 
 authenticatedRoutes.route('/bankrulelist', {
     name: 'bankrulelist',
@@ -2492,3 +2520,21 @@ authenticatedRoutes.route('/manufacturingsettings',  {
         })
     }
 })
+
+authenticatedRoutes.route('/buildcostreport', {
+    name: 'buildcostreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'buildcostreport'
+        });
+    }
+});
+
+authenticatedRoutes.route('/worksheetreport', {
+    name: 'worksheetreport',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'worksheetreport'
+        });
+    }
+});

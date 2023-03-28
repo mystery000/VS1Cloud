@@ -42,15 +42,15 @@ Template.report1099.onRendered(()=>{
     LoadingOverlay.show();
 
     let reset_data = [
-      { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "100" },
-      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "80" },
-      { index: 3, label: 'Payment', class: 'colPayment', active: true, display: true, width: "100" },
-      { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
-      { index: 5, label: 'Method', class: 'colMethod', active: true, display: true, width: "90" },
-      { index: 6, label: 'Bill Street', class: 'colBillStreet', active: true, display: true, width: "100" },
-      { index: 7, label: 'Bill Place', class: 'colBillPlace', active: true, display: true, width: "100" },
-      { index: 8, label: 'Card Amount', class: 'colCardAmount', active: true, display: true, width: "100" },
-      { index: 9, label: 'Non Card Amount', class: 'colNonCardAmount', active: true, display: true, width: "130" },
+      { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "150" },
+      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
+      { index: 3, label: 'Payment #', class: 'colPayment', active: true, display: true, width: "150" },
+      { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
+      { index: 5, label: 'Method', class: 'colMethod', active: true, display: true, width: "150" },
+      { index: 6, label: 'Bill Street', class: 'colBillStreet', active: true, display: true, width: "150" },
+      { index: 7, label: 'Bill Place', class: 'colBillPlace', active: true, display: true, width: "150" },
+      { index: 8, label: 'Card Amount', class: 'colCardAmount', active: true, display: true, width: "150" },
+      { index: 9, label: 'Non Card Amount', class: 'colNonCardAmount', active: true, display: true, width: "150" },
     ];
     templateObject.report1099th.set(reset_data);
 

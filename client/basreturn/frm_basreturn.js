@@ -17,7 +17,7 @@ import { autoTable } from 'jspdf-autotable';
 import 'jquery-editable-select';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-
+import moment from "moment";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './frm_basreturn.html';
@@ -368,7 +368,7 @@ Template.basreturn.onRendered(function() {
                 balance: accBalance || 0.0,
                 isheader: lineData.IsHeader || false,
                 cardnumber: lineData.CarNumber || "",
-                expirydate: lineData.ExpiryDate || "",
+                expirydate: moment(lineData.ExpiryDate).format("DD/MM/YYYY") || "",
                 cvc: lineData.CVC || "",
                 useReceiptClaim: lineData.AllowExpenseClaim || false,
                 expenseCategory: lineData.AccountGroup || ""
@@ -1332,7 +1332,7 @@ Template.basreturn.onRendered(function() {
                         AccountType: accountsSummaryReport[i].AccountType || '',
                         clientname: accountsSummaryReport[i].clientname || '',
                         Type: accountsSummaryReport[i].Type || '',
-                        transDate: accountsSummaryReport[i].Date || "",
+                        transDate: moment(accountsSummaryReport[i].Date).format("DD/MM/YYYY") || "",
                         debit: accountsSummaryReport[i].TotalDebitEx || 0.00,
                         credit: accountsSummaryReport[i].TotalCreditEx || 0.00,
                         balance: accountsSummaryReport[i].Balance || 0.00,
@@ -3019,7 +3019,7 @@ Template.basreturn.helpers({
     years: () => {
         let currentDate = new Date();
         let years = [];
-        for (var i = currentDate.getFullYear(); i >= 2020; i--) {
+        for (var i = currentDate.getFullYear(); i >= 2010; i--) {
             years.push(i);
         }
         return years;

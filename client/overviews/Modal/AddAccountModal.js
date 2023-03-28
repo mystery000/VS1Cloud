@@ -87,7 +87,7 @@ Template.addAccountModal.onRendered(function () {
         });
       });
   };
-  templateObject.loadAccountTypes();
+  templateObject.loadAccountTypes();  
 
   $("#sltBankCodes").editableSelect();
   $("#sltBankCodes")
@@ -140,7 +140,7 @@ Template.addAccountModal.onRendered(function () {
 
     $(document).on("click", "#tblBankName tbody tr", function (e) {
       var table = $(this);
-      let BankName = table.find(".bankName").text();
+      let BankName = table.find(".colBankName").text();
       $('#bankNameModal').modal('toggle');
       $('#edtBankName').val(BankName);
     });
@@ -272,18 +272,21 @@ Template.addAccountModal.onRendered(function () {
 
   $("#addNewAccountModal #edtSubAccount1").editableSelect()
   $("#addNewAccountModal #edtSubAccount1").editableSelect().on("click.editable-select", (e) => {
+    if (!$("#sltAccountType").val()) return swal("WARNING", "Please select Account Type first.", "warning")
     currentSubAccount = $("#addNewAccountModal #edtSubAccount1")
     editableService.clickAccount(e)
   })
 
   $("#addNewAccountModal #edtSubAccount2").editableSelect()
   $("#addNewAccountModal #edtSubAccount2").editableSelect().on("click.editable-select", (e) => {
+    if (!$("#edtSubAccount1").val()) return swal("WARNING", "Please select Sub Account 1 first.", "warning")
     currentSubAccount = $("#addNewAccountModal #edtSubAccount2")
     editableService.clickAccount(e)
   })
 
   $("#addNewAccountModal #edtSubAccount3").editableSelect()
   $("#addNewAccountModal #edtSubAccount3").editableSelect().on("click.editable-select", (e) => {
+    if (!$("#edtSubAccount2").val()) return swal("WARNING", "Please select Sub Account 2 first.", "warning")
     currentSubAccount = $("#addNewAccountModal #edtSubAccount3")
     editableService.clickAccount(e)
   })
@@ -1207,417 +1210,247 @@ Template.addAccountModal.events({
     }
   },
 
-  "click .btnSaveAccount": function () {
-    playSaveAudio();
-    let templateObject = Template.instance();
-    let accountService = new AccountService();
-    let organisationService = new OrganisationService();
-    setTimeout(function(){
-    LoadingOverlay.show();
+  "click .btnSaveAccount": function () {    
+      playSaveAudio();
+      let templateObject = Template.instance();
+      let accountService = new AccountService();
+      let organisationService = new OrganisationService();
+      setTimeout(function () {
+          let forTransaction = false;
+          let isHeader = false;
+          let useReceiptClaim = false;
 
-    let forTransaction = false;
-    if ($("#showOnTransactions").is(":checked")) {
-      forTransaction = true;
-    }
-    let accountID = $("#edtAccountID").val();
-    var accounttype = $("#sltAccountType").val();
-    var accountname = $("#edtAccountName").val();
-    var accountno = $("#edtAccountNo").val();
-    var taxcode = $("#sltTaxCode").val();
-    var accountdesc = $("#txaAccountDescription").val();
-    var swiftCode = $("#swiftCode").val();
-    var routingNo = $("#routingNo").val();
-    // var comments = $('#txaAccountComments').val();
-    var bankname = $("#edtBankName").val();
-    var bankaccountname = $("#edtBankAccountName").val();
-    var bankbsb = $("#edtBSB").val();
-    var bankacountno = $("#edtBankAccountNo").val();
-    // let isBankAccount = templateObject.isBankAccount.get();
-
-    var expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
-    let cardnumber = $("#edtCardNumber").val();
-    let cardcvc = $("#edtCvc").val();
-    let expiryDate =
-      expirydateTime.getFullYear() +
-      "-" +
-      (expirydateTime.getMonth() + 1) +
-      "-" +
-      expirydateTime.getDate();
-
-    let companyID = 1;
-    let data = "";
-    if (accountID == "") {
-      accountService
-        .getCheckAccountData(accountname)
-        .then(function (data) {
-          accountID = parseInt(data.taccount[0].Id) || 0;
-          data = {
-            type: "TAccount",
-            fields: {
-              ID: accountID,
-              // AccountName: accountname|| '',
-              AccountNumber: accountno || "",
-              // AccountTypeName: accounttype|| '',
-              Active: true,
-              BankAccountName: bankaccountname || "",
-              BankAccountNumber: bankacountno || "",
-              BSB: bankbsb || "",
-              Description: accountdesc || "",
-              TaxCode: taxcode || "",
-              PublishOnVS1: true,
-              Extra: swiftCode,
-              BankNumber: routingNo,
-              IsHeader: forTransaction,
-              CarNumber: cardnumber || "",
-              CVC: cardcvc || "",
-              ExpiryDate: expiryDate || "",
-            },
-          };
-
-          accountService
-            .saveAccount(data)
-            .then(function (data) {
-              if ($("#showOnTransactions").is(":checked")) {
-                var objDetails = {
-                  type: "TCompanyInfo",
-                  fields: {
-                    Id: companyID,
-                    AccountNo: bankacountno,
-                    BankBranch: swiftCode,
-                    BankAccountName: bankaccountname,
-                    BankName: bankname,
-                    Bsb: bankbsb,
-                    SiteCode: routingNo,
-                    FileReference: accountname,
-                  },
-                };
-                organisationService
-                  .saveOrganisationSetting(objDetails)
-                  .then(function (data) {
-                    var accNo = bankacountno || "";
-                    var swiftCode1 = swiftCode || "";
-                    var bankAccName = bankaccountname || "";
-                    var accountName = accountname || "";
-                    var bsb = bankbsb || "";
-                    var routingNo = routingNo || "";
-
-                    localStorage.setItem("vs1companyBankName", bankname);
-                    localStorage.setItem(
-                      "vs1companyBankAccountName",
-                      bankAccName
-                    );
-                    localStorage.setItem("vs1companyBankAccountNo", accNo);
-                    localStorage.setItem("vs1companyBankBSB", bsb);
-                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            Meteor._reload.reload();
-                          })
-                          .catch(function (err) {
-                            Meteor._reload.reload();
-                          });
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            Meteor._reload.reload();
-                          })
-                          .catch(function (err) {
-                            Meteor._reload.reload();
-                          });
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  });
-              } else {
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              }
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  // Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
-                }
-              });
-              $(".fullScreenSpin").css("display", "none");
-            });
-        })
-        .catch(function (err) {
-          data = {
-            type: "TAccount",
-            fields: {
-              AccountName: accountname || "",
-              AccountNumber: accountno || "",
-              AccountTypeName: accounttype || "",
-              Active: true,
-              BankAccountName: bankaccountname || "",
-              BankAccountNumber: bankacountno || "",
-              BSB: bankbsb || "",
-              Description: accountdesc || "",
-              TaxCode: taxcode || "",
-              Extra: swiftCode,
-              BankNumber: routingNo,
-              PublishOnVS1: true,
-              IsHeader: forTransaction,
-              CarNumber: cardnumber || "",
-              CVC: cardcvc || "",
-              ExpiryDate: expiryDate || "",
-            },
-          };
-
-          accountService
-            .saveAccount(data)
-            .then(function (data) {
-              if ($("#showOnTransactions").is(":checked")) {
-                var objDetails = {
-                  type: "TCompanyInfo",
-                  fields: {
-                    Id: companyID,
-                    AccountNo: bankacountno,
-                    BankBranch: swiftCode,
-                    BankAccountName: bankaccountname,
-                    BankName: bankname,
-                    Bsb: bankbsb,
-                    SiteCode: routingNo,
-                    FileReference: accountname,
-                  },
-                };
-                organisationService
-                  .saveOrganisationSetting(objDetails)
-                  .then(function (data) {
-                    var accNo = bankacountno || "";
-                    var swiftCode1 = swiftCode || "";
-                    var bankName = bankaccountname || "";
-                    var accountName = accountname || "";
-                    var bsb = bankbsb || "";
-                    var routingNo = routingNo || "";
-                    localStorage.setItem("vs1companyBankName", bankname);
-                    localStorage.setItem(
-                      "vs1companyBankAccountName",
-                      bankAccName
-                    );
-                    localStorage.setItem("vs1companyBankAccountNo", accNo);
-                    localStorage.setItem("vs1companyBankBSB", bsb);
-                    localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                    localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            Meteor._reload.reload();
-                          })
-                          .catch(function (err) {
-                            Meteor._reload.reload();
-                          });
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    sideBarService
-                      .getAccountListVS1()
-                      .then(function (dataReload) {
-                        addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                          .then(function (datareturn) {
-                            //window.open('/addAccountModal', '_self');
-                          })
-                          .catch(function (err) {
-                            Meteor._reload.reload();
-                          });
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  });
-              } else {
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              }
-            })
-            .catch(function (err) {
-              swal({
-                title: "Oooops...",
-                text: err,
-                type: "error",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-              }).then((result) => {
-                if (result.value) {
-                  Meteor._reload.reload();
-                } else if (result.dismiss === "cancel") {
-                }
-              });
-              $(".fullScreenSpin").css("display", "none");
-            });
-        });
-    } else {
-      data = {
-        type: "TAccount",
-        fields: {
-          ID: accountID,
-          AccountName: accountname || "",
-          AccountNumber: accountno || "",
-          // AccountTypeName: accounttype || '',
-          Active: true,
-          BankAccountName: bankaccountname || "",
-          BankAccountNumber: bankacountno || "",
-          BSB: bankbsb || "",
-          Description: accountdesc || "",
-          TaxCode: taxcode || "",
-          Extra: swiftCode,
-          BankNumber: routingNo,
-          //Level4: bankname,
-          PublishOnVS1: true,
-          IsHeader: forTransaction,
-          CarNumber: cardnumber || "",
-          CVC: cardcvc || "",
-          ExpiryDate: expiryDate || "",
-        },
-      };
-
-      accountService
-        .saveAccount(data)
-        .then(function (data) {
           if ($("#showOnTransactions").is(":checked")) {
-            var objDetails = {
-              type: "TCompanyInfo",
-              fields: {
-                Id: companyID,
-                AccountNo: bankacountno,
-                BankBranch: swiftCode,
-                BankAccountName: bankaccountname,
-                BankName: bankname,
-                Bsb: bankbsb,
-                SiteCode: routingNo,
-                FileReference: accountname,
-              },
-            };
-            organisationService
-              .saveOrganisationSetting(objDetails)
-              .then(function (data) {
-                var accNo = bankacountno || "";
-                var swiftCode1 = swiftCode || "";
-                var bankAccName = bankaccountname || "";
-                var accountName = accountname || "";
-                var bsb = bankbsb || "";
-                var routingNo = routingNo || "";
-                localStorage.setItem("vs1companyBankName", bankname);
-                localStorage.setItem("vs1companyBankAccountName", bankAccName);
-                localStorage.setItem("vs1companyBankAccountNo", accNo);
-                localStorage.setItem("vs1companyBankBSB", bsb);
-                localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                sideBarService
-                  .getAccountListVS1()
-                  .then(function (dataReload) {
-                    addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                      .then(function (datareturn) {
-                        Meteor._reload.reload();
-                      })
-                      .catch(function (err) {
-                        Meteor._reload.reload();
-                      });
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              });
-          } else {
-            sideBarService
-              .getAccountListVS1()
-              .then(function (dataReload) {
-                addVS1Data("TAccountVS1", JSON.stringify(dataReload))
-                  .then(function (datareturn) {
-                    Meteor._reload.reload();
-                  })
-                  .catch(function (err) {
-                    Meteor._reload.reload();
-                  });
-              })
-              .catch(function (err) {
-                Meteor._reload.reload();
-              });
+              forTransaction = true;
           }
-        })
-        .catch(function (err) {
-          swal({
-            title: "Oooops...",
-            text: err,
-            type: "error",
-            showCancelButton: false,
-            confirmButtonText: "Try Again",
-          }).then((result) => {
-            if (result.value) {
-              Meteor._reload.reload();
-            } else if (result.dismiss === "cancel") {
-            }
-          });
-          $(".fullScreenSpin").css("display", "none");
-        });
-    }
-  }, delayTimeAfterSound);
+          if ($("#useReceiptClaim").is(":checked")) {
+              useReceiptClaim = true;
+          }
+          if ($("#accountIsHeader").is(":checked")) {
+              isHeader = true;
+          }
+          let accountID = $("#edtAccountID").val();
+          const accounttype = $("#sltAccountType").val();
+          const accountname = $("#edtAccountName").val();
+          const accountno = $("#edtAccountNo").val();
+          const taxcode = $("#sltTaxCode").val();
+          const accountdesc = $("#txaAccountDescription").val();
+          const swiftCode = $("#swiftCode").val();
+          const routingNo = $("#routingNo").val();
+          // var comments = $('#txaAccountComments').val();
+          const bankname = $("#edtBankName").val();
+          const bankaccountname = $("#edtBankAccountName").val();
+          const bankbsb = $("#edtBSB").val();
+          const bankacountno = $("#edtBankAccountNo").val();
+          // const isBankAccount = templateObject.isBankAccount.get();
+          const expenseCategory = $("#expenseCategory").val();
+          const categoryAccountID = $("#categoryAccountID").val();
+          const categoryAccountName = $("#categoryAccountName").val();
+          const expirydateTime = new Date(
+              $("#edtExpiryDate").datepicker("getDate")
+          );
+          const cardnumber = $("#edtCardNumber").val();
+          const cardcvc = $("#edtCvc").val();
+          const expiryDate =
+              expirydateTime.getFullYear() +
+              "-" +
+              (expirydateTime.getMonth() + 1) +
+              "-" +
+              expirydateTime.getDate();
+
+          let companyID = 1;
+          let data = "";
+          if (categoryAccountID != "" && categoryAccountID != accountID) {
+              data = {
+                  type: "TAccount",
+                  fields: {
+                      ID: categoryAccountID,
+                      ReceiptCategory: "",
+                  },
+              };
+              accountService
+                  .saveAccount(data)
+                  .then(function (data2) {
+                      doBeforeSave(accountID);
+                  })
+                  .catch(function (err) {
+                      swal({
+                          title: "Oooops...",
+                          text: err,
+                          type: "error",
+                          showCancelButton: false,
+                          confirmButtonText: "Try Again",
+                      }).then((result) => {
+                          if (result.value) {
+                          } else if (result.dismiss === "cancel") {
+                          }
+                      });
+                      return false;
+                  });
+          } else {
+              doBeforeSave(accountID);
+          }
+          function doBeforeSave(accountID) {
+              if (accountID == "") {
+                  accountService
+                      .getCheckAccountData(accountname)
+                      .then(function (data) {
+                          accountID = parseInt(data.taccount[0].Id) || 0;
+                          doSaveAccount(accountID);
+                      })
+                      .catch(function (err) {
+                          doSaveAccount();
+                      });
+              } else {
+                  doSaveAccount(accountID);
+              }
+          }
+          function doSaveAccount(accountID) {
+              data = {
+                  type: "TAccount",
+                  fields: {
+                      ID: accountID,
+                      // AccountName: accountname|| '',
+                      AccountNumber: accountno || "",
+                      // AccountTypeName: accounttype|| '',
+                      ReceiptCategory: expenseCategory || "",
+                      Active: true,
+                      BankAccountName: bankaccountname || "",
+                      BankAccountNumber: bankacountno || "",
+                      BSB: bankbsb || "",
+                      Description: accountdesc || "",
+                      TaxCode: taxcode || "",
+                      PublishOnVS1: true,
+                      Extra: swiftCode,
+                      BankNumber: routingNo,
+                      IsHeader: isHeader,
+                      AllowExpenseClaim: useReceiptClaim,
+                      Required: forTransaction,
+                      CarNumber: cardnumber || "",
+                      CVC: cardcvc || "",
+                      ExpiryDate: expiryDate || "",
+                  },
+              };
+              if (accountID === undefined) {
+                  data.fields.AccountName = accountname || "";
+                  data.fields.AccountTypeName = accounttype || "";
+              }
+              accountService
+                  .saveAccount(data)
+                  .then(function (data) {
+                      if ($("#showOnTransactions").is(":checked")) {
+                          const objDetails = {
+                              type: "TCompanyInfo",
+                              fields: {
+                                  Id: companyID,
+                                  AccountNo: bankacountno,
+                                  BankBranch: swiftCode,
+                                  BankAccountName: bankaccountname,
+                                  BankName: bankname,
+                                  Bsb: bankbsb,
+                                  SiteCode: routingNo,
+                                  FileReference: accountname,
+                              },
+                          };
+                          organisationService
+                              .saveOrganisationSetting(objDetails)
+                              .then(function (data) {
+                                  const accNo = bankacountno || "";
+                                  const swiftCode1 = swiftCode || "";
+                                  const bankAccName = bankaccountname || "";
+                                  const accountName = accountname || "";
+                                  const bsb = bankbsb || "";
+                                  const routingNo = routingNo || "";
+
+                                  localStorage.setItem(
+                                      "vs1companyBankName",
+                                      bankname
+                                  );
+                                  localStorage.setItem(
+                                      "vs1companyBankAccountName",
+                                      bankAccName
+                                  );
+                                  localStorage.setItem(
+                                      "vs1companyBankAccountNo",
+                                      accNo
+                                  );
+                                  localStorage.setItem(
+                                      "vs1companyBankBSB",
+                                      bsb
+                                  );
+                                  localStorage.setItem(
+                                      "vs1companyBankSwiftCode",
+                                      swiftCode1
+                                  );
+                                  localStorage.setItem(
+                                      "vs1companyBankRoutingNo",
+                                      routingNo
+                                  );
+                                  doAfterSave(accountID);
+                              })
+                              .catch(function (err) {
+                                  doAfterSave(accountID);
+                              });
+                      } else {
+                          doAfterSave(accountID);
+                      }
+                  })
+                  .catch(function (err) {
+                      swal({
+                          title: "Oooops...",
+                          text: err,
+                          type: "error",
+                          showCancelButton: false,
+                          confirmButtonText: "Try Again",
+                      }).then((result) => {
+                          if (result.value) {
+                              Meteor._reload.reload();
+                          } else if (result.dismiss === "cancel") {
+                          }
+                      });
+                      $(".fullScreenSpin").css("display", "none");
+                  });
+          }
+          function doAfterSave(accountID) {
+              sideBarService
+                  .getAccountListVS1()
+                  .then(function (dataReload) {
+                      addVS1Data("TAccountVS1", JSON.stringify(dataReload))
+                          .then(function (datareturn) {
+                              successSaveEvent(accountID);
+                          })
+                          .catch(function (err) {
+                              window.open("/accountsoverview", "_self");
+                          });
+                  })
+                  .catch(function (err) {
+                      window.open("/accountsoverview", "_self");
+                  });
+          }
+          function successSaveEvent(accountID) {
+              let successTxt = "";
+              if (accountID == "") {
+                  successTxt = "Account successfully created";
+              } else {
+                  successTxt = "Account successfully updated";
+              }
+              swal({
+                  title: "Success",
+                  text: successTxt,
+                  type: "success",
+                  showCancelButton: false,
+                  confirmButtonText: "Try Again",
+              }).then((result) => {
+                  if (result.value) {
+                  } else if (result.dismiss === "cancel") {
+                  }
+              });
+              $(".fullScreenSpin").css("display", "none");
+              setTimeout(function () {
+                  window.open("/accountsoverview", "_self");
+              }, 100);
+          }
+      }, delayTimeAfterSound);  
   },
   "change #sltAccountType": function (e) {
     let templateObject = Template.instance();

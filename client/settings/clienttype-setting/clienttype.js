@@ -1,6 +1,7 @@
 import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from "../../js/sidebar-service";
 import { TaxRateService } from "../settings-service";
+import {UtilityService} from "../../utility-service";
 import { ReactiveVar } from "meteor/reactive-var";
 import XLSX from "xlsx";
 import { Template } from 'meteor/templating';
@@ -20,6 +21,38 @@ Template.clienttypesettings.onCreated(function () {
 
   templateObject.departlist = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
+
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    };
+    var dataList = [
+      data.ID || "",
+      data.TypeDescription || "",
+      data.TypeDescription || "",
+      data.CreditLimit || 0.0,
+      data.DefaultPostAccount || "",
+      data.GracePeriod || "",
+      data.TermsName || "",
+      linestatus,
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: 'ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
+    { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+    { index: 3, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "200" },
+    { index: 4, label: 'Default Accounts', class: 'colDefaultAccount', active: true, display: true, width: "200" },
+    { index: 5, label: 'Grace Period', class: 'colGracePeriodtus', active: true, display: true, width: "100" },
+    { index: 6, label: 'Terms', class: 'colTerms', active: true, display: true, width: "200" },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.clienttypesettings.onRendered(function () {
@@ -41,15 +74,23 @@ Template.clienttypesettings.onRendered(function () {
 
   $("#tblClienttypeList tbody").on("click", "tr", function () {
     $("#add-clienttype-title").text("Edit Customer Type");
-    let targetID = $(event.target).closest("tr").attr("id");
+    let targetID = $(event.target).closest('tr').find(".colClientTypeID").text();
     let typeDescription = $(event.target)
       .closest("tr")
       .find(".colDescription")
       .text();
     let typeName = $(event.target).closest("tr").find(".colTypeName").text();
+    let typeActive = $(event.target).closest("tr").find(".colStatus").text();
     $("#edtClientTypeID").val(targetID);
     $("#edtClientTypeName").val(typeName);
     $("#txaDescription").val(typeDescription);
+    if (typeActive === "In-Active") {
+      $('.btnDeleteClientType').addClass('d-none')
+      $('.btnActiveClientType').removeClass('d-none')
+    } else {
+      $('.btnActiveClientType').addClass('d-none')
+      $('.btnDeleteClientType').removeClass('d-none')
+    }
     $("#myModalClientType").modal("show");
   });
 });
@@ -372,7 +413,7 @@ Template.clienttypesettings.events({
           var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
             header: 1,
           });
-          var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
           templateObj.selectedFile.set(sCSV);
 
           if (roa.length) result[sheetName] = roa;
@@ -548,5 +589,40 @@ Template.clienttypesettings.helpers({
   },
   loggedCompany: () => {
     return localStorage.getItem("mySession") || "";
+  },
+
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getClientTypeDataList;
+  },
+
+  searchAPI: function() {
+    return sideBarService.getClientTypeDataByName;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 });

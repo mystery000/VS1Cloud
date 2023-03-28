@@ -1062,78 +1062,32 @@
                                 class="row trackItem"
                                 style="{{#if includeInventory}}{{#if isTrackChecked}}display: flex;{{else}}display: none;{{/if}}{{else}}display: none;{{/if}}"
                             >
-                                <div class="col-3">
-                                    <div class="form-group" style="margin-bottom: 0px">
-                                        <label>Department</label>
-                                    </div>
-                                </div>
-                                <div class="col-9">
-                                    <div class="row">
-                                        <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px">
-                                                <label>Available</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px">
-                                                <label>On SO</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px">
-                                                <label>On BO</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px">
-                                                <label>In Stock</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px">
-                                                <label>On Order</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-2">
-                                            <div class="form-group" style="margin-bottom: 0px">
-                                                <label>Bin Number</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
                                 {{#each item in productqtyrecords}}
                                 <div class="col-12">
                                     <div class="row">
-                                        <div class="col-3">
-                                            <div class="form-group">
-                                                <label style="display: none;">Deparment</label>
-                                                <select type="search" class="form-control slt_department" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                    {{#each itemt in deptrecords}}
-                                                    {{#if equals itemtt.itemt.id productrecord.productclass.DeptID}}
-                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
-                                                    {{else}}
-                                                    <option value="{{itemt.department}}" data-tag="{{itemt.id}}" >{{itemt.department}}</option>
-                                                    {{/if}}
-                                                    {{/each}}
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-9">
-                                            <!-- edited by matthias -->
+                                        <div class="col-4">
                                             <div class="row">
-                                                <div class="col-2">
-                                                    <div class="form-group">
-                                                        <input
+                                                <div class="col-8 form-group">
+                                                    <label style="">Deparment</label>
+                                                    {{> vs1_dropdown id='sltdepartment' name='sltdepartment' value=bindept type='search' classes='es-input'}}
+                                                </div>
+                                                <div class="col-4 form-group">
+                                                    <label>Available</label>
+                                                    <input
                                                             type="text"
                                                             class="form-control trackProd Available"
                                                             value="{{item.availableqty}}"
                                                             style="text-align: center"
-                                                        />
-                                                    </div>
+                                                    />
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-8">
+                                            <!-- edited by matthias -->
+                                            <div class="row">
                                                 <div class="col-2">
                                                     <div class="form-group">
+                                                        <label style="white-space: nowrap;">On SO</label>
                                                         <input
                                                             type="text"
                                                             class="form-control trackProd OnSO"
@@ -1144,6 +1098,7 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
+                                                        <label style="white-space: nowrap;">On BO</label>
                                                         <input
                                                             type="text"
                                                             class="form-control trackProd OnBO"
@@ -1154,6 +1109,7 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
+                                                        <label style="white-space: nowrap;">In Stock</label>
                                                         <input
                                                             type="text"
                                                             class="form-control trackProd InStock"
@@ -1164,6 +1120,7 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
+                                                        <label style="white-space: nowrap;">On Order</label>
                                                         <input
                                                             type="text"
                                                             class="form-control trackProd OnOrder"
@@ -1174,15 +1131,34 @@
                                                 </div>
                                                 <div class="col-2">
                                                     <div class="form-group">
-                                                        <select type="search" class="form-control slt-bin" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                            {{#each itemtt in binrecords}}
-                                                            {{#if equals itemtt.binclass bindept}}
-                                                            {{#if equals itemtt.binnumber productrecord.productclass.DefaultbinNumber}}
-                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>
-                                                            {{else}}
-                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>
-                                                            {{/if}}
-                                                            {{/if}}
+                                                        <label style="white-space: nowrap;">Bin Location</label>
+                                                        <select type="search" class="form-control slt-bin" id="sltbinlocation" name="sltbinlocation" value="{{binlocation}}" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                            {{#each itemtt in binlocationarray}}
+                                                                {{#if equals itemtt.binclass bindept}}
+                                                                    {{#if equals itemtt.binlocation binlocation}}
+                                                                        <option value="{{itemtt.binlocation}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binlocation}}</option>
+                                                                    {{else}}
+                                                                        <option value="{{itemtt.binlocation}}" data-location="{{itemtt.binlocation}}">{{itemtt.binlocation}}</option>
+                                                                    {{/if}}
+                                                                {{/if}}
+                                                            {{/each}}
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-2">
+                                                    <div class="form-group">
+                                                        <label style="white-space: nowrap;">Bin Number</label>
+                                                        <select type="search" class="form-control slt-bin" id="sltbinnumber" name="sltbinnumber" value="{{binnumber}}" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                                            {{#each itemtt in binarray}}
+                                                                {{#if equals itemtt.binclass bindept}}
+                                                                    {{#if equals itemtt.binlocation binlocation}}
+                                                                        {{#if equals itemtt.binnumber binnumber}}
+                                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}" selected>{{itemtt.binnumber}}</option>
+                                                                        {{else}}
+                                                                            <option value="{{itemtt.binnumber}}" data-location="{{itemtt.binlocation}}">{{itemtt.binnumber}}</option>
+                                                                        {{/if}}
+                                                                    {{/if}}
+                                                                {{/if}}
                                                             {{/each}}
                                                         </select>
                                                     </div>
@@ -1612,7 +1588,7 @@
                                             </div>
                                           </div>
                                         </div>
-                                        {{> departmentModal}}
+<!--                                        {{> departmentModal}}-->
                                       </div>
 
                                     <!-- {{>recentTransactionTable productID=productID type="all"}} -->
@@ -2145,7 +2121,12 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        {{> departmentpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+        {{> newdepartmentpop}}
+    </div>
     <div class="modal fade" role="dialog" tabindex="-1" id="UOMListModal">
         {{> uomlistpop}}
     </div>

@@ -95,10 +95,25 @@ Template.billcard.onCreated(() => {
     templateObject.hasFollow = new ReactiveVar(false);
 
     templateObject.supplierRecord = new ReactiveVar();
+});
+
+Template.billcard.onRendered(() => {
+    let templateObject = Template.instance();
+    let tempObj = Template.instance();
+    let utilityService = new UtilityService();
+    let productService = new ProductService();
+    let accountService = new AccountService();
+    let purchaseService = new PurchaseBoardService();
+    const taxRateService = new TaxRateService();
+    let tableProductList;
+    var splashArrayProductList = new Array();
+    var splashArrayTaxRateList = new Array();
+    const taxCodesList = [];
+    let taxCodes = new Array();
 
     templateObject.setSupplierInfo = () => {
         if (!FlowRouter.current().queryParams.supplierid) {
-            $('#supplierListModal').modal('toggle');
+            // $('#supplierListModal').modal('toggle');
         }
         let utilityService = new UtilityService();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -205,7 +220,6 @@ Template.billcard.onCreated(() => {
     templateObject.generatePdfForMail = async (invoiceId) => {
         let file = "Bill-" + invoiceId + ".pdf"
         return new Promise((resolve, reject) => {
-            let templateObject = Template.instance();
             let completeTabRecord;
             let doc = new jsPDF('p', 'pt', 'a4');
             var source = document.getElementById('html-2-pdfwrapper');
@@ -231,7 +245,6 @@ Template.billcard.onCreated(() => {
     }
     templateObject.addAttachment = async (objDetails) => {
         let attachment = [];
-        let templateObject = Template.instance();
         let invoiceId = objDetails.fields.ID;
         let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
         let pdfObject = "";
@@ -571,9 +584,6 @@ Template.billcard.onCreated(() => {
         await templateObject.addAttachment(objDetails);
     }
 
-});
-Template.billcard.onRendered(() => {
-    let templateObject = Template.instance();
     templateObject.hasFollowings = async function () {
         var currentDate = new Date();
         let purchaseService = new PurchaseBoardService();
@@ -3256,6 +3266,7 @@ Template.billcard.onRendered(() => {
     let table;
     $(document).ready(function () {
         $('#edtSupplierName').editableSelect();
+        $('#edtSupplierName').val('');
         $('#sltCurrency').editableSelect();
         $('#sltTerms').editableSelect();
         $('#sltDept').editableSelect();
@@ -3309,98 +3320,9 @@ Template.billcard.onRendered(() => {
                 });
             }
         });
-
-
-
     });
 
-    $('#shipvia').editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var shipvianame = e.target.value || '';
-            $('#edtShipViaID').val('');
-            $('#newShipViaMethodName').text('Add Ship Via');
-            $('#edtShipVia').attr('readonly', false);
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#shipViaModal').modal('toggle');
-                setTimeout(function () {
-                    $('#tblShipViaPopList_filter .form-control-sm').focus();
-                    $('#tblShipViaPopList_filter .form-control-sm').val('');
-                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblShipViaPopList').DataTable();
-                    datatable.draw();
-                    $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                }, 500);
-            } else {
-                if (shipvianame.replace(/\s/g, '') != '') {
-                    $('#newShipViaMethodName').text('Edit Ship Via');
-                    setTimeout(function () {
-                        // $('#edtShipVia').attr('readonly', true);
-                    }, 100);
 
-                    getVS1Data('TShippingMethod').then(function (dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getShippingMethodData().then(function (data) {
-                                for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                    if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
-                                        $('#edtShipViaID').val(data.tshippingmethod[i].Id);
-                                        $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
-                                    }
-                                }
-                                setTimeout(function () {
-                                    LoadingOverlay.hide();
-                                    $('#newShipViaModal').modal('toggle');
-                                }, 200);
-                            }).catch(function (err) {
-                                LoadingOverlay.hide();
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tshippingmethod;
-                            for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                if (useData[i].ShippingMethod === shipvianame) {
-                                    $('#edtShipViaID').val(useData[i].Id);
-                                    $('#edtShipVia').val(useData[i].ShippingMethod);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#newShipViaModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getShippingMethodData().then(function (data) {
-                            for (let i = 0; i < data.tshippingmethod.length; i++) {
-                                if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
-                                    $('#edtShipViaID').val(data.tshippingmethod[i].Id);
-                                    $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#edtShipVia').attr('readonly', false);
-                                $('#newShipViaModal').modal('toggle');
-                            }, 200);
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
-                    });
-                } else {
-                    $('#shipViaModal').modal();
-                    setTimeout(function () {
-                        $('#tblShipViaPopList_filter .form-control-sm').focus();
-                        $('#tblShipViaPopList_filter .form-control-sm').val('');
-                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblShipViaPopList').DataTable();
-                        datatable.draw();
-                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
 
     $(document).on("click", "#tblShipViaPopList tbody tr", function (e) {
         $('#shipvia').val($(this).find(".colShipName ").text());
@@ -3422,8 +3344,8 @@ Template.billcard.onRendered(() => {
         let $printrows = $(".bill_print tbody tr");
 
         if (selectLineID) {
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
+            let lineProductName = table.find(".colAccountName").text();
+            let lineProductDesc = table.find(".colDescription").text();
 
             let lineUnitPrice = "0.00";
             let lineTaxRate = table.find(".taxrate").text();
@@ -3531,8 +3453,8 @@ Template.billcard.onRendered(() => {
                 });
             }
         } else {
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
+            let lineProductName = table.find(".colAccountName").text();
+            let lineProductDesc = table.find(".colDescription").text();
 
             let lineUnitPrice = "0.00";
             let lineTaxRate = table.find(".taxrate").text();
@@ -3745,8 +3667,8 @@ Template.billcard.onRendered(() => {
         $('#departmentModal').modal('toggle');
     });
     $(document).on("click", "#termsList tbody tr", function (e) {
-        $('#sltTerms').val($(this).find(".colTermName").text());
-        $('#termsListModal').modal('toggle');
+        $('#sltTerms').val($(this).find(".colName").text());
+        $('#termsListModal').modal('hide');
     });
     $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
         $('#sltStatus').val($(this).find(".colStatusName").text());
@@ -3758,7 +3680,7 @@ Template.billcard.onRendered(() => {
             LoadingOverlay.hide();
         }, 1000);
     });
-
+    $(document).ready(function() {
     $('#sltTerms').editableSelect()
         .on('click.editable-select', function (e, li) {
             var $earch = $(this);
@@ -3970,6 +3892,171 @@ Template.billcard.onRendered(() => {
             }
         });
 
+        $('#shipvia').editableSelect()
+            .on('click.editable-select', function (e, li) {
+                var $earch = $(this);
+                var offset = $earch.offset();
+                var shipvianame = e.target.value || '';
+                $('#edtShipViaID').val('');
+                $('#newShipViaMethodName').text('Add Ship Via');
+                $('#edtShipVia').attr('readonly', false);
+                if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                    $('#shipViaModal').modal('toggle');
+                    setTimeout(function () {
+                        $('#tblShipViaPopList_filter .form-control-sm').focus();
+                        $('#tblShipViaPopList_filter .form-control-sm').val('');
+                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblShipViaPopList').DataTable();
+                        datatable.draw();
+                        $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                    }, 500);
+                } else {
+                    if (shipvianame.replace(/\s/g, '') != '') {
+                        $('#newShipViaMethodName').text('Edit Ship Via');
+                        setTimeout(function () {
+                            // $('#edtShipVia').attr('readonly', true);
+                        }, 100);
+
+                        getVS1Data('TShippingMethod').then(function (dataObject) {
+                            if (dataObject.length == 0) {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                sideBarService.getShippingMethodData().then(function (data) {
+                                    for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                        if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
+                                            $('#edtShipViaID').val(data.tshippingmethod[i].Id);
+                                            $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
+                                        }
+                                    }
+                                    setTimeout(function () {
+                                        LoadingOverlay.hide();
+                                        $('#newShipViaModal').modal('toggle');
+                                    }, 200);
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.tshippingmethod;
+                                for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                    if (useData[i].ShippingMethod === shipvianame) {
+                                        $('#edtShipViaID').val(useData[i].Id);
+                                        $('#edtShipVia').val(useData[i].ShippingMethod);
+                                    }
+                                }
+                                setTimeout(function () {
+                                    LoadingOverlay.hide();
+                                    $('#newShipViaModal').modal('toggle');
+                                }, 200);
+                            }
+                        }).catch(function (err) {
+                            $('.fullScreenSpin').css('display', 'inline-block');
+                            sideBarService.getShippingMethodData().then(function (data) {
+                                for (let i = 0; i < data.tshippingmethod.length; i++) {
+                                    if (data.tshippingmethod[i].ShippingMethod === shipvianame) {
+                                        $('#edtShipViaID').val(data.tshippingmethod[i].Id);
+                                        $('#edtShipVia').val(data.tshippingmethod[i].ShippingMethod);
+                                    }
+                                }
+                                setTimeout(function () {
+                                    LoadingOverlay.hide();
+                                    $('#edtShipVia').attr('readonly', false);
+                                    $('#newShipViaModal').modal('toggle');
+                                }, 200);
+                            }).catch(function (err) {
+                                LoadingOverlay.hide();
+                            });
+                        });
+                    } else {
+                        $('#shipViaModal').modal();
+                        setTimeout(function () {
+                            $('#tblShipViaPopList_filter .form-control-sm').focus();
+                            $('#tblShipViaPopList_filter .form-control-sm').val('');
+                            $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                            var datatable = $('#tblShipViaPopList').DataTable();
+                            datatable.draw();
+                            $('#tblShipViaPopList_filter .form-control-sm').trigger("input");
+                        }, 500);
+                    }
+                }
+            });
+
+            $('#sltDept').editableSelect()
+                .on('click.editable-select', function (e, li) {
+                    var $earch = $(this);
+                    var offset = $earch.offset();
+                    var deptDataName = e.target.value || '';
+                    $('#edtDepartmentID').val('');
+                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                        $('#departmentModal').modal('toggle');
+                    } else {
+                        if (deptDataName.replace(/\s/g, '') != '') {
+                            $('#newDeptHeader').text('Edit Department');
+
+                            getVS1Data('TDeptClass').then(function (dataObject) {
+                                if (dataObject.length == 0) {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    sideBarService.getDepartment().then(function (data) {
+                                        for (let i = 0; i < data.tdeptclass.length; i++) {
+                                            if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                                $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                                $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                                $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                                $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                            }
+                                        }
+                                        setTimeout(function () {
+                                            LoadingOverlay.hide();
+                                            $('#newDepartmentModal').modal('toggle');
+                                        }, 200);
+                                    });
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.tdeptclass;
+                                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        }
+                                    }
+                                    setTimeout(function () {
+                                        LoadingOverlay.hide();
+                                        $('#newDepartmentModal').modal('toggle');
+                                    }, 200);
+                                }
+                            }).catch(function (err) {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                sideBarService.getDepartment().then(function (data) {
+                                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        }
+                                    }
+                                    setTimeout(function () {
+                                        LoadingOverlay.hide();
+                                        $('#newDepartmentModal').modal('toggle');
+                                    }, 200);
+                                });
+                            });
+                        } else {
+                            $('#departmentModal').modal();
+                            setTimeout(function () {
+                                $('#departmentList_filter .form-control-sm').focus();
+                                $('#departmentList_filter .form-control-sm').val('');
+                                $('#departmentList_filter .form-control-sm').trigger("input");
+                                var datatable = $('#departmentList').DataTable();
+                                datatable.draw();
+                                $('#departmentList_filter .form-control-sm').trigger("input");
+                            }, 500);
+                        }
+                    }
+                });
+
+    });
     // $('#sltCurrency').editableSelect()
     //     .on('click.editable-select', function(e, li) {
     //         var $earch = $(this);
@@ -4068,81 +4155,7 @@ Template.billcard.onRendered(() => {
     //         }
     //     });
 
-    $('#sltDept').editableSelect()
-        .on('click.editable-select', function (e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var deptDataName = e.target.value || '';
-            $('#edtDepartmentID').val('');
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#departmentModal').modal('toggle');
-            } else {
-                if (deptDataName.replace(/\s/g, '') != '') {
-                    $('#newDeptHeader').text('Edit Department');
 
-                    getVS1Data('TDeptClass').then(function (dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getDepartment().then(function (data) {
-                                for (let i = 0; i < data.tdeptclass.length; i++) {
-                                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                        $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                        $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                        $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                        $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                    }
-                                }
-                                setTimeout(function () {
-                                    LoadingOverlay.hide();
-                                    $('#newDepartmentModal').modal('toggle');
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tdeptclass;
-                            for (let i = 0; i < data.tdeptclass.length; i++) {
-                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#newDepartmentModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function (err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getDepartment().then(function (data) {
-                            for (let i = 0; i < data.tdeptclass.length; i++) {
-                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                }
-                            }
-                            setTimeout(function () {
-                                LoadingOverlay.hide();
-                                $('#newDepartmentModal').modal('toggle');
-                            }, 200);
-                        });
-                    });
-                } else {
-                    $('#departmentModal').modal();
-                    setTimeout(function () {
-                        $('#departmentList_filter .form-control-sm').focus();
-                        $('#departmentList_filter .form-control-sm').val('');
-                        $('#departmentList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#departmentList').DataTable();
-                        datatable.draw();
-                        $('#departmentList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
 
     // $('#edtSupplierName').editableSelect().on('click.editable-select', function(e, li) {
     //     var $earch = $(this);
@@ -5225,7 +5238,6 @@ Template.billcard.onRendered(() => {
 
 
     $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-        const templateObject = Template.instance();
         const tableSupplier = $(this);
         $('#edtSupplierName').val(tableSupplier.find(".colCompany").text());
         $('#edtSupplierName').attr("suppid", tableSupplier.find(".colID").text());
@@ -5240,6 +5252,7 @@ Template.billcard.onRendered(() => {
         $('#txaShipingInfo').val(postalAddress);
         $('#sltTerms').val(tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms);
         templateObject.setSupplierInfo();
+        $('#supplierListModal').modal('hide');
     });
 
 
@@ -5496,270 +5509,255 @@ Template.billcard.onRendered(() => {
         x.addListener(mediaQuery)
     }, 10);
 
-});
-
-Template.billcard.onRendered(function () {
-    let tempObj = Template.instance();
-    let utilityService = new UtilityService();
-    let productService = new ProductService();
-    let accountService = new AccountService();
-    let purchaseService = new PurchaseBoardService();
-    const taxRateService = new TaxRateService();
-    let tableProductList;
-    var splashArrayProductList = new Array();
-    var splashArrayTaxRateList = new Array();
-    const taxCodesList = [];
-    let taxCodes = new Array();
-
-    tempObj.getAllTaxCodes = function () {
-        getVS1Data('TTaxcodeVS1').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                purchaseService.getTaxCodesDetailVS1().then(function (data) {
-
-                    let records = [];
-                    let inventoryData = [];
-                    taxCodes = data.ttaxcodevs1;
-                    tempObj.taxcodes.set(taxCodes);
-                    for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                        let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                        var dataList = [
-                            data.ttaxcodevs1[i].Id || '',
-                            data.ttaxcodevs1[i].CodeName || '',
-                            data.ttaxcodevs1[i].Description || '-',
-                            taxRate || 0,
-                        ];
-
-                        let taxcoderecordObj = {
-                            codename: data.ttaxcodevs1[i].CodeName || ' ',
-                            coderate: taxRate || ' ',
-                        };
-
-                        taxCodesList.push(taxcoderecordObj);
-
-                        splashArrayTaxRateList.push(dataList);
-                    }
-                    tempObj.taxraterecords.set(taxCodesList);
-
-                    if (splashArrayTaxRateList) {
-
-                        $('#tblTaxRate').DataTable({
-                            data: splashArrayTaxRateList,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            paging: true,
-                            "aaSorting": [],
-                            "orderMulti": true,
-                            columnDefs: [{
-                                orderable: false,
-                                targets: 0
-                            },
-                            {
-                                className: "taxName",
-                                "targets": [1]
-                            },
-                            {
-                                className: "taxDesc",
-                                "targets": [2]
-                            },
-                            {
-                                className: "taxRate text-right",
-                                "targets": [3]
-                            }
-                            ],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-
-                            bStateSave: true,
-
-                            pageLength: initialDatatableLoad,
-                            lengthMenu: [
-                                [initialDatatableLoad, -1],
-                                [initialDatatableLoad, "All"]
-                            ],
-                            info: true,
-                            responsive: true,
-                            language: { search: "", searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function () {
-                                $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
-                                $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
-                            }
-
-                        });
-
-                    }
-                })
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.ttaxcodevs1;
-                let records = [];
-                let inventoryData = [];
-                taxCodes = data.ttaxcodevs1;
-                tempObj.taxcodes.set(taxCodes);
-                for (let i = 0; i < useData.length; i++) {
-                    let taxRate = (useData[i].Rate * 100).toFixed(2);
-                    var dataList = [
-                        useData[i].Id || '',
-                        useData[i].CodeName || '',
-                        useData[i].Description || '-',
-                        taxRate || 0,
-                    ];
-
-                    let taxcoderecordObj = {
-                        codename: useData[i].CodeName || ' ',
-                        coderate: taxRate || ' ',
-                    };
-
-                    taxCodesList.push(taxcoderecordObj);
-
-                    splashArrayTaxRateList.push(dataList);
-                }
-                tempObj.taxraterecords.set(taxCodesList);
-
-
-                if (splashArrayTaxRateList) {
-
-                    $('#tblTaxRate').DataTable({
-                        data: splashArrayTaxRateList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [{
-                            orderable: false,
-                            targets: 0
-                        },
-                        {
-                            className: "taxName",
-                            "targets": [1]
-                        },
-                        {
-                            className: "taxDesc",
-                            "targets": [2]
-                        },
-                        {
-                            className: "taxRate text-right",
-                            "targets": [3]
-                        }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        language: { search: "", searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
-                            $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
-                        }
-
-                    });
-
-
-
-
-
-
-                }
-
-            }
-        }).catch(function (err) {
-            purchaseService.getTaxCodesDetailVS1().then(function (data) {
-
-                let records = [];
-                let inventoryData = [];
-                taxCodes = data.ttaxcodevs1;
-                tempObj.taxcodes.set(taxCodes);
-                for (let i = 0; i < data.ttaxcodevs1.length; i++) {
-                    let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
-                    var dataList = [
-                        data.ttaxcodevs1[i].Id || '',
-                        data.ttaxcodevs1[i].CodeName || '',
-                        data.ttaxcodevs1[i].Description || '-',
-                        taxRate || 0,
-                    ];
-
-                    let taxcoderecordObj = {
-                        codename: data.ttaxcodevs1[i].CodeName || ' ',
-                        coderate: taxRate || ' ',
-                    };
-
-                    taxCodesList.push(taxcoderecordObj);
-
-                    splashArrayTaxRateList.push(dataList);
-                }
-                tempObj.taxraterecords.set(taxCodesList);
-
-
-                if (splashArrayTaxRateList) {
-
-                    $('#tblTaxRate').DataTable({
-                        data: splashArrayTaxRateList,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        paging: true,
-                        "aaSorting": [],
-                        "orderMulti": true,
-                        columnDefs: [{
-                            orderable: false,
-                            targets: 0
-                        },
-                        {
-                            className: "taxName",
-                            "targets": [1]
-                        },
-                        {
-                            className: "taxDesc",
-                            "targets": [2]
-                        },
-                        {
-                            className: "taxRate text-right",
-                            "targets": [3]
-                        }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-
-
-
-                        bStateSave: true,
-
-
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [
-                            [initialDatatableLoad, -1],
-                            [initialDatatableLoad, "All"]
-                        ],
-                        info: true,
-                        responsive: true,
-                        language: { search: "", searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
-                            $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
-                        }
-
-                    });
-
-
-
-
-
-
-                }
-            })
-        });
-    };
-    tempObj.getAllTaxCodes();
+    // tempObj.getAllTaxCodes = function () {
+    //     getVS1Data('TTaxcodeVS1').then(function (dataObject) {
+    //         if (dataObject.length == 0) {
+    //             purchaseService.getTaxCodesDetailVS1().then(function (data) {
+    //
+    //                 let records = [];
+    //                 let inventoryData = [];
+    //                 taxCodes = data.ttaxcodevs1;
+    //                 tempObj.taxcodes.set(taxCodes);
+    //                 for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+    //                     let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+    //                     var dataList = [
+    //                         data.ttaxcodevs1[i].Id || '',
+    //                         data.ttaxcodevs1[i].CodeName || '',
+    //                         data.ttaxcodevs1[i].Description || '-',
+    //                         taxRate || 0,
+    //                     ];
+    //
+    //                     let taxcoderecordObj = {
+    //                         codename: data.ttaxcodevs1[i].CodeName || ' ',
+    //                         coderate: taxRate || ' ',
+    //                     };
+    //
+    //                     taxCodesList.push(taxcoderecordObj);
+    //
+    //                     splashArrayTaxRateList.push(dataList);
+    //                 }
+    //                 tempObj.taxraterecords.set(taxCodesList);
+    //
+    //                 if (splashArrayTaxRateList) {
+    //
+    //                     $('#tblTaxRate').DataTable({
+    //                         data: splashArrayTaxRateList,
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         paging: true,
+    //                         "aaSorting": [],
+    //                         "orderMulti": true,
+    //                         columnDefs: [{
+    //                             orderable: false,
+    //                             targets: 0
+    //                         },
+    //                         {
+    //                             className: "taxName",
+    //                             "targets": [1]
+    //                         },
+    //                         {
+    //                             className: "taxDesc",
+    //                             "targets": [2]
+    //                         },
+    //                         {
+    //                             className: "taxRate text-right",
+    //                             "targets": [3]
+    //                         }
+    //                         ],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //
+    //                         bStateSave: true,
+    //
+    //                         pageLength: initialDatatableLoad,
+    //                         lengthMenu: [
+    //                             [initialDatatableLoad, -1],
+    //                             [initialDatatableLoad, "All"]
+    //                         ],
+    //                         info: true,
+    //                         responsive: true,
+    //                         language: { search: "", searchPlaceholder: "Search List..." },
+    //                         "fnInitComplete": function () {
+    //                             $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
+    //                             $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
+    //                         }
+    //
+    //                     });
+    //
+    //                 }
+    //             })
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.ttaxcodevs1;
+    //             let records = [];
+    //             let inventoryData = [];
+    //             taxCodes = data.ttaxcodevs1;
+    //             tempObj.taxcodes.set(taxCodes);
+    //             for (let i = 0; i < useData.length; i++) {
+    //                 let taxRate = (useData[i].Rate * 100).toFixed(2);
+    //                 var dataList = [
+    //                     useData[i].Id || '',
+    //                     useData[i].CodeName || '',
+    //                     useData[i].Description || '-',
+    //                     taxRate || 0,
+    //                 ];
+    //
+    //                 let taxcoderecordObj = {
+    //                     codename: useData[i].CodeName || ' ',
+    //                     coderate: taxRate || ' ',
+    //                 };
+    //
+    //                 taxCodesList.push(taxcoderecordObj);
+    //
+    //                 splashArrayTaxRateList.push(dataList);
+    //             }
+    //             tempObj.taxraterecords.set(taxCodesList);
+    //
+    //
+    //             if (splashArrayTaxRateList) {
+    //
+    //                 $('#tblTaxRate').DataTable({
+    //                     data: splashArrayTaxRateList,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     paging: true,
+    //                     "aaSorting": [],
+    //                     "orderMulti": true,
+    //                     columnDefs: [{
+    //                         orderable: false,
+    //                         targets: 0
+    //                     },
+    //                     {
+    //                         className: "taxName",
+    //                         "targets": [1]
+    //                     },
+    //                     {
+    //                         className: "taxDesc",
+    //                         "targets": [2]
+    //                     },
+    //                     {
+    //                         className: "taxRate text-right",
+    //                         "targets": [3]
+    //                     }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //
+    //
+    //
+    //                     bStateSave: true,
+    //
+    //
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [
+    //                         [initialDatatableLoad, -1],
+    //                         [initialDatatableLoad, "All"]
+    //                     ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     language: { search: "", searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function () {
+    //                         $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
+    //                         $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
+    //                     }
+    //
+    //                 });
+    //
+    //
+    //
+    //
+    //
+    //
+    //             }
+    //
+    //         }
+    //     }).catch(function (err) {
+    //         purchaseService.getTaxCodesDetailVS1().then(function (data) {
+    //
+    //             let records = [];
+    //             let inventoryData = [];
+    //             taxCodes = data.ttaxcodevs1;
+    //             tempObj.taxcodes.set(taxCodes);
+    //             for (let i = 0; i < data.ttaxcodevs1.length; i++) {
+    //                 let taxRate = (data.ttaxcodevs1[i].Rate * 100).toFixed(2);
+    //                 var dataList = [
+    //                     data.ttaxcodevs1[i].Id || '',
+    //                     data.ttaxcodevs1[i].CodeName || '',
+    //                     data.ttaxcodevs1[i].Description || '-',
+    //                     taxRate || 0,
+    //                 ];
+    //
+    //                 let taxcoderecordObj = {
+    //                     codename: data.ttaxcodevs1[i].CodeName || ' ',
+    //                     coderate: taxRate || ' ',
+    //                 };
+    //
+    //                 taxCodesList.push(taxcoderecordObj);
+    //
+    //                 splashArrayTaxRateList.push(dataList);
+    //             }
+    //             tempObj.taxraterecords.set(taxCodesList);
+    //
+    //
+    //             if (splashArrayTaxRateList) {
+    //
+    //                 $('#tblTaxRate').DataTable({
+    //                     data: splashArrayTaxRateList,
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     paging: true,
+    //                     "aaSorting": [],
+    //                     "orderMulti": true,
+    //                     columnDefs: [{
+    //                         orderable: false,
+    //                         targets: 0
+    //                     },
+    //                     {
+    //                         className: "taxName",
+    //                         "targets": [1]
+    //                     },
+    //                     {
+    //                         className: "taxDesc",
+    //                         "targets": [2]
+    //                     },
+    //                     {
+    //                         className: "taxRate text-right",
+    //                         "targets": [3]
+    //                     }
+    //                     ],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //
+    //
+    //
+    //                     bStateSave: true,
+    //
+    //
+    //                     pageLength: initialDatatableLoad,
+    //                     lengthMenu: [
+    //                         [initialDatatableLoad, -1],
+    //                         [initialDatatableLoad, "All"]
+    //                     ],
+    //                     info: true,
+    //                     responsive: true,
+    //                     language: { search: "", searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function () {
+    //                         $("<button class='btn btn-primary btnAddNewTaxRate' data-dismiss='modal' data-toggle='modal' data-target='#newTaxRateModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblTaxRate_filter");
+    //                         $("<button class='btn btn-primary btnRefreshTax' type='button' id='btnRefreshTax' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblTaxRate_filter");
+    //                     }
+    //
+    //                 });
+    //
+    //
+    //
+    //
+    //
+    //
+    //             }
+    //         })
+    //     });
+    // };
+    // tempObj.getAllTaxCodes();
 
     tempObj.getSubTaxCodes = function () {
         let subTaxTableList = [];
@@ -5817,9 +5815,6 @@ Template.billcard.onRendered(function () {
     };
 
     tempObj.getSubTaxCodes();
-
-
-
 });
 
 Template.billcard.helpers({
@@ -6046,8 +6041,6 @@ Template.billcard.events({
     },
     'click #btnCopyInvoice': function () {
         playCopyAudio();
-        let templateObject = Template.instance();
-        let purchaseService = new PurchaseBoardService();
         let i = 0;
         setTimeout(async function () {
             $("#basedOnFrequency").prop('checked', true);
@@ -6144,8 +6137,6 @@ Template.billcard.events({
     },
     'click .btnSaveFrequency': async function () {
         playSaveAudio();
-        let templateObject = Template.instance();
-        let purchaseService = new PurchaseBoardService();
         // let selectedType = '';
         let selectedType = "basedOnFrequency";
         let frequencyVal = '';
@@ -6525,7 +6516,6 @@ Template.billcard.events({
         $('#' + targetID + " #lineMemo").text($('#' + targetID + " .lineMemo").text());
     },
     'blur .colAmountExChange': function (event) {
-        let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
@@ -6633,7 +6623,6 @@ Template.billcard.events({
 
     },
     'blur .colAmountIncChange': function (event) {
-        let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
@@ -7152,7 +7141,6 @@ Template.billcard.events({
     'click #accountListModal #refreshpagelist': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         localStorage.setItem('VS1PurchaseAccountList', '');
-        let templateObject = Template.instance();
         Meteor._reload.reload();
         //templateObject.getAllProducts();
     },
@@ -7826,7 +7814,6 @@ Template.billcard.events({
 
     'click .printConfirm': async function (event) {
         playPrintAudio();
-        const templateObject = Template.instance();
         setTimeout(async function () {
             var printTemplate = [];
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -8018,7 +8005,6 @@ Template.billcard.events({
         }
     },
     'click .btnRemove': async function (event) {
-        let templateObject = Template.instance();
         let taxcodeList = templateObject.taxraterecords.get();
         let utilityService = new UtilityService();
         var targetID = $(event.target).closest('tr').attr('id');
@@ -8132,7 +8118,6 @@ Template.billcard.events({
         playDeleteAudio();
         var currentDate = new Date();
         let purchaseService = new PurchaseBoardService();
-        let templateObject = Template.instance();
         setTimeout(async function () {
 
             swal({
@@ -8196,7 +8181,6 @@ Template.billcard.events({
     },
     'click .btnDeleteBill2': function (event) {
         playDeleteAudio();
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(function () {
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -8254,7 +8238,6 @@ Template.billcard.events({
     },
     'click .btnDeleteBill': function (event) {
         playDeleteAudio();
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         setTimeout(function () {
             $('.fullScreenSpin').css('display', 'inline-block');
@@ -8314,7 +8297,6 @@ Template.billcard.events({
     },
     'click .btnDeleteLine': function (event) {
         playDeleteAudio();
-        let templateObject = Template.instance();
         let utilityService = new UtilityService();
         setTimeout(function () {
             let taxcodeList = templateObject.taxraterecords.get();
@@ -8663,9 +8645,8 @@ Template.billcard.events({
                     $('.po').text(ponumber);
                     async function addAttachment() {
                         let attachment = [];
-                        let templateObject = Template.instance();
-
                         let invoiceId = objDetails.fields.ID;
+                        FlowRouter.go('/billlist?success=true');
                         let encodedPdf = await generatePdfForMail(invoiceId);
                         let pdfObject = "";
 
@@ -9005,7 +8986,6 @@ Template.billcard.events({
                     function generatePdfForMail(invoiceId) {
                         let file = "Bill-" + invoiceId + ".pdf"
                         return new Promise((resolve, reject) => {
-                            let templateObject = Template.instance();
                             let completeTabRecord;
                             let doc = new jsPDF('p', 'pt', 'a4');
                             var source = document.getElementById('html-2-pdfwrapper');
@@ -9029,91 +9009,6 @@ Template.billcard.events({
 
                         });
                     }
-
-                    if (supplierID !== " ") {
-                        let supplierEmailData = {
-                            type: "TSupplier",
-                            fields: {
-                                ID: supplierID,
-                                Email: supplierEmail
-                            }
-                        }
-
-                    };
-                    var getcurrentCloudDetails = CloudUser.findOne({
-                        _id: localStorage.getItem('mycloudLogonID'),
-                        clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-                    });
-                    if (getcurrentCloudDetails) {
-                        if (getcurrentCloudDetails._id.length > 0) {
-                            var clientID = getcurrentCloudDetails._id;
-                            var clientUsername = getcurrentCloudDetails.cloudUsername;
-                            var clientEmail = getcurrentCloudDetails.cloudEmail;
-                            var checkPrefDetails = CloudPreference.findOne({
-                                userid: clientID,
-                                PrefName: 'billcard'
-                            });
-                            if (checkPrefDetails) {
-                                CloudPreference.update({
-                                    _id: checkPrefDetails._id
-                                }, {
-                                    $set: {
-                                        username: clientUsername,
-                                        useremail: clientEmail,
-                                        PrefGroup: 'purchaseform',
-                                        PrefName: 'billcard',
-                                        published: true,
-                                        customFields: [{
-                                            index: '1',
-                                            label: getcustomField1,
-                                            hidden: getchkcustomField1
-                                        }, {
-                                            index: '2',
-                                            label: getcustomField2,
-                                            hidden: getchkcustomField2
-                                        }],
-                                        updatedAt: new Date()
-                                    }
-                                }, function (err, idTag) {
-                                    if (err) {
-
-                                    } else {
-
-
-                                    }
-                                });
-                            } else {
-                                CloudPreference.insert({
-                                    userid: clientID,
-                                    username: clientUsername,
-                                    useremail: clientEmail,
-                                    PrefGroup: 'purchaseform',
-                                    PrefName: 'billcard',
-                                    published: true,
-                                    customFields: [{
-                                        index: '1',
-                                        label: getcustomField1,
-                                        hidden: getchkcustomField1
-                                    }, {
-                                        index: '2',
-                                        label: getcustomField2,
-                                        hidden: getchkcustomField2
-                                    }],
-                                    createdAt: new Date()
-                                }, function (err, idTag) {
-                                    if (err) {
-
-                                    } else {
-
-
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-
-                    }
-
                 }).catch(function (err) {
                     swal({
                         title: 'Oooops...',
@@ -9484,7 +9379,6 @@ Template.billcard.events({
         if (getcurrent_id[1]) {
             window.open('/supplierpaymentcard?billid=' + currentId, '_self');
         } else {
-            let templateObject = Template.instance();
             let suppliername = $('#edtSupplierName');
             let purchaseService = new PurchaseBoardService();
             let termname = $('#sltTerms').val() || '';
@@ -9770,7 +9664,6 @@ Template.billcard.events({
         }, delayTimeAfterSound);
     },
     'click #btnViewPayment': async function () {
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         $('.fullScreenSpin').css('display', 'inline-block');
         let paymentID = "";
@@ -9796,7 +9689,6 @@ Template.billcard.events({
 
     },
     'click .btnTransactionPaid': async function () {
-        let templateObject = Template.instance();
         let purchaseService = new PurchaseBoardService();
         $('.fullScreenSpin').css('display', 'inline-block');
         let selectedSupplierPaymentID = [];

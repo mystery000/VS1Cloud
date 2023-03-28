@@ -363,25 +363,44 @@
                             value="{{record.lastname}}">
                         </div>
                       </div>
-                      <div class="col-6 col-md-4">
-                        <div class="form-group" style="padding: 0px 8px;">
-                          <label class="text-nowrap">Phone</label>
-                          <input type="text" class="form-control" id="edtSupplierPhone" name="edtSupplierPhone"
-                            value="{{record.phone}}">
+                      <div class="col-6 col-md-2">
+                        <div class="custom-control custom-switch chkSamePrimary"
+                          style="padding: 0px 8px; margin-top: 38px; padding-left: 2.25rem;">
+                          <input class="custom-control-input" type="checkbox" id="chkSameAsPrimary"
+                            style=" cursor: pointer;" checked="{{#if record.isprimary}}checked{{/if}}">
+                          <label class="custom-control-label" for="chkSameAsPrimary" style=" cursor: pointer;">Is Primary Accountant</label>
                         </div>
                       </div>
-                      <div class="col-6 col-md-4">
-                        <div class="form-group" style="padding: 0px 8px;">
-                          <label class="text-nowrap">Mobile</label>
-                          <input type="text" class="form-control" id="edtSupplierMobile" name="edtSupplierMobile"
-                            value="{{record.mobile}}">
+                      <div class="row no-gutters col-12">
+                        <div class="col-6 col-md">
+                          <div class="form-group" style="padding: 0px 8px;">
+                            <label class="text-nowrap">Phone</label>
+                            <input type="text" class="form-control" id="edtSupplierPhone" name="edtSupplierPhone"
+                              value="{{record.phone}}">
+                          </div>
                         </div>
-                      </div>
-                      <div class="col-6 col-md-4">
-                        <div class="form-group" style="padding: 0px 8px;">
-                          <label class="text-nowrap">Fax</label>
-                          <input type="text" class="form-control" id="edtSupplierFax" name="edtSupplierFax"
-                            value="{{record.fax}}">
+                        <div class="col-6 col-md">
+                          <div class="form-group" style="padding: 0px 8px;">
+                            <label class="text-nowrap">Mobile</label>
+                            <input type="text" class="form-control" id="edtSupplierMobile" name="edtSupplierMobile"
+                              value="{{record.mobile}}">
+                          </div>
+                        </div>
+                        <div class="col-6 col-md">
+                          <div class="form-group" style="padding: 0px 8px;">
+                            <label class="text-nowrap">Fax</label>
+                            <input type="text" class="form-control" id="edtSupplierFax" name="edtSupplierFax"
+                              value="{{record.fax}}">
+                          </div>
+                        </div>
+                        <div class="col-6 col-md-2 invisible active-password-wrapper">
+                          <div class="form-group" style="padding: 0px 8px;">
+                            <label class="text-nowrap">Password</label>
+                            <span data-toggle="#edtActivePrimaryPassword"
+                              class="fa fa-fw fa-eye field-icon toggle-password"
+                              style="color: #00a3d3; margin-top: 42px; margin-left: 4px;"></span>                          
+                            <input type="password" class="form-control" id="edtActivePrimaryPassword" name="edtActivePrimaryPassword" style="width: calc(100% - 40px);">
+                          </div>
                         </div>
                       </div>
                       <div class="col-6 col-md-5">
@@ -467,6 +486,8 @@
                                   id="attachment-count">{{attachmentCount}}</span>{{/if}} Attachments</a></li>
                             <li class="nav-item" style="cursor: pointer;"><a class="nav-link" role="tab"
                                 data-toggle="tab" data-target="#tab-9">Custom Fields</a></li>
+                            <li class="nav-item d-none vs1-login-nav" style="cursor: pointer;"><a class="vs1-login-nav-link nav-link" role="tab"
+                                data-toggle="tab" data-target="#tab-11">VS1 User Login</a></li>
                           </ul>
                           <div class="tab-content">
                             <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
@@ -500,7 +521,22 @@
                                   width: 12% !important;
                                 }
                               </style>
-                              {{> non_transactional_list tablename="tblSupplierCrmListWithDate"}}
+<!--                              {{> non_transactional_list tablename="tblSupplierCrmListWithDate"}}-->
+                                {{>datatablelist
+                                        tablename="tblSupplierCrmListWithDate"
+                                        apiName= apiFunction
+                                        indexeddbname = 'TCRMTaskList'
+                                        tableheaderrecords = tableheaderrecords
+                                        exportfilename = 'CRM Task List'
+                                        istransaction = true
+                                        apiParams= apiParams
+                                        datahandler = datahandler
+                                        service=service
+                                        lowercaseDataName='tprojecttasks'
+                                        exIndexDBName = 'tprojecttasks'
+                                        exdatahandler = exDataHandler
+                                        searchAPI = searchAPI
+                                }}
                             </div>
                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4"
                               style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
@@ -1108,6 +1144,33 @@
                                     </div>
                                   </div>
                                 </div>
+                              </div>
+                            </div>
+                            <div class="tab-pane border rounded-0" role="tabpanel" id="tab-11"
+                              style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; ">
+                              <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start"
+                                style="margin: 12px;">
+                                <div class="col d-xl-flex align-items-xl-start" style="width: 50%;">
+                                  <div class="form-group flex-grow-1" style="margin: 4px;padding-right:4px;">
+                                    <label>Username or Email</label>                                    
+                                    <input type="text" class="form-control" name="primaryAccountantUsername"
+                                      id="primaryAccountantUsername">
+                                  </div>
+                                  <div class="form-group flex-grow-1" style="margin: 4px;">
+                                    <label>Password</label>
+                                    <div style="width: 100%">
+                                      <div style="width: 85%; float: left;">                                        
+                                        <input type="password" class="form-control" id="primaryAccountantPassword"
+                                          name="primaryAccountantPassword" autocomplete="new-password">
+                                      </div>
+                                      <div style="width: 15%; float: left;">
+                                        <span data-toggle="#primaryAccountantPassword"
+                                          class="fa fa-fw fa-eye field-icon toggle-password"
+                                          style="color: #00a3d3; margin-top: 10px; margin-left: 4px;"></span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>                                
                               </div>
                             </div>
                           </div>

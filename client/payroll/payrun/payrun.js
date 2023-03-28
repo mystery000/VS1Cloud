@@ -268,10 +268,6 @@ Template.payrun.onRendered(function() {
 });
 
 Template.payrun.events({
-    'click .btnPayRunNext': function(event) {
-        $('.modal-backdrop').css('display', 'none');
-        FlowRouter.go('/payrundetails');
-    },
     'click .btnSingleTouchPayroll': function(event) {
         $('.modal-backdrop').css('display', 'none');
         FlowRouter.go('/singletouchpayroll');

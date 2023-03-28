@@ -41,15 +41,15 @@ Template.customersummaryreport.onRendered(() => {
     let reset_data = [];
     reset_data = [
       { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "200" },
-      { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "150" },
-      { index: 3, label: 'Address', class: 'colAddress', active: true, display: true, width: "200" },
-      { index: 4, label: 'City', class: 'colAddress2', active: true, display: true, width: "200" },
-      { index: 5, label: 'Zip', class: 'colPostcode', active: true, display: true, width: "100" },
-      { index: 6, label: 'State', class: 'colState', active: true, display: true, width: "100" },
-      { index: 7, label: 'Total (Ex)', class: 'colTotalAEX text-center0', active: true, display: true, width: "150" },
-      { index: 8, label: 'Total', class: 'colTotalCost text-center0', active: true, display: true, width: "150" },
-      { index: 9, label: 'Gross Profit', class: 'colGrossProfit text-center0', active: true, display: true, width: "100" },
-      { index: 10, label: 'Margin', class: 'colMargin text-center0', active: true, display: true, width: "100" },
+      { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "155" },
+      { index: 3, label: 'Address', class: 'colAddress', active: true, display: true, width: "180" },
+      { index: 4, label: 'City', class: 'colAddress2', active: true, display: true, width: "110" },
+      { index: 5, label: 'Zip', class: 'colPostcode', active: true, display: true, width: "110" },
+      { index: 6, label: 'State', class: 'colState', active: true, display: true, width: "110" },
+      { index: 7, label: 'Total (Ex)', class: 'colTotalAEX text-right', active: true, display: true, width: "110" },
+      { index: 8, label: 'Total', class: 'colTotalCost text-right', active: true, display: true, width: "110" },
+      { index: 9, label: 'Gross Profit', class: 'colGrossProfit text-right', active: true, display: true, width: "110" },
+      { index: 10, label: 'Margin', class: 'colMargin text-right', active: true, display: true, width: "110" },
       //
       // { index: 3, label: 'Rep', class: 'colRep', active: true, display: true, width: "100" },
       // { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
@@ -80,8 +80,8 @@ Template.customersummaryreport.onRendered(() => {
   templateObject.initDate = () => {
     Datehandler.initOneMonth();
   };
-  templateObject.setDateAs = (dateFrom = null) => {
-    templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
+  templateObject.setDateAs = (dateTo = null) => {
+    templateObject.dateAsAt.set((dateTo) ? moment(dateTo).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
   };
   templateObject.initDate();
 
@@ -95,7 +95,7 @@ Template.customersummaryreport.onRendered(() => {
 
   templateObject.getCustomerSummaryData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateFrom);
+    templateObject.setDateAs(GlobalFunctions.convertYearMonthDay($('#dateTo').val()));
     getVS1Data('TCustomerSummaryReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getCustomerDetailReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -139,10 +139,10 @@ Template.customersummaryreport.onRendered(() => {
         GlobalFunctions.generateSpan(data.tcustomersummaryreport[i]["Address 2"] || "", 'text-primary'),
         GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].Postcode || "", 'text-primary'),
         GlobalFunctions.generateSpan(data.tcustomersummaryreport[i].State || "", 'text-primary'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Amount (Ex)"] || 0), 'text-success'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Cost"] || 0), 'text-success'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Gross Profit"] || 0), 'text-success'),
-        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i].Margin || 0), 'text-primary'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Amount (Ex)"] || 0), 'text-success', 'text-right'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Total Cost"] || 0), 'text-success', 'text-right'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i]["Gross Profit"] || 0), 'text-success', 'text-right'),
+        GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(data.tcustomersummaryreport[i].Margin || 0), 'text-primary', 'text-right'),
       ];
       splashArrayCustomerSummaryReport.push(dataList);
       templateObject.transactiondatatablerecords.set(splashArrayCustomerSummaryReport);
@@ -189,19 +189,19 @@ Template.customersummaryreport.onRendered(() => {
           },
           {
             targets: 6,
-            className: "colTotalAEX",
+            className: "colTotalAEX text-right",
           },
           {
             targets: 7,
-            className: "colTotalCost",
+            className: "colTotalCost text-right",
           },
           {
             targets: 8,
-            className: "colGrossProfit",
+            className: "colGrossProfit text-right",
           },
           {
             targets: 9,
-            className: "colMargin",
+            className: "colMargin text-right",
           },
         ],
         select: true,
@@ -311,55 +311,6 @@ Template.customersummaryreport.onRendered(() => {
 
 //   templateObject.initDate();
 
-
-//   templateObject.getCustomerDetailsHistory = async function (dateFrom, dateTo, ignoreDate) {
-//     templateObject.setDateAs(dateFrom);
-//     LoadingOverlay.show();
-//     let data = [];
-//     if (!localStorage.getItem('VS1CustomerSummary_Report')) {
-//       data = await reportService.getCustomerDetailReport( dateFrom, dateTo, ignoreDate);
-//       if( data.tcustomersummaryreport.length > 0 ){
-//         localStorage.setItem('VS1CustomerSummary_Report', JSON.stringify(data)||'');
-//       }
-//     }else{
-//       data = JSON.parse(localStorage.getItem('VS1CustomerSummary_Report'));
-//     }
-
-//     let reportData = [];
-//     if( data.tcustomersummaryreport.length > 0 ){
-//         let reportSummary = data.tcustomersummaryreport.map(el => {
-//           let resultobj = {};
-//           Object.entries(el).map(([key, val]) => {
-//               resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
-//               return resultobj;
-//           })
-//           return resultobj;
-//         })
-
-//       let reportGroups = [];
-//       for (const item of reportSummary ) {
-//         let isExist = reportGroups.filter((subitem) => {
-//           if( subitem.EMAIL == item.EMAIL ){
-//               subitem.SubAccounts.push(item)
-//               return subitem
-//           }
-//         });
-
-//         if( isExist.length == 0 ){
-//           reportData.push({
-//               Margin: 0,
-//               ...item
-//           });
-//         }
-//       $(".fullScreenSpin").css("display", "none");
-
-//       }
-
-//     }
-//     templateObject.records.set(reportData);
-//     LoadingOverlay.hide();
-//   };
-
 //   templateObject.getCustomerDetailsHistory(
 //     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
 //     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
@@ -435,46 +386,18 @@ Template.customersummaryreport.events({
   },
   "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(function(){
-      let values = [];
-      let basedOnTypeStorages = Object.keys(localStorage);
-      basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-        let employeeId = storage.split("_")[2];
-        return (
-            storage.includes("BasedOnType_") &&
-            employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
-        );
-      });
-      let i = basedOnTypeStorages.length;
-      if (i > 0) {
-        while (i--) {
-          values.push(localStorage.getItem(basedOnTypeStorages[i]));
-        }
-      }
-      values.forEach((value) => {
-        let reportData = JSON.parse(value);
-        reportData.HostURL = $(location).attr("protocal")
-            ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-            : "http://" + $(location).attr("hostname");
-        if (reportData.BasedOnType.includes("P")) {
-          if (reportData.FormID == 1) {
-            let formIds = reportData.FormIDs.split(",");
-            if (formIds.includes("225")) {
-              reportData.FormID = 225;
-              Meteor.call("sendNormalEmail", reportData);
-            }
-          } else {
-            if (reportData.FormID == 225)
-              Meteor.call("sendNormalEmail", reportData);
-          }
-        }
-      });
-
+    setTimeout(function () {
+      $("a").attr("href", "/");
       document.title = "Customer Summary Report";
       $(".printReport").print({
-        title: "Customer Summary Report | " + loggedCompany,
+        title: document.title + " | Customer Summary | " + loggedCompany,
         noPrintSelector: ".addSummaryEditor",
+        mediaPrint: false,
       });
+
+      setTimeout(function () {
+        $("a").attr("href", "#");
+      }, 100);
     }, delayTimeAfterSound);
   },
   "keyup #myInputSearch": function (event) {
@@ -522,17 +445,22 @@ Template.customersummaryreport.events({
     }
   },
   "click #ignoreDate":  (e, templateObject) => {
-    localStorage.setItem("VS1CustomerSummary_Report", "");
-    templateObject.getCustomerDetailsHistory(null, null, true)
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData("TCustomerSummaryReport").then(function(){
+      templateObject.getCustomerSummaryData(null, null, true);
+    })
   },
   "change #dateTo, change #dateFrom": (e) => {
     let templateObject = Template.instance();
-    localStorage.setItem("VS1CustomerSummary_Report", "");
-    templateObject.getCustomerDetailsHistory(
-        false,
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val())
-    )
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData("TCustomerSummaryReport").then(function(){
+      templateObject.getCustomerSummaryData(
+          false,
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val())
+      );
+    })
+
   },
   ...Datehandler.getDateRangeEvents(),
   // "change .edtReportDates": async function () {

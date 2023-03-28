@@ -62,7 +62,22 @@
             <div>
 
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
-                    {{> transaction_list tablename = "tblchequelist" }}
+<!--                    {{> transaction_list tablename = "tblchequelist" }}-->
+                    {{>datatablelist
+                            tablename="tblchequelist"
+                            apiName= apiFunction
+                            indexeddbname = 'TChequeList'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Cheque List'
+                            istransaction = true
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tchequelist'
+                            exIndexDBName = 'tchequelist'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                 </div>
 
             </div>

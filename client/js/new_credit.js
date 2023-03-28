@@ -3637,8 +3637,8 @@ Template.creditcard.onRendered(() => {
     $("#departmentModal").modal("toggle");
   });
   $(document).on("click", "#termsList tbody tr", function (e) {
-    $("#sltTerms").val($(this).find(".colTermName").text());
-    $("#termsListModal").modal("toggle");
+    $("#sltTerms").val($(this).find(".colName").text());
+    $("#termsListModal").modal("hide");
   });
   $(document).on("click", "#tblStatusPopList tbody tr", function (e) {
     $("#sltStatus").val($(this).find(".colStatusName").text());
@@ -5662,37 +5662,37 @@ Template.creditcard.onRendered(() => {
     }
   })
 
-  $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
-    const tableSupplier = $(this);
-    $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
-    $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
-    $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
-    $("#edtSupplierEmail").attr(
-      "customerid",
-      tableSupplier.find(".colID").text()
-    );
-    $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
-    let postalAddress =
-      tableSupplier.find(".colCompany").text() +
-      "\n" +
-      tableSupplier.find(".colStreetAddress").text() +
-      "\n" +
-      tableSupplier.find(".colCity").text() +
-      " " +
-      tableSupplier.find(".colState").text() +
-      " " +
-      tableSupplier.find(".colZipCode").text() +
-      "\n" +
-      tableSupplier.find(".colCountry").text();
-    $("#txabillingAddress").val(postalAddress);
-    $("#pdfSupplierAddress").html(postalAddress);
-    $(".pdfSupplierAddress").text(postalAddress);
-    $("#txaShipingInfo").val(postalAddress);
-    $("#sltTerms").val(
-      tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms
-    );
-    setSupplierInfo();
-  });
+  // $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
+  //   const tableSupplier = $(this);
+  //   $("#edtSupplierName").val(tableSupplier.find(".colCompany").text());
+  //   $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
+  //   $("#edtSupplierEmail").val(tableSupplier.find(".colEmail").text());
+  //   $("#edtSupplierEmail").attr(
+  //     "customerid",
+  //     tableSupplier.find(".colID").text()
+  //   );
+  //   $("#edtSupplierName").attr("suppid", tableSupplier.find(".colID").text());
+  //   let postalAddress =
+  //     tableSupplier.find(".colCompany").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colStreetAddress").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colCity").text() +
+  //     " " +
+  //     tableSupplier.find(".colState").text() +
+  //     " " +
+  //     tableSupplier.find(".colZipCode").text() +
+  //     "\n" +
+  //     tableSupplier.find(".colCountry").text();
+  //   $("#txabillingAddress").val(postalAddress);
+  //   $("#pdfSupplierAddress").html(postalAddress);
+  //   $(".pdfSupplierAddress").text(postalAddress);
+  //   $("#txaShipingInfo").val(postalAddress);
+  //   $("#sltTerms").val(
+  //     tableSupplier.find(".colSupplierTermName").text() || purchaseDefaultTerms
+  //   );
+  //   setSupplierInfo();
+  // });
 
   function setSupplierInfo() {
     if (!FlowRouter.current().queryParams.supplierid) {
@@ -7777,167 +7777,6 @@ Template.creditcard.events({
 
       var credits = $('input[name="Credits"]:checked').val();
       let emid = localStorage.getItem("mySessionEmployeeLoggedID");
-
-      sideBarService
-        .getTemplateNameandEmployeId("Credits", emid, 1)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Credits",
-              GlobalRef: "Credits",
-              Description: $('input[name="Credits_1"]').val(),
-              Template: "1",
-              Active: credits == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {});
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Credits",
-              Description: $('input[name="Credits_1"]').val(),
-              Template: "1",
-              Active: credits == 1 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {});
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Credits", emid, 2)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Credits",
-              GlobalRef: "Credits",
-              Description: $('input[name="Credits_2"]').val(),
-              Template: "2",
-              Active: credits == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {});
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Credits",
-              Description: $('input[name="Credits_2"]').val(),
-              Template: "2",
-              Active: credits == 2 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {});
-        });
-
-      sideBarService
-        .getTemplateNameandEmployeId("Credits", emid, 3)
-        .then(function (data) {
-          templateid = data.ttemplatesettings;
-          var id = templateid[0].fields.ID;
-
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              ID: parseInt(id),
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Credits",
-              GlobalRef: "Credits",
-              Description: $('input[name="Credits_3"]').val(),
-              Template: "3",
-              Active: credits == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {});
-        })
-        .catch(function (err) {
-          objDetails = {
-            type: "TTemplateSettings",
-            fields: {
-              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
-              SettingName: "Credits",
-              Description: $('input[name="Credits_3"]').val(),
-              Template: "3",
-              Active: credits == 3 ? true : false,
-            },
-          };
-
-          sideBarService
-            .saveTemplateSetting(objDetails)
-            .then(function (objDetails) {
-              sideBarService
-                .getTemplateInformation(initialBaseDataLoad, 0)
-                .then(function (data) {
-                  addVS1Data("TTemplateSettings", JSON.stringify(data));
-                });
-            })
-            .catch(function (err) {});
-        });
 
       if (
         $("#print_credit").is(":checked") ||

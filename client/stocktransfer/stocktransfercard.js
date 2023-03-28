@@ -37,6 +37,8 @@ import { Template } from 'meteor/templating';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import "./stocktransfercard.html"
 import "../lib/global/globalStockTransfer.js";
+import LoadingOverlay from '../LoadingOverlay';
+
 const _ = require('lodash');
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
@@ -67,6 +69,661 @@ Template.stocktransfercard.onCreated(function() {
 
     templateObject.isProccessed = new ReactiveVar();
     templateObject.isProccessed.set(false);
+
+
+    templateObject.generatePdfForMail = async (invoiceId) => {
+        let stripe_id = templateObject.accountID.get() || "";
+        let file = "Invoice-" + invoiceId + ".pdf";
+        let stringQuery = '?';
+        return new Promise((resolve, reject) => {
+          var source = document.getElementById("html-2-pdfwrapper_invoice");
+          var opt = {
+            margin: 0,
+            filename: file,
+            image: {
+              type: "jpeg",
+              quality: 0.98,
+            },
+            html2canvas: {
+              scale: 2,
+            },
+            jsPDF: {
+              unit: "in",
+              format: "a4",
+              orientation: "portrait",
+            },
+          };
+          resolve(
+            html2pdf().set(opt).from(source).toPdf().output("datauristring")
+          );
+        });
+      }
+    
+    templateObject.addAttachment = async (objDetails, isforced = false) => {
+    let attachment = [];
+    let invoiceId = objDetails.fields.ID;
+    let encodedPdf = await templateObject.generatePdfForMail(invoiceId);
+    let pdfObject = "";
+    let base64data = encodedPdf.split(",")[1];
+    pdfObject = {
+        filename: "invoice-" + invoiceId + ".pdf",
+        content: base64data,
+        encoding: "base64",
+    };
+    attachment.push(pdfObject);
+    let erpInvoiceId = objDetails.fields.ID;
+
+    let mailFromName = localStorage.getItem("vs1companyName");
+    let mailFrom =
+        localStorage.getItem("VS1OrgEmail") ||
+        localStorage.getItem("VS1AdminUserName");
+    let customerEmailName = $("#edtCustomerName").val();
+    let checkEmailData = $("#edtCustomerEmail").val();
+    let grandtotal = $("#grandTotal").html();
+    let emailDueDate = $("#dtDueDate").val();
+    let customerBillingAddress = $("#txabillingAddress").val();
+    let customerTerms = $("#sltTerms").val();
+
+    let customerSubtotal = $("#subtotal_total").html();
+    let customerTax = $("#subtotal_tax").html();
+    let customerNett = $("#subtotal_nett").html();
+    let customerTotal = $("#grandTotal").html();
+
+    const stringQuery = "";
+    const stripeGlobalURL = ""
+
+    let mailSubject =
+        "Invoice " +
+        erpInvoiceId +
+        " from " +
+        mailFromName +
+        " for " +
+        customerEmailName;
+    var htmlmailBody =
+        '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
+        "        <tr>" +
+        '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+        '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+        '                    <table class="main">' +
+        "                        <tr>" +
+        '                            <td class="wrapper">' +
+        '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+        '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Invoice No. ' +
+        erpInvoiceId +
+        " Details</span>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="height: 16px;"></tr>' +
+        "                                    <tr>" +
+        "                                        <td>" +
+        '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="height: 48px;"></tr>' +
+        '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+        '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+        '                                            <p style="font-weight: 700; font-size: 16px; color: #363a3b; margin-bottom: 6px;">DUE ' +
+        emailDueDate +
+        "</p>" +
+        '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' +
+        grandtotal +
+        "</p>" +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        "                                                <tbody>" +
+        "                                                    <tr>" +
+        '                                                        <td align="center" style="padding-bottom: 15px;">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        "                                                                <tbody>" +
+        "                                                                    <tr>" +
+        '                                                                        <td> <a href="' +
+        stripeGlobalURL +
+        "" +
+        stringQuery +
+        '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        "                                                                    </tr>" +
+        "                                                                </tbody>" +
+        "                                                            </table>" +
+        "                                                        </td>" +
+        "                                                    </tr>" +
+        "                                                </tbody>" +
+        "                                            </table>" +
+        '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 18px;">Dear ' +
+        customerEmailName +
+        ",</p>" +
+        '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+        '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+        '                                            <p style="font-size: 18px;">' +
+        mailFromName +
+        "</p>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+        "                                                </div>" +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+        customerEmailName +
+        "</p>" +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' +
+        customerBillingAddress +
+        "</p>" +
+        "                                                </div>" +
+        "                                            </div>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Terms</p>' +
+        "                                                </div>" +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="font-size: 16px;">' +
+        customerTerms +
+        "</p>" +
+        "                                                </div>" +
+        "                                            </div>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+        "                                                </div>" +
+        '                                                <div style="width: 50%; float: right; text-align: right;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerSubtotal +
+        "</p>" +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerTax +
+        "</p>" +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerNett +
+        "</p>" +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' +
+        customerTotal +
+        "</p>" +
+        "                                                </div>" +
+        "                                            </div>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        "                                                <tbody>" +
+        "                                                    <tr>" +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        "                                                                <tbody>" +
+        "                                                                    <tr>" +
+        '                                                                        <td> <a href="' +
+        stripeGlobalURL +
+        "" +
+        stringQuery +
+        '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        "                                                                    </tr>" +
+        "                                                                </tbody>" +
+        "                                                            </table>" +
+        "                                                        </td>" +
+        "                                                    </tr>" +
+        "                                                </tbody>" +
+        "                                            </table>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                    <tr>" +
+        "                                        <td>" +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        "                                                <tbody>" +
+        "                                                    <tr>" +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        "                                                                <tbody>" +
+        "                                                                    <tr>" +
+        '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+        "                                                                    </tr>" +
+        "                                                                </tbody>" +
+        "                                                            </table>" +
+        "                                                        </td>" +
+        "                                                    </tr>" +
+        "                                                </tbody>" +
+        "                                            </table>" +
+        "                                        </td>" +
+        "                                    </tr>" +
+        "                                </table>" +
+        "                            </td>" +
+        "                        </tr>" +
+        "                    </table>" +
+        '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+        '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        "                            <tr>" +
+        '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+        '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' +
+        mailFromName +
+        "</span>" +
+        "                                    <br>" +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+        "                                </td>" +
+        "                            </tr>" +
+        "                        </table>" +
+        "                    </div>" +
+        "                </div>" +
+        "            </td>" +
+        "        </tr>" +
+        "    </table>";
+
+    if (
+        $(".chkEmailCopy").is(":checked") &&
+        $(".chkEmailRep").is(":checked")
+    ) {
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: checkEmailData,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To Customer: " + checkEmailData + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            }).then((result) => {
+            });
+            }
+        }
+        );
+
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: mailFrom,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To Customer: " +
+                checkEmailData +
+                " and User: " +
+                mailFrom +
+                "",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            }).then((result) => {
+                if (result.value) {
+                window.open(url, "_self");
+                } else if (result.dismiss === "cancel") { }
+            });
+            }
+        }
+        );
+    } else if ($(".chkEmailCopy").is(":checked") || isforced) {
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: checkEmailData,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To Customer: " + checkEmailData + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            }).then((result) => {
+            });
+            }
+        }
+        );
+    } else if ($(".chkEmailRep").is(":checked")) {
+        Meteor.call(
+        "sendEmail", {
+        from: "" + mailFromName + " <" + mailFrom + ">",
+        to: mailFrom,
+        subject: mailSubject,
+        text: "",
+        html: htmlmailBody,
+        attachments: attachment,
+        },
+        function (error, result) {
+            if (error && error.error === "error") {
+            } else {
+            $("#html-Invoice-pdfwrapper").css("display", "none");
+            swal({
+                title: "SUCCESS",
+                text: "Email Sent To User: " + mailFrom + " ",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+            });
+            }
+        }
+        );
+    } else {
+        // window.open(url, "_self");
+    }
+    }
+    
+    templateObject.sendEmail = async (isforced = false) => {
+    var splashLineArray = new Array();
+    let lineItemsForm = [];
+    let lineItems = [];
+    let lineItemObjForm = {};
+    var saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+    let saleDate =
+        saledateTime.getFullYear() +
+        "-" +
+        (saledateTime.getMonth() + 1) +
+        "-" +
+        saledateTime.getDate();
+    let checkBackOrder = templateObject.includeBOnShippedQty.get();
+    $("#tblInvoiceLine > tbody > tr").each(function () {
+        var lineID = this.id;
+        const tdproduct = $(this).find(".lineProductName").val();
+        const tddescription = $(this).find('.lineProductDesc').text();
+        const tdQty = $(this).find('.lineQty').val();
+        const tdOrderd = $(this).find(".lineOrdered").val();
+        const tdunitprice = $(this).find('.colUnitPriceExChange').val();
+        const tdtaxCode = $(this).find(".lineTaxCode").val();
+        const tdtaxrate = $(this).find(".lineTaxRate").val();
+        const tdlineUnit = $(this).find(".lineUOM").text() || defaultUOM;
+        const taxamount = $(this).find('.colTaxAmount').val();
+        const tdlineamt = $(this).find(".colAmountInc").text();
+        const tdSalesLineCustField1 = $(this).find(".lineSalesLinesCustField1").val();
+
+        const lineItemObj = {
+        description: tddescription || "",
+        quantity: tdQty || 0,
+        unitPrice: tdunitprice.toLocaleString(undefined, {
+            minimumFractionDigits: 2,
+        }) || 0,
+        };
+
+        lineItems.push(lineItemObj);
+
+        if (tdproduct != "") {
+        if (checkBackOrder == true) {
+            lineItemObjForm = {
+            type: "TInvoiceLine",
+            fields: {
+                ProductName: tdproduct || "",
+                ProductDescription: tddescription || "",
+                UOMQtySold: parseFloat(tdOrderd) || 0,
+                UOMQtyShipped: parseFloat(tdQty) || 0,
+                LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                Headershipdate: saleDate,
+                LineTaxCode: tdtaxCode || "",
+                DiscountPercent: parseFloat($(this).find(".lineDiscount").val()) || 0,
+                UnitOfMeasure: tdlineUnit,
+                SalesLinesCustField1: tdSalesLineCustField1,
+            },
+            };
+        } else {
+            lineItemObjForm = {
+            type: "TInvoiceLine",
+            fields: {
+                ProductName: tdproduct || "",
+                ProductDescription: tddescription || "",
+                UOMQtySold: parseFloat(tdQty) || 0,
+                UOMQtyShipped: parseFloat(tdQty) || 0,
+                LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+                Headershipdate: saleDate,
+                LineTaxCode: tdtaxCode || "",
+                DiscountPercent: parseFloat($(this).find(".lineDiscount").val()) || 0,
+                UnitOfMeasure: tdlineUnit,
+                SalesLinesCustField1: tdSalesLineCustField1,
+            },
+            };
+        }
+
+        lineItemsForm.push(lineItemObjForm);
+        splashLineArray.push(lineItemObjForm);
+        }
+    });
+    if ($("#formCheck-one").is(":checked")) {
+        getchkcustomField1 = false;
+    }
+    if ($("#formCheck-two").is(":checked")) {
+        getchkcustomField2 = false;
+    }
+
+    let customer = $("#edtCustomerName").val();
+
+    let poNumber = $("#ponumber").val();
+    let reference = $("#edtRef").val();
+
+    let departement = $("#sltDept").val();
+    let shippingAddress = $("#txaShipingInfo").val();
+    let comments = $("#txaComment").val();
+    let pickingInfrmation = $("#txapickmemo").val();
+    let saleCustField1 = $("#edtSaleCustField1").val() || "";
+    let saleCustField2 = $("#edtSaleCustField2").val() || "";
+    let saleCustField3 = $("#edtSaleCustField3").val() || "";
+    const billingAddress  = $("#txabillingAddress").val();
+    var url = FlowRouter.current().path;
+    var getso_id = url.split("?id=");
+    var currentInvoice = getso_id[getso_id.length - 1];
+    let uploadedItems = templateObject.uploadedFiles.get();
+    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    let ForeignExchangeRate = $('#exchange_rate').val() || 0;
+    var objDetails = "";
+    let termname = $('#sltTerms').val() || '';
+    if (termname === '') {
+        swal('Terms has not been selected!', '', 'warning');
+        event.preventDefault();
+        return false;
+    }
+    if (getso_id[1]) {
+        currentInvoice = parseInt(currentInvoice);
+        objDetails = {
+        type: "TInvoiceEx",
+        fields: {
+            ID: currentInvoice,
+            CustomerName: customer,
+            ForeignExchangeCode: currencyCode,
+            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            Lines: splashLineArray,
+            InvoiceToDesc: billingAddress,
+            SaleDate: saleDate,
+            CustPONumber: poNumber,
+            ReferenceNo: reference,
+            TermsName: termname,
+            SaleClassName: departement,
+            ShipToDesc: shippingAddress,
+            Comments: comments,
+            SaleCustField1: saleCustField1,
+            SaleCustField2: saleCustField2,
+            SaleCustField3: saleCustField3,
+            PickMemo: pickingInfrmation,
+            Attachments: uploadedItems,
+            SalesStatus: $("#sltStatus").val(),
+        },
+        };
+    } else {
+        objDetails = {
+        type: "TInvoiceEx",
+        fields: {
+            CustomerName: customer,
+            ForeignExchangeCode: currencyCode,
+            ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+            Lines: splashLineArray,
+            InvoiceToDesc: billingAddress,
+            SaleDate: saleDate,
+            CustPONumber: poNumber,
+            ReferenceNo: reference,
+            TermsName: termname,
+            SaleClassName: departement,
+            ShipToDesc: shippingAddress,
+            Comments: comments,
+            SaleCustField1: saleCustField1,
+            SaleCustField2: saleCustField2,
+            SaleCustField3: saleCustField3,
+            PickMemo: pickingInfrmation,
+            Attachments: uploadedItems,
+            SalesStatus: $("#sltStatus").val(),
+        },
+        };
+    }
+    await templateObject.addAttachment(objDetails, isforced);
+    }
+    
+    templateObject.print = async (_template = '') => {
+    LoadingOverlay.show();
+    setTimeout(async function () {
+        var printTemplate = [];
+        $("#html-2-pdfwrapper").css("display", "block");
+        var invoices = $('input[name="Invoices"]:checked').val();
+        let emid = localStorage.getItem("mySessionEmployeeLoggedID");
+
+        if(_template !== ''){
+            const _templateNumber = $(`input[name="${_template}"]:checked`).val();
+            await templateObject.exportSalesToPdf(_template, _templateNumber);
+            return;
+        }
+
+        $(".pdfCustomerName").html($("#edtCustomerName").val());
+        $(".pdfCustomerAddress").html(
+        $("#txabillingAddress")
+            .val()
+            .replace(/[\r\n]/g, "<br />")
+        );
+        $("#printcomment").html(
+        $("#txaComment")
+            .val()
+            .replace(/[\r\n]/g, "<br />")
+        );
+       
+
+        if(printTemplate.length === 0) {
+            printTemplate.push("Stock Transfer");
+        }
+
+        var template_number = 1;
+        if (printTemplate.length > 0) {
+        for (var i = 0; i < printTemplate.length; i++) {
+            if (printTemplate[i] == "Invoices") {
+            template_number = $("input[name=Invoices]:checked").val();
+            } else if (printTemplate[i] == "Delivery Docket") {
+            template_number = $(
+                'input[name="Delivery Docket"]:checked'
+            ).val();
+            } else if (printTemplate[i] == "Invoice Back Orders") {
+            template_number = $(
+                'input[name="Invoice Back Orders"]:checked'
+            ).val();
+            } else { }
+
+            let result = await templateObject.exportSalesToPdf(
+            printTemplate[i],
+            template_number
+            );
+            if (result == true) { }
+        }
+        }
+        const isCheckedEmail = $("#printModal").find("#emailSend").is(":checked");
+        if(isCheckedEmail){
+        if ($("#edtCustomerEmail").val() != "") {
+            await templateObject.sendEmail();
+        } else {
+            swal({
+            title: "Customer Email Required",
+            text: "Please enter customer email",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+            }).then((result) => {
+            if (result.value) { } else if (result.dismiss === "cancel") { }
+            });
+        }
+        }
+        $("#printModal").modal('hide');
+        LoadingOverlay.hide();
+
+    }, delayTimeAfterSound);
+    }
+    templateObject.exportSalesToPdf = function() {
+        let margins = {
+            top: 0,
+            bottom: 0,
+            left: 0,
+            width: 100
+        };
+        let id = $('.printID').attr("id");
+        var source = document.getElementById('html-2-pdfwrapper');
+        let file = "Stock Transer.pdf";
+        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
+            file = 'Stock Transfer-' + id + '.pdf';
+        }
+
+        var opt = {
+            margin: 0,
+            filename: file,
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        };
+        html2pdf().set(opt).from(source).save().then(function(dataObject) {
+            $('.fullScreenSpin').css('display', 'none');
+            $('#html-2-pdfwrapper').css('display', 'none');
+        });
+
+    };
 });
 
 Template.stocktransfercard.onRendered(function() {
@@ -1409,42 +2066,7 @@ Template.stocktransfercard.onRendered(function() {
     }, delayTimeAfterSound);
     });
 
-    exportSalesToPdf = function() {
-        let margins = {
-            top: 0,
-            bottom: 0,
-            left: 0,
-            width: 100
-        };
-        let id = $('.printID').attr("id");
-        var source = document.getElementById('html-2-pdfwrapper');
-        let file = "Stock Transer.pdf";
-        if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-            file = 'Stock Transfer-' + id + '.pdf';
-        }
-
-        var opt = {
-            margin: 0,
-            filename: file,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
-        html2pdf().set(opt).from(source).save().then(function(dataObject) {
-            $('.fullScreenSpin').css('display', 'none');
-            $('#html-2-pdfwrapper').css('display', 'none');
-        });
-
-    };
+  
     $(document).ready(function() {
         $('#sltDepartment').editableSelect();
         $('#edtCustomerName').editableSelect();
@@ -1550,7 +2172,7 @@ Template.stocktransfercard.onRendered(function() {
             // }, 200);
         });
     });
-
+    $(document).ready(function() {
     $('#shipvia').editableSelect()
         .on('click.editable-select', function(e, li) {
             var $earch = $(this);
@@ -1720,266 +2342,32 @@ Template.stocktransfercard.onRendered(function() {
             }
         });
 
-    $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
-        $('#shipvia').val($(this).find(".colShipName ").text());
-        $('#shipViaModal').modal('toggle');
-
-        $('#tblShipViaPopList_filter .form-control-sm').val('');
-        setTimeout(function () {
-            $('.btnRefreshVia').trigger('click');
-            $('.fullScreenSpin').css('display', 'none');
-        }, 1000);
-    });
-
-    $(document).on("click", "#departmentList tbody tr", function(e) {
-        let $tblrows = $("#tblStocktransfer tbody tr");
-        let selectLineID = $('#selectLineID').val();
-        let departmentData = $(this).find(".colDeptName").text() || '';
-        let departmentDataID = $(this).attr("id") || '';
-        if (selectLineID != '') {
-            $('#' + selectLineID + " .lineDepartment").val(departmentData);
-            $('#' + selectLineID + " .linedeptid").text(departmentDataID);
-        } else {
-            $('#sltDepartment').val(departmentData);
-
-            $tblrows.each(function(index) {
-                var $tblrow = $(this);
-                let productname = $tblrow.find(".lineProductName").val() || '';
-                let selectLineIDRow = $tblrow.closest('tr').attr('id');
-                templateObject.getProductQty(selectLineIDRow, productname);
-                $('input[name="deptID"]').val(departmentDataID);
-
-            });
-        }
-        $('#departmentModal').modal('toggle');
-
-    });
-    $(document).on("click", ".chkEmailCopy", function(e) {
-        if ($(event.target).is(':checked')) {
-            $('#employeeList').modal('show');
-        }
-    });
-
-    $(document).on("blur", ".lineUOMQtyShipped", function(event) {
-        var targetID = $(event.target).closest('tr').attr('id');
-        $('#' + targetID + " .lineAdjustQtyPrint").text($('#' + targetID + " .lineUOMQtyShipped").val());
-    });
-
-    $('#edtCustomerName').editableSelect()
-        .on('click.editable-select', function(e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            $('#edtCustomerPOPID').val('');
-            var customerDataName = e.target.value || '';
-            // var customerDataID = $('#edtCustomerName').attr('custid').replace(/\s/g, '') || '';
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#customerListModal').modal();
-                setTimeout(function() {
-                    $('#tblCustomerlist_filter .form-control-sm').focus();
-                    $('#tblCustomerlist_filter .form-control-sm').val('');
-                    $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblCustomerlist').DataTable();
-                    //datatable.clear();
-                    //datatable.rows.add(splashArrayCustomerList);
-                    datatable.draw();
-                    $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-                    //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
-                }, 500);
-            } else {
-                if (customerDataName.replace(/\s/g, '') != '') {
-                    //FlowRouter.go('/customerscard?name=' + e.target.value);
-                    $('#edtCustomerPOPID').val('');
-                    getVS1Data('TCustomerVS1').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                                $('.fullScreenSpin').css('display', 'none');
-                                let lineItems = [];
-                                $('#add-customer-title').text('Edit Customer');
-                                let popCustomerID = data.tcustomer[0].fields.ID || '';
-                                let popCustomerName = data.tcustomer[0].fields.ClientName || '';
-                                let popCustomerEmail = data.tcustomer[0].fields.Email || '';
-                                let popCustomerTitle = data.tcustomer[0].fields.Title || '';
-                                let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
-                                let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
-                                let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
-                                let popCustomertfn = '' || '';
-                                let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
-                                let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
-                                let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
-                                let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
-                                let popCustomerURL = data.tcustomer[0].fields.URL || '';
-                                let popCustomerStreet = data.tcustomer[0].fields.Street || '';
-                                let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
-                                let popCustomerState = data.tcustomer[0].fields.State || '';
-                                let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
-                                let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                                let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
-                                let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
-                                let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
-                                let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
-                                let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
-                                let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
-                                let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
-                                let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
-                                let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
-                                let popCustomernotes = data.tcustomer[0].fields.Notes || '';
-                                let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
-                                let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
-                                let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
-                                let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
-                                let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
-                                let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
-                                let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
-                                let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
-                                let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                                let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
-                                $('#edtCustomerCompany').val(popCustomerName);
-                                $('#edtCustomerPOPID').val(popCustomerID);
-                                $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                                $('#edtTitle').val(popCustomerTitle);
-                                $('#edtFirstName').val(popCustomerFirstName);
-                                $('#edtMiddleName').val(popCustomerMiddleName);
-                                $('#edtLastName').val(popCustomerLastName);
-                                $('#edtCustomerPhone').val(popCustomerPhone);
-                                $('#edtCustomerMobile').val(popCustomerMobile);
-                                $('#edtCustomerFax').val(popCustomerFaxnumber);
-                                $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                                $('#edtCustomerWebsite').val(popCustomerURL);
-                                $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                                $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                                $('#edtCustomerShippingState').val(popCustomerState);
-                                $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                                $('#sedtCountry').val(popCustomerCountry);
-                                $('#txaNotes').val(popCustomernotes);
-                                $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                                $('#sltTermsPOP').val(popCustomerterms);
-                                $('#sltCustomerType').val(popCustomerType);
-                                $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                                $('#edtCustomeField1').val(popCustomercustfield1);
-                                $('#edtCustomeField2').val(popCustomercustfield2);
-                                $('#edtCustomeField3').val(popCustomercustfield3);
-                                $('#edtCustomeField4').val(popCustomercustfield4);
-
-                                $('#sltTaxCode').val(popCustomerTaxCode);
-
-                                if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                                    (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                                    (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
-                                    $('#chkSameAsShipping2').attr("checked", "checked");
-                                }
-
-                                if (data.tcustomer[0].fields.IsSupplier == true) {
-                                    // $('#isformcontractor')
-                                    $('#chkSameAsSupplier').attr("checked", "checked");
-                                } else {
-                                    $('#chkSameAsSupplier').removeAttr("checked");
-                                }
-
-                                setTimeout(function() {
-                                    $('#addCustomerModal').modal('show');
-                                }, 200);
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'none');
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tcustomervs1;
-
-                            var added = false;
-                            for (let i = 0; i < data.tcustomervs1.length; i++) {
-                                if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-                                    let lineItems = [];
-                                    added = true;
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#add-customer-title').text('Edit Customer');
-                                    let popCustomerID = data.tcustomervs1[i].fields.ID || '';
-                                    let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
-                                    let popCustomerEmail = data.tcustomervs1[i].fields.Email || '';
-                                    let popCustomerTitle = data.tcustomervs1[i].fields.Title || '';
-                                    let popCustomerFirstName = data.tcustomervs1[i].fields.FirstName || '';
-                                    let popCustomerMiddleName = data.tcustomervs1[i].fields.CUSTFLD10 || '';
-                                    let popCustomerLastName = data.tcustomervs1[i].fields.LastName || '';
-                                    let popCustomertfn = '' || '';
-                                    let popCustomerPhone = data.tcustomervs1[i].fields.Phone || '';
-                                    let popCustomerMobile = data.tcustomervs1[i].fields.Mobile || '';
-                                    let popCustomerFaxnumber = data.tcustomervs1[i].fields.Faxnumber || '';
-                                    let popCustomerSkypeName = data.tcustomervs1[i].fields.SkypeName || '';
-                                    let popCustomerURL = data.tcustomervs1[i].fields.URL || '';
-                                    let popCustomerStreet = data.tcustomervs1[i].fields.Street || '';
-                                    let popCustomerStreet2 = data.tcustomervs1[i].fields.Street2 || '';
-                                    let popCustomerState = data.tcustomervs1[i].fields.State || '';
-                                    let popCustomerPostcode = data.tcustomervs1[i].fields.Postcode || '';
-                                    let popCustomerCountry = data.tcustomervs1[i].fields.Country || LoggedCountry;
-                                    let popCustomerbillingaddress = data.tcustomervs1[i].fields.BillStreet || '';
-                                    let popCustomerbcity = data.tcustomervs1[i].fields.BillStreet2 || '';
-                                    let popCustomerbstate = data.tcustomervs1[i].fields.BillState || '';
-                                    let popCustomerbpostalcode = data.tcustomervs1[i].fields.BillPostcode || '';
-                                    let popCustomerbcountry = data.tcustomervs1[i].fields.Billcountry || LoggedCountry;
-                                    let popCustomercustfield1 = data.tcustomervs1[i].fields.CUSTFLD1 || '';
-                                    let popCustomercustfield2 = data.tcustomervs1[i].fields.CUSTFLD2 || '';
-                                    let popCustomercustfield3 = data.tcustomervs1[i].fields.CUSTFLD3 || '';
-                                    let popCustomercustfield4 = data.tcustomervs1[i].fields.CUSTFLD4 || '';
-                                    let popCustomernotes = data.tcustomervs1[i].fields.Notes || '';
-                                    let popCustomerpreferedpayment = data.tcustomervs1[i].fields.PaymentMethodName || '';
-                                    let popCustomerterms = data.tcustomervs1[i].fields.TermsName || '';
-                                    let popCustomerdeliverymethod = data.tcustomervs1[i].fields.ShippingMethodName || '';
-                                    let popCustomeraccountnumber = data.tcustomervs1[i].fields.ClientNo || '';
-                                    let popCustomerisContractor = data.tcustomervs1[i].fields.Contractor || false;
-                                    let popCustomerissupplier = data.tcustomervs1[i].fields.IsSupplier || false;
-                                    let popCustomeriscustomer = data.tcustomervs1[i].fields.IsCustomer || false;
-                                    let popCustomerTaxCode = data.tcustomervs1[i].fields.TaxCodeName || '';
-                                    let popCustomerDiscount = data.tcustomervs1[i].fields.Discount || 0;
-                                    let popCustomerType = data.tcustomervs1[i].fields.ClientTypeName || '';
-                                    $('#edtCustomerCompany').val(popCustomerName);
-                                    $('#edtCustomerPOPID').val(popCustomerID);
-                                    $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                                    $('#edtTitle').val(popCustomerTitle);
-                                    $('#edtFirstName').val(popCustomerFirstName);
-                                    $('#edtMiddleName').val(popCustomerMiddleName);
-                                    $('#edtLastName').val(popCustomerLastName);
-                                    $('#edtCustomerPhone').val(popCustomerPhone);
-                                    $('#edtCustomerMobile').val(popCustomerMobile);
-                                    $('#edtCustomerFax').val(popCustomerFaxnumber);
-                                    $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                                    $('#edtCustomerWebsite').val(popCustomerURL);
-                                    $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                                    $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                                    $('#edtCustomerShippingState').val(popCustomerState);
-                                    $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                                    $('#sedtCountry').val(popCustomerCountry);
-                                    $('#txaNotes').val(popCustomernotes);
-                                    $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                                    $('#sltTermsPOP').val(popCustomerterms);
-                                    $('#sltCustomerType').val(popCustomerType);
-                                    $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                                    $('#edtCustomeField1').val(popCustomercustfield1);
-                                    $('#edtCustomeField2').val(popCustomercustfield2);
-                                    $('#edtCustomeField3').val(popCustomercustfield3);
-                                    $('#edtCustomeField4').val(popCustomercustfield4);
-
-                                    $('#sltTaxCode').val(popCustomerTaxCode);
-
-                                    if ((data.tcustomervs1[i].fields.Street == data.tcustomervs1[i].fields.BillStreet) && (data.tcustomervs1[i].fields.Street2 == data.tcustomervs1[i].fields.BillStreet2) &&
-                                        (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
-                                        (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
-                                        $('#chkSameAsShipping2').attr("checked", "checked");
-                                    }
-
-                                    if (data.tcustomervs1[i].fields.IsSupplier == true) {
-                                        // $('#isformcontractor')
-                                        $('#chkSameAsSupplier').attr("checked", "checked");
-                                    } else {
-                                        $('#chkSameAsSupplier').removeAttr("checked");
-                                    }
-
-                                    setTimeout(function() {
-                                        $('#addCustomerModal').modal('show');
-                                    }, 200);
-
-                                }
-                            }
-                            if (!added) {
+        $('#edtCustomerName').editableSelect()
+            .on('click.editable-select', function(e, li) {
+                var $earch = $(this);
+                var offset = $earch.offset();
+                $('#edtCustomerPOPID').val('');
+                var customerDataName = e.target.value || '';
+                // var customerDataID = $('#edtCustomerName').attr('custid').replace(/\s/g, '') || '';
+                if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                    $('#customerListModal').modal();
+                    setTimeout(function() {
+                        $('#tblCustomerlist_filter .form-control-sm').focus();
+                        $('#tblCustomerlist_filter .form-control-sm').val('');
+                        $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblCustomerlist').DataTable();
+                        //datatable.clear();
+                        //datatable.rows.add(splashArrayCustomerList);
+                        datatable.draw();
+                        $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+                        //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
+                    }, 500);
+                } else {
+                    if (customerDataName.replace(/\s/g, '') != '') {
+                        //FlowRouter.go('/customerscard?name=' + e.target.value);
+                        $('#edtCustomerPOPID').val('');
+                        getVS1Data('TCustomerVS1').then(function(dataObject) {
+                            if (dataObject.length == 0) {
                                 $('.fullScreenSpin').css('display', 'inline-block');
                                 sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
                                     $('.fullScreenSpin').css('display', 'none');
@@ -2071,317 +2459,333 @@ Template.stocktransfercard.onRendered(function() {
                                 }).catch(function(err) {
                                     $('.fullScreenSpin').css('display', 'none');
                                 });
-                            }
-                        }
-                    }).catch(function(err) {
-                        sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                            $('.fullScreenSpin').css('display', 'none');
-                            let lineItems = [];
-                            $('#add-customer-title').text('Edit Customer');
-                            let popCustomerID = data.tcustomer[0].fields.ID || '';
-                            let popCustomerName = data.tcustomer[0].fields.ClientName || '';
-                            let popCustomerEmail = data.tcustomer[0].fields.Email || '';
-                            let popCustomerTitle = data.tcustomer[0].fields.Title || '';
-                            let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
-                            let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
-                            let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
-                            let popCustomertfn = '' || '';
-                            let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
-                            let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
-                            let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
-                            let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
-                            let popCustomerURL = data.tcustomer[0].fields.URL || '';
-                            let popCustomerStreet = data.tcustomer[0].fields.Street || '';
-                            let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
-                            let popCustomerState = data.tcustomer[0].fields.State || '';
-                            let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
-                            let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-                            let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
-                            let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
-                            let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
-                            let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
-                            let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
-                            let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
-                            let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
-                            let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
-                            let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
-                            let popCustomernotes = data.tcustomer[0].fields.Notes || '';
-                            let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
-                            let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
-                            let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
-                            let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
-                            let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
-                            let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
-                            let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
-                            let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
-                            let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-                            let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
-                            $('#edtCustomerCompany').val(popCustomerName);
-                            $('#edtCustomerPOPID').val(popCustomerID);
-                            $('#edtCustomerPOPEmail').val(popCustomerEmail);
-                            $('#edtTitle').val(popCustomerTitle);
-                            $('#edtFirstName').val(popCustomerFirstName);
-                            $('#edtMiddleName').val(popCustomerMiddleName);
-                            $('#edtLastName').val(popCustomerLastName);
-                            $('#edtCustomerPhone').val(popCustomerPhone);
-                            $('#edtCustomerMobile').val(popCustomerMobile);
-                            $('#edtCustomerFax').val(popCustomerFaxnumber);
-                            $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-                            $('#edtCustomerWebsite').val(popCustomerURL);
-                            $('#edtCustomerShippingAddress').val(popCustomerStreet);
-                            $('#edtCustomerShippingCity').val(popCustomerStreet2);
-                            $('#edtCustomerShippingState').val(popCustomerState);
-                            $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-                            $('#sedtCountry').val(popCustomerCountry);
-                            $('#txaNotes').val(popCustomernotes);
-                            $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-                            $('#sltTermsPOP').val(popCustomerterms);
-                            $('#sltCustomerType').val(popCustomerType);
-                            $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-                            $('#edtCustomeField1').val(popCustomercustfield1);
-                            $('#edtCustomeField2').val(popCustomercustfield2);
-                            $('#edtCustomeField3').val(popCustomercustfield3);
-                            $('#edtCustomeField4').val(popCustomercustfield4);
-
-                            $('#sltTaxCode').val(popCustomerTaxCode);
-
-                            if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                                (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                                (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
-                                $('#chkSameAsShipping2').attr("checked", "checked");
-                            }
-
-                            if (data.tcustomer[0].fields.IsSupplier == true) {
-                                // $('#isformcontractor')
-                                $('#chkSameAsSupplier').attr("checked", "checked");
                             } else {
-                                $('#chkSameAsSupplier').removeAttr("checked");
-                            }
+                                let data = JSON.parse(dataObject[0].data);
+                                let useData = data.tcustomervs1;
 
-                            setTimeout(function() {
-                                $('#addCustomerModal').modal('show');
-                            }, 200);
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-                    });
-                } else {
-                    $('#customerListModal').modal();
-                    setTimeout(function() {
-                        $('#tblCustomerlist_filter .form-control-sm').focus();
-                        $('#tblCustomerlist_filter .form-control-sm').val('');
-                        $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-                        var datatable = $('#tblCustomerlist').DataTable();
-                        //datatable.clear();
-                        //datatable.rows.add(splashArrayCustomerList);
-                        datatable.draw();
-                        $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-                        //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
-                    }, 500);
-                }
-            }
+                                var added = false;
+                                for (let i = 0; i < data.tcustomervs1.length; i++) {
+                                    if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
+                                        let lineItems = [];
+                                        added = true;
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        $('#add-customer-title').text('Edit Customer');
+                                        let popCustomerID = data.tcustomervs1[i].fields.ID || '';
+                                        let popCustomerName = data.tcustomervs1[i].fields.ClientName || '';
+                                        let popCustomerEmail = data.tcustomervs1[i].fields.Email || '';
+                                        let popCustomerTitle = data.tcustomervs1[i].fields.Title || '';
+                                        let popCustomerFirstName = data.tcustomervs1[i].fields.FirstName || '';
+                                        let popCustomerMiddleName = data.tcustomervs1[i].fields.CUSTFLD10 || '';
+                                        let popCustomerLastName = data.tcustomervs1[i].fields.LastName || '';
+                                        let popCustomertfn = '' || '';
+                                        let popCustomerPhone = data.tcustomervs1[i].fields.Phone || '';
+                                        let popCustomerMobile = data.tcustomervs1[i].fields.Mobile || '';
+                                        let popCustomerFaxnumber = data.tcustomervs1[i].fields.Faxnumber || '';
+                                        let popCustomerSkypeName = data.tcustomervs1[i].fields.SkypeName || '';
+                                        let popCustomerURL = data.tcustomervs1[i].fields.URL || '';
+                                        let popCustomerStreet = data.tcustomervs1[i].fields.Street || '';
+                                        let popCustomerStreet2 = data.tcustomervs1[i].fields.Street2 || '';
+                                        let popCustomerState = data.tcustomervs1[i].fields.State || '';
+                                        let popCustomerPostcode = data.tcustomervs1[i].fields.Postcode || '';
+                                        let popCustomerCountry = data.tcustomervs1[i].fields.Country || LoggedCountry;
+                                        let popCustomerbillingaddress = data.tcustomervs1[i].fields.BillStreet || '';
+                                        let popCustomerbcity = data.tcustomervs1[i].fields.BillStreet2 || '';
+                                        let popCustomerbstate = data.tcustomervs1[i].fields.BillState || '';
+                                        let popCustomerbpostalcode = data.tcustomervs1[i].fields.BillPostcode || '';
+                                        let popCustomerbcountry = data.tcustomervs1[i].fields.Billcountry || LoggedCountry;
+                                        let popCustomercustfield1 = data.tcustomervs1[i].fields.CUSTFLD1 || '';
+                                        let popCustomercustfield2 = data.tcustomervs1[i].fields.CUSTFLD2 || '';
+                                        let popCustomercustfield3 = data.tcustomervs1[i].fields.CUSTFLD3 || '';
+                                        let popCustomercustfield4 = data.tcustomervs1[i].fields.CUSTFLD4 || '';
+                                        let popCustomernotes = data.tcustomervs1[i].fields.Notes || '';
+                                        let popCustomerpreferedpayment = data.tcustomervs1[i].fields.PaymentMethodName || '';
+                                        let popCustomerterms = data.tcustomervs1[i].fields.TermsName || '';
+                                        let popCustomerdeliverymethod = data.tcustomervs1[i].fields.ShippingMethodName || '';
+                                        let popCustomeraccountnumber = data.tcustomervs1[i].fields.ClientNo || '';
+                                        let popCustomerisContractor = data.tcustomervs1[i].fields.Contractor || false;
+                                        let popCustomerissupplier = data.tcustomervs1[i].fields.IsSupplier || false;
+                                        let popCustomeriscustomer = data.tcustomervs1[i].fields.IsCustomer || false;
+                                        let popCustomerTaxCode = data.tcustomervs1[i].fields.TaxCodeName || '';
+                                        let popCustomerDiscount = data.tcustomervs1[i].fields.Discount || 0;
+                                        let popCustomerType = data.tcustomervs1[i].fields.ClientTypeName || '';
+                                        $('#edtCustomerCompany').val(popCustomerName);
+                                        $('#edtCustomerPOPID').val(popCustomerID);
+                                        $('#edtCustomerPOPEmail').val(popCustomerEmail);
+                                        $('#edtTitle').val(popCustomerTitle);
+                                        $('#edtFirstName').val(popCustomerFirstName);
+                                        $('#edtMiddleName').val(popCustomerMiddleName);
+                                        $('#edtLastName').val(popCustomerLastName);
+                                        $('#edtCustomerPhone').val(popCustomerPhone);
+                                        $('#edtCustomerMobile').val(popCustomerMobile);
+                                        $('#edtCustomerFax').val(popCustomerFaxnumber);
+                                        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+                                        $('#edtCustomerWebsite').val(popCustomerURL);
+                                        $('#edtCustomerShippingAddress').val(popCustomerStreet);
+                                        $('#edtCustomerShippingCity').val(popCustomerStreet2);
+                                        $('#edtCustomerShippingState').val(popCustomerState);
+                                        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+                                        $('#sedtCountry').val(popCustomerCountry);
+                                        $('#txaNotes').val(popCustomernotes);
+                                        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+                                        $('#sltTermsPOP').val(popCustomerterms);
+                                        $('#sltCustomerType').val(popCustomerType);
+                                        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+                                        $('#edtCustomeField1').val(popCustomercustfield1);
+                                        $('#edtCustomeField2').val(popCustomercustfield2);
+                                        $('#edtCustomeField3').val(popCustomercustfield3);
+                                        $('#edtCustomeField4').val(popCustomercustfield4);
 
+                                        $('#sltTaxCode').val(popCustomerTaxCode);
 
-        });
-
-    /* On click Customer List */
-
-
-    $('#sltBankAccountName').editableSelect().on('click.editable-select', function(e, li) {
-        var $earch = $(this);
-        var offset = $earch.offset();
-        let accountService = new AccountService();
-        const accountTypeList = [];
-        var accountDataName = e.target.value || '';
-
-        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            $('#selectLineID').val('');
-            $('#accountListModal').modal();
-            setTimeout(function() {
-                $('#tblAccount_filter .form-control-sm').focus();
-                $('#tblAccount_filter .form-control-sm').val('');
-                $('#tblAccount_filter .form-control-sm').trigger("input");
-                var datatable = $('#tblAccountlist').DataTable();
-                datatable.draw();
-                $('#tblAccountlist_filter .form-control-sm').trigger("input");
-            }, 500);
-        } else {
-            if (accountDataName.replace(/\s/g, '') != '') {
-                getVS1Data('TAccountVS1').then(function(dataObject) {
-                    if (dataObject.length == 0) {
-                        accountService.getOneAccountByName(accountDataName).then(function(data) {
-                            let lineItems = [];
-                            let lineItemObj = {};
-                            let fullAccountTypeName = '';
-                            let accBalance = '';
-                            $('#add-account-title').text('Edit Account Details');
-                            $('#edtAccountName').attr('readonly', true);
-                            $('#sltAccountType').attr('readonly', true);
-                            $('#sltAccountType').attr('disabled', 'disabled');
-                            if (accountTypeList) {
-                                for (var h = 0; h < accountTypeList.length; h++) {
-
-                                    if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
-
-                                        fullAccountTypeName = accountTypeList[h].description || '';
-
-                                    }
-                                }
-
-                            }
-
-                            var accountid = data.taccountvs1[0].fields.ID || '';
-                            var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
-                            var accountname = data.taccountvs1[0].fields.AccountName || '';
-                            var accountno = data.taccountvs1[0].fields.AccountNumber || '';
-                            var taxcode = data.taccountvs1[0].fields.TaxCode || '';
-                            var accountdesc = data.taccountvs1[0].fields.Description || '';
-                            var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
-                            var bankbsb = data.taccountvs1[0].fields.BSB || '';
-                            var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
-
-                            var swiftCode = data.taccountvs1[0].fields.Extra || '';
-                            var routingNo = data.taccountvs1[0].fields.BankCode || '';
-
-                            var showTrans = data.taccountvs1[0].fields.IsHeader || false;
-
-                            var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
-                            var cardcvc = data.taccountvs1[0].fields.CVC || '';
-                            var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
-
-                            if ((accounttype === "BANK")) {
-                                $('.isBankAccount').removeClass('isNotBankAccount');
-                                $('.isCreditAccount').addClass('isNotCreditAccount');
-                            } else if ((accounttype === "CCARD")) {
-                                $('.isCreditAccount').removeClass('isNotCreditAccount');
-                                $('.isBankAccount').addClass('isNotBankAccount');
-                            } else {
-                                $('.isBankAccount').addClass('isNotBankAccount');
-                                $('.isCreditAccount').addClass('isNotCreditAccount');
-                            }
-
-                            $('#edtAccountID').val(accountid);
-                            $('#sltAccountType').val(accounttype);
-                            $('#sltAccountType').append('<option value="' + accounttype + '" selected="selected">' + accounttype + '</option>');
-                            $('#edtAccountName').val(accountname);
-                            $('#edtAccountNo').val(accountno);
-                            $('#sltTaxCode').val(taxcode);
-                            $('#txaAccountDescription').val(accountdesc);
-                            $('#edtBankAccountName').val(bankaccountname);
-                            $('#edtBSB').val(bankbsb);
-                            $('#edtBankAccountNo').val(bankacountno);
-                            $('#swiftCode').val(swiftCode);
-                            $('#routingNo').val(routingNo);
-                            $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
-
-                            $('#edtCardNumber').val(cardnumber);
-                            $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
-                            $('#edtCvc').val(cardcvc);
-
-                            if (showTrans == 'true') {
-                                $('.showOnTransactions').prop('checked', true);
-                            } else {
-                                $('.showOnTransactions').prop('checked', false);
-                            }
-
-                            setTimeout(function() {
-                                $('#addNewAccount').modal('show');
-                            }, 500);
-
-                        }).catch(function(err) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.taccountvs1;
-                        var added = false;
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullAccountTypeName = '';
-                        let accBalance = '';
-                        $('#add-account-title').text('Edit Account Details');
-                        $('#edtAccountName').attr('readonly', true);
-                        $('#sltAccountType').attr('readonly', true);
-                        $('#sltAccountType').attr('disabled', 'disabled');
-                        for (let a = 0; a < data.taccountvs1.length; a++) {
-
-                            if ((data.taccountvs1[a].fields.AccountName) === accountDataName) {
-                                added = true;
-                                if (accountTypeList) {
-                                    for (var h = 0; h < accountTypeList.length; h++) {
-
-                                        if (data.taccountvs1[a].fields.AccountTypeName === accountTypeList[h].accounttypename) {
-
-                                            fullAccountTypeName = accountTypeList[h].description || '';
-
+                                        if ((data.tcustomervs1[i].fields.Street == data.tcustomervs1[i].fields.BillStreet) && (data.tcustomervs1[i].fields.Street2 == data.tcustomervs1[i].fields.BillStreet2) &&
+                                            (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
+                                            (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
+                                            $('#chkSameAsShipping2').attr("checked", "checked");
                                         }
+
+                                        if (data.tcustomervs1[i].fields.IsSupplier == true) {
+                                            // $('#isformcontractor')
+                                            $('#chkSameAsSupplier').attr("checked", "checked");
+                                        } else {
+                                            $('#chkSameAsSupplier').removeAttr("checked");
+                                        }
+
+                                        setTimeout(function() {
+                                            $('#addCustomerModal').modal('show');
+                                        }, 200);
+
                                     }
+                                }
+                                if (!added) {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        let lineItems = [];
+                                        $('#add-customer-title').text('Edit Customer');
+                                        let popCustomerID = data.tcustomer[0].fields.ID || '';
+                                        let popCustomerName = data.tcustomer[0].fields.ClientName || '';
+                                        let popCustomerEmail = data.tcustomer[0].fields.Email || '';
+                                        let popCustomerTitle = data.tcustomer[0].fields.Title || '';
+                                        let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
+                                        let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
+                                        let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
+                                        let popCustomertfn = '' || '';
+                                        let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
+                                        let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
+                                        let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
+                                        let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
+                                        let popCustomerURL = data.tcustomer[0].fields.URL || '';
+                                        let popCustomerStreet = data.tcustomer[0].fields.Street || '';
+                                        let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
+                                        let popCustomerState = data.tcustomer[0].fields.State || '';
+                                        let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
+                                        let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+                                        let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
+                                        let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
+                                        let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
+                                        let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
+                                        let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
+                                        let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
+                                        let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
+                                        let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
+                                        let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
+                                        let popCustomernotes = data.tcustomer[0].fields.Notes || '';
+                                        let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
+                                        let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
+                                        let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
+                                        let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
+                                        let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
+                                        let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
+                                        let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
+                                        let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
+                                        let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+                                        let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
+                                        $('#edtCustomerCompany').val(popCustomerName);
+                                        $('#edtCustomerPOPID').val(popCustomerID);
+                                        $('#edtCustomerPOPEmail').val(popCustomerEmail);
+                                        $('#edtTitle').val(popCustomerTitle);
+                                        $('#edtFirstName').val(popCustomerFirstName);
+                                        $('#edtMiddleName').val(popCustomerMiddleName);
+                                        $('#edtLastName').val(popCustomerLastName);
+                                        $('#edtCustomerPhone').val(popCustomerPhone);
+                                        $('#edtCustomerMobile').val(popCustomerMobile);
+                                        $('#edtCustomerFax').val(popCustomerFaxnumber);
+                                        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+                                        $('#edtCustomerWebsite').val(popCustomerURL);
+                                        $('#edtCustomerShippingAddress').val(popCustomerStreet);
+                                        $('#edtCustomerShippingCity').val(popCustomerStreet2);
+                                        $('#edtCustomerShippingState').val(popCustomerState);
+                                        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+                                        $('#sedtCountry').val(popCustomerCountry);
+                                        $('#txaNotes').val(popCustomernotes);
+                                        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+                                        $('#sltTermsPOP').val(popCustomerterms);
+                                        $('#sltCustomerType').val(popCustomerType);
+                                        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+                                        $('#edtCustomeField1').val(popCustomercustfield1);
+                                        $('#edtCustomeField2').val(popCustomercustfield2);
+                                        $('#edtCustomeField3').val(popCustomercustfield3);
+                                        $('#edtCustomeField4').val(popCustomercustfield4);
 
+                                        $('#sltTaxCode').val(popCustomerTaxCode);
+
+                                        if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
+                                            (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                                            (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                                            $('#chkSameAsShipping2').attr("checked", "checked");
+                                        }
+
+                                        if (data.tcustomer[0].fields.IsSupplier == true) {
+                                            // $('#isformcontractor')
+                                            $('#chkSameAsSupplier').attr("checked", "checked");
+                                        } else {
+                                            $('#chkSameAsSupplier').removeAttr("checked");
+                                        }
+
+                                        setTimeout(function() {
+                                            $('#addCustomerModal').modal('show');
+                                        }, 200);
+                                    }).catch(function(err) {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                    });
+                                }
+                            }
+                        }).catch(function(err) {
+                            sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
+                                $('.fullScreenSpin').css('display', 'none');
+                                let lineItems = [];
+                                $('#add-customer-title').text('Edit Customer');
+                                let popCustomerID = data.tcustomer[0].fields.ID || '';
+                                let popCustomerName = data.tcustomer[0].fields.ClientName || '';
+                                let popCustomerEmail = data.tcustomer[0].fields.Email || '';
+                                let popCustomerTitle = data.tcustomer[0].fields.Title || '';
+                                let popCustomerFirstName = data.tcustomer[0].fields.FirstName || '';
+                                let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || '';
+                                let popCustomerLastName = data.tcustomer[0].fields.LastName || '';
+                                let popCustomertfn = '' || '';
+                                let popCustomerPhone = data.tcustomer[0].fields.Phone || '';
+                                let popCustomerMobile = data.tcustomer[0].fields.Mobile || '';
+                                let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || '';
+                                let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || '';
+                                let popCustomerURL = data.tcustomer[0].fields.URL || '';
+                                let popCustomerStreet = data.tcustomer[0].fields.Street || '';
+                                let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || '';
+                                let popCustomerState = data.tcustomer[0].fields.State || '';
+                                let popCustomerPostcode = data.tcustomer[0].fields.Postcode || '';
+                                let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
+                                let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || '';
+                                let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || '';
+                                let popCustomerbstate = data.tcustomer[0].fields.BillState || '';
+                                let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || '';
+                                let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
+                                let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || '';
+                                let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || '';
+                                let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || '';
+                                let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || '';
+                                let popCustomernotes = data.tcustomer[0].fields.Notes || '';
+                                let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || '';
+                                let popCustomerterms = data.tcustomer[0].fields.TermsName || '';
+                                let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || '';
+                                let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || '';
+                                let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
+                                let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
+                                let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
+                                let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || '';
+                                let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
+                                let popCustomerType = data.tcustomer[0].fields.ClientTypeName || '';
+                                $('#edtCustomerCompany').val(popCustomerName);
+                                $('#edtCustomerPOPID').val(popCustomerID);
+                                $('#edtCustomerPOPEmail').val(popCustomerEmail);
+                                $('#edtTitle').val(popCustomerTitle);
+                                $('#edtFirstName').val(popCustomerFirstName);
+                                $('#edtMiddleName').val(popCustomerMiddleName);
+                                $('#edtLastName').val(popCustomerLastName);
+                                $('#edtCustomerPhone').val(popCustomerPhone);
+                                $('#edtCustomerMobile').val(popCustomerMobile);
+                                $('#edtCustomerFax').val(popCustomerFaxnumber);
+                                $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+                                $('#edtCustomerWebsite').val(popCustomerURL);
+                                $('#edtCustomerShippingAddress').val(popCustomerStreet);
+                                $('#edtCustomerShippingCity').val(popCustomerStreet2);
+                                $('#edtCustomerShippingState').val(popCustomerState);
+                                $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+                                $('#sedtCountry').val(popCustomerCountry);
+                                $('#txaNotes').val(popCustomernotes);
+                                $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+                                $('#sltTermsPOP').val(popCustomerterms);
+                                $('#sltCustomerType').val(popCustomerType);
+                                $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+                                $('#edtCustomeField1').val(popCustomercustfield1);
+                                $('#edtCustomeField2').val(popCustomercustfield2);
+                                $('#edtCustomeField3').val(popCustomercustfield3);
+                                $('#edtCustomeField4').val(popCustomercustfield4);
+
+                                $('#sltTaxCode').val(popCustomerTaxCode);
+
+                                if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
+                                    (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                                    (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                                    $('#chkSameAsShipping2').attr("checked", "checked");
                                 }
 
-
-
-                                var accountid = data.taccountvs1[a].fields.ID || '';
-                                var accounttype = fullAccountTypeName || data.taccountvs1[a].fields.AccountTypeName;
-                                var accountname = data.taccountvs1[a].fields.AccountName || '';
-                                var accountno = data.taccountvs1[a].fields.AccountNumber || '';
-                                var taxcode = data.taccountvs1[a].fields.TaxCode || '';
-                                var accountdesc = data.taccountvs1[a].fields.Description || '';
-                                var bankaccountname = data.taccountvs1[a].fields.BankAccountName || '';
-                                var bankbsb = data.taccountvs1[a].fields.BSB || '';
-                                var bankacountno = data.taccountvs1[a].fields.BankAccountNumber || '';
-
-                                var swiftCode = data.taccountvs1[a].fields.Extra || '';
-                                var routingNo = data.taccountvs1[a].BankCode || '';
-
-                                var showTrans = data.taccountvs1[a].fields.IsHeader || false;
-
-                                var cardnumber = data.taccountvs1[a].fields.CarNumber || '';
-                                var cardcvc = data.taccountvs1[a].fields.CVC || '';
-                                var cardexpiry = data.taccountvs1[a].fields.ExpiryDate || '';
-
-                                if ((accounttype === "BANK")) {
-                                    $('.isBankAccount').removeClass('isNotBankAccount');
-                                    $('.isCreditAccount').addClass('isNotCreditAccount');
-                                } else if ((accounttype === "CCARD")) {
-                                    $('.isCreditAccount').removeClass('isNotCreditAccount');
-                                    $('.isBankAccount').addClass('isNotBankAccount');
+                                if (data.tcustomer[0].fields.IsSupplier == true) {
+                                    // $('#isformcontractor')
+                                    $('#chkSameAsSupplier').attr("checked", "checked");
                                 } else {
-                                    $('.isBankAccount').addClass('isNotBankAccount');
-                                    $('.isCreditAccount').addClass('isNotCreditAccount');
-                                }
-
-                                $('#edtAccountID').val(accountid);
-                                $('#sltAccountType').val(accounttype);
-                                $('#sltAccountType').append('<option value="' + accounttype + '" selected="selected">' + accounttype + '</option>');
-                                $('#edtAccountName').val(accountname);
-                                $('#edtAccountNo').val(accountno);
-                                $('#sltTaxCode').val(taxcode);
-                                $('#txaAccountDescription').val(accountdesc);
-                                $('#edtBankAccountName').val(bankaccountname);
-                                $('#edtBSB').val(bankbsb);
-                                $('#edtBankAccountNo').val(bankacountno);
-                                $('#swiftCode').val(swiftCode);
-                                $('#routingNo').val(routingNo);
-                                $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
-
-                                $('#edtCardNumber').val(cardnumber);
-                                $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
-                                $('#edtCvc').val(cardcvc);
-
-                                if (showTrans == 'true') {
-                                    $('.showOnTransactions').prop('checked', true);
-                                } else {
-                                    $('.showOnTransactions').prop('checked', false);
+                                    $('#chkSameAsSupplier').removeAttr("checked");
                                 }
 
                                 setTimeout(function() {
-                                    $('#addNewAccount').modal('show');
-                                }, 500);
+                                    $('#addCustomerModal').modal('show');
+                                }, 200);
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'none');
+                            });
+                        });
+                    } else {
+                        $('#customerListModal').modal();
+                        setTimeout(function() {
+                            $('#tblCustomerlist_filter .form-control-sm').focus();
+                            $('#tblCustomerlist_filter .form-control-sm').val('');
+                            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+                            var datatable = $('#tblCustomerlist').DataTable();
+                            //datatable.clear();
+                            //datatable.rows.add(splashArrayCustomerList);
+                            datatable.draw();
+                            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+                            //$('#tblCustomerlist').dataTable().fnFilter(' ').draw(false);
+                        }, 500);
+                    }
+                }
 
-                            }
-                        }
-                        if (!added) {
+
+            });
+      });
+        /* On click Customer List */
+
+
+        $('#sltBankAccountName').editableSelect().on('click.editable-select', function(e, li) {
+            var $earch = $(this);
+            var offset = $earch.offset();
+            let accountService = new AccountService();
+            const accountTypeList = [];
+            var accountDataName = e.target.value || '';
+
+            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                $('#selectLineID').val('');
+                $('#accountListModal').modal();
+                setTimeout(function() {
+                    $('#tblAccount_filter .form-control-sm').focus();
+                    $('#tblAccount_filter .form-control-sm').val('');
+                    $('#tblAccount_filter .form-control-sm').trigger("input");
+                    var datatable = $('#tblAccountlist').DataTable();
+                    datatable.draw();
+                    $('#tblAccountlist_filter .form-control-sm').trigger("input");
+                }, 500);
+            } else {
+                if (accountDataName.replace(/\s/g, '') != '') {
+                    getVS1Data('TAccountVS1').then(function(dataObject) {
+                        if (dataObject.length == 0) {
                             accountService.getOneAccountByName(accountDataName).then(function(data) {
                                 let lineItems = [];
                                 let lineItemObj = {};
@@ -2464,110 +2868,328 @@ Template.stocktransfercard.onRendered(function() {
                             }).catch(function(err) {
                                 $('.fullScreenSpin').css('display', 'none');
                             });
-                        }
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.taccountvs1;
+                            var added = false;
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            let fullAccountTypeName = '';
+                            let accBalance = '';
+                            $('#add-account-title').text('Edit Account Details');
+                            $('#edtAccountName').attr('readonly', true);
+                            $('#sltAccountType').attr('readonly', true);
+                            $('#sltAccountType').attr('disabled', 'disabled');
+                            for (let a = 0; a < data.taccountvs1.length; a++) {
 
-                    }
-                }).catch(function(err) {
-                    accountService.getOneAccountByName(accountDataName).then(function(data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullAccountTypeName = '';
-                        let accBalance = '';
-                        $('#add-account-title').text('Edit Account Details');
-                        $('#edtAccountName').attr('readonly', true);
-                        $('#sltAccountType').attr('readonly', true);
-                        $('#sltAccountType').attr('disabled', 'disabled');
-                        if (accountTypeList) {
-                            for (var h = 0; h < accountTypeList.length; h++) {
+                                if ((data.taccountvs1[a].fields.AccountName) === accountDataName) {
+                                    added = true;
+                                    if (accountTypeList) {
+                                        for (var h = 0; h < accountTypeList.length; h++) {
 
-                                if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+                                            if (data.taccountvs1[a].fields.AccountTypeName === accountTypeList[h].accounttypename) {
 
-                                    fullAccountTypeName = accountTypeList[h].description || '';
+                                                fullAccountTypeName = accountTypeList[h].description || '';
+
+                                            }
+                                        }
+
+                                    }
+
+
+
+                                    var accountid = data.taccountvs1[a].fields.ID || '';
+                                    var accounttype = fullAccountTypeName || data.taccountvs1[a].fields.AccountTypeName;
+                                    var accountname = data.taccountvs1[a].fields.AccountName || '';
+                                    var accountno = data.taccountvs1[a].fields.AccountNumber || '';
+                                    var taxcode = data.taccountvs1[a].fields.TaxCode || '';
+                                    var accountdesc = data.taccountvs1[a].fields.Description || '';
+                                    var bankaccountname = data.taccountvs1[a].fields.BankAccountName || '';
+                                    var bankbsb = data.taccountvs1[a].fields.BSB || '';
+                                    var bankacountno = data.taccountvs1[a].fields.BankAccountNumber || '';
+
+                                    var swiftCode = data.taccountvs1[a].fields.Extra || '';
+                                    var routingNo = data.taccountvs1[a].BankCode || '';
+
+                                    var showTrans = data.taccountvs1[a].fields.IsHeader || false;
+
+                                    var cardnumber = data.taccountvs1[a].fields.CarNumber || '';
+                                    var cardcvc = data.taccountvs1[a].fields.CVC || '';
+                                    var cardexpiry = data.taccountvs1[a].fields.ExpiryDate || '';
+
+                                    if ((accounttype === "BANK")) {
+                                        $('.isBankAccount').removeClass('isNotBankAccount');
+                                        $('.isCreditAccount').addClass('isNotCreditAccount');
+                                    } else if ((accounttype === "CCARD")) {
+                                        $('.isCreditAccount').removeClass('isNotCreditAccount');
+                                        $('.isBankAccount').addClass('isNotBankAccount');
+                                    } else {
+                                        $('.isBankAccount').addClass('isNotBankAccount');
+                                        $('.isCreditAccount').addClass('isNotCreditAccount');
+                                    }
+
+                                    $('#edtAccountID').val(accountid);
+                                    $('#sltAccountType').val(accounttype);
+                                    $('#sltAccountType').append('<option value="' + accounttype + '" selected="selected">' + accounttype + '</option>');
+                                    $('#edtAccountName').val(accountname);
+                                    $('#edtAccountNo').val(accountno);
+                                    $('#sltTaxCode').val(taxcode);
+                                    $('#txaAccountDescription').val(accountdesc);
+                                    $('#edtBankAccountName').val(bankaccountname);
+                                    $('#edtBSB').val(bankbsb);
+                                    $('#edtBankAccountNo').val(bankacountno);
+                                    $('#swiftCode').val(swiftCode);
+                                    $('#routingNo').val(routingNo);
+                                    $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+                                    $('#edtCardNumber').val(cardnumber);
+                                    $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+                                    $('#edtCvc').val(cardcvc);
+
+                                    if (showTrans == 'true') {
+                                        $('.showOnTransactions').prop('checked', true);
+                                    } else {
+                                        $('.showOnTransactions').prop('checked', false);
+                                    }
+
+                                    setTimeout(function() {
+                                        $('#addNewAccount').modal('show');
+                                    }, 500);
 
                                 }
                             }
+                            if (!added) {
+                                accountService.getOneAccountByName(accountDataName).then(function(data) {
+                                    let lineItems = [];
+                                    let lineItemObj = {};
+                                    let fullAccountTypeName = '';
+                                    let accBalance = '';
+                                    $('#add-account-title').text('Edit Account Details');
+                                    $('#edtAccountName').attr('readonly', true);
+                                    $('#sltAccountType').attr('readonly', true);
+                                    $('#sltAccountType').attr('disabled', 'disabled');
+                                    if (accountTypeList) {
+                                        for (var h = 0; h < accountTypeList.length; h++) {
+
+                                            if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+
+                                                fullAccountTypeName = accountTypeList[h].description || '';
+
+                                            }
+                                        }
+
+                                    }
+
+                                    var accountid = data.taccountvs1[0].fields.ID || '';
+                                    var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
+                                    var accountname = data.taccountvs1[0].fields.AccountName || '';
+                                    var accountno = data.taccountvs1[0].fields.AccountNumber || '';
+                                    var taxcode = data.taccountvs1[0].fields.TaxCode || '';
+                                    var accountdesc = data.taccountvs1[0].fields.Description || '';
+                                    var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
+                                    var bankbsb = data.taccountvs1[0].fields.BSB || '';
+                                    var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
+
+                                    var swiftCode = data.taccountvs1[0].fields.Extra || '';
+                                    var routingNo = data.taccountvs1[0].fields.BankCode || '';
+
+                                    var showTrans = data.taccountvs1[0].fields.IsHeader || false;
+
+                                    var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
+                                    var cardcvc = data.taccountvs1[0].fields.CVC || '';
+                                    var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
+
+                                    if ((accounttype === "BANK")) {
+                                        $('.isBankAccount').removeClass('isNotBankAccount');
+                                        $('.isCreditAccount').addClass('isNotCreditAccount');
+                                    } else if ((accounttype === "CCARD")) {
+                                        $('.isCreditAccount').removeClass('isNotCreditAccount');
+                                        $('.isBankAccount').addClass('isNotBankAccount');
+                                    } else {
+                                        $('.isBankAccount').addClass('isNotBankAccount');
+                                        $('.isCreditAccount').addClass('isNotCreditAccount');
+                                    }
+
+                                    $('#edtAccountID').val(accountid);
+                                    $('#sltAccountType').val(accounttype);
+                                    $('#sltAccountType').append('<option value="' + accounttype + '" selected="selected">' + accounttype + '</option>');
+                                    $('#edtAccountName').val(accountname);
+                                    $('#edtAccountNo').val(accountno);
+                                    $('#sltTaxCode').val(taxcode);
+                                    $('#txaAccountDescription').val(accountdesc);
+                                    $('#edtBankAccountName').val(bankaccountname);
+                                    $('#edtBSB').val(bankbsb);
+                                    $('#edtBankAccountNo').val(bankacountno);
+                                    $('#swiftCode').val(swiftCode);
+                                    $('#routingNo').val(routingNo);
+                                    $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+                                    $('#edtCardNumber').val(cardnumber);
+                                    $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+                                    $('#edtCvc').val(cardcvc);
+
+                                    if (showTrans == 'true') {
+                                        $('.showOnTransactions').prop('checked', true);
+                                    } else {
+                                        $('.showOnTransactions').prop('checked', false);
+                                    }
+
+                                    setTimeout(function() {
+                                        $('#addNewAccount').modal('show');
+                                    }, 500);
+
+                                }).catch(function(err) {
+                                    $('.fullScreenSpin').css('display', 'none');
+                                });
+                            }
 
                         }
-
-                        var accountid = data.taccountvs1[0].fields.ID || '';
-                        var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
-                        var accountname = data.taccountvs1[0].fields.AccountName || '';
-                        var accountno = data.taccountvs1[0].fields.AccountNumber || '';
-                        var taxcode = data.taccountvs1[0].fields.TaxCode || '';
-                        var accountdesc = data.taccountvs1[0].fields.Description || '';
-                        var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
-                        var bankbsb = data.taccountvs1[0].fields.BSB || '';
-                        var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
-
-                        var swiftCode = data.taccountvs1[0].fields.Extra || '';
-                        var routingNo = data.taccountvs1[0].fields.BankCode || '';
-
-                        var showTrans = data.taccountvs1[0].fields.IsHeader || false;
-
-                        var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
-                        var cardcvc = data.taccountvs1[0].fields.CVC || '';
-                        var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
-
-                        if ((accounttype === "BANK")) {
-                            $('.isBankAccount').removeClass('isNotBankAccount');
-                            $('.isCreditAccount').addClass('isNotCreditAccount');
-                        } else if ((accounttype === "CCARD")) {
-                            $('.isCreditAccount').removeClass('isNotCreditAccount');
-                            $('.isBankAccount').addClass('isNotBankAccount');
-                        } else {
-                            $('.isBankAccount').addClass('isNotBankAccount');
-                            $('.isCreditAccount').addClass('isNotCreditAccount');
-                        }
-
-                        $('#edtAccountID').val(accountid);
-                        $('#sltAccountType').val(accounttype);
-                        $('#sltAccountType').append('<option value="' + accounttype + '" selected="selected">' + accounttype + '</option>');
-                        $('#edtAccountName').val(accountname);
-                        $('#edtAccountNo').val(accountno);
-                        $('#sltTaxCode').val(taxcode);
-                        $('#txaAccountDescription').val(accountdesc);
-                        $('#edtBankAccountName').val(bankaccountname);
-                        $('#edtBSB').val(bankbsb);
-                        $('#edtBankAccountNo').val(bankacountno);
-                        $('#swiftCode').val(swiftCode);
-                        $('#routingNo').val(routingNo);
-                        $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
-
-                        $('#edtCardNumber').val(cardnumber);
-                        $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
-                        $('#edtCvc').val(cardcvc);
-
-                        if (showTrans == 'true') {
-                            $('.showOnTransactions').prop('checked', true);
-                        } else {
-                            $('.showOnTransactions').prop('checked', false);
-                        }
-
-                        setTimeout(function() {
-                            $('#addNewAccount').modal('show');
-                        }, 500);
-
                     }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'none');
+                        accountService.getOneAccountByName(accountDataName).then(function(data) {
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            let fullAccountTypeName = '';
+                            let accBalance = '';
+                            $('#add-account-title').text('Edit Account Details');
+                            $('#edtAccountName').attr('readonly', true);
+                            $('#sltAccountType').attr('readonly', true);
+                            $('#sltAccountType').attr('disabled', 'disabled');
+                            if (accountTypeList) {
+                                for (var h = 0; h < accountTypeList.length; h++) {
+
+                                    if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+
+                                        fullAccountTypeName = accountTypeList[h].description || '';
+
+                                    }
+                                }
+
+                            }
+
+                            var accountid = data.taccountvs1[0].fields.ID || '';
+                            var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
+                            var accountname = data.taccountvs1[0].fields.AccountName || '';
+                            var accountno = data.taccountvs1[0].fields.AccountNumber || '';
+                            var taxcode = data.taccountvs1[0].fields.TaxCode || '';
+                            var accountdesc = data.taccountvs1[0].fields.Description || '';
+                            var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
+                            var bankbsb = data.taccountvs1[0].fields.BSB || '';
+                            var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
+
+                            var swiftCode = data.taccountvs1[0].fields.Extra || '';
+                            var routingNo = data.taccountvs1[0].fields.BankCode || '';
+
+                            var showTrans = data.taccountvs1[0].fields.IsHeader || false;
+
+                            var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
+                            var cardcvc = data.taccountvs1[0].fields.CVC || '';
+                            var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
+
+                            if ((accounttype === "BANK")) {
+                                $('.isBankAccount').removeClass('isNotBankAccount');
+                                $('.isCreditAccount').addClass('isNotCreditAccount');
+                            } else if ((accounttype === "CCARD")) {
+                                $('.isCreditAccount').removeClass('isNotCreditAccount');
+                                $('.isBankAccount').addClass('isNotBankAccount');
+                            } else {
+                                $('.isBankAccount').addClass('isNotBankAccount');
+                                $('.isCreditAccount').addClass('isNotCreditAccount');
+                            }
+
+                            $('#edtAccountID').val(accountid);
+                            $('#sltAccountType').val(accounttype);
+                            $('#sltAccountType').append('<option value="' + accounttype + '" selected="selected">' + accounttype + '</option>');
+                            $('#edtAccountName').val(accountname);
+                            $('#edtAccountNo').val(accountno);
+                            $('#sltTaxCode').val(taxcode);
+                            $('#txaAccountDescription').val(accountdesc);
+                            $('#edtBankAccountName').val(bankaccountname);
+                            $('#edtBSB').val(bankbsb);
+                            $('#edtBankAccountNo').val(bankacountno);
+                            $('#swiftCode').val(swiftCode);
+                            $('#routingNo').val(routingNo);
+                            $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+                            $('#edtCardNumber').val(cardnumber);
+                            $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+                            $('#edtCvc').val(cardcvc);
+
+                            if (showTrans == 'true') {
+                                $('.showOnTransactions').prop('checked', true);
+                            } else {
+                                $('.showOnTransactions').prop('checked', false);
+                            }
+
+                            setTimeout(function() {
+                                $('#addNewAccount').modal('show');
+                            }, 500);
+
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+
                     });
-
-                });
-                $('#addAccountModal').modal('toggle');
-            } else {
-                $('#selectLineID').val('');
-                $('#accountListModal').modal();
-                setTimeout(function() {
-                    $('#tblAccount_filter .form-control-sm').focus();
-                    $('#tblAccount_filter .form-control-sm').val('');
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                    var datatable = $('#tblSupplierlist').DataTable();
-                    datatable.draw();
-                    $('#tblAccount_filter .form-control-sm').trigger("input");
-                }, 500);
+                    $('#addAccountModal').modal('toggle');
+                } else {
+                    $('#selectLineID').val('');
+                    $('#accountListModal').modal();
+                    setTimeout(function() {
+                        $('#tblAccount_filter .form-control-sm').focus();
+                        $('#tblAccount_filter .form-control-sm').val('');
+                        $('#tblAccount_filter .form-control-sm').trigger("input");
+                        var datatable = $('#tblSupplierlist').DataTable();
+                        datatable.draw();
+                        $('#tblAccount_filter .form-control-sm').trigger("input");
+                    }, 500);
+                }
             }
+
+
+        });
+
+    $(document).on("click", "#tblShipViaPopList tbody tr", function(e) {
+        $('#shipvia').val($(this).find(".colShipName ").text());
+        $('#shipViaModal').modal('toggle');
+
+        $('#tblShipViaPopList_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshVia').trigger('click');
+            $('.fullScreenSpin').css('display', 'none');
+        }, 1000);
+    });
+
+    $(document).on("click", "#departmentList tbody tr", function(e) {
+        let $tblrows = $("#tblStocktransfer tbody tr");
+        let selectLineID = $('#selectLineID').val();
+        let departmentData = $(this).find(".colDeptName").text() || '';
+        let departmentDataID = $(this).attr("id") || '';
+        if (selectLineID != '') {
+            $('#' + selectLineID + " .lineDepartment").val(departmentData);
+            $('#' + selectLineID + " .linedeptid").text(departmentDataID);
+        } else {
+            $('#sltDepartment').val(departmentData);
+
+            $tblrows.each(function(index) {
+                var $tblrow = $(this);
+                let productname = $tblrow.find(".lineProductName").val() || '';
+                let selectLineIDRow = $tblrow.closest('tr').attr('id');
+                templateObject.getProductQty(selectLineIDRow, productname);
+                $('input[name="deptID"]').val(departmentDataID);
+
+            });
         }
+        $('#departmentModal').modal('toggle');
 
+    });
+    $(document).on("click", ".chkEmailCopy", function(e) {
+        if ($(event.target).is(':checked')) {
+            $('#employeeList').modal('show');
+        }
+    });
 
+    $(document).on("blur", ".lineUOMQtyShipped", function(event) {
+        var targetID = $(event.target).closest('tr').attr('id');
+        $('#' + targetID + " .lineAdjustQtyPrint").text($('#' + targetID + " .lineUOMQtyShipped").val());
     });
 
     $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
@@ -4549,7 +5171,7 @@ Template.stocktransfercard.events({
                             objDetails = {
                             type: "TProductVS1",
                             fields: {
-                                ID: parseInt(data.tproductlist[i].PARTSID),
+                                ID: parseInt(data.tproductqtylist[i].PARTSID),
                                 Active: true,
                                 SNTracking: "true",
                                 Batch: "false",
@@ -4560,7 +5182,7 @@ Template.stocktransfercard.events({
                             .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
                                 .then(async function (dataReload) {
-                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                 swal.close();
                                 $(target).click();
                                 })
@@ -4587,7 +5209,7 @@ Template.stocktransfercard.events({
                             objDetails = {
                             type: "TProductVS1",
                             fields: {
-                                ID: parseInt(data.tproductlist[i].PARTSID),
+                                ID: parseInt(data.tproductqtylist[i].PARTSID),
                                 Active: true,
                                 SNTracking: "false",
                                 Batch: "true",
@@ -4598,7 +5220,7 @@ Template.stocktransfercard.events({
                             .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
                                 .then(async function (dataReload) {
-                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                 swal.close();
                                 $(target).click();
                                 })
@@ -4739,7 +5361,37 @@ Template.stocktransfercard.events({
                 }
             });
         }
-    }
+    },
+
+    // Print Modal Events
+    "click #printModal .btn-check-template": function (event) {
+        const template = $(event.target).data('template');
+        const templateObject = Template.instance()
+        templateObject.print(template)
+    },
+    "click #printModal #btnSendEmail" : async function (event) {
+        const templateObject = Template.instance()
+        const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
+        if ($("#edtCustomerEmail").val() != "") {
+            LoadingOverlay.show();
+            await templateObject.sendEmail(true);
+            LoadingOverlay.hide();
+        } else {
+            swal({
+            title: "Customer Email Required",
+            text: "Please enter customer email",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+            })
+        }
+    },
+    "click .printConfirm": async function (event) {
+        const checkedPrintOptions = $("#printModal").find(".chooseTemplateBtn:checked")
+        playPrintAudio();
+        const templateObject = Template.instance();
+        templateObject.print()
+    },
 });
 
 Template.stocktransfercard.helpers({

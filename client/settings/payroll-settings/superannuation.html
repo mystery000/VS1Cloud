@@ -8,7 +8,58 @@
                 </div>
                 <div class="modal-body">
                     <div class="card-body p-1 rounded">
-                        <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <a href="#newSuperannuationFundModal" data-toggle="modal">
+                                    {{> vs1_button
+                                        color='primary'
+                                        classes='float-right btnAddordinaryTimeSuperannuation'
+                                        type='button'
+                                        id="btnAddordinaryTimeSuperannuation"
+                                        iconName='plus'
+                                        title='New Superannuation Fund'
+                                    }}
+                                </a>
+                            </div>
+                        </div>
+                        <style>
+                            #tblSuperannuation{
+                                width: 100%!important;
+                            }
+                            #tblSuperannuation .colSuperannuationName{
+                                width: 20%!important;
+                            }
+                            #tblSuperannuation .colSuperannuationType{
+                                width: 17%!important;
+                            }
+                            #tblSuperannuation .colEmployerNum{
+                                width: 17%!important;
+                            }
+                            #tblSuperannuation .colbsb{
+                                width: 17%!important;
+                            }
+                            #tblSuperannuation .colStatus{
+                                width: 10%!important;
+                            }
+                            #tblSuperannuation .colaccountname{
+                                width: 17%!important;
+                            }
+                        </style>
+                        {{> datatablelist
+                            tablename="tblSuperannuation"
+                            apiName=apiFunction8
+                            indexeddbname='Tsuperannuation'
+                            tableheaderrecords=tableheaderrecords8
+                            exportfilename='Superannuations'
+                            apiParams=apiParams8
+                            datahandler=datahandler8
+                            service=service8
+                            lowercaseDataName='tsuperannuation'
+                            exIndexDBName='tsuperannuation'
+                            exdatahandler=exDataHandler8
+                            searchAPI=searchAPI8
+                        }}
+                        <!-- <div class="table-responsive">
                             <table id="tblSuperannuation" style="width:100%" class="table table-striped table-bordered">
                                 <thead>
                                     <tr class="dnd-moved">
@@ -29,7 +80,7 @@
                                     </tbody>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -51,66 +102,148 @@
                     <form class="row" id="superannuationRateForm">
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtFundType">Type</label>
                                 <input type="hidden" id="newSuperannuationFundId" value="0">
                                 <input type="hidden" name="edtSuperAnnuationDropDownID" id="edtSuperAnnuationDropDownID" value="">
+                                {{> default_input 
+                                    label="Type" 
+                                    classes="edtFundType customEditableSelect" 
+                                    id="edtFundType" 
+                                    name="edtFundType" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtFundType">Type</label>
                                 <select type="search" class="form-control edtFundType customEditableSelect" id="edtFundType" >
                                     <option value="regulated">Regulated Superannuation Fund</option>
                                     <option value="selfmanged">Self-Managed Superannuation Fund</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtFundName">Name</label>
-                                <input type="text" class="form-control" id="edtFundName">
+                                {{> default_input 
+                                    label="Name" 
+                                    classes="edtFundName" 
+                                    id="edtFundName" 
+                                    name="edtFundName" 
+                                    defaultValue="" 
+                                    type="text"
+                                }}
+                                <!-- <label for="edtFundName">Name</label>
+                                <input type="text" class="form-control" id="edtFundName"> -->
                             </div>
                         </div>
 
                         <div class="col-12" id="acountabmandelectronic" style="display: none;">
                             <div class="row">
                                 <div class="col-4">
-                                    <label for="edtabn">ABN</label>
-                                    <input type="text" class="form-control" id="edtabn">
+                                    {{> default_input 
+                                        label="ABN" 
+                                        classes="edtabn" 
+                                        id="edtabn" 
+                                        name="edtabn" 
+                                        defaultValue="" 
+                                        type="text"
+                                    }}
+                                    <!-- <label for="edtabn">ABN</label>
+                                    <input type="text" class="form-control" id="edtabn"> -->
                                 </div>
 
                                 <div class="col-8">
-                                    <label for="edtelectronicsalias">Electronics Service Address Alias</label>
-                                    <input type="text" class="form-control" id="edtelectronicsalias">
+                                    {{> default_input 
+                                        label="Electronics Service Address Alias" 
+                                        classes="edtelectronicsalias" 
+                                        id="edtelectronicsalias" 
+                                        name="edtelectronicsalias" 
+                                        defaultValue="" 
+                                        type="text"
+                                    }}
+                                    <!-- <label for="edtelectronicsalias">Electronics Service Address Alias</label>
+                                    <input type="text" class="form-control" id="edtelectronicsalias"> -->
                                 </div>
 
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtFundName">Employer Number <span style="font-weight: 200;">(optional)</span></label>
-                                <input type="text" class="form-control" id="edtEmployerNumber">
+                                {{> default_input 
+                                    label="Employer Number (optional)" 
+                                    classes="edtEmployerNumber" 
+                                    id="edtEmployerNumber" 
+                                    name="edtEmployerNumber" 
+                                    defaultValue="" 
+                                    type="text"
+                                }}
+                                <!-- <label for="edtFundName">Employer Number <span style="font-weight: 200;">(optional)</span></label>
+                                <input type="text" class="form-control" id="edtEmployerNumber"> -->
                             </div>
-                            <span style="font-size: 12px;">Some funds assign a unique number to each employer. If you do not have one, leave this blank.</span>
+                            <span style="font-size: 12px;">Some funds assign a unique number to each employer. <br>If you do not have one, leave this blank.</span>
                         </div>
 
                         <div class="col-12" id="accountbsb" style="display: none;">
                             <h4><strong>Bank Account</strong></h4>
                             <div class="row">
                                    <div class="col-6">
-                                        <label for="edtbsb">BSB</label>
-                                        <input type="text" class="form-control" id="edtbsb">
+                                        {{> default_input 
+                                            label="BSB" 
+                                            classes="edtbsb" 
+                                            id="edtbsb" 
+                                            name="edtbsb" 
+                                            defaultValue="" 
+                                            type="text"
+                                        }}
+                                        <!-- <label for="edtbsb">BSB</label>
+                                        <input type="text" class="form-control" id="edtbsb"> -->
                                    </div>
                                    <div class="col-6">
-                                        <label for="edtaccountnumber">Account Number</label>
-                                        <input type="text" class="form-control" id="edtaccountnumber">
+                                        {{> default_input 
+                                            label="Account Number" 
+                                            classes="edtaccountnumber" 
+                                            id="edtaccountnumber" 
+                                            name="edtaccountnumber" 
+                                            defaultValue="" 
+                                            type="text"
+                                        }}
+                                        <!-- <label for="edtaccountnumber">Account Number</label>
+                                        <input type="text" class="form-control" id="edtaccountnumber"> -->
                                    </div>
                             </div>
                         </div>
                         <div class="col-12" id="account_name" style="display: none;">
-                            <label for="edtaccountname">Account Name</label>
-                            <input type="text" class="form-control edtExpenseAccountDropDown" id="edtaccountname">
+                            {{> default_input 
+                                label="Account Name" 
+                                classes="edtaccountname" 
+                                id="edtaccountname" 
+                                name="edtaccountname" 
+                                defaultValue="" 
+                                type="text"
+                            }}
+                            <!-- <label for="edtaccountname">Account Name</label>
+                            <input type="text" class="form-control edtExpenseAccountDropDown" id="edtaccountname"> -->
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success saveSuperannuation"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                    {{> vs1_button
+                        color='success'
+                        classes='saveSuperannuation'
+                        type='button'
+                        id="saveSuperannuation"
+                        iconName='save'
+                        title='Save'
+                    }}
+                    <a data-dismiss="modal">
+                        {{> vs1_button
+                            color='secondary'
+                            classes=''
+                            type='button'
+                            id="btnCancel"
+                            iconName='close'
+                            title='Close'
+                        }}
+                    </a>
+                    <!-- <button type="button" class="btn btn-success saveSuperannuation"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                 </div>
             </div>
         </div>

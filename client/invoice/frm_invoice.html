@@ -115,7 +115,7 @@
 
     {{#if invoicerecord}}
     <form>
-      {{> transaction_header
+      <!-- {{> transaction_header
         cardType="Invoice"
         data=invoicerecord
         uploadedFile=uploadedFile
@@ -139,18 +139,40 @@
         showCopyTransaction=true
         showCopyToInvoice=false
         showCopyToOrder=false
-      }}
+      }} -->
 
-      {{> transaction_line
-      tablename="tblInvoiceLine"
-      recordLineItems=invoicerecord.LineItems
-      isForeignEnabled=isForeignEnabled
-      canShowBackOrder=true
-      canShowUOM=true
-      includeBOnShippedQty=includeBOnShippedQty
-      isBatchSerialNoTracking=isBatchSerialNoTracking
-      getDefaultCurrency=getDefaultCurrency
-      }}
+      {{>transactionheader
+        includeClient=true
+        includeAddress=true
+        Category='invoice'
+        TranascationType='Invoice'
+        clientType='Customer'
+        payment=true
+        headerfields=headerfields
+        headerbuttons=headerbuttons
+        currency=true
+        balanceDue=invoicerecord.balanceDue
+        isPaid=invoicerecord.ispaid
+        data=invoicerecord
+        gridTableId='tblInvoiceLine'
+        printTableId='invoice_print'
+       }}
+
+
+
+      <div>
+        {{> transaction_line
+          tablename="tblInvoiceLine"
+          recordLineItems=invoicerecord.LineItems
+          isForeignEnabled=isForeignEnabled
+          canShowBackOrder=true
+          canShowUOM=true
+          includeBOnShippedQty=true
+          isBatchSerialNoTracking=isBatchSerialNoTracking
+          getDefaultCurrency=getDefaultCurrency
+          }}
+        <!-- {{> deletepop itemName1="Refund" itemName2="refund" itemName3="Refund" button1="btnDeleteRefund" button2="btnDeleteFollowingRefunds"}} -->
+      </div>
 
       <div class="row align-items-end" style="margin: 12px;">
         <div class="col-12 col-lg-8 col-xl-10" style="padding-right: 24px;">
@@ -815,8 +837,8 @@
 
     <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog"
       aria-labelledby="templatePreviewLabel" aria-hidden="true">
-      {{> custom_print_template 
-        modalId="templatePreviewModal" 
+      {{> custom_print_template
+        modalId="templatePreviewModal"
         idPrefix="html-2-pdfwrapper_invoice"
         namePrefix="html-2-pdfwrapper_invoice" }}
     </div>
@@ -1078,7 +1100,7 @@
   <div id="elementH"></div>
 
   <!-- This a template with all VS1 POP Modal used for Transactions -->
-  {{> all_transaction_modals customerRecord=customerRecord}}
+  <!-- {{> all_transaction_modals customerRecord=customerRecord}} -->
   <!-- {{> deletepop itemName1="Invoice" itemName2="invoice" itemName3="Invoice" button1="btnDeleteInvoice"
   button2="btnDeleteFollowingInvoices"}} -->
   <script>

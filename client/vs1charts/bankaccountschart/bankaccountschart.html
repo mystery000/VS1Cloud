@@ -25,48 +25,107 @@
         hrefDetails="/reconciliationlist"
         editModalID="editDashboardModal"
     }}
-        <div class="table-responsive" style="overflow-x: hidden!important;">
-            <table id="tblBankAccountChartList" style="width:100%" class="dataTable table table-striped table-bordered tblBankAccountChartList">
-                <thead>
-                    <tr class="dnd-moved">
-                        <th class="th colReconId hiddenColumn">ID</th>
-                        <th class="th colReconAccountName" style="width:80px;">Account Name</th>
-                        <th class="th colReconBalance" style="width:80px;">Balance</th>
-                        <th class="th colNotReconcilied" style="width:140px;">Not Reconciled</th>
-                        <th class="th colReconDate" style="width:140px!;">Last Reconciled</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#if datatablerecords}}
-                        {{#each item in datatablerecords}}
-                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                <td contenteditable="false" class="colReconId hiddenColumn">{{item.id}}</td>
-                                <td contenteditable="false" class="colReconAccountName">{{item.accountname}}</td>
-                                <td contenteditable="false" class="colReconBalance" style="text-align: right!important;">
-                                    {{item.balance}}
-                                </td>
-                                <td contenteditable="false" class="colNotReconcilied">{{item.cardnumber}}</td>
-                                <td contenteditable="false" class="colReconDate">{{item.expirydate}}</td>
-                            </tr>
-                        {{/each}}
-                    {{/if}}
-                </tbody>
-            </table>
-
-            <style media="screen">
-                .colReconDate{
-                    width:80px!Important;
-                }
-                .colNotReconcilied{
-                    width:100px!Important;
-                }
-                .colReconBalance{
-                    width:80px!Important;
-                }
-                .colReconAccountName{
-                    width:120px!Important;
+        <div>
+            <style>
+                td.colReconBalance{
+                    text-align: right !important;
                 }
             </style>
+              <!-- tablename: Specify the html table Id/name
+              apiName: Pass the API function here e.g apiFunction
+              indexeddbname: specify the indexdb name
+              tableheaderrecords: Pass the header records
+              exportfilename:Print out table name
+              istransaction: Assign true or false if it is a transacation or non - transaction list
+              apiParams= apiParams
+              datahandler = datahandler
+              service=service
+              lowercaseDataName='treconciliationlist'
+              exIndexDBName = 'treconciliationlist'
+              exdatahandler = exDataHandler
+              searchAPI = searchAPI
+              orderby = '[[ 4, "desc" ]]'
+              orderdesc = 'desc'
+              indexeddbname = 'TReconciliationBankAccountsList'
+              tableheaderrecords = tableheaderrecords
+              exportfilename = 'Bank Account List'
+              istransaction = false
+              apiParams= apiParams
+              datahandler = datahandler
+              service=service
+              lowercaseDataName='treconciliationlist'
+              exIndexDBName = 'treconciliationlist'
+              exdatahandler = exDataHandler
+              searchAPI = searchAPI
+              orderby: Pass which column to order datatble with. Default 1
+              orderdesc : Specify if order is desc or asc. Deafult asc
+            -->
+
+            {{>datatablelist
+                    tablename="tblBankAccountChartList"
+                    apiName= apiFunction
+                    indexeddbname = 'TReconciliationBankAccountsList'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Bank Account List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='treconciliationlist'
+                    exIndexDBName = 'treconciliationlist'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+                    orderby = '[[ 4, "desc" ]]'
+                    viewActiveInactiveButton = true
+                    viewConvertedButton = false
+                    viewCompletedButton = false
+                    showPlusButton = false
+                    showPlusButtonCRM = false
+            }}
         </div>
+
+<!--        <div class="table-responsive" style="overflow-x: hidden!important;">-->
+<!--            <table id="tblBankAccountChartList" style="width:100%" class="dataTable table table-striped table-bordered tblBankAccountChartList">-->
+<!--                <thead>-->
+<!--                    <tr class="dnd-moved">-->
+<!--                        <th class="th colReconId hiddenColumn">ID</th>-->
+<!--                        <th class="th colReconAccountName" style="width:80px;">Account Name</th>-->
+<!--                        <th class="th colReconBalance" style="width:80px;">Balance</th>-->
+<!--                        <th class="th colNotReconcilied" style="width:140px;">Not Reconciled</th>-->
+<!--                        <th class="th colReconDate" style="width:140px!;">Last Reconciled</th>-->
+<!--                    </tr>-->
+<!--                </thead>-->
+<!--                <tbody>-->
+<!--                    {{#if datatablerecords}}-->
+<!--                        {{#each item in datatablerecords}}-->
+<!--                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">-->
+<!--                                <td contenteditable="false" class="colReconId hiddenColumn">{{item.id}}</td>-->
+<!--                                <td contenteditable="false" class="colReconAccountName">{{item.accountname}}</td>-->
+<!--                                <td contenteditable="false" class="colReconBalance" style="text-align: right!important;">-->
+<!--                                    {{item.balance}}-->
+<!--                                </td>-->
+<!--                                <td contenteditable="false" class="colNotReconcilied">{{item.cardnumber}}</td>-->
+<!--                                <td contenteditable="false" class="colReconDate">{{item.expirydate}}</td>-->
+<!--                            </tr>-->
+<!--                        {{/each}}-->
+<!--                    {{/if}}-->
+<!--                </tbody>-->
+<!--            </table>-->
+
+<!--            <style media="screen">-->
+<!--                .colReconDate{-->
+<!--                    width:80px!Important;-->
+<!--                }-->
+<!--                .colNotReconcilied{-->
+<!--                    width:100px!Important;-->
+<!--                }-->
+<!--                .colReconBalance{-->
+<!--                    width:80px!Important;-->
+<!--                }-->
+<!--                .colReconAccountName{-->
+<!--                    width:120px!Important;-->
+<!--                }-->
+<!--            </style>-->
+<!--        </div>-->
     {{/draggablePanel}}
 </template>

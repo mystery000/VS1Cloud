@@ -42,11 +42,11 @@ Template.trialbalance.onRendered(() => {
     let reset_data = [];
     reset_data = [
       // { index: 1, label: 'ID', class:'colID', active: false, display: true, width: "50" },
-      { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "40" },
+      { index: 1, label: 'Account Name', class:'colAccountName', active: true, display: true, width: "41" },
       { index: 2, label: 'Account No', class:'colAccountNo', active: true, display: true, width: "15" },
       { index: 3, label: 'Account', class:'colAccount', active: true, display: true, width: "15" },
       { index: 4, label: 'Credits (Ex)', class:'colCreditsEx text-center0', active: true, display: true, width: "15" },
-      { index: 5, label: 'Debits (Ex)', class:'colDebitsEx text-center0', active: true, display: true, width: "15" },
+      { index: 5, label: 'Debits (Ex)', class:'colDebitsEx text-center0', active: true, display: true, width: "14" },
       // { index: 4, label: 'Account Name Only', class:'colAccountNameOnly', active: false, display: true, width: "200" },
       // { index: 7, label: 'Credits (Inc)', class:'colCreditsInc', active: false, display: true, width: "120" },
       // { index: 9, label: 'Debits (Inc)', class:'colDebitsInc', active: false, display: true, width: "120" },
@@ -79,7 +79,7 @@ Template.trialbalance.onRendered(() => {
 
   templateObject.getTrialBalanceData = async function (dateFrom, dateTo, ignoreDate) {
 
-    templateObject.setDateAs(dateFrom);
+    templateObject.setDateAs(dateTo);
     getVS1Data('TTrialBalanceReport').then(function (dataObject) {
       if (dataObject.length == 0) {
         reportService.getTrialBalanceDetailsData(dateFrom, dateTo, ignoreDate).then(async function (data) {
@@ -131,7 +131,6 @@ Template.trialbalance.onRendered(() => {
         // data.ttrialbalancereport[i].TransID || "",
       ];
       splashArrayTrialBalanceReport.push(dataList);
-      templateObject.transactiondatatablerecords.set(splashArrayTrialBalanceReport);
     }
 
 
@@ -140,7 +139,7 @@ Template.trialbalance.onRendered(() => {
     let trialBalanceReport = [];
     let symDollar = '$';
     trialBalanceReport.push([
-      `<span class="table-cells"><strong>${T_AccountName}</strong></span>`,
+        GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
       "",
       "",
       "",
@@ -151,56 +150,55 @@ Template.trialbalance.onRendered(() => {
       if(start != splashArrayTrialBalanceReport[i][0]) {
         creditSum += (credit - 0), debitSum += (debit - 0);
         start = splashArrayTrialBalanceReport[i][0];
-        credit = credit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>`;
-        debit = debit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>`;
-        // total = total >= 0 ? `<!--<span class='table-cells'><strong>${showCurrency(total)}</strong></span>-->` : `<span class='text-danger'><strong>${showCurrency(total)}</strong></span>`;
+        credit = credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-lbold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-danger text-bold", "text-right");
+        debit = debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-lbold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-danger text-bold", "text-right");
         trialBalanceReport.push([
-          `<span class="table-cells"><strong>Total ${T_AccountName}</strong></span>`,
+          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-lbold"),
           "",
           "",
           credit,
           debit,
         ]);
         trialBalanceReport.push([
-          `<span class="table-cells"><strong>${splashArrayTrialBalanceReport[i][0]}</strong></span>`,
+          GlobalFunctions.generateSpan(splashArrayTrialBalanceReport[i][0], "table-cells text-bold"),
           "",
           "",
           "",
           ""
         ]);
-
         credit = 0, debit = 0;
       }
       T_AccountName = splashArrayTrialBalanceReport[i][0];
       splashArrayTrialBalanceReport[i][0] = "";
-      splashArrayTrialBalanceReport[i][1] = `<span class="text-primary">${splashArrayTrialBalanceReport[i][1]}</span>`;
-      splashArrayTrialBalanceReport[i][2] = `<span class="text-primary">${splashArrayTrialBalanceReport[i][2]}</span>`;
+      splashArrayTrialBalanceReport[i][1] = GlobalFunctions.generateSpan(splashArrayTrialBalanceReport[i][1], "text-primary");
+      splashArrayTrialBalanceReport[i][2] = GlobalFunctions.generateSpan(splashArrayTrialBalanceReport[i][2], "text-primary");
 
       let tmp;
       tmp = splashArrayTrialBalanceReport[i][3] - 0;
       credit += tmp;
-      splashArrayTrialBalanceReport[i][3] = (tmp >= 0) ? `<span class="text-primary">${GlobalFunctions.showCurrency(tmp)}</span>` : `<span class="text-danger">${GlobalFunctions.showCurrency(tmp)}</span>`;
+      splashArrayTrialBalanceReport[i][3] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
 
       tmp = splashArrayTrialBalanceReport[i][4] - 0;
       debit += tmp;
-      splashArrayTrialBalanceReport[i][4] = (tmp >= 0) ? `<span class="text-primary">${GlobalFunctions.showCurrency(tmp)}</span>` : `<span class="text-danger">${GlobalFunctions.showCurrency(tmp)}</span>`;
+      splashArrayTrialBalanceReport[i][4] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), "text-danger", "text-right");
       trialBalanceReport.push(splashArrayTrialBalanceReport[i]);
     }
     trialBalanceReport.push([
-      `<span class="table-cells"><strong>Total ${T_AccountName}</strong></span>`,
+      GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
       "",
       "",
-      credit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(credit)}</strong></span>`,
-      debit >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(debit)}</strong></span>`,
+      credit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(credit), "table-danger text-bold", "text-right"),
+      debit >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debit), "table-danger text-bold", "text-right"),
     ]);
     creditSum += (credit - 0), debitSum += (debit - 0);
     trialBalanceReport.push([
-      `<span class="table-cells"><strong>Grand Total</strong></span>`,
+      GlobalFunctions.generateSpan(`Grand Total`, "table-cells text-bold"),
       "",
       "",
-      creditSum >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(creditSum)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(creditSum)}</strong></span>`,
-      debitSum >= 0 ? `<span class='table-cells'><strong>${GlobalFunctions.showCurrency(debitSum)}</strong></span>` : `<span class='text-danger'><strong>${GlobalFunctions.showCurrency(debitSum)}</strong></span>`,
+      creditSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(creditSum), "table-danger text-bold", "text-right"),
+      debitSum >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "table-cells text-bold", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(debitSum), "table-danger text-bold", "text-right"),
     ]);
+    templateObject.transactiondatatablerecords.set(trialBalanceReport);
     setTimeout(function () {
       $('#trialbalance').DataTable({
         data: trialBalanceReport,
@@ -1122,121 +1120,20 @@ Template.trialbalance.events({
   "click .btnPrintReport": function (event) {
     $('.fullScreenSpin').css('display', 'inline-block')
     playPrintAudio();
-    setTimeout(async function(){
-      let targetElement = document.getElementsByClassName('printReport')[0];
-      targetElement.style.width = "210mm";
-      targetElement.style.backgroundColor = "#ffffff";
-      targetElement.style.padding = "20px";
-      targetElement.style.height = "fit-content";
-      targetElement.style.fontSize = "13.33px";
-      targetElement.style.color = "#000000";
-      targetElement.style.overflowX = "visible";
-      let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
-      let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
-      for (let k = 0; k< targetTds.length; k++) {
-        $(targetTds[k]).attr('style', 'min-width: 0px !important')
-        $(targetTds[k]).attr('style', 'max-width: 130px !important')
-      }
-      for (let j = 0; j< targetThs.length; j++) {
-        $(targetThs[j]).attr('style', 'min-width: 0px !important')
-        $(targetThs[j]).attr('style', 'max-width: 130px !important')
-      }
-
-      let docTitle = "Trial Balance.pdf";
-
-
-      var opt = {
-        margin: 0,
-        filename: docTitle,
-        image: {
-          type: 'jpeg',
-          quality: 0.98
-        },
-        html2canvas: {
-          scale: 2
-        },
-        jsPDF: {
-          unit: 'in',
-          format: 'a4',
-          orientation: 'portrait'
-        }
-      };
-      let source = targetElement;
-
-      async function getAttachments () {
-        return new Promise(async(resolve, reject)=> {
-          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
-            let pdfObject = "";
-            let base64data = dataObject.split(',')[1];
-            pdfObject = {
-              filename: docTitle,
-              content: base64data,
-              encoding: 'base64'
-            }
-            let attachments = [];
-            attachments.push(pdfObject);
-            resolve(attachments)
-          })
-        })
-      }
-
-      async function checkBasedOnType() {
-        return new Promise(async(resolve, reject)=>{
-          let values = [];
-          let basedOnTypeStorages = Object.keys(localStorage);
-          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-            let employeeId = storage.split("_")[2];
-            return (
-                storage.includes("BasedOnType_")
-                // storage.includes("BasedOnType_") && employeeId == localStorage.getItem("mySessionEmployeeLoggedID")
-            );
-          });
-          let i = basedOnTypeStorages.length;
-          if (i > 0) {
-            while (i--) {
-              values.push(localStorage.getItem(basedOnTypeStorages[i]));
-            }
-          }
-          for(let j = 0; j < values.length; j ++) {
-            let value = values[j]
-            let reportData = JSON.parse(value);
-            reportData.HostURL = $(location).attr("protocal")
-                ? $(location).attr("protocal") + "://" + $(location).attr("hostname")
-                : "http://" + $(location).attr("hostname");
-            if (reportData.BasedOnType.includes("P")) {
-              if (reportData.FormID == 1) {
-                let formIds = reportData.FormIDs.split(",");
-                if (formIds.includes("140")) {
-                  reportData.FormID = 140;
-                  reportData.attachments = await getAttachments()
-                  Meteor.call("sendNormalEmail", reportData);
-                  resolve()
-                }
-              } else {
-                if (reportData.FormID == 140){
-                  reportData.attachments = await getAttachments();
-                  Meteor.call("sendNormalEmail", reportData);
-                  resolve()
-                }
-              }
-            }
-            if(j == values.length -1) {resolve()}
-          }
-        })
-      }
-
-      await checkBasedOnType();
-      $('.fullScreenSpin').css('display', 'none');
-      targetElement.style.width = "100%";
-      targetElement.style.backgroundColor = "#ffffff";
-      targetElement.style.padding = "0px";
-      targetElement.style.fontSize = "1rem";
+    setTimeout(function () {
+      $("a").attr("href", "/");
       document.title = "Trial Balance Report";
       $(".printReport").print({
-        title: document.title + " | Trial Balance | " + loggedCompany,
+        title: document.title + " | Trial  Balance Report | " + loggedCompany,
         noPrintSelector: ".addSummaryEditor",
+        mediaPrint: false,
       });
+      setTimeout(function () {
+        $("a").attr("href", "#");
+      }, 100);
     }, delayTimeAfterSound);
+    $('.fullScreenSpin').css('display', 'none')
+
   },
   /*"click .btnSpreadSheetLink": function() {
     LoadingOverlay.show();
@@ -1317,7 +1214,6 @@ Template.trialbalance.events({
   },*/
   "click .btnExportReport": function () {
     LoadingOverlay.show();
-    debugger
     let utilityService = new UtilityService();
     let templateObject = Template.instance();
     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
@@ -1337,7 +1233,8 @@ Template.trialbalance.events({
         dateTo.getDate();
 
     const filename = loggedCompany + "-Trial Balance" + ".csv";
-    utilityService.exportReportToCsvTable("tableExport", filename, "csv");
+    utilityService.exportReportToCsvTable("trialbalance", filename, "csv");
+    LoadingOverlay.hide();
     let rows = [];
     // reportService.getTrialBalanceDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {
     //     if(data.ttrialbalancereport){
@@ -1450,12 +1347,16 @@ Template.trialbalance.events({
     // templateObject.dateAsAt.set("Current Date");
     // await templateObject.setReportOptions(true);
     // // $(".fullScreenSpin").css("display", "none");
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData('TTrialBalanceReport').then(function(){
 
-    templateObject.loadReport(
-        null,
-        null,
-        true
-    );
+      templateObject.getTrialBalanceData(
+          null,
+          null,
+          true
+      );
+    })
+
   },
   "keyup #myInputSearch": function (event) {
     $(".table tbody tr").show();
@@ -1655,11 +1556,14 @@ Template.trialbalance.events({
    * This is the new way to handle any modification on the date fields
    */
   "change #dateTo, change #dateFrom": (e, templateObject) => {
-    templateObject.loadReport(
-        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-        false
-    );
+    $(".fullScreenSpin").css("display", "inline-block");
+    clearData('TTrialBalanceReport').then(function(){
+      templateObject.getTrialBalanceData(
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          false
+      );
+    })
   },
   ...Datehandler.getDateRangeEvents()
 });

@@ -1,0 +1,75 @@
+<template name="customfiltersmodal">
+  <div class="modal fade" role="dialog" tabindex="-1" id="customFilterModal">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+          <div class="modal-header customFilterHelpModal">
+              <h4>Custom Filter</h4>
+          </div>
+          <div class="modal-body customFilterHelpModal">
+            <div class="row">
+              First Filter Here
+            </div>
+          </div>
+            <div class="modal-header" style="border-top:1px solid #e3e6f0;">
+                <h4>Outstanding Invoices</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" style="width: 100%; display:none;" id="selectTableID" name="selectTableID" readonly>
+                <ul class="list-group list-group-flush">
+
+                  <li class="list-group-item templateItem justify-content-between">
+                    <div class="custom-control custom-switch">
+                      <input class="custom-control-input rdoGreen" type="radio" name="rdoGreen" id="rdoGreen" value="Green" style="cursor: pointer;" />
+                      <label class="custom-control-label" for="rdoGreen" style="cursor: pointer; color: #1cc88a;">Within Terms</label>
+                      <!-- <input class="" type="text" name="txtGreen" style="border: none; width: 90%;" value="Within Terms" /> -->
+                    </div>
+
+                    <div class="custom-control custom-switch">
+                      <input class="custom-control-input rdoYellow" type="radio" name="rdoYellow" id="rdoYellow" value="Yellow" style="cursor: pointer;" />
+                      <label class="custom-control-label" for="rdoYellow" style="cursor: pointer; color: #d7d715;">1 to 30 Days Overdue</label>
+                      <!-- <input class="" type="text" name="txtYellow" style="border: none; width: 90%;" value="1 to 30 Days Overdue" /> -->
+                    </div>
+
+
+                    <div class="custom-control custom-switch">
+                      <input class="custom-control-input rdoOrange" type="radio" name="rdoOrange" id="rdoOrange" value="Orange" style="cursor: pointer;" />
+                      <label class="custom-control-label" for="rdoOrange" style="cursor: pointer; color: #f6c23e;">31 to 60 Days Overdue</label>
+                      <!-- <input class="" type="text" name="txtOrange" style="border: none; width: 90%;" value="31 to 60 Days Overdue" /> -->
+                    </div>
+
+                    <div class="custom-control custom-switch">
+                      <input class="custom-control-input rdoRed" type="radio" name="rdoRed" id="rdoRed" value="Red" style="cursor: pointer;" />
+                      <label class="custom-control-label" for="rdoRed" style="cursor: pointer; color: #e74a3b;">More than 61 Days Overdue</label>
+                      <!-- <input class="" type="text" name="txtRed" style="border: none; width: 90%;" value="More than 61 Days Overdue" /> -->
+                    </div>
+                  </li>
+
+                  <li class="list-group-item templateItem justify-content-between">
+                    <div class="custom-control custom-switch">
+                      <input class="custom-control-input rdoDueThisMonth" type="radio" name="rdoDueThisMonth" id="rdoDueThisMonth" value="Due This Calendar Month" style="cursor: pointer;" />
+                      <label class="custom-control-label" for="rdoDueThisMonth" style="cursor: pointer; color: transparent;"></label>
+                      <input class="" type="text" name="txtDueThisMonth" style="border: none; width: 90%;" value="Due This Calendar Month" />
+                    </div>
+
+                    <div class="custom-control custom-switch">
+                      <input class="custom-control-input rdoDueLastMonth" type="radio" name="rdoDueLastMonth" id="rdoDueLastMonth" value="Due Last Calendar Month" style="cursor: pointer;" />
+                      <label class="custom-control-label" for="rdoDueLastMonth" style="cursor: pointer; color: transparent;"></label>
+                      <input class="" type="text" name="txtDueLastMonth" style="border: none; width: 90%;" value="Due Last Calendar Month" />
+                    </div>
+
+                  </li>
+
+                  <li class="list-group-item templateItem justify-content-between">
+                    <P>Due    <input class="" type="number" name="txtDaysDue" style="width: 15%; margin-left: 15px; margin-right: 15px;" value="" /> Days ago</P>
+                  </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btnSaveApply" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Apply</button>
+                <button class="btn btn-primary btnSaveFilter" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save Filter</button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button" autocomplete="off"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+            </div>
+        </div>
+    </div>
+  </div>
+</template>

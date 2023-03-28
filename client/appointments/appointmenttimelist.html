@@ -70,8 +70,7 @@
                 </div>
 
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
-                    <button class="btn btn-primary printConfirm float-right" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+                    {{> export_import_print_display_button tablename="tblappointmenttimelist"}}
                 </div>
 
             </div>
@@ -202,39 +201,21 @@
 
 
                         </style>
-                        <table id="tblappointmenttimelist" name="tblappointmenttimelist" class="dataTable table table-hover table-striped table-bordered tblappointmenttimelist">
-                            <thead>
-                                <tr class="dnd-moved">
-                                    <th class="th colSortDate" style="width:60px;">ID</th>
-                                    <th class="th colDate" style="width:84px;">Date</th>
-                                    <th class="th colAccountName" style="width:250px;">Company</th>
-                                    <th class="th colStatementNo" style="width:150px;">Rep</th>
-                                    <th class="th colOpenBalance" style="width:84px;">From Time</th>
-                                    <th class="th colEmployee" style="width:84px;">To Time</th>
-                                    <th class="th colHours" style="width:84px;">Hours</th>
-                                    <th class="th colNotes">Break</th>
-                                    <th class="th colTimeLog hiddenColumn" style="width:60px;">TimeLog ID</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#if datatablerecords}}
-                                {{#each item in datatablerecords}}
-                                <tr class="dnd-moved" id="{{item.id}}" logid="{{item.logid}}" style="cursor: pointer;">
-                                    <!-- <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td> -->
-                                    <td contenteditable="false" class="colSortDate">{{item.id}}</td>
-                                    <td contenteditable="false" class="colDate" ><span style="display:none;">{{item.sortdate}}</span>{{item.appointmentdate}}</td>
-                                    <td contenteditable="false" class="colAccountName" id="colAccountName{{item.id}}">{{item.accountname}}</td>
-                                    <td contenteditable="false" class="colStatementNo">{{item.statementno}}</td>
-                                    <td contenteditable="false" class="colOpenBalance" >{{item.timeStart}}</td>
-                                    <td contenteditable="false" class="colEmployee">{{item.timeEnd}}</td>
-                                    <td contenteditable="false" class="colHours">{{item.hours}}</td>
-                                    <td contenteditable="false" class="colNotes" >{{item.notes}}</td>
-                                    <td contenteditable="false" class="colTimeLog hiddenColumn" >{{item.logid}}</td>
-                                </tr>
-                                {{/each}}
-                                {{/if}}
-                            </tbody>
-                        </table>
+                        {{>datatablelist
+                            tablename="tblappointmenttimelist"
+                            apiName= apiFunction
+                            indexeddbname = 'TAppointment'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Appointment Time List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tappointmentex'
+                            exIndexDBName = 'tappointmentex'
+                            exdatahandler = exDataHandler
+                            isMultipleRows = true
+                        }}
 
                         <div class="modal fade" role="dialog"  id="event-modal">
                             <form id="frmAppointment">
@@ -411,11 +392,11 @@
                                                             <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
                                                                 Service</label><select id="product-list" name="product-list" class="form-control">
                                                                 {{#if datatablerecords}}
-                                                                {{#each item in datatablerecords}}
-                                                                <option value="{{item.id}}">{{item.productname}}</option>
-                                                                {{/each}}
+                                                                    {{#each item in datatablerecords}}
+                                                                        <option value="{{item.id}}">{{item.productname}}</option>
+                                                                    {{/each}}
                                                                 {{/if}}
-                                                                </select></div>
+                                                            </select></div>
                                                         </div>
                                                         <div class="col-2 colStart" id="colStart" style="padding-top: 2em;">
                                                             <button class="btn btn-success" type="button" style="margin: 8px 0px; width: 100%;" id="btnStartActualTime">Start</button>

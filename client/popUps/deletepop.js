@@ -183,8 +183,8 @@ const hasFollowings = async function() {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-      var saleDate = invData.fields.SaleDate;
-      var fromDate = saleDate.substring(0, 10);
+      var creationDate = invData.fields.CreationDate;
+      var fromDate = creationDate.substring(0, 10);
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
       var followingInvoices = await sideBarService.getAllTInvoiceListData(
         fromDate,
@@ -194,14 +194,14 @@ const hasFollowings = async function() {
         0
       );
       var invList = followingInvoices.tinvoicelist;
-        $("#following_cnt").val(invList.length);
-        if (invList.length > 0) {
-          $("#btn_follow1").css("display", "inline-block");
-          $("#btn_follow2").css("display", "inline-block");
-        } else {
-          $("#btn_follow1").css("display", "none");
-          $("#btn_follow2").css("display", "none");
-        }
+      $("#following_cnt").val(invList.length);
+      if (invList.length > 0) {
+        $("#btn_follow1").css("display", "inline-block");
+        $("#btn_follow2").css("display", "inline-block");
+      } else {
+        $("#btn_follow1").css("display", "none");
+        $("#btn_follow2").css("display", "none");
+      }
     }
   }
   if('customer_payment' == templateInstance.data.formType) {
@@ -384,8 +384,8 @@ const hasFollowings = async function() {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-      var saleDate = quoteData.fields.SaleDate;
-      var fromDate = saleDate.substring(0, 10);
+      var creationDate = quoteData.fields.CreationDate;
+      var fromDate = creationDate.substring(0, 10);
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
       var followingQuotes = await sideBarService.getAllTQuoteListData(
           fromDate,
@@ -409,8 +409,8 @@ const hasFollowings = async function() {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var soData = await salesService.getOneSalesOrderdataEx(currentInvoice);
-      var saleDate = soData.fields.SaleDate;
-      var fromDate = saleDate.substring(0, 10);
+      var creationDate = soData.fields.CreationDate;
+      var fromDate = creationDate.substring(0, 10);
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
       var followingSOs = await sideBarService.getAllTSalesOrderListData(
         fromDate,
@@ -434,8 +434,8 @@ const hasFollowings = async function() {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var refundData = await salesService.getRefundSales(currentInvoice);
-      var saleDate = refundData.fields.SaleDate;
-      var fromDate = saleDate.substring(0, 10);
+      var creationDate = refundData.fields.CreationDate;
+      var fromDate = creationDate.substring(0, 10);
       var toDate =
           currentDate.getFullYear() +
           "-" +
@@ -509,8 +509,8 @@ const hasFollowings = async function() {
     if (getso_id[1]) {
       currentInvoice = parseInt(currentInvoice);
       var invData = await salesService.getOneInvoicedataEx(currentInvoice);
-      var saleDate = invData.fields.SaleDate;
-      var fromDate = saleDate.substring(0, 10);
+      var creationDate = invData.fields.CreationDate;
+      var fromDate = creationDate.substring(0, 10);
       var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
       var followingInvoices = await sideBarService.getAllTInvoiceListData(
           fromDate,

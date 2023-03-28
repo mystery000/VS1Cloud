@@ -7,7 +7,22 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
                 <div class="card-body p-1 rounded" >
-                   {{> non_transactional_list tablename = 'tblInventoryAccountList'}}
+<!--                   {{> non_transactional_list tablename = 'tblInventoryAccountList'}}-->
+                    {{>datatablelist
+                            tablename="tblInventoryAccountList"
+                            apiName= apiFunction
+                            indexeddbname = 'TAccountVS1List'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Inventory Account List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='taccountvs1list'
+                            exIndexDBName = 'taccountvs1list'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                 </div>
             </div>
             <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>

@@ -46,21 +46,17 @@
                 <div>
                     <a class="btn btn-primary float-left vs1ButtonMargin" href="#newBinLocationModal" data-toggle="modal"><i class="fa fa-plus" style="margin-right: 8px;"></i>New Bin Location</a>
                     <div class="modal fade" role="dialog" tabindex="-1" id="newBinLocationModal">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-dialog modal-dialog-centered" style="max-width: 350px;" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h4 class="mb-0">Add New Bin Location</h4>
+                                    <h4 class="mb-0">Add Bin Location</h4>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                                 </div>
                                 <div class="modal-body" style="background-color: #ededed;">
                                     <div class="row no-gutters">
                                         <div class="col-12 d-xl-flex align-items-xl-end">
                                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department</label>
-                                                <select class="form-control" name="sltDepartmentList" id="sltDepartmentList" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                                    {{#each item in deptrecords}}
-                                                    <option value="{{item.department}}" mytag="{{item.id}}">{{item.department}}</option>
-                                                    {{/each}}
-                                                </select>
+                                                {{> vs1_dropdown id='sltDepartmentList' name='sltDepartmentList' type='search' classes='es-input'}}
                                             </div>
                                         </div>
                                     </div>
@@ -88,11 +84,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col" style="margin-right: 4px;">
-                <a class="btn btnOpenSettings float-right vs1ButtonMargin" role="button" data-toggle="modal"  href="#tblBinLocations_Modal"><i class="icon ion-android-more-horizontal"></i></a>
-                <button class="btn btn-primary float-right printConfirm vs1ButtonMargin" type="button" ><i class="fas fa-print" style="padding-right: 5px;"></i>Print</button>
-                <button class="btn btn-primary float-right vs1ButtonMargin " type="button" data-toggle="modal" href="#importModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                <button class="btn btn-primary float-right exportinv_csv vs1ButtonMargin" type="button"  id="exportinv_csv" name="exportinv_csv"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+            <div class="col d-flex my-auto justify-content-end" style="margin-right: 4px;">
+                {{> spreadsheet_link templateName="Bin Location List Report Result"}}
+                {{> export_import_print_display_button Export="exportinv_csv" Import="btnImport" Print="btnPrint" DisplaySettings="btnOpenReportSettings"}}
                 <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -154,41 +148,6 @@
                         </div>
                     </div>
                 </div>
-                <div>
-                    <a class="btn btn-primary float-right" role="button" data-toggle="modal" href="#myModalDepartment" style="margin: 12px;"><i class="fas fa-users-cog" style="padding-right: 5px;"></i>Department</a>
-                    
-                    <!-- Start Department Modal -->
-                    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-                        <div class="modal-dialog modal-sm" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4>Departments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                                </div>
-                                <div class="modal-body">
-                                    {{#each item in deptrecords}}
-                                    {{#if equals item.department "Head Office"}}
-                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                        <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" checked="" value="{{item.department}}"><label class="custom-control-label"
-for="formCheck-{{item.id}}">{{item.department}}</label></div>
-                                    {{else}}
-                                    <div class="custom-control custom-switch" style="margin: 8px;">
-                                        <input class="custom-control-input chkDepartment" type="checkbox" id="formCheck-{{item.id}}" name="chkDepartment" value="{{item.department}}"><label class="custom-control-label"
-for="formCheck-{{item.id}}">{{item.department}}</label></div>
-                                    {{/if}}
-                                    {{/each}}
-                                    
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="btn btn-primary btnSaveSelect" type="button"><i class="fa fa-save" style="margin-right: 8px;"></i>Save</button>
-                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 8px;"></i>Close</button>
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- End Department Modal -->
-
-                </div>
             </div>
         </div>
 
@@ -229,7 +188,6 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
             </div>
         </div>
     </div>
-
     <!-- Start Help Video Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
         <div class="modal-dialog" role="document" style="max-width: 670px!important;">
@@ -251,7 +209,7 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
 
     <!-- Start Edit Bin Modal -->
     <div class="modal fade" role="dialog" tabindex="-1" id="editBinLocationModal">
-        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 350px;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="mb-0">Edit Bin Location</h4>
@@ -262,25 +220,21 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
                     <div class="row no-gutters">
                         <div class="col-12 d-xl-flex align-items-xl-end">
                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Department</label>
-                                <select class="form-control" name="editBinDepartmentList" id="editBinDepartmentList" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    {{#each item in deptrecords}}
-                                    <option value="{{item.department}}" mytag="{{item.id}}">{{item.department}}</option>
-                                    {{/each}}
-                                </select>
+                                {{> vs1_dropdown id='editBinDepartmentList' name='editBinDepartmentList' type='search' classes='es-input'}}
                             </div>
                         </div>
                     </div>
                     <div class="row no-gutters">
                         <div class="col-12 d-xl-flex align-items-xl-end">
                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Rack</label>
-                                <input type="text" class="form-control" id="editBinRack" name="editBinRack">
+                                <input class="form-control" name="editBinRack" id="editBinRack" style="background-color:rgb(255, 255, 255); cursor: pointer;"/>
                             </div>
                         </div>
                     </div>
                     <div class="row no-gutters">
                         <div class="col-12 d-xl-flex align-items-xl-end">
                             <div class="form-group flex-grow-1" style="margin: 8px;"><label>Bin #</label>
-                                <input type="text" class="form-control" id="editBinNum" name="editBinNum">
+                                <input class="form-control" name="editBinNum" id="editBinNum" style="background-color:rgb(255, 255, 255); cursor: pointer;"/>
                             </div>
                         </div>
                     </div>
@@ -294,7 +248,12 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
         </div>
     </div>
     <!-- End Edit Bin Modal -->
-
+    <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
+        {{> departmentpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
+        {{> newdepartmentpop}}
+    </div>
     <script>
         modalDraggable();
     </script>

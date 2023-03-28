@@ -787,8 +787,11 @@
                             }
                         }
                     </style>
+                    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm" style="margin-bottom: -45px; width: fit-content; z-index:9">
+                        {{> transaction_list_date}}
+                    </div>
                     <div class="table-responsive">
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                             </div>
@@ -821,7 +824,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <style>
                             .dataTables_filter .form-control-sm {
                                 font-size: 1rem !important;
@@ -831,35 +834,57 @@
                                 display: none;
                             }
 
-                            /* input[type="time"]::-webkit-calendar-picker-indicator {
-                                background: none;
+                            #tblTimeSheet .colChkBox{
+                                width: 40px!important
+                            }
+                            /* #tblTimeSheet .colID{
+                                width: 40px!important
+                            }
+                            #tblTimeSheet .colName{
+                                width: 200px!important
+                            }
+                            #tblTimeSheet .colDate{
+                                width: 150px!important
+                            }
+                            #tblTimeSheet .colJob{
+                                width: 200px!important
+                            }
+                            #tblTimeSheet .colProduct{
+                                width: 200px!important
+                            }
+                            #tblTimeSheet .colClockHours{
+                                width: 100px!important
+                            }
+                            #tblTimeSheet .colRegHoursOne{
+                                width: 100px!important
+                            }
+                            #tblTimeSheet .colOvertime{
+                                width: 100px!important
+                            }
+                            #tblTimeSheet .colDouble{
+                                width: 100px!important
+                            }
+                            #tblTimeSheet .colAdditional{
+                                width: 100px!important
+                            }
+                            #tblTimeSheet .colPaycheckTips{
+                                width: 200px!important
+                            }
+                            #tblTimeSheet .colNotes{
+                                width: 200px!important
+                            }
+                            #tblTimeSheet .colDescription{
+                                width: 200px!important
+                            }
+                            #tblTimeSheet .colStatus{
+                                width: 100px!important
                             } */
-                            /* .colFlag {
-                                width: 2% !important;
+                            #tblTimeSheet .chkBox{
+                                margin: 0px!important
                             }
-                            .colID {
-                                width: 3% !important;
-                            }
-                            .colView {
-                                width: 3% !important;
-                            }
-                            .colStatus {
-                                width: 5% !important;
-                            }
-                            .colJob {
-                                width: 10% !important;
-                            }
-                            .colRate {
-                                width: 10% !important;
-                            }
-                            .colNotes {
-                                width: 10% !important;
-                            }
-                            .thColHours {
-                                width: 4% !important;
-                            } */
                         </style>
-                        {{> transaction_list tablename = "tblTimeSheet" }}
+                        <!-- {{> transaction_list tablename = "tblTimeSheet" }} -->
+                        {{> internal_transaction_list_with_switchbox tablename="tblTimeSheet"}}
                         <!-- <table id="tblTimeSheet" class="dataTable table table-hover table-striped table-bordered tblTimeSheet">
                             <thead>
                                 <tr class="dnd-moved">
@@ -1115,9 +1140,9 @@
         {{> addcustomerpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
         {{> payrollproductlistpop}}
-    </div>
+    </div> -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
         {{> newproductpop}}

@@ -76,41 +76,41 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
     const lineExtaSellItems = [];
     var currentLoc = FlowRouter.current().route.path;
     tempObj.getAllProducts = function() {
-        getVS1Data("TProductList")
+        getVS1Data("TProductQtyList")
             .then(function(dataObject) {
                 if (dataObject.length == 0) {
                     sideBarService
                         .getNewProductListVS1(initialBaseDataLoad, 0)
                         .then(function(data) {
-                            addVS1Data("TProductList", JSON.stringify(data));
+                            addVS1Data("TProductQtyList", JSON.stringify(data));
                             let records = [];
                             let inventoryData = [];
 
-                            for (let i = 0; i < data.tproductlist.length; i++) {
-                                if (data.tproductlist[i].Active == true) {
+                            for (let i = 0; i < data.tproductqtylist.length; i++) {
+                                if (data.tproductqtylist[i].Active == true) {
                                     linestatus = "";
-                                } else if (data.tproductlist[i].Active == false) {
+                                } else if (data.tproductqtylist[i].Active == false) {
                                     linestatus = "In-Active";
                                 };
                                 costprice = utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                                    Math.floor(data.tproductqtylist[i].BuyQTY1 * 100) / 100); //Cost Price
                                 sellprice = utilityService.modifynegativeCurrencyFormat(
-                                    Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
-                                if (data.tproductlist[i].ExtraSellPrice != null) {
+                                    Math.floor(data.tproductqtylist[i].SellQTY1 * 100) / 100); //Sell Price
+                                if (data.tproductqtylist[i].ExtraSellPrice != null) {
                                     for (
-                                        let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
+                                        let e = 0; e < data.tproductqtylist[i].ExtraSellPrice.length; e++
                                     ) {
                                         let lineExtaSellObj = {
-                                            clienttype: data.tproductlist[i].ExtraSellPrice[e]
+                                            clienttype: data.tproductqtylist[i].ExtraSellPrice[e]
                                                 .ClientTypeName || "",
-                                            productname: data.tproductlist[i].ExtraSellPrice[e]
+                                            productname: data.tproductqtylist[i].ExtraSellPrice[e]
                                                 .ProductName ||
-                                                data.tproductlist[i].ProductName,
+                                                data.tproductqtylist[i].ProductName,
                                             price: utilityService.modifynegativeCurrencyFormat(
-                                                data.tproductlist[i].ExtraSellPrice[e]
+                                                data.tproductqtylist[i].ExtraSellPrice[e]
                                                 .Price1
                                             ) || 0,
-                                            qtypercent: data.tproductlist[i].QtyPercent1 || 0,
+                                            qtypercent: data.tproductqtylist[i].QtyPercent1 || 0,
                                         };
                                         lineExtaSellItems.push(lineExtaSellObj);
                                     }
@@ -119,49 +119,49 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                                 if (currentLoc == "/purchaseordercard") {
                                     dataList = [
                                         '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                                        data.tproductlist[i].PARTSID +
+                                        data.tproductqtylist[i].PARTSID +
                                         "x" +
-                                        data.tproductlist[i].ProductName +
+                                        data.tproductqtylist[i].ProductName +
                                         '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                                        data.tproductlist[i].PARTSID +
+                                        data.tproductqtylist[i].PARTSID +
                                         "x" +
-                                        data.tproductlist[i].ProductName +
+                                        data.tproductqtylist[i].ProductName +
                                         '"></label></div>',
-                                        data.tproductlist[i].PARTSID || "",
-                                        data.tproductlist[i].PARTNAM || "",
-                                        data.tproductlist[i].PARTSDESCRIPTION || "",
-                                        data.tproductlist[i].BARCODE || "",
+                                        data.tproductqtylist[i].PARTSID || "",
+                                        data.tproductqtylist[i].ProductName || "",
+                                        data.tproductqtylist[i].SalesDescription || "",
+                                        data.tproductqtylist[i].BARCODE || "",
                                         costprice,
                                         sellprice,
-                                        data.tproductlist[i].InstockQty,
-                                        data.tproductlist[i].PURCHTAXCODE || "",
-                                        data.tproductlist[i].PRODUCTCODE || "",
-                                        data.tproductlist[i].Ex_Works || null,
+                                        data.tproductqtylist[i].InstockQty,
+                                        data.tproductqtylist[i].PurchaseTaxcode || "",
+                                        data.tproductqtylist[i].PRODUCTCODE || "",
+                                        data.tproductqtylist[i].Ex_Works || null,
                                         linestatus
                                     ];
                                 } else {
                                     dataList = [
                                         '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                        data.tproductlist[i].PARTSID +
+                                        data.tproductqtylist[i].PARTSID +
                                         '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                        data.tproductlist[i].PARTSID +
+                                        data.tproductqtylist[i].PARTSID +
                                         '"></label></div>',
-                                        data.tproductlist[i].PARTSID || "",
-                                        data.tproductlist[i].PARTNAM || "",
-                                        data.tproductlist[i].PARTSDESCRIPTION || "",
-                                        data.tproductlist[i].BARCODE || "",
+                                        data.tproductqtylist[i].PARTSID || "",
+                                        data.tproductqtylist[i].ProductName || "",
+                                        data.tproductqtylist[i].SalesDescription || "",
+                                        data.tproductqtylist[i].BARCODE || "",
                                         costprice,
                                         sellprice,
-                                        data.tproductlist[i].InstockQty,
-                                        data.tproductlist[i].PURCHTAXCODE || "",
-                                        data.tproductlist[i].PRODUCTCODE || "",
-                                        data.tproductlist[i].Ex_Works || null,
+                                        data.tproductqtylist[i].InstockQty,
+                                        data.tproductqtylist[i].PurchaseTaxcode || "",
+                                        data.tproductqtylist[i].PRODUCTCODE || "",
+                                        data.tproductqtylist[i].Ex_Works || null,
                                         linestatus
                                     ];
                                 }
 
                                 if (currentLoc == "/stockadjustmentcard") {
-                                    if (data.tproductlist[i].PRODUCTGROUP == "INV") {
+                                    if (data.tproductqtylist[i].PRODUCTGROUP == "INV") {
                                         splashArrayProductList.push(dataList);
                                     }
                                 } else {
@@ -172,32 +172,32 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                         });
                 } else {
                     let data = JSON.parse(dataObject[0].data);
-                    let useData = data.tproductlist;
+                    let useData = data.tproductqtylist;
                     let records = [];
                     let inventoryData = [];
-                    for (let i = 0; i < data.tproductlist.length; i++) {
-                        if (data.tproductlist[i].Active == true) {
+                    for (let i = 0; i < data.tproductqtylist.length; i++) {
+                        if (data.tproductqtylist[i].Active == true) {
                             linestatus = "";
-                        } else if (data.tproductlist[i].Active == false) {
+                        } else if (data.tproductqtylist[i].Active == false) {
                             linestatus = "In-Active";
                         };
                         costprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(data.tproductlist[i].BuyQty1Cost * 100) / 100); //Cost Price
+                            Math.floor(data.tproductqtylist[i].BuyQty1Cost * 100) / 100); //Cost Price
                         sellprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(data.tproductlist[i].SellQty1Price* 100) / 100); //Sell Price
-                        if (data.tproductlist[i].ExtraSellPrice != null) {
+                            Math.floor(data.tproductqtylist[i].SellQty1Price* 100) / 100); //Sell Price
+                        if (data.tproductqtylist[i].ExtraSellPrice != null) {
                             for (
-                                let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
+                                let e = 0; e < data.tproductqtylist[i].ExtraSellPrice.length; e++
                             ) {
                                 let lineExtaSellObj = {
-                                    clienttype: data.tproductlist[i].ExtraSellPrice[e]
+                                    clienttype: data.tproductqtylist[i].ExtraSellPrice[e]
                                         .ClientTypeName || "",
-                                    productname: data.tproductlist[i].ExtraSellPrice[e]
-                                        .ProductName || data.tproductlist[i].ProductName,
+                                    productname: data.tproductqtylist[i].ExtraSellPrice[e]
+                                        .ProductName || data.tproductqtylist[i].ProductName,
                                     price: utilityService.modifynegativeCurrencyFormat(
-                                        data.tproductlist[i].ExtraSellPrice[e].Price1
+                                        data.tproductqtylist[i].ExtraSellPrice[e].Price1
                                     ) || 0,
-                                    qtypercent: data.tproductlist[i].QtyPercent1 || 0,
+                                    qtypercent: data.tproductqtylist[i].QtyPercent1 || 0,
                                 };
                                 lineExtaSellItems.push(lineExtaSellObj);
                             }
@@ -207,50 +207,50 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                         if (currentLoc == "/purchaseordercard") {
                             dataList = [
                                 '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-                                data.tproductlist[i].PARTSID +
+                                data.tproductqtylist[i].PARTSID +
                                 "x" +
-                                data.tproductlist[i].ProductName +
+                                data.tproductqtylist[i].ProductName +
                                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-                                data.tproductlist[i].PARTSID +
+                                data.tproductqtylist[i].PARTSID +
                                 "x" +
-                                data.tproductlist[i].ProductName +
+                                data.tproductqtylist[i].ProductName +
                                 '"></label></div>',
-                                data.tproductlist[i].PARTSID || "",
-                                data.tproductlist[i].PARTNAM || "",
-                                data.tproductlist[i].PARTSDESCRIPTION || "",
-                                data.tproductlist[i].BARCODE || "",
+                                data.tproductqtylist[i].PARTSID || "",
+                                data.tproductqtylist[i].ProductName || "",
+                                data.tproductqtylist[i].SalesDescription || "",
+                                data.tproductqtylist[i].BARCODE || "",
                                 costprice,
                                 sellprice,
-                                data.tproductlist[i].InstockQty,
-                                data.tproductlist[i].PURCHTAXCODE || "",
-                                data.tproductlist[i].PRODUCTCODE || "",
-                                data.tproductlist[i].Ex_Works || null,
+                                data.tproductqtylist[i].InstockQty,
+                                data.tproductqtylist[i].PurchaseTaxcode || "",
+                                data.tproductqtylist[i].PRODUCTCODE || "",
+                                data.tproductqtylist[i].Ex_Works || null,
                                 linestatus
                             ];
                         } else {
                             dataList = [
                                 '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                data.tproductlist[i].PARTSID +
+                                data.tproductqtylist[i].PARTSID +
                                 '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                data.tproductlist[i].PARTSID +
+                                data.tproductqtylist[i].PARTSID +
                                 '"></label></div>',
-                                data.tproductlist[i].PARTSID || "",
-                                data.tproductlist[i].PARTNAM || "",
-                                data.tproductlist[i].PARTSDESCRIPTION || "",
-                                data.tproductlist[i].BARCODE || "",
+                                data.tproductqtylist[i].PARTSID || "",
+                                data.tproductqtylist[i].ProductName || "",
+                                data.tproductqtylist[i].SalesDescription || "",
+                                data.tproductqtylist[i].BARCODE || "",
                                 costprice,
                                 sellprice,
-                                data.tproductlist[i].InstockQty,
-                                data.tproductlist[i].PURCHTAXCODE || "",
-                                data.tproductlist[i].PRODUCTCODE || "",
-                                data.tproductlist[i].Ex_Works || null,
+                                data.tproductqtylist[i].InstockQty,
+                                data.tproductqtylist[i].PurchaseTaxcode || "",
+                                data.tproductqtylist[i].PRODUCTCODE || "",
+                                data.tproductqtylist[i].Ex_Works || null,
                                 linestatus
                             ];
                         }
 
                         // splashArrayProductList.push(dataList);
                         if (currentLoc == "/stockadjustmentcard") {
-                            if (data.tproductlist[i].PRODUCTGROUP == "INV") {
+                            if (data.tproductqtylist[i].PRODUCTGROUP == "INV") {
                                 splashArrayProductList.push(dataList);
                             }
                         } else {
@@ -266,7 +266,7 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                 sideBarService
                     .getNewProductListVS1(initialBaseDataLoad, 0)
                     .then(function(data) {
-                        addVS1Data("TProductList", JSON.stringify(data));
+                        addVS1Data("TProductQtyList", JSON.stringify(data));
                         let records = [];
                         let inventoryData = [];
                         let buyrate = 0.00;
@@ -275,36 +275,36 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
 
 
 
-                        for (let i = 0; i < data.tproductlist.length; i++) {
-                            if (data.tproductlist[i].Active == true) {
+                        for (let i = 0; i < data.tproductqtylist.length; i++) {
+                            if (data.tproductqtylist[i].Active == true) {
                                 linestatus = "";
-                            } else if (data.tproductlist[i].Active == false) {
+                            } else if (data.tproductqtylist[i].Active == false) {
                                 linestatus = "In-Active";
                             };
-                            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].ProductName +
-                            '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
-                            "x" + data.tproductlist[i].ProductName +
+                            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductqtylist[i].PARTSID + "x" + data.tproductqtylist[i].ProductName +
+                            '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[i].PARTSID +
+                            "x" + data.tproductqtylist[i].ProductName +
                             '"></label></div>'; //switchbox
 
                             costprice = utilityService.modifynegativeCurrencyFormat(
-                                Math.floor(data.tproductlist[i].BuyQty1Cost * 100) / 100); //Cost Price
+                                Math.floor(data.tproductqtylist[i].BuyQty1Cost * 100) / 100); //Cost Price
                             sellprice = utilityService.modifynegativeCurrencyFormat(
-                                Math.floor(data.tproductlist[i].SellQty1Price* 100) / 100); //Sell Price
+                                Math.floor(data.tproductqtylist[i].SellQty1Price* 100) / 100); //Sell Price
 
-                            if (data.tproductlist[i].ExtraSellPrice != null) {
+                            if (data.tproductqtylist[i].ExtraSellPrice != null) {
                                 for (
-                                    let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
+                                    let e = 0; e < data.tproductqtylist[i].ExtraSellPrice.length; e++
                                 ) {
                                     let lineExtaSellObj = {
-                                        clienttype: data.tproductlist[i].ExtraSellPrice[e]
+                                        clienttype: data.tproductqtylist[i].ExtraSellPrice[e]
                                             .ClientTypeName || "",
-                                        productname: data.tproductlist[i].ExtraSellPrice[e]
-                                            .ProductName || data.tproductlist[i].ProductName,
+                                        productname: data.tproductqtylist[i].ExtraSellPrice[e]
+                                            .ProductName || data.tproductqtylist[i].ProductName,
                                         price: utilityService.modifynegativeCurrencyFormat(
-                                            data.tproductlist[i].ExtraSellPrice[e]
+                                            data.tproductqtylist[i].ExtraSellPrice[e]
                                             .Price1
                                         ) || 0,
-                                        qtypercent: data.tproductlist[i].QtyPercent1 || 0,
+                                        qtypercent: data.tproductqtylist[i].QtyPercent1 || 0,
                                     };
                                     lineExtaSellItems.push(lineExtaSellObj);
                                 }
@@ -314,37 +314,37 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
                             if (currentLoc == "/purchaseordercard") {
                                 dataList = [
                                     chkBox,
-                                    data.tproductlist[i].PARTSID || "",
-                                    data.tproductlist[i].PARTNAM || "",
-                                    data.tproductlist[i].PARTSDESCRIPTION || "",
-                                    data.tproductlist[i].BARCODE || "",
+                                    data.tproductqtylist[i].PARTSID || "",
+                                    data.tproductqtylist[i].ProductName || "",
+                                    data.tproductqtylist[i].SalesDescription || "",
+                                    data.tproductqtylist[i].BARCODE || "",
                                     costprice,
                                     sellprice,
-                                    data.tproductlist[i].InstockQty,
-                                    data.tproductlist[i].PURCHTAXCODE || "",
-                                    data.tproductlist[i].PRODUCTCODE || "",
-                                    data.tproductlist[i].Ex_Works || null,
+                                    data.tproductqtylist[i].InstockQty,
+                                    data.tproductqtylist[i].PurchaseTaxcode || "",
+                                    data.tproductqtylist[i].PRODUCTCODE || "",
+                                    data.tproductqtylist[i].Ex_Works || null,
                                     linestatus
                                 ];
                             } else {
                                 dataList = [
                                     chkBox,
-                                    data.tproductlist[i].PARTSID || "",
-                                    data.tproductlist[i].PARTNAM || "",
-                                    data.tproductlist[i].PARTSDESCRIPTION || "",
-                                    data.tproductlist[i].BARCODE || "",
+                                    data.tproductqtylist[i].PARTSID || "",
+                                    data.tproductqtylist[i].ProductName || "",
+                                    data.tproductqtylist[i].SalesDescription || "",
+                                    data.tproductqtylist[i].BARCODE || "",
                                     costprice,
                                     sellprice,
-                                    data.tproductlist[i].InstockQty,
-                                    data.tproductlist[i].PURCHTAXCODE || "",
-                                    data.tproductlist[i].PRODUCTCODE || "",
-                                    data.tproductlist[i].Ex_Works || null,
+                                    data.tproductqtylist[i].InstockQty,
+                                    data.tproductqtylist[i].PurchaseTaxcode || "",
+                                    data.tproductqtylist[i].PRODUCTCODE || "",
+                                    data.tproductqtylist[i].Ex_Works || null,
                                     linestatus
                                 ];
                             }
 
                             if (currentLoc == "/stockadjustmentcard") {
-                                if (data.tproductlist[i].PRODUCTGROUP == "INV") {
+                                if (data.tproductqtylist[i].PRODUCTGROUP == "INV") {
                                     splashArrayProductList.push(dataList);
                                 }
                             } else {
@@ -405,72 +405,72 @@ Template.productlistpopwithcheckboxes.events({
                     let records = [];
 
                     let inventoryData = [];
-                    if (data.tproductlist.length > 0) {
-                        for (let i = 0; i < data.tproductlist.length; i++) {
+                    if (data.tproductqtylist.length > 0) {
+                        for (let i = 0; i < data.tproductqtylist.length; i++) {
                             var dataList = "";
-                            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].PARTNAM +
-                            '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
-                            "x" + data.tproductlist[i].PARTNAM +
+                            chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductqtylist[i].PARTSID + "x" + data.tproductqtylist[i].PARTNAM +
+                            '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[i].PARTSID +
+                            "x" + data.tproductqtylist[i].PARTNAM +
                             '"></label></div>'; //switchbox
 
                             costprice = utilityService.modifynegativeCurrencyFormat(
-                                Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                                Math.floor(data.tproductqtylist[i].BuyQTY1 * 100) / 100); //Cost Price
                             sellprice = utilityService.modifynegativeCurrencyFormat(
-                                Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
+                                Math.floor(data.tproductqtylist[i].SellQTY1 * 100) / 100); //Sell Price
                             if (currentLoc == "/purchaseordercard") {
                                 dataList = [
                                     '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                    data.tproductlist[i].PARTSID +
+                                    data.tproductqtylist[i].PARTSID +
                                     '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                    data.tproductlist[i].PARTSID +
+                                    data.tproductqtylist[i].PARTSID +
                                     '"></label></div>',
-                                    data.tproductlist[i].PARTSID || "",
-                                    data.tproductlist[i].PARTNAM || "",
-                                    data.tproductlist[i].PARTSDESCRIPTION || "",
-                                    data.tproductlist[i].BARCODE || "",
+                                    data.tproductqtylist[i].PARTSID || "",
+                                    data.tproductqtylist[i].ProductName || "",
+                                    data.tproductqtylist[i].SalesDescription || "",
+                                    data.tproductqtylist[i].BARCODE || "",
                                     costprice,
                                     sellprice,
-                                    data.tproductlist[i].InstockQty,
-                                    data.tproductlist[i].PURCHTAXCODE || "",
-                                    data.tproductlist[i].PRODUCTCODE || "",
-                                    data.tproductlist[i].Ex_Works || null,
+                                    data.tproductqtylist[i].InstockQty,
+                                    data.tproductqtylist[i].PurchaseTaxcode || "",
+                                    data.tproductqtylist[i].PRODUCTCODE || "",
+                                    data.tproductqtylist[i].Ex_Works || null,
                                     linestatus
                                 ];
                             } else {
                                 dataList = [
                                     '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="appointment-products-checks" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="productCheck-' +
-                                    data.tproductlist[i].PARTSID +
+                                    data.tproductqtylist[i].PARTSID +
                                     '"><label class="custom-control-label chkBox pointer" for="productCheck-' +
-                                    data.tproductlist[i].PARTSID +
+                                    data.tproductqtylist[i].PARTSID +
                                     '"></label></div>',
-                                    data.tproductlist[i].PARTSID || "",
-                                    data.tproductlist[i].PARTNAM || "",
-                                    data.tproductlist[i].PARTSDESCRIPTION || "",
-                                    data.tproductlist[i].BARCODE || "",
+                                    data.tproductqtylist[i].PARTSID || "",
+                                    data.tproductqtylist[i].ProductName || "",
+                                    data.tproductqtylist[i].SalesDescription || "",
+                                    data.tproductqtylist[i].BARCODE || "",
                                     costprice,
                                     sellprice,
-                                    data.tproductlist[i].InstockQty,
-                                    data.tproductlist[i].PURCHTAXCODE || "",
-                                    data.tproductlist[i].PRODUCTCODE || "",
-                                    data.tproductlist[i].Ex_Works || null,
+                                    data.tproductqtylist[i].InstockQty,
+                                    data.tproductqtylist[i].PurchaseTaxcode || "",
+                                    data.tproductqtylist[i].PRODUCTCODE || "",
+                                    data.tproductqtylist[i].Ex_Works || null,
                                     linestatus
                                 ];
                             }
 
-                            if (data.tproductlist[i].ExtraSellPrice != null) {
+                            if (data.tproductqtylist[i].ExtraSellPrice != null) {
                                 for (
-                                    let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
+                                    let e = 0; e < data.tproductqtylist[i].ExtraSellPrice.length; e++
                                 ) {
                                     let lineExtaSellObj = {
-                                        clienttype: data.tproductlist[i].ExtraSellPrice[e].ClientTypeName || "",
-                                        productname: data.tproductlist[i].ExtraSellPrice[e].ProductName || data.tproductlist[i].ProductName,
-                                        price: utilityService.modifynegativeCurrencyFormat(data.tproductlist[i].ExtraSellPrice[e].Price1) || 0,
+                                        clienttype: data.tproductqtylist[i].ExtraSellPrice[e].ClientTypeName || "",
+                                        productname: data.tproductqtylist[i].ExtraSellPrice[e].ProductName || data.tproductqtylist[i].ProductName,
+                                        price: utilityService.modifynegativeCurrencyFormat(data.tproductqtylist[i].ExtraSellPrice[e].Price1) || 0,
                                     };
                                     lineExtaSellItems.push(lineExtaSellObj);
                                 }
                             }
                             if (currentLoc == "/stockadjustmentcard") {
-                                if (data.tproductlist[i].PRODUCTGROUP == "INV") {
+                                if (data.tproductqtylist[i].PRODUCTGROUP == "INV") {
                                     splashArrayProductList.push(dataList);
                                 }
                             } else {
@@ -509,7 +509,7 @@ Template.productlistpopwithcheckboxes.events({
                     $(".fullScreenSpin").css("display", "none");
                 });
         } else {
-            sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) { addVS1Data("TProductList", JSON.stringify(data));
+            sideBarService.getNewProductListVS1(initialBaseDataLoad, 0).then(function(data) { addVS1Data("TProductQtyList", JSON.stringify(data));
                     let records = [];
                     let inventoryData = [];
                     let chkBox;
@@ -522,67 +522,67 @@ Template.productlistpopwithcheckboxes.events({
                       deleteFilter = false;
                     };
 
-                    for (let i = 0; i < data.tproductlist.length; i++) {
+                    for (let i = 0; i < data.tproductqtylist.length; i++) {
                         var dataList = "";
-                        if (data.tproductlist[i].Active == true) {
+                        if (data.tproductqtylist[i].Active == true) {
                             linestatus = "";
-                        } else if (data.tproductlist[i].Active == false) {
+                        } else if (data.tproductqtylist[i].Active == false) {
                             linestatus = "In-Active";
                         };
-                        chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductlist[i].PARTSID + "x" + data.tproductlist[i].PARTNAM +
-                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductlist[i].PARTSID +
-                        "x" + data.tproductlist[i].PARTNAM +
+                        chkBox = '<div class="custom-control custom-switch chkBox pointer" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-' + data.tproductqtylist[i].PARTSID + "x" + data.tproductqtylist[i].PARTNAM +
+                        '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tproductqtylist[i].PARTSID +
+                        "x" + data.tproductqtylist[i].PARTNAM +
                         '"></label></div>'; //switchbox
 
                         costprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(data.tproductlist[i].BuyQTY1 * 100) / 100); //Cost Price
+                            Math.floor(data.tproductqtylist[i].BuyQTY1 * 100) / 100); //Cost Price
                         sellprice = utilityService.modifynegativeCurrencyFormat(
-                            Math.floor(data.tproductlist[i].SellQTY1 * 100) / 100); //Sell Price
+                            Math.floor(data.tproductqtylist[i].SellQTY1 * 100) / 100); //Sell Price
                         if (currentLoc == "/purchaseordercard") {
                             dataList = [
                                 chkBox,
-                                data.tproductlist[i].PARTSID || "",
-                                data.tproductlist[i].PARTNAM || "",
-                                data.tproductlist[i].PARTSDESCRIPTION || "",
-                                data.tproductlist[i].BARCODE || "",
+                                data.tproductqtylist[i].PARTSID || "",
+                                data.tproductqtylist[i].ProductName || "",
+                                data.tproductqtylist[i].SalesDescription || "",
+                                data.tproductqtylist[i].BARCODE || "",
                                 costprice,
                                 sellprice,
-                                data.tproductlist[i].InstockQty,
-                                data.tproductlist[i].PURCHTAXCODE || "",
-                                data.tproductlist[i].PRODUCTCODE || "",
-                                data.tproductlist[i].Ex_Works || null,
+                                data.tproductqtylist[i].InstockQty,
+                                data.tproductqtylist[i].PurchaseTaxcode || "",
+                                data.tproductqtylist[i].PRODUCTCODE || "",
+                                data.tproductqtylist[i].Ex_Works || null,
                                 linestatus
                             ];
                         } else {
                             dataList = [
                                 chkBox,
-                                data.tproductlist[i].PARTSID || "",
-                                data.tproductlist[i].PARTNAM || "",
-                                data.tproductlist[i].PARTSDESCRIPTION || "",
-                                data.tproductlist[i].BARCODE || "",
+                                data.tproductqtylist[i].PARTSID || "",
+                                data.tproductqtylist[i].ProductName || "",
+                                data.tproductqtylist[i].SalesDescription || "",
+                                data.tproductqtylist[i].BARCODE || "",
                                 costprice,
                                 sellprice,
-                                data.tproductlist[i].InstockQty,
-                                data.tproductlist[i].PURCHTAXCODE || "",
-                                data.tproductlist[i].PRODUCTCODE || "",
-                                data.tproductlist[i].Ex_Works || null,
+                                data.tproductqtylist[i].InstockQty,
+                                data.tproductqtylist[i].PurchaseTaxcode || "",
+                                data.tproductqtylist[i].PRODUCTCODE || "",
+                                data.tproductqtylist[i].Ex_Works || null,
                                 linestatus
                             ];
                         }
-                        if (data.tproductlist[i].ExtraSellPrice != null) {
+                        if (data.tproductqtylist[i].ExtraSellPrice != null) {
                             for (
-                                let e = 0; e < data.tproductlist[i].ExtraSellPrice.length; e++
+                                let e = 0; e < data.tproductqtylist[i].ExtraSellPrice.length; e++
                             ) {
                                 let lineExtaSellObj = {
-                                    clienttype: data.tproductlist[i].ExtraSellPrice[e].ClientTypeName || "",
-                                    productname: data.tproductlist[i].ExtraSellPrice[e].ProductName || data.tproductlist[i].ProductName,
-                                    price: utilityService.modifynegativeCurrencyFormat(data.tproductlist[i].ExtraSellPrice[e].Price1) || 0,
+                                    clienttype: data.tproductqtylist[i].ExtraSellPrice[e].ClientTypeName || "",
+                                    productname: data.tproductqtylist[i].ExtraSellPrice[e].ProductName || data.tproductqtylist[i].ProductName,
+                                    price: utilityService.modifynegativeCurrencyFormat(data.tproductqtylist[i].ExtraSellPrice[e].Price1) || 0,
                                 };
                                 lineExtaSellItems.push(lineExtaSellObj);
                             }
                         }
                         if (currentLoc == "/stockadjustmentcard") {
-                            if (data.tproductlist[i].PRODUCTGROUP == "INV") {
+                            if (data.tproductqtylist[i].PRODUCTGROUP == "INV") {
                                 splashArrayProductList.push(dataList);
                             }
                         } else {

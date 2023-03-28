@@ -10,11 +10,15 @@ import XLSX from "xlsx";
 import { Template } from 'meteor/templating';
 import './accountOverview.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import treeTable from './treeTable.js'
 
 import { ReceiptService } from "../receipts/receipt-service";
+import {CRMService} from "../crm/crm-service";
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let receiptService = new ReceiptService();
+
+treeTable(window, jQuery)
 Template.accountsoverview.inheritsHooksFrom('non_transactional_list');
 Template.accountsoverview.onCreated(function() {
     const templateObject = Template.instance();
@@ -28,9 +32,8 @@ Template.accountsoverview.onCreated(function() {
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar();
-
     templateObject.transactiondatatablerecords = new ReactiveVar([]);
-
+    templateObject.treeColumnHeader = new ReactiveVar([])
 });
 
 Template.accountsoverview.onRendered(function() {
@@ -52,6 +55,188 @@ Template.accountsoverview.onRendered(function() {
     let needAddVehicle = true;
     const templateObject = Template.instance();
     const currenttablename = 'tblAccountOverview';
+    let reset_data = [
+        { index: 0, label: '#ID', class: 'colAccountId', active: false, display: true, width: "10" },
+        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+        { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
+        { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
+        { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
+        { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
+        { index: 9, label: 'BSB', class: 'colBSB', active: true, display: true, width: "95" },
+        { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
+        { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
+        { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
+        { index: 13, label: 'CVC', class: 'colCVC', active: false, display: true, width: "60" },
+        { index: 14, label: 'Swift Code', class: 'colExtra', active: false, display: true, width: "80" },
+        { index: 15, label: 'Routing Number', class: 'colAPCANumber', active: false, display: true, width: "120" },
+        { index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60" },
+        { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60" },
+        { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
+        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 20, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "80" },
+        { index: 21, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "80" },
+        { index: 22, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "80" },
+    ]
+    templateObject.treeColumnHeader.set(reset_data)
+    let columnDefs = [
+        {
+            targets: 0,
+            className: "colAccountId colID hiddenColumn",
+            width: "10px",
+            createdCell: function (td, cellData, rowData, row, col) {
+                $(td).closest("tr").attr("id", rowData[0]);
+            },
+        },
+        {
+            targets: 1,
+            className: "colAccountName",
+            width: "200px",
+        },
+        {
+            targets: 2,
+            className: "colDescription",
+        },
+        {
+            targets: 3,
+            className: "colAccountNo",
+            width: "90px",
+        },
+        {
+            targets: 4,
+            className: "colType",
+            width: "60px",
+        },
+        {
+            targets: 5,
+            className: "colBalance text-right",
+            width: "80px",
+        },
+        {
+            targets: 6,
+            className: "colTaxCode",
+            width: "80px",
+        },
+        {
+            targets: 7,
+            className: "colBankName hiddenColumn",
+            width: "120px",
+        },
+        {
+            targets: 8,
+            className: "colBankAccountName",
+            width: "120px",
+        },
+        {
+            targets: 9,
+            className: "colBSB",
+            width: "95px",
+        },
+        {
+            targets: 10,
+            className: "colBankAccountNo",
+            width: "120px",
+        },
+        {
+            targets: 11,
+            className: "colCardNumber hiddenColumn",
+            width: "120px",
+        },
+        {
+            targets: 12,
+            className: "colExpiryDate hiddenColumn",
+            width: "60px",
+        },
+        {
+            targets: 13,
+            className: "colCVC hiddenColumn",
+            width: "60px",
+        },
+        {
+            targets: 14,
+            className: "colExtra hiddenColumn",
+            width: "80px",
+        },
+        {
+            targets: 15,
+            className: "colAPCANumber hiddenColumn",
+            width: "120px",
+        },
+        {
+            targets: 16,
+            className: "colIsHeader hiddenColumn",
+            width: "60px",
+        },
+        {
+            targets: 17,
+            className: "colUseReceiptClaim hiddenColumn",
+            width: "60px",
+        },
+        {
+            targets: 18,
+            className: "colExpenseCategory hiddenColumn",
+            width: "80px",
+        },
+        {
+            targets: 19,
+            className: "colStatus",
+            width: "100px",
+        },
+        {
+            targets: 20,
+            className: "colLevel1 hiddenColumn",
+            width: "60px",
+        },
+        {
+            targets: 21,
+            className: "colLevel2 hiddenColumn",
+            width: "60px",
+        },
+        {
+            targets: 22,
+            className: "colLevel3 hiddenColumn",
+            width: "60px",
+        },
+    ];
+    let buttons = [
+        {
+            extend: "csvHtml5",
+            text: "",
+            download: "open",
+            className: "btntabletocsv hiddenColumn",
+            filename: "Accounts Overview",
+            orientation: "portrait",
+            exportOptions: {
+                columns: ":visible",
+            },
+        },
+        {
+            extend: "print",
+            download: "open",
+            className: "btntabletopdf hiddenColumn",
+            text: "",
+            title: "Accounts Overview",
+            filename: "Accounts Overview",
+            exportOptions: {
+                columns: ":visible",
+                stripHtml: false,
+            },
+        },
+        {
+            extend: "excelHtml5",
+            title: "",
+            download: "open",
+            className: "btntabletoexcel hiddenColumn",
+            filename: "Accounts Overview",
+            orientation: "portrait",
+            exportOptions: {
+                columns: ":visible",
+            },
+        },
+    ];
+
 
     if(localStorage.getItem("ERPLoggedCountry") == "United States of America"){
         $(".btnTaxSummary").show();
@@ -102,6 +287,7 @@ Template.accountsoverview.onRendered(function() {
         });
     }
     templateObject.displayAccountsOverviewListData = async function(data) {
+        templateObject.displayAccountsOverviewTreeData(data)
         var splashArrayAccountsOverview = new Array();
         let lineItems = [];
         let lineItemObj = {};
@@ -137,7 +323,7 @@ Template.accountsoverview.onRendered(function() {
                 data.taccountvs1list[i].AccountType || "",
                 accBalance || '',
                 data.taccountvs1list[i].TaxCode || '',
-                data.taccountvs1list[i].BankName || '',
+                data.taccountvs1list[i].BankCode || '',
                 data.taccountvs1list[i].BankAccountName || '',
                 data.taccountvs1list[i].BSB || '',
                 data.taccountvs1list[i].BankAccountNumber || "",
@@ -170,159 +356,8 @@ Template.accountsoverview.onRendered(function() {
             $('#' + currenttablename).DataTable({
                 data: splashArrayAccountsOverview,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                columnDefs: [{
-                        targets: 0,
-                        className: "colAccountId colID hiddenColumn",
-                        width: "10px",
-                        createdCell: function(td, cellData, rowData, row, col) {
-                            $(td).closest("tr").attr("id", rowData[0]);
-                        }
-                    },
-                    {
-                        targets: 1,
-                        className: "colAccountName",
-                        width: "200px",
-                    },
-                    {
-                        targets: 2,
-                        className: "colDescription"
-                    },
-                    {
-                        targets: 3,
-                        className: "colAccountNo",
-                        width: "90px",
-                    },
-                    {
-                        targets: 4,
-                        className: "colType",
-                        width: "60px",
-                    },
-                    {
-                        targets: 5,
-                        className: "colBalance text-right",
-                        width: "80px",
-                    },
-                    {
-                        targets: 6,
-                        className: "colTaxCode",
-                        width: "80px",
-                    },
-                    {
-                        targets: 7,
-                        className: "colBankName hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 8,
-                        className: "colBankAccountName",
-                        width: "120px",
-                    },
-                    {
-                        targets: 9,
-                        className: "colBSB",
-                        width: "95px",
-                    },
-                    {
-                        targets: 10,
-                        className: "colBankAccountNo",
-                        width: "120px",
-                    },
-                    {
-                        targets: 11,
-                        className: "colCardNumber hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 12,
-                        className: "colExpiryDate hiddenColumn",
-                        width: "60px",
-                    },
-                    {
-                        targets: 13,
-                        className: "colCVC hiddenColumn",
-                        width: "60px",
-                    },
-                    {
-                        targets: 14,
-                        className: "colExtra hiddenColumn",
-                        width: "80px",
-                    },
-                    {
-                        targets: 15,
-                        className: "colAPCANumber hiddenColumn",
-                        width: "120px",
-                    },
-                    {
-                        targets: 16,
-                        className: "colIsHeader hiddenColumn",
-                        width: "60px",
-                    },
-                    {
-                        targets: 17,
-                        className: "colUseReceiptClaim hiddenColumn",
-                        width: "60px",
-                    },
-                    {
-                        targets: 18,
-                        className: "colExpenseCategory hiddenColumn",
-                        width: "80px",
-                    },
-                    {
-                        targets: 19,
-                        className: "colStatus",
-                        width: "100px",
-                    },
-                    {
-                        targets: 20,
-                        className: "colLevel1 hiddenColumn",
-                        width: "60px",
-                    },
-                    {
-                        targets: 21,
-                        className: "colLevel2 hiddenColumn",
-                        width: "60px",
-                    },
-                    {
-                        targets: 22,
-                        className: "colLevel3 hiddenColumn",
-                        width: "60px",
-                    }
-                ],
-                buttons: [{
-                        extend: 'csvHtml5',
-                        text: '',
-                        download: 'open',
-                        className: "btntabletocsv hiddenColumn",
-                        filename: "Accounts Overview",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-                    }, {
-                        extend: 'print',
-                        download: 'open',
-                        className: "btntabletopdf hiddenColumn",
-                        text: '',
-                        title: 'Accounts Overview',
-                        filename: "Accounts Overview",
-                        exportOptions: {
-                            columns: ':visible',
-                            stripHtml: false
-                        }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        title: '',
-                        download: 'open',
-                        className: "btntabletoexcel hiddenColumn",
-                        filename: "Accounts Overview",
-                        orientation: 'portrait',
-                        exportOptions: {
-                            columns: ':visible'
-                        }
-
-                    }
-                ],
+                columnDefs: columnDefs,
+                buttons: buttons,
                 select: true,
                 destroy: true,
                 colReorder: true,
@@ -429,6 +464,363 @@ Template.accountsoverview.onRendered(function() {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    makeNegativeGlobal();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    makeNegativeGlobal();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    templateObject.displayAccountsOverviewTreeData = async function(data) {
+        var splashArrayAccountsOverview = new Array();
+        let accBalance = "";
+        let deleteFilter = false;
+        if (data.Params.Search.replace(/\s/g, "") == "") {
+            deleteFilter = true;
+        } else {
+            deleteFilter = false;
+        };
+
+        for (let i = 0; i < data.taccountvs1list.length; i++) {
+            if (!isNaN(data.taccountvs1list[i].Balance)) {
+                accBalance = utilityService.modifynegativeCurrencyFormat(data.taccountvs1list[i].Balance) || Currency + "0.00";
+            } else {
+                accBalance = Currency + "0.00";
+            }
+            if (data.taccountvs1list[i].ReceiptCategory && data.taccountvs1list[i].ReceiptCategory != '') {
+                usedCategories.push(data.taccountvs1list[i].fields);
+            }
+            let linestatus = '';
+            if (data.taccountvs1list[i].Active == true) {
+                linestatus = "";
+            } else if (data.taccountvs1list[i].Active == false) {
+                linestatus = "In-Active";
+            };
+            var dataList = {
+                id: data.taccountvs1list[i].AccountID || "",
+                name: data.taccountvs1list[i].AccountName || "",
+                description: data.taccountvs1list[i].Description || "",
+                number: data.taccountvs1list[i].AccountNumber || "",
+                type: data.taccountvs1list[i].AccountType || "",
+                balance: accBalance || '',
+                originbalance: data.taccountvs1list[i].Balance || 0,
+                taxcode: data.taccountvs1list[i].TaxCode || '',
+                bankname: data.taccountvs1list[i].BankName || '',
+                bankaccountname: data.taccountvs1list[i].BankAccountName || '',
+                bsb: data.taccountvs1list[i].BSB || '',
+                bankaccountnumber: data.taccountvs1list[i].BankAccountNumber || "",
+                carnumber: data.taccountvs1list[i].CarNumber || "",
+                expirydate: data.taccountvs1list[i].ExpiryDate || "",
+                cvc: data.taccountvs1list[i].CVC || "",
+                extra: data.taccountvs1list[i].Extra || "",
+                banknumber: data.taccountvs1list[i].BankNumber || "",
+                isheader: data.taccountvs1list[i].IsHeader || false,
+                allowexpenseclaim: data.taccountvs1list[i].AllowExpenseClaim || false,
+                receiptcategory: data.taccountvs1list[i].ReceiptCategory || "",
+                linestatus: linestatus,
+                level1: data.taccountvs1list[i].Level1 || "",
+                level2: data.taccountvs1list[i].Level2 || "",
+                level3: data.taccountvs1list[i].Level3 || "",
+            };
+            splashArrayAccountsOverview.push(dataList);
+        }
+
+        splashArrayAccountsOverview.sort((a,b) => {
+            if (a.type > b.type) return 1
+            else if (a.type < b.type) return -1
+            else {
+                if (a.level1 > b.level1) return 1
+                else if (a.level1 < b.level1) return -1
+                else {
+                    if (a.level2 > b.level2) return 1
+                    else if (a.level2 < b.level2) return -1
+                    else {
+                        if (a.level3 > b.level3) return 1
+                        else if (a.level3 < b.level3) return -1
+                        else {
+                            return 0
+                        }
+                    }
+                }
+            }
+        })
+        let treeDataArray = []
+        let accountType
+        let parentIndex
+        let emptyData = {
+            id: "",
+            name: "",
+            description: "",
+            number: "",
+            type: "",
+            balance: '',
+            taxcode: '',
+            bankname: '',
+            bankaccountname: '',
+            bsb: '',
+            bankaccountnumber: "",
+            carnumber: "",
+            expirydate: "",
+            cvc: "",
+            extra: "",
+            banknumber: "",
+            isheader: false,
+            allowexpenseclaim: false,
+            receiptcategory: "",
+            linestatus: "",
+            level1: "",
+            level2: "",
+            level3: "",
+        }
+        let totalBalance
+        for (let index = 0;index < splashArrayAccountsOverview.length; index++) {
+            let item = splashArrayAccountsOverview[index]
+            if (!item.type) {
+                treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: 0})
+                continue
+            }
+            if (!accountType || accountType !== item.type)  {
+                if (parentIndex) treeDataArray[parentIndex - 1].balance = utilityService.modifynegativeCurrencyFormat(totalBalance) || Currency + "0.00"
+                totalBalance = 0
+                accountType = item.type
+                parentIndex = treeDataArray.length + 1
+                treeDataArray.push({...emptyData, name: accountType, tt_key: parentIndex, tt_parent: 0})
+            }
+            treeDataArray.push({...item, tt_key: treeDataArray.length + 1, tt_parent: parentIndex})
+            totalBalance += item.originbalance
+        }
+
+        let columns = [
+            {
+                "data": "id"
+            },
+            {
+                "data": "name",
+            },
+            {
+                "data": "description"
+            },
+            {
+                "data": "number",
+            },
+            {
+                "data": "type"
+            },
+            {
+                "data": "balance",
+            },
+            {
+                "data": "taxcode"
+            },
+            {
+                "data": "bankname",
+            },
+            {
+                "data": "bankaccountname"
+            },
+            {
+                "data": "bsb",
+            },
+            {
+                "data": "bankaccountnumber"
+            },
+            {
+                "data": "carnumber",
+            },
+            {
+                "data": "expirydate"
+            },
+            {
+                "data": "cvc",
+            },
+            {
+                "data": "extra"
+            },
+            {
+                "data": "banknumber",
+            },
+            {
+                "data": "isheader"
+            },
+            {
+                "data": "allowexpenseclaim",
+            },
+            {
+                "data": "receiptcategory"
+            },
+            {
+                "data": "linestatus",
+            },
+            {
+                "data": "level1"
+            },
+            {
+                "data": "level2",
+            },
+            {
+                "data": "level3"
+            }
+        ]
+
+        // $('.fullScreenSpin').css('display','none');
+        // const fakeData = [
+        //     {tt_key: 1, tt_parent: 0, name: "CEO", salary: 1000000},
+        //     {tt_key: 2, tt_parent: 1, name: "CTO", salary: 110000},
+        //     {tt_key: 3, tt_parent: 2, name: "Front-end developer", salary: 60000},
+        //     {tt_key: 4, tt_parent: 2, name: "Back-end developer", salary: 65000},
+        //     {tt_key: 5, tt_parent: 1, name: "CFO", salary: 100000}
+        // ];
+        // $('#test-table').treeTable({
+        //     "data": treeDataArray,
+        //     "collapsed": false,
+        //     "columns": columns,
+        //     "order": [[1, 'desc']]
+        // });
+
+        setTimeout(function() {
+            $('#tblAccountTreeOverview').treeTable({
+                data: treeDataArray,
+                columns: columns,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: columnDefs.map((item) => {return {...item, targets: item.targets + 1}}),
+                buttons: buttons,
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#tblAccountTreeOverview_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+
+                        }
+                    } else {
+
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                        $('.fullScreenSpin').css('display', 'inline-block');
+                        sideBarService.getAllTAccountVS1List(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter).then(function(dataObjectnew) {
+                            for (let j = 0; j < dataObjectnew.taccountvs1list.length; j++) {
+                                if (!isNaN(dataObjectnew.taccountvs1list[j].Balance)) {
+                                    accBalance = utilityService.modifynegativeCurrencyFormat(dataObjectnew.taccountvs1list[j].Balance) || 0.0;
+                                } else {
+                                    accBalance = Currency + "0.00";
+                                }
+                                if (dataObjectnew.taccountvs1list[j].ReceiptCategory && dataObjectnew.taccountvs1list[j].ReceiptCategory != '') {
+                                    usedCategories.push(dataObjectnew.taccountvs1list[j].fields);
+                                }
+                                let linestatus = '';
+                                if (dataObjectnew.taccountvs1list[j].Active == true) {
+                                    linestatus = "";
+                                } else if (dataObjectnew.taccountvs1list[j].Active == false) {
+                                    linestatus = "In-Active";
+                                };
+
+                                var dataListDupp = [
+                                    dataObjectnew.taccountvs1list[j].AccountID || "",
+                                    dataObjectnew.taccountvs1list[j].AccountName || "",
+                                    dataObjectnew.taccountvs1list[j].Description || "",
+                                    dataObjectnew.taccountvs1list[j].AccountNumber || "",
+                                    dataObjectnew.taccountvs1list[j].AccountType || "",
+                                    accBalance || '',
+                                    dataObjectnew.taccountvs1list[j].TaxCode || '',
+                                    dataObjectnew.taccountvs1list[j].BankName || '',
+                                    dataObjectnew.taccountvs1list[j].BankAccountName || '',
+                                    dataObjectnew.taccountvs1list[j].BSB || '',
+                                    dataObjectnew.taccountvs1list[j].BankAccountNumber || "",
+                                    dataObjectnew.taccountvs1list[j].CarNumber || "",
+                                    dataObjectnew.taccountvs1list[j].ExpiryDate || "",
+                                    dataObjectnew.taccountvs1list[j].CVC || "",
+                                    dataObjectnew.taccountvs1list[j].Extra || "",
+                                    dataObjectnew.taccountvs1list[j].BankNumber || "",
+                                    dataObjectnew.taccountvs1list[j].IsHeader || false,
+                                    dataObjectnew.taccountvs1list[j].AllowExpenseClaim || false,
+                                    dataObjectnew.taccountvs1list[j].ReceiptCategory || "",
+                                    linestatus,
+                                    dataObjectnew.taccountvs1list[j].Level1 || "",
+                                    dataObjectnew.taccountvs1list[j].Level2 || "",
+                                    dataObjectnew.taccountvs1list[j].Level3 || "",
+                                ];
+
+                                splashArrayAccountsOverview.push(dataListDupp);
+                            }
+                            let uniqueChars = [...new Set(splashArrayAccountsOverview)];
+                            templateObject.transactiondatatablerecords.set(uniqueChars);
+                            var datatable = $('#tblAccountTreeOverview').DataTable();
+                            datatable.clear();
+                            datatable.rows.add(uniqueChars);
+                            datatable.draw(false);
+                            setTimeout(function() {
+                                $('#tblAccountTreeOverview').dataTable().fnPageChange('last');
+                            }, 400);
+
+                            $('.fullScreenSpin').css('display', 'none');
+
+                        }).catch(function(err) {
+                            $('.fullScreenSpin').css('display', 'none');
+                        });
+
+                    });
+                    setTimeout(function() {
+                        makeNegativeGlobal();
+                        // $('#tblAccountTreeOverview tbody td').attr('style', 'padding: 0 12px 0 12px !important')
+                        $('#tblAccountTreeOverview .tt-details-control').attr('style', 'padding: 0 !important; border-right-width: 0; width: 30px; position: relative; z-index: 100;')
+                        $('#tblAccountTreeOverview th.colAccountName').attr('style', 'padding-left: 0')
+                        $('#tblAccountTreeOverview td.colAccountName').attr('style', 'padding-left: 0 !important')
+                        $('#tblAccountTreeOverview tbody tr.has-parent.level-1 td.colAccountName').attr('style', 'padding-left: 18px !important')
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data.Params.Search.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#tblAccountTreeOverview_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#tblAccountTreeOverview_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#tblAccountTreeOverview_filter');
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data.Params.Count || 0; //get count from API data
@@ -1399,6 +1791,7 @@ Template.accountsoverview.onRendered(function() {
                       $('#chkEftOption_credit').prop('checked', data.taccountvs1[0].fields.IncludeCreditTotal);
                       $('#chkEftOption_debit').prop('checked', data.taccountvs1[0].fields.IncludeDebitTotal);
                       $('#accountIsHeader').prop('checked', data.taccountvs1[0].fields.IsHeader);
+                      $('#useReceiptClaim').prop('checked', data.taccountvs1[0].fields.AllowExpenseClaim);
                     }).catch(function(err) {
                     })
                     //accountService.getOneAccount(listData).then(function (data) {
@@ -1448,7 +1841,9 @@ Template.accountsoverview.onRendered(function() {
                     $("#edtBankAccountNo").val(bankacountno);
                     $("#swiftCode").val(swiftCode);
                     $("#routingNo").val(routingNo);
-                    $("#edtBankName").val(bankname);
+                    $("#edtBankName").val(bankname);                    
+                    $('#eftBankName').val(bankname);                                        
+                    $('#eftDescription').val($("#tblBankName").find(`td:contains(${bankname})`).next().text());                    
                     $("#edtSubAccount1").val(level1);
                     $("#edtSubAccount2").val(level2);
                     $("#edtSubAccount3").val(level3);
@@ -1468,12 +1863,7 @@ Template.accountsoverview.onRendered(function() {
                             $(".showOnTransactions").prop("checked", false);
                         }
                     }
-                    let useReceiptClaim = $(event.target).closest("tr").find(".colUseReceiptClaim").attr("checkheader") || false;
-                    if (useReceiptClaim == "true") {
-                        $(".useReceiptClaim").prop("checked", true);
-                    } else {
-                        $(".useReceiptClaim").prop("checked", false);
-                    }
+
                     let category = $(event.target).closest("tr").find(".colExpenseCategory").attr("category") || "";
                     $("#expenseCategory").val(category);
 
@@ -1578,12 +1968,18 @@ Template.accountsoverview.events({
             });
     },
     "click .btnBatchUpdate": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        batchUpdateCall("/accountsoverview?success=true");
+        // $(".fullScreenSpin").css("display", "inline-block");
+        showCounterProgressModal();
+
+        batchUpdateCall("/accountsoverview?success=true", true);
         //FlowRouter.go('/salesorderslist?success=true');
+
         sideBarService
             .getAccountListVS1()
             .then(function(data) {
+
+                updateCounterProgress("Accounts Load");
+
                 addVS1Data("TAccountVS1", JSON.stringify(data))
                     .then(function(datareturn) {
                         //location.reload();
@@ -1595,206 +1991,6 @@ Template.accountsoverview.events({
             .catch(function(err) {
                 //location.reload();
             });
-    },
-    "click .btnSaveAccount": function() {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        let accountService = new AccountService();
-        let organisationService = new OrganisationService();
-        setTimeout(function(){
-        $(".fullScreenSpin").css("display", "inline-block");
-        let forTransaction = false;
-        let isHeader = false;
-        let useReceiptClaim = false;
-
-        if ($("#showOnTransactions").is(":checked")) {
-            forTransaction = true;
-        }
-        if ($("#useReceiptClaim").is(":checked")) {
-            useReceiptClaim = true;
-        }
-        if ($("#accountIsHeader").is(":checked")) {
-            isHeader = true;
-        }
-        let accountID = $("#edtAccountID").val();
-        const accounttype = $("#sltAccountType").val();
-        const accountname = $("#edtAccountName").val();
-        const accountno = $("#edtAccountNo").val();
-        const taxcode = $("#sltTaxCode").val();
-        const accountdesc = $("#txaAccountDescription").val();
-        const swiftCode = $("#swiftCode").val();
-        const routingNo = $("#routingNo").val();
-        // var comments = $('#txaAccountComments').val();
-        const bankname = $("#edtBankName").val();
-        const bankaccountname = $("#edtBankAccountName").val();
-        const bankbsb = $("#edtBSB").val();
-        const bankacountno = $("#edtBankAccountNo").val();
-        const isBankAccount = templateObject.isBankAccount.get();
-        const expenseCategory = $("#expenseCategory").val();
-        const categoryAccountID = $("#categoryAccountID").val();
-        const categoryAccountName = $("#categoryAccountName").val();
-        const expirydateTime = new Date($("#edtExpiryDate").datepicker("getDate"));
-        const cardnumber = $("#edtCardNumber").val();
-        const cardcvc = $("#edtCvc").val();
-        const expiryDate =
-            expirydateTime.getFullYear() +
-            "-" +
-            (expirydateTime.getMonth() + 1) +
-            "-" +
-            expirydateTime.getDate();
-
-        let companyID = 1;
-        let data = "";
-        if (categoryAccountID != "" && categoryAccountID != accountID) {
-            data = {
-                type: "TAccount",
-                fields: {
-                    ID: categoryAccountID,
-                    ReceiptCategory: ""
-                },
-            };
-            accountService.saveAccount(data).then(function(data2) {
-                doBeforeSave(accountID);
-            }).catch(function(err) {
-                swal({
-                    title: "Oooops...",
-                    text: err,
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: "Try Again",
-                }).then((result) => {
-                    if (result.value) {} else if (result.dismiss === "cancel") {}
-                });
-                return false;
-            })
-        } else {
-            doBeforeSave(accountID);
-        }
-        function doBeforeSave(accountID) {
-            if (accountID == "") {
-                accountService.getCheckAccountData(accountname).then(function (data) {
-                    accountID = parseInt(data.taccount[0].Id) || 0;
-                    doSaveAccount(accountID);
-                }).catch(function (err) {
-                    doSaveAccount(0);
-                });
-            } else {
-                doSaveAccount(accountID);
-            }
-        }
-        function doSaveAccount(accountID) {
-            data = {
-                type: "TAccount",
-                fields: {
-                    ID: accountID,
-                    // AccountName: accountname|| '',
-                    AccountNumber: accountno || "",
-                    // AccountTypeName: accounttype|| '',
-                    ReceiptCategory: expenseCategory || "",
-                    Active: true,
-                    BankAccountName: bankaccountname || "",
-                    BankAccountNumber: bankacountno || "",
-                    BSB: bankbsb || "",
-                    Description: accountdesc || "",
-                    TaxCode: taxcode || "",
-                    PublishOnVS1: true,
-                    Extra: swiftCode,
-                    BankNumber: routingNo,
-                    IsHeader: isHeader,
-                    AllowExpenseClaim: useReceiptClaim,
-                    Required: forTransaction,
-                    CarNumber: cardnumber || "",
-                    CVC: cardcvc || "",
-                    ExpiryDate: expiryDate || "",
-                },
-            };
-            accountService.saveAccount(data).then(function(data) {
-                if ($("#showOnTransactions").is(":checked")) {
-                    const objDetails = {
-                        type: "TCompanyInfo",
-                        fields: {
-                            Id: companyID,
-                            AccountNo: bankacountno,
-                            BankBranch: swiftCode,
-                            BankAccountName: bankaccountname,
-                            BankName: bankname,
-                            Bsb: bankbsb,
-                            SiteCode: routingNo,
-                            FileReference: accountname,
-                        },
-                    };
-                    organisationService.saveOrganisationSetting(objDetails).then(function(data) {
-                        const accNo = bankacountno || "";
-                        const swiftCode1 = swiftCode || "";
-                        const bankAccName = bankaccountname || "";
-                        const accountName = accountname || "";
-                        const bsb = bankbsb || "";
-                        const routingNo = routingNo || "";
-
-                        localStorage.setItem("vs1companyBankName", bankname);
-                        localStorage.setItem(
-                            "vs1companyBankAccountName",
-                            bankAccName
-                        );
-                        localStorage.setItem("vs1companyBankAccountNo", accNo);
-                        localStorage.setItem("vs1companyBankBSB", bsb);
-                        localStorage.setItem("vs1companyBankSwiftCode", swiftCode1);
-                        localStorage.setItem("vs1companyBankRoutingNo", routingNo);
-                        doAfterSave(accountID);
-                    }).catch(function(err) {
-                        doAfterSave(accountID);
-                    });
-                } else {
-                    doAfterSave(accountID);
-                }
-            }).catch(function(err) {
-                swal({
-                    title: "Oooops...",
-                    text: err,
-                    type: "error",
-                    showCancelButton: false,
-                    confirmButtonText: "Try Again",
-                }).then((result) => {
-                    if (result.value) {
-                        Meteor._reload.reload();
-                    } else if (result.dismiss === "cancel") {}
-                });
-                $(".fullScreenSpin").css("display", "none");
-            });
-        }
-        function doAfterSave(accountID) {
-            sideBarService.getAccountListVS1().then(function(dataReload) {
-                addVS1Data("TAccountVS1", JSON.stringify(dataReload)).then(function(datareturn) {
-                    successSaveEvent(accountID);
-                }).catch(function(err) {
-                    window.open("/accountsoverview", "_self");
-                });
-            }).catch(function(err) {
-                window.open("/accountsoverview", "_self");
-            });
-        }
-        function successSaveEvent(accountID) {
-            let successTxt = "";
-            if (accountID == "") {
-                successTxt = "Account successfully created";
-            } else {
-                successTxt = "Account successfully updated";
-            }
-            swal({
-                title: "Success",
-                text: successTxt,
-                type: "success",
-                showCancelButton: false,
-                confirmButtonText: "Try Again",
-            }).then((result) => {
-                if (result.value) {} else if (result.dismiss === "cancel") {}
-            });
-            $(".fullScreenSpin").css("display", "none");
-            setTimeout(function() {
-                window.open("/accountsoverview", "_self");
-            }, 100);
-        }
-       }, delayTimeAfterSound);
     },
     "click .btnAddNewAccounts": function() {
         $("#add-account-title").text("Add New Account");
@@ -2084,7 +2280,7 @@ Template.accountsoverview.events({
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
                         header: 1,
                     });
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -2524,6 +2720,15 @@ Template.accountsoverview.events({
         await clearData('TAccountVS1List');
         templateObject.getAccountsOverviewData(false);
     },
+    "change #showAsTree": function(e) {
+        if ($('#showAsTree').prop('checked')) {
+            $('#tblAccountTreeOverview').closest('.table-responsive').removeClass('d-none')
+            $('#tblAccountOverview').closest('.table-responsive').addClass('d-none')
+        } else {
+            $('#tblAccountOverview').closest('.table-responsive').removeClass('d-none')
+            $('#tblAccountTreeOverview').closest('.table-responsive').addClass('d-none')
+        }
+    }
 });
 
 Template.accountsoverview.helpers({
@@ -2604,5 +2809,43 @@ Template.accountsoverview.helpers({
     // custom fields displaysettings
     displayfields: () => {
       return Template.instance().displayfields.get();
+    },
+    treeColumnHeader: () => {
+        return Template.instance().treeColumnHeader.get();
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTAccountVS1List;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllTAccountVS1List;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["limitCount", "limitFrom", "deleteFilter", "typeFilter", "useReceiptClaim"];
     },
 });

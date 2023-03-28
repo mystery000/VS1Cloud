@@ -798,6 +798,10 @@ Template.new_quote.onRendered(() => {
       const lineID = this.id;
       let tdproduct = $('#' + lineID + " .lineProductName").val();
       let tddescription = $('#' + lineID + " .lineProductDesc").text();
+      let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
+      if(tdpqa){
+          tddescription += " " + tdpqa;
+      }
       let tdQty = $('#' + lineID + " .lineQty").val();
       let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
       let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
@@ -2155,6 +2159,21 @@ Template.new_quote.onRendered(() => {
                     let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
                     let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                    let serialno = "";
+                    let lotno = "";
+                    let expirydate = "";
+                    if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                            serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                            lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                            let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
                     lineItemObj = {
                       lineID: Random.id(),
                       id: data.fields.Lines[i].fields.ID || '',
@@ -2174,7 +2193,10 @@ Template.new_quote.onRendered(() => {
                       curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                       TaxTotal: TaxTotalGbp || 0,
                       TaxRate: TaxRateGbp || 0,
-                      DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
+                      DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                      serialnumbers: serialno,
+                      lotnumbers: lotno,
+                      expirydates: expirydate
                     };
                     var dataListTable = [
                       data.fields.Lines[i].fields.ProductName || '',
@@ -2195,6 +2217,21 @@ Template.new_quote.onRendered(() => {
                   let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                   let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                          serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                          lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
                   lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines.fields.ID || '',
@@ -2213,7 +2250,10 @@ Template.new_quote.onRendered(() => {
                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                     TaxTotal: TaxTotalGbp || 0,
                     TaxRate: TaxRateGbp || 0,
-                    DiscountPercent: data.fields.Lines.fields.DiscountPercent || 0
+                    DiscountPercent: data.fields.Lines.fields.DiscountPercent || 0,
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -2503,6 +2543,21 @@ Template.new_quote.onRendered(() => {
                     let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines[i].fields.LineTaxTotal);
                     let TaxRateGbp = (useData[d].fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                    let serialno = "";
+                    let lotno = "";
+                    let expirydate = "";
+                    if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                            serialno += (serialno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                            lotno += (lotno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                            let expirydateformat = useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
                     lineItemObj = {
                       lineID: Random.id(),
                       id: useData[d].fields.Lines[i].fields.ID || '',
@@ -2522,8 +2577,10 @@ Template.new_quote.onRendered(() => {
                       curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                       TaxTotal: TaxTotalGbp || 0,
                       TaxRate: TaxRateGbp || 0,
-                      DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0
-
+                      DiscountPercent: useData[d].fields.Lines[i].fields.DiscountPercent || 0,
+                      serialnumbers: serialno,
+                      lotnumbers: lotno,
+                      expirydates: expirydate
                     };
 
                     var dataListTable = [
@@ -2546,6 +2603,21 @@ Template.new_quote.onRendered(() => {
                   let currencyAmountGbp = currencySymbol + '' + useData[d].fields.Lines.fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(useData[d].fields.Lines.fields.LineTaxTotal);
                   let TaxRateGbp = currencySymbol + '' + useData[d].fields.Lines.fields.LineTaxRate;
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(useData[d].fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                          serialno += (serialno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(useData[d].fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                          lotno += (lotno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
                   lineItemObj = {
                     lineID: Random.id(),
                     id: useData[d].fields.Lines.fields.ID || '',
@@ -2563,7 +2635,10 @@ Template.new_quote.onRendered(() => {
                     //TotalAmt: AmountGbp || 0,
                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                     TaxTotal: TaxTotalGbp || 0,
-                    TaxRate: TaxRateGbp || 0
+                    TaxRate: TaxRateGbp || 0,
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   lineItems.push(lineItemObj);
                 }
@@ -2786,6 +2861,21 @@ Template.new_quote.onRendered(() => {
                       let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                       let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
                       let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                      let serialno = "";
+                      let lotno = "";
+                      let expirydate = "";
+                      if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                          for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                              serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                          }
+                      }
+                      if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                          for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                              lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                              let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                              expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                          }
+                      }
                       lineItemObj = {
                         lineID: Random.id(),
                         id: data.fields.Lines[i].fields.ID || '',
@@ -2805,8 +2895,10 @@ Template.new_quote.onRendered(() => {
                         curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                         TaxTotal: TaxTotalGbp || 0,
                         TaxRate: TaxRateGbp || 0,
-                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
-
+                        DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                        serialnumbers: serialno,
+                        lotnumbers: lotno,
+                        expirydates: expirydate
                       };
                       var dataListTable = [
                         data.fields.Lines[i].fields.ProductName || '',
@@ -2827,6 +2919,21 @@ Template.new_quote.onRendered(() => {
                     let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                     let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                     let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                    let serialno = "";
+                    let lotno = "";
+                    let expirydate = "";
+                    if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                        for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                            serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                        }
+                    }
+                    if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                        for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                            lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                            let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                        }
+                    }
                     lineItemObj = {
                       lineID: Random.id(),
                       id: data.fields.Lines.fields.ID || '',
@@ -2844,7 +2951,10 @@ Template.new_quote.onRendered(() => {
                       //TotalAmt: AmountGbp || 0,
                       curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                       TaxTotal: TaxTotalGbp || 0,
-                      TaxRate: TaxRateGbp || 0
+                      TaxRate: TaxRateGbp || 0,
+                      serialnumbers: serialno,
+                      lotnumbers: lotno,
+                      expirydates: expirydate
                     };
                     lineItems.push(lineItemObj);
                   }
@@ -3073,6 +3183,21 @@ Template.new_quote.onRendered(() => {
                   let currencyAmountGbp = currencySymbol + '' + data.fields.Lines[i].fields.TotalLineAmount.toFixed(2);
                   let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines[i].fields.LineTaxTotal);
                   let TaxRateGbp = (data.fields.Lines[i].fields.LineTaxRate * 100).toFixed(2);
+                  let serialno = "";
+                  let lotno = "";
+                  let expirydate = "";
+                  if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
+                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                          serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
+                  }
+                  if(data.fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
+                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                          lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                          let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
+                  }
                   lineItemObj = {
                     lineID: Random.id(),
                     id: data.fields.Lines[i].fields.ID || '',
@@ -3092,8 +3217,10 @@ Template.new_quote.onRendered(() => {
                     curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                     TaxTotal: TaxTotalGbp || 0,
                     TaxRate: TaxRateGbp || 0,
-                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0
-
+                    DiscountPercent: data.fields.Lines[i].fields.DiscountPercent || 0,
+                    serialnumbers: serialno,
+                    lotnumbers: lotno,
+                    expirydates: expirydate
                   };
                   var dataListTable = [
                     data.fields.Lines[i].fields.ProductName || '',
@@ -3114,6 +3241,21 @@ Template.new_quote.onRendered(() => {
                 let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2);
                 let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal);
                 let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate;
+                let serialno = "";
+                let lotno = "";
+                let expirydate = "";
+                if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                    }
+                }
+                if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                    }
+                }
                 lineItemObj = {
                   lineID: Random.id(),
                   id: data.fields.Lines.fields.ID || '',
@@ -3131,7 +3273,10 @@ Template.new_quote.onRendered(() => {
                   //TotalAmt: AmountGbp || 0,
                   curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                   TaxTotal: TaxTotalGbp || 0,
-                  TaxRate: TaxRateGbp || 0
+                  TaxRate: TaxRateGbp || 0,
+                  serialnumbers: serialno,
+                  lotnumbers: lotno,
+                  expirydates: expirydate
                 };
                 lineItems.push(lineItemObj);
               }
@@ -3795,6 +3940,21 @@ Template.new_quote.onRendered(() => {
         let currencyAmountGbp = currencySymbol + '' + data.fields.Lines.fields.TotalLineAmount.toFixed(2) || 0;
         let TaxTotalGbp = utilityService.modifynegativeCurrencyFormat(data.fields.Lines.fields.LineTaxTotal) || 0;
         let TaxRateGbp = currencySymbol + '' + data.fields.Lines.fields.LineTaxRate || 0;
+        let serialno = "";
+        let lotno = "";
+        let expirydate = "";
+        if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
+            for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+            }
+        }
+        if(data.fields.Lines.fields?.PQA?.fields?.PQABatch != null){
+            for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+            }
+        }
         lineItemObj = {
           lineID: Random.id(),
           id: data.fields.Lines.fields.ID || '',
@@ -3812,7 +3972,10 @@ Template.new_quote.onRendered(() => {
           //TotalAmt: AmountGbp || 0,
           curTotalAmt: currencyAmountGbp || currencySymbol + '0',
           TaxTotal: TaxTotalGbp || 0,
-          TaxRate: TaxRateGbp || 0
+          TaxRate: TaxRateGbp || 0,
+          serialnumbers: serialno,
+          lotnumbers: lotno,
+          expirydates: expirydate
         };
         lineItems.push(lineItemObj);
       }
@@ -4641,8 +4804,8 @@ Template.new_quote.onRendered(() => {
     }, 200);
   }
 
-  $('#edtCustomerName').editableSelect().on('click.editable-select', function (e, li) {
-
+  // $('#edtCustomerName').editableSelect().on('click.editable-select', function (e, li) {
+    $(document).on('click', '#edtCustomerName', function(e, li) {
     const $each = $(this);
     const offset = $each.offset();
     $('#edtCustomerPOPID').val('');
@@ -4800,7 +4963,7 @@ Template.new_quote.onRendered(() => {
     }, 200);
   }
   function setInitCustomer() {
-    $('#customerListModal').modal();
+    $('#customerListModal').modal('show');
     setTimeout(function () {
       $('#tblCustomerlist_filter .form-control-sm').focus();
       $('#tblCustomerlist_filter .form-control-sm').val('');
@@ -7117,8 +7280,8 @@ Template.new_quote.events({
             $("#deleteprogressbar").modal('show');
             currentInvoice = parseInt(currentInvoice);
             var quoteData = await salesService.getOneQuotedataEx(currentInvoice);
-            var saleDate = quoteData.fields.SaleDate;
-            var fromDate = saleDate.substring(0, 10);
+            var creationDate = quoteData.fields.CreationDate;
+            var fromDate = creationDate.substring(0, 10);
             var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingQuotes = await sideBarService.getAllTQuoteListData(
               fromDate,
@@ -10732,7 +10895,7 @@ Template.new_quote.events({
         event.preventDefault();
         return false;
       } else {
-        getVS1Data("TProductList").then(function (dataObject) {
+        getVS1Data("TProductQtyList").then(function (dataObject) {
           if (dataObject.length == 0) {
             productService.getProductStatus(selectedProductName).then(async function (data) {
               if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
@@ -10774,11 +10937,13 @@ Template.new_quote.events({
           }
           else {
             let data = JSON.parse(dataObject[0].data);
-            for (let i = 0; i < data.tproductlist.length; i++) {
-              if (data.tproductlist[i].PARTNAME == selectedProductName) {
-                if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+            let existProductInfo = false;
+            for (let i = 0; i < data.tproductqtylist.length; i++) {
+              if (data.tproductqtylist[i].ProductName == selectedProductName) {
+                existProductInfo = true;
+                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                   return false;
-                } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
                   let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
                   if (selectedLot != undefined && selectedLot != "") {
                     shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
@@ -10791,7 +10956,7 @@ Template.new_quote.events({
                     $("#availableLotNumberModal").attr("data-row", row + 1);
                     $("#availableLotNumberModal").modal("show");
                   }, 200);
-                } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
                   let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
                   if (selectedSN != undefined && selectedSN != "") {
                     shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
@@ -10803,7 +10968,7 @@ Template.new_quote.events({
                     var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                     $("#availableSerialNumberModal").attr("data-row", row + 1);
                     $('#availableSerialNumberModal').modal('show');
-                    if (data.tproductlist[i].CUSTFLD13 == 'true') {
+                    if (data.tproductqtylist[i].CUSTFLD13 == 'true') {
                       $("#availableSerialNumberModal .btnSNCreate").show();
                     }
                     else {
@@ -10812,6 +10977,46 @@ Template.new_quote.events({
                   }, 200);
                 }
               }
+            }
+
+            if (!existProductInfo) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if (selectedLot != undefined && selectedLot != "") {
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else {
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if (selectedSN != undefined && selectedSN != "") {
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else {
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if (data.tproductvs1[0].CUSTFLD13 == 'true') {
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else {
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              });
             }
           }
         }).catch(function (err) {
@@ -10871,9 +11076,11 @@ Template.new_quote.events({
         event.preventDefault();
         return false;
       } else {
-        getVS1Data("TProductList").then(function (dataObject) {
+        $(".fullScreenSpin").css("display", "inline-block");
+        getVS1Data("TProductQtyList").then(function (dataObject) {
           if (dataObject.length == 0) {
             productService.getProductStatus(selectedProductName).then(async function (data) {
+              $(".fullScreenSpin").css("display", "none");
               if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
                 var buttons = $("<div>")
                   .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
@@ -10890,7 +11097,7 @@ Template.new_quote.events({
                       objDetails = {
                         type: "TProductVS1",
                         fields: {
-                          ID: parseInt(data.tproductlist[i].PARTSID),
+                          ID: parseInt(data.tproductqtylist[i].PARTSID),
                           Active: true,
                           SNTracking: "true",
                           Batch: "false",
@@ -10901,7 +11108,7 @@ Template.new_quote.events({
                         .then(async function (objDetails) {
                           sideBarService.getProductListVS1("All", 0)
                             .then(async function (dataReload) {
-                              await addVS1Data("TProductList", JSON.stringify(dataReload));
+                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                               swal.close();
                               $(target).click();
                             })
@@ -10928,7 +11135,7 @@ Template.new_quote.events({
                       objDetails = {
                         type: "TProductVS1",
                         fields: {
-                          ID: parseInt(data.tproductlist[i].PARTSID),
+                          ID: parseInt(data.tproductqtylist[i].PARTSID),
                           Active: true,
                           SNTracking: "false",
                           Batch: "true",
@@ -10939,7 +11146,7 @@ Template.new_quote.events({
                         .then(async function (objDetails) {
                           sideBarService.getProductListVS1("All", 0)
                             .then(async function (dataReload) {
-                              await addVS1Data("TProductList", JSON.stringify(dataReload));
+                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                               swal.close();
                               $(target).click();
                             })
@@ -11003,9 +11210,12 @@ Template.new_quote.events({
           }
           else {
             let data = JSON.parse(dataObject[0].data);
-            for (let i = 0; i < data.tproductlist.length; i++) {
-              if (data.tproductlist[i].PARTNAME == selectedProductName) {
-                if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == false) {
+            let existProductInfo = false;
+            for (let i = 0; i < data.tproductqtylist.length; i++) {
+              if (data.tproductqtylist[i].ProductName == selectedProductName) {
+                $(".fullScreenSpin").css("display", "none");
+                existProductInfo = true;
+                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
                   var buttons = $("<div>")
                     .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
                     .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
@@ -11021,7 +11231,7 @@ Template.new_quote.events({
                         objDetails = {
                           type: "TProductVS1",
                           fields: {
-                            ID: parseInt(data.tproductlist[i].PARTSID),
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
                             Active: true,
                             SNTracking: "true",
                             Batch: "false",
@@ -11032,7 +11242,7 @@ Template.new_quote.events({
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
                               .then(async function (dataReload) {
-                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                 swal.close();
                                 $(target).click();
                               })
@@ -11059,7 +11269,7 @@ Template.new_quote.events({
                         objDetails = {
                           type: "TProductVS1",
                           fields: {
-                            ID: parseInt(data.tproductlist[i].PARTSID),
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
                             Active: true,
                             SNTracking: "false",
                             Batch: "true",
@@ -11070,7 +11280,7 @@ Template.new_quote.events({
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
                               .then(async function (dataReload) {
-                                await addVS1Data("TProductList", JSON.stringify(dataReload));
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                 swal.close();
                                 $(target).click();
                               })
@@ -11097,7 +11307,7 @@ Template.new_quote.events({
                       });
                     }
                   });
-                } else if (data.tproductlist[i].batch == true && data.tproductlist[i].SNTracking == false) {
+                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
                   let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
                   if (selectedLot != undefined && selectedLot != "") {
                     shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
@@ -11110,7 +11320,7 @@ Template.new_quote.events({
                     $("#availableLotNumberModal").attr("data-row", row + 1);
                     $("#availableLotNumberModal").modal("show");
                   }, 200);
-                } else if (data.tproductlist[i].batch == false && data.tproductlist[i].SNTracking == true) {
+                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
                   let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
                   if (selectedSN != undefined && selectedSN != "") {
                     shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
@@ -11122,7 +11332,7 @@ Template.new_quote.events({
                     var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
                     $("#availableSerialNumberModal").attr("data-row", row + 1);
                     $('#availableSerialNumberModal').modal('show');
-                    if (data.tproductlist[i].CUSTFLD13 == 'true') {
+                    if (data.tproductqtylist[i].CUSTFLD13 == 'true') {
                       $("#availableSerialNumberModal .btnSNCreate").show();
                     }
                     else {
@@ -11132,9 +11342,141 @@ Template.new_quote.events({
                 }
               }
             }
+
+            if (!existProductInfo) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                $(".fullScreenSpin").css("display", "none");
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  var buttons = $("<div>")
+                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                  swal({
+                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                    type: "warning",
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    html: buttons,
+                    onOpen: function (dObj) {
+                      $('#trackSN').on('click', function () {
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "true",
+                            Batch: "false",
+                          },
+                        };
+  
+                        productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                      });
+                      $('#trackLN').on('click', function () {
+                        swal.close();
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "false",
+                            Batch: "true",
+                          },
+                        };
+  
+                        productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
+                              }
+                            });
+                          });
+                      });
+                      $('#trackCancel').on('click', function () {
+                        swal.close();
+                      });
+                    }
+                  });
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if (selectedLot != undefined && selectedLot != "") {
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else {
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if (selectedSN != undefined && selectedSN != "") {
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else {
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if (data.tproductvs1[0].CUSTFLD13 == 'true') {
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else {
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              });
+            }
           }
         }).catch(function (err) {
           productService.getProductStatus(selectedProductName).then(async function (data) {
+            $(".fullScreenSpin").css("display", "none");
             if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
               var buttons = $("<div>")
                 .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
@@ -11151,7 +11493,7 @@ Template.new_quote.events({
                     objDetails = {
                       type: "TProductVS1",
                       fields: {
-                        ID: parseInt(data.tproductlist[i].PARTSID),
+                        ID: parseInt(data.tproductqtylist[i].PARTSID),
                         Active: true,
                         SNTracking: "true",
                         Batch: "false",
@@ -11162,7 +11504,7 @@ Template.new_quote.events({
                       .then(async function (objDetails) {
                         sideBarService.getProductListVS1("All", 0)
                           .then(async function (dataReload) {
-                            await addVS1Data("TProductList", JSON.stringify(dataReload));
+                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                             swal.close();
                             $(target).click();
                           })
@@ -11189,7 +11531,7 @@ Template.new_quote.events({
                     objDetails = {
                       type: "TProductVS1",
                       fields: {
-                        ID: parseInt(data.tproductlist[i].PARTSID),
+                        ID: parseInt(data.tproductqtylist[i].PARTSID),
                         Active: true,
                         SNTracking: "false",
                         Batch: "true",
@@ -11200,7 +11542,7 @@ Template.new_quote.events({
                       .then(async function (objDetails) {
                         sideBarService.getProductListVS1("All", 0)
                           .then(async function (dataReload) {
-                            await addVS1Data("TProductList", JSON.stringify(dataReload));
+                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                             swal.close();
                             $(target).click();
                           })

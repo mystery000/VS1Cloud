@@ -6,7 +6,22 @@
                         aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
-                {{> non_transactional_list tablename="tblTitleList"}}
+<!--                {{> non_transactional_list tablename="tblTitleList"}}-->
+                {{>datatablelist
+                        tablename="tblTitleList"
+                        apiName= apiFunction
+                        indexeddbname = 'TTitleList'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Title List'
+                        istransaction = false
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='ttitlelist'
+                        exIndexDBName = 'ttitlelist'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                }}
             </div>
             <div class="modal-footer">
                 <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>

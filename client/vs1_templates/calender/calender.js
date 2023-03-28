@@ -74,6 +74,9 @@ Template.calender.onCreated(function() {
     templateObject.toupdatelogid = new ReactiveVar();
     templateObject.createAppointment = new ReactiveVar();
     templateObject.createAppointment.set(false);
+
+    templateObject.changedEvents = new ReactiveVar([]);
+    addVS1Data("TNewAppointment", JSON.stringify([]))
 });
 
 async function sendAppointmentEmail() {
@@ -409,19 +412,38 @@ Template.calender.onRendered(function() {
         if (getso_id[1]) {
             currentInvoice = parseInt(currentInvoice);
             var apptData = await appointmentService.getOneAppointmentdataEx(currentInvoice);
-            let apptIds = await appointmentService.getAllAppointmentListCount();
-            let apptIdList = apptIds.tappointmentex;
-            let cnt = 0;
-            for (let i = 0; i < apptIdList.length; i++) {
-                if (apptIdList[i].Id > apptData.fields.ID) {
-                    cnt++;
+            getVS1Data("TAppointment").then(async function(dataObject) {
+                if(dataObject.length == 0){
+                    let appointmentService = new AppointmentService();
+                    let apptIds = await appointmentService.getAllAppointmentListCount();
+                    let apptIdList = apptIds.tappointmentex;
+                    let cnt = 0;
+                    for (let i = 0; i < apptIdList.length; i++) {
+                        if (apptIdList[i].Id > apptData.fields.ID) {
+                            cnt++;
+                        }
+                    }
+                    if (cnt > 1) {
+                        $("#btn_follow2").css("display", "inline-block");
+                    } else {
+                        $("#btn_follow2").css("display", "none");
+                    }
+                }else{
+                    let apptIds = JSON.parse(dataObject[0].data);
+                    let apptIdList = apptIds.tappointmentex;
+                    let cnt = 0;
+                    for (let i = 0; i < apptIdList.length; i++) {
+                        if (apptIdList[i].Id > apptData.fields.ID) {
+                            cnt++;
+                        }
+                    }
+                    if (cnt > 1) {
+                        $("#btn_follow2").css("display", "inline-block");
+                    } else {
+                        $("#btn_follow2").css("display", "none");
+                    }
                 }
-            }
-            if (cnt > 1) {
-                $("#btn_follow2").css("display", "inline-block");
-            } else {
-                $("#btn_follow2").css("display", "none");
-            }
+            })
         }
     }
     templateObject.hasFollowings();
@@ -673,6 +695,56 @@ Template.calender.onRendered(function() {
             }
         },
     };
+
+    templateObject.saveUpdatedEvents = async() => {
+        localStorage.setItem("isFormUpdated", false);
+        let updatedEvents = await getVS1Data("TNewAppointment");
+        let updatedTimeLogs = await getVS1Data("TAppointmentsTimeLog");
+        if(updatedEvents){
+            let data = JSON.parse(updatedEvents[0]?.data)
+            if(data?.length !== 0){
+                for(var i = 0; i< data.length; i++){
+                    await appointmentService.saveAppointment(data[i]);
+                }
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                })
+            }
+        }
+        if(updatedTimeLogs){
+            let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
+            if(timeLogData?.length !== 0){
+                for(var i = 0; i< timeLogData.length; i++){
+                    await appointmentService.saveTimeLog(timeLogData[i]);
+                }
+                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
+                })
+            }
+        }
+       
+    }
+
+    templateObject.updateEvents = async (updatedEvent) => {
+        let tempEvents = await getVS1Data("TNewAppointment")
+        localStorage.setItem("isFormUpdated", true);
+        if(tempEvents.length == 0){
+            addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
+        }else{
+            let data = JSON.parse(tempEvents[0].data)
+            if(data.length === 0){
+                let currentEventIndex = data?.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
+                if(currentEventIndex > -1){
+                    data[currentEventIndex] = updatedEvent;
+                }else{
+                    data.push(updatedEvent)
+                }
+            }else{
+                data.push(updatedEvent)
+            }
+            addVS1Data("TNewAppointment", JSON.stringify(data))
+        }
+    }
 
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
@@ -1042,39 +1114,52 @@ Template.calender.onRendered(function() {
                             '</div>' + "" +
                             '</div>';
                         let day = moment(startDate).format("dddd").toLowerCase();
-                        appointmentService.saveAppointment(objectData).then(function(data) {
-                            appointmentData[index].startDate = startDate + " " + startTime;
-                            appointmentData[index].endDate = endDate + " " + endTime;
-                            templateObject.appointmentrecords.set(appointmentData);
-                            $(".droppable #" + eventDropID).remove();
-                            $("#" + nameid + " ." + day + " .droppable").append(job);
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == nameid) {
-                                    $(this).attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
-                                }
-                            });
-                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                    } else {
-                                        window.open("/appointments", "_self");
-                                    }
-                                }).catch(function(err) {});
-                            }).catch(function(err) {
-                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                    window.open(localStorage.getItem("appt_historypage"), "_self");
-                                } else {
-                                    window.open("/appointments", "_self");
-                                }
-                            });
-                        }).catch(function(err) {
-                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                            } else {
-                                window.open("/appointments", "_self");
+
+                        appointmentData[index].startDate = startDate + " " + startTime;
+                        appointmentData[index].endDate = endDate + " " + endTime;
+                        templateObject.appointmentrecords.set(appointmentData);
+                        $(".droppable #" + eventDropID).remove();
+                        $("#" + nameid + " ." + day + " .droppable").append(job);
+                        $("#allocationTable tbody tr").each(function() {
+                            if (this.id == nameid) {
+                                $(this).attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
                             }
                         });
+                        let tempEvents = templateObject.changedEvents.get();
+                        templateObject.updateEvents(objectData)
+                        // appointmentService.saveAppointment(objectData).then(function(data) {
+                        //     appointmentData[index].startDate = startDate + " " + startTime;
+                        //     appointmentData[index].endDate = endDate + " " + endTime;
+                        //     templateObject.appointmentrecords.set(appointmentData);
+                        //     $(".droppable #" + eventDropID).remove();
+                        //     $("#" + nameid + " ." + day + " .droppable").append(job);
+                        //     $("#allocationTable tbody tr").each(function() {
+                        //         if (this.id == nameid) {
+                        //             $(this).attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
+                        //         }
+                        //     });
+                        //     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                        //         addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
+                        //             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //                 window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //             } else {
+                        //                 window.open("/appointments", "_self");
+                        //             }
+                        //         }).catch(function(err) {});
+                        //     }).catch(function(err) {
+                        //         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //             window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //         } else {
+                        //             window.open("/appointments", "_self");
+                        //         }
+                        //     });
+                        // }).catch(function(err) {
+                        //     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                        //         window.open(localStorage.getItem("appt_historypage"), "_self");
+                        //     } else {
+                        //         window.open("/appointments", "_self");
+                        //     }
+                        // });
                     }
                 }
             },
@@ -1478,7 +1563,7 @@ Template.calender.onRendered(function() {
                     document.getElementById("product-list").value = result[0].product || "";
                     document.getElementById("product-list-1").value = result[0].product || "";
                     
-                    if (result[0].extraProducts != "") {
+                    if (result[0].extraProducts && result[0].extraProducts != "") {
                         let extraProducts = result[0].extraProducts.split(":");
                         let extraProductFees = [];
                         productService.getNewProductServiceListVS1()
@@ -1611,29 +1696,42 @@ Template.calender.onRendered(function() {
                             '</div>' + "" +
                             '</div>';
                         let day = moment(startDate).format("dddd").toLowerCase();
-                        appointmentService.saveAppointment(objectData).then(function(data) {
-                            appointmentData[index].startDate = startDate + " " + startTime;
-                            appointmentData[index].endDate = endDate + " " + endTime;
-                            templateObject.appointmentrecords.set(appointmentData);
-                            $(".droppable #" + eventDropID).remove();
-                            $("#" + nameid + " ." + day + " .droppable").append(job);
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == nameid) {
-                                    $(this).attr("id", $(this).attr("id").replace("-", " "));
-                                }
-                            });
-                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                    window.open("/appointments", '_self');
-                                }).catch(function(err) {
-                                    window.open("/appointments", '_self');
-                                });
-                            }).catch(function(err) {
-                                window.open("/appointments", '_self');
-                            });
-                        }).catch(function(err) {
-                            window.open("/appointments", '_self');
+                        appointmentData[index].startDate = startDate + " " + startTime;
+                        appointmentData[index].endDate = endDate + " " + endTime;
+                        templateObject.appointmentrecords.set(appointmentData);
+                        $(".droppable #" + eventDropID).remove();
+                        $("#" + nameid + " ." + day + " .droppable").append(job);
+                        $("#allocationTable tbody tr").each(function() {
+                            if (this.id == nameid) {
+                                $(this).attr("id", $(this).attr("id").replace("-", " "));
+                            }
                         });
+                        let tempEvents = templateObject.changedEvents.get();
+                        templateObject.updateEvents(objectData)
+
+                        // appointmentService.saveAppointment(objectData).then(function(data) {
+                        //     appointmentData[index].startDate = startDate + " " + startTime;
+                        //     appointmentData[index].endDate = endDate + " " + endTime;
+                        //     templateObject.appointmentrecords.set(appointmentData);
+                        //     $(".droppable #" + eventDropID).remove();
+                        //     $("#" + nameid + " ." + day + " .droppable").append(job);
+                        //     $("#allocationTable tbody tr").each(function() {
+                        //         if (this.id == nameid) {
+                        //             $(this).attr("id", $(this).attr("id").replace("-", " "));
+                        //         }
+                        //     });
+                        //     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+                        //         addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
+                        //             window.open("/appointments", '_self');
+                        //         }).catch(function(err) {
+                        //             window.open("/appointments", '_self');
+                        //         });
+                        //     }).catch(function(err) {
+                        //         window.open("/appointments", '_self');
+                        //     });
+                        // }).catch(function(err) {
+                        //     window.open("/appointments", '_self');
+                        // });
                     }
                 }
 
@@ -1781,7 +1879,7 @@ Template.calender.onRendered(function() {
         });
         calendar.render();
         // $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 160px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""><div class="input-group-addon"><span class="glyphicon glyphicon-th"></span></div></div><div class="custom-control custom-switch" style="width:160px; float:left; margin:8px 5px 0 60px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
-        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:160px; float: right; margin:8px 30px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
+        $("#calendar .fc-header-toolbar div:nth-child(2)").html('<div class="input-group date" style="width: 200px; float:left"><input type="text" class="form-control" id="appointmentDate" name="appointmentDate" value=""></div><div class="custom-control custom-switch" style="width:192px; float: right; margin:8px 0px 0 0px;"><input class="custom-control-input" type="checkbox" name="chkmyAppointments" id="chkmyAppointments" style="cursor: pointer;" autocomplete="on" checked"><label class="custom-control-label" for="chkmyAppointments" style="cursor: pointer;">My Appointments</label></div>');
         let draggableEl = document.getElementById('external-events-list');
         new Draggable(draggableEl, {
             itemSelector: '.fc-event',
@@ -1797,10 +1895,10 @@ Template.calender.onRendered(function() {
                 };
             }
         });
-        $("#appointmentDate").css("fontSize", "32px");
+        $("#appointmentDate").css("fontSize", "24px");
         $("#appointmentDate").css("padding", "0px");
         $("#appointmentDate").css("border", "0px");
-        $("#appointmentDate").css("margin-left", "30px");
+        $("#appointmentDate").css("margin-left", "20px");
         $("#appointmentDate").css("height", "40px");
         $("#appointmentDate").css("cursor", "pointer");
         $("#appointmentDate").css("background-color", "white");
@@ -2063,53 +2161,104 @@ Template.calender.onRendered(function() {
         templateObject.datatablerecords.set([]);
         const splashArrayProductServiceListGet = [];
         //$('#product-list').editableSelect('clear');
-        sideBarService.getSelectedProducts(employeeID).then(function(data) {
-            let dataList = {};
-            let getallinvproducts = templateObject.allnoninvproducts.get();
-            if (data.trepservices.length > 0) {
-                for (let i = 0; i < data.trepservices.length; i++) {
-                    dataList = {
-                        id: data.trepservices[i].Id || "",
-                        productname: data.trepservices[i].ServiceDesc || "",
-                        productcost: data.trepservices[i].Rate || 0.00
-
-                    };
-                    let checkServiceArray = getallinvproducts.filter(function(prodData) {
-                        if (prodData[1] === data.trepservices[i].ServiceDesc) {
-                            const prodservicedataList = [
-                                prodData[0],
-                                prodData[1] || "-",
-                                prodData[2] || "",
-                                prodData[3] || "",
-                                prodData[4],
-                                prodData[5],
-                                prodData[6],
-                                prodData[7] || "",
-                                prodData[8] || "",
-                                prodData[9] || null,
-                                prodData[10]
-                            ];
-                            splashArrayProductServiceListGet.push(prodservicedataList);
-                            //splashArrayProductServiceListGet.push(prodservicedataList);
-                            return prodservicedataList || "";
+        getVS1Data("TRepServices").then(function(dataObject){
+            if (dataObject.length == 0) {
+                sideBarService.getSelectedProducts(employeeID).then(function(data) {
+                    addVS1Data("TRepServices", JSON.stringify(data));
+                    let dataList = {};
+                    let getallinvproducts = templateObject.allnoninvproducts.get();
+                    if (data.trepservices.length > 0) {
+                        for (let i = 0; i < data.trepservices.length; i++) {
+                            dataList = {
+                                id: data.trepservices[i].Id || "",
+                                productname: data.trepservices[i].ServiceDesc || "",
+                                productcost: data.trepservices[i].Rate || 0.00
+        
+                            };
+                            let checkServiceArray = getallinvproducts.filter(function(prodData) {
+                                if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                                    const prodservicedataList = [
+                                        prodData[0],
+                                        prodData[1] || "-",
+                                        prodData[2] || "",
+                                        prodData[3] || "",
+                                        prodData[4],
+                                        prodData[5],
+                                        prodData[6],
+                                        prodData[7] || "",
+                                        prodData[8] || "",
+                                        prodData[9] || null,
+                                        prodData[10]
+                                    ];
+                                    splashArrayProductServiceListGet.push(prodservicedataList);
+                                    //splashArrayProductServiceListGet.push(prodservicedataList);
+                                    return prodservicedataList || "";
+                                }
+                            }) || "";
+                            productlist.push(dataList);
                         }
-                    }) || "";
-                    productlist.push(dataList);
+                        if (splashArrayProductServiceListGet) {
+                            let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
+                            const datatable = $('#tblInventoryPayrollService').DataTable();
+                            datatable.clear();
+                            datatable.rows.add(uniqueChars);
+                            datatable.draw(false);
+                        }
+                        templateObject.datatablerecords.set(productlist);
+                    } else {
+                        templateObject.getAllProductData();
+                    }
+                }).catch(function(err) {
+                    templateObject.getAllProductData();
+                });
+            }else{
+                let data = JSON.parse(dataObject[0].data);
+                let dataList = {};
+                let getallinvproducts = templateObject.allnoninvproducts.get();
+                if (data.trepservices.length > 0) {
+                    for (let i = 0; i < data.trepservices.length; i++) {
+                        dataList = {
+                            id: data.trepservices[i].Id || "",
+                            productname: data.trepservices[i].ServiceDesc || "",
+                            productcost: data.trepservices[i].Rate || 0.00
+
+                        };
+                        let checkServiceArray = getallinvproducts.filter(function(prodData) {
+                            if (prodData[1] === data.trepservices[i].ServiceDesc) {
+                                const prodservicedataList = [
+                                    prodData[0],
+                                    prodData[1] || "-",
+                                    prodData[2] || "",
+                                    prodData[3] || "",
+                                    prodData[4],
+                                    prodData[5],
+                                    prodData[6],
+                                    prodData[7] || "",
+                                    prodData[8] || "",
+                                    prodData[9] || null,
+                                    prodData[10]
+                                ];
+                                splashArrayProductServiceListGet.push(prodservicedataList);
+                                //splashArrayProductServiceListGet.push(prodservicedataList);
+                                return prodservicedataList || "";
+                            }
+                        }) || "";
+                        productlist.push(dataList);
+                    }
+                    if (splashArrayProductServiceListGet) {
+                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
+                        const datatable = $('#tblInventoryPayrollService').DataTable();
+                        datatable.clear();
+                        datatable.rows.add(uniqueChars);
+                        datatable.draw(false);
+                    }
+                    templateObject.datatablerecords.set(productlist);
+                } else {
+                    templateObject.getAllProductData();
                 }
-                if (splashArrayProductServiceListGet) {
-                    let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
-                    const datatable = $('#tblInventoryPayrollService').DataTable();
-                    datatable.clear();
-                    datatable.rows.add(uniqueChars);
-                    datatable.draw(false);
-                }
-                templateObject.datatablerecords.set(productlist);
-            } else {
-                templateObject.getAllProductData();
             }
-        }).catch(function(err) {
-            templateObject.getAllProductData();
-        });
+        })
+        
     };
 
     templateObject.getAllProductData = function() {
@@ -2520,29 +2669,29 @@ Template.calender.onRendered(function() {
         let currentDay = moment().format("dddd");
         let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-        $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-        $('#here_table thead tr').append('<th class="employeeName"></th>');
+        // $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+        // $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+        // $('#here_table thead tr').append('<th class="employeeName"></th>');
 
-        for (let w = 0; w < daysOfTheWeek.length; w++) {
-            if (daysOfTheWeek[w] === "Sunday") {
-                if ($('#showSunday').is(":checked")) {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                }
-            } else if (daysOfTheWeek[w] === "Saturday") {
-                if ($('#showSaturday').is(":checked")) {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                }
-            } else {
-                $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-            }
-        }
+        // for (let w = 0; w < daysOfTheWeek.length; w++) {
+        //     if (daysOfTheWeek[w] === "Sunday") {
+        //         if ($('#showSunday').is(":checked")) {
+        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+        //         } else {
+        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+        //         }
+        //     } else if (daysOfTheWeek[w] === "Saturday") {
+        //         if ($('#showSaturday').is(":checked")) {
+        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+        //         } else {
+        //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+        //         }
+        //     } else {
+        //         $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+        //     }
+        // }
 
-        $('#here_table').append('</tr ></thead >');
+        // $('#here_table').append('</tr ></thead >');
         for (let i = 0; i <= weekResults[0].dates.length; i++) {
             days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
         }
@@ -2760,7 +2909,7 @@ Template.calender.onRendered(function() {
                     //allEmp.push(dataList);
                 }
             }
-            let tableRowData = [];
+            // let tableRowData = [];
             let sundayRowData = [];
             let mondayRowData = [];
             let splashArrayMonday = [];
@@ -2777,8 +2926,8 @@ Template.calender.onRendered(function() {
             let fridayRow = "";
             let saturdayRow = "";
             let tableRow = "";
-            let saturdayStatus = "";
-            let sundayStatus = "";
+            // let saturdayStatus = "";
+            // let sundayStatus = "";
             for (let r = 0; r < resourceChat.length; r++) {
                 sundayRowData = [];
                 mondayRowData = [];
@@ -2846,33 +2995,33 @@ Template.calender.onRendered(function() {
                     }
                 }
 
-                if ($('#showSaturday').is(":checked")) {
-                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                } else {
-                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                }
+                // if ($('#showSaturday').is(":checked")) {
+                //     saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                // } else {
+                //     saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                // }
 
-                if ($('#showSunday').is(":checked")) {
-                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                } else {
-                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                }
+                // if ($('#showSunday').is(":checked")) {
+                //     sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                // } else {
+                //     sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                // }
 
-                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                    sundayStatus + "" +
-                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                    saturdayStatus + "" +
-                    '</tr>';
-                tableRowData.push(tableRow);
+                // tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+                //     '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+                //     sundayStatus + "" +
+                //     '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+                //     '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+                //     '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+                //     '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+                //     '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+                //     saturdayStatus + "" +
+                //     '</tr>';
+                // tableRowData.push(tableRow);
 
             }
             //setTimeout(function () {
-            $('#here_table table').append(tableRowData);
+            // $('#here_table table').append(tableRowData);
             //}, 500);
             //templateObject.employeerecords.set(allEmp);
             templateObject.resourceAllocation.set(resourceChat);
@@ -3714,21 +3863,37 @@ Template.calender.onRendered(function() {
         document.getElementById("suburb").value = $(this).find(".colCity").text();
         document.getElementById("zip").value = $(this).find(".colZipCode").text();
         if ($("#updateID").val() == "") {
-            let appointmentService = new AppointmentService();
-            appointmentService.getAllAppointmentListCount().then(function(data) {
-                if (data.tappointmentex.length > 0) {
-                    let max = 1;
-                    for (let i = 0; i < data.tappointmentex.length; i++) {
-                        if (data.tappointmentex[i].Id > max) {
-                            max = data.tappointmentex[i].Id;
+            getVS1Data("TAppointment").then(function(dataObject) {
+                if(dataObject.length == 0){
+                    let appointmentService = new AppointmentService();
+                    appointmentService.getAllAppointmentListCount().then(function(data) {
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
                         }
+                    });
+                }else{
+                    let data = JSON.parse(dataObject[0].data);
+                    if (data.tappointmentex.length > 0) {
+                        let max = 1;
+                        for (let i = 0; i < data.tappointmentex.length; i++) {
+                            if (data.tappointmentex[i].Id > max) {
+                                max = data.tappointmentex[i].Id;
+                            }
+                        }
+                        document.getElementById("appID").value = max + 1;
+                    } else {
+                        document.getElementById("appID").value = 1;
                     }
-                    document.getElementById("appID").value = max + 1;
-
-                } else {
-                    document.getElementById("appID").value = 1;
                 }
-            });
+            })
             if (getEmployeeID != "") {
                 const filterEmpData = getAllEmployeeData.filter(empdData => {
                     return empdData.id == getEmployeeID;
@@ -4700,7 +4865,7 @@ Template.calender.onRendered(function() {
         }
 
         // FlowRouter.go('/dashboardsalesmanager', '_self');
-        Meteor._reload.reload();
+        // Meteor._reload.reload();
     });
 });
 
@@ -6031,30 +6196,30 @@ Template.calender.events({
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-            $('#here_table thead tr').append('<th class="employeeName"></th>');
-            for (let w = 0; w < daysOfTheWeek.length; w++) {
-                if (daysOfTheWeek[w] === "Sunday") {
-                    if ($('#showSunday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    }
+            // $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+            // $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+            // $('#here_table thead tr').append('<th class="employeeName"></th>');
+            // for (let w = 0; w < daysOfTheWeek.length; w++) {
+            //     if (daysOfTheWeek[w] === "Sunday") {
+            //         if ($('#showSunday').is(":checked")) {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+            //         } else {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+            //         }
 
-                } else if (daysOfTheWeek[w] === "Saturday") {
-                    if ($('#showSaturday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    }
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-                }
+            //     } else if (daysOfTheWeek[w] === "Saturday") {
+            //         if ($('#showSaturday').is(":checked")) {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+            //         } else {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+            //         }
+            //     } else {
+            //         $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+            //     }
 
-            }
+            // }
 
-            let tableRowData = [];
+            // let tableRowData = [];
             let sundayRowData = [];
             let mondayRowData = [];
             let splashArrayMonday = [];
@@ -6071,8 +6236,8 @@ Template.calender.events({
             let fridayRow = "";
             let saturdayRow = "";
             let tableRow = "";
-            let saturdayStatus = "";
-            let sundayStatus = "";
+            // let saturdayStatus = "";
+            // let sundayStatus = "";
             for (let r = 0; r < resourceChat.length; r++) {
 
                 sundayRowData = [];
@@ -6161,32 +6326,32 @@ Template.calender.events({
 
                 }
 
-                if ($('#showSaturday').is(":checked")) {
-                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                } else {
-                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                }
+                // if ($('#showSaturday').is(":checked")) {
+                //     saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                // } else {
+                //     saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                // }
 
-                if ($('#showSunday').is(":checked")) {
-                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                } else {
-                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                }
+                // if ($('#showSunday').is(":checked")) {
+                //     sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                // } else {
+                //     sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                // }
 
-                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                    sundayStatus + "" +
-                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                    saturdayStatus + "" +
-                    '</tr>';
-                tableRowData.push(tableRow);
+                // tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+                //     '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+                //     sundayStatus + "" +
+                //     '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+                //     '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+                //     '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+                //     '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+                //     '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+                //     saturdayStatus + "" +
+                //     '</tr>';
+                // tableRowData.push(tableRow);
 
             }
-            $('#here_table table').append(tableRowData);
+            // $('#here_table table').append(tableRowData);
 
             $('.sunday').attr("id", dayPrev[0]);
             $('.monday').attr("id", dayPrev[1]);
@@ -6427,30 +6592,30 @@ Template.calender.events({
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-            $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-            $('#here_table thead tr').append('<th class="employeeName"></th>');
+            // $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+            // $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+            // $('#here_table thead tr').append('<th class="employeeName"></th>');
 
-            for (let w = 0; w < daysOfTheWeek.length; w++) {
-                if (daysOfTheWeek[w] === "Sunday") {
-                    if ($('#showSunday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                    }
+            // for (let w = 0; w < daysOfTheWeek.length; w++) {
+            //     if (daysOfTheWeek[w] === "Sunday") {
+            //         if ($('#showSunday').is(":checked")) {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+            //         } else {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+            //         }
 
-                } else if (daysOfTheWeek[w] === "Saturday") {
-                    if ($('#showSaturday').is(":checked")) {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    } else {
-                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                    }
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-                }
-            }
+            //     } else if (daysOfTheWeek[w] === "Saturday") {
+            //         if ($('#showSaturday').is(":checked")) {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+            //         } else {
+            //             $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+            //         }
+            //     } else {
+            //         $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+            //     }
+            // }
 
-            let tableRowData = [];
+            // let tableRowData = [];
             let sundayRowData = [];
             let mondayRowData = [];
             let splashArrayMonday = [];
@@ -6467,8 +6632,8 @@ Template.calender.events({
             let fridayRow = "";
             let saturdayRow = "";
             let tableRow = "";
-            let saturdayStatus = "";
-            let sundayStatus = "";
+            // let saturdayStatus = "";
+            // let sundayStatus = "";
             for (let r = 0; r < resourceChat.length; r++) {
 
                 sundayRowData = [];
@@ -6557,32 +6722,32 @@ Template.calender.events({
 
                 }
 
-                if ($('#showSaturday').is(":checked")) {
-                    saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                } else {
-                    saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
-                }
+                // if ($('#showSaturday').is(":checked")) {
+                //     saturdayStatus = '<td class="fullWeek saturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                // } else {
+                //     saturdayStatus = '<td class="fullWeek saturday hidesaturday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + saturdayRowData.join("") + '</div></td>'
+                // }
 
-                if ($('#showSunday').is(":checked")) {
-                    sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                } else {
-                    sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
-                }
+                // if ($('#showSunday').is(":checked")) {
+                //     sundayStatus = '<td class="fullWeek sunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                // } else {
+                //     sundayStatus = '<td class="fullWeek sunday hidesunday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + sundayRowData.join("") + '</div></td>'
+                // }
 
-                tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
-                    '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
-                    sundayStatus + "" +
-                    '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
-                    '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
-                    '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
-                    saturdayStatus + "" +
-                    '</tr>';
-                tableRowData.push(tableRow);
+                // tableRow = '<tr id="' + resourceChat[r].employeeName + '">' + "" +
+                //     '<td class="tdEmployeeName" style="overflow: hidden; white-space: nowrap; height: 110px; max-height: 110px; font-weight: 700;padding: 6px;">' + resourceChat[r].employeeName + '</td>' + "" +
+                //     sundayStatus + "" +
+                //     '<td class="fullWeek monday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + mondayRowData.join("") + '</div></td>' + "" +
+                //     '<td td class="fullWeek tuesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + tuesdayRowData.join("") + '</div></td>' + "" +
+                //     '<td class="fullWeek wednesday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + wednesdayRowData.join("") + '</div></td>' + "" +
+                //     '<td class="fullWeek thursday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + thursdayRowData.join("") + '</div></td>' + "" +
+                //     '<td td class="fullWeek friday" style="padding: 0px;"><div class="droppable" style="min-height: 110px; overflow: hidden; margin: 6px;">' + fridayRowData.join("") + '</div></td>' + "" +
+                //     saturdayStatus + "" +
+                //     '</tr>';
+                // tableRowData.push(tableRow);
 
             }
-            $('#here_table table').append(tableRowData);
+            // $('#here_table table').append(tableRowData);
 
             $('.sunday').attr("id", dayNext[0]);
             $('.monday').attr("id", dayNext[1]);
@@ -8975,7 +9140,11 @@ Template.calender.events({
     },
     'click #chkmyAppointments': function(event) {
 
-    }
+    },
+    'click .btn-auto-save': function(event) {
+        let templateObject = Template.instance();
+        templateObject.saveUpdatedEvents();
+    },
 });
 
 Template.calender.helpers({
@@ -9101,21 +9270,37 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
-                let appointmentService = new AppointmentService();
-                appointmentService.getAllAppointmentListCount().then(function(dataObj) {
-                    if (dataObj.tappointmentex.length > 0) {
-                        let max = 1;
-                        for (let i = 0; i < dataObj.tappointmentex.length; i++) {
-                            if (dataObj.tappointmentex[i].Id > max) {
-                                max = dataObj.tappointmentex[i].Id;
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
                             }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
                         }
-                        document.getElementById("appID").value = max + 1;
-
-                    } else {
-                        document.getElementById("appID").value = 1;
                     }
-                });
+                })
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;
@@ -9171,21 +9356,37 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
-                let appointmentService = new AppointmentService();
-                appointmentService.getAllAppointmentListCount().then(function(dataObj) {
-                    if (dataObj.tappointmentex.length > 0) {
-                        let max = 1;
-                        for (let i = 0; i < dataObj.tappointmentex.length; i++) {
-                            if (dataObj.tappointmentex[i].Id > max) {
-                                max = dataObj.tappointmentex[i].Id;
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
                             }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
                         }
-                        document.getElementById("appID").value = max + 1;
-
-                    } else {
-                        document.getElementById("appID").value = 1;
                     }
-                });
+                })
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter(empdData => {
                         return empdData.id == getEmployeeID;
@@ -9241,21 +9442,37 @@ const openAppointModalDirectly = (leadid, templateObject, auto = false) => {
                 document.getElementById("endTime").value = endTime;
             }
             if ($("#updateID").val() == "") {
-                let appointmentService = new AppointmentService();
-                appointmentService.getAllAppointmentListCount().then(function(dataObj) {
-                    if (dataObj.tappointmentex.length > 0) {
-                        let max = 1;
-                        for (let i = 0; i < dataObj.tappointmentex.length; i++) {
-                            if (dataObj.tappointmentex[i].Id > max) {
-                                max = dataObj.tappointmentex[i].Id;
+                getVS1Data("TAppointment").then(function(dataObject) {
+                    if(dataObject.length == 0){
+                        let appointmentService = new AppointmentService();
+                        appointmentService.getAllAppointmentListCount().then(function(data) {
+                            if (data.tappointmentex.length > 0) {
+                                let max = 1;
+                                for (let i = 0; i < data.tappointmentex.length; i++) {
+                                    if (data.tappointmentex[i].Id > max) {
+                                        max = data.tappointmentex[i].Id;
+                                    }
+                                }
+                                document.getElementById("appID").value = max + 1;
+                            } else {
+                                document.getElementById("appID").value = 1;
                             }
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        if (data.tappointmentex.length > 0) {
+                            let max = 1;
+                            for (let i = 0; i < data.tappointmentex.length; i++) {
+                                if (data.tappointmentex[i].Id > max) {
+                                    max = data.tappointmentex[i].Id;
+                                }
+                            }
+                            document.getElementById("appID").value = max + 1;
+                        } else {
+                            document.getElementById("appID").value = 1;
                         }
-                        document.getElementById("appID").value = max + 1;
-
-                    } else {
-                        document.getElementById("appID").value = 1;
                     }
-                });
+                })
                 if (getEmployeeID != "") {
                     var filterEmpData = getAllEmployeeData.filter((empdData) => {
                         return empdData.id == getEmployeeID;

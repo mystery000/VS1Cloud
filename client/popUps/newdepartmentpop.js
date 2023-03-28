@@ -2,6 +2,9 @@ import {
     TaxRateService
 } from "../settings/settings-service";
 import {
+    ProductService
+} from "../product/product-service";
+import {
     ReactiveVar
 } from 'meteor/reactive-var';
 import {
@@ -12,7 +15,7 @@ import '../lib/global/indexdbstorage.js';
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './newdepartmentpop.html';
-
+let productService = new ProductService();
 let sideBarService = new SideBarService();
 Template.newdepartmentpop.onCreated(function() {
     const templateObject = Template.instance();
@@ -23,9 +26,10 @@ Template.newdepartmentpop.onCreated(function() {
     templateObject.roomrecords = new ReactiveVar([]);
 
     templateObject.departlist = new ReactiveVar([]);
+    templateObject.record = new ReactiveVar();
 });
 
-Template.newdepartmentpop.onRendered(function() {
+Template.newdepartmentpop.onRendered(async function() {
     let templateObject = Template.instance();
     let taxRateService = new TaxRateService();
     const dataTableList = [];
@@ -118,23 +122,40 @@ Template.newdepartmentpop.onRendered(function() {
     templateObject.getAllEmployees();
 
     templateObject.getRooms = function() {
+        getVS1Data('TProductBin').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(async function (data) {
+                    await addVS1Data('TProductBin', JSON.stringify(data));
+                    templateObject.setBinRecords(data);
+                }).catch(function (err) {
 
-        taxRateService.getBins().then(function(data) {
-            let binList = [];
-            for (let i = 0; i < data.tproductbin.length; i++) {
-
-                let dataObj = {
-                    roomid: data.tproductbin[i].BinNumber || ' ',
-                    roomname: data.tproductbin[i].BinLocation || ' '
-                };
-                if (data.tproductbin[i].BinLocation.replace(/\s/g, '') != '') {
-                    binList.push(dataObj);
-                }
-
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.setBinRecords(data);
             }
-            templateObject.roomrecords.set(binList);
+        }).catch(function (err) {
+            productService.getBins().then(async function (data) {
+                await addVS1Data('TProductBin', JSON.stringify(data));
+                templateObject.setBinRecords(data);
+            }).catch(function (err) {
+            });
         });
     };
+    templateObject.setBinRecords = function(data){
+        let binList = [];
+        for (let i = 0; i < data.tproductbin.length; i++) {
+
+            let dataObj = {
+                roomid: data.tproductbin[i].BinNumber || ' ',
+                roomname: data.tproductbin[i].BinLocation || ' '
+            };
+            if (data.tproductbin[i].BinLocation.replace(/\s/g, '') != '') {
+                binList.push(dataObj);
+            }
+        }
+        templateObject.roomrecords.set(binList);
+    }
     templateObject.getRooms();
 
     templateObject.getDeptList = function() {
@@ -716,57 +737,109 @@ Template.newdepartmentpop.onRendered(function() {
     }
     templateObject.getTaxRates();
 
-    templateObject.getDepartments = function() {
-        getVS1Data('TDeptClass').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                taxRateService.getDepartment().then(function(data) {
-                    for (let i in data.tdeptclass) {
+    // templateObject.getDepartments = function() {
+    //     getVS1Data('TDeptClass').then(function(dataObject) {
+    //         if (dataObject.length == 0) {
+    //             taxRateService.getDepartment().then(function(data) {
+    //                 for (let i in data.tdeptclass) {
 
-                        let deptrecordObj = {
-                            id: data.tdeptclass[i].Id || ' ',
-                            department: data.tdeptclass[i].DeptClassName || ' ',
-                        };
+    //                     let deptrecordObj = {
+    //                         id: data.tdeptclass[i].Id || ' ',
+    //                         department: data.tdeptclass[i].DeptClassName || ' ',
+    //                     };
 
-                        deptrecords.push(deptrecordObj);
-                        templateObject.deptrecords.set(deptrecords);
+    //                     deptrecords.push(deptrecordObj);
+    //                     templateObject.deptrecords.set(deptrecords);
 
+    //                 }
+    //             });
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.tdeptclass;
+    //             for (let i in useData) {
+
+    //                 let deptrecordObj = {
+    //                     id: useData[i].Id || ' ',
+    //                     department: useData[i].DeptClassName || ' ',
+    //                 };
+
+    //                 deptrecords.push(deptrecordObj);
+    //                 templateObject.deptrecords.set(deptrecords);
+
+    //             }
+
+    //         }
+    //     }).catch(function(err) {
+    //         taxRateService.getDepartment().then(function(data) {
+    //             for (let i in data.tdeptclass) {
+
+    //                 let deptrecordObj = {
+    //                     id: data.tdeptclass[i].Id || ' ',
+    //                     department: data.tdeptclass[i].DeptClassName || ' ',
+    //                 };
+
+    //                 deptrecords.push(deptrecordObj);
+    //                 templateObject.deptrecords.set(deptrecords);
+
+    //             }
+    //         });
+    //     });
+
+
+    // }
+    // templateObject.getDepartments();
+
+
+    getDepartmentDetail = async function(name) {
+        return new Promise(async(resolve, reject)=> {
+            getVS1Data('TDeptClass').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    taxRateService.getOneDepartmentByName(name).then(data=>{
+                        resolve(data.tdeptclass[0])
+                    })
+                }else {
+                    let data = JSON.parse(dataObject[0].data);
+                    let useData = data.tdeptclass;
+                    let added = false
+                    for(let i = 0; i< useData.length; i++) {
+                        if(useData[i].DeptClassName == name) {
+                            added = true;
+                            resolve(useData[i])
+                        }
                     }
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tdeptclass;
-                for (let i in useData) {
-
-                    let deptrecordObj = {
-                        id: useData[i].Id || ' ',
-                        department: useData[i].DeptClassName || ' ',
-                    };
-
-                    deptrecords.push(deptrecordObj);
-                    templateObject.deptrecords.set(deptrecords);
-
+                    if(added == false) {
+                        taxRateService.getOneDepartmentByName(name).then(data=>{
+                            resolve(data.tdeptclass[0])
+                        })
+                    }
                 }
-
-            }
-        }).catch(function(err) {
-            taxRateService.getDepartment().then(function(data) {
-                for (let i in data.tdeptclass) {
-
-                    let deptrecordObj = {
-                        id: data.tdeptclass[i].Id || ' ',
-                        department: data.tdeptclass[i].DeptClassName || ' ',
-                    };
-
-                    deptrecords.push(deptrecordObj);
-                    templateObject.deptrecords.set(deptrecords);
-
-                }
-            });
-        });
-
-
+            }).catch(function(err) {
+                taxRateService.getOneDepartmentByName(name).then(data=>{
+                    resolve(data.tdeptclass[0])
+                })
+            })
+        })
     }
-    templateObject.getDepartments();
+
+    let record = {
+        id:'',
+        name: '',
+        description:'',
+        sitecode: ''
+    }
+    if(templateObject.data.name) {
+        let name = templateObject.data.name
+        let detail = await getDepartmentDetail(name);
+        record = {
+            id: detail.ID,
+            name: name,
+            description: detail.Description,
+            sitecode: detail.SiteCode
+        }
+    }
+    templateObject.record.set(record)
+
+
 
     $(document).on('click', '.table-remove', function() {
         event.stopPropagation();
@@ -1422,5 +1495,8 @@ Template.newdepartmentpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+    record:()=>{
+        return Template.instance().record.get()
     }
 });

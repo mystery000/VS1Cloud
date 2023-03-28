@@ -36,8 +36,13 @@
                         </div>
 
                         <div class="col-6">
-
-                            <div class="form-group">
+                            {{> single_date_picker
+                                label="Start Date"
+                                id="edtLeaveStartDate"
+                                name="edtLeaveStartDate"
+                                defaultValue=""
+                            }}
+                            <!-- <div class="form-group">
                                 <label>Start Date</label>
                                 <div class="input-group date" style="cursor: pointer;">
                                     <input type="text" class="form-control formClassDate edtLeaveStartDate" id="edtLeaveStartDate" name="edtLeaveStartDate" value="">
@@ -45,10 +50,16 @@
                                         <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
+                            {{> single_date_picker
+                                label="End Date"
+                                id="edtLeaveEndDate"
+                                name="edtLeaveEndDate"
+                                defaultValue=""
+                            }}
+                            <!-- <div class="form-group">
                                 <label>End Date</label>
                                 <div class="input-group date" style="cursor: pointer;">
                                     <input type="text" class="form-control formClassDate edtLeaveEndDate" id="edtLeaveEndDate" name="edtLeaveEndDate" value="">
@@ -56,7 +67,7 @@
                                         <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-8">
                             <div class="form-group">

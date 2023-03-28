@@ -31,37 +31,37 @@ Template.suppliersummary.onRendered(() => {
   LoadingOverlay.show();
 
   let reset_data = [
-    { index: 1, label: 'Supplier ID', class: 'colSupplierID', active: true, display: true, width: "100" },
-    { index: 2, label: 'Contact Name', class: 'colContactName', active: true, display: true, width: "100" },
-    { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "60" },
-    { index: 4, label: 'Mobile', class: 'colMobile', active: true, display: true, width: "70" },
-    { index: 5, label: 'Fax Number', class: 'colFaxNumber', active: true, display: true, width: "100" },
-    { index: 6, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "100" },
-    { index: 7, label: 'AP Balance', class: 'colAPBalance', active: true, display: true, width: "100" },
-    { index: 8, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-    { index: 9, label: 'Street', class: 'colStreet', active: true, display: true, width: "80" },
-    { index: 10, label: 'Suburb', class: 'colSubburb', active: true, display: true, width: "80" },
-    { index: 11, label: 'State', class: 'colState', active: true, display: true, width: "70" },
-    { index: 12, label: 'Postcode', class: 'colPostcode', active: true, display: true, width: "80" },
-    { index: 13, label: 'Country', class: 'colCountry', active: true, display: true, width: "80" },
-    { index: 14, label: 'Bank Account Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
-    { index: 15, label: 'Bank Account BSB', class: 'colBankAccountBSB', active: true, display: true, width: "120" },
-    { index: 16, label: 'Bank Account No', class: 'colAccountNo', active: true, display: true, width: "120" },
-    { index: 17, label: 'Creation Date', class: 'colCreationDate', active: true, display: true, width: "110" },
-    { index: 18, label: 'Active', class: 'colActive', active: true, display: true, width: "70" },
-    { index: 19, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "100" },
-    { index: 20, label: 'Street2', class: 'colStreet2', active: false, display: true, width: "80" },
-    { index: 21, label: 'Street3', class: 'colStreet3', active: false, display: true, width: "80" },
-    { index: 22, label: 'No Staff', class: 'colNoStaff', active: false, display: true, width: "80" },
-    { index: 23, label: 'Min Inv value', class: 'colMinInvValue', active: false, display: true, width: "110" },
-    { index: 24, label: 'Freight to Store', class: 'colFrighttoStore', active: false, display: true, width: "120" },
-    { index: 25, label: 'Rebate', class: 'colRebate', active: false, display: true, width: "70" },
-    { index: 26, label: 'First Name', class: 'colFirstName', active: false, display: true, width: "90" },
-    { index: 27, label: 'Last Name', class: 'colLastName', active: false, display: true, width: "90" },
-    { index: 28, label: 'Contact Details', class: 'colContractDetails', active: false, display: true, width: "110" },
-    { index: 29, label: 'ABN', class: 'colABN', active: false, display: true, width: "60" },
-    { index: 30, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "100" },
-    { index: 31, label: 'ClientID', class: 'colClientID', active: false, display: true, width: "80" },
+    { index: 1, label: 'Supplier', class: 'colSupplierID', active: true, display: true, width: "150" },
+    { index: 2, label: 'PO No', class: 'colContactName', active: true, display: true, width: "150" },
+    { index: 3, label: 'Trans Type', class: 'colPhone', active: true, display: true, width: "150" },
+    { index: 4, label: 'Product ID', class: 'colMobile', active: true, display: true, width: "150" },
+    { index: 5, label: 'Product Desc', class: 'colFaxNumber', active: true, display: true, width: "150" },
+    { index: 6, label: 'Cost (ex)', class: 'colARBalance text-right', active: true, display: true, width: "150" },
+    { index: 7, label: 'Tax', class: 'colAPBalance text-right', active: true, display: true, width: "150" },
+    { index: 8, label: 'Cost (inc)', class: 'colBalance text-right', active: true, display: true, width: "150" },
+    { index: 9, label: 'Tax Code', class: 'colStreet text-right', active: true, display: true, width: "150" },
+    { index: 10, label: 'Qty Ordered', class: 'colSubburb text-right', active: true, display: true, width: "150" },
+    { index: 11, label: 'Qty Received', class: 'colState text-right', active: true, display: true, width: "150" },
+    { index: 12, label: 'Qty BO', class: 'colPostcode text-right', active: true, display: true, width: "150" },
+    { index: 13, label: 'ETA Date', class: 'colCountry', active: true, display: true, width: "150" },
+    { index: 14, label: 'Order Date', class: 'colBankAccountName', active: true, display: true, width: "150" },
+    { index: 15, label: 'Received Date', class: 'colBankAccountBSB', active: true, display: true, width: "150" },
+    // { index: 16, label: 'Bank Account No', class: 'colAccountNo', active: true, display: true, width: "120" },
+    // { index: 17, label: 'Creation Date', class: 'colCreationDate', active: true, display: true, width: "110" },
+    // { index: 18, label: 'Active', class: 'colActive', active: true, display: true, width: "70" },
+    // { index: 19, label: 'Global Ref', class: 'colGlobalRef', active: false, display: true, width: "100" },
+    // { index: 20, label: 'Street2', class: 'colStreet2', active: false, display: true, width: "80" },
+    // { index: 21, label: 'Street3', class: 'colStreet3', active: false, display: true, width: "80" },
+    // { index: 22, label: 'No Staff', class: 'colNoStaff', active: false, display: true, width: "80" },
+    // { index: 23, label: 'Min Inv value', class: 'colMinInvValue', active: false, display: true, width: "110" },
+    // { index: 24, label: 'Freight to Store', class: 'colFrighttoStore', active: false, display: true, width: "120" },
+    // { index: 25, label: 'Rebate', class: 'colRebate', active: false, display: true, width: "70" },
+    // { index: 26, label: 'First Name', class: 'colFirstName', active: false, display: true, width: "90" },
+    // { index: 27, label: 'Last Name', class: 'colLastName', active: false, display: true, width: "90" },
+    // { index: 28, label: 'Contact Details', class: 'colContractDetails', active: false, display: true, width: "110" },
+    // { index: 29, label: 'ABN', class: 'colABN', active: false, display: true, width: "60" },
+    // { index: 30, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "100" },
+    // { index: 31, label: 'ClientID', class: 'colClientID', active: false, display: true, width: "80" },
   ];
   templateObject.suppliersummaryth.set(reset_data);
 
@@ -96,104 +96,39 @@ Template.suppliersummary.onRendered(() => {
     $("#dateTo").val(moment(defaultOptions.toDate).format('DD/MM/YYYY'));
     await templateObject.reportOptions.set(defaultOptions);
     await templateObject.getSupplierSummaryReportData();
-
-    // await templateObject.loadReport(
-    //   GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-    //   GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-    //   ignoreDate
-    // );
   };
 
 
   /**
    * @deprecated since 23 septemeber 2022
    */
-  templateObject.getSupplierSummaryReportData = async function () {
-    let data = [];
-    if (!localStorage.getItem('VS1SupplierSummary_Report')) {
-      const options = await templateObject.reportOptions.get();
-      let dateFrom = moment(options.fromDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let dateTo = moment(options.toDate).format("YYYY-MM-DD") || moment().format("YYYY-MM-DD");
-      let ignoreDate = options.ignoreDate || false;
-      data = await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
-      if( data.tsupplierproduct.length > 0 ){
-        localStorage.setItem('VS1SupplierSummary_Report', JSON.stringify(data)||'');
-      }
-    }else{
-      data = JSON.parse(localStorage.getItem('VS1SupplierSummary_Report'));
-    }
+  templateObject.getSupplierReportData = async function (dateFrom, dateTo, ignoreDate = false) {
+    getVS1Data('TSupplierProduct').then(function (dataObject) {
+      if (dataObject.length == 0) {
+        templateObject.loadReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+          await addVS1Data('TSupplierProduct', JSON.stringify(data));
+          templateObject.displayReportData(data);
+        }).catch(function (err) {
 
-    let reportSummary = data.tsupplierproduct.map(el => {
-      let resultobj = {};
-      Object.entries(el).map(([key, val]) => {
-          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
-          return resultobj;
-      })
-      return resultobj;
-    })
-    let reportData = [];
-    if( reportSummary.length > 0 ){
-      for (const item of reportSummary ) {
-        let isExist = reportData.filter((subitem) => {
-          if( subitem.Supplier_Name == item.Supplier_Name ){
-              subitem.SubAccounts.push(item)
-              return subitem
-          }
         });
-
-        if( isExist.length == 0 ){
-          reportData.push({
-              TotalCostEx: 0,
-              TotalCostInc: 0,
-              TotalTax: 0,
-              SubAccounts: [item],
-              ...item
-          });
-        }
-       LoadingOverlay.hide();
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.displayReportData(data);
       }
-    }
-    let useData = reportData.filter((item) => {
-      let TotalCostEx = 0;
-      let TotalCostInc = 0;
-      let TotalTax = 0;
-      item.SubAccounts.map((subitem) => {
-        TotalCostEx += subitem.Line_Cost_Ex;
-        TotalCostInc += subitem.Line_Cost_Inc;
-        TotalTax += subitem.Line_Tax;
+    }).catch(function (err) {
+      templateObject.loadReport(dateFrom, dateTo, ignoreDate).then(async function (data) {
+        await addVS1Data('TSupplierProduct', JSON.stringify(data));
+        templateObject.displayReportData(data);
+      }).catch(function (err) {
+
       });
-      item.TotalCostEx = TotalCostEx;
-      item.TotalCostInc = TotalCostInc;
-      item.TotalTax = TotalTax;
-      return item;
     });
-    templateObject.records.set(useData);
-
-
-    if (templateObject.records.get()) {
-      setTimeout(function () {
-        $("td a").each(function () {
-          if ( $(this).text().indexOf("-" + Currency) >= 0 ) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-        $("td").each(function () {
-          if ($(this).text().indexOf("-" + Currency) >= 0) {
-            $(this).addClass("text-danger");
-            $(this).removeClass("fgrblue");
-          }
-        });
-       LoadingOverlay.hide();
-      }, 1000);
-    }
   }
-
   templateObject.loadReport = async (dateFrom, dateTo, ignoreDate) => {
     LoadingOverlay.show();
-    templateObject.setDateAs(dateFrom);
+    templateObject.setDateAs(dateTo);
     let data = await CachedHttp.get(erpObject.TSupplierProduct, async () => {
-      return await  await reportService.getSupplierProductReport( dateFrom, dateTo, ignoreDate);
+      return await await reportService.getSupplierProductReport(dateFrom, dateTo, ignoreDate);
     }, {
       useIndexDb: true,
       useLocalStorage: false,
@@ -202,12 +137,15 @@ Template.suppliersummary.onRendered(() => {
       }
     });
     data = data.response;
-
+    LoadingOverlay.hide();
+    return data;
+  }
+  templateObject.displayReportData = (data) => {
     let reportSummary = data.tsupplierproduct.map(el => {
       let resultobj = {};
       Object.entries(el).map(([key, val]) => {
-          resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
-          return resultobj;
+        resultobj[key.split(" ").join("_").replace(/\W+/g, '')] = val;
+        return resultobj;
       })
       return resultobj;
     })
@@ -216,21 +154,21 @@ Template.suppliersummary.onRendered(() => {
       for (const item of reportSummary ) {
         let isExist = reportData.filter((subitem) => {
           if( subitem.Supplier_Name == item.Supplier_Name ){
-              subitem.SubAccounts.push(item)
-              return subitem
+            subitem.SubAccounts.push(item)
+            return subitem
           }
         });
 
         if( isExist.length == 0 ){
           reportData.push({
-              TotalCostEx: 0,
-              TotalCostInc: 0,
-              TotalTax: 0,
-              SubAccounts: [item],
-              ...item
+            TotalCostEx: 0,
+            TotalCostInc: 0,
+            TotalTax: 0,
+            SubAccounts: [item],
+            ...item
           });
         }
-       LoadingOverlay.hide();
+        LoadingOverlay.hide();
       }
     }
     let useData = reportData.filter((item) => {
@@ -264,18 +202,17 @@ Template.suppliersummary.onRendered(() => {
             $(this).removeClass("fgrblue");
           }
         });
-       LoadingOverlay.hide();
       }, 1000);
     }
   }
 
   templateObject.initDate();
-  templateObject.loadReport(
-    GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-    GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-    false
+  templateObject.getSupplierReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
   );
-  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateFrom').val()) );
+  templateObject.setDateAs( GlobalFunctions.convertYearMonthDay($('#dateTo').val()) );
 
 
 });
@@ -433,12 +370,15 @@ Template.suppliersummary.events({
     // var dateTo = new Date($("#dateTo").datepicker("getDate"));
     // await templateObject.setReportOptions(false, dateFrom, dateTo);
     // //LoadingOverlay.hide();
+    clearData('TSupplierProduct').then(function(){
+      templateObject.getSupplierReportData(
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          false
+      );
+    });
 
-    templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-    );
+
   },
   // "click #lastMonth": async function () {
   //   LoadingOverlay.show();
@@ -569,11 +509,13 @@ Template.suppliersummary.events({
    * This is the new way to handle any modification on the date fields
    */
    "change #dateTo, change #dateFrom": (e, templateObject) => {
-    templateObject.loadReport(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-    );
+    clearData('TSupplierProduct').then(function(){
+      templateObject.getSupplierReportData(
+          GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+          GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+          false
+      );
+    });
     templateObject.dateAsAt.set($('#dateTo').val());
   },
   ...Datehandler.getDateRangeEvents()

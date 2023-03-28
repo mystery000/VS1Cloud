@@ -438,7 +438,10 @@ Template.reconrulelist.onRendered(function() {
 
 Template.reconrulelist.events({
     'click #btnBankRule':function(event){
-        window.open('/newbankrule','_self');
+        FlowRouter.go(
+            `/newbankrule`
+        );
+        // window.open('/newbankrule','_self');
     },
     'click .chkDatatable' : function(event){
         const columns = $('#tblbankrulelist th');

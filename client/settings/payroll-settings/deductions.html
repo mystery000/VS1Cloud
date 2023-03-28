@@ -10,7 +10,58 @@
                 <div class="modal-body">
                     <!-- <input type="hidden" style="width: 100%; display:none;" id="deductionID" name="deductionID" /> -->
                     <div class="card-body p-1 rounded">
-                        <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12 col-md-12 mb-3">
+                                <a href="#noneModal" data-toggle="modal">
+                                    {{> vs1_button
+                                        color='primary'
+                                        classes='float-right btnAddordinaryTimeDeductions'
+                                        type='button'
+                                        id="btnAddordinaryTimeDeductions"
+                                        iconName='plus'
+                                        title='New Deduction'
+                                    }}
+                                </a>
+                            </div>
+                        </div>
+                        <style>
+                            #tblDeductions{
+                                width: 100% !important;
+                            }
+                            #tblDeductions .colDeductionsNames{
+                                width: 20%!important;
+                            }
+                            #tblDeductions .colDeductionsType{
+                                width: 17%!important;
+                            }
+                            #tblDeductions .colDeductionsDisplayName{
+                                width: 17%!important;
+                            }
+                            #tblDeductions .colDeductionsAmount{
+                                width: 17%!important;
+                            }
+                            #tblDeductions .colDeductionsAccounts{
+                                width: 17%!important;
+                            }
+                            #tblDeductions .colStatus{
+                                width: 10%!important;
+                            }
+                        </style>
+                        {{> datatablelist
+                            tablename="tblDeductions"
+                            apiName=apiFunction5
+                            indexeddbname='TDeduction'
+                            tableheaderrecords=tableheaderrecords5
+                            exportfilename='Deductions'
+                            apiParams=apiParams5
+                            datahandler=datahandler5
+                            service=service5
+                            lowercaseDataName='tdeduction'
+                            exIndexDBName='tdeduction'
+                            exdatahandler=exDataHandler5
+                            searchAPI=searchAPI5
+                        }}
+                        <!-- <div class="table-responsive">
                             <table id="tblDeductions" style="width:100%" class="table table-striped table-bordered">
                                 <thead>
                                     <tr class="dnd-moved">
@@ -32,7 +83,7 @@
                                     </tbody>
                                 </tbody>
                             </table>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -41,7 +92,7 @@
             </div>
         </div>
     </div> 
-    <div class="modal fade" id="noneModal" tabindex="-1" role="dialog" aria-labelledby="noneLabel" aria-hidden="true" style="z-index:9999">
+    <div class="modal fade" id="noneModal" tabindex="-1" role="dialog" aria-labelledby="noneLabel" aria-hidden="true" style="z-index:999999">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -57,30 +108,62 @@
                     <form class="row" id="deductionRateForm">
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtDeductionDesctiption">Deduction Name</label>
-                                <input type="text" class="form-control" id="edtDeductionDesctiption" name="edtDeductionDesctiption">
+                                {{> default_input 
+                                    label="Deduction Name" 
+                                    classes="edtDeductionDesctiption" 
+                                    id="edtDeductionDesctiption" 
+                                    name="edtDeductionDesctiption" 
+                                    defaultValue="" 
+                                    type="text"
+                                }}
+                                <!-- <label for="edtDeductionDesctiption">Deduction Name</label>
+                                <input type="text" class="form-control" id="edtDeductionDesctiption" name="edtDeductionDesctiption"> -->
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtDeductionName">Deduction Type</label>
+                                {{> default_input 
+                                    label="Deduction Type" 
+                                    classes="customEditableSelect" 
+                                    id="edtDeductionType" 
+                                    name="edtDeductionType" 
+                                    defaultValue="" 
+                                    type="search"
+                                }}
+                                <!-- <label for="edtDeductionName">Deduction Type</label>
                                 <select type="search" name="edtDeductionType" class="form-control customEditableSelect" id="edtDeductionType">
                                     <option value="Nones">Nones</option>
                                     <option value="Workplace Giving">Workplace Giving</option>
                                     <option value="Union / Association Fees">Union / Association Fees</option>
-                                </select>
+                                </select> -->
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtDeductionAmount">Amount</label>
-                                <input type="text" class="form-control" id="edtDeductionAmount" name="edtDeductionAmount">
+                                {{> default_input 
+                                    label="Amount" 
+                                    classes="edtDeductionAmount" 
+                                    id="edtDeductionAmount" 
+                                    name="edtDeductionAmount" 
+                                    defaultValue="" 
+                                    type="text"
+                                }}
+                                <!-- <label for="edtDeductionAmount">Amount</label>
+                                <input type="text" class="form-control" id="edtDeductionAmount" name="edtDeductionAmount"> -->
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="form-group">
-                                <label for="edtDeductionAccount">Account</label>
-                                <input type="text" class="form-control edtExpenseAccountDropDown" id="edtDeductionAccount" name="edtDeductionAccount">
+                                {{> default_input 
+                                    label="Account" 
+                                    classes="edtExpenseAccountDropDown" 
+                                    id="edtDeductionAccount" 
+                                    name="edtDeductionAccount" 
+                                    defaultValue="" 
+                                    type="text"
+                                }}
+                                <!-- <label for="edtDeductionAccount">Account</label>
+                                <input type="text" class="form-control edtExpenseAccountDropDown" id="edtDeductionAccount" name="edtDeductionAccount"> -->
                                 <input type="hidden" class="form-control" id="edtDeductionAccountID" name="edtDeductionAccountID">
                             </div>
                         </div>
@@ -101,8 +184,26 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success btnSaveDeduction"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                    {{> vs1_button
+                        color='success'
+                        classes='btnSaveDeduction'
+                        type='button'
+                        id="btnSaveDeduction"
+                        iconName='save'
+                        title='Save'
+                    }}
+                    <a data-dismiss="modal">
+                        {{> vs1_button
+                            color='secondary'
+                            classes=''
+                            type='button'
+                            id="btnCancel"
+                            iconName='close'
+                            title='Close'
+                        }}
+                    </a>
+                    <!-- <button type="button" class="btn btn-success btnSaveDeduction"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
                 </div>
             </div>
         </div>

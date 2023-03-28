@@ -1,18 +1,18 @@
 import {ContactService} from "./contact-service";
-import { ReactiveVar } from 'meteor/reactive-var';
+import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
 import XLSX from 'xlsx';
-import { SideBarService } from '../js/sidebar-service';
+import {SideBarService} from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
 
 let sideBarService = new SideBarService();
 
-import { Template } from 'meteor/templating';
+import {Template} from 'meteor/templating';
 import './employeelist.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 
 Template.employeelist.inheritsHooksFrom('non_transactional_list');
-Template.employeelist.onCreated(function(){
+Template.employeelist.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
@@ -23,10 +23,60 @@ Template.employeelist.onCreated(function(){
 
 
     templateObject.employees = new ReactiveVar([]);
+
+
+    templateObject.getDataTableList = function (data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        }
+        ;
+        var dataList = [
+            data.EmployeeID || "",
+            data.EmployeeName || "",
+            data.FirstName || "",
+            data.LastName || "",
+            data.Phone || "",
+            data.Mobile || '',
+            data.Email || '',
+            data.DefaultClassName || '',
+            data.CustFld1 || '',
+            data.CustFld2 || '',
+            linestatus,
+            data.Street || "",
+            data.Street2 || "",
+            data.State || "",
+            data.Postcode || "",
+            data.Country || "",
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        {index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10"},
+        {index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200"},
+        {index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100"},
+        {index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100"},
+        {index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+        {index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "95"},
+        {index: 6, label: 'Email', class: 'colEmail', active: true, display: true, width: "200"},
+        {index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "80"},
+        {index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120"},
+        {index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120"},
+        {index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+        {index: 11, label: 'Address', class: 'colAddress', active: true, display: true, width: ""},
+        {index: 12, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120"},
+        {index: 13, label: 'State', class: 'colState', active: false, display: true, width: "120"},
+        {index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80"},
+        {index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200"},
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
-Template.employeelist.onRendered(function() {
-   // $('.fullScreenSpin').css('display','inline-block');
+Template.employeelist.onRendered(function () {
+    // $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
     let contactService = new ContactService();
     const customerList = [];
@@ -34,7 +84,7 @@ Template.employeelist.onRendered(function() {
     const splashArray = [];
     const dataTableList = [];
     const tableHeaderList = [];
-    if(FlowRouter.current().queryParams.success){
+    if (FlowRouter.current().queryParams.success) {
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
     /*
@@ -301,23 +351,23 @@ Template.employeelist.onRendered(function() {
       // set initial table rest_data  //
       */
 
-    $('#tblEmployeelist tbody').on( 'click', 'tr', function () {
-        const listData = $(this).closest('tr').attr('id');
-        if(listData){
-          let params = ''
-          var queryParams = FlowRouter.current().queryParams;
-          if(queryParams.bank) {
-            let edtBankName = queryParams.edtBankName;
-            let edtBankAccountName = queryParams.edtBankAccountName;
-            let edtBSB = queryParams.edtBSB;
-            let edtBankAccountNo = queryParams.edtBankAccountNo;
-            let swiftCode = queryParams.swiftCode;
-            let apcaNo = queryParams.apcaNo;
-            let routingNo = queryParams.routingNo;
-            let sltBankCodes = queryParams.sltBankCodes;
-            params = '&bank=true&edtBankName='+edtBankName+'&edtBankAccountName='+edtBankAccountName+'&edtBSB='+edtBSB+'&edtBankAccountNo='+edtBankAccountNo+'&swiftCode='+swiftCode+'&apcaNo='+apcaNo+'&routingNo='+routingNo+'&sltBankCodes='+sltBankCodes;
-          }
-          FlowRouter.go('/employeescard?id=' + listData + params);
+    $('#tblEmployeelist tbody').on('click', 'tr', function () {
+        const listData = $(this).closest('tr').find(".colEmployeeNo").text();
+        if (listData) {
+            let params = ''
+            var queryParams = FlowRouter.current().queryParams;
+            if (queryParams.bank) {
+                let edtBankName = queryParams.edtBankName;
+                let edtBankAccountName = queryParams.edtBankAccountName;
+                let edtBSB = queryParams.edtBSB;
+                let edtBankAccountNo = queryParams.edtBankAccountNo;
+                let swiftCode = queryParams.swiftCode;
+                let apcaNo = queryParams.apcaNo;
+                let routingNo = queryParams.routingNo;
+                let sltBankCodes = queryParams.sltBankCodes;
+                params = '&bank=true&edtBankName=' + edtBankName + '&edtBankAccountName=' + edtBankAccountName + '&edtBSB=' + edtBSB + '&edtBankAccountNo=' + edtBankAccountNo + '&swiftCode=' + swiftCode + '&apcaNo=' + apcaNo + '&routingNo=' + routingNo + '&sltBankCodes=' + sltBankCodes;
+            }
+            FlowRouter.go('/employeescard?id=' + listData + params);
         }
     });
     // templateObject.checkSetupWizardFinished = async function () {
@@ -340,14 +390,14 @@ Template.employeelist.onRendered(function() {
 Template.employeelist.events({
     "click #tblEmployeelist tbody tr": (e, ui) => {
         const id = $(e.currentTarget).attr('id');
-        if(id){
+        if (id) {
             FlowRouter.go(`/employeescard?id=${id}`);
         }
     },
-    'click #btnNewEmployee':function(event){
+    'click #btnNewEmployee': function (event) {
         FlowRouter.go('/employeescard');
     },
-    'click .btnAddVS1User':function(event){
+    'click .btnAddVS1User': function (event) {
         swal({
             title: 'Is this an existing Employee?',
             text: '',
@@ -366,15 +416,15 @@ Template.employeelist.events({
         })
     },
     'keyup #tblEmployeelist_filter input': function (event) {
-          if($(event.target).val() != ''){
+        if ($(event.target).val() != '') {
             $(".btnRefreshEmployees").addClass('btnSearchAlert');
-          }else{
+        } else {
             $(".btnRefreshEmployees").removeClass('btnSearchAlert');
-          }
-          if (event.keyCode == 13) {
-             $(".btnRefreshEmployees").trigger("click");
-          }
-      },
+        }
+        if (event.keyCode == 13) {
+            $(".btnRefreshEmployees").trigger("click");
+        }
+    },
 
     'click .btnRefreshEmployees': async (event, ui) => {
         await ui.loadEmployees(true);
@@ -473,59 +523,59 @@ Template.employeelist.events({
         // }
     },
     'click .exportbtn': function () {
-        $('.fullScreenSpin').css('display','inline-block');
+        $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletocsv').click();
-        $('.fullScreenSpin').css('display','none');
+        $('.fullScreenSpin').css('display', 'none');
 
     },
     'click .exportbtnExcel': function () {
-        $('.fullScreenSpin').css('display','inline-block');
+        $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletoexcel').click();
-        $('.fullScreenSpin').css('display','none');
+        $('.fullScreenSpin').css('display', 'none');
     },
-    'click .btnRefresh':  (e, ui) => {
+    'click .btnRefresh': (e, ui) => {
         // ui.initPage(true);
-        $('.fullScreenSpin').css('display','inline-block');
+        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
 
-        sideBarService.getAllEmployees(initialBaseDataLoad,0).then(function(dataEmployee) {
-            addVS1Data('TEmployee',JSON.stringify(dataEmployee));
+        sideBarService.getAllEmployees(initialBaseDataLoad, 0).then(function (dataEmployee) {
+            addVS1Data('TEmployee', JSON.stringify(dataEmployee));
         });
 
         sideBarService.getAllAppointmentPredList().then(function (dataPred) {
             addVS1Data('TAppointmentPreferences', JSON.stringify(dataPred)).then(function (datareturnPred) {
-              sideBarService.getAllTEmployeeList(initialBaseDataLoad,0,false).then(function(data) {
-                  addVS1Data('TEmployeeList',JSON.stringify(data)).then(function (datareturn) {
-                      window.open('/employeelist','_self');
-                  }).catch(function (err) {
-                      window.open('/employeelist','_self');
-                  });
-              }).catch(function(err) {
-                  window.open('/employeelist','_self');
-              });
+                sideBarService.getAllTEmployeeList(initialBaseDataLoad, 0, false).then(function (data) {
+                    addVS1Data('TEmployeeList', JSON.stringify(data)).then(function (datareturn) {
+                        window.open('/employeelist', '_self');
+                    }).catch(function (err) {
+                        window.open('/employeelist', '_self');
+                    });
+                }).catch(function (err) {
+                    window.open('/employeelist', '_self');
+                });
             }).catch(function (err) {
-              window.open('/employeelist','_self');
+                window.open('/employeelist', '_self');
             });
         }).catch(function (err) {
-          window.open('/employeelist','_self');
+            window.open('/employeelist', '_self');
         });
 
     },
-    'click .printConfirm' : function(event){
+    'click .printConfirm': function (event) {
         playPrintAudio();
-        setTimeout(function(){
-        $('.fullScreenSpin').css('display','inline-block');
-        jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletopdf').click();
-        $('.fullScreenSpin').css('display','none');
-    }, delayTimeAfterSound);
+        setTimeout(function () {
+            $('.fullScreenSpin').css('display', 'inline-block');
+            jQuery('#tblEmployeelist_wrapper .dt-buttons .btntabletopdf').click();
+            $('.fullScreenSpin').css('display', 'none');
+        }, delayTimeAfterSound);
     },
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
-        let rows =[];
-        const filename = 'SampleEmployee'+'.csv';
-        rows[0]= ['First Name', 'Last Name', 'Phone','Mobile', 'Email','Skype', 'Street', 'City/Suburb', 'State', 'Post Code', 'Country', 'Gender'];
-        rows[1]= ['John', 'Smith', '9995551213','9995551213', 'johnsmith@email.com','johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
-        rows[1]= ['Jane', 'Smith', '9995551213','9995551213', 'janesmith@email.com','janesmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'F'];
+        let rows = [];
+        const filename = 'SampleEmployee' + '.csv';
+        rows[0] = ['First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'City/Suburb', 'State', 'Post Code', 'Country', 'Gender'];
+        rows[1] = ['John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'M'];
+        rows[1] = ['Jane', 'Smith', '9995551213', '9995551213', 'janesmith@email.com', 'janesmith', '123 Main Street', 'Brooklyn', 'New York', '1234', 'United States', 'F'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
     'click .templateDownloadXLSX': function (e) {
@@ -533,7 +583,7 @@ Template.employeelist.events({
         e.preventDefault();  //stop the browser from following
         window.location.href = 'sample_imports/SampleEmployee.xlsx';
     },
-    'click .btnUploadFile':function(event){
+    'click .btnUploadFile': function (event) {
         $('#attachment-upload').val('');
         $('.file-name').text('');
         //$(".btnImport").removeAttr("disabled");
@@ -544,25 +594,25 @@ Template.employeelist.events({
         let templateObj = Template.instance();
         var filename = $('#attachment-upload')[0].files[0]['name'];
         var fileExtension = filename.split('.').pop().toLowerCase();
-        var validExtensions = ["csv","txt","xlsx"];
-        var validCSVExtensions = ["csv","txt"];
-        var validExcelExtensions = ["xlsx","xls"];
+        var validExtensions = ["csv", "txt", "xlsx"];
+        var validCSVExtensions = ["csv", "txt"];
+        var validExcelExtensions = ["xlsx", "xls"];
 
         if (validExtensions.indexOf(fileExtension) == -1) {
             swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
             $('.file-name').text('');
             $(".btnImport").Attr("disabled");
-        }else if(validCSVExtensions.indexOf(fileExtension) != -1){
+        } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
 
             $('.file-name').text(filename);
             let selectedFile = event.target.files[0];
             templateObj.selectedFile.set(selectedFile);
-            if($('.file-name').text() != ""){
+            if ($('.file-name').text() != "") {
                 $(".btnImport").removeAttr("disabled");
-            }else{
+            } else {
                 $(".btnImport").Attr("disabled");
             }
-        }else if(fileExtension == 'xlsx'){
+        } else if (fileExtension == 'xlsx') {
             $('.file-name').text(filename);
             let selectedFile = event.target.files[0];
             var oFileIn;
@@ -580,7 +630,7 @@ Template.employeelist.events({
                 var result = {};
                 workbook.SheetNames.forEach(function (sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;
@@ -590,19 +640,18 @@ Template.employeelist.events({
             };
             reader.readAsArrayBuffer(oFile);
 
-            if($('.file-name').text() != ""){
+            if ($('.file-name').text() != "") {
                 $(".btnImport").removeAttr("disabled");
-            }else{
+            } else {
                 $(".btnImport").Attr("disabled");
             }
 
         }
 
 
-
     },
-    'click .btnImport' : function () {
-        $('.fullScreenSpin').css('display','inline-block');
+    'click .btnImport': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
         let templateObject = Template.instance();
         let contactService = new ContactService();
         let objDetails;
@@ -610,70 +659,81 @@ Template.employeelist.events({
         //let empStartDate = new Date().format("YYYY-MM-DD");
         var empStartDate = moment(saledateTime).format("YYYY-MM-DD");
         Papa.parse(templateObject.selectedFile.get(), {
-            complete: function(results) {
+            complete: function (results) {
 
-                if(results.data.length > 0){
-                    if( (results.data[0][0] == "First Name")
-                       && (results.data[0][1] == "Last Name") && (results.data[0][2] == "Phone")
-                       && (results.data[0][3] == "Mobile") && (results.data[0][4] == "Email")
-                       && (results.data[0][5] == "Skype") && (results.data[0][6] == "Street")
-                       && ((results.data[0][7] == "Street2")|| (results.data[0][7] == "City/Suburb")) && (results.data[0][8] == "State")
-                       && (results.data[0][9] == "Post Code") && (results.data[0][10] == "Country")
-                       && (results.data[0][11] == "Gender")) {
+                if (results.data.length > 0) {
+                    if ((results.data[0][0] == "First Name")
+                        && (results.data[0][1] == "Last Name") && (results.data[0][2] == "Phone")
+                        && (results.data[0][3] == "Mobile") && (results.data[0][4] == "Email")
+                        && (results.data[0][5] == "Skype") && (results.data[0][6] == "Street")
+                        && ((results.data[0][7] == "Street2") || (results.data[0][7] == "City/Suburb")) && (results.data[0][8] == "State")
+                        && (results.data[0][9] == "Post Code") && (results.data[0][10] == "Country")
+                        && (results.data[0][11] == "Gender")) {
 
                         let dataLength = results.data.length * 500;
-                        setTimeout(function(){
+                        setTimeout(function () {
                             // $('#importModal').modal('toggle');
                             //Meteor._reload.reload();
-                            window.open('/employeelist?success=true','_self');
-                        },parseInt(dataLength));
+                            window.open('/employeelist?success=true', '_self');
+                        }, parseInt(dataLength));
 
-                        for (let i = 0; i < results.data.length -1; i++) {
+                        for (let i = 0; i < results.data.length - 1; i++) {
                             objDetails = {
                                 type: "TEmployee",
                                 fields:
-                                {
-                                    FirstName: results.data[i+1][0].trim(),
-                                    LastName: results.data[i+1][1].trim(),
-                                    Phone: results.data[i+1][2],
-                                    Mobile: results.data[i+1][3],
-                                    DateStarted: empStartDate,
-                                    DOB: empStartDate,
-                                    Sex: results.data[i+1][11]||"F",
-                                    Email: results.data[i+1][4],
-                                    SkypeName: results.data[i+1][5],
-                                    Street: results.data[i+1][6],
-                                    Street2: results.data[i+1][7],
-                                    Suburb: results.data[i+1][7],
-                                    State: results.data[i+1][8],
-                                    PostCode:results.data[i+1][9],
-                                    Country:results.data[i+1][10]
+                                    {
+                                        FirstName: results.data[i + 1][0].trim(),
+                                        LastName: results.data[i + 1][1].trim(),
+                                        Phone: results.data[i + 1][2],
+                                        Mobile: results.data[i + 1][3],
+                                        DateStarted: empStartDate,
+                                        DOB: empStartDate,
+                                        Sex: results.data[i + 1][11] || "F",
+                                        Email: results.data[i + 1][4],
+                                        SkypeName: results.data[i + 1][5],
+                                        Street: results.data[i + 1][6],
+                                        Street2: results.data[i + 1][7],
+                                        Suburb: results.data[i + 1][7],
+                                        State: results.data[i + 1][8],
+                                        PostCode: results.data[i + 1][9],
+                                        Country: results.data[i + 1][10]
 
-                                    // BillStreet: results.data[i+1][6],
-                                    // BillStreet2: results.data[i+1][7],
-                                    // BillState: results.data[i+1][8],
-                                    // BillPostCode:results.data[i+1][9],
-                                    // Billcountry:results.data[i+1][10]
-                                }
+                                        // BillStreet: results.data[i+1][6],
+                                        // BillStreet2: results.data[i+1][7],
+                                        // BillState: results.data[i+1][8],
+                                        // BillPostCode:results.data[i+1][9],
+                                        // Billcountry:results.data[i+1][10]
+                                    }
                             };
-                            if(results.data[i+1][1]){
-                                if(results.data[i+1][1] !== "") {
+                            if (results.data[i + 1][1]) {
+                                if (results.data[i + 1][1] !== "") {
                                     contactService.saveEmployee(objDetails).then(function (data) {
                                         ///$('.fullScreenSpin').css('display','none');
                                         //Meteor._reload.reload();
                                     }).catch(function (err) {
                                         //$('.fullScreenSpin').css('display','none');
-                                        swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => { if (result.value) { Meteor._reload.reload(); } else if (result.dismiss === 'cancel') {}});
+                                        swal({
+                                            title: 'Oooops...',
+                                            text: err,
+                                            type: 'error',
+                                            showCancelButton: false,
+                                            confirmButtonText: 'Try Again'
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                Meteor._reload.reload();
+                                            } else if (result.dismiss === 'cancel') {
+                                            }
+                                        });
                                     });
                                 }
                             }
                         }
-                    }else{
-                        $('.fullScreenSpin').css('display','none');
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
                         swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
                     }
-                }else{
-                    $('.fullScreenSpin').css('display','none');
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
                     swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
                 }
 
@@ -685,12 +745,11 @@ Template.employeelist.events({
 });
 
 Template.employeelist.helpers({
-    datatablerecords : () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b){
+    datatablerecords: () => {
+        return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.employeename == 'NA') {
                 return 1;
-            }
-            else if (b.employeename == 'NA') {
+            } else if (b.employeename == 'NA') {
                 return -1;
             }
             return (a.employeename.toUpperCase() > b.employeename.toUpperCase()) ? 1 : -1;
@@ -700,7 +759,7 @@ Template.employeelist.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({userid:localStorage.getItem('mycloudLogonID'),PrefName:'tblEmployeelist'});
+        return CloudPreference.findOne({userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblEmployeelist'});
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
@@ -714,7 +773,42 @@ Template.employeelist.helpers({
     },
     // custom fields displaysettings
     displayfields: () => {
-    return Template.instance().displayfields.get();
+        return Template.instance().displayfields.get();
     },
-    employees: () => Template.instance().employees.get()
+    employees: () => Template.instance().employees.get(),
+
+    apiFunction: function () {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTEmployeeList;
+    },
+
+    searchAPI: function () {
+        return sideBarService.getAllEmployeesDataVS1ByName;
+    },
+
+    service: () => {
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function () {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });
