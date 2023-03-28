@@ -882,7 +882,16 @@ Template.calender.onRendered(function() {
         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
             window.open(localStorage.getItem("appt_historypage"), "_self");
         } else {
-            window.open("/appointments", "_self");
+            var url = FlowRouter.current().path;
+            if(url === '/appointments'){
+                window.open("/appointments", '_self');
+            }else if(url === '/dashboardsalesmanager'){
+                window.open("/dashboardsalesmanager", '_self');
+            }else if(url === '/dashboardsales'){
+                window.open("/dashboardsales", '_self');
+            }else{
+                window.open("/appointments", '_self');
+            }
         }
     }
 
@@ -1101,7 +1110,7 @@ Template.calender.onRendered(function() {
                         templateObject
                     );
                 } else {
-                    $("#customerListModal-calendar").modal();
+                    $("#customerListModal").modal();
                 }
             },
             eventClick: function(info) {
@@ -1518,7 +1527,7 @@ Template.calender.onRendered(function() {
                         }
                     });
                     if (!leaveFlag) {
-                        $("#customerListModal-calendar").modal();
+                        $("#customerListModal").modal();
                     }
                 }
             },
@@ -1720,7 +1729,7 @@ Template.calender.onRendered(function() {
                 } else {
                     console.log('++++++++++++++++')
                      $("#appointmentLeaveConfirmModal").modal("toggle");
-                    // $("#customerListModal-calendar").modal();
+                    // $("#customerListModal").modal();
                 }
             },
             eventClick: function(info) {
@@ -1968,7 +1977,7 @@ Template.calender.onRendered(function() {
                 //     }
                 // });
                 // if (!leaveFlag) {
-                //     $("#customerListModal-calendar").modal();
+                //     $("#customerListModal").modal();
                 // }
                 if (info.event._def.publicId != "") {
                     if(pattern.test(info.event._def.publicId)){
@@ -2218,7 +2227,7 @@ Template.calender.onRendered(function() {
                         }
                     });
                     if (!leaveFlag) {
-                        $("#customerListModal-calendar").modal();
+                        $("#customerListModal").modal();
                     }
                 }
             },
@@ -2452,7 +2461,6 @@ Template.calender.onRendered(function() {
         setTimeout(() => {
             const child1 = document.querySelector(".fc-appointments-button");
             const child2 = document.querySelector("#appointmentDate").parentNode;
-            console.log('OKKKKK')
             if (child1 != null) {
                 const parent1 = child1.parentNode;
                 $(parent1).css("min-width", 714).css("text-align", "center");
@@ -3650,7 +3658,7 @@ Template.calender.onRendered(function() {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    // $("#customerListModal-calendar").modal();
+                    // $("#customerListModal").modal();
                     $("#appointmentLeaveConfirmModal").modal("toggle");
                     // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
                     // calendar.gotoDate(info.start);
@@ -3822,7 +3830,7 @@ Template.calender.onRendered(function() {
                 } else if (FlowRouter.current().queryParams.supplierid) {
                     openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                 } else {
-                    $("#customerListModal-calendar").modal();
+                    $("#customerListModal").modal();
                 }
             },
             events: [],
@@ -3932,7 +3940,7 @@ Template.calender.onRendered(function() {
 						templateObject
 					);
 				} else {
-					$("#customerListModal-calendar").modal();
+					$("#customerListModal").modal();
 				}
 				setTimeout(function() {
 					$("#tblCustomerlist_filter .form-control-sm").focus();
@@ -4582,7 +4590,7 @@ Template.calender.onRendered(function() {
 							templateObject
 						);
 					} else {
-						$("#customerListModal-calendar").modal();
+						$("#customerListModal").modal();
 					}
 					setTimeout(function() {
 						$("#tblCustomerlist_filter .form-control-sm").focus();
@@ -5180,7 +5188,7 @@ Template.calender.onRendered(function() {
         } else if (FlowRouter.current().queryParams.supplierid) {
             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
         } else {
-            $("#customerListModal-calendar").modal();
+            $("#customerListModal").modal();
         }
         setTimeout(function() {
             $('#tblCustomerlist_filter .form-control-sm').focus();
@@ -5578,8 +5586,6 @@ Template.calender.onRendered(function() {
     });
 
     $(document).on("click", ".appointmentCustomer #tblCustomerlist tbody tr", function(e) {
-        //$("#updateID").val("");
-        console.log('OK')
         let checkIncludeAllProducts = templateObject.includeAllProducts.get();
         let getAllEmployeeData = templateObject.employeerecords.get() || "";
         let getEmployeeID = templateObject.empID.get() || "";
@@ -5653,7 +5659,7 @@ Template.calender.onRendered(function() {
 
             //templateObject.getAllProductData();
         }
-        $("#customerListModal-calendar").modal("hide");
+        $("#customerListModal").modal("hide");
         $("#event-modal").modal();
     });
 
@@ -5881,7 +5887,7 @@ Template.calender.onRendered(function() {
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                         } else {
-                            // $("#customerListModal-calendar").modal();
+                            // $("#customerListModal").modal();
                             $("#appointmentLeaveConfirmModal").modal("toggle");
                             // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
                             // calendar.gotoDate(info.start);
@@ -6165,7 +6171,7 @@ Template.calender.onRendered(function() {
                         } else if (FlowRouter.current().queryParams.supplierid) {
                             openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
                         } else {
-                            $("#customerListModal-calendar").modal();
+                            $("#customerListModal").modal();
                         }
                     },
                     events: eventData,
@@ -6948,7 +6954,7 @@ Template.calender.events({
             } else if (FlowRouter.current().queryParams.supplierid) {
                 openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject, 'supplier');
             } else {
-                $("#customerListModal-calendar").modal();
+                $("#customerListModal").modal();
             }
         }
 
@@ -8492,7 +8498,16 @@ Template.calender.events({
     'click .checkclose': function() {
         const templateObject = Template.instance();
         if (templateObject.checkRefresh.get() == true || $('#updateID').val() == "") {
-            window.open("/appointments", '_self');
+            var url = FlowRouter.current().path;
+            if(url === '/appointments'){
+                window.open("/appointments", '_self');
+            }else if(url === '/dashboardsalesmanager'){
+                window.open("/dashboardsalesmanager", '_self');
+            }else if(url === '/dashboardsales'){
+                window.open("/dashboardsales", '_self');
+            }else{
+                window.open("/appointments", '_self');
+            }
         }
     },
     'click btnDeleteAppointment': function() {
@@ -11560,6 +11575,17 @@ Template.calender.events({
         let templateObject = Template.instance();
         templateObject.saveUpdatedEvents();
     },
+    'click .chkServiceCard': function() {
+        //  templateObject = Template.instance();
+        //  let productFees = templateObject.productFees.get();
+        //  let productFeesID = $(event.target).attr('id').split("-")[1];
+        //  if ($(event.target).prop('checked') == true) {
+        //      productFees.push(productFeesID);
+        //  } else {
+        //      productFees.splice(productFees.indexOf(productFeesID), 1);
+        //  }
+        //  templateObject.productFees.set(productFees);
+    },
     'click #btnselProductFees': function(event) {
         templateObject = Template.instance();
 
@@ -11667,7 +11693,7 @@ Template.calender.events({
     "click #btnCreateAppointmentRequest": function(event){
         $("#appointmentLeaveConfirmModal").modal("hide");
         console.log('Show CustomerListModal')
-        $("#customerListModal-calendar").modal();
+        $("#customerListModal").modal();
     },
     "click #btnCreateLeaveRequest": function(event){
         $("#appointmentLeaveConfirmModal").modal("hide");
@@ -11872,7 +11898,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
 
                 //templateObject.getAllProductData();
             }
-            $("#customerListModal-calendar").modal("hide");
+            $("#customerListModal").modal("hide");
             $("#event-modal").modal();
             setTimeout(() => {
                 if (localStorage.getItem("smsCustomerAppt") == "false") {
@@ -11984,7 +12010,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
 
                 //templateObject.getAllProductData();
             }
-            $("#customerListModal-calendar").modal("hide");
+            $("#customerListModal").modal("hide");
             $("#event-modal").modal();
             setTimeout(() => {
                 if (localStorage.getItem("smsCustomerAppt") == "false") {
@@ -12096,7 +12122,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
 
                 //templateObject.getAllProductData();
             }
-            $("#customerListModal-calendar").modal("hide");
+            $("#customerListModal").modal("hide");
             $("#event-modal").modal();
             setTimeout(() => {
                 if (localStorage.getItem("smsCustomerAppt") == "false") {

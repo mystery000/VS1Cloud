@@ -235,8 +235,6 @@ Template.appointments.onRendered(function() {
     }
     templateObject.hasFollowings();
 
-    // $("#employeeListModal").modal("show");
-
     let currentId = FlowRouter.current().context.hash;
     if (currentId == "allocationModal") {
         setTimeout(function() {
@@ -3436,7 +3434,7 @@ Template.appointments.events({
             });
         }, 500);
     },
-    'click .chkServiceCard': function() {
+    // 'click .chkServiceCard': function() {
         //  templateObject = Template.instance();
         //  let productFees = templateObject.productFees.get();
         //  let productFeesID = $(event.target).attr('id').split("-")[1];
@@ -3446,7 +3444,7 @@ Template.appointments.events({
         //      productFees.splice(productFees.indexOf(productFeesID), 1);
         //  }
         //  templateObject.productFees.set(productFees);
-    },
+    // },
    "click .btnRemove": function(event) {
         var targetID = $(event.target).closest("tr").attr("id");
         // if ($("#tblExtraProducts tbody>tr").length > 1) {
