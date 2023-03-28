@@ -121,8 +121,8 @@ Template.paymentoverview.onCreated(function() {
         };
 
         let dataList = [
-            data.PaymentID || '',
-            moment(data.PaymentDate).format("DD/MM/YYYY") || data.PaymentDate,
+            // data.PaymentID || '',
+            '<span style="display:none;">' + (data.PaymentDate !=''? moment(data.PaymentDate).format("YYYY/MM/DD"): data.PaymentDate) + '</span>' +moment(data.PaymentDate).format("DD/MM/YYYY") || data.PaymentDate,
             data.ClientName || '',
             data.PaymentID || '',
             data.ReferenceNo || '',
@@ -140,20 +140,20 @@ Template.paymentoverview.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 0, label: "ID", class: "colID", active: false, display: true, width: "100" },
-        { index: 1, label: "Date", class: "colPaymentDate", active: true, display: true, width: "74" },
-        { index: 2, label: "Contact Name", class: "colCustomerName", active: true, display: true, width: "200" },
-        { index: 3, label: "Payment No.", class: "colPaymentNo", active: true, display: true, width: "100" },
-        { index: 4, label: "Ref No.", class: "colRefNo", active: true, display: true, width: "100" },
-        { index: 5, label: "Amount", class: "colPaymentAmount text-right", active: true, display: true, width: "100" },
-        { index: 6, label: "Bank", class: "colBankAccount", active: true, display: true, width: "200" },
-        { index: 7, label: "Type", class: "colType", active: true, display: true, width: "200" },
-        { index: 8, label: "Department", class: "colDepartment", active: true, display: true, width: "100" },
-        { index: 9, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
-        { index: 10, label: "Receipt No", class: "colReceiptNo", active: false, display: true, width: "100" },
-        { index: 11, label: "Job Name", class: "colJobName", active: false, display: true, width: "100" },
-        { index: 12, label: "Payment Method", class: "colPaymentMethod", active: false, display: true, width: "100" },
-        { index: 13, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+        // { index: 0, label: "ID", class: "colID", active: false, display: true, width: "100" },
+        { index: 0, label: "Date", class: "colPaymentDate", active: true, display: true, width: "74" },
+        { index: 1, label: "Contact Name", class: "colCustomerName", active: true, display: true, width: "200" },
+        { index: 2, label: "Payment No.", class: "colPaymentNo", active: true, display: true, width: "100" },
+        { index: 3, label: "Ref No.", class: "colRefNo", active: true, display: true, width: "100" },
+        { index: 4, label: "Amount", class: "colPaymentAmount text-right", active: true, display: true, width: "100" },
+        { index: 5, label: "Bank", class: "colBankAccount", active: true, display: true, width: "200" },
+        { index: 6, label: "Type", class: "colType", active: true, display: true, width: "200" },
+        { index: 7, label: "Department", class: "colDepartment", active: true, display: true, width: "100" },
+        { index: 8, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
+        { index: 9, label: "Receipt No", class: "colReceiptNo", active: false, display: true, width: "100" },
+        { index: 10, label: "Job Name", class: "colJobName", active: false, display: true, width: "100" },
+        { index: 11, label: "Payment Method", class: "colPaymentMethod", active: false, display: true, width: "100" },
+        { index: 12, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
