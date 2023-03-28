@@ -453,7 +453,7 @@ Template.datatablelist.onRendered(async function () {
                 //columns: acolDef,
                 columnDefs: colDef,
                 // fixedColumns: true ,
-                "ordering": false,
+                // "ordering": false,
                 // deferRender: true,
                 buttons: [{
                     extend: 'csvHtml5',
