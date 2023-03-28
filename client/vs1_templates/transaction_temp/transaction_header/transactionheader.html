@@ -1,7 +1,7 @@
 <template name="transactionheader">
     <div class="transaction_header"
     style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-     
+
       <div class="row">
           <div class="col-12 col-md-4">
               <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
@@ -27,31 +27,31 @@
       <div class="row align-items-center justify-content-between">
         <div class="col-12 col-xl-10">
             {{#if includeClient}}
-            <div class="row">
-                    <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
-                        {{> customerselector
-                            label=clientType
-                            id=getCustomerID
-                            value=data.CustomerID
-                            data = data.ClientName
-                            email = data.ClientEmail
-                            modalId=modal_id
-                            list_template_name=getTemplate
-                            target_modal_id=getTargetModalID
-                            target_template_id=getTargetTemplate
-                            is_editable=true
-                            colNameForValue='colCompany'
-                            modal_title=getModalTitle
-                            lineTableId=gridTableId
-                            printTableId=printTableId
+                <div class="row">
+                        <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
+                            {{> customerselector
+                                label=clientType
+                                id=getCustomerID
+                                value=data.CustomerID
+                                data = data.ClientName
+                                email = data.ClientEmail
+                                modalId=modal_id
+                                list_template_name=getTemplate
+                                target_modal_id=getTargetModalID
+                                target_template_id=getTargetTemplate
+                                is_editable=true
+                                colNameForValue='colCompany'
+                                modal_title=getModalTitle
+                                lineTableId=getgridTableId
+                                printTableId=printTableId
+                              }}
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
+                            {{> customer_email_input
+                                label=clientType
                             }}
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-6 col-md-4 col-xl-3">
-                        {{> customer_email_input
-                            label=clientType
-                        }}
-                    </div>
-            </div>
+                        </div>
+                </div>
             {{/if}}
             <div class="row">
                 {{#if includeAddress}}
@@ -156,7 +156,7 @@
                       </div>
                     </div>
                   </div>
-        
+
                 </div>
             </div>
         </div>

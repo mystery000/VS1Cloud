@@ -230,17 +230,17 @@ Template.binlocationslist.onRendered(function () {
   templateObject.getAccountNames = function () {
     productService.getAccountName().then(function (data) {
       // let productData = templateObject.records.get();
-      for (let i in data.taccount) {
+      for (let i in data.taccountvs1) {
 
         let accountnamerecordObj = {
-          accountname: data.taccount[i].AccountName || ' '
+          accountname: data.taccountvs1[i].AccountName || ' '
         };
 
-        if ((data.taccount[i].AccountTypeName == "COGS")) {
+        if ((data.taccountvs1[i].AccountTypeName == "COGS")) {
           coggsaccountrecords.push(accountnamerecordObj);
           templateObject.coggsaccountrecords.set(coggsaccountrecords);
         }
-        if ((data.taccount[i].AccountTypeName == "INC")) {
+        if ((data.taccountvs1[i].AccountTypeName == "INC")) {
           salesaccountrecords.push(accountnamerecordObj);
           templateObject.salesaccountrecords.set(salesaccountrecords);
         }
@@ -774,7 +774,7 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
   },
-  
+
   // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
@@ -804,7 +804,7 @@ Template.binlocationslist.events({
             splashArrayProductList.push(dataList);
           }
 
-          
+
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {

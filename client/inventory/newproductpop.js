@@ -66,26 +66,26 @@ Template.newproductpop.onRendered(async function () {
   let clientType = [];
 
   templateObject.getAccountNames = function () {
-    getVS1Data("TAccountVS1")
-      .then(function (dataObject) {
+    getVS1Data("TAccountVS1").then(function (dataObject) {
         if (dataObject.length == 0) {
-          productService.getAccountName().then(function (data) {
+          sideBarService.getAccountListVS1().then(function (data) {
+            addVS1Data('TAccountVS1', JSON.stringify(data));
             let productData = templateObject.records.get();
-            for (let i in data.taccount) {
+            for (let i in data.taccountvs1) {
               let accountnamerecordObj = {
-                accountname: data.taccount[i].AccountName || " ",
+                accountname: data.taccountvs1[i].fields.AccountName || " ",
               };
-              if (data.taccount[i].AccountTypeName == "COGS") {
+              if (data.taccountvs1[i].fields.AccountTypeName == "COGS") {
                 coggsaccountrecords.push(accountnamerecordObj);
                 templateObject.coggsaccountrecords.set(coggsaccountrecords);
               }
 
-              if (data.taccount[i].AccountTypeName == "INC") {
+              if (data.taccountvs1[i].fields.AccountTypeName == "INC") {
                 salesaccountrecords.push(accountnamerecordObj);
                 templateObject.salesaccountrecords.set(salesaccountrecords);
               }
 
-              if (data.taccount[i].AccountTypeName == "OCASSET") {
+              if (data.taccountvs1[i].fields.AccountTypeName == "OCASSET") {
                 inventoryaccountrecords.push(accountnamerecordObj);
                 templateObject.inventoryaccountrecords.set(
                   inventoryaccountrecords
@@ -123,9 +123,9 @@ Template.newproductpop.onRendered(async function () {
       .catch(function (err) {
         productService.getAccountName().then(function (data) {
           let productData = templateObject.records.get();
-          for (let i in data.taccount) {
+          for (let i in data.taccountvs1) {
             let accountnamerecordObj = {
-              accountname: data.taccount[i].AccountName || " ",
+              accountname: data.taccountvs1[i].AccountName || " ",
             };
             if (data.taccount[i].AccountTypeName == "COGS") {
               coggsaccountrecords.push(accountnamerecordObj);
@@ -241,7 +241,7 @@ Template.newproductpop.onRendered(async function () {
             for (let i = 0; i < data.tclienttype.length; i++) {
               clientType.push(data.tclienttype[i].fields.TypeName);
             }
-            clientType = _.sortBy(clientType);
+            // clientType = _.sortBy(clientType);
             templateObject.clienttypeList.set(clientType);
           });
         } else {
