@@ -1287,10 +1287,6 @@ Template.invoiceemail.helpers({
     return salesService.getAllInvoiceListNonBO
   },
 
-  searchAPI: function () {
-    return sideBarService.getNewSalesOrderByNameOrID
-  },
-
   apiParams: function () {
     return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
   },
