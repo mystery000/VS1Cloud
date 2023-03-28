@@ -50,11 +50,11 @@ Template.leadstatussettings.onCreated(function() {
     let headerStructure = [
         { index: 0, label: '#ID', class: 'colLeadStatusID', active: false, display: true, width: "50" },
         { index: 1, label: '#Type Code', class: 'colLeadTypeCode', active: false, display: true, width: "120" },
-        { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "200" },
-        { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "400" },
+        { index: 2, label: 'Lead Status Name', class: 'colStatusName', active: true, display: true, width: "150" },
+        { index: 3, label: 'Description', class: 'colDescription', active: true, display: true, width: "1210" },
         { index: 4, label: '#Is Default', class: 'colIsDefault', active: false, display: true, width: "180" },
-        { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: false, display: false, width: "250" },
-        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+        { index: 5, label: 'Expected Quantity per Month', class: 'colQuantity', active: false, display: false, width: "220" },
+        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
