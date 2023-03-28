@@ -2227,6 +2227,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     }
                     $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     checkBoxClickByName();
+                    $("th div.colChkBoxAll").css("margin-left", "18px")
                 },
                 "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                     let countTableData = data?.length || 0; //get count from API data
