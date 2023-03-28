@@ -80,6 +80,7 @@ Template.calender.onCreated(function() {
     templateObject.leaveemployeerecords = new ReactiveVar([]);
 
     templateObject.changedEvents = new ReactiveVar([]);
+    templateObject.extraProductFees = new ReactiveVar([]);
     addVS1Data("TNewAppointment", JSON.stringify([]))
 });
 
@@ -1830,22 +1831,39 @@ Template.calender.onRendered(function() {
                     console.log('result[0]:',result[0])
                     if (result[0].extraProducts && result[0].extraProducts != "") {
                         let extraProducts = result[0].extraProducts.split(":");
-                        console.log('extraProducts')
+                        console.log('extraProducts:',extraProducts)
                         let extraProductFees = [];
-                        productService.getNewProductServiceListVS1().then(function(products) {
+                        getVS1Data("TProductVS1").then(function(dataObject){
+                            if (dataObject.length == 0) {
+                                productService.getNewProductServiceListVS1().then(function(products) {
+                                    extraProducts.forEach((item) => {
+                                        $("#productCheck-" + item).prop("checked", true);
+                                        products.tproductvs1.forEach((product) => {
+                                            if (product.Id == item) {
+                                                extraProductFees.push(product);
+                                            }
+                                            $("#productCheck-" + item).prop("checked", true);
+                                            $("#productCheck-" + item).closest('tr').addClass('checkRowSelected');
+                                        });
+                                    });
+                                    templateObject.extraProductFees.set(extraProductFees);
+                                }).catch(function(err) {
+                                });
+                            }else{
+                                let data = JSON.parse(dataObject[0].data);
                                 extraProducts.forEach((item) => {
                                     $("#productCheck-" + item).prop("checked", true);
-                                    products.tproductvs1.forEach((product) => {
+                                    data.tproductvs1.forEach((product) => {
                                         if (product.Id == item) {
                                             extraProductFees.push(product);
                                         }
                                         $("#productCheck-" + item).prop("checked", true);
+                                        $("#productCheck-" + item).closest('tr').addClass('checkRowSelected');
                                     });
                                 });
                                 templateObject.extraProductFees.set(extraProductFees);
-                            })
-                            .catch(function(err) {
-                            });
+                            }
+                        });
                         $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
                     }
 
@@ -4655,271 +4673,188 @@ Template.calender.onRendered(function() {
 					let lineExtaSellItems = [];
 					let lineExtaSellObj = {};
 					$(".fullScreenSpin").css("display", "inline-block");
-					getVS1Data("TProductWeb")
-						.then(function(dataObject) {
-							if (dataObject.length == 0) {
-								sideBarService
-									.getOneProductdatavs1byname(productDataName)
-									.then(function(data) {
-										$(".fullScreenSpin").css("display", "none");
-										let lineItems = [];
-										let lineItemObj = {};
-										let currencySymbol = Currency;
-										let totalquantity = 0;
-										let productname = data.tproduct[0].fields.ProductName || "";
-										let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
-										let productprintName =
-											data.tproduct[0].fields.ProductPrintName || "";
-										let assetaccount =
-											data.tproduct[0].fields.AssetAccount || "";
-										let buyqty1cost =
-											utilityService.modifynegativeCurrencyFormat(
-												data.tproduct[0].fields.BuyQty1Cost
-											) || 0;
-										let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
-										let taxcodepurchase =
-											data.tproduct[0].fields.TaxCodePurchase || "";
-										let purchasedescription =
-											data.tproduct[0].fields.PurchaseDescription || "";
-										let sellqty1price =
-											utilityService.modifynegativeCurrencyFormat(
-												data.tproduct[0].fields.SellQty1Price
-											) || 0;
-										let incomeaccount =
-											data.tproduct[0].fields.IncomeAccount || "";
-										let taxcodesales =
-											data.tproduct[0].fields.TaxCodeSales || "";
-										let salesdescription =
-											data.tproduct[0].fields.SalesDescription || "";
-										let active = data.tproduct[0].fields.Active;
-										let lockextrasell =
-											data.tproduct[0].fields.LockExtraSell || "";
-										let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
-										let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
-										let barcode = data.tproduct[0].fields.BARCODE || "";
-										$("#selectProductID")
-											.val(data.tproduct[0].fields.ID)
-											.trigger("change");
-										$("#add-product-title").text("Edit Product");
-										$("#edtproductname").val(productname);
-										$("#edtsellqty1price").val(sellqty1price);
-										$("#txasalesdescription").val(salesdescription);
-										$("#sltsalesacount").val(incomeaccount);
-										$("#slttaxcodesales").val(taxcodesales);
-										$("#edtbarcode").val(barcode);
-										$("#txapurchasedescription").val(purchasedescription);
-										$("#sltcogsaccount").val(cogsaccount);
-										$("#slttaxcodepurchase").val(taxcodepurchase);
-										$("#edtbuyqty1cost").val(buyqty1cost);
+					getVS1Data("TProductWeb").then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
+                                $(".fullScreenSpin").css("display", "none");
+                                let lineItems = [];
+                                let lineItemObj = {};
+                                let currencySymbol = Currency;
+                                let totalquantity = 0;
+                                let productname = data.tproduct[0].fields.ProductName || "";
+                                let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
+                                let productprintName = data.tproduct[0].fields.ProductPrintName || "";
+                                let assetaccount = data.tproduct[0].fields.AssetAccount || "";
+                                let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+                                let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                                let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || "";
+                                let purchasedescription = data.tproduct[0].fields.PurchaseDescription || "";
+                                let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+                                let incomeaccount = data.tproduct[0].fields.IncomeAccount || "";
+                                let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
+                                let salesdescription = data.tproduct[0].fields.SalesDescription || "";
+                                let active = data.tproduct[0].fields.Active;
+                                let lockextrasell = data.tproduct[0].fields.LockExtraSell || "";
+                                let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
+                                let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
+                                let barcode = data.tproduct[0].fields.BARCODE || "";
+                                $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                                $("#add-product-title").text("Edit Product");
+                                $("#edtproductname").val(productname);
+                                $("#edtsellqty1price").val(sellqty1price);
+                                $("#txasalesdescription").val(salesdescription);
+                                $("#sltsalesacount").val(incomeaccount);
+                                $("#slttaxcodesales").val(taxcodesales);
+                                $("#edtbarcode").val(barcode);
+                                $("#txapurchasedescription").val(purchasedescription);
+                                $("#sltcogsaccount").val(cogsaccount);
+                                $("#slttaxcodepurchase").val(taxcodepurchase);
+                                $("#edtbuyqty1cost").val(buyqty1cost);
 
-										setTimeout(function() {
-											$("#newProductModal").modal("show");
-										}, 500);
-									})
-									.catch(function(err) {
-										$(".fullScreenSpin").css("display", "none");
-									});
-							} else {
-								let data = JSON.parse(dataObject[0].data);
-								let useData = data.tproductvs1;
-								var added = false;
+                                setTimeout(function() {
+                                    $("#newProductModal").modal("show");
+                                }, 500);
+                            }).catch(function(err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tproductvs1;
+                            var added = false;
 
-								for (let i = 0; i < data.tproductvs1.length; i++) {
-									if (
-										data.tproductvs1[i].fields.ProductName === productDataName
-									) {
-										added = true;
-										$(".fullScreenSpin").css("display", "none");
-										let lineItems = [];
-										let lineItemObj = {};
-										let currencySymbol = Currency;
-										let totalquantity = 0;
+                            for (let i = 0; i < data.tproductvs1.length; i++) {
+                                if (data.tproductvs1[i].fields.ProductName === productDataName) {
+                                    added = true;
+                                    $(".fullScreenSpin").css("display", "none");
+                                    let lineItems = [];
+                                    let lineItemObj = {};
+                                    let currencySymbol = Currency;
+                                    let totalquantity = 0;
 
-										let productname =
-											data.tproductvs1[i].fields.ProductName || "";
-										let productcode =
-											data.tproductvs1[i].fields.PRODUCTCODE || "";
-										let productprintName =
-											data.tproductvs1[i].fields.ProductPrintName || "";
-										let assetaccount =
-											data.tproductvs1[i].fields.AssetAccount || "";
-										let buyqty1cost =
-											utilityService.modifynegativeCurrencyFormat(
-												data.tproductvs1[i].fields.BuyQty1Cost
-											) || 0;
-										let cogsaccount =
-											data.tproductvs1[i].fields.CogsAccount || "";
-										let taxcodepurchase =
-											data.tproductvs1[i].fields.TaxCodePurchase || "";
-										let purchasedescription =
-											data.tproductvs1[i].fields.PurchaseDescription || "";
-										let sellqty1price =
-											utilityService.modifynegativeCurrencyFormat(
-												data.tproductvs1[i].fields.SellQty1Price
-											) || 0;
-										let incomeaccount =
-											data.tproductvs1[i].fields.IncomeAccount || "";
-										let taxcodesales =
-											data.tproductvs1[i].fields.TaxCodeSales || "";
-										let salesdescription =
-											data.tproductvs1[i].fields.SalesDescription || "";
-										let active = data.tproductvs1[i].fields.Active;
-										let lockextrasell =
-											data.tproductvs1[i].fields.LockExtraSell || "";
-										let customfield1 =
-											data.tproductvs1[i].fields.CUSTFLD1 || "";
-										let customfield2 =
-											data.tproductvs1[i].fields.CUSTFLD2 || "";
-										let barcode = data.tproductvs1[i].fields.BARCODE || "";
-										$("#selectProductID")
-											.val(data.tproductvs1[i].fields.ID)
-											.trigger("change");
-										$("#add-product-title").text("Edit Product");
-										$("#edtproductname").val(productname);
-										$("#edtsellqty1price").val(sellqty1price);
-										$("#txasalesdescription").val(salesdescription);
-										$("#sltsalesacount").val(incomeaccount);
-										$("#slttaxcodesales").val(taxcodesales);
-										$("#edtbarcode").val(barcode);
-										$("#txapurchasedescription").val(purchasedescription);
-										$("#sltcogsaccount").val(cogsaccount);
-										$("#slttaxcodepurchase").val(taxcodepurchase);
-										$("#edtbuyqty1cost").val(buyqty1cost);
+                                    let productname = data.tproductvs1[i].fields.ProductName || "";
+                                    let productcode = data.tproductvs1[i].fields.PRODUCTCODE || "";
+                                    let productprintName = data.tproductvs1[i].fields.ProductPrintName || "";
+                                    let assetaccount = data.tproductvs1[i].fields.AssetAccount || "";
+                                    let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1Cost) || 0;
+                                    let cogsaccount = data.tproductvs1[i].fields.CogsAccount || "";
+                                    let taxcodepurchase = data.tproductvs1[i].fields.TaxCodePurchase || "";
+                                    let purchasedescription = data.tproductvs1[i].fields.PurchaseDescription || "";
+                                    let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1Price) || 0;
+                                    let incomeaccount = data.tproductvs1[i].fields.IncomeAccount || "";
+                                    let taxcodesales = data.tproductvs1[i].fields.TaxCodeSales || "";
+                                    let salesdescription = data.tproductvs1[i].fields.SalesDescription || "";
+                                    let active = data.tproductvs1[i].fields.Active;
+                                    let lockextrasell = data.tproductvs1[i].fields.LockExtraSell || "";
+                                    let customfield1 = data.tproductvs1[i].fields.CUSTFLD1 || "";
+                                    let customfield2 = data.tproductvs1[i].fields.CUSTFLD2 || "";
+                                    let barcode = data.tproductvs1[i].fields.BARCODE || "";
+                                    $("#selectProductID").val(data.tproductvs1[i].fields.ID).trigger("change");
+                                    $("#add-product-title").text("Edit Product");
+                                    $("#edtproductname").val(productname);
+                                    $("#edtsellqty1price").val(sellqty1price);
+                                    $("#txasalesdescription").val(salesdescription);
+                                    $("#sltsalesacount").val(incomeaccount);
+                                    $("#slttaxcodesales").val(taxcodesales);
+                                    $("#edtbarcode").val(barcode);
+                                    $("#txapurchasedescription").val(purchasedescription);
+                                    $("#sltcogsaccount").val(cogsaccount);
+                                    $("#slttaxcodepurchase").val(taxcodepurchase);
+                                    $("#edtbuyqty1cost").val(buyqty1cost);
 
-										setTimeout(function() {
-											$("#newProductModal").modal("show");
-										}, 500);
-									}
-								}
-								if (!added) {
-									sideBarService
-										.getOneProductdatavs1byname(productDataName)
-										.then(function(data) {
-											$(".fullScreenSpin").css("display", "none");
-											let lineItems = [];
-											let lineItemObj = {};
-											let currencySymbol = Currency;
-											let totalquantity = 0;
-											let productname =
-												data.tproduct[0].fields.ProductName || "";
-											let productcode =
-												data.tproduct[0].fields.PRODUCTCODE || "";
-											let productprintName =
-												data.tproduct[0].fields.ProductPrintName || "";
-											let assetaccount =
-												data.tproduct[0].fields.AssetAccount || "";
-											let buyqty1cost =
-												utilityService.modifynegativeCurrencyFormat(
-													data.tproduct[0].fields.BuyQty1Cost
-												) || 0;
-											let cogsaccount =
-												data.tproduct[0].fields.CogsAccount || "";
-											let taxcodepurchase =
-												data.tproduct[0].fields.TaxCodePurchase || "";
-											let purchasedescription =
-												data.tproduct[0].fields.PurchaseDescription || "";
-											let sellqty1price =
-												utilityService.modifynegativeCurrencyFormat(
-													data.tproduct[0].fields.SellQty1Price
-												) || 0;
-											let incomeaccount =
-												data.tproduct[0].fields.IncomeAccount || "";
-											let taxcodesales =
-												data.tproduct[0].fields.TaxCodeSales || "";
-											let salesdescription =
-												data.tproduct[0].fields.SalesDescription || "";
-											let active = data.tproduct[0].fields.Active;
-											let lockextrasell =
-												data.tproduct[0].fields.LockExtraSell || "";
-											let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
-											let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
-											let barcode = data.tproduct[0].fields.BARCODE || "";
-											$("#selectProductID")
-												.val(data.tproduct[0].fields.ID)
-												.trigger("change");
-											$("#add-product-title").text("Edit Product");
-											$("#edtproductname").val(productname);
-											$("#edtsellqty1price").val(sellqty1price);
-											$("#txasalesdescription").val(salesdescription);
-											$("#sltsalesacount").val(incomeaccount);
-											$("#slttaxcodesales").val(taxcodesales);
-											$("#edtbarcode").val(barcode);
-											$("#txapurchasedescription").val(purchasedescription);
-											$("#sltcogsaccount").val(cogsaccount);
-											$("#slttaxcodepurchase").val(taxcodepurchase);
-											$("#edtbuyqty1cost").val(buyqty1cost);
+                                    setTimeout(function() {
+                                        $("#newProductModal").modal("show");
+                                    }, 500);
+                                }
+                            }
+                            if (!added) {
+                                sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
+                                    $(".fullScreenSpin").css("display", "none");
+                                    let lineItems = [];
+                                    let lineItemObj = {};
+                                    let currencySymbol = Currency;
+                                    let totalquantity = 0;
+                                    let productname = data.tproduct[0].fields.ProductName || "";
+                                    let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
+                                    let productprintName = data.tproduct[0].fields.ProductPrintName || "";
+                                    let assetaccount = data.tproduct[0].fields.AssetAccount || "";
+                                    let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+                                    let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                                    let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || "";
+                                    let purchasedescription = data.tproduct[0].fields.PurchaseDescription || "";
+                                    let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+                                    let incomeaccount = data.tproduct[0].fields.IncomeAccount || "";
+                                    let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
+                                    let salesdescription = data.tproduct[0].fields.SalesDescription || "";
+                                    let active = data.tproduct[0].fields.Active;
+                                    let lockextrasell = data.tproduct[0].fields.LockExtraSell || "";
+                                    let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
+                                    let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
+                                    let barcode = data.tproduct[0].fields.BARCODE || "";
+                                    $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                                    $("#add-product-title").text("Edit Product");
+                                    $("#edtproductname").val(productname);
+                                    $("#edtsellqty1price").val(sellqty1price);
+                                    $("#txasalesdescription").val(salesdescription);
+                                    $("#sltsalesacount").val(incomeaccount);
+                                    $("#slttaxcodesales").val(taxcodesales);
+                                    $("#edtbarcode").val(barcode);
+                                    $("#txapurchasedescription").val(purchasedescription);
+                                    $("#sltcogsaccount").val(cogsaccount);
+                                    $("#slttaxcodepurchase").val(taxcodepurchase);
+                                    $("#edtbuyqty1cost").val(buyqty1cost);
 
-											setTimeout(function() {
-												$("#newProductModal").modal("show");
-											}, 500);
-										})
-										.catch(function(err) {
-											$(".fullScreenSpin").css("display", "none");
-										});
-								}
-							}
-						})
-						.catch(function(err) {
-							sideBarService
-								.getOneProductdatavs1byname(productDataName)
-								.then(function(data) {
-									$(".fullScreenSpin").css("display", "none");
-									let lineItems = [];
-									let lineItemObj = {};
-									let currencySymbol = Currency;
-									let totalquantity = 0;
-									let productname = data.tproduct[0].fields.ProductName || "";
-									let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
-									let productprintName =
-										data.tproduct[0].fields.ProductPrintName || "";
-									let assetaccount = data.tproduct[0].fields.AssetAccount || "";
-									let buyqty1cost =
-										utilityService.modifynegativeCurrencyFormat(
-											data.tproduct[0].fields.BuyQty1Cost
-										) || 0;
-									let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
-									let taxcodepurchase =
-										data.tproduct[0].fields.TaxCodePurchase || "";
-									let purchasedescription =
-										data.tproduct[0].fields.PurchaseDescription || "";
-									let sellqty1price =
-										utilityService.modifynegativeCurrencyFormat(
-											data.tproduct[0].fields.SellQty1Price
-										) || 0;
-									let incomeaccount =
-										data.tproduct[0].fields.IncomeAccount || "";
-									let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
-									let salesdescription =
-										data.tproduct[0].fields.SalesDescription || "";
-									let active = data.tproduct[0].fields.Active;
-									let lockextrasell =
-										data.tproduct[0].fields.LockExtraSell || "";
-									let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
-									let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
-									let barcode = data.tproduct[0].fields.BARCODE || "";
-									$("#selectProductID")
-										.val(data.tproduct[0].fields.ID)
-										.trigger("change");
-									$("#add-product-title").text("Edit Product");
-									$("#edtproductname").val(productname);
-									$("#edtsellqty1price").val(sellqty1price);
-									$("#txasalesdescription").val(salesdescription);
-									$("#sltsalesacount").val(incomeaccount);
-									$("#slttaxcodesales").val(taxcodesales);
-									$("#edtbarcode").val(barcode);
-									$("#txapurchasedescription").val(purchasedescription);
-									$("#sltcogsaccount").val(cogsaccount);
-									$("#slttaxcodepurchase").val(taxcodepurchase);
-									$("#edtbuyqty1cost").val(buyqty1cost);
+                                    setTimeout(function() {
+                                        $("#newProductModal").modal("show");
+                                    }, 500);
+                                }).catch(function(err) {
+                                    $(".fullScreenSpin").css("display", "none");
+                                });
+                            }
+                        }
+                    }).catch(function(err) {
+                        sideBarService.getOneProductdatavs1byname(productDataName).then(function(data) {
+                            $(".fullScreenSpin").css("display", "none");
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            let currencySymbol = Currency;
+                            let totalquantity = 0;
+                            let productname = data.tproduct[0].fields.ProductName || "";
+                            let productcode = data.tproduct[0].fields.PRODUCTCODE || "";
+                            let productprintName = data.tproduct[0].fields.ProductPrintName || "";
+                            let assetaccount = data.tproduct[0].fields.AssetAccount || "";
+                            let buyqty1cost = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.BuyQty1Cost) || 0;
+                            let cogsaccount = data.tproduct[0].fields.CogsAccount || "";
+                            let taxcodepurchase = data.tproduct[0].fields.TaxCodePurchase || "";
+                            let purchasedescription = data.tproduct[0].fields.PurchaseDescription || "";
+                            let sellqty1price = utilityService.modifynegativeCurrencyFormat(data.tproduct[0].fields.SellQty1Price) || 0;
+                            let incomeaccount = data.tproduct[0].fields.IncomeAccount || "";
+                            let taxcodesales = data.tproduct[0].fields.TaxCodeSales || "";
+                            let salesdescription = data.tproduct[0].fields.SalesDescription || "";
+                            let active = data.tproduct[0].fields.Active;
+                            let lockextrasell = data.tproduct[0].fields.LockExtraSell || "";
+                            let customfield1 = data.tproduct[0].fields.CUSTFLD1 || "";
+                            let customfield2 = data.tproduct[0].fields.CUSTFLD2 || "";
+                            let barcode = data.tproduct[0].fields.BARCODE || "";
+                            $("#selectProductID").val(data.tproduct[0].fields.ID).trigger("change");
+                            $("#add-product-title").text("Edit Product");
+                            $("#edtproductname").val(productname);
+                            $("#edtsellqty1price").val(sellqty1price);
+                            $("#txasalesdescription").val(salesdescription);
+                            $("#sltsalesacount").val(incomeaccount);
+                            $("#slttaxcodesales").val(taxcodesales);
+                            $("#edtbarcode").val(barcode);
+                            $("#txapurchasedescription").val(purchasedescription);
+                            $("#sltcogsaccount").val(cogsaccount);
+                            $("#slttaxcodepurchase").val(taxcodepurchase);
+                            $("#edtbuyqty1cost").val(buyqty1cost);
 
-									setTimeout(function() {
-										$("#newProductModal").modal("show");
-									}, 500);
-								})
-								.catch(function(err) {
-									$(".fullScreenSpin").css("display", "none");
-								});
-						});
+                            setTimeout(function() {
+                                $("#newProductModal").modal("show");
+                            }, 500);
+                        }).catch(function(err) {
+                            $(".fullScreenSpin").css("display", "none");
+                        });
+                    });
 
 					setTimeout(function() {
 						var begin_day_value = $("#event_begin_day").attr("value");
