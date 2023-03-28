@@ -26,6 +26,10 @@ Template.invoicelistBO.onCreated(function(){
 
     templateObject.getDataTableList = function(data){
         let salestatus = data.QuoteStatus || '';
+        let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.TotalAmount) || 0.00;
+        let totalAmount = utilityService.modifynegativeCurrencyFormat(data.TotalAmountInc) || 0.00;
+        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
         if(data.Deleted == true){
             salestatus = "Deleted";
         }else if(data.CustomerName == ''){
@@ -42,6 +46,13 @@ Template.invoicelistBO.onCreated(function(){
             moment(data.ETADate).format("DD/MM/YYYY") || data.ETADate,
             data.CustomerJob || '',
             data.BackOrder || 0,
+            totalAmountEx || 0.00,
+            0.00 || 0.00,
+            totalAmount || 0.00,
+            totalOutstanding || 0.00,
+            data.UOM || '',
+            data.SaleTerms || '',
+            data.ReportTo || '',
             data.PickMemo || '',
             salestatus || '',
         ];
@@ -58,8 +69,15 @@ Template.invoicelistBO.onCreated(function(){
         { index: 6, label: "ETA Date", class: "colETADate", active: true, display: true, width: "100" },
         { index: 7, label: "Customer Job", class: "colCustomerJob", active: true, display: true, width: "100" },
         { index: 8, label: "Qty", class: "colQty", active: true, display: true, width: "100" },
-        { index: 9, label: "Comments", class: "colComments", active: true, display: true, width: "200" },
-        { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+        { index: 9, label: "Amount (Ex)", class: "AmountEx", active: false, display: true, width: "100" },
+        { index: 10, label: "Tax", class: "Tax", active: false, display: true, width: "100" },
+        { index: 11, label: "Amount (Inc)", class: "AmountInc", active: false, display: true, width: "100" },
+        { index: 12, label: "Outstanding", class: "Outstanding", active: false, display: true, width: "100" },
+        { index: 13, label: "UOM", class: "UOM", active: false, display: true, width: "100" },
+        { index: 14, label: "Terms", class: "Terms", active: false, display: true, width: "100" },
+        { index: 15, label: "Rep", class: "Rep", active: false, display: true, width: "100" },
+        { index: 16, label: "Comments", class: "colComments", active: true, display: true, width: "200" },
+        { index: 17, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -1300,7 +1318,6 @@ Template.invoicelistBO.onRendered(function() {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
-    tableResize();
 
     templateObject.initPage = async () => {
         LoadingOverlay.show();
