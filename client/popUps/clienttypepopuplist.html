@@ -39,7 +39,22 @@
                               </div>
                           </div>
                         </div>
-                        {{> non_transactional_list tablename="tblClienttypeList"}}                        
+                        <!-- {{> non_transactional_list tablename="tblClienttypeList"}}               -->
+                        {{>datatablelist
+                            tablename="tblClienttypeList"
+                            apiName= apiFunction
+                            indexeddbname = 'TClientTypeList'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Client type List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tclienttypelist'
+                            exIndexDBName = 'tclienttype'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
                     </div>
                 </div>
             </div>
