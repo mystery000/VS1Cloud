@@ -140,6 +140,26 @@ const TransactionTypeData = {
       },
     ],
   },
+  stocktransfer: {
+    templates: [
+      {
+        name: "Stock Transfer",
+        title: "Stock Transfer",
+        key: 'stocktransfer',
+        active: true
+      },
+    ],
+  },
+  stockadjustment: {
+    templates: [
+      {
+        name: "Stock Adjustment",
+        title: "Stock Adjustment",
+        key: 'stockadjustment',
+        active: true
+      },
+    ],
+  }
 };
 
 Template.transaction_print_modal.onCreated(async function () {
@@ -158,17 +178,18 @@ Template.transaction_print_modal.onCreated(async function () {
     stopAppointmentSMSMessage:
       "Hi [Customer Name], This is [Employee Name] from [Company Name] just letting you know that we have finished doing the following service [Product/Service].",
   });
+  this.templates = new ReactiveVar([]);
+
 
   const getTemplates = async () => {
     const vs1Data = await getVS1Data("TTemplateSettings");
+
     if (vs1Data.length == 0) {
       const templateInfomation = await sideBarService.getTemplateInformation(
         initialBaseDataLoad,
         0
       );
-
       addVS1Data("TTemplateSettings", JSON.stringify(templateInfomation));
-
       const templates = TransactionTypeData[transactionType].templates
         .filter((item) => item.active)
         .map((template) => {
@@ -198,6 +219,14 @@ Template.transaction_print_modal.onCreated(async function () {
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
             .filter((item) => item.fields.SettingName == template.name)
+            .map((item) => ({
+              fields: {
+                SettingName: item.fields.SettingName,
+                Template: item.fields.Template,
+                Description: item.fields.Description === "" ? `Template ${item.fields.Template}` : item.fields.Description,
+              },
+              type: "TTemplateSettings",
+            }))
             .sort((a, b) => a.fields.Template - b.fields.Template);
 
           if (templateList.length === 0) {
@@ -221,7 +250,7 @@ Template.transaction_print_modal.onCreated(async function () {
   };
 
   const getSMSSettings = async () => {
-    
+
     const smsSettings = this.smsSettings.get()
 
     const smsServiceSettings = await smsService.getSMSSettings();
@@ -263,7 +292,7 @@ Template.transaction_print_modal.onCreated(async function () {
   }
 
   const templates = await getTemplates();
-  this.templates = new ReactiveVar(templates);
+  this.templates.set(templates)
   getSMSSettings();
 
   this.fnSendSMS = async function(isForced = false){
@@ -318,7 +347,6 @@ Template.transaction_print_modal.onCreated(async function () {
           phoneNumber,
           message,
           function (error, result) {
-            console.log(error, result)
             LoadingOverlay.hide();
             if (error || !result.success) {
               swal({
@@ -422,19 +450,19 @@ Template.transaction_print_modal.events({
   },
   "click #printModal .printConfirm": async function (event) {
     const checkedPrintOptions = Template.instance().findAll('.chooseTemplateBtn:checked');
-    if(checkedPrintOptions.length == 0){
-      swal({
-        title: 'Oooops....',
-        text: 'You must select one print option at least!',
-        type: 'error',
-        showCancelButton: false,
-        confirmButtonText: 'Cancel'
-      })
-      return;
-    }
+    // if(checkedPrintOptions.length == 0){
+    //   swal({
+    //     title: 'Oooops....',
+    //     text: 'You must select one print option at least!',
+    //     type: 'error',
+    //     showCancelButton: false,
+    //     confirmButtonText: 'Cancel'
+    //   })
+    //   return;
+    // }
     const templateObject = Template.instance();
     templateObject.fnSendSMS()
-    
+
   },
   "click #printModal .chooseTemplateBtn": function (event, key, param) {
     const dataKey = $(event.target).attr("data-id");

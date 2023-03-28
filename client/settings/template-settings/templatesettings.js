@@ -20,15 +20,19 @@ import '../../vs1_templates/print_templates/preview_header1.html';
 import '../../vs1_templates/print_templates/preview_header2.html';
 import '../../vs1_templates/print_templates/preview_header3.html';
 import LoadingOverlay from '../../LoadingOverlay'
+import moment from 'moment';
 
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
 var template_list = [
   "Bills",
+  "Cheques",
   "Credits",
   "Customer Payments",
   "Customer Statements",
+  "Delivery Docket",
+  "Deposits",
   "Invoices",
   "Invoice Back Orders",
   "Purchase Orders",
@@ -37,11 +41,10 @@ var template_list = [
   "Sales Orders",
   "Supplier Payments",
   "Statements",
-  "Delivery Docket",
   "Journal Entry",
-  "Deposits",
-  "Cheques",
-];
+  "Stock Transfer",
+  "Stock Adjustment"
+].sort();
 var noHasTotals = [
   "Customer Payment",
   "Customer Statement",
@@ -50,6 +53,8 @@ var noHasTotals = [
   "Delivery Docket",
   "Journal Entry",
   "Deposit",
+  "Stock Transfer",
+  "Stock Adjustment"
 ];
 
 var PrintDisplaySettingData = {
@@ -71,7 +76,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Credits": [
@@ -90,7 +95,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Customer Payments": [
@@ -109,7 +114,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Customer Statements": [
@@ -128,7 +133,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Invoices": [
@@ -147,7 +152,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Invoice Back Orders": [
@@ -166,7 +171,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Purchase Orders": [
@@ -185,7 +190,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Quotes": [
@@ -204,7 +209,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Refunds": [
@@ -223,7 +228,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Sales Orders": [
@@ -242,7 +247,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Supplier Payments": [
@@ -261,7 +266,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Statements": [
@@ -280,7 +285,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Delivery Docket": [
@@ -299,7 +304,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Journal Entry": [
@@ -318,7 +323,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Deposits": [
@@ -337,7 +342,7 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
     {
       "Cheques": [
@@ -356,8 +361,46 @@ var PrintDisplaySettingData = {
           "columns": [true,true,true,true,true,true,true,true,true,],
           "filter": 0
         },
-      ] 
+      ]
     },
+    {
+      "Stock Transfer" : [
+        {
+          'template_type' : 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ]
+    },
+    {
+      "Stock Adjustment" : [
+        {
+          'template_type' : 1,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 2,
+          "columns": [true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+        {
+          "template_type": 3,
+          "columns": [true,true,true,true,true,true,true,true,true,],
+          "filter": 0
+        },
+      ]
+    }
   ]
 };
 
@@ -385,34 +428,7 @@ Template.templatesettings.onRendered(function () {
 
   let templateObject = Template.instance();
 
-  $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
-    title = $(this).parent().parent().attr("data-id");
-    number = $(this).parent().parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-    templateObject.generateInvoiceData(title, number);
-    $(".modal-title#templatePreviewLabel").css("display", "none");
-    $("#templatePreviewModal #templatePreviewInput").css("display", "block");
-    $("#editPrintMore").css("display", "block");
-    $('#templatePreviewModal .btnCopyReport').css("display", "block");
-    $('#templatePreviewModal .btnImportReport').css("display", "block");
-    $("#templatePreviewModal #templatePreviewInput").val(
-      $('input[name="' + title + "_" + number + '"]').val()
-    );
-    // localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
-    templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
-  });
-  $(document).on("click", ".templateItem #btnPreviewTemplate", function (e) {
-    title = $(this).parent().parent().attr("data-id");
-    number = $(this).parent().parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-    templateObject.generateInvoiceData(title, number);
-    $(".modal-title#templatePreviewLabel").css("display", "block");
-    $("#templatePreviewModal #templatePreviewInput").css("display", "none");
-    $('#templatePreviewModal .btnCopyReport').css("display", "none");
-    $('#templatePreviewModal .btnImportReport').css("display", "none");
-    $("#editPrintMore").css("display", "none");
-    $("#templatePreviewModal .modal-title").text(
-      $('input[name="' + title + "_" + number + '"]').val()
-    );
-  });
+
 
   templateObject.setPrintTemplateDetail = function (input_value) {
     addVS1Data("TPrintTemplateDetail", JSON.stringify(input_value));
@@ -825,7 +841,6 @@ Template.templatesettings.onRendered(function () {
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
-
           for (let i = 0; i < data.ttemplatesettings.length; i++) {
             if (data.ttemplatesettings[i].fields.SettingName == "bill") {
               if (data.ttemplatesettings[i].fields.Template == 1) {
@@ -1856,43 +1871,35 @@ Template.templatesettings.onRendered(function () {
 
   ];
 
+  $("#templatePreviewModal").on("hide.bs.modal", function(){
+    if(table) {
+      table.destroy()
+    }
+  })
+
   function loadDataTable(num) {
     // Adjust any columnDef widths set by the user
+    columnDefs.map((item) => {
+      item.className = item.title
+      if(item.className == "Bin Location") item.className = `${item.className} hiddenColumn`
+    });
+
     setUserColumnsDefWidths();
-    
+
     table = $('#' + tableId + num).DataTable({
       data: dataSet,
       destroy: true,
-      autoWidth: true,
+      autoWidth: false,
       deferRender: true,
       dom: 't',
-      // scrollY: 300,
-      // scrollX: true,
-      // scrollCollapse: true,
-      // scroller: true,
-      colReorder: true,
-      // columnDefs: columnDefs,
+      colReorder: false,
+      columnDefs: columnDefs,
       "order": [[1, "asc"]],
       initComplete: function (settings) {
 
-        //Add JQueryUI resizable functionality to each th in the ScrollHead table
-
-        // $('#' + tableId + num + '_wrapper .dataTables_scrollHead thead th').resizable({
-
-        //   handles: "e",
-
-        //   alsoResize: '#' + tableId + num + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
-
-        //   stop: function () {
-
-        //     saveColumnSettings();
-
-        //     loadDataTable(num);
-        //   }
-        // });
       },
     });
-    // table.colReorder.move( 0, 1 );
+
     tableResize();
   }
 
@@ -1906,7 +1913,7 @@ Template.templatesettings.onRendered(function () {
 
     if (userColumnDefs.length === 0 ) return;
 
-    columnDefs.forEach( function(columnDef) {
+    columnDefs = columnDefs.map( function(columnDef) {
 
       // Check if there is a width specified for this column
       userColumnDef = userColumnDefs.find( function(column) {
@@ -1920,6 +1927,8 @@ Template.templatesettings.onRendered(function () {
 
       }
 
+      return columnDef;
+
     });
 
   }
@@ -1928,7 +1937,7 @@ Template.templatesettings.onRendered(function () {
   function saveColumnSettings() {
 
     var userColumnDefs = JSON.parse(localStorage.getItem(tableId)) || [];
-    
+
     var width, header, existingSetting;
 
     table.columns().every( function ( targets ) {
@@ -2437,11 +2446,14 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "false";
     }
 
-    object_invoce[0]["fields"][abnString] = ['', 'left', true]
-    object_invoce[0]["fields"][repString] = ['', 'left', true]
-    object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
-    object_invoce[0]["fields"][dateString] = ['', 'left', true]
-    object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
+    // object_invoce[0]["fields"][abnString] = ['', 'left', true]
+    // object_invoce[0]["fields"][repString] = ['', 'left', true]
+    // object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
+    // object_invoce[0]["fields"][dateString] = ['', 'left', true]
+    // object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
+
+    if(object_invoce[0]['fields']["Bin Location"])
+      object_invoce[0]['fields']["Bin Location"] = ['15', 'left', false];
 
     await templateObject.print_displayfields.set(object_invoce[0]['fields']);
   }
@@ -3004,7 +3016,7 @@ Template.templatesettings.onRendered(function () {
         customfieldlabel1: "customfield1",
         customfieldlabel2: "customfield2",
         customfieldlabel3: "customfield3",
-        showFX: "AUD",
+        showFX: "AUD",  
         comment: "Customer Payment Template Preview",
       };
     }
@@ -3233,6 +3245,7 @@ Template.templatesettings.onRendered(function () {
       "Fanta Grape Can",
       "Fanta Grape Can SODA",
       "1",
+      "1",
       "$0.00",
       "$0.00",
       "$0.00",
@@ -3241,6 +3254,7 @@ Template.templatesettings.onRendered(function () {
     array_data.push([
       "Fanta Grape Can",
       "Fanta Grape Can SODA",
+      "1",
       "1",
       "$0.00",
       "$0.00",
@@ -3269,12 +3283,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3317,12 +3332,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3365,12 +3381,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3417,6 +3434,7 @@ Template.templatesettings.onRendered(function () {
       "Fanta Grape Can",
       "Fanta Grape Can SODA",
       "1",
+      "1",
       "$0.00",
       "$0.00",
       "$0.00",
@@ -3425,6 +3443,7 @@ Template.templatesettings.onRendered(function () {
     array_data.push([
       "Fanta Grape Can",
       "Fanta Grape Can SODA",
+      "1",
       "1",
       "$0.00",
       "$0.00",
@@ -3455,12 +3474,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3503,12 +3523,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3551,12 +3572,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3601,6 +3623,7 @@ Template.templatesettings.onRendered(function () {
     array_data.push([
       "ABC Product",
       "ABC Product",
+      "1",
       "5",
       "$5.00",
       "$0.00",
@@ -3629,12 +3652,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>ABC Building Company</p>",
         supplier_addr: "Dallas\nTexas 8877\nUnited States",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3678,12 +3702,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>ABC Building Company</p>",
         supplier_addr: "Dallas\nTexas 8877\nUnited States",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3726,12 +3751,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>ABC Building Company</p>",
         supplier_addr: "Dallas\nTexas 8877\nUnited States",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3776,6 +3802,7 @@ Template.templatesettings.onRendered(function () {
       "Fanta Grape Can",
       "Fanta Grape Can SODA",
       "1",
+      "1",
       "$0.00",
       "$0.00",
       "$0.00",
@@ -3805,12 +3832,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>Accenture Software Dev</p>",
         supplier_addr: "Building 3\nWaterfall Corporate\nSouth Africa",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3852,12 +3880,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>Accenture Software Dev</p>",
         supplier_addr: "Building 3\nWaterfall Corporate\nSouth Africa",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3899,12 +3928,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>Accenture Software Dev</p>",
         supplier_addr: "Building 3\nWaterfall Corporate\nSouth Africa",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3949,6 +3979,7 @@ Template.templatesettings.onRendered(function () {
       "Bank Stickers",
       "Bank Stickers",
       "1",
+      "1",
       "$50.00",
       "$0.00",
       "-$50.00",
@@ -3977,12 +4008,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>Accenture Software Dev</p>",
         supplier_addr: "Building 3\nWaterfall Corporate\nSouth Africa",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "-$50.00",
         gst: "$0.00",
@@ -4025,12 +4057,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>Accenture Software Dev</p>",
         supplier_addr: "Building 3\nWaterfall Corporate\nSouth Africa",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "-$50.00",
         gst: "$0.00",
@@ -4073,12 +4106,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "<p>Accenture Software Dev</p>",
         supplier_addr: "Building 3\nWaterfall Corporate\nSouth Africa",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "-$50.00",
         gst: "$0.00",
@@ -4122,6 +4156,7 @@ Template.templatesettings.onRendered(function () {
       "Test",
       "Test description",
       "2",
+      "2",
       "$0",
       "$0.00",
       "$0.00",
@@ -4151,12 +4186,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -4199,12 +4235,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -4247,12 +4284,13 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["25", "left"],
-          Description: ["30", "left"],
+          "Product Name": ["20", "left"],
+          Description: ["25", "left"],
+          "Bin Location": ["15", "left"],
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["15", "left"],
+          Amount: ["10", "left"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -4650,9 +4688,9 @@ Template.templatesettings.onRendered(function () {
   function showDeliveryDocket(template_title, number) {
     object_invoce = [];
     var array_data = [];
-    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1"]);
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
 
-    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1"]);
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
     let item_invoices = "";
     if (number == 1) {
       item_invoices = {
@@ -4676,8 +4714,9 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["40", "left"],
-          Description: ["40", "left"],
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
         subtotal: "",
@@ -4721,8 +4760,9 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["40", "left"],
-          Description: ["40", "left"],
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
         subtotal: "",
@@ -4766,8 +4806,9 @@ Template.templatesettings.onRendered(function () {
         supplier_name: "Amar",
         supplier_addr: "Gwalior\nMadhya Pradesh",
         fields: {
-          "Product Name": ["40", "left"],
-          Description: ["40", "left"],
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
         subtotal: "",
@@ -5313,6 +5354,331 @@ Template.templatesettings.onRendered(function () {
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
 
+  function showStockTransfer(template_title, number) {
+    object_invoce = [];
+    var array_data = [];
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+    let item_invoices = "";
+    if (number == 1) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Transfer",
+        value: "751",
+        date: moment().format("DD/MM/YYYY"),
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: moment().format("DD/MM/YYYY"),
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "NA",
+        customfield2: "NA",
+        customfield3: "NA",
+        customfieldlabel1: "NA",
+        customfieldlabel2: "NA",
+        customfieldlabel3: "NA",
+        applied: "",
+        showFX: "",
+        comment: "Stock Transfer Template Preview",
+      };
+    } else if (number == 2) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Transfer",
+        value: "751",
+        date: moment().format("DD/MM/YYYY"),
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: moment().format("DD/MM/YYYY"),
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Transfer Template Preview",
+      };
+    } else {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Transfer",
+        value: "751",
+        date: moment().format("DD/MM/YYYY"),
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: moment().format("DD/MM/YYYY"),
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Transfer Template Preview",
+      };
+    }
+
+    object_invoce.push(item_invoices);
+
+    $("#templatePreviewModal .field_payment").show();
+    $("#templatePreviewModal .field_amount").show();
+
+    if (number == 1) {
+      updateTemplate1(object_invoce);
+    } else if (number == 2) {
+      updateTemplate2(object_invoce);
+    } else {
+      updateTemplate3(object_invoce);
+    }
+
+    saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
+  }
+  function showStockAdjustment(template_title, number) {
+    object_invoce = [];
+    var array_data = [];
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+
+    array_data.push(["Fanta Grape Can", "Fanta Grape Can SODA", "1", "1"]);
+    let item_invoices = "";
+    if (number == 1) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Adjustment",
+        value: "751",
+        date: "25/05/2022",
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: "07/07/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "NA",
+        customfield2: "NA",
+        customfield3: "NA",
+        customfieldlabel1: "NA",
+        customfieldlabel2: "NA",
+        customfieldlabel3: "NA",
+        applied: "",
+        showFX: "",
+        comment: "Stock Adjustment Template Preview",
+      };
+    } else if (number == 2) {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Adjustment",
+        value: "751",
+        date: "25/05/2022",
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: "07/07/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Adjustment Template Preview",
+      };
+    } else {
+      item_invoices = {
+        o_url: "vs1cloud.com",
+        o_name: "Sample Company",
+        o_address: "123 street",
+        o_city: "Los Angeles",
+        o_state: "Califonia 12345",
+        o_reg: "",
+        o_abn: "56789051234",
+        o_phone: "Phone : 25151944",
+        title: "Stock Adjustment",
+        value: "751",
+        date: "25/05/2022",
+        invoicenumber: "751",
+        refnumber: "1234",
+        pqnumber: "1244",
+        duedate: "07/07/2022",
+        paylink: "Pay Now",
+        supplier_type: "Customer",
+        supplier_name: "Amar",
+        supplier_addr: "Gwalior\nMadhya Pradesh",
+        fields: {
+          "Product Name": ["30", "left"],
+          Description: ["30", "left"],
+          "Bin Location": ["20", "left"],
+          Qty: ["20", "left"],
+        },
+        subtotal: "",
+        gst: "",
+        total: "",
+        paid_amount: "",
+        bal_due: "",
+        bsb: "",
+        account: "",
+        swift: "",
+        data: array_data,
+        customfield1: "Custom Field 1 Data",
+        customfield2: "Custom Field 2 Data",
+        customfield3: "Custom Field 3 Data",
+        customfieldlabel1: "Custom Field 1",
+        customfieldlabel2: "Custom Field 2",
+        customfieldlabel3: "Custom Field 3",
+        applied: "",
+        showFX: "",
+        comment: "Stock Adjustment Template Preview",
+      };
+    }
+
+    object_invoce.push(item_invoices);
+
+    $("#templatePreviewModal .field_payment").show();
+    $("#templatePreviewModal .field_amount").show();
+
+    if (number == 1) {
+      updateTemplate1(object_invoce);
+    } else if (number == 2) {
+      updateTemplate2(object_invoce);
+    } else {
+      updateTemplate3(object_invoce);
+    }
+
+    saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
+  }
+
   templateObject.generateInvoiceData = function (template_title, number) {
     object_invoce = [];
     switch (template_title) {
@@ -5379,6 +5745,12 @@ Template.templatesettings.onRendered(function () {
       case "Cheques":
         showChequeData(template_title, number);
         break;
+      case "Stock Transfer":
+        showStockTransfer(template_title, number);
+        break;
+      case 'Stock Adjustment':
+        showStockAdjustment(template_title, number);
+      default: break;
     }
   };
 });
@@ -5471,6 +5843,8 @@ Template.templatesettings.events({
       var journal_entry = $('input[name="Journal Entry"]:checked').val();
       var deposits = $('input[name="Deposits"]:checked').val();
       var cheques = $('input[name="Cheques"]:checked').val();
+      const stockTransfer = $('input[name="stock_transfer"]:checked').val();
+      const stockAdjustment = $('input[name="stock_adjustment"]:checked').val();
       $(".fullScreenSpin").css("display", "inline-block");
       let emid = localStorage.getItem("mySessionEmployeeLoggedID");
       let count = 0;
@@ -9497,6 +9871,529 @@ Template.templatesettings.events({
             })
             .catch(function (err) {});
         });
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Transfer", emid, 1)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              GlobalRef: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_1"]').val(),
+              Template: "1",
+              Active: stockTransfer == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_1"]').val(),
+              Template: "1",
+              Active: stockTransfer == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Transfer", emid, 2)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              GlobalRef: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_2"]').val(),
+              Template: "2",
+              Active: stockTransfer == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_2"]').val(),
+              Template: "2",
+              Active: stockTransfer == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Transfer", emid, 3)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              GlobalRef: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_3"]').val(),
+              Template: "3",
+              Active: stockTransfer == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Transfer",
+              Description: $('input[name="Stock Transfer_3"]').val(),
+              Template: "3",
+              Active: stockTransfer == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+        sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 1)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_1"]').val(),
+              Template: "1",
+              Active: stockAdjustment == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_1"]').val(),
+              Template: "1",
+              Active: stockAdjustment == 1,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 2)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_2"]').val(),
+              Template: "2",
+              Active: stockAdjustment == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_2"]').val(),
+              Template: "2",
+              Active: stockAdjustment == 2,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
+
+
+      sideBarService
+        .getTemplateNameandEmployeId("Stock Adjustment", emid, 3)
+        .then(function (data) {
+          $(".fullScreenSpin").css("display", "none");
+          templateid = data.ttemplatesettings;
+          var id = templateid[0].fields.ID;
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              ID: parseInt(id),
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              GlobalRef: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_3"]').val(),
+              Template: "3",
+              Active: stockAdjustment == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {
+              $(".fullScreenSpin").css("display", "none");
+            });
+        })
+        .catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+          objDetails = {
+            type: "TTemplateSettings",
+            fields: {
+              EmployeeID: localStorage.getItem("mySessionEmployeeLoggedID"),
+              SettingName: "Stock Adjustment",
+              Description: $('input[name="Stock Adjustment_3"]').val(),
+              Template: "3",
+              Active: stockAdjustment == 3,
+            },
+          };
+
+          sideBarService
+            .saveTemplateSetting(objDetails)
+            .then(function (objDetails) {
+              sideBarService
+                .getTemplateInformation(initialBaseDataLoad, 0)
+                .then(function (data) {
+                  addVS1Data("TTemplateSettings", JSON.stringify(data));
+                  count++;
+                  if (count >= 48) {
+                    $(".fullScreenSpin").css("display", "none");
+                    swal({
+                      title: "Success",
+                      text: "Template Setting Saved Successfully.",
+                      type: "success",
+                      showCancelButton: false,
+                      confirmButtonText: "Done",
+                    }).then((result) => {
+                      if (result.value) {
+                      } else if (result.dismiss === "cancel") {
+                      }
+                    });
+                  }
+                });
+            })
+            .catch(function (err) {});
+        });
     }, delayTimeAfterSound);
   },
 
@@ -9546,7 +10443,37 @@ Template.templatesettings.events({
 
   "click .resetPrintTable": function() {
 
-  }
+  },
+  "click .btnPreviewTemplate" : function (event) {
+    const title = $(event.target).parent().parent().data("id");
+    const number = $(event.target).parent().parent().data("template-id");
+    const templateObject = Template.instance()
+    templateObject.generateInvoiceData(title, number);
+    $(".modal-title#templatePreviewLabel").css("display", "block");
+    $("#templatePreviewModal #templatePreviewInput").css("display", "none");
+    $('#templatePreviewModal .btnCopyReport').css("display", "none");
+    $('#templatePreviewModal .btnImportReport').css("display", "none");
+    $("#editPrintMore").css("display", "none");
+    $("#templatePreviewModal .modal-title").text(
+      $('input[name="' + title + "_" + number + '"]').val()
+    );
+  },
+
+  "click .btnEditTemplate": function(event) {
+    const title = $(event.target).parent().parent().data("id");
+    const number = $(event.target).parent().parent().data("template-id");
+    const templateObject = Template.instance()
+    templateObject.generateInvoiceData(title, number);
+    $(".modal-title#templatePreviewLabel").css("display", "none");
+    $("#templatePreviewModal #templatePreviewInput").css("display", "block");
+    $("#editPrintMore").css("display", "block");
+    $('#templatePreviewModal .btnCopyReport').css("display", "block");
+    $('#templatePreviewModal .btnImportReport').css("display", "block");
+    $("#templatePreviewModal #templatePreviewInput").val(
+      $('input[name="' + title + "_" + number + '"]').val()
+    );
+    templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
+  },
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;

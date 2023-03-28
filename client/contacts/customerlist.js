@@ -20,6 +20,76 @@ Template.customerlist.onCreated(function(){
     templateObject.setupFinished = new ReactiveVar();
 
     templateObject.transactiondatatablerecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let mobile = contactService.changeMobileFormat(data.Mobile);
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance)|| 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit)|| 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SOBalance)|| 0.00;
+        let dataList = [
+            data.ClientID || '',
+            data.Company || '-',
+            data.JobName || '',
+            data.Phone || '',
+            mobile || '',
+            arBalance || 0.00,
+            creditBalance || 0.00,
+            balance || 0.00,
+            creditLimit || 0.00,
+            salesOrderBalance || 0.00,
+            data.Street || '',
+            data.Street2 || data.Suburb || '',
+            data.State || '',
+            data.Postcode || '',
+            data.Country || '',
+            data.Email || '',
+            data.AccountNo || '',
+            data.ClientTypeName || 'Default',
+            data.Discount || 0,
+            data.TermsName || loggedTermsSales || 'COD',
+            data.FirstName || '',
+            data.LastName || '',
+            data.TaxCodeName || 'E',
+            data.ClientNo || '',
+            data.JobTitle || '',
+            data.Notes || '',
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "40" },
+        { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "60" },
+        { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "60" },
+        { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "60" },
+        { index: 4, label: "Mobile", class: "colMobile", active: false, display: true, width: "60" },
+        { index: 5, label: "AR Balance", class: "colARBalance", active: true, display: true, width: "60" },
+        { index: 6, label: "Credit Balance", class: "colCreditBalance", active: true, display: true, width: "60" },
+        { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "60" },
+        { index: 8, label: "Credit Limit", class: "colCreditLimit", active: true, display: true, width: "60" },
+        { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "60" },
+        { index: 10, label: "Street Address", class: "colStreetAddress", active: false, display: true, width: "60" },
+        { index: 11, label: "City/Suburb", class: "colSuburb", active: true, display: true, width: "60" },
+        { index: 12, label: "State", class: "colState", active: false, display: true, width: "60" },
+        { index: 13, label: "Zip Code", class: "colZipCode", active: false, display: true, width: "60" },
+        { index: 14, label: "Country", class: "colCountry", active: true, display: true, width: "60" },
+        { index: 15, label: "Email", class: "colEmail", active: false, display: true, width: "60" },
+        { index: 16, label: "Account No", class: "colAccountNo", active: false, display: true, width: "60" },
+        { index: 17, label: "Customer Type", class: "colCustomerType", active: false, display: true, width: "60" },
+        { index: 18, label: "Discount", class: "colCustomerDiscount", active: false, display: true, width: "60" },
+        { index: 19, label: "Term Name", class: "colCustomerTermName", active: false, display: true, width: "60" },
+        { index: 20, label: "First Name", class: "colCustomerFirstName", active: false, display: true, width: "60" },
+        { index: 21, label: "Last Name", class: "colCustomerLastName", active: false, display: true, width: "60" },
+        { index: 22, label: "Tax Code", class: "colCustomerTaxCode", active: false, display: true, width: "60" },
+        { index: 23, label: "Custom Field 1", class: "colClientNo", active: false, display: true, width: "60" },
+        { index: 24, label: "Custom Field 2", class: "colJobTitle", active: false, display: true, width: "60" },
+        { index: 25, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
+        { index: 26, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.customerlist.onRendered(function() {
@@ -314,11 +384,11 @@ Template.customerlist.onRendered(function() {
 
     }
 
-    templateObject.getCustomerList();
+    //templateObject.getCustomerList();
 
     $('#tblCustomerlist tbody').on( 'click', 'tr', function () {
-        var listData = $(this).closest('tr').attr('id');
-        var transactiontype = $(this).closest('tr').attr('isjob');
+        var listData = $(this).closest('tr').find('.colCustomerID').text();
+        var transactiontype = $(this).closest('tr').find('.colJob').text();
         if(listData){
             if(transactiontype != ""){
                 FlowRouter.go('/customerscard?jobid=' + listData);
@@ -342,25 +412,25 @@ Template.customerlist.events({
         $('#edtCustomerCompany').focus();
       }, 1000);
   },
-  'click .chkDatatable' : function(event){
-      var columns = $('#tblCustomerlist th');
-      let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-      $.each(columns, function(i,v) {
-          let className = v.classList;
-          let replaceClass = className[1];
-
-          if(v.innerText == columnDataValue){
-              if($(event.target).is(':checked')){
-                  $("."+replaceClass+"").css('display','table-cell');
-                  $("."+replaceClass+"").css('padding','.75rem');
-                  $("."+replaceClass+"").css('vertical-align','top');
-              }else{
-                  $("."+replaceClass+"").css('display','none');
-              }
-          }
-      });
-  },
+  // 'click .chkDatatable' : function(event){
+  //     var columns = $('#tblCustomerlist th');
+  //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+  //
+  //     $.each(columns, function(i,v) {
+  //         let className = v.classList;
+  //         let replaceClass = className[1];
+  //
+  //         if(v.innerText == columnDataValue){
+  //             if($(event.target).is(':checked')){
+  //                 $("."+replaceClass+"").css('display','table-cell');
+  //                 $("."+replaceClass+"").css('padding','.75rem');
+  //                 $("."+replaceClass+"").css('vertical-align','top');
+  //             }else{
+  //                 $("."+replaceClass+"").css('display','none');
+  //             }
+  //         }
+  //     });
+  // },
   'click .btnCloseCustomerPOPList': function (event) {
       setTimeout(function () {
         $('#tblCustomerlist_filter .form-control-sm').val('');
@@ -587,62 +657,62 @@ Template.customerlist.events({
           });
       }
   },
-  'blur .divcolumn' : function(event){
-      let columData = $(event.target).text();
-
-      let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-      var datable = $('#tblCustomerlist').DataTable();
-      var title = datable.column( columnDatanIndex ).header();
-      $(title).html(columData);
-
-  },
-  'change .rngRange' : function(event){
-      let range = $(event.target).val();
-      $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
-      let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-      let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-      var datable = $('#tblCustomerlist th');
-      $.each(datable, function(i,v) {
-          if(v.innerText == columnDataValue){
-              let className = v.className;
-              let replaceClass = className.replace(/ /g, ".");
-              $("."+replaceClass+"").css('width',range+'px');
-
-          }
-      });
-
-  },
-  'click .btnOpenSettings' : function(event){
-      let templateObject = Template.instance();
-      var columns = $('#tblCustomerlist th');
-
-      const tableHeaderList = [];
-      let sTible = "";
-      let sWidth = "";
-      let sIndex = "";
-      let sVisible = "";
-      let columVisible = false;
-      let sClass = "";
-      $.each(columns, function(i,v) {
-          if(v.hidden == false){
-              columVisible =  true;
-          }
-          if((v.className.includes("hiddenColumn"))){
-              columVisible = false;
-          }
-          sWidth = v.style.width.replace('px', "");
-          let datatablerecordObj = {
-              sTitle: v.innerText || '',
-              sWidth: sWidth || '',
-              sIndex: v.cellIndex || 0,
-              sVisible: columVisible || false,
-              sClass: v.className || ''
-          };
-          tableHeaderList.push(datatablerecordObj);
-      });
-      templateObject.tableheaderrecords.set(tableHeaderList);
-  },
+  // 'blur .divcolumn' : function(event){
+  //     let columData = $(event.target).text();
+  //
+  //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+  //     var datable = $('#tblCustomerlist').DataTable();
+  //     var title = datable.column( columnDatanIndex ).header();
+  //     $(title).html(columData);
+  //
+  // },
+  // 'change .rngRange' : function(event){
+  //     let range = $(event.target).val();
+  //     $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
+  //
+  //     let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+  //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+  //     var datable = $('#tblCustomerlist th');
+  //     $.each(datable, function(i,v) {
+  //         if(v.innerText == columnDataValue){
+  //             let className = v.className;
+  //             let replaceClass = className.replace(/ /g, ".");
+  //             $("."+replaceClass+"").css('width',range+'px');
+  //
+  //         }
+  //     });
+  //
+  // },
+  // 'click .btnOpenSettings' : function(event){
+  //     let templateObject = Template.instance();
+  //     var columns = $('#tblCustomerlist th');
+  //
+  //     const tableHeaderList = [];
+  //     let sTible = "";
+  //     let sWidth = "";
+  //     let sIndex = "";
+  //     let sVisible = "";
+  //     let columVisible = false;
+  //     let sClass = "";
+  //     $.each(columns, function(i,v) {
+  //         if(v.hidden == false){
+  //             columVisible =  true;
+  //         }
+  //         if((v.className.includes("hiddenColumn"))){
+  //             columVisible = false;
+  //         }
+  //         sWidth = v.style.width.replace('px', "");
+  //         let datatablerecordObj = {
+  //             sTitle: v.innerText || '',
+  //             sWidth: sWidth || '',
+  //             sIndex: v.cellIndex || 0,
+  //             sVisible: columVisible || false,
+  //             sClass: v.className || ''
+  //         };
+  //         tableHeaderList.push(datatablerecordObj);
+  //     });
+  //     templateObject.tableheaderrecords.set(tableHeaderList);
+  // },
   'click .exportbtn': function () {
       $('.fullScreenSpin').css('display','inline-block');
       jQuery('#tblCustomerlist_wrapper .dt-buttons .btntabletocsv').click();
@@ -774,7 +844,7 @@ Template.customerlist.events({
               var result = {};
               workbook.SheetNames.forEach(function (sheetName) {
                   var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
-                  var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                  var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                   templateObj.selectedFile.set(sCSV);
 
                   if (roa.length) result[sheetName] = roa;
@@ -934,5 +1004,40 @@ Template.customerlist.helpers({
     getSkippedSteps() {
         let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
         return setupUrl[1];
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTCustomerList;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getNewCustomerByNameOrID;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['limitCount', 'limitFrom'];
+    },
 });

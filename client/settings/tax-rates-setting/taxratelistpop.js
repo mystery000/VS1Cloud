@@ -12,12 +12,33 @@ import '../../lib/global/indexdbstorage.js';
 import { Template } from 'meteor/templating';
 import './taxratelistpop.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let taxRateService = new TaxRateService();
 let sideBarService = new SideBarService();
 
 Template.taxratelistpop.onCreated(function () {
+    templateObject = Template.instance();
+    templateObject.tableheaderrecords = new ReactiveVar([]);
 
+    templateObject.getDataTableList = function(data) {
+        let taxRate = (data.Rate * 100).toFixed(2);
+        var dataList = [
+            data.Id || '',
+            data.CodeName || '',
+            data.Description || '-',
+            taxRate || 0,
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        {index: 0, label: "ID", class: "colID", width: "50", active: true, display: true},
+        {index: 1, label: "Name", class: "colName taxName", width: "80", active: true, display: true},
+        {index: 2, label: "Description", class: "colDescription", width: "", active: true, display: true},
+        {index: 3, label: "Rate", class: "colRate taxRate", width: "100", active: true, display: true},
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.taxratelistpop.onRendered(function () {
@@ -35,7 +56,7 @@ Template.taxratelistpop.events({
         var splashArrayTaxRateList = new Array();
         const dataTableList = [];
         const tableHeaderList = [];
-        
+
         let dataSearchName = $('#tblTaxRate_filter input').val();
         var currentLoc = FlowRouter.current().route.path;
         if (dataSearchName.replace(/\s/g, '') != '') {
@@ -135,7 +156,43 @@ Template.taxratelistpop.events({
 });
 
 Template.taxratelistpop.helpers({
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getTaxRateVS1;
+    },
 
+    searchAPI: function() {
+        return sideBarService.getTaxRateVS1ByName;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return [];
+    },
 });
 
 Template.registerHelper('equals', function (a, b) {

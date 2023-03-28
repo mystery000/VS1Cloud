@@ -1,0 +1,386 @@
+<template name="newstatementrule">
+    <div class="container-fluid">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div class="row mb-4" style="padding: 16px;">
+            <div class="col-12 col-md-4">
+                <h2 class="text-dark mb-0">New Statement Rule
+                    <a role="button" data-toggle="modal" href="#helpViewModal" style="font-size: 20px;">Help <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+                </h2>
+            </div>
+            <div class="col-12 col-md-4">{{> loggedcompanyoverview}}</div>
+            <!-- Start Help View Modal -->
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            <p class="text-center text-muted"><button class="btn btn-primary" type="button">Employ Advisor</button></p>
+                            <p class="text-center text-muted" style="margin: 0;">
+                                <a href="https://vs1forum.com/ucp.php?mode=register&cloudusername={{loggedCompany}}" target="_blank" class="btn btn-primary">
+                                Go To Forum
+                                </a>
+                            </p>
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+                <div class="modal-dialog" role="document" style="max-width: 670px !important;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="title-header">Bank Rule List</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                                <source src="https://erphelpes.com/vs1videos/newreconciliationvideo.mp4" type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Help View Modal -->
+        </div>
+        <style>
+            .mb-6 {
+                margin-bottom: 3rem;
+            }
+            .hiddenColumn{
+                display:none;
+            }
+            .highlightInput {
+                border: 0 solid transparent !important;
+                background-color: rgba(0, 0, 0, 0) !important;
+                padding: 0 !important;
+                width: 100% !important;
+                /*text-align: right !important;*/
+                color: #858796 !important;
+            }
+
+            .highlightInput::-webkit-outer-spin-button,
+            .highlightInput::-webkit-inner-spin-button {
+                -webkit-appearance: none !important;
+                margin: 0 !important;
+            }
+
+            /* Firefox */
+            .highlightInput[type=number] {
+                -moz-appearance: textfield !important;
+            }
+            .manage-account ul {
+                list-style: none;
+                padding: 0;
+            }
+            .textFindMatch p {
+                line-height: 80px;
+                margin: 0;
+                text-align: center;
+            }
+            .noTransaction p {
+                line-height: 150px;
+                margin: 0;
+                text-align: center;
+            }
+            .btnFindMatch button{
+                margin-top: 32px;
+                margin-left: 32px;
+            }
+            .moreDetailValue {
+                color: #000a1e;
+            }
+            .moreDetailLabel {
+                text-align: right;
+            }
+            .moreDetailLine {
+                border-top: 1px solid #ccced2;
+                padding: 10px 0;
+            }
+            .moreDetailBox {
+                border-left: 1px solid #ccced2;
+                border-right: 1px solid #ccced2;
+                border-bottom: 1px solid #ccced2;
+            }
+            .tab-pane {
+                border: 1px solid;
+                border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;
+            }
+            .ruleType {
+                padding: 6px 16px 6px 6px;
+                margin-right: 16px;
+                cursor: pointer;
+            }
+            .ruleType:hover {
+                 background-color: #f2f3f4;
+            }
+            .ruleTypeActive {
+                color: #00a3d3;
+            }
+        </style>
+
+        <div class="row justify-content-center mb-6" id="spentRuleCard">
+            <div class="row no-gutters d-xl-flex justify-content-center justify-content-xl-center mb-3" style="width: 100%;">
+                <div class="card col-lg-10 col-md-12 col-sm-12 spentBankRuleCard" id="spentBankRuleCard">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-primary m-0 font-weight-bold" id="spentRuleTitle">New Bank rule</p>
+                        </div>
+                        <div class="float-right"></div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="padding: 20px 10px;">
+                                    <h4>1. Select Bank Account Name</h4>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-6 mx-4">
+                                <div class="form-group mb-0">
+                                    <label>Bank Account Name</label>
+                                    <input type="hidden" id="bankAccountID" value="">
+                                    <select type="search" class="form-control" id="bankAccountName" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="padding: 20px 10px;">
+                                    <h4>2. Apply a bank rule</h4>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="col-12 col-md-12" style="padding: 0 20px;">
+                                    <div>
+                                        <p>Add columns</p>
+                                    </div>
+                                    <div class="table-responsive" style="padding: .375rem .75rem;">
+                                        <table id="tblBankRule" style="width:100%;" class="table table-bordered tblBankRule">
+                                            <thead>
+                                            <tr class="dnd-moved">
+                                                <th class="th colID hiddenColumn">id</th>
+                                                <th>Column Name</th>
+                                                <th>#</th>
+                                                <th></th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#if bankRuleData}}
+                                                    {{#each item in bankRuleData}}
+                                                        <tr class="dnd-moved">
+                                                            <td class="colColumn">
+                                                                <input class="highlightInput lineColumn" type="text" value="{{item.column}}" data-id="{{@index}}">
+                                                            </td>
+                                                            <td class="colOrder">
+                                                                <input class="highlightInput lineOrder" type="number" value="{{item.order}}" data-id="{{@index}}">
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="table-remove btnRemove" data-id="{{@index}}">
+                                                                    <button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button>
+                                                                </span>
+                                                            </td>
+                                                        </tr>
+                                                    {{/each}}
+                                                {{/if}}
+                                                {{#unless bankRuleData}}
+                                                    <tr class="dnd-moved" id="noData">
+                                                        <td colspan="5">No columns</td>
+                                                    </tr>
+                                                {{/unless}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="row">
+                                        <button class="btn btn-primary" style="margin-left: 35px;" id="addLineColumn" >Add a new column</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div style="padding: 20px 10px;">
+                                    <h4>3. Preview</h4>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="col-12 col-md-12" style="padding: 0 20px;">
+                                    <div class="row justify-content-between align-items-center mb-3">
+                                        <div class="col-auto">Preview bank statement</div>
+                                        <div class="col-auto">{{> reconImportModal}}</div>
+                                    </div>
+                                    {{#if bankRuleData}}
+                                    <div class="table-responsive" style="padding: .375rem .75rem;">
+                                        <table id="tblBankRulePreview" style="width:100%;" class="table table-bordered tblBankRulePreview">
+                                            <thead>
+                                                <tr class="dnd-moved">
+                                                    {{#each item in previewColumn}}
+                                                        <th>{{item.order}}</th>
+                                                    {{/each}}
+                                                </tr>
+                                                <tr class="dnd-moved">
+                                                    {{#each item in previewColumn}}
+                                                        <th>{{item.column}}</th>
+                                                    {{/each}}
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{#if previewData}}
+                                                    {{#each rowItem in previewData}}
+                                                    <tr class="dnd-moved">
+                                                        {{#each item in rowItem}}
+                                                            <td style="height: 50px">{{item}}</td>
+                                                        {{/each}}
+                                                    </tr>
+                                                    {{/each}}
+                                                {{else}}
+                                                    <tr class="dnd-moved">
+                                                        {{#each item in previewColumn}}
+                                                            <td>xxx</td>
+                                                        {{/each}}
+                                                    </tr>
+                                                {{/if}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-md-11">
+                <div class="card shadow" style="padding: 16px;">
+                    <div class="row justify-content-center">
+                        <button class="btn btn-success btnSave btn-auto-save" type="button" style="margin: 0 16px;">
+                            <i class="fa fa-save" style="padding-right: 8px;"></i>Save
+                        </button>
+                        <button class="btn btn-secondary btnBack" type="button" style="margin: 0 16px;">
+                            <i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">
+        {{> addaccountpop}}
+    </div>
+    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="bankAccountListModal">
+        {{> accountlistpop}}
+    </div>
+    <div class="modal fade newbankrule" role="dialog" tabindex="-1" id="productListModal">
+        {{> productlistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+        {{> newproductpop}}
+    </div>
+    <div class="modal fade customerListModal newbankrule" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
+                    {{> customerlistpop}}
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        {{> addcustomerpop}}
+    </div>
+    <div class="modal fade supplierListModal newbankrule" role="dialog" tabindex="-1" id="supplierListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content supplierListContent">
+                <div class="modal-header">
+                    <h4>Supplier List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
+                    {{> supplierlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
+        {{> addsupplierpop}}
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="fieldModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Field List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <table id="tblFields" style="width:100%" class="table table-striped table-bordered tblFields">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="thFieldName">Field Name</th>
+                                        <th class="thDescription">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="conditionModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Condition List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <table id="tblConditions" style="width:100%" class="table table-striped table-bordered tblConditions">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="thConditionName">Condition Name</th>
+                                        <th class="thDescription">Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        modalDraggable();
+    </script>
+    {{> init_form_page_script}}
+</template>

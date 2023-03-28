@@ -10,9 +10,9 @@
         }
 
         table.dataTable {
-            table-layout: fixed;
+            /* table-layout: fixed; */
             width: 100%;
-            white-space: nowrap;
+            /* white-space: nowrap; */
             overflow: hidden;  
         }
         
@@ -21,10 +21,12 @@
             overflow: hidden;
         }
         
-        table.dataTable td {
-            white-space: nowrap;
+        table.dataTable td, th {
+            min-width: 60px;
+            /*white-space: nowrap;*/
+            /* white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis;
+            text-overflow: ellipsis; */
         }
     </style>
     <div class="template-preview-body1">

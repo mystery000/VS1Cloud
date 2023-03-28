@@ -1,19 +1,29 @@
 <template name="eftOptionsModal">
   <div class="modal fade eftOptionsModal" role="dialog" tabindex="-1" id="eftOptionsModal">
-    <div class="modal-dialog modal-md modal-dialog-scrollable modal-dialog-centered generated-id" role="document">
+    <div class="modal-dialog modal-md modal-dialog-scrollable modal-dialog-centered generated-id m-0" role="document" style="left: calc(50% - 250px)">
       <div class="modal-content">
         <div class="modal-header">
           <h4 style="">
-            <div style="float: left;">EFT Options</div>
-            <a role="button" data-toggle="modal" href="#helpViewModalAdd"
-              style="float: right; font-size: 20px; margin-top: 4px; margin-left: 8px;">Help
-              <i class="fa fa-question-circle-o" style="font-size: 20px;"></i></a>
+            <div style="float: left;">EFT Options {{> helpbutton}}</div>
           </h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
               aria-hidden="true">×</span></button>
         </div>
         <div class="modal-body" style="background-color: #EDEDED;">
           <div class="row">
-
+              <div class="col-12 row">
+                  <div class="col-6">
+                      <div class="form-group m-6">
+                          <label>Bank Name</label>
+                          <input type="text" class="form-control" id="eftBankName" name="eftBankName" />
+                      </div>
+                  </div>
+                  <div class="col-6">
+                      <div class="form-group m-6">
+                          <label>Description</label>
+                          <input type="text" class="form-control" id="eftDescription" name="eftDescription" />
+                      </div>
+                  </div>
+              </div>
             {{#each item in eftOptionsList}}
             <div class="col-12 chkEftOptionsList" optionsid="{{item.id}}">
               <div class="custom-control custom-switch" style="margin: 4px; margin-top: 20px;">
@@ -29,14 +39,14 @@
         </div>
         <form></form>
         <div class="modal-footer" style="background-color: #ededed;">
-          <button class="btn btn-success btnSaveEftOptions" type="button" style="margin: 8px;" id="btnSaveEftOptions"
-            name="btnSaveEftOptions"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-          <button class="btn btn-secondary btnCancelEftOptions" type="button" style="margin: 8px;"><i
-              class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
+          <button class="btn btn-success btnSaveEftOptions" type="button" style="margin: 8px;" id="btnSaveEftOptions" name="btnSaveEftOptions"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+          <button class="btn btn-danger btnDeleteEftOptions vs1ButtonMargin" id="make-in-active" type="button"><i class="fa fa-trash" style="padding-right: 8px;"></i>Make In-Active</button>
+          <button class="btn btn-secondary btnCancelEftOptions" type="button" style="margin: 8px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
         </div>
       </div>
     </div>
   </div>
-
-
+  <script>
+    modalDraggable();
+  </script>
 </template>

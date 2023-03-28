@@ -43,13 +43,13 @@ Template.salesorderslistpop.onCreated(()=>{
             totalAmountEx || 0.00,
             totalTax || 0.00,
             totalAmount || 0.00,
-            salestatus || '',
             data.EmployeeName || '',
             data.Converted? 'Converted': 'Unconverted',
             data.Comments || '',
             data.SaleCustField1 || '',
             data.SaleCustField2 || '',
-            data.SaleCustField3 || ''
+            data.SaleCustField3 || '',
+            salestatus || '',
         ];
         return dataList;
     }
@@ -91,10 +91,10 @@ Template.salesorderslistpop.onCreated(()=>{
         { index: 5, label: "Amount (Ex)", class: "colAmountEx", active: true, display: true, width: "100" },
         { index: 6, label: "Tax", class: "colTax", active: true, display: true, width: "100" },
         { index: 7, label: "Amount (Inc)", class: "colAmount", active: true, display: true, width: "100" },
-        { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
-        { index: 9, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
-        { index: 10, label: "Converted", class: "colConverted", active: true, display: true, width: "100" },
-        { index: 11, label: "Comments", class: "colComments", active: true, display: true, width: "" },
+        { index: 8, label: "Employee", class: "colEmployee", active: true, display: true, width: "100" },
+        { index: 9, label: "Converted", class: "colConverted", active: true, display: true, width: "80" },
+        { index: 10, label: "Comments", class: "colComments", active: true, display: true, width: "80" },
+        { index: 11, label: "Status", class: "colStatus", active: true, display: true, width: "60" },
     ]
 
     let custFields = [];

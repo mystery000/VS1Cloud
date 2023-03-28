@@ -310,9 +310,9 @@ export class ReportService extends BaseService {
         return this.getList(this.ERPObjects.TDeptClass, options);
     }
 
-    getProfitLossLayout() {
+    getProfitLossLayout(id) {
         let options = {
-            LayoutID: 3,
+            LayoutID: id,
         };
         return this.getList('VS1_PNLGetLayout', options);
     }
@@ -889,13 +889,33 @@ export class ReportService extends BaseService {
         return this.POST(this.ERPObjects.TBASReturn, data);
     }
 
-    getAllBASReturn(data) {
-        let options = {
-            OrderBy: "ID desc",
-            ListType: "Detail",
-        };
+    getAllBASReturn(limitcount, limitfrom, deleteFilter, dateFrom, dateTo, ignoreDate) {
+        let options = "";
+
+        if (ignoreDate == true) {
+            options = {
+                IgnoreDates: true,
+                Search: "",
+                OrderBy: "ID desc",
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        } else {
+            options = {
+                OrderBy: "ID desc",
+                IgnoreDates: false,
+                Search: "",
+                // DateFrom: '"' + dateFrom + '"',
+                // DateTo: '"' + dateTo + '"',
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        }
+        if (deleteFilter) options.Search = "Active != true"
         return this.getList(this.ERPObjects.TBASReturn, options);
-    }
+    };
 
     getOneBASReturn(id) {
         let options = {
@@ -909,13 +929,33 @@ export class ReportService extends BaseService {
         return this.POST(this.ERPObjects.TVATReturn, data);
     }
 
-    getAllVATReturn(data) {
-        let options = {
-            OrderBy: "ID desc",
-            ListType: "Detail",
-        };
+    getAllVATReturn(limitcount, limitfrom, deleteFilter, dateFrom, dateTo, ignoreDate) {
+        let options = "";
+
+        if (ignoreDate == true) {
+            options = {
+                IgnoreDates: true,
+                Search: "",
+                OrderBy: "ID desc",
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        } else {
+            options = {
+                OrderBy: "ID desc",
+                IgnoreDates: false,
+                Search: "",
+                // DateFrom: '"' + dateFrom + '"',
+                // DateTo: '"' + dateTo + '"',
+                // LimitCount: parseInt(limitcount),
+                // LimitFrom: parseInt(limitfrom),
+                ListType: "Detail",
+            };
+        }
+        if (deleteFilter) options.Search = "Active != true"
         return this.getList(this.ERPObjects.TVATReturn, options);
-    }
+    };
 
     getOneVATReturn(id) {
         let options = {
@@ -941,11 +981,19 @@ export class ReportService extends BaseService {
         return this.POST('VS1_Cloud_Task/Method?Name="VS1_PNLRenameGroup"', data);
     }
 
-    getPNLLayout(layout=3) {
-        let options = {
-            select: "[ID]=" + layout,
-            ListType: "Detail",
-        };
+    getPNLLayout(layout="All") {
+        let options = {};
+        if(layout="All"){
+            options = {
+                PropertyList: "ID, Description, LName, IsCurrentLayout",
+            };
+        }
+        else{
+            options = {
+                select: "[ID]=" + layout,
+                PropertyList: "ID, Description, LName, IsCurrentLayout",
+            };
+        }
 
         return this.getList(
             this.ERPObjects.TPNLLayout,

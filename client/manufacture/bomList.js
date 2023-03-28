@@ -53,6 +53,7 @@ Template.bom_list.onCreated(function(){
   templateObject.tableheaderrecords.set(headerStructure);
       
 })
+
 Template.bom_list.onRendered(function(){
   const templateObject  = Template.instance();
   const productService = new ProductService();
@@ -193,7 +194,7 @@ Template.bom_list.events({
             var result = {};
             workbook.SheetNames.forEach(function (sheetName) {
                 var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
-                var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                 templateObj.selectedFile.set(sCSV);
 
                 if (roa.length) result[sheetName] = roa;

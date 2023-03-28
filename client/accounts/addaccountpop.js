@@ -19,9 +19,15 @@ Template.addaccountpop.onCreated(function () {
     templateObject.selectedFile = new ReactiveVar();
     templateObject.isBankAccount = new ReactiveVar();
     templateObject.isBankAccount.set(false);
+
+    templateObject.accountrecord = new ReactiveVar();
+    templateObject.isBankAccount = new ReactiveVar(false);
+    templateObject.isCreditAccount = new ReactiveVar(false)
+
+    templateObject.record = new ReactiveVar();
 });
 
-Template.addaccountpop.onRendered(function () {
+Template.addaccountpop.onRendered(async function () {
 
     // $('#sltAccountType').editableSelect('add', function(item){
     //     $(this).val(item.id);
@@ -38,33 +44,85 @@ Template.addaccountpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
     let currentId = FlowRouter.current().context.hash;
+    if(templateObject.data.name) {
+        let name = templateObject.data.name;
+        async function getAccountDetailByName(accountName) {
+            return new Promise(async(resolve, reject)=> {
+                getVS1Data('TAccountVS1List').then(function(dataObject){
+                    if(dataObject.length == 0) {
+                        accountService.getOneAccountByName(name).then(data=>{
+                            resolve(data.taccountvs1[0].fields)
+                        })
+                    } else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.taccountvs1list;
+                        let useDataIndex = useData.findIndex(account => {
+                            return account.AccountName == accountName
+                        })
+                        if(useDataIndex> -1) {
+                            resolve(useData[useDataIndex])
+                        }
+                    }
+                }).catch(function(e){
+                    accountService.getOneAccountByName(name).then(data=>{
+                        resolve(data.taccountvs1[0].fields)
+                    }).catch(function(err) {
+                        resolve([])
+                    })
+                })
+            })
+        }
 
+        $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+        let accountDetail = await getAccountDetailByName(name);
+
+        $('#sltTaxCode').editableSelect();
+        setTimeout(()=>{
+            let accountTypeName = accountDetail.AccountType;
+            $('#sltTaxCode').val(accountDetail.Taxcode)
+            if ((accountTypeName === "BANK")) {
+                $('.isBankAccount').removeClass('isNotBankAccount');
+                $('.isCreditAccount').addClass('isNotCreditAccount');
+            }else if ((accountTypeName === "CCARD")) {
+                $('.isCreditAccount').removeClass('isNotCreditAccount');
+                $('.isBankAccount').addClass('isNotBankAccount');
+            } else {
+                $('.isBankAccount').addClass('isNotBankAccount');
+                $('.isCreditAccount').addClass('isNotCreditAccount');
+            }
+        }, 2000)
+        $('#chkEftOption_balance').prop('checked', accountDetail.IncludeBalanceRecord)
+        $('#chkEftOption_net').prop('checked', accountDetail.IncludeNetTotal)
+        $('#chkEftOption_credit').prop('checked', accountDetail.IncludeCreditTotal)
+        $('#chkEftOption_debit').prop('checked', accountDetail.IncludeDebitTotal)
+        templateObject.record.set(accountDetail)
+
+    } else {
         setTimeout(function () {
-          $('.isBankAccount').addClass('isNotBankAccount');
-          $('.isCreditAccount').addClass('isNotCreditAccount');
+            $('.isBankAccount').addClass('isNotBankAccount');
+            $('.isCreditAccount').addClass('isNotCreditAccount');
 
-          $('#add-account-title').text('Add New Account');
-          $('#edtAccountID').val('');
-          $('#sltAccountType').val('');
-          $('#sltAccountType').removeAttr('readonly', true);
-          $('#sltAccountType').removeAttr('disabled', 'disabled');
-          $('#edtAccountName').val('');
-          $('#edtAccountName').attr('readonly', false);
-          $('#edtAccountNo').val('');
-          $('#sltTaxCode').val('NT' || '');
-          $('#txaAccountDescription').val('');
-          $('#edtBankAccountName').val('');
-          $('#edtBSB').val('');
-          $('#edtBankAccountNo').val('');
-          $('#routingNo').val('');
-          $('#edtBankName').val('');
-          $('#swiftCode').val('');
-          $('.showOnTransactions').prop('checked', false);
-          $('.isBankAccount').addClass('isNotBankAccount');
-          $('.isCreditAccount').addClass('isNotCreditAccount');
+            $('#add-account-title').text('Add New Account');
+            $('#edtAccountID').val('');
+            $('#sltAccountType').val('');
+            $('#sltAccountType').removeAttr('readonly', true);
+            $('#sltAccountType').removeAttr('disabled', 'disabled');
+            $('#edtAccountName').val('');
+            $('#edtAccountName').attr('readonly', false);
+            $('#edtAccountNo').val('');
+            $('#sltTaxCode').val('NT' || '');
+            $('#txaAccountDescription').val('');
+            $('#edtBankAccountName').val('');
+            $('#edtBSB').val('');
+            $('#edtBankAccountNo').val('');
+            $('#routingNo').val('');
+            $('#edtBankName').val('');
+            $('#swiftCode').val('');
+            $('.showOnTransactions').prop('checked', false);
+            $('.isBankAccount').addClass('isNotBankAccount');
+            $('.isCreditAccount').addClass('isNotCreditAccount');
         }, 500);
-
-
+    }
 
     $("#edtExpiryDate").datepicker({
         showOn: 'button',
@@ -108,8 +166,7 @@ Template.addaccountpop.onRendered(function () {
         $('#bankNameModal').modal('toggle');
         $('#edtBankName').val(BankName);
       });
-
- var currentLoc = FlowRouter.current().route.path;
+     var currentLoc = FlowRouter.current().route.path;
     getVS1Data('TAccountType').then(function (dataObject) {
         if (dataObject.length == 0) {
             accountService.getAccountTypeCheck().then(function (data) {
@@ -1084,5 +1141,9 @@ Template.addaccountpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
+    },
+
+    record: () => {
+        return Template.instance().record.get()
     }
 });

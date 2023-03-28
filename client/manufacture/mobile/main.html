@@ -58,7 +58,7 @@
 		}
 		.mobile-btn-number{
 			height: 10vw;
-			width: 15.8vw;
+			width: 14.8vw;
 			border: none;
 			font-weight: 800;
 			font-size: 2.5vw;
@@ -70,7 +70,7 @@
 		}
 		.mobile-right-btn-containner button{
 			height: 13.45vw;
-			width: 15.97vw;
+			width: 14.45vw;
 			font-weight: 800;
 			font-size: 1.8vw;
 		}
@@ -112,7 +112,7 @@
 			overflow: auto;
 		}
 		#txtpause-notes{
-			height: 24vw;
+			height: 7vw;
 		}
 		.mobile-stop-job-btns, .mobile-stop-job-input{
 			width: 100%;
@@ -193,7 +193,25 @@
 			background-color: #fff;
 			margin-top: 2vw;
 		}
+		.mobile-phone-right-btn-containner {
+			display: none;
+		}
+
 		@media (max-width: 480px) {
+			
+			.mobile-phone-right-btn-containner {
+				display: block;
+				margin-left: 10px;
+			}
+
+			.mobile-right-btn-containner   {
+				display: none !important;
+			}
+
+			.mobile-left-btn-containner {
+				display: none !important;
+			}
+						
 			.mobile-checkin-container{
 				height: 100vh;
 			}
@@ -212,9 +230,15 @@
 				margin-bottom: 1vw;
 				font-size: 4vw;
 			}
-			.mobile-left-btn-containner, .mobile-header-container, .mobile-main-input, button.mobile-bg-color-grey, .mobile-right-side-btn{
-				display: none !important;
+
+			.mobile-phone-right-btn-containner .mobile-btn {
+				width: 45.5vw;
+				height: 45.5vw;
+				margin: 0;
+				margin-bottom: 1vw;
+				font-size: 5vw;
 			}
+			
 			.mobile-phone-header-container{
 				display: block;
 			}
@@ -222,9 +246,49 @@
 				height: 100vw;
 			}
 			.colContent {
-			    overflow-x: unset !!important;
+			    overflow-x: unset !important;
+			}
+			
+			.mobile-main-input {
+				width: 70%;
+				height: 10vw;
+				margin-left:10px;
+
+			}
+			.mobile-right-side-btn {
+				width: 20vw;
+				margin-right: 10px;
+			}
+			.mf-17 {
+				font-size:3.7vw
+			}
+			.phone-footer-btn {
+				width: 30vw;
+				height: 13vw;
+			}
+
+			#txtpause-notes {
+				height: 18vw;
+			}
+
+			.mobile-stop-job-btns, .mobile-stop-job-input{ 
+				height: 14.6vw;
+				font-size: 5vw;
+			}
+			.mobile-header-text {
+				font-size: 3.8vw;
+			}
+
+
+		}
+
+		@media (min-width: 480px) {
+			.mobile-right-btn-containner {
+				display: block;
+			
 			}
 		}
+
 	</style>
 	{{>mobileHeader}}
 	<div class="mobile-page-container">
@@ -259,10 +323,28 @@
 			{{#if isMobileDevices}}
 				<div>Capture copies of receipt's or take photo's of completed jobs.</div>
 			{{/if}}
+
 			<div class="mt-4 mobile-row mobile-left-employee-list mmw-100 mtw-50" style="display: none;">
 				<table id="tblEmployeeList" name="tblEmployeeList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
 				</table>
 			</div>
+			<div class="mt-4 mobile-row mobile-left-workorder-list mmw-100 mtw-50" style="display: none;">
+				<table id="tblWorkOrderList" name="tblWorkOrderList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
+				</table>
+			</div>
+			<div class="mt-4 mobile-row mobile-left-jobprocess-list mmw-100 mtw-50" style="display: none;">
+				<table id="tblJobProcessList" name="tblWorkOrderList" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-hover table-striped table-bordered tblEmployeeList">
+				</table>
+			</div>
+			
+			<div class="mt-4 mobile-row mobile-stop-job-container mmw-100 mtw-50" style="display: none;">
+				<button class="mobile-stop-job-btns" style="background-color: #999; color: white">QUANTITY BUILT</button>
+				<input class="mobile-stop-job-input" value="0" />
+				<button class="mobile-stop-job-btns mobile-bg-color-blue mobile-color-white" id="btnSaveClose">SAVE & CLOSE</button>
+				<button class="mobile-stop-job-btns mobile-color-white mobile-bg-color-green" id="btnCompleteProcess">COMPLETE PROCESS</button>
+			</div>
+				
+			
 			<div class="mt-4 mobile-row mobile-left-btn-containner mmw-100 mtw-50">
 				<button calcValue="7" class="mobile-btn-number m-mb-1 mobile-btn">7</button>
 				<button calcValue="8" class="mobile-btn-number m-mb-1 m-ml-1 mobile-btn">8</button>
@@ -279,8 +361,8 @@
 			</div>
 			<div class="mt-4 mobile-row mobile-right-btn-containner mmw-100 mtw-50">
 				<button id="btnOpentList" class="m-mb-1 mobile-bg-color-grey mobile-btn">OPEN LIST</button>
-				<button id="btnClockIn" class="m-mb-1 mobile-bg-color-green mobile-color-white m-ml-1 mobile-btn">CLOCK IN</button>
-				<button id="btnClockOut" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn">CLOCK OUT</button>
+				<button id="btnClockIn" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK IN</button>
+				<button id="btnClockOut" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK OUT</button>
 				<button class="m-mb-1 mobile-bg-color-grey mobile-btn" id="mobileBtnQrCobeScan">SCAN</button>
 				<button id="btnStartBreak" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>START BREAK</button>
 				<button id="btnStopBreak" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>STOP BREAK</button>
@@ -288,12 +370,47 @@
 				<button id="btnStartJob" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>START JOB</button>
 				<button id="btnStopJob" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>STOP JOB</button>
 			</div>
-			<div class="mt-4 mobile-row mobile-stop-job-container mmw-100 mtw-50" style="display: none;">
-				<button class="mobile-stop-job-btns" style="background-color: #999; color: white">QUANTITY BUILT</button>
-				<input class="mobile-stop-job-input" value="0" />
-				<button class="mobile-stop-job-btns mobile-bg-color-blue mobile-color-white" id="btnSaveClose">SAVE & CLOSE</button>
-				<button class="mobile-stop-job-btns mobile-color-white mobile-bg-color-green">COMPLETE PROCESS</button>
+
+			<div class="mt-4 mobile-row mobile-phone-right-btn-containner mmw-100 mtw-50">
+				
+				<button id="btnClockIn_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK IN</button>
+				<button id="btnClockOut_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>CLOCK OUT</button>				
+				<button id="btnStartBreak_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>START BREAK</button>
+				<button id="btnStopBreak_phone" class="m-mb-1 mobile-bg-color-blue mobile-color-white m-ml-1 mobile-btn" disabled>STOP BREAK</button>				
+				<button id="btnStartJob_phone" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>START JOB</button>
+				<button id="btnStopJob_phone" class="m-ml-1 mobile-bg-color-blue mobile-color-white mobile-btn" disabled>STOP JOB</button>
+				<button id="btnOpentList" class="m-mb-1 mobile-bg-color-grey  phone-footer-btn">OPEN LIST</button>
+				<button class="m-mb-1 mobile-bg-color-grey  phone-footer-btn" id="mobileBtnQrCobeScan">SCAN</button>
+				<button id="mobileBtnCancel" class="mobile-bg-color-grey  phone-footer-btn">CANCEL</button>
+
+			</div>
+
+			
+		</div>
+	</div>
+	<style>
+		
+			
+		
+	</style>
+	<div class="modal fade" role="dialog" tabindex="-1" id="WastageModal">
+		<div class="modal-dialog modal-xl modal-centered" role="document">
+			<div class="modal-content" >
+				<div class="modal-header" >
+					<h4 class="title-header" >Wastage Form</h4>
+					<button type="button" class="close" id="closeBOMSetupModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+				</div>
+				<div class="table-responsive">
+					<table id="tblWastageForm" name="tblWastageForm" style="width: 100%;margin-top: 0px !important;" class="dataTable table table-striped table-bordered ">
+					</table>
+				</div>
+				<div class="modal-footer d-flex align-items-center justify-content-center px-3" style="border-top-width: 0px; gap: 15px " >
+					<button class="btn btn-success btn-save-wastage" type="button" ><i class="fa fa-save" style="padding-right: 8px;"></i>Save</button>
+					<button class="btn btn-primary btn-print-wastage" type="button"><i class="fa fa-print" style="padding-right: 8px;"></i>Print</button>
+					<button class="btn btn-secondary btn-cancel-wastage" type="button"><i class="fa fa-remove" style="padding-right: 8px;"></i>Cancel</button>
+				</div>
 			</div>
 		</div>
 	</div>
+	
 </template>

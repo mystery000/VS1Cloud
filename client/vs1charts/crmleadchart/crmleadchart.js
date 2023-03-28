@@ -25,8 +25,10 @@ Template.crmleadchart.onCreated(() => {
 Template.crmleadchart.onRendered(() => {
   const templateObject = Template.instance();
 
-  function chartClickEvent() {
+  function chartClickEvent(event, array) {
+      if (array[0] != undefined) {
     FlowRouter.go("/leadlist");
+    }
   }
 
   function getModdayOfCurrentWeek(date) {
@@ -56,37 +58,58 @@ Template.crmleadchart.onRendered(() => {
       colors.push('#01a2d3');
     }
 
-    var ctx = document.getElementById("chart_leadbarchart").getContext("2d");
-    var barChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Record Count ',
-          data: data,
-          backgroundColor: colors,
-          borderWidth: 1
-        }]
-      },
-      options: {
-        'onClick': chartClickEvent,
-        maintainAspectRatio: false,
-        responsive: true, 
-        "legend": {
-          "display": false
+    try {
+      var ctx = document.getElementById("chart_leadbarchart").getContext("2d");
+      var barChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Record Count ',
+            data: data,
+            backgroundColor: colors,
+            borderWidth: 1
+          }]
         },
-        "title": {},
-        "scales": {
-          "xAxes": [
-            {
+        options: {
+          'onClick': chartClickEvent,
+          maintainAspectRatio: false,
+          responsive: true,
+          "legend": {
+            "display": false
+          },
+          "title": {},
+          "scales": {
+            "xAxes": [
+              {
+                "gridLines": {
+                  "color": "rgb(234, 236, 244)",
+                  "zeroLineColor": "rgb(234, 236, 244)",
+                  "drawBorder": false,
+                  "drawTicks": false,
+                  "borderDash": ["2"],
+                  "zeroLineBorderDash": ["2"],
+                  "drawOnChartArea": false
+                },
+                "ticks": {
+                  "fontColor": "#858796",
+                  "beginAtZero": true,
+                  "padding": 20
+                },
+                "scaleLabel": {
+                  "display": true,
+                  "labelString": 'Created Date',
+                  "fontColor": "#546372"
+                }
+              }],
+            "yAxes": [{
               "gridLines": {
                 "color": "rgb(234, 236, 244)",
                 "zeroLineColor": "rgb(234, 236, 244)",
                 "drawBorder": false,
                 "drawTicks": false,
                 "borderDash": ["2"],
-                "zeroLineBorderDash": ["2"],
-                "drawOnChartArea": false
+                "zeroLineBorderDash": ["2"]
               },
               "ticks": {
                 "fontColor": "#858796",
@@ -95,33 +118,16 @@ Template.crmleadchart.onRendered(() => {
               },
               "scaleLabel": {
                 "display": true,
-                "labelString": 'Created Date',
-                "fontColor": "#546372"
+                "labelString": 'Record Count'
               }
-            }],
-          "yAxes": [{
-            "gridLines": {
-              "color": "rgb(234, 236, 244)",
-              "zeroLineColor": "rgb(234, 236, 244)",
-              "drawBorder": false,
-              "drawTicks": false,
-              "borderDash": ["2"],
-              "zeroLineBorderDash": ["2"]
-            },
-            "ticks": {
-              "fontColor": "#858796",
-              "beginAtZero": true,
-              "padding": 20
-            },
-            "scaleLabel": {
-              "display": true,
-              "labelString": 'Record Count'
             }
+            ]
           }
-          ]
         }
-      }
-    });
+      });
+    } catch (e) {
+    }
+
   }
 
 
@@ -138,11 +144,10 @@ Template.crmleadchart.onRendered(() => {
       labels.push(key);
       data.push(records[key].length);
       borderColors.push('#ffffff00');
-    } 
-
-    var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
+    }
 
     try {
+      var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
       var pieChart = new Chart(ctx, {
         type: "pie",
         data: {
@@ -172,7 +177,6 @@ Template.crmleadchart.onRendered(() => {
       });
 
     } catch (error) {
-
     }
   };
 
@@ -180,6 +184,23 @@ Template.crmleadchart.onRendered(() => {
     let crmService = new CRMService();
     let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
 
+    getVS1Data("TCRMLeadChart").then(function (dataObject) {
+      if (dataObject.length) {
+        let data = JSON.parse(dataObject[0].data);
+        templateObject.setLeadChartData(data);
+      }else{
+        crmService.getAllLeadCharts().then(function (data) {
+          addVS1Data("TCRMLeadChart", JSON.stringify(data));
+          templateObject.setLeadChartData(data);
+        });
+      }
+    }).catch(function (err) {
+      crmService.getAllLeadCharts().then(function (data) {
+        addVS1Data("TCRMLeadChart", JSON.stringify(data));
+        templateObject.setLeadChartData(data);
+      });
+    });
+  /*
     getVS1Data("TCRMLeadBarChart").then(function (dataObject) {
       if (dataObject.length) {
         let data = JSON.parse(dataObject[0].data);
@@ -239,12 +260,56 @@ Template.crmleadchart.onRendered(() => {
       }
 
       addVS1Data("TCRMLeadBarChart", JSON.stringify(bar_records));
-      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records)); 
+      addVS1Data("TCRMLeadPieChart", JSON.stringify(pie_records));
 
     }).catch(function (err) {
-
     });
+    */
   }
+
+  templateObject.setLeadChartData = async function (data) {
+    let bar_records = [];
+    let pie_records = [];
+    if (data.tprospect.length) {
+
+      let accountData = data.tprospect;
+      for (let i = 0; i < accountData.length; i++) {
+        let recordObj = {};
+        recordObj.Id = data.tprospect[i].Id;
+        CreationDate = data.tprospect[i].CreationDate ? data.tprospect[i].CreationDate.substr(0, 10) : "";
+
+        recordObj.CreationDateSort = CreationDate ? CreationDate : "-";
+        recordObj.CreationDate = CreationDate ? getModdayOfCurrentWeek(CreationDate) + "~" : "-";
+        bar_records.push(recordObj);
+
+        let pieRecordObj = {};
+        pieRecordObj.Id = data.tprospect[i].Id;
+        pieRecordObj.SourceName = data.tprospect[i].SourceName ? data.tprospect[i].SourceName : "-";
+        pie_records.push(pieRecordObj);
+      }
+
+      bar_records = _.sortBy(bar_records, 'CreationDateSort');
+      bar_records = await _.groupBy(bar_records, 'CreationDate');
+
+      pie_records = _.sortBy(pie_records, 'SourceName');
+      pie_records = await _.groupBy(pie_records, 'SourceName');
+
+    } else {
+      let recordObj = {};
+      recordObj.Id = '';
+      recordObj.CreationDate = '-';
+
+      let pieRecordObj = {};
+      pieRecordObj.Id = '';
+      pieRecordObj.SourceName = '-';
+
+      await bar_records.push(recordObj);
+      await pie_records.push(pieRecordObj);
+    }
+
+     drawBarChart(bar_records);
+     drawPieChart(pie_records);
+  };
 
   templateObject.getLeadBarChartData();
 

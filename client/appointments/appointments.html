@@ -723,6 +723,7 @@
                     </div>
 
                     <div class="modal-footer">
+                        <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoiceDisable" name="btnCreateInvoiceDisable"><span>Create Invoice</span></button>
                             <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptionsDisable" name="btnCopyOptionsDisable" disabled><span>Copy Appointment</span></button>
@@ -730,7 +731,6 @@
                             <button class="btn btn-primary btnCreateInvoice" type="button" style="margin: 14px;" id="btnCreateInvoice" name="btnCreateInvoice">Create Invoice</button>
                             <button class="btn btn-primary btnCopyOptions" type="button" style="margin: 14px;" id="btnCopyOptions" name="btnCopyOptions">Copy Appointment</button>
                         {{/if}}
-                        <button class="btn btn-success btnSaveAppointment" type="button" style="margin: 14px;" id="btnSaveAppointment" name="btnSaveAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                         {{#if equals accessStartStopOnly true}}
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDeleteDisbale" name="btnDeleteDisbale" disabled><i class="fas fa-trash-alt" style="margin-right: 5px;"></i><span>Delete</span></button>
                             <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptionsDisable" name="btnOptionsDisable" disabled><i class="fas fa-cogs" style="margin-right: 5px;"></i><span>Options</span></button> -->
@@ -738,7 +738,7 @@
                             <button class="btn btn-danger btnDelete" type="button" style="margin: 14px;" id="btnDelete" name="btnDelete"><i class="fas fa-trash-alt" style="margin-right: 5px;"></i>Delete</button>
                             <!-- <button class="btn btn-warning btnOptions" type="button" style="margin: 14px;" id="btnOptions" name="btnOptions"><i class="fas fa-cogs" style="margin-right: 5px;"></i>Options</button> -->
                         {{/if}}
-
+                        <input type="submit" id= "btnAppointmentSubmit" hidden/>
                         <!-- Start Appointment Modal to choose Start Appointment SMS Message -->
                         <div class="modal fade" role="dialog" id="startAppointmentModal">
                             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -1430,9 +1430,9 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
 
-    {{> newLeaveRequestModal}} 
+    {{> newLeaveRequestModal}}
 
     <style>
         .fc-next-button {
@@ -1519,7 +1519,8 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         .rowB {
             overflow-x: auto;
             margin-left: 0px;
-            margin-right: 24px;
+            padding: 20px;
+            justify-content: space-between;
         }
 
         .nav-tabs .nav-link.active {
@@ -2105,8 +2106,12 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
         // }, 10);
     </script>
 
-    <div class="row rowB" id="rowB">
-        <div class="colEmployeeList" id="colEmployeeList" style="width:288px; margin:8px">
+    <div style="">
+        <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
+    </div>
+
+    <div class="row rowB charts connectedChartSortable connectedSortable ui-sortable" id="rowB">
+        <div class="colEmployeeList sortable-chart-widget-js draggable-panel" chart-slug="appointment-card-0" id="colEmployeeList" style="width:288px;">
             <style>
                 /* .newcardb {
                     width: 150px;
@@ -2130,7 +2135,7 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                     user-select: none;
                 }
             </style>
-            <div class="card shadow mb-4 newcardb" id="newcardb" style="margin: 8px;">
+            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb" style="">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="text-primary font-weight-bold m-0">Employees</h6>
                 </div>
@@ -2203,17 +2208,26 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                     </div>
                 </div>
             </div>
+
         </div>
-        <div class="colCalendar" id="colCalendar" style="width:calc(100% - 325px); margin:8px">
+
+        <div class="colCalendar sortable-chart-widget-js draggable-panel" chart-slug="appointment-card-1" id="colCalendar" style="width:calc(100% - 325px);">
             <style>
                 #sidebarToggleAppointments:hover {
                     background-color: #eaecf4;
                 }
+
+                #calendar .fc-header-toolbar{padding-top: 5px;}
             </style>
-            <div style="float:left; margin-top: 25px;">
-                <button class="btn btn-link d-md rounded-circle mr-3" id="sidebarToggleAppointments" type="button"><i class="fas fa-bars" style="color: #00A3D3;"></i></button>
+            <div class="card shadow mb-4 newcardb portlet ui-widget ui-widget-content ui-helper-clearfix ui-corner-all ui-resizable" id="newcardb" style="">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h6 class="text-primary font-weight-bold m-0">Calendar</h6>
+                </div>
+                <div class="card-body text-nowrap">
+                    {{> calender}}
+                </div>
             </div>
-            {{> calender}}
+
         </div>
     </div>
 
@@ -2230,6 +2244,25 @@ var getInputRadio = goToParent.find("input[id = " + getValue + "]");
                 </div>
                 <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                     <button class="btn btn-primary" type="button" style="background-color: #00A3D3; border-color: #00A3D3;">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="copyFrequencyModal">
+        {{> copyfrequencypop}}
+    </div>
+    <div class="modal fade appointmentLeaveConfirmModal" role="dialog" tabindex="-1" id="appointmentLeaveConfirmModal">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Choose request type</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center flex-column">
+                        <button class="btn btn-primary btnCreateAppointmentRequest w-50" type="button" id="btnCreateAppointmentRequest" name="btnCreateAppointmentRequest">Appointment</button>
+                        <button class="btn btn-primary btnCreateLeaveRequest w-50 mt-3" type="button" id="btnCreateLeaveRequest" name="btnCreateLeaveRequest">LeaveRequest</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
                 </div>
             </div>
         </div>

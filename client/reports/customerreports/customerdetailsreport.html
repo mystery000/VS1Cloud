@@ -2,117 +2,16 @@
     {{# vs1_report_template tabledisplayname="Customer Details Report" tablename="customerdetailsreport"  dateAsAt=dateAsAt sheetname="Customer Details Report Result"}}
     <div class="table-responsive">
         <table class="table table-sm" id="tableExport" name="tableExport">
-            <thead>
+            <thead class="table-active">
                         {{#each c in customerdetailsreportth}}
                         {{#if c.display}}
-                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left!important; width:{{c.width}}px">
+                            <th data-class="{{c.class}}" thclass="{{c.class}}" data-col-index="{{c.id}}" data-col-active="{{ c.active}}" class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left; width:{{c.width}}px">
                                 {{c.label}}
                             </th>
                         {{/if}}
                       {{/each}}
             </thead>
             <tbody>
-                <!-- {{#if records}}
-                    {{#each arrayify records}}
-                        <tr>
-                            <td>{{ value.Name }}</td>
-                            <td>{{ value.Phone }}</td>
-                            <td>{{ value.Type }}</td>
-                            {{#if isOnlyDefaultActive }}
-                                {{#if currencyList}}
-                                    {{#each c in currencyList }}
-                                        {{# if c.active}}
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#each c in currencyList }}
-                                        {{# if c.active}}
-                                            <td></td>
-                                        {{/if}}
-                                    {{/each}}
-                                    {{#each c in currencyList }}
-                                        {{# if c.active}}
-                                        {{/if}}
-                                    {{/each}}
-                                {{/if}}
-                            {{else}}
-                                <td></td>
-                            {{/if}}
-                             <td></td>
-                             <td>{{ value.Address }}</td>
-                             <td>{{ value.Suburb }}</td>
-                             <td>{{ value.Postcode }}</td>
-                             <td>{{ value.State }}</td>
-                        </tr>
-                        {{#each item in value.SubAccounts}}
-                            {{#if checkEmptySubAccount item }}
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ item.Type }}</a></td>
-                                    {{#if isOnlyDefaultActive }}
-                                        {{#if currencyList}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                {{/if}}
-                                            {{/each}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                    <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right {{#if isNegativeAmount item.Total_Amount_Inc}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ convertAmount item.Total_Amount_Inc c}}</a></td>
-                                                {{/if}}
-                                            {{/each}}
-                                            {{#each c in currencyList }}
-                                                {{# if c.active}}
-                                                {{/if}}
-                                            {{/each}}
-                                        {{/if}}
-                                    {{else}}
-                                        <td class="text-right {{#if isNegativeAmount item.Total_Amount_Inc}} text-danger{{else}} text-success {{/if}}"><a href="{{redirectionType item}}" style="text-decoration:none!important;">{{ formatPrice item.Total_Amount_Inc }}</a></td>
-                                    {{/if}}
-                                    <td class="text-center text-success"><a href="{{redirectionType item}}" style="text-decoration:none!important;">0</a></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
-                            {{/if}}
-                        {{/each}}
-                        {{#if checkEmpty value }}
-                            <tr>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                {{#if isOnlyDefaultActive }}
-                                    {{#if currencyList}}
-                                        {{#each c in currencyList }}
-                                            {{# if c.active}}
-                                            {{/if}}
-                                        {{/each}}
-                                        {{#each c in currencyList }}
-                                            {{# if c.active}}
-                                                <td currency="{{c.code}}" currency-id="{{c.id}}" class="text-right">{{ convertAmount value.TotalInc c}}</td>
-                                            {{/if}}
-                                        {{/each}}
-                                        {{#each c in currencyList }}
-                                            {{# if c.active}}
-                                            {{/if}}
-                                        {{/each}}
-                                    {{/if}}
-                                {{else}}
-                                    <td class="text-right">{{ formatPrice value.TotalInc }}</td>
-                                {{/if}}
-                                <td class="text-center">0</td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        {{/if}}
-                    {{/each}}
-                {{else}}
-                    <tr class="odd" style="text-align: center;">
-                      <td valign="top" colspan="11" class="dataTables_empty text-left">No data available in table</td>
-                    </tr>
-                {{/if}} -->
             </tbody>
         </table>
     </div>

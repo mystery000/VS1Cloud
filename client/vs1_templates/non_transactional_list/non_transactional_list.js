@@ -52,6 +52,8 @@ Template.non_transactional_list.onCreated(function() {
     templateObject.tablename = new ReactiveVar();
     templateObject.currentproductID = new ReactiveVar();
     templateObject.currenttype = new ReactiveVar();
+    templateObject.processlist = new ReactiveVar([]);
+
 });
 
 Template.non_transactional_list.onRendered(function() {
@@ -286,7 +288,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "105" },
                 { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
             ];
-        } else if (currenttablename == "tblTermsList") { //Do Something Here
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") { //Do Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
                 { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
@@ -338,17 +340,18 @@ Template.non_transactional_list.onRendered(function() {
             ];
         } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') { //Done Something Here
             reset_data = [
-                { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-                { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-                { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
-                { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-                { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-                { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
-                { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-                { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
-                { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-                { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
-            ];
+                { index: 0, label: 'ID', class: 'colSupplierID colID', active: false, display: true, width: "20" },
+                { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+                { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+                { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+                { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+                { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+                { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+                { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+                { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+                { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+                { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+            ];  
         } else if (currenttablename == "tblLeadlist") { //Done Something Here
             reset_data = [
                 { index: 0, label: '#ID', class: 'colLeadId', active: false, display: true, width: "10" },
@@ -563,6 +566,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "500" },
                 { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
                 { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
+                { index: 4, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
             ]
         } else if(currenttablename === "tblInventoryOverview"){
             reset_data = [
@@ -707,7 +711,7 @@ Template.non_transactional_list.onRendered(function() {
           ];
         } else if(currenttablename === "tblFixedAssetList"){
           reset_data = [
-            { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "0" },
+            { index: 0, label: 'ID', class: 'FixedID', active: false, display: true, width: "0" },
             { index: 1, label: 'Asset Name', class: 'AssetName', active: true, display: true, width: "" },
             { index: 2, label: 'Colour', class: 'Color', active: true, display: true, width: "" },
             { index: 3, label: 'Brand Name', class: 'BrandName', active: true, display: true, width: "" },
@@ -749,7 +753,7 @@ Template.non_transactional_list.onRendered(function() {
             ]
         } else if (currenttablename === "tblFixedAssetType") {
             reset_data = [
-                { index: 0, label: 'ID', class: 'FixedID', active: true, display: true, width: "" },
+                { index: 0, label: 'ID', class: 'FixedID', active: false, display: true, width: "0" },
                 { index: 1, label: 'Asset Type Code', class: 'AssetCode', active: true, display: true, width: "300" },
                 { index: 2, label: 'Asset Type Name', class: 'AssetName', active: true, display: true, width: "300" },
                 { index: 3, label: 'Notes', class: 'Notes', active: true, display: true, width: "300" },
@@ -799,6 +803,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
                 { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "150" },
                 { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "150" },
+                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "150" },
             ]
         } else if (currenttablename === "tblHolidays"){
             reset_data = [
@@ -806,6 +811,7 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "100" },
                 { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "100" },
                 { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "150" },
+                { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "150" },
             ]
         }else if (currenttablename === "tblDraftPayRun"){
             reset_data = [
@@ -818,7 +824,20 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
                 { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
             ]
-        } else if (currenttablename === 'taxRatesList') {
+        } else if (currenttablename === "tblPayRunHistory"){
+            reset_data = [
+                { index: 0, label: 'ID', class: 'colHistoryPayRunID', active: true, display: true, width: "" },
+                { index: 1, label: 'Calendar', class: 'colPayRunCalendar', active: true, display: true, width: "100" },
+                { index: 2, label: 'Period', class: 'colPayRunPeriod', active: true, display: true, width: "100" },
+                { index: 3, label: 'Payment Date', class: 'colPayRunPaymentDate', active: true, display: true, width: "150" },
+                { index: 4, label: 'Wages', class: 'colPayRunWages', active: true, display: true, width: "150" },
+                { index: 5, label: 'Tax', class: 'colPayRunTax', active: true, display: true, width: "100" },
+                { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "100" },
+                { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "100" },
+            ]
+        }
+
+        else if (currenttablename === 'taxRatesList') {
             reset_data = [
                 { index: 0, label: 'Id', class: 'colTaxRateId', active: false, display: true },
                 { index: 1, label: 'Name', class: 'colTaxRateName', active: true, display: true, width: '80' },
@@ -950,6 +969,17 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
                 { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
             ]
+        } else if (currenttablename === "tblMyTaskDatatable"){
+            reset_data = [
+                { index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "" },
+                { index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "" },
+                { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "" },
+                { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "" },
+                { index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "" },
+                { index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "" },
+                { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+            ]
         } else if (currenttablename === "tblReceiptCategoryList") {
             reset_data = [
                 { index: 0, label: 'Id', class: 'colId', active: false, display: true, width: "" },
@@ -958,7 +988,72 @@ Template.non_transactional_list.onRendered(function() {
                 { index: 3, label: 'Post Account', class: 'colPostAccount', active: true, display: true, width: "" },
                 { index: 4, label: '', class: 'colDelete', active: true, display: true, width: "" }
             ]
-        }
+        } else if (currenttablename === "tblServicesList"){
+            reset_data = [
+                { index: 0, label: 'Machine Name', class: 'colMachineName', active: true, display: true, width: "" },
+                { index: 1, label: 'IP Address', class: 'colIPAddress', active: true, display: true, width: "" },
+                { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+                { index: 3, label: 'Check', class: 'colCheck', active: true, display: true, width: "" },
+                { index: 4, label: 'Restart', class: 'colRestart', active: true, display: true, width: "" },
+                { index: 5, label: 'Edit', class: 'colEdit', active: true, display: true, width: "" },
+            ]
+        } else if (currenttablename === "tblMachineSummaryList"){
+            reset_data = [
+                { index: 0, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+                { index: 1, label: 'Count of Status', class: 'colCountOfStatus', active: true, display: true, width: "" },
+            ]
+        } else if (currenttablename === "tblMachineDetailList"){
+            reset_data = [
+                { index: 0, label: 'Time', class: 'colTime', active: true, display: true, width: "" },
+                { index: 1, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+            ]
+        } else if (currenttablename === "tblAdminServiceList"){
+            reset_data = [
+                { index: 0, label: 'Email Address', class: 'colAddress', active: true, display: true, width: "" },
+                { index: 1, label: 'Password', class: 'colPassword', active: true, display: true, width: "" },
+                { index: 2, label: 'SMS number', class: 'colSMS', active: true, display: true, width: "" },
+            ]
+        }  else if(currenttablename === "tblBuildCostReport"){
+
+            reset_data = [
+                { index: 0, label: "Work Order", class: "colWorkOrder", width: "80", active: true, display: true },
+                { index: 1, label: "ProductID", class: "colProductID", width: "80", active: true, display: true },
+                { index: 2, label: "Process BOM", class: "colProcessBOM", width: "100", active: true, display: true },
+                { index: 3, label: "BOM Changed", class: "colBOMChanged", width: "100", active: true, display: true },
+                { index: 4, label: "BOM Products", class: "colProducts", width: "100", active: true, display: true },
+                { index: 5, label: "Products Changed", class: "colProductChanged", width: "100", active: true, display: true },
+                { index: 6, label: "Unit Cost", class: "colUnitCost", width: "100", active: true, display: true },
+                { index: 7, label: "BOM Qty", class: "colBOMQty", width: "100", active: true, display: true },
+                { index: 8, label: "Changed Qty", class: "colChangedQty", width: "100", active: true, display: true },
+                { index: 9, label: "Variance", class: "colVariance", width: "100", active: true, display: true },
+                { index: 10, label: "Wastage", class: "colWastage", width: "100", active: true, display: true },
+                { index: 11, label: "Total Clocked Hrs", class: "colTotalClockedHrs", width: "100", active: true, display: true },
+                { index: 12, label: "Labour Cost", class: "colLabourCost", width: "100", active: true, display: true },
+                { index: 13, label: "Overhead Cost", class: "colOverheadCost", width: "100", active: true, display: true },
+                { index: 14, label: "Raw Material Cost", class: "colRawMaterialCost", width: "100", active: true, display: true },
+                { index: 15, label: "Total BOM Cost", class: "colTotalBOMCost", width: "100", active: true, display: true },
+                { index: 16, label: "Wastage Cost", class: "colWastageCost", width: "100", active: true, display: true },
+        
+            ]
+        } else if(currenttablename === "tblProductionWorksheetReport"){
+
+            reset_data = [
+                { index: 0, label: "Sale", class: "colSale", width: "80", active: true, display: true },
+                { index: 1, label: "Customer", class: "colCustomer", width: "100", active: true, display: true },
+                { index: 2, label: "Ship Date", class: "colShipDate", width: "100", active: true, display: true },
+                { index: 3, label: "Total Qty", class: "colTotalQty", width: "100", active: true, display: true },
+                { index: 4, label: "Product", class: "colProducts", width: "100", active: true, display: true },
+                { index: 5, label: "Description", class: "colDescription", width: "100", active: true, display: true },
+                { index: 6, label: "ItemCaption", class: "colItemCation", width: "100", active: true, display: true },
+                { index: 7, label: "Resource", class: "colResource", width: "100", active: true, display: true },
+                { index: 8, label: "Employee", class: "colEmployee", width: "100", active: true, display: true },
+                { index: 9, label: "Start", class: "colStart", width: "100", active: true, display: true },
+                { index: 10, label: "Duration", class: "colDuration", width: "100", active: true, display: true },
+              
+        
+            ]
+        }       
+
         templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
@@ -1682,7 +1777,6 @@ Template.non_transactional_list.onRendered(function() {
         } else {
             deleteFilter = false;
         };
-
         for (let i = 0; i < data.temployeelist.length; i++) {
             let linestatus = '';
             if (data.temployeelist[i].Active == true) {
@@ -2206,12 +2300,12 @@ Template.non_transactional_list.onRendered(function() {
     //InventoryOverview Data
     templateObject.getAllProductData = async function(deleteFilter=false) {
         // await templateObject.initCustomFieldDisplaySettings("", "tblInventoryOverview");
-        getVS1Data("TProductList").then(function (dataObject) {
+        getVS1Data("TProductQtyList").then(function (dataObject) {
             if (dataObject.length == 0) {
                 sideBarService
                 .getProductListVS1(initialBaseDataLoad, 0, deleteFilter)
                 .then(async function (data) {
-                    await addVS1Data("TProductList", JSON.stringify(data));
+                    await addVS1Data("TProductQtyList", JSON.stringify(data));
                     templateObject.displayAllProductData(data);
                 })
                 .catch(function (err) {});
@@ -2230,37 +2324,37 @@ Template.non_transactional_list.onRendered(function() {
         let checkIfSerialorLot = '';
         var dataList = {};
         departmentData = "All";
-        for (let i = 0; i < data.tproductlist.length; i++) {
-          let availableQty = data.tproductlist[i].AvailableQty||0;
-          if(data.tproductlist[i].SNTracking == true){
+        for (let i = 0; i < data.tproductqtylist.length; i++) {
+          let availableQty = data.tproductqtylist[i].AvailableQty||0;
+          if(data.tproductqtylist[i].SNTracking == true){
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
-          }else if(data.tproductlist[i].batch == true){
+          }else if(data.tproductqtylist[i].batch == true){
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnBatch"  style="font-size: 22px;" ></i>';
           }else{
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
           }
 
-           onBOOrder = data.tproductlist[i].TotalQtyInStock - availableQty;
+           onBOOrder = data.tproductqtylist[i].TotalQtyInStock - availableQty;
             var dataList = [
-                data.tproductlist[i].PARTSID || "",
-                data.tproductlist[i].PARTNAME || "-",
-                data.tproductlist[i].PARTSDESCRIPTION || "",
+                data.tproductqtylist[i].PARTSID || "",
+                data.tproductqtylist[i].ProductName || "-",
+                data.tproductqtylist[i].SalesDescription || "",
                 availableQty,
-                data.tproductlist[i].SOBOQty||0,
-                data.tproductlist[i].POBOQty||0,
-                data.tproductlist[i].InstockQty,
-                data.tproductlist[i].AllocatedBOQty,
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COST1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].COSTINC1 * 100) /100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICE1 * 100) / 100),
-                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductlist[i].PRICEINC1 * 100) /100),
+                data.tproductqtylist[i].AllocatedSO||0,
+                data.tproductqtylist[i].AllocatedBO||0,
+                data.tproductqtylist[i].InStock,
+                data.tproductqtylist[i].OnOrder,
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].CostExA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].CostIncA * 100) /100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PriceExA * 100) / 100),
+                utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductqtylist[i].PriceIncA * 100) /100),
                 checkIfSerialorLot||'',
-                data.tproductlist[i].BARCODE || "",
+                data.tproductqtylist[i].BARCODE || "",
                 departmentData,
-                data.tproductlist[i].PURCHASEDESC || "",
-                data.tproductlist[i].CUSTFLD1 || "",
-                data.tproductlist[i].CUSTFLD2 || "",
-                data.tproductlist[i].Active ? "" : "In-Active"
+                data.tproductqtylist[i].PurchaseDescription || "",
+                data.tproductqtylist[i].CUSTFLD1 || "",
+                data.tproductqtylist[i].CUSTFLD2 || "",
+                data.tproductqtylist[i].Active ? "" : "In-Active"
             ];
             splashArrayProductList.push(dataList);
             dataTableList.push(dataList);
@@ -2281,15 +2375,15 @@ Template.non_transactional_list.onRendered(function() {
                         width: `${item.width}px`
                     })
                 });
-            }                       
+            }
             $("#" + currenttablename).dataTable({
                 data: splashArrayProductList,
                 sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: columnData,
                   select: true,
                   destroy: true,
-                  colReorder: true,    
-                  "autoWidth": false,            
+                  colReorder: true,
+                  "autoWidth": false,
                   buttons: [{
                           extend: "excelHtml5",
                           text: "",
@@ -2343,18 +2437,18 @@ Template.non_transactional_list.onRendered(function() {
                       $(".paginate_button.next:not(.disabled)",this.api().table().container()).on("click", function() {
                           $(".fullScreenSpin").css("display", "inline-block");
                           sideBarService.getProductListVS1(initialDatatableLoad,oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                            getVS1Data("TProductList").then(function (dataObjectold) {
+                            getVS1Data("TProductQtyList").then(function (dataObjectold) {
                                 if (dataObjectold.length == 0) {
                                 } else {
                                   let dataOld = JSON.parse(dataObjectold[0].data);
 
-                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductlist),dataOld.tproductlist);
+                                  var thirdaryData = $.merge($.merge([],dataObjectnew.tproductqtylist),dataOld.tproductqtylist);
                                   let objCombineData = {
                                     Params: dataOld.Params,
-                                    tproductlist: thirdaryData,
+                                    tproductqtylist: thirdaryData,
                                   };
 
-                                  addVS1Data("TProductList",JSON.stringify(objCombineData)).then(function (datareturn) {
+                                  addVS1Data("TProductQtyList",JSON.stringify(objCombineData)).then(function (datareturn) {
                                       templateObject.resetData(objCombineData);
                                       $(".fullScreenSpin").css("display", "none");
                                     }).catch(function (err) {
@@ -2418,7 +2512,7 @@ Template.non_transactional_list.onRendered(function() {
         await templateObject.initCustomFieldDisplaySettings("", "tblBinLocations");
         getVS1Data("TProductBin").then(function(dataObject) {
             if (dataObject.length == 0) {
-                productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(function(data) {
+                productService.getBins().then(function(data) {
                         addVS1Data("TProductBin", JSON.stringify(data));
                         templateObject.displayAllProductBinData(data, deptname);
                     });
@@ -2428,11 +2522,11 @@ Template.non_transactional_list.onRendered(function() {
                 templateObject.displayAllProductBinData(data, deptname);
             }
         }).catch(function(err) {
-            productService.getAllBinProductVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+            productService.getBins().then(async function(data) {
                 await addVS1Data('TProductBin', JSON.stringify(data));
                 templateObject.displayAllProductBinData(data, dpetname, );
             }).catch(function(err) {
-    
+
             });
         });
     };
@@ -2461,7 +2555,7 @@ Template.non_transactional_list.onRendered(function() {
                 productsData = data.tproductvs1;
             }
         });
-      
+        
         for (let i = 0; i < data.tproductbin.length; i++) {
             let linestatus = '';
             let productDetail;
@@ -2474,7 +2568,7 @@ Template.non_transactional_list.onRendered(function() {
             } else if (data.tproductbin[i].Active == false) {
                 linestatus = "In-Active";
             };
-
+            let flag = 0;
             for (let j = 0; j < productsData.length ; j++ ){
                 if(productsData[j].fields.ProductClass[0].fields.DefaultbinLocation == data.tproductbin[i].BinLocation && productsData[j].fields.ProductClass[0].fields.DefaultbinNumber == data.tproductbin[i].BinNumber) {
                     productDetail = productsData[j].fields;
@@ -2482,24 +2576,38 @@ Template.non_transactional_list.onRendered(function() {
                     productsalesdescription = productsData[j].fields.SalesDescription;
                     productinstock = productsData[j].fields.ProductClass[0].fields.OnOrderQuantity;
                     productId = productsData[j].fields.ID;
+                    flag = 1;
+                    var dataList = [
+                        data.tproductbin[i].Id || "",
+                        data.tproductbin[i].BinLocation || "-",
+                        data.tproductbin[i].BinNumber || "",
+                        data.tproductbin[i].BinClassName || "",
+                        productId || "",
+                        productname || "",
+                        productsalesdescription || "",
+                        productinstock || "",
+                        linestatus,
+                    ];
+                    splashArrayProductList.push(dataList);
+                    dataTableList.push(dataList);
                 }
             }
-
-            var dataList = [
-                data.tproductbin[i].Id || "",
-                data.tproductbin[i].BinLocation || "-",
-                data.tproductbin[i].BinNumber || "",
-                data.tproductbin[i].BinClassName || "",
-                productId || "",
-                productname || "",
-                productsalesdescription || "",
-                productinstock || "",
-                linestatus,
-            ];
-            splashArrayProductList.push(dataList);
-            dataTableList.push(dataList);
+            if(flag == 0) {
+                var dataList = [
+                    data.tproductbin[i].Id || "",
+                    data.tproductbin[i].BinLocation || "-",
+                    data.tproductbin[i].BinNumber || "",
+                    data.tproductbin[i].BinClassName || "",
+                    productId || "",
+                    productname || "",
+                    productsalesdescription || "",
+                    productinstock || "",
+                    linestatus,
+                ];
+                splashArrayProductList.push(dataList);
+                dataTableList.push(dataList);
+            }
         }
-
 
         templateObject.transactiondatatablerecords.set(dataTableList);
 
@@ -2692,7 +2800,7 @@ Template.non_transactional_list.onRendered(function() {
             let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.tsuppliervs1list[i].Balance) || 0.00;
 
             var dataList = [
-                // data.tsuppliervs1list[i].ClientID || '',
+                data.tsuppliervs1list[i].ClientID || '',
                 data.tsuppliervs1list[i].Company || '',
                 data.tsuppliervs1list[i].Phone || '',
                 arBalance || 0.00,
@@ -2728,62 +2836,62 @@ Template.non_transactional_list.onRendered(function() {
                 data: splashArraySuppliersList,
                 "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
                 columnDefs: [
-                    // {
-                    //     targets: 0,
-                    //     className: "colSupplierID colID hiddenColumn",
-                    //     width: "10px",
-                    //     createdCell: function(td, cellData, rowData, row, col) {
-                    //         $(td).closest("tr").attr("id", rowData[0]);
-                    //     }
-                    // },
                     {
                         targets: 0,
+                        className: "colSupplierID colID hiddenColumn",
+                        width: "10px",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("id", rowData[0]);
+                        }
+                    },
+                    {
+                        targets: 1,
                         className: "colCompany",
                         width: "200px",
                     },
                     {
-                        targets: 1,
+                        targets: 2,
                         className: "colPhone",
                         width: "95px",
                     },
                     {
-                        targets: 2,
+                        targets: 3,
                         className: "colARBalance text-right",
                         width: "90px",
                     },
                     {
-                        targets: 3,
+                        targets: 4,
                         className: "colCreditBalance text-right",
                         width: "110px",
                     },
                     {
-                        targets: 4,
+                        targets: 5,
                         className: "colBalance text-right",
                         width: "80px",
                     },
                     {
-                        targets: 5,
+                        targets: 6,
                         className: "colCreditLimit text-right",
                         width: "90px",
                     },
                     {
-                        targets: 6,
+                        targets: 7,
                         className: "colSalesOrderBalance text-right",
                         width: "120px",
                     },
 
                     {
-                        targets: 7,
+                        targets: 8,
                         className: "colSuburb",
                         width: "120px",
                     },
                     {
-                        targets: 8,
+                        targets: 9,
                         className: "colCountry",
                         width: "200px",
                     },
                     {
-                        targets: 9,
+                        targets: 10,
                         className: "colNotes",
                     }
                 ],
@@ -2880,6 +2988,607 @@ Template.non_transactional_list.onRendered(function() {
 
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
+
+    //Build Cost Report Data    
+    templateObject.getBuildCostReport = async function(deleteFilter = false) {
+        var customerpage = 0;
+        getVS1Data('TVS1Workorder').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                //     templateObject.displaySuppliersListData(data);
+                // }).catch(function(err) {
+                // });
+            } else {
+                let data_buildCost = JSON.parse(dataObject[0].data);
+
+                getVS1Data('TProcessStep').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                            await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                                templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder,data);
+                            })
+                        })
+                    } else {
+                        let data_process = JSON.parse(dataObject[0].data);
+                        templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder, data_process); 
+                    }
+                }).catch(function(e) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                        await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                            templateObject.displayBuildCostReportData(data_buildCost.tvs1workorder,data);
+                                                    })
+                    })
+                })
+
+                
+            }
+        }).catch(function(err) {
+            // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+            //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+            //     templateObject.displaySuppliersListData(data);
+            // }).catch(function(err) {
+
+            // });
+        });
+    }
+
+    templateObject.displayBuildCostReportData = async function(data, data2) {
+        var splashArrayBuildCostReport = new Array();
+        let deleteFilter = false;
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+        let bomData;
+        let process_data = data2.tprocessstep;
+
+        let hourly_labour_cost;
+        let hourly_overhead_cost;
+        let unit_cost = "95.63"
+        let unit_cost_f;
+
+       
+        for (let i = 0; i < data.length; i++) {
+
+            bomData = JSON.parse(data[i].fields.BOMStructure);                    
+            for(let k =0 ; k < process_data.length; k++) {
+                if (bomData.Info == process_data[k].fields.Description) {
+                    hourly_labour_cost = parseFloat(process_data[k].fields.HourlyLabourCost);
+                    hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);    
+                }
+            }
+
+
+            let details = JSON.parse(bomData.Details);
+
+            unit_cost_f = parseFloat(unit_cost.replace(/\$/g, '')) ;
+            
+            let dataList = [ bomData.Id || '' , 
+                             bomData.Caption || '',
+                             bomData.Info || '',
+                             '' || '',
+                            bomData.Caption || '',
+                            '' || '',
+                            '$95' || '',
+                            bomData.TotalQtyOriginal || '0',
+                            bomData.TotalQtyOriginal || '0', //change qty
+                            bomData.QtyVariation || '0',
+                            '' || 0,
+                            '00:12:35' || '',
+                            hourly_labour_cost * 1 || '',
+                            hourly_overhead_cost * 1 || '',
+                            parseFloat(bomData.TotalQtyOriginal) * unit_cost_f  || 0,
+                            '' || 0,
+                            '' || 0,
+                            
+                        ];
+
+            splashArrayBuildCostReport.push(dataList);
+            
+
+            for(let j=0; j<details.length;j++) {
+
+                dataList = [  '' , 
+                              '',
+                              '',
+                              '' || '',
+                              details[j].productName || '',
+                              '' || '',
+                              '$7.5' || '',   //unit cost
+                               details[j].qty || '',  //qty
+                               details[j].qty || '',  //change qty
+                                '' || 0,     //variance
+                                '' || 0,    //wastage
+                                '' || '',
+                                hourly_labour_cost * 1 || '',
+                                hourly_overhead_cost * 1 || '',
+                                parseFloat(details[j].qty) * 7.5 || 0,
+                                '' || 0,
+                                '' || 0,
+                                
+                        ];
+                splashArrayBuildCostReport.push(dataList);        
+            }
+
+          
+           
+            
+            templateObject.transactiondatatablerecords.set(splashArrayBuildCostReport);
+        }
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayBuildCostReport,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    // {
+                    //     targets: 0,
+                    //     className: "colSupplierID colID hiddenColumn",
+                    //     width: "10px",
+                    //     createdCell: function(td, cellData, rowData, row, col) {
+                    //         $(td).closest("tr").attr("id", rowData[0]);
+                    //     }
+                    // },
+                    {
+                        targets: 0,
+                        className: "colCompany",
+                        width: "200px",
+                    },
+                    {
+                        targets: 1,
+                        className: "colPhone",
+                        width: "95px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colARBalance text-right",
+                        width: "90px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colCreditBalance text-right",
+                        width: "110px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colBalance text-right",
+                        width: "80px",
+                    },
+                    {
+                        targets: 5,
+                        className: "colCreditLimit text-right",
+                        width: "90px",
+                    },
+                    {
+                        targets: 6,
+                        className: "colSalesOrderBalance text-right",
+                        width: "120px",
+                    },
+
+                    {
+                        targets: 7,
+                        className: "colSuburb",
+                        width: "120px",
+                    },
+                    {
+                        targets: 8,
+                        className: "colCountry",
+                        width: "200px",
+                    },
+                    {
+                        targets: 9,
+                        className: "colNotes",
+                    },
+                    
+                    {   orderable: false, 
+                        targets: '_all',
+                    },
+
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Suppliers List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Suppliers List',
+                        filename: "Suppliers List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Suppliers List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (data.Params.Search.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = splashArrayBuildCostReport.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    //Production WorkSheet Report Data    
+    templateObject.getProductionWorksheetReport = async function() {
+
+        getVS1Data('TVS1Workorder').then(function(dataObject) {
+            if (dataObject.length == 0) {
+                // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+                //     templateObject.displaySuppliersListData(data);
+                // }).catch(function(err) {
+                // });
+            } else {
+                let data_buildCost = JSON.parse(dataObject[0].data);
+
+
+                getVS1Data('TProcessStep').then(function(dataObject) {
+                    if (dataObject.length == 0) {
+                        manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                            await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                                let data_process = JSON.parse(dataObject[0].data);
+                                templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder,data_process);
+                            })
+                        })
+                    } else {
+                        let data_process = JSON.parse(dataObject[0].data);
+                        templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder, data_process); 
+                    }
+                }).catch(function(e) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
+                        await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                            let data_process = JSON.parse(dataObject[0].data);
+                            templateObject.displayProductionWorksheetReportData(data_buildCost.tvs1workorder,data_process);
+                                                    })
+                    })
+                })
+
+                
+            }
+        }).catch(function(err) {
+            // sideBarService.getAllSuppliersDataVS1List(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+            //     addVS1Data('TSupplierVS1List', JSON.stringify(data));
+            //     templateObject.displaySuppliersListData(data);
+            // }).catch(function(err) {
+
+            // });
+        });
+    }
+
+    templateObject.displayProductionWorksheetReportData = async function(data_workorder, data_process) {
+     
+        var splashArrayWorksheetReport = new Array();
+        let deleteFilter = false;
+        // if (data.Params.Search.replace(/\s/g, "") == "") {
+        //     deleteFilter = true;
+        // } else {
+        //     deleteFilter = false;
+        // };
+        let bomData;
+        let process_data = data_process.tprocessstep;
+        let dataList;
+
+        for(let i = 0; i < process_data.length; i ++ ) {
+            let exist_data = false ;
+            for(let j=0; j < data_workorder.length ; j++) {
+                bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
+                let details = JSON.parse(bomData.Details);
+                for(let k=0 ; k < details.length ; k++) {
+                    if (process_data[i].fields.Description == details[k].process) {
+                        exist_data = true;
+                    }
+                }  
+                
+            }
+
+            if(exist_data) {
+                dataList = [
+                    "<span style = 'font-weight:bold; font-size:20px ' >Resource/Process </span>",
+                    "<span style = 'font-weight:bold; font-size:20px ' >" + process_data[i].fields.Description +  "    Bay</span>", 
+                    "<span style = 'font-weight:bold; font-size:20px ' > /    " + process_data[i].fields.Description + "</span>"
+                ];
+                splashArrayWorksheetReport.push(dataList);
+            }   
+            
+            for(let j=0; j < data_workorder.length ; j++) {
+                bomData = JSON.parse(data_workorder[j].fields.BOMStructure);
+                let details = JSON.parse(bomData.Details);
+
+                for(let k=0 ; k < details.length ; k++) {
+                    if (process_data[i].fields.Description == details[k].process) {
+                        dataList = [
+                        bomData.Id || '' ,
+                        data_workorder[j].fields.Customer || '' ,
+                        data_workorder[j].fields.ShipDate  || '',
+                        details[k].qty || '',
+                        data_workorder[j].fields.ProductName || '',
+                        bomData.Description || '',
+                        details[k].productName || '',
+                        details[k].process + "  Bays" || '',
+                        "Dene Mills",
+                        data_workorder[j].fields.StartTime || '',
+                        "00:00:00 " || ' ',
+                        ];
+                        splashArrayWorksheetReport.push(dataList);
+                    }
+                }  
+                
+            }
+           
+        }
+        dataList = [
+             '' ,
+             '' ,
+             '',
+             '',
+             '',
+             '',
+             '',
+             '',
+             '',
+             
+             '<span style = "color:red ; font-size : 20px " > Total </span>' || ' ',
+             '<span style = "color:red ; font-size : 20px " >00:00:00 </span>' || ' '
+        ];
+
+        splashArrayWorksheetReport.push(dataList);
+        
+        templateObject.transactiondatatablerecords.set(splashArrayWorksheetReport);
+     
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayWorksheetReport,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    // {
+                    //     targets: 0,
+                    //     className: "colSupplierID colID hiddenColumn",
+                    //     width: "10px",
+                    //     createdCell: function(td, cellData, rowData, row, col) {
+                    //         $(td).closest("tr").attr("id", rowData[0]);
+                    //     }
+                    // },
+                    {
+                        targets: 0,
+                        className: "colSale",
+                        width: "200px",
+                    },
+                    {
+                        targets: 1,
+                        className: "colCustomer",
+                        width: "135px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colShipDate",
+                        width: "135px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colTotalQty",
+                        width: "100px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colProducts",
+                        width: "100px",
+                    },
+                    {
+                        targets: 5,
+                        className: "colDescription text-right",
+                        width: "130px",
+                    },
+                    {
+                        targets: 6,
+                        className: "colItemCation text-right",
+                        width: "100px",
+                    },
+                    {
+                        targets: 7,
+                        className: "colResource text-right",
+                        width: "120px",
+                    },
+
+                    {
+                        targets: 8,
+                        width: "100px",
+                    },
+                    {
+                        targets: 9,
+                        width: "100px",
+                    },
+
+                    {
+                        targets: 10,
+                        width: "100px",
+                    },
+                                        
+                    { orderable: false, targets: '_all' }
+                    
+                   
+                    
+                ],
+
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "Suppliers List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'Suppliers List',
+                        filename: "Suppliers List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "Production Worksheet List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: false,
+                "order": [
+                    
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                language: { search: "", searchPlaceholder: "Search List..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (data.Params.Search.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = splashArrayWorksheetReport.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+
 
     //Lead List Data
     templateObject.getLeadListData = async function(deleteFilter = false) {
@@ -3283,11 +3992,11 @@ Template.non_transactional_list.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let deleteFilter = false;
-        // if(data.Params.Search.replace(/\s/g, "") == ""){
-        //   deleteFilter = true;
-        // }else{
-        //   deleteFilter = false;
-        // };
+        if(data?.Params?.Search?.replace(/\s/g, "") == ""){
+          deleteFilter = true;
+        }else{
+          deleteFilter = false;
+        };
         for (let i = 0; i < data.tclienttype.length; i++) {
             let mobile = "";
             //sideBarService.changeDialFormat(data.temployeelist[i].Mobile, data.temployeelist[i].Country);
@@ -4769,7 +5478,7 @@ Template.non_transactional_list.onRendered(function() {
 
     //UOM List Data
     templateObject.getUOMListData = async function (deleteFilter = false) {
-      //GET Data here from Web API or IndexDB      
+      //GET Data here from Web API or IndexDB
       getVS1Data("TUnitOfMeasureList")
         .then(function (dataObject) {
           if (dataObject.length == 0) {
@@ -6185,10 +6894,10 @@ Template.non_transactional_list.onRendered(function() {
                 overtimes.push(defaultOvertime);
             };
         })
-        templateObject.displayOverTimeSheetListData(overtimes); //Call this function to display data on the table
+        templateObject.displayOverTimeSheetListData(overtimes, deleteFilter); //Call this function to display data on the table
     }
 
-    templateObject.displayOverTimeSheetListData = async function(data) {
+    templateObject.displayOverTimeSheetListData = async function(data, deleteFilter) {
         var splashArrayOverTimeSheetList = new Array();
         for (let i = 0; i < data.length; i++) {
             var dataList = [
@@ -6196,11 +6905,18 @@ Template.non_transactional_list.onRendered(function() {
                 data[i].rate || "",
                 data[i].rule || "",
                 data[i].hourlyMultiplier || "",
+                data[i].active == true ? '' : 'In-Active',
             ];
-            splashArrayOverTimeSheetList.push(dataList);
+            if(deleteFilter == true){
+                splashArrayOverTimeSheetList.push(dataList);
+            }
+            else{
+                if(data[i].active == true){
+                    splashArrayOverTimeSheetList.push(dataList);
+                }
+            }
             templateObject.transactiondatatablerecords.set(splashArrayOverTimeSheetList);
         }
-        let deleteFilter = false;
         if(templateObject.transactiondatatablerecords.get()) {
             setTimeout(function () {
                 MakeNegative();
@@ -6231,6 +6947,11 @@ Template.non_transactional_list.onRendered(function() {
                     {
                         targets: 3,
                         className: "colHourlyAmount",
+                        width: "150px",
+                    },
+                    {
+                        targets: 4,
+                        className: "colStatus",
                         width: "150px",
                     }
                 ],
@@ -6356,7 +7077,7 @@ Template.non_transactional_list.onRendered(function() {
             if (dataObject.length == 0) {
                 manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
                     await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
-                        templateObject.displayProcessListData(data)
+                        templateObject.displayProcessListData(data);
                     })
                 })
             } else {
@@ -6366,7 +7087,7 @@ Template.non_transactional_list.onRendered(function() {
         }).catch(function(e) {
             manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(async function(data) {
                 await addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
-                    templateObject.displayProcessListData(data)
+                    templateObject.displayProcessListData(data);
                 })
             })
         })
@@ -9056,13 +9777,11 @@ Template.non_transactional_list.onRendered(function() {
         if(customerName == ""){
             customerName = $('#edtJobCustomerCompany').val() || "";
         }
-
         let fromDate = datefrom == "" ? moment(new Date()).subtract(2, 'month').format('DD/MM/YYYY') : datefrom;
         let toDate = dateto == "" ? moment(new Date()).format("DD/MM/YYYY") : dateto;
-
         fromDate = new Date(fromDate.split("/")[2]+"-"+fromDate.split("/")[1]+"-"+(parseInt(fromDate.split("/")[0])+1)+" 00:00:01");
         toDate = new Date(toDate.split("/")[2]+"-"+toDate.split("/")[1]+"-"+(parseInt(toDate.split("/")[0])+1)+" 23:59:59");
-
+        if (FlowRouter.current().path === "/customerscard") return templateObject.displayCustomerCrmListDataWithDate(dataTableList, deleteFilter, moment(fromDate).format("DD/MM/YYYY"), moment(toDate).format("DD/MM/YYYY"))
         getVS1Data("TCRMTaskList").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 crmService.getAllTasksByContactName().then(async function(data) {
@@ -11725,7 +12444,7 @@ Template.non_transactional_list.onRendered(function() {
                             tab3endDate = new Date(data.tvatreturns[i].fields.Tab3Year, (parseInt(endMonth)), 0);
                             tab3endDate = moment(tab3endDate).format("YYYY-MM-DD");
                         }
-                        
+
                         if (deleteFilter == false) {
                             if (data.tvatreturns[i].fields.Active) {
                                 var dataList = {
@@ -13279,15 +13998,15 @@ Template.non_transactional_list.onRendered(function() {
       if( displayfields.length > 0 ){
           displayfields.forEach(function( item ){
             if (item.id == 0) {
-              columnData.push({
-                className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
-                targets: item.id,
-                width: "10px",
-                createdCell: function(td, cellData, rowData, row, col) {
-                  $(td).closest("tr").attr("id", rowData[0]);
-                }
-              })
-            }
+                columnData.push({
+                  className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
+                  targets: item.id,
+                  width: "10px",
+                  createdCell: function(td, cellData, rowData, row, col) {
+                    $(td).closest("tr").attr("id", rowData[0]);
+                  }
+                })
+              }
             else {
               columnData.push({
                   className: ( item.active )? item.class : `col${item.class} hiddenColumn`,
@@ -13410,6 +14129,220 @@ Template.non_transactional_list.onRendered(function() {
         });
       });
     }
+
+    templateObject.getPayRunsHistoryList =async function(){
+        let data = await CachedHttp.get(erpObject.TPayHistory, async () => {
+            return await   sideBarService.getAllPayHistoryDataVS1(initialBaseDataLoad, 0);
+          }, {
+            forceOverride: false,
+            validate: (cachedResponse) => {
+              return true;
+            }
+          });
+
+           data = data.response.tpayhistory;
+          templateObject.displayPayRunsHistoryList(data);
+
+      }
+
+      templateObject.displayPayRunsHistoryList = function(data){
+        let splashArrayTimeSheetList = new Array();
+        for (let i = 0; i < data.length; i++) {
+            let ID = data[i].fields.ID || '';
+            let calendar = data[i].fields.Payperiod;
+            let period =data[i].fields.payDate != "" ? moment(data[i].fields.payDate).format("D MMM YYYY") : "";
+            let paymentDate =data[i].fields.DatePaid != "" ? moment(data[i].fields.DatePaid).format("D MMM YYYY") : "";
+            let wages =data[i].fields.Wages;
+            let tax = data[i].fields.Tax;
+            let supper = data[i].fields.Superannuation;
+            let netPay = data[i].fields.Net;
+            var dataTimeSheetList = [
+                ID,
+                calendar,
+                period,
+                paymentDate,
+                wages,
+                tax,
+                supper,
+                netPay
+              ];
+            splashArrayTimeSheetList.push(dataTimeSheetList);
+            templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        }
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colHistoryPayRunID",
+                        targets:0,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunCalendar",
+                        targets: 1,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunPeriod",
+                        targets: 2,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunPaymentDate",
+                        targets: 3,
+                        width:'150px'
+                    },
+                    {
+                        className: "colPayRunWages",
+                        targets: 4,
+                        width:'150px'
+                    },
+                    {
+                        className: "colPayRunTax",
+                        targets: 5,
+                        width:'250px'
+                    },
+                    {
+                        className: "colPayRunSuper",
+                        targets: 6,
+                        width:'100px'
+                    },
+                    {
+                        className: "colPayRunNetPay",
+                        targets: 7,
+                        width:'100px'
+                    }
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                "order": [
+                    [1, "asc"]
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.length || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+      setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     templateObject.displayPayRunsList = function(data){
         let splashArrayTimeSheetList = new Array();
@@ -14417,7 +15350,7 @@ Template.non_transactional_list.onRendered(function() {
                     }
                 }
                 else if(data.tproductbatches[i].Batchno != "" && data.tproductbatches[i].Alloctype == "IN"){
-                    qty += "<label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
+                    qty += "<span class=\"spliter\"></span><label style='width:100%; text-align:right'>" + data.tproductbatches[i].Qty + "</label>";
                     if(data.tproductbatches[i].Transtype == "TPurchaseOrderLine"){
                         transaction = "<label style='width:100%;'>PO-"+data.tproductbatches[i].transid+"</label>" + transaction;
                     }
@@ -14561,10 +15494,7 @@ Template.non_transactional_list.onRendered(function() {
                 destroy: true,
                 colReorder: true,
                 pageLength: initialDatatableLoad,
-                lengthMenu: [
-                    [initialDatatableLoad, -1],
-                    [initialDatatableLoad, "All"]
-                ],
+                lengthMenu: [],
                 info: true,
                 responsive: true,
             //   "order": [
@@ -14819,30 +15749,31 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getPayCalendarsData = function(){
+    templateObject.getPayCalendarsData = async function(deleteFilter = false){
+        await clearData('TPayrollCalendars');
         getVS1Data('TPayrollCalendars').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+                sideBarService.getCalender(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
                     await addVS1Data('TPayrollCalendars', JSON.stringify(data));
-                    templateObject.displayPayCalendars(data);
+                    templateObject.displayPayCalendars(data, deleteFilter);
                 }).catch(function (err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayPayCalendars(data);
+                templateObject.displayPayCalendars(data, deleteFilter);
             }
         }).catch(function (err) {
-          sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+          sideBarService.getCalender(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
               await addVS1Data('TPayrollCalendars', JSON.stringify(data));
-              templateObject.displayPayCalendars(data);
+              templateObject.displayPayCalendars(data, deleteFilter);
           }).catch(function (err) {
 
           });
         });
     }
 
-    templateObject.displayPayCalendars = function(data){
+    templateObject.displayPayCalendars = function(data, deleteFilter){
         let splashArrayPayrollCalendars = new Array();
         for (let i = 0; i < data.tpayrollcalendars.length; i++) {
             let ID = data.tpayrollcalendars[i].fields.ID || '';
@@ -14852,6 +15783,7 @@ Template.non_transactional_list.onRendered(function() {
                 data.tpayrollcalendars[i].fields.PayrollCalendarPayPeriod || '',
                 moment(data.tpayrollcalendars[i].fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
                 moment(data.tpayrollcalendars[i].fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
+                data.tpayrollcalendars[i].fields.PayrollCalendarActive == true ? '' : 'In-Active',
               ];
             splashArrayPayrollCalendars.push(dataPayrollCalendars);
             templateObject.transactiondatatablerecords.set(splashArrayPayrollCalendars);
@@ -14893,6 +15825,11 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colNextPaymentDate",
                         targets: 4,
                         width:'150px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 5,
+                        width:'100px'
                     }
                 ],
                 buttons: [{
@@ -14964,7 +15901,7 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                    if (deleteFilter == true) {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -15001,30 +15938,31 @@ Template.non_transactional_list.onRendered(function() {
         setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
-    templateObject.getHolidaysData = function(){
+    templateObject.getHolidaysData = async function(deleteFilter = false){
+        await clearData('TPayrollHolidays');
         getVS1Data('TPayrollHolidays').then(function (dataObject) {
             if (dataObject.length == 0) {
-                sideBarService.getHolidayData(initialBaseDataLoad, 0).then(async function (data) {
+                sideBarService.getHolidayData(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
                     await addVS1Data('TPayrollHolidays', JSON.stringify(data));
-                    templateObject.displayHolidaysData(data);
+                    templateObject.displayHolidaysData(data, deleteFilter);
                 }).catch(function (err) {
 
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayHolidaysData(data);
+                templateObject.displayHolidaysData(data, deleteFilter);
             }
         }).catch(function (err) {
-          sideBarService.getCalender(initialBaseDataLoad, 0).then(async function (data) {
+          sideBarService.getCalender(initialBaseDataLoad, 0, deleteFilter).then(async function (data) {
               await addVS1Data('TPayrollHolidays', JSON.stringify(data));
-              templateObject.displayHolidaysData(data);
+              templateObject.displayHolidaysData(data, deleteFilter);
           }).catch(function (err) {
 
           });
         });
     }
 
-    templateObject.displayHolidaysData = function(data){
+    templateObject.displayHolidaysData = function(data, deleteFilter){
         let splashArrayHoidays = new Array();
         for (let i = 0; i < data.tpayrollholidays.length; i++) {
             var dataHolidays = [
@@ -15032,6 +15970,7 @@ Template.non_transactional_list.onRendered(function() {
                 data.tpayrollholidays[i].fields.PayrollHolidaysName || "",
                 moment(data.tpayrollholidays[i].fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
                 data.tpayrollholidays[i].fields.PayrollHolidaysGroupName || "",
+                data.tpayrollholidays[i].fields.PayrollHolidaysActive == true ? '' : 'In-Active',                
               ];
             splashArrayHoidays.push(dataHolidays);
             templateObject.transactiondatatablerecords.set(splashArrayHoidays);
@@ -15068,6 +16007,11 @@ Template.non_transactional_list.onRendered(function() {
                         className: "colHolidaygroup hiddenColumn",
                         targets: 3,
                         width:'150px'
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 4,
+                        width:'100px'
                     }
                 ],
                 buttons: [{
@@ -15139,7 +16083,7 @@ Template.non_transactional_list.onRendered(function() {
                 },
                 language: { search: "", searchPlaceholder: "Search..." },
                 "fnInitComplete": function(oSettings) {
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                    if (deleteFilter == true) {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -15745,6 +16689,192 @@ Template.non_transactional_list.onRendered(function() {
         });
     }
 
+    templateObject.getMyTasksList = async function(deleteFilter = false, dateFilter="all"){
+        var url = FlowRouter.current().path;
+        url = new URL(window.location.href);
+        let employeeID = url.searchParams.get("id") ? url.searchParams.get("id") : '';
+
+        if(!employeeID){
+            employeeID = localStorage.getItem('mySessionEmployee');
+        }
+
+        getVS1Data("TCRMTaskList").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                crmService.getAllTaskList(employeeID).then(function(data) {
+                    if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                        let all_records = data.tprojecttasks;
+                        let today = moment().format("YYYY-MM-DD");
+
+                        if(!deleteFilter){
+                            all_records = all_records.filter((item) => item.fields.Completed == false);
+                        }
+
+                        $(".crm_all_count").text(all_records.length);
+
+                        if(dateFilter == "today"){
+                            all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                            $(".crm_today_count").text(today_records.length);
+                        }
+                        else if(dateFilter == "upcoming"){
+                            upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                            $(".crm_upcoming_count").text(upcoming_records.length);
+                        }
+
+                        setTimeout(() => {
+                            getVS1Data("TCRMProjectList").then(function(dataObject) {
+                                if (dataObject.length == 0) {
+                                    crmService.getTProjectList(employeeID).then(function(data) {
+                                        if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                            let all_projects = data.tprojectlist;
+                                            all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                            templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                        }
+                                        addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                    }).catch(function(err) {});
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                }
+                            }).catch(function(err) {
+                                crmService.getTProjectList(employeeID).then(function(data) {
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                        templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                    addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                }).catch(function(err) {});
+                            });
+                        }, 100);
+                    } else {
+                        $(".crm_all_count").text(0);
+                        $(".crm_today_count").text(0);
+                        $(".crm_upcoming_count").text(0);
+                    }
+                    $(".fullScreenSpin").css("display", "none");
+                }).catch(function(err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                let all_records = data.tprojecttasks;
+                let today = moment().format("YYYY-MM-DD");
+
+                if (employeeID) {
+                    all_records = all_records.filter(item => item.fields.EnteredBy == employeeID);
+                }
+                if(!deleteFilter){
+                    all_records = all_records.filter((item) => item.fields.Completed == false);
+                }
+
+                $(".crm_all_count").text(all_records.length);
+
+                if(dateFilter == "today"){
+                    all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                    $(".crm_today_count").text(today_records.length);
+                }
+                else if(dateFilter == "upcoming"){
+                    upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                    $(".crm_upcoming_count").text(upcoming_records.length);
+                }
+
+                setTimeout(() => {
+                    getVS1Data("TCRMProjectList").then(function(dataObject) {
+                        if (dataObject.length == 0) {
+                            crmService.getTProjectList(employeeID).then(function(data) {
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                    templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                }
+                                addVS1Data("TCRMProjectList", JSON.stringify(data));
+                            }).catch(function(err) {});
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                let all_projects = data.tprojectlist;
+                                templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                            }
+                        }
+                    }).catch(function(err) {
+                        crmService.getTProjectList(employeeID).then(function(data) {
+                            if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                let all_projects = data.tprojectlist;
+                                all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                            }
+                            addVS1Data("TCRMProjectList", JSON.stringify(data));
+                        }).catch(function(err) {});
+                    });
+                }, 100);
+
+                $(".fullScreenSpin").css("display", "none");
+            }
+        }).catch(function(err) {
+            crmService.getAllTaskList(employeeID).then(function(data) {
+                if (data.tprojecttasks && data.tprojecttasks.length > 0) {
+                    let all_records = data.tprojecttasks;
+                    let today = moment().format("YYYY-MM-DD");
+
+                    if(!deleteFilter){
+                        all_records = all_records.filter((item) => item.fields.Completed == false);
+                    }
+
+                    $(".crm_all_count").text(all_records.length);
+
+                    if(dateFilter == "today"){
+                        all_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) == today);
+                        $(".crm_today_count").text(today_records.length);
+                    }
+                    else if(dateFilter == "upcoming"){
+                        upcoming_records = all_records.filter((item) => item.fields.due_date.substring(0, 10) > today);
+                        $(".crm_upcoming_count").text(upcoming_records.length);
+                    }
+
+                    setTimeout(() => {
+                        getVS1Data("TCRMProjectList").then(function(dataObject) {
+                            if (dataObject.length == 0) {
+                                crmService.getTProjectList(employeeID).then(function(data) {
+                                    if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                        let all_projects = data.tprojectlist;
+                                        all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                        templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                    }
+                                    addVS1Data("TCRMProjectList", JSON.stringify(data));
+                                }).catch(function(err) {});
+                            } else {
+                                let data = JSON.parse(dataObject[0].data);
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                }
+                            }
+                        }).catch(function(err) {
+                            crmService.getTProjectList(employeeID).then(function(data) {
+                                if (data.tprojectlist && data.tprojectlist.length > 0) {
+                                    let all_projects = data.tprojectlist;
+                                    all_projects = all_projects.filter((proj) => proj.fields.ID != 11);
+                                    templateObject.displayMyTasksList(all_records, deleteFilter, all_projects);
+                                }
+                                addVS1Data("TCRMProjectList", JSON.stringify(data));
+                            }).catch(function(err) {});
+                        });
+                    }, 100);
+                } else {
+                    $(".crm_all_count").text(0);
+                    $(".crm_today_count").text(0);
+                    $(".crm_upcoming_count").text(0);
+                }
+                $(".fullScreenSpin").css("display", "none");
+            }).catch(function(err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+
     templateObject.displayAllTasksList = async function(task_array, deleteFilter = false, project_array){
         var splashArrayLeadList = new Array();
         let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
@@ -15785,7 +16915,7 @@ Template.non_transactional_list.onRendered(function() {
                 td1 = "";
                 td11 = "";
             } else {
-                td11 = moment(item.fields.due_date).format("DD/MM/YYYY");
+                td11 = moment(item.fields.due_date).format("MM/DD/YYYY");
                 td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
 
                 let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
@@ -16053,8 +17183,331 @@ Template.non_transactional_list.onRendered(function() {
        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
     }
 
+    templateObject.displayMyTasksList = async function(task_array, deleteFilter = false, project_array){
+        var splashArrayLeadList = new Array();
+        let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
+            tcontact = "";
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+
+        // sort
+        task_array.sort((a, b) => {
+            let x = new Date(a.fields.due_date);
+            let y = new Date(b.fields.due_date);
+            let px = parseInt(a.fields.priority);
+            let py = parseInt(b.fields.priority);
+
+            if(py != px){
+                return py - px;
+            }else{
+                return y - x;
+            }
+        });
+
+        task_array.forEach((item) => {
+            if (item.fields.Completed) {
+                completed = "checked";
+                chk_complete = "chk_uncomplete";
+            } else {
+                completed = "";
+                chk_complete = "chk_complete";
+            }
+            td0 = `
+                <div class="custom-control custom-checkbox chkBox pointer no-modal "
+                style="width:15px;margin-right: -6px;">
+                <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+                    id="formCheck-${item.fields.ID}" ${completed}>
+                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+                    for="formCheck-${item.fields.ID}"></label>
+                </div>`;
+
+            tflag = `<i class="fas fa-flag task_modal_priority_${item.fields.priority}" data-id="${item.fields.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+
+            tcontact = item.fields.ContactName;
+
+            if (item.fields.due_date == "" || item.fields.due_date == null) {
+                td1 = "";
+                td11 = "";
+            } else {
+                td11 = moment(item.fields.due_date).format("MM/DD/YYYY");
+                td1 = `<label style="display:none;">${item.fields.due_date}</label>` + td11;
+
+                let tdue_date = moment(item.fields.due_date).format("YYYY-MM-DD");
+                if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                    color_num = 3; // Red
+                } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                    color_num = 2; // Orange
+                } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                    color_num = 0; // Green
+                }
+
+                td0 = `
+                    <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+                    style="width:15px;margin-right: -6px;${completed_style}">
+                    <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+                        id="formCheck-${item.fields.ID}" ${completed}>
+                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${item.fields.ID}"
+                        for="formCheck-${item.fields.ID}"></label>
+                    </div>`;
+            }
+
+            td2 = item.fields.TaskName;
+            td3 = item.fields.TaskDescription.length < 80 ? item.fields.TaskDescription : item.fields.TaskDescription.substring(0, 79) + "...";
+
+            if (item.fields.TaskLabel) {
+                if (item.fields.TaskLabel.fields) {
+                    td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${item.fields.TaskLabel.fields.ID}"><i class="fas fa-tag"
+                        style="margin-right: 5px; color:${item.fields.TaskLabel.fields.Color}" data-id="${item.fields.TaskLabel.fields.ID}"></i>${item.fields.TaskLabel.fields.TaskLabelName}</a></span>`;
+                    labelsForExcel = item.fields.TaskLabel.fields.TaskLabelName;
+                } else {
+                    item.fields.TaskLabel.forEach((lbl) => {
+                        td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.fields.ID}"><i class="fas fa-tag"
+                            style="margin-right: 5px; color:${lbl.fields.Color}" data-id="${lbl.fields.ID}"></i>${lbl.fields.TaskLabelName}</a></span>`;
+                        labelsForExcel += lbl.fields.TaskLabelName + " ";
+                    });
+                }
+            } else {
+                td4 = "";
+            }
+
+            projectName = item.fields.ProjectName;
+            if (item.fields.ProjectName == "" || item.fields.ProjectName == "Default") {
+                projectName = "";
+            }
+
+            let all_projects = project_array;
+            let projectColor = 'transparent';
+            if (item.fields.ProjectID != 0) {
+                let projects = all_projects.filter(project => project.fields.ID == item.fields.ProjectID);
+                if (projects.length && projects[0].fields.ProjectColour) {
+                    projectColor = projects[0].fields.ProjectColour;
+                }
+            }
+
+            td6 = ``;
+            if (item.fields.Active) {
+                td6 = "";
+            } else {
+                td6 = "In-Active";
+            }
+
+            splashArrayLeadList.push([
+                tflag,
+                tcontact,
+                td1,
+                td2,
+                td3,
+                td4,
+                projectName,
+                td6,
+                item.fields.ID,
+                color_num,
+                labelsForExcel,
+                item.fields.Completed,
+                projectColor
+            ]);
+        });
+
+        templateObject.transactiondatatablerecords.set(splashArrayLeadList);
+
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayLeadList,
+                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 0,
+                        className: "colPriority openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).closest("tr").attr("data-id", rowData[8]);
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "100px",
+                    },
+                    {
+                        orderable: false,
+                        targets: 1,
+                        className: "colContact openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "200px",
+                    },
+                    {
+                        targets: 2,
+                        className: "colDate openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                        width: "120px",
+                    },
+                    {
+                        targets: 3,
+                        className: "colTaskName openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 4,
+                        className: "colTaskDesc openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 5,
+                        className: "colTaskLabels openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background-color', rowData[13]);
+                        },
+                    },
+                    {
+                        targets: 6,
+                        className: "colTaskProjects openEditTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                            $(td).css('background', rowData[13]);
+                        },
+                    },
+                    {
+                        orderable: false,
+                        targets: 7,
+                        className: "colStatus openEditSubTaskModal",
+                        createdCell: function(td, cellData, rowData, row, col) {
+                            $(td).attr("data-id", rowData[8]);
+                        },
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+                order: [
+                    // [3, "desc"],
+                ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Completed</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = task_array.length || 0; //get count from API data
+
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+
+            }).on('length.dt', function(e, settings, len) {
+
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+       setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
     templateObject.getAllReceiptCategoryList = async function (deleteFilter = false) {
-        //GET Data here from Web API or IndexDB      
+        //GET Data here from Web API or IndexDB
         getVS1Data("TReceiptCategory")
           .then(function (dataObject) {
             if (dataObject.length == 0) {
@@ -16063,7 +17516,7 @@ Template.non_transactional_list.onRendered(function() {
                   templateObject.displayAllReceiptCategoryList(data); //Call this function to display data on the table
                 })
                 .catch(function (err) {
-  
+
                 });
             } else {
               let data = JSON.parse(dataObject[0].data);
@@ -16092,7 +17545,7 @@ Template.non_transactional_list.onRendered(function() {
           let mobile = "";
           let linestatus = "";
           let currentData = data.treceiptcategory[i]
-          
+
           if (currentData.Active == true) {
             linestatus = "";
           } else if (currentData.Active == false) {
@@ -16100,7 +17553,7 @@ Template.non_transactional_list.onRendered(function() {
           }
 
           let deleteBtn = `<span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>`
-          
+
           var dataList = [
             currentData.Id || "",
             currentData.CategoryName || "",
@@ -16187,13 +17640,13 @@ Template.non_transactional_list.onRendered(function() {
                 if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
                   $(".paginate_button.page-item.next").addClass("disabled");
                 }
-  
+
                 $(".paginate_button.next:not(.disabled)", this.api().table().container()).on("click", function () {
                   $(".fullScreenSpin").css("display", "inline-block");
                   //var splashArrayCustomerListDupp = new Array();
                   let dataLenght = oSettings._iDisplayLength;
                   let customerSearch = $("#" + currenttablename + "_filter input").val();
-                  let linestatus = "";                  
+                  let linestatus = "";
                   receiptService
                     .getAllReceiptCategorys(initialDatatableLoad, oSettings.fnRecordsDisplay(), deleteFilter)
                     .then(function (dataObjectnew) {
@@ -16213,7 +17666,7 @@ Template.non_transactional_list.onRendered(function() {
                         ];
                         splashArrayList.push(dataListDupp);
                       }
-  
+
                       let uniqueChars = [...new Set(splashArrayList)];
                       templateObject.transactiondatatablerecords.set(uniqueChars);
                       var datatable = $("#" + currenttablename).DataTable();
@@ -16225,7 +17678,7 @@ Template.non_transactional_list.onRendered(function() {
                           .dataTable()
                           .fnPageChange("last");
                       }, 400);
-  
+
                       $(".fullScreenSpin").css("display", "none");
                     })
                     .catch(function (err) {
@@ -16256,7 +17709,7 @@ Template.non_transactional_list.onRendered(function() {
               },
               fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
                 let countTableData = data?.Params?.Count || 0; //get count from API data
-  
+
                 return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
               },
             })
@@ -16284,11 +17737,782 @@ Template.non_transactional_list.onRendered(function() {
             });
           $(".fullScreenSpin").css("display", "none");
         }, 0);
-  
+
         setTimeout(function () {
           $("div.dataTables_filter input").addClass("form-control form-control-sm");
         }, 0);
-      };
+    };
+
+    templateObject.getServicesList = function(deleteFilter=false){
+        getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    templateObject.displayServicesList(data, deleteFilter);
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayServicesList(data, deleteFilter);
+            }
+        }).catch(function (err) {
+            stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                templateObject.displayServicesList(data, deleteFilter);
+            }).catch(function (err) {
+
+            });
+        });
+    }
+
+    templateObject.displayServicesList = function(data, deleteFilter=false){
+        let splashArrayTimeSheetList = new Array();
+        var url = FlowRouter.current().path;
+        // for (let i = 0; i < data.tserialnumberlistcurrentreport.length; i++) {
+
+            // let tclass = '';
+            // if(data.tserialnumberlistcurrentreport[i].AllocType == "Sold"){
+            //     tclass="text-sold";
+            // }else if(data.tserialnumberlistcurrentreport[i].AllocType == "In-Stock"){
+                // tclass="text-instock";
+            // }else if(data.tserialnumberlistcurrentreport[i].AllocType == "Transferred (Not Available)"){
+            //     tclass="text-transfered";
+            // }else{
+            //     tclass='';
+            // }
+
+        //     let productname = data.tserialnumberlistcurrentreport[i].ProductName != '' ? data.tserialnumberlistcurrentreport[i].ProductName : 'Unknown';
+        //     let department = data.tserialnumberlistcurrentreport[i].DepartmentName != '' ? data.tserialnumberlistcurrentreport[i].DepartmentName : 'Unknown';
+        //     let salsedes = data.tserialnumberlistcurrentreport[i].PartsDescription;
+        //     let qty = data.tserialnumberlistcurrentreport[i].Quantity || 1;
+        //     let transaction = data.tserialnumberlistcurrentreport[i].Description;
+        //     let bin = data.tserialnumberlistcurrentreport[i].BinNumber;
+        //     let barcode = data.tserialnumberlistcurrentreport[i].Barcode;
+        //     let serialnumber = data.tserialnumberlistcurrentreport[i].SerialNumber;
+        //     let status = data.tserialnumberlistcurrentreport[i].AllocType;
+        //     let date = data.tserialnumberlistcurrentreport[i].TransDate !=''? moment(data.tserialnumberlistcurrentreport[i].TransDate).format("YYYY/MM/DD"): data.tserialnumberlistcurrentreport[i].TransDate;
+
+
+        //     var dataTimeSheetList = [
+        //         serialnumber,
+        //         productname,
+        //         salsedes,
+        //         status === ""?"Draft":status,
+        //         qty,
+        //         date,
+        //         cssclass
+        //     ];
+
+        //     splashArrayTimeSheetList.push(dataTimeSheetList);
+        // }
+
+        let cssclass = '';
+        cssclass = "bgcolor-green";
+        var dataTimeSheetList = [
+            "Machine-1",
+            "100.100.100.100",
+            "06/03/2023 20:30:30",
+            "<button class='btn btn-warning btnServiceCheck' type='button'>Checks</button>",
+            "<button class='btn btn-danger btnServiceRestart' type='button'>Restarts</button>",
+            "<button class='btn btn-success btnServiceEdit' type='button'>Edit</button>",
+            cssclass
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        cssclass = "bgcolor-red";
+        var dataTimeSheetList = [
+            "Machine-2",
+            "100.100.100.101",
+            "04/03/2023 10:30:30",
+            "<button class='btn btn-warning btnServiceCheck' type='button'>Checks</button>",
+            "<button class='btn btn-danger btnServiceRestart' type='button'>Restarts</button>",
+            "<button class='btn btn-success btnServiceEdit' type='button'>Edit</button>",
+            cssclass
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colMachineName",
+                        targets: 0,
+                        width:'8%'
+                    },
+                    {
+                        className: "colIPAddress",
+                        targets: 1,
+                        width:'14%',
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 2,
+                        width:'14%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-text-color");
+                            $(td).addClass(rowData[6]);
+                        }
+                    },
+                    {
+                        className: "colCheck",
+                        targets: 3,
+                        width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-button");
+                        }
+                    },
+                    {
+                        className: "colRestart",
+                        targets: 4,
+                        width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-button");
+                        }
+                    },
+                    {
+                        className: "colEdit",
+                        targets: 5,
+                        width:'8%',
+                        createdCell: function (td, cellData, rowData, row, col) {
+                            $(td).addClass("td-button");
+                        }
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter == true) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    templateObject.getMachineSummaryList = function(deleteFilter=false){
+        getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    templateObject.displayMachineSummaryList(data, deleteFilter);
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayMachineSummaryList(data, deleteFilter);
+            }
+        }).catch(function (err) {
+            stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                templateObject.displayMachineSummaryList(data, deleteFilter);
+            }).catch(function (err) {
+
+            });
+        });
+    }
+
+    templateObject.displayMachineSummaryList = function(data, deleteFilter=false){
+        let splashArrayTimeSheetList = new Array();
+        var url = FlowRouter.current().path;
+        let cssclass = '';
+        cssclass = "bgcolor-green";
+        var dataTimeSheetList = [
+            "06/03/2023 20:30:30",
+            1,
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        cssclass = "bgcolor-red";
+        var dataTimeSheetList = [
+            "04/03/2023 10:30:30",
+            2,
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colDate",
+                        targets: 0,
+                        width:'14%',
+                    },
+                    {
+                        className: "colCountOfStatus",
+                        targets: 1,
+                        width:'8%',
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter == true) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    templateObject.getMachineDetailList = function(deleteFilter=false){
+        getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    templateObject.displayMachineDetailList(data, deleteFilter);
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayMachineDetailList(data, deleteFilter);
+            }
+        }).catch(function (err) {
+            stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                templateObject.displayMachineDetailList(data, deleteFilter);
+            }).catch(function (err) {
+
+            });
+        });
+    }
+
+    templateObject.displayMachineDetailList = function(data, deleteFilter=false){
+        let splashArrayTimeSheetList = new Array();
+        var url = FlowRouter.current().path;
+        let cssclass = '';
+        cssclass = "bgcolor-green";
+        var dataTimeSheetList = [
+            "20:30:30",
+            "on",
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        cssclass = "bgcolor-red";
+        var dataTimeSheetList = [
+            "10:30:30",
+            "off",
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colTime",
+                        targets: 0,
+                        width:'14%',
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 1,
+                        width:'8%',
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter == true) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
+
+    templateObject.getAdminServiceList = function(deleteFilter=false){
+        getVS1Data('TSerialNumberListCurrentReport').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                    await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                    templateObject.displayAdminServiceList(data, deleteFilter);
+                }).catch(function (err) {
+
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.displayAdminServiceList(data, deleteFilter);
+            }
+        }).catch(function (err) {
+            stockTransferService.getAllSerialNumber(initialBaseDataLoad, 0).then(async function (data) {
+                await addVS1Data('TSerialNumberListCurrentReport', JSON.stringify(data));
+                templateObject.displayAdminServiceList(data, deleteFilter);
+            }).catch(function (err) {
+
+            });
+        });
+    }
+
+    templateObject.displayAdminServiceList = function(data, deleteFilter=false){
+        let splashArrayTimeSheetList = new Array();
+        var url = FlowRouter.current().path;
+        let cssclass = '';
+        cssclass = "bgcolor-green";
+        var dataTimeSheetList = [
+            "dene@vs1cloud.com",
+            "dene@123",
+            "3222838495",
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        cssclass = "bgcolor-red";
+        var dataTimeSheetList = [
+            "sales@vs1cloud.com",
+            "sales@123",
+            "3222838495",
+        ];
+
+        splashArrayTimeSheetList.push(dataTimeSheetList);
+
+        templateObject.transactiondatatablerecords.set(splashArrayTimeSheetList);
+        if (templateObject.transactiondatatablerecords.get()) {
+            setTimeout(function() {
+                MakeNegative();
+            }, 100);
+        }
+        $('.fullScreenSpin').css('display', 'none');
+        setTimeout(function() {
+            $('#' + currenttablename).DataTable({
+                data: splashArrayTimeSheetList,
+                "sDom": "<'row'><'row'<'col-sm-12 col-md-8'f><'col-sm-12 col-md-4'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                columnDefs: [
+                    {
+                        className: "colTime",
+                        targets: 0,
+                        width:'14%',
+                    },
+                    {
+                        className: "colStatus",
+                        targets: 1,
+                        width:'8%',
+                    },
+                ],
+                buttons: [{
+                        extend: 'csvHtml5',
+                        text: '',
+                        download: 'open',
+                        className: "btntabletocsv hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }, {
+                        extend: 'print',
+                        download: 'open',
+                        className: "btntabletopdf hiddenColumn",
+                        text: '',
+                        title: 'STP List',
+                        filename: "STP List",
+                        exportOptions: {
+                            columns: ':visible',
+                            stripHtml: false
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: '',
+                        download: 'open',
+                        className: "btntabletoexcel hiddenColumn",
+                        filename: "STP List",
+                        orientation: 'portrait',
+                        exportOptions: {
+                            columns: ':visible'
+                        }
+                    }
+                ],
+                select: true,
+                destroy: true,
+                colReorder: true,
+                pageLength: initialDatatableLoad,
+                lengthMenu: [
+                    [initialDatatableLoad, -1],
+                    [initialDatatableLoad, "All"]
+                ],
+                info: true,
+                responsive: true,
+            //   "order": [
+            //       [1, "asc"]
+            //   ],
+                action: function() {
+                    $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnDrawCallback": function(oSettings) {
+                    $('.paginate_button.page-item').removeClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
+                    if (oSettings._iDisplayLength == -1) {
+                        if (oSettings.fnRecordsDisplay() > 150) {
+                        }
+                    } else {
+                    }
+                    if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+                        $('.paginate_button.page-item.next').addClass('disabled');
+                    }
+                    $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function() {
+                    });
+                    setTimeout(function() {
+                        MakeNegative();
+                    }, 100);
+                },
+                language: { search: "", searchPlaceholder: "Search..." },
+                "fnInitComplete": function(oSettings) {
+                    // if (deleteFilter == true) {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>Show Sold</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                },
+                "fnInfoCallback": function(oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    let countTableData = data.Params.Count || 0; //get count from API data
+                    return 'Showing ' + iStart + " to " + iEnd + " of " + countTableData;
+                }
+            }).on('page', function() {
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            }).on('column-reorder', function() {
+            }).on('length.dt', function(e, settings, len) {
+                $(".fullScreenSpin").css("display", "inline-block");
+                let dataLenght = settings._iDisplayLength;
+                if (dataLenght == -1) {
+                    if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+                        $(".fullScreenSpin").css("display", "none");
+                    } else {
+                        $(".fullScreenSpin").css("display", "none");
+                    }
+                } else {
+                    $(".fullScreenSpin").css("display", "none");
+                }
+                setTimeout(function() {
+                    MakeNegative();
+                }, 100);
+            });
+            $(".fullScreenSpin").css("display", "none");
+        }, 0);
+        setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
+    }
 
     //Check URL to make right call.
     if (currenttablename == "tblcontactoverview" || currenttablename == "tblContactlist") {
@@ -16300,7 +18524,7 @@ Template.non_transactional_list.onRendered(function() {
     }  else if (currenttablename == "tblAccountOverview" || currenttablename == "tblDashboardAccountChartList") {
         // templateObject.getAccountsOverviewData(); - moved to accountOverview.js
     } else if (currenttablename == "tblAccountListPop") {
-        
+
     } else if (currenttablename == 'tblBankAccountsOverview') {
         templateObject.getBankAccountsOverviewData();
     } else if (currenttablename == "tblClienttypeList") {
@@ -16311,7 +18535,7 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getDepartmentData();
     } else if (currenttablename == "tblPaymentMethodList") {
         templateObject.getPaymentMethodData();
-    } else if (currenttablename == "tblTermsList") {
+    } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
         templateObject.getTermsData();
     } else if (currenttablename == "tblUOMList") {
         templateObject.getUOMListData();
@@ -16319,6 +18543,10 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getBOMListData();
     } else if (currenttablename == "tblSupplierlist" || currenttablename == 'tblSetupSupplierlist') {
         templateObject.getSupplierListData();
+    } else if (currenttablename == "tblBuildCostReport") {
+        templateObject.getBuildCostReport();
+    } else if (currenttablename == "tblProductionWorksheetReport") {
+        templateObject.getProductionWorksheetReport();    
     } else if (currenttablename == "tblLeadlist") {
         templateObject.getLeadListData();
     } else if (currenttablename == "tblCurrencyList") {
@@ -16440,7 +18668,10 @@ Template.non_transactional_list.onRendered(function() {
 
     } else if (currenttablename === "tblPayRuns"){
         templateObject.getPayRunsList();
-    } else if (currenttablename === "tblTimeSheet"){
+    }  else if (currenttablename === "tblPayRunHistory"){
+        templateObject.getPayRunsHistoryList();
+    }
+    else if (currenttablename === "tblTimeSheet"){
         templateObject.getTimeSheetList();
     } else if (currenttablename === 'taxRatesList'){
         templateObject.getTaxRates();
@@ -16463,9 +18694,9 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getLotNumberList(false, prductID);
         }, 100);
     }else if (currenttablename === "tblPayCalendars"){
-        templateObject.getPayCalendarsData();
+        templateObject.getPayCalendarsData(false);
     } else if (currenttablename === "tblHolidays"){
-        templateObject.getHolidaysData();
+        templateObject.getHolidaysData(false);
     } else if(currenttablename === "tblDraftPayRun"){
         templateObject.getDraftPayRunData();
     } else if(currenttablename === "tblAllSingleTouchPayroll"){
@@ -16476,8 +18707,26 @@ Template.non_transactional_list.onRendered(function() {
         templateObject.getSalesListByCustomer()
     } else if(currenttablename === 'tblAllTaskDatatable'){
         templateObject.getAllTasksList(false);
+    } else if(currenttablename === 'tblMyTaskDatatable'){
+        templateObject.getMyTasksList(false);
     } else if(currenttablename === 'tblReceiptCategoryList'){
         templateObject.getAllReceiptCategoryList();
+    } else if (currenttablename === "tblServicesList"){
+        setTimeout(function() {
+            templateObject.getServicesList(false);
+        }, 100);
+    } else if (currenttablename === "tblMachineSummaryList"){
+        setTimeout(function() {
+            templateObject.getMachineSummaryList(false);
+        }, 100);
+    } else if (currenttablename === "tblMachineDetailList"){
+        setTimeout(function() {
+            templateObject.getMachineDetailList(false);
+        }, 100);
+    } else if (currenttablename === "tblAdminServiceList"){
+        setTimeout(function() {
+            templateObject.getAdminServiceList(false);
+        }, 100);
     }
 
     tableResize();
@@ -16497,6 +18746,8 @@ Template.non_transactional_list.onRendered(function() {
             templateObject.getVatReturnData(false, datefrom, dateto);
         } else if (currenttablename === "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if (currenttablename === "tblMyTaskDatatable") {
+            templateObject.getMyTasksList(false);
         } else if(currenttablename === 'tblReceiptCategoryList'){
             templateObject.getAllReceiptCategoryList();
         }
@@ -16560,7 +18811,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblPaymentMethodList") {
             await clearData('TPaymentList');
             templateObject.getPaymentMethodData(true);
-        } else if (currenttablename == "tblTermsList") {
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
             await clearData('TTermsVS1List');
             templateObject.getTermsData(true);
         } else if (currenttablename == "tblUOMList") {
@@ -16620,7 +18871,7 @@ Template.non_transactional_list.events({
         }else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(true);
         }else if(currenttablename === "tblInventoryOverview"){
-            await clearData('TProductList');
+            await clearData('TProductQtyList');
             templateObject.getAllProductData(true);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();
@@ -16652,8 +18903,22 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(true);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(true);
+        } else if (currenttablename == "tblMyTaskDatatable") {
+            templateObject.getMyTasksList(true);
         } else if(currenttablename === 'tblReceiptCategoryList'){
             templateObject.getAllReceiptCategoryList(true);
+        } else if (currenttablename === "tblServicesList"){
+            templateObject.getServicesList(true);
+        } else if (currenttablename === "tblMachineSummaryList"){
+            templateObject.getMachineSummaryList(true);
+        } else if (currenttablename === "tblMachineDetailList"){
+            templateObject.getMachineDetailList(true);
+        } else if (currenttablename === "tblAdminServiceList"){
+            templateObject.getAdminServiceList(true);
+        } else if (currenttablename === "tblPayCalendars"){
+            templateObject.getPayCalendarsData(true);
+        } else if (currenttablename === "tblHolidays"){
+            templateObject.getHolidaysData(true);
         }
     },
     "click .btnHideDeleted": async function(e) {
@@ -16683,7 +18948,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename == "tblPaymentMethodList") {
             await clearData('TPaymentMethodList');
             templateObject.getPaymentMethodListData(false);
-        } else if (currenttablename == "tblTermsList") {
+        } else if (currenttablename == "tblTermsList" || currenttablename == "termsList") {
             await clearData('TTermsVS1List');
             templateObject.getTermsData(false);
         } else if (currenttablename == "tblUOMList") {
@@ -16739,7 +19004,7 @@ Template.non_transactional_list.events({
         } else if (currenttablename === "tblOverTimeSheet"){
             templateObject.getOverTimeSheets(false);
         } else if(currenttablename === "tblInventoryOverview"){
-            await clearData('TProductList');
+            await clearData('TProductQtyList');
             templateObject.getAllProductData(false);
         } else if (currenttablename === "tblBASReturnList") {
             const datefrom = $("#dateFrom").val();
@@ -16771,8 +19036,22 @@ Template.non_transactional_list.events({
             templateObject.getServiceLogData(false);
         } else if (currenttablename == "tblAllTaskDatatable") {
             templateObject.getAllTasksList(false);
+        } else if (currenttablename == "tblMyTaskDatatable") {
+            templateObject.getMyTasksList(false);
         } else if(currenttablename === 'tblReceiptCategoryList'){
             templateObject.getAllReceiptCategoryList(false);
+        } else if (currenttablename === "tblServicesList"){
+            templateObject.getServicesList(false);
+        } else if (currenttablename === "tblMachineSummaryList"){
+            templateObject.getMachineSummaryList(false);
+        } else if (currenttablename === "tblMachineDetailList"){
+            templateObject.getMachineDetailList(false);
+        } else if (currenttablename === "tblAdminServiceList"){
+            templateObject.getAdminServiceList(false);
+        } else if (currenttablename === "tblPayCalendars"){
+            templateObject.getPayCalendarsData(false);
+        } else if (currenttablename === "tblHolidays"){
+            templateObject.getHolidaysData(false);
         }
     },
     'change .custom-range': async function(event) {

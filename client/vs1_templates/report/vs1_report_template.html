@@ -206,7 +206,7 @@
                                 </div>
                                 <div class="row no-gutters justify-content-end">
                                     {{> spreadsheet_link templateName=sheetname}}
-                                    {{> export_import_print_display_button Export="btnExportReport" Import="hiddenButton" Print="btnPrintReport" DisplaySettings="btnOpenReportSettings"}}
+                                    {{> report_export_import_print_display_button Export="btnExportReport" Import="hiddenButton" Print="btnPrintReport" DisplaySettings="btnOpenReportSettings"}}
                                 </div>
                             </div>
                         </div>
@@ -222,23 +222,17 @@
                                 </style>
                                 <img class="imageUpload img-fluid" id="uploadedImage2" src="assets/img/VS1.png">
                             </div>
-                            <div class="row">
                                 {{#if isTaxCodeOption }}
-                                    <div class="col-12">
-                                        <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="taxCodeCategory" id="mainTaxCode" checked="checked">
-                                        <label class="form-check-label" for="mainTaxCode">
-                                            Main Taxcode
-                                        </label>
+                                    <div class="row">
+                                        <div class="col-3">
+                                            {{> toggle_button className="" id="mainTaxCode" displayName="Main Taxcode" isChecked="true"}}
                                         </div>
-                                        <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="taxCodeCategory" id="subTaxCode">
-                                        <label class="form-check-label" for="subTaxCode">
-                                            Sub Taxcode
-                                        </label>
+                                        <div class="col-3">
+                                            {{> toggle_button className="" id="subTaxCode" displayName="Sub Taxcode" isChecked=""}}
                                         </div>
                                     </div>
                                 {{/if}}
+                            <div class="row">
                                 <div class="col">
                                     <p class="text-center" style="margin-bottom: 0px;font-weight: bold;">{{tabledisplayname}}</p>
                                     <p class="text-center" style="margin-bottom: 0px;">{{companyname}}&nbsp;</p>
@@ -253,8 +247,14 @@
                                     .text-bold {
                                         font-weight: 800;
                                     }
+                                    .text-lbold {
+                                        font-weight: 700;
+                                    }
                                     .totalhr {
                                         border-top: 2px #858999 solid;
+                                    }
+                                    .listhr {
+                                        border-bottom: 2px #858999 solid;
                                     }
                                     .grandtotal {
                                         border-top: 2px #858999 solid;
@@ -263,7 +263,7 @@
                                     .tableExportDetailDiv th,
                                     .tableExportDetailDiv td {
                                         white-space: nowrap;
-                                        padding: 12px;
+                                        padding: 5px 15px;
                                     }
                                     /* .tableExportDetailDiv th {
                                         text-align: center;
@@ -306,6 +306,15 @@
                                     }
                                     table.dataTable {
                                         border-collapse: collapse !important;
+                                    }
+                                    .table-sm td, .table-sm th{
+                                        padding: 5px 15px!important;
+                                    }
+                                    .table-sm th {
+                                        white-space: nowrap;
+                                    }
+                                    .customDoubleTableHeading th{
+                                        padding: 0px 15px!important;
                                     }
                                 </style>
                                 {{> Template.contentBlock}}
@@ -440,7 +449,8 @@
         .JColResizer>tbody>tr>td,
         .JColResizer>tbody>tr>th {
             padding: 5px !important;
-            padding-left: 6px !important;
+            padding-left: 15px !important;
+            padding-right: 15px !important;
         }
 
         .hiddenColumn {

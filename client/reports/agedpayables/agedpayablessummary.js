@@ -45,15 +45,14 @@ Template.agedpayablessummary.onRendered(() => {
     let reset_data = [];
     reset_data = [
       { index: 1, label: 'Contact', class: 'colName', active: true, display: true, width: "150" },
-      { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
-      { index: 3, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
-      { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
-      { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
-      { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
-      { index: 7, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
-      { index: 8, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
-      { index: 9, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
-      { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
+      { index: 2, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
+      { index: 3, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
+      { index: 4, label: 'Total Amount Due', class: 'colAmountDue text-right', active: true, display: true, width: "170" },
+      { index: 5, label: 'Current', class: 'colCurrent text-right', active: true, display: true, width: "150" },
+      { index: 6, label: '1 - 30 Days', class: 'col130Days text-right', active: true, display: true, width: "150" },
+      { index: 7, label: '30 - 60 Days', class: 'col3060Days text-right', active: true, display: true, width: "150" },
+      { index: 8, label: '60 - 90 Days', class: 'col6090Days text-right', active: true, display: true, width: "150" },
+      { index: 9, label: '> 90 Days', class: 'col90Days text-right', active: true, display: true, width: "150" },
     ];
     templateObject.agedpayablesth.set(reset_data);
   }
@@ -81,13 +80,28 @@ Template.agedpayablessummary.onRendered(() => {
     let currenctURL = FlowRouter.current().queryParams || '';
     let contactName = FlowRouter.current().queryParams.contact ||'';
     let contactID = FlowRouter.current().queryParams.contactid ||'';
+  templateObject.loadReport = async (dateFrom = null, dateTo = null, ignoreDate = false) => {
 
+    templateObject.setDateAs(dateFrom);
+    LoadingOverlay.show();
+    let data = await CachedHttp.get(erpObject.TAPReport, async () => {
+      return await reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate, contactID);
+    }, {
+      useIndexDb: true,
+      useLocalStorage: false,
+      validate: (cachedResponse) => {
+        return false;
+      }
+    });
+    templateObject.displayAgedPayablesData(data.response);
+
+  }
   templateObject.getAgedPayablesData = async function (dateFrom, dateTo, ignoreDate, contactID) {
 
     templateObject.setDateAs(dateFrom);
     getVS1Data('TAPReport').then(function (dataObject) {
       if (dataObject.length == 0) {
-        sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
+        reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
           await addVS1Data('TAPReport', JSON.stringify(data));
           templateObject.displayAgedPayablesData(data);
         }).catch(function (err) {
@@ -97,7 +111,7 @@ Template.agedpayablessummary.onRendered(() => {
         templateObject.displayAgedPayablesData(data);
       }
     }).catch(function (err) {
-      sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
+      reportService.getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
         await addVS1Data('TAPReport', JSON.stringify(data));
         templateObject.displayAgedPayablesData(data);
       }).catch(function (err) {
@@ -119,55 +133,67 @@ Template.agedpayablessummary.onRendered(() => {
     } else {
       deleteFilter = false;
     };
-    for (let i = 0; i < data.tcustomersummaryreport.length; i++) {
+    let sum =  new Array(), total = new Array();
+    let contact, j;
+    for(j = 0 ; j < 6; j ++)  total[j] = 0;
+    for (let i = 0; i < data.tapreport.length; i++) {
       var dataList = [
-        data.tcustomersummaryreport[i].ACCOUNTID || "",
-        data.tcustomersummaryreport[i].ACCOUNTNAME || "",
-        data.tcustomersummaryreport[i].ACCOUNTNUMBER || "",
-        data.tcustomersummaryreport[i].ACCOUNTS || "",
-        data.tcustomersummaryreport[i].AMOUNTEX || "",
-        data.tcustomersummaryreport[i].AMOUNTINC || "",
-        data.tcustomersummaryreport[i].CHEQUENUMBER || "",
-        data.tcustomersummaryreport[i].CLASS || "",
-        data.tcustomersummaryreport[i].CLASSID || "",
-        data.tcustomersummaryreport[i]["CLIENT NAME"] || "",
-        data.tcustomersummaryreport[i].CREDITSEX || "",
-        data.tcustomersummaryreport[i].CREDITSINC || "",
-        data.tcustomersummaryreport[i].DATE || "",
-        data.tcustomersummaryreport[i].DEBITSEX || "",
-        data.tcustomersummaryreport[i].DEBITSINC || "",
-        data.tcustomersummaryreport[i].DETAILS || "",
-        data.tcustomersummaryreport[i].FIXEDASSETID || "",
-        data.tcustomersummaryreport[i].GLOBALREF || "",
-        data.tcustomersummaryreport[i].ID || "",
-        data.tcustomersummaryreport[i].MEMO || "",
-        data.tcustomersummaryreport[i].PAYMENTID || "",
-        data.tcustomersummaryreport[i].PREPAYMENTID || "",
-        data.tcustomersummaryreport[i].PRODUCTDESCRIPTION || "",
-        data.tcustomersummaryreport[i].PRODUCTNAME || "",
-        data.tcustomersummaryreport[i].PURCHASEORDERID || "",
-        data.tcustomersummaryreport[i].REFERENCENO || "",
-        data.tcustomersummaryreport[i].REPNAME || "",
-        data.tcustomersummaryreport[i].SALEID || "",
-        data.tcustomersummaryreport[i].TAXCODE || "",
-        data.tcustomersummaryreport[i].TAXRATE || "",
-        data.tcustomersummaryreport[i].TYPE || "",
-
+        data.tapreport[i].Name || "",
+        data.tapreport[i].PONumber || "",
+        GlobalFunctions.formatDate(data.tapreport[i].DueDate) || "",
+        data.tapreport[i].AmountDue || "",
+        data.tapreport[i].Current || "",
+        data.tapreport[i]["30Days"] || "",
+        data.tapreport[i]["60Days"] || "",
+        data.tapreport[i]["90Days"] || "",
+        data.tapreport[i]["120Days"] || "",
       ];
-      splashArrayAgedPayablesReport.push(dataList);
-      templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
+      if(contact != dataList[0]){
+        if(i != 0) {
+          for(j = 0 ; j < 6; j ++)
+            sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger", "text-right");
+          splashArrayAgedPayablesReport.push([
+              GlobalFunctions.generateSpan(contact, "text-primary"),
+              "",
+              "",
+              sum[0],
+              sum[1],
+              sum[2],
+              sum[3],
+              sum[4],
+              sum[5],
+          ]);
+        }
+        contact = dataList[0];
+        for(j = 0 ; j < 6; j ++)
+          sum[j] = 0;
+      }
+      for(j = 0 ; j < 6; j ++) sum[j] += dataList[3 + j] - 0, total[j] += dataList[3 + j] - 0;
     }
-
+    for(j = 0 ; j < 6; j ++)
+      total[j] =  total[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total[j]), "table-cells text-primary", "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(total[j]), "text-danger text-bold", "text-right");
+    splashArrayAgedPayablesReport.push([
+      GlobalFunctions.generateSpan("Grand Total", "table-cells text-bold"),
+      "",
+      "",
+      total[0],
+      total[1],
+      total[2],
+      total[3],
+      total[4],
+      total[5],
+    ]);
+    templateObject.transactiondatatablerecords.set(splashArrayAgedPayablesReport);
 
     if (templateObject.transactiondatatablerecords.get()) {
       setTimeout(function () {
-        MakeNegative();
+        //MakeNegative();
       }, 100);
     }
     //$('.fullScreenSpin').css('display','none');
 
     setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: splashArrayAgedPayablesReport,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1186,8 +1212,8 @@ Template.agedpayablessummary.events({
 });
 
 Template.agedpayablessummary.helpers({
-  agedpayablessummaryth: () => {
-    return Template.instance().agedpayablessummaryth.get();
+  agedpayablesth: () => {
+    return Template.instance().agedpayablesth.get();
   },
   transactiondatatablerecords : () => {
        return Template.instance().transactiondatatablerecords.get();

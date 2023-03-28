@@ -338,7 +338,6 @@ Template.paymentmethodpop.onRendered(function() {
 
             }
         }).catch(function(err) {
-          console.log(err);
             taxRateService.getPaymentMethodVS1().then(function(data) {
                 let lineItems = [];
                 let lineItemObj = {};

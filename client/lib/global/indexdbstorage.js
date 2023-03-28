@@ -38,7 +38,7 @@ openDb = function (dbName) {
       let db = event.target.result;
       db.createObjectStore("vscloudlogininfo", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProductVS1", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TProductList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TProductQtyList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCustomerVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSupplierProduct", { keyPath: "EmployeeEmail" });
@@ -53,6 +53,7 @@ openDb = function (dbName) {
       db.createObjectStore("TDeptClass", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDeptClassList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TDepartment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TCostTypes", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCurrency", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TCurrencyList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TLeadStatusType", { keyPath: "EmployeeEmail" });
@@ -393,8 +394,6 @@ openDb = function (dbName) {
       db.createObjectStore("TCurrencyRateHistory", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TXeCurrencySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTripGroup", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TLeaveData", { keyPath: "EmployeeEmail" });
-      // db.createObjectStore('TEarningData', { keyPath: "EmployeeEmail" });
       db.createObjectStore("TReportsAccountantsCategory", {
         keyPath: "EmployeeEmail",
       });
@@ -446,7 +445,6 @@ openDb = function (dbName) {
         keyPath: "EmployeeEmail",
       });
       db.createObjectStore("TRateTypes", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("TEarningData", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TTimeSheetDetails", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLog", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TServiceLogList", { keyPath: "EmployeeEmail" });
@@ -465,6 +463,7 @@ openDb = function (dbName) {
       db.createObjectStore("TVS1Workorder", {keyPath: "EmployeeEmail" });
 
       db.createObjectStore("TVS1DashboardStatus", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1DashboardOptions", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1Image", {keyPath: "EmployeeEmail"});
 
       db.createObjectStore("TVS1Sales_Report", {keyPath: "EmployeeEmail"});
@@ -542,6 +541,46 @@ openDb = function (dbName) {
       db.createObjectStore("PrintDisplaySettings", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TPNLLayout", { keyPath: "EmployeeEmail" });
       db.createObjectStore("ManufacturingSettings", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardExecData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData2", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardSalesData3", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData1", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData2", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TDashboardMyData3", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("BuildProfitabilityReport", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("ProductionWorksheetReport", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("WorkOrderReport", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TBankNameList", { keyPath: "EmployeeEmail"});
+      db.createObjectStore("TCRMLeadChart", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTitleList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TDashbaordOptions", {keyPath: "EmployeeEmail"});
+      db.createObjectStore("TTransactionDescription", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TTransactionCode", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TAppointmentsTimeLog", { keyPath: "EmployeeEmail" });
+
+
+      // For accountant favorite reports state
+      db.createObjectStore('TFavReportCompany', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustee', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportFinancialStatement', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportIndividual', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportPartnershipNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrustNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSelfManagedSuperfund', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSingleDirector', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportSoleTraderNonTrading', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavReportTrust', {keyPath: 'EmployeeEmail'});
+
+      db.createObjectStore('TFavSupplierList', {keyPath: 'EmployeeEmail'});
+      db.createObjectStore('TFavSupplierSummaryReport', {keyPath: 'EmployeeEmail'});
+
+      db.createObjectStore("TReconciliationBankAccountsList", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("CloudAppointmentStartStopAccessLevel", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("CloudAppointmentAllocationLaunch", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("CloudAppointmentCreateAppointment", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
@@ -607,6 +646,7 @@ addVS1Data = async function (objectName, vs1Data) {
   let transaction = await db.transaction([objectName], "readwrite");
 
   transaction.oncomplete = function (event) {};
+
   let currentDate = new Date();
   let hours = currentDate.getHours(); //returns 0-23
   let minutes = currentDate.getMinutes(); //returns 0-59
@@ -804,7 +844,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 240);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 252);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };

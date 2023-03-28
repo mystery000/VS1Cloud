@@ -21,13 +21,45 @@ Template.superannuationSettings.onCreated(function() {
   templateObject.imageFileData=new ReactiveVar();
   templateObject.currentDrpDownID = new ReactiveVar();
   // templateObject.Accounts = new ReactiveVar([]);
+
+  templateObject.tableheaderrecords8 = new ReactiveVar([]);
+  templateObject.getDataTableList8 = function(data){
+    let dataList = [
+        data.fields.ID || '',
+        data.fields.Superfund || '',
+        data.fields.Area || '',
+        data.fields.Employeeid || '',
+        data.fields.ABN || '',
+        data.fields.ElectronicsServiceAddressAlias || '',
+        data.fields.BSB || '',
+        data.fields.Accountno || '',
+        data.fields.AccountName || '',
+        data.fields.Supertypeid || '',
+        data.fields.Active == true ? '' : 'In-Active',
+        '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    ];
+    return dataList;
+  }
+  let headerStructure8  = [
+    { index: 0, label: 'ID', class: 'colSuperannuationID', active: false, display: true, width: "" },
+    { index: 1, label: 'Name', class: 'colSuperannuationName', active: true, display: true, width: "100" },
+    { index: 2, label: 'Type', class: 'colSuperannuationType', active: true, display: true, width: "80" },
+    { index: 3, label: 'Employer Number', class: 'colEmployerNum', active: true, display: true, width: "50" },
+    { index: 4, label: 'ABN', class: 'colabn', active: false, display: true, width: "" },
+    { index: 5, label: 'Electronics Service Address Alias', class: 'colservicealias', active: false, display: true, width: "" },
+    { index: 6, label: 'BSB', class: 'colbsb', active: true, display: true, width: "50" },
+    { index: 7, label: 'Account Number', class: 'colaccountnumber', active: false, display: true, width: "" },
+    { index: 8, label: 'Account Name', class: 'colaccountname', active: true, display: true, width: "50" },
+    { index: 9, label: 'fundid', class: 'colSuperannuationTypeid', active: false, display: true, width: "" },
+    { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+    { index: 11, label: '', class: 'colDeletesup', active: true, display: true, width: "20" }
+  ];
+  templateObject.tableheaderrecords8.set(headerStructure8);
 });
 
 Template.superannuationSettings.onRendered(function() {
-    $('#edtFundType').editableSelect('add', function(item){
-        $(this).val(item.id);
-        $(this).text(item.name);
-    });
+    $('#edtFundType').editableSelect('add', 'Regulated Superannuation Fund');
+    $('#edtFundType').editableSelect('add', 'Self-Managed Superannuation Fund');
   const templateObject = Template.instance();
   var splashArraySuperannuationList = new Array();
 
@@ -260,7 +292,7 @@ templateObject.getSuperannuationData = async function(){
     // }
 };
 
-templateObject.getSuperannuationData();
+// templateObject.getSuperannuationData();
 
 $('.superannuationDropDown').editableSelect();
 $('.superannuationDropDown').editableSelect()
@@ -522,5 +554,35 @@ Template.superannuationSettings.events({
 Template.superannuationSettings.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get();
+    },
+
+    tableheaderrecords8: () => {
+        return Template.instance().tableheaderrecords8.get();
+    },
+    apiFunction8:function() {
+        return sideBarService.getSuperannuation;
+    },
+    searchAPI8: function() {
+        return sideBarService.getSuperannuationByName;
+    },
+    service8: ()=>{
+        return sideBarService;
+    },
+    datahandler8: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList8(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler8: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList8(data);
+            return dataReturn;
+        }
+    },
+    apiParams8: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     }
 });

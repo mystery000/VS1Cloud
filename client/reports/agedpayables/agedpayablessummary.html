@@ -73,257 +73,34 @@
 
             </tr>
           {{/if}} -->
-        {{#if agedpayablessummaryth}}
-        {{#each c in agedpayablessummaryth }}
-        {{# if c.display}}
-        <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
-          class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-          style="text-align: left!important; width:{{c.width}}px">{{ c.label }}</th>
-        {{/if}}
-        {{/each}}
-        {{/if}}
+        <tr class="table-active">
+            {{#if agedpayablesth}}
+            {{#each c in agedpayablesth }}
+            {{# if c.display}}
+            <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+              class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+              style="text-align: left; width:{{c.width}}px">{{ c.label }}</th>
+            {{/if}}
+            {{/each}}
+            {{/if}}
+        </tr>
       </thead>
       <tbody>
-        <!-- {{#if reportrecords}}
-        {{#each items in reportrecords}}
-        <tr class="totalhr">
-          <td class="Total1Indented MenuLeft TotalField">
-            <span class="table-cells">
-
-              <a href="/supplierscard?id={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.contact}}</a>
-            </span>
-          </td>
-          <td class="Total1Indented MenuLeft TotalField text-left">
-            <span class="table-cells">
-
-              <a href="#" style="text-decoration:none!important;">{{items.invoiceno}}</a>
-            </span>
-          </td>
-          <td class="Total1Indented MenuLeft TotalField">
-            <span class="table-cells">
-
-              <a href="#" style="text-decoration:none!important;">{{items.duedate}}</a>
-            </span>
-          </td>
-
-          {{#if isOnlyDefaultActive }}
-
-          {{#if currencyList}}
-
-          {{#each c in currencyList }}
-          {{# if c.active}}
-
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.amountdue}} text-danger {{/if}}">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{convertAmount items.amountdue c null}}</a>
-            </span>
-          </td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{# if c.active}}
-
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.current}} text-danger {{/if}}">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{convertAmount items.current c null}}</a>
-            </span>
-          </td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{# if c.active}}
-
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.day30}} text-danger {{/if}}">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{convertAmount items.day30 c null}}</a>
-            </span>
-          </td>
-          {{/if}}
-          {{/each}}
-
-
-          {{#each c in currencyList }}
-          {{# if c.active}}
-
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.day60}} text-danger {{/if}}">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{convertAmount items.day60 c null}}</a>
-            </span>
-          </td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{# if c.active}}
-
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.day90}} text-danger {{/if}}">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{convertAmount items.day90 c null}}</a>
-            </span>
-          </td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{# if c.active}}
-
-          <td currency="{{c.code}}" currency-id="{{c.id}}"
-            class="Total1Indented MenuLeft TotalField text-right {{#if isNegativeAmount items.dayabove90}} text-danger {{/if}}">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{convertAmount items.dayabove90 c null}}</a>
-            </span>
-          </td>
-          {{/if}}
-          {{/each}}
-
-
-
-
-          {{/if}}
-
+          {{#if transactiondatatablerecords}}
+              {{#each items in transactiondatatablerecords}}
+                  <tr class="listhr">
+                      {{#each item in items}}
+                          <td class="{{item.indent}}">
+                              <span class={{item.className}}>{{item.string}}</span>
+                          </td>
+                      {{/each}}
+                  </tr>
+              {{/each}}
           {{else}}
-
-          <td class="Total1Indented MenuLeft TotalField text-right">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.amountdue}}</a>
-            </span>
-          </td>
-
-          <td class="Total1Indented MenuLeft TotalField text-right">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.current}}</a>
-            </span>
-          </td>
-
-          <td class="Total1Indented MenuLeft TotalField text-right">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.day30}}</a>
-            </span>
-          </td>
-
-
-          <td class="Total1Indented MenuLeft TotalField text-right">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.day60}}</a>
-            </span>
-          </td>
-          <td class="Total1Indented MenuLeft TotalField text-right">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.day90}}</a>
-            </span>
-          </td>
-          <td class="Total1Indented MenuLeft TotalField text-right">
-            <span class="table-cells">
-
-              <a href="/agedpayables?contact={{items.contact}}&contactid={{items.clientid}}"
-                style="text-decoration:none!important;">{{items.dayabove90}}</a>
-            </span>
-          </td>
-
+              <tr class="odd" style="text-align: center;">
+                  <td valign="top" colspan="9" class="dataTables_empty text-left">No data available in table</td>
+              </tr>
           {{/if}}
-
-
-        </tr>
-        {{/each}}
-
-        {{#if grandrecords}}
-        <tr class="grandtotal" style="font-weight: 800;font-size: 16px;">
-
-          <td>{{grandrecords.Title}}</td>
-          <td></td>
-          <td></td>
-
-          {{#if isOnlyDefaultActive }}
-          {{#if currencyList}}
-
-          {{#each c in currencyList }}
-          {{#if c.active}}
-          <td class="text-right">{{ convertAmount grandrecords.TotalAmountDue c null}}</td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{#if c.active}}
-          <td class="text-right">{{ convertAmount grandrecords.TotalCurrent c null}}</td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{#if c.active}}
-          <td class="text-right">{{ convertAmount grandrecords.OneMonth c null}}</td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{#if c.active}}
-          <td class="text-right">{{ convertAmount grandrecords.TwoMonth c null}}</td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{#if c.active}}
-          <td class="text-right">{{ convertAmount grandrecords.ThreeMonth c null}}</td>
-          {{/if}}
-          {{/each}}
-
-          {{#each c in currencyList }}
-          {{#if c.active}}
-          <td class="text-right">{{ convertAmount grandrecords.OlderMonth c null}}</td>
-          {{/if}}
-          {{/each}}
-
-
-
-          {{/if}}
-          {{else}}
-
-          <td class="text-right">{{ formatPrice grandrecords.TotalAmountDue}}</td>
-          <td class="text-right">{{ formatPrice grandrecords.TotalCurrent}}</td>
-          <td class="text-right">{{ formatPrice grandrecords.OneMonth}}</td>
-          <td class="text-right">{{ formatPrice grandrecords.TwoMonth}}</td>
-          <td class="text-right">{{ formatPrice grandrecords.ThreeMonth}}</td>
-          <td class="text-right">{{ formatPrice grandrecords.OlderMonth}}</td>
-
-          {{/if}}
-
-        </tr>
-        {{/if}}
-        {{else}}
-        <tr class="odd" style="text-align: center;">
-          <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
-        </tr>
-        {{/if}} -->
-
       </tbody>
     </table>
   </div>

@@ -93,6 +93,7 @@ Template.employeescard.onCreated(function () {
   templateObject.recentTrasactions = new ReactiveVar([]);
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.tableLeaveRequestheaderrecords = new ReactiveVar([]);
   templateObject.isCloudUserPass = new ReactiveVar();
   templateObject.isCloudUserPass.set(false);
   templateObject.selectedproducts = new ReactiveVar([]);
@@ -126,6 +127,34 @@ Template.employeescard.onCreated(function () {
   templateObject.TRepServices = new ReactiveVar([]);
   templateObject.taskrecords = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
+
+  templateObject.getDataTableList = function(data) {
+    let currentId = FlowRouter.current().queryParams;
+    let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
+    let dataList = [];
+    if(parseInt(data.fields.EmployeeID) == parseInt(employeeID)){
+      dataList = [
+        data.fields.ID || '',
+        data.fields.Description || '',
+        data.fields.PayPeriod || '',
+        data.fields.LeaveMethod || '',
+        data.fields.Status || '',
+        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
+      ];
+    }
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
+    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
+    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
+    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
+    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
+    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+];
+templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
+
 });
 
 Template.employeescard.onRendered(function () {
@@ -2080,7 +2109,7 @@ Template.employeescard.onRendered(function () {
           $('#edtDashboardOptions').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
-            $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
+            // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
             $('#dashboardOptionListModal').modal('toggle');
           } else {
             $('#dashboardOptionListModal').modal('toggle');
@@ -2096,8 +2125,51 @@ Template.employeescard.onRendered(function () {
 
         }
       });
+
+      $('#edtEmploymentGroup').editableSelect('add', 'Full-time employment');
+      $('#edtEmploymentGroup').editableSelect('add', 'Part-time employment');
+      $('#edtEmploymentGroup').editableSelect('add', 'Casual employment');
+      $('#edtEmploymentGroup').editableSelect('add', 'Labour hire');
+      $('#edtEmploymentGroup').editableSelect('add', 'Superannuation income stream');
+
+      $('#edtEarningRate').editableSelect('add', 'Australian Resident');
+      $('#edtEarningRate').editableSelect('add', 'Foreign Resident');
+      $('#edtEarningRate').editableSelect('add', 'Working Holiday Maker');
+
+      $('#edtEmploymentBasis').editableSelect('add', 'Full-time employment');
+      $('#edtEmploymentBasis').editableSelect('add', 'Part-time employment');
+      $('#edtEmploymentBasis').editableSelect('add', 'Casual employment');
+      $('#edtEmploymentBasis').editableSelect('add', 'Labour hire');
+      $('#edtEmploymentBasis').editableSelect('add', 'Superannuation income stream');
+
+      $('#edtResidencyStatus').editableSelect('add', 'Australian Resident');
+      $('#edtResidencyStatus').editableSelect('add', 'Foreign Resident');
+      $('#edtResidencyStatus').editableSelect('add', 'Working Holiday Maker');
+      
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
+      
+      $('#edtPayrollCalendar').editableSelect()
+        .on('click.editable-select', async function (e, li) {
+          let $search = $(this);
+          let offset = $search.offset();
+          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#payrollCalendarPopModal').modal("toggle");
+          } else {
+            $('#payrollCalendarPopModal').modal("toggle");
+          }
+        });
+
+      $('#edtHolidays').editableSelect()
+        .on('click.editable-select', async function (e, li) {
+          let $search = $(this);
+          let offset = $search.offset();
+          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+            $('#holidaysPopModal').modal("toggle");
+          } else {
+            $('#holidaysPopModal').modal("toggle");
+          }
+        });
     }, 1000)
 
     //On Click Client Type List
@@ -2139,9 +2211,22 @@ Template.employeescard.onRendered(function () {
       $('#edtHolidays').val($(this).find(".colHolidayName").text());
       $('#holidaysPopModal').modal('toggle');
     });
+
+    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+        var table = $(this);
+        const id = table.find('.colAccountID').text();
+        const accountName = table.find('.colAccountName').text();
+        $("#edtExpenseAccount").val(accountName);
+        $(".paste-expenses").val(accountName);
+        $(".paste-expenses").attr('account-id', id);
+        $(".paste-expenses").removeClass('paste-expenses')
+        $("#accountListModal").modal("toggle");
+    });    
   });
 
   $(document).on('click', '#editEmployeeTitle', function (e, li) {
+    e.preventDefault();
+    e.stopPropagation();
     const $earch = $(this);
     const offset = $earch.offset();
     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
@@ -2282,151 +2367,151 @@ Template.employeescard.onRendered(function () {
       }
     }
 
-    setTimeout(function () {
-      $('#tblLeaveRequests').DataTable({
-        data: splashArrayList,
-        "sDom": "Rlfrtip",
-        columnDefs: [
+    // setTimeout(function () {
+    //   $('#tblLeaveRequests').DataTable({
+    //     data: splashArrayList,
+    //     "sDom": "Rlfrtip",
+    //     columnDefs: [
 
-          {
-            className: "colLRID colLeaveRequest hiddenColumn",
-            "targets": [0]
-          },
-          {
-            className: "colLeaveRequest colLRDescription",
-            "targets": [1]
-          },
-          {
-            className: "colLeaveRequest colLRLeavePeriod",
-            "targets": [2]
-          },
-          {
-            className: "colLeaveRequest colLRLeaveType",
-            "targets": [3]
-          },
-          {
-            className: "colLeaveRequest colLRStatus",
-            "targets": [4]
-          },
-          {
-            className: "colLRAction",
-            "targets": [5]
-          }
-        ],
-        select: true,
-        destroy: true,
-        colReorder: true,
-        pageLength: initialDatatableLoad,
-        lengthMenu: [
-          [initialDatatableLoad, -1],
-          [initialDatatableLoad, "All"]
-        ],
-        info: true,
-        responsive: true,
-        "order": [
-          [0, "asc"]
-        ],
-        action: function () {
-          $('#tblLeaveRequests').DataTable().ajax.reload();
-        },
-        "fnDrawCallback": function (oSettings) {
-          $('.paginate_button.page-item').removeClass('disabled');
-          $('#tblLeaveRequests_ellipsis').addClass('disabled');
-          if (oSettings._iDisplayLength == -1) {
-            if (oSettings.fnRecordsDisplay() > 150) {
+    //       {
+    //         className: "colLRID colLeaveRequest hiddenColumn",
+    //         "targets": [0]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRDescription",
+    //         "targets": [1]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRLeavePeriod",
+    //         "targets": [2]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRLeaveType",
+    //         "targets": [3]
+    //       },
+    //       {
+    //         className: "colLeaveRequest colLRStatus",
+    //         "targets": [4]
+    //       },
+    //       {
+    //         className: "colLRAction",
+    //         "targets": [5]
+    //       }
+    //     ],
+    //     select: true,
+    //     destroy: true,
+    //     colReorder: true,
+    //     pageLength: initialDatatableLoad,
+    //     lengthMenu: [
+    //       [initialDatatableLoad, -1],
+    //       [initialDatatableLoad, "All"]
+    //     ],
+    //     info: true,
+    //     responsive: true,
+    //     "order": [
+    //       [0, "asc"]
+    //     ],
+    //     action: function () {
+    //       $('#tblLeaveRequests').DataTable().ajax.reload();
+    //     },
+    //     "fnDrawCallback": function (oSettings) {
+    //       $('.paginate_button.page-item').removeClass('disabled');
+    //       $('#tblLeaveRequests_ellipsis').addClass('disabled');
+    //       if (oSettings._iDisplayLength == -1) {
+    //         if (oSettings.fnRecordsDisplay() > 150) {
 
-            }
-          } else {
+    //         }
+    //       } else {
 
-          }
-          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-            $('.paginate_button.page-item.next').addClass('disabled');
-          }
+    //       }
+    //       if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
+    //         $('.paginate_button.page-item.next').addClass('disabled');
+    //       }
 
-          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-            .on('click', function () {
-              LoadingOverlay.show();
+    //       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //         .on('click', function () {
+    //           LoadingOverlay.show();
 
-              var splashArrayList = new Array();
-              let dataLenght = oSettings._iDisplayLength;
-              let customerSearch = $('#tblLeaveRequests_filter input').val();
+    //           var splashArrayList = new Array();
+    //           let dataLenght = oSettings._iDisplayLength;
+    //           let customerSearch = $('#tblLeaveRequests_filter input').val();
 
-              sideBarService.getLeaveRequestList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
-                for (let i = 0; i < useData.length; i++) {
-                  let dataListAllowance = [
-                    useData[i].fields.ID || '',
-                    useData[i].fields.Description || '',
-                    useData[i].fields.PayPeriod || '',
-                    useData[i].fields.LeaveMethod || '',
-                    useData[i].fields.Status || '',
-                    (useData[i].fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
-                  ];
-                  splashArrayList.push(dataListAllowance);
-                }
+    //           sideBarService.getLeaveRequestList(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (useData) {
+    //             for (let i = 0; i < useData.length; i++) {
+    //               let dataListAllowance = [
+    //                 useData[i].fields.ID || '',
+    //                 useData[i].fields.Description || '',
+    //                 useData[i].fields.PayPeriod || '',
+    //                 useData[i].fields.LeaveMethod || '',
+    //                 useData[i].fields.Status || '',
+    //                 (useData[i].fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded btn-sm removeLeaveRequest" data-id="${useData[i].fields.ID}" style="margin-bottom: 24px;" autocomplete="off"><i class="fa fa-remove"></i></button>`
+    //               ];
+    //               splashArrayList.push(dataListAllowance);
+    //             }
 
-                let uniqueChars = [...new Set(splashArrayList)];
-                var datatable = $('#tblLeaveRequests').DataTable();
-                datatable.clear();
-                datatable.rows.add(uniqueChars);
-                datatable.draw(false);
-                setTimeout(function () {
-                  $("#tblLeaveRequests").dataTable().fnPageChange('last');
-                }, 400);
+    //             let uniqueChars = [...new Set(splashArrayList)];
+    //             var datatable = $('#tblLeaveRequests').DataTable();
+    //             datatable.clear();
+    //             datatable.rows.add(uniqueChars);
+    //             datatable.draw(false);
+    //             setTimeout(function () {
+    //               $("#tblLeaveRequests").dataTable().fnPageChange('last');
+    //             }, 400);
 
-                $('.fullScreenSpin').css('display', 'none');
+    //             $('.fullScreenSpin').css('display', 'none');
 
 
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
+    //           }).catch(function (err) {
+    //             $('.fullScreenSpin').css('display', 'none');
+    //           });
 
-            });
-          setTimeout(function () {
-            MakeNegative();
-          }, 100);
-        },
-        "fnInitComplete": function () {
-          $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
-          $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
-        }
+    //         });
+    //       setTimeout(function () {
+    //         MakeNegative();
+    //       }, 100);
+    //     },
+    //     "fnInitComplete": function () {
+    //       $("<button class='btn btn-primary btnLeaveRequestBtn' data-dismiss='modal' data-toggle='modal' data-target='#newLeaveRequestModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblLeaveRequests_filter");
+    //       $("<button class='btn btn-primary btnRefreshLeaveRequest' type='button' id='btnRefreshLeaveRequest' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblLeaveRequests_filter");
+    //     }
 
-      }).on('page', function () {
-        setTimeout(function () {
-          MakeNegative();
-        }, 100);
+    //   }).on('page', function () {
+    //     setTimeout(function () {
+    //       MakeNegative();
+    //     }, 100);
 
-      }).on('column-reorder', function () {
+    //   }).on('column-reorder', function () {
 
-      }).on('length.dt', function (e, settings, len) {
-        //LoadingOverlay.show();
+    //   }).on('length.dt', function (e, settings, len) {
+    //     //LoadingOverlay.show();
 
-        let dataLenght = settings._iDisplayLength;
-        let splashArrayPayNotesList = [];
-        if (dataLenght == -1) {
-          $('.fullScreenSpin').css('display', 'none');
+    //     let dataLenght = settings._iDisplayLength;
+    //     let splashArrayPayNotesList = [];
+    //     if (dataLenght == -1) {
+    //       $('.fullScreenSpin').css('display', 'none');
 
-        } else {
-          if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-            $('.fullScreenSpin').css('display', 'none');
-          } else {
-            sideBarService.getLeaveRequestList(dataLenght, 0).then(function (dataNonBo) {
+    //     } else {
+    //       if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
+    //         $('.fullScreenSpin').css('display', 'none');
+    //       } else {
+    //         sideBarService.getLeaveRequestList(dataLenght, 0).then(function (dataNonBo) {
 
-              addVS1Data('TLeavRequest', JSON.stringify(dataNonBo)).then(function (datareturn) {
-                // templateObject.resetData(dataNonBo);
-                $('.fullScreenSpin').css('display', 'none');
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'none');
-              });
-            }).catch(function (err) {
-              $('.fullScreenSpin').css('display', 'none');
-            });
-          }
-        }
-        setTimeout(function () {
-          MakeNegative();
-        }, 1000);
-      });
-    }, 1000);
+    //           addVS1Data('TLeavRequest', JSON.stringify(dataNonBo)).then(function (datareturn) {
+    //             // templateObject.resetData(dataNonBo);
+    //             $('.fullScreenSpin').css('display', 'none');
+    //           }).catch(function (err) {
+    //             $('.fullScreenSpin').css('display', 'none');
+    //           });
+    //         }).catch(function (err) {
+    //           $('.fullScreenSpin').css('display', 'none');
+    //         });
+    //       }
+    //     }
+    //     setTimeout(function () {
+    //       MakeNegative();
+    //     }, 1000);
+    //   });
+    // }, 1000);
   };
   templateObject.getLeaveRequests();
 
@@ -2751,6 +2836,24 @@ Template.employeescard.onRendered(function () {
     let earningLines = await templateObject.getEarnings(employeeID);
 
     templateObject.payTemplateEarningLineInfo.set(earningLines);
+
+    setTimeout(function () {
+      for(var i=0; i<earningLines.length; i++){
+        $('#ptEarningRate'+earningLines[i].ID).editableSelect();
+        $('#ptEarningRate'+earningLines[i].ID).editableSelect()
+          .on('click.editable-select', async function (e, li) {
+            let $search = $(this);
+            let offset = $search.offset();
+            if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+              $('#earningRateSettingsModal').modal('show');            
+            } else {
+              $('#earningRateSettingsModal').modal('show');
+            }
+          });
+          $('#ptEarningRate'+earningLines[i].ID).val(earningLines[i].EarningRate);
+      }
+    }, 1000);
+    
     templateObject.setEarningLineDropDown();
 
   };
@@ -3360,8 +3463,8 @@ Template.employeescard.onRendered(function () {
         $(`#edtTfnExemption option[value='${objEmployeePaySettings.TFNExemption}']`).attr('selected', 'selected');
         $(`#edtPayPeriod`).val(objEmployeePaySettings.Payperiod);
         $(`#edtLeavePayPeriod`).val(objEmployeePaySettings.Payperiod);
-        $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
-        $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
+        // $(`#edtEmploymentBasis option[value='${objEmployeePaySettings.EmploymentBasis}']`).attr('selected', 'selected');
+        // $(`#edtResidencyStatus option[value='${objEmployeePaySettings.ResidencyStatus}']`).attr('selected', 'selected');
       }
     } catch (err) {
       let employeePayrollService = new EmployeePayrollService();
@@ -9988,28 +10091,21 @@ Template.employeescard.events({
   "click input#edtPayPeriod": (e, ui) => {
     $('#SelectPayRunModal').modal("show");
   },
-  "click input#edtPayrollCalendar": (e, ui) => {
-    $('#payrollCalendarPopModal').modal("show");
-  },
-  "click input#edtHolidays": (e, ui) => {
-    $('#holidaysPopModal').modal("show");
-  },
-  "click .earningLineDropDown": (e, ui) => {
-    $(e.currentTarget).addClass('paste-earnings');
-    $('#earningRateSettingsModal').modal('show');
-  },
+  // "click input#edtPayrollCalendar": (e, ui) => {
+  //   $('#payrollCalendarPopModal').modal("show");
+  // },
+  // "click input#edtHolidays": (e, ui) => {
+  //   $('#holidaysPopModal').modal("show");
+  // },
+  // "click .earningLineDropDown": (e, ui) => {
+  //   $(e.currentTarget).addClass('paste-earnings');
+  //   $('#earningRateSettingsModal').modal('show');
+  // },
 
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
   },
-  "click #tblAccountListPop tbody tr": (e, ui) => {
-    const id = $(e.currentTarget).find('.colAccountID').text();
-    const accountName = $(e.currentTarget).find('.colAccountName').text();
-    $(".paste-expenses").val(accountName);
-    $(".paste-expenses").attr('account-id', id);
-    $(".paste-expenses").removeClass('paste-expenses')
-  },
-
+  
   "click #tblEarnings tbody tr": (e, ui) => {
     const tr = $(e.currentTarget);
     const id = parseInt(tr.find('.colEarningsID').text());
@@ -10160,6 +10256,7 @@ Template.employeescard.helpers({
       })
       temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
     }
+    temp.dashboardOptions = "All";
     return temp;
   },
   employeePayInfo: () => {
@@ -10292,6 +10389,9 @@ Template.employeescard.helpers({
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
+  tableLeaveRequestheaderrecords: () => {
+    return Template.instance().tableLeaveRequestheaderrecords.get();
+  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
       userid: localStorage.getItem('mycloudLogonID'),
@@ -10372,6 +10472,32 @@ Template.employeescard.helpers({
     return Template.instance().earningLines.get();
   },
   formatPrice: (price) => GlobalFunctions.formatPrice(price),
+  apiFunction:async function() {
+    let templateObject = Template.instance();
+    let data = await templateObject.saveLeaveRequestLocalDB();
+    return data;
+  },
+  apiParams: function() {
+    return ['ignoredate', 'limitCount', 'limitFrom'];
+  },
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableList(data)
+        return dataReturn
+    }
+  },
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+  },
 });
 
 function openEditTaskModals(id, type) {

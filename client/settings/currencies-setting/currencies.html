@@ -159,7 +159,28 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        {{> non_transactional_list tablename="tblCurrencyList"}}
+<!--                                        {{> non_transactional_list tablename="tblCurrencyList"}}-->
+
+                                        <style>
+                                            td.colCurrencySymbol, td.colBuyRate, td.colSellRate, td.colUpperVariation, td.colLowerVariation{
+                                                text-align: right !important;
+                                            }
+                                        </style>
+                                        {{>datatablelist
+                                                tablename="tblCurrencyList"
+                                                apiName= apiFunction
+                                                indexeddbname = 'TCurrencyList'
+                                                tableheaderrecords = tableheaderrecords
+                                                exportfilename = 'Currency List'
+                                                istransaction = false
+                                                apiParams= apiParams
+                                                datahandler = datahandler
+                                                service=service
+                                                lowercaseDataName='tcurrencylist'
+                                                exIndexDBName = 'tcurrencylist'
+                                                exdatahandler = exDataHandler
+                                                searchAPI = searchAPI
+                                        }}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">

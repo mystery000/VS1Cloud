@@ -1000,17 +1000,17 @@ setTimeout(function () {
   templateObject.getAccountNames = function(){
     productService.getAccountName().then(function(data){
         // let productData = templateObject.records.get();
-      for(let i in data.taccount){
+      for(let i in data.taccountvs1){
 
         let accountnamerecordObj = {
-          accountname: data.taccount[i].AccountName || ' '
+          accountname: data.taccountvs1[i].AccountName || ' '
         };
 
-        if((data.taccount[i].AccountTypeName == "COGS")){
+        if((data.taccountvs1[i].AccountTypeName == "COGS")){
             coggsaccountrecords.push(accountnamerecordObj);
           templateObject.coggsaccountrecords.set(coggsaccountrecords);
         }
-        if((data.taccount[i].AccountTypeName == "INC")){
+        if((data.taccountvs1[i].AccountTypeName == "INC")){
           salesaccountrecords.push(accountnamerecordObj);
           templateObject.salesaccountrecords.set(salesaccountrecords);
         }
@@ -1930,7 +1930,7 @@ $('#attachment-upload').trigger('click');
                 var result = {};
                 workbook.SheetNames.forEach(function (sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {header: 1});
-                    var sCSV = XLSX.utils.make_csv(workbook.Sheets[sheetName]);
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
                     templateObj.selectedFile.set(sCSV);
 
                     if (roa.length) result[sheetName] = roa;

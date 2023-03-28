@@ -10,22 +10,37 @@
         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
           <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
             <div class="card-body rounded" style="margin: 0px;">
-              <div class="tbl_responsive" style="overflow-x: hidden !important">
-                <table id="tblProjectsDatatablePop" name="tblProjectsDatatablePop" style="width:100%"
-                  class="dataTable table table-hover table-striped table-bordered tblProjectsDatatablePop">
-                  <thead>
-                    <tr class="dnd-moved">
-                      <th class="th colPrjectDate">Date</th>
-                      <th class="th colProjectName">Project</th>
-                      <th class="th colProjectDesc">Description</th>
-                      <th class="th colProjectStatus">Status</th>
-                      <th class="th colProjectTasks">Tasks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
+                {{>datatablelist
+                        tablename="tblProjectsDatatablePop"
+                        apiName= apiFunction
+                        indexeddbname = 'TCRMProjectList'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Projects Datatable List'
+                        istransaction = false
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tprojectlist'
+                        exIndexDBName = 'tprojectlist'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                }}
+<!--              <div class="tbl_responsive" style="overflow-x: hidden !important">-->
+<!--                <table id="tblProjectsDatatablePop" name="tblProjectsDatatablePop" style="width:100%"-->
+<!--                  class="dataTable table table-hover table-striped table-bordered tblProjectsDatatablePop">-->
+<!--                  <thead>-->
+<!--                    <tr class="dnd-moved">-->
+<!--                      <th class="th colPrjectDate">Date</th>-->
+<!--                      <th class="th colProjectName">Project</th>-->
+<!--                      <th class="th colProjectDesc">Description</th>-->
+<!--                      <th class="th colProjectStatus">Status</th>-->
+<!--                      <th class="th colProjectTasks">Tasks</th>-->
+<!--                    </tr>-->
+<!--                  </thead>-->
+<!--                  <tbody>-->
+<!--                  </tbody>-->
+<!--                </table>-->
+<!--              </div>-->
             </div>
           </div>
         </div>

@@ -52,12 +52,12 @@ Template.agedpayables.onRendered(() => {
         { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
         { index: 3, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
         { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
-        { index: 5, label: 'Amount Due', class: 'colAmountDue', active: true, display: true, width: "150" },
-        { index: 6, label: 'Current', class: 'colCurrent', active: true, display: true, width: "150" },
-        { index: 7, label: '1 - 30 Days', class: 'col130Days', active: true, display: true, width: "150" },
-        { index: 8, label: '30 - 60 Days', class: 'col3060Days', active: true, display: true, width: "150" },
-        { index: 9, label: '60 - 90 Days', class: 'col6090Days', active: true, display: true, width: "150" },
-        { index: 10, label: '> 90 Days', class: 'col90Days', active: true, display: true, width: "150" },
+        { index: 5, label: 'Amount Due', class: 'colAmountDue text-right', active: true, display: true, width: "150" },
+        { index: 6, label: 'Current', class: 'colCurrent text-right', active: true, display: true, width: "150" },
+        { index: 7, label: '1 - 30 Days', class: 'col130Days text-right', active: true, display: true, width: "150" },
+        { index: 8, label: '30 - 60 Days', class: 'col3060Days text-right', active: true, display: true, width: "150" },
+        { index: 9, label: '60 - 90 Days', class: 'col6090Days text-right', active: true, display: true, width: "150" },
+        { index: 10, label: '> 90 Days', class: 'col90Days text-right', active: true, display: true, width: "150" },
         // { index: 11, label: 'Order Date', class: 'colOrderDate', active: true, display: true, width: "120" },
         // { index: 12, label: 'Invoice Date', class: 'colInvoiceDate', active: true, display: true, width: "120" },
         // { index: 13, label: 'Original Amount', class: 'colOriginalAmount', active: true, display: true, width: "120" },
@@ -122,6 +122,19 @@ Template.agedpayables.onRendered(() => {
       });
     });
   }
+  let url = FlowRouter.current().path;
+  if (url.indexOf("?dateFrom") > 0) {
+    url = new URL(window.location.href);
+    var getDateFrom = url.searchParams.get("dateFrom");
+    var getLoadDate = url.searchParams.get("dateTo");
+    if( typeof getDateFrom === undefined || getDateFrom == "" || getDateFrom === null){
+      let currentUrl = FlowRouter.current().queryParams;
+      getDateFrom = currentUrl.dateFrom
+      getLoadDate = currentUrl.dateTo
+    }
+    $("#dateFrom").datepicker('setDate', moment(getDateFrom).format('DD/MM/YYYY'));
+    $("#dateTo").datepicker('setDate', moment(getLoadDate).format('DD/MM/YYYY'));
+  }
 
   templateObject.getAgedPayablesData(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
@@ -153,12 +166,13 @@ Template.agedpayables.onRendered(() => {
     }
       splashArrayAgedPayablesReport.sort(GlobalFunctions.sortFunction);
 
-      let start = splashArrayAgedPayablesReport[0][0];
+      let start;
+      if(splashArrayAgedPayablesReport.length != 0) start = splashArrayAgedPayablesReport[0][0] || '';
       let sum, totalSum;
       sum = new Array(6);
       totalSum = new Array(6);
 
-      let T_AccountName = splashArrayAgedPayablesReport[0][0];
+      let T_AccountName = start;
       let agedPayableList = [];
       agedPayableList.push([
           GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
@@ -179,13 +193,13 @@ Template.agedpayables.onRendered(() => {
               start = splashArrayAgedPayablesReport[i][0];
               for(j = 0 ; j < 6; j ++){
                   totalSum[j] += (sum[j] - 0);
-                  sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold");
+                  sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold", "text-right listhr");
               }
               agedPayableList.push([
-                  GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold"),
-                  "",
-                  "",
-                  "",
+                  GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold", "listhr"),
+                  GlobalFunctions.generateSpan("","","listhr"),
+                  GlobalFunctions.generateSpan("","","listhr"),
+                  GlobalFunctions.generateSpan("","","listhr"),
                   sum[0],
                   sum[1],
                   sum[2],
@@ -215,20 +229,20 @@ Template.agedpayables.onRendered(() => {
           let tmp;
           for(j = 0 ; j < 6; j ++) {
               tmp = splashArrayAgedPayablesReport[i][4 + j] - 0;
-              splashArrayAgedPayablesReport[i][4 + j] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success') : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger');
+              splashArrayAgedPayablesReport[i][4 + j] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success', "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger', "text-right");
               sum[j] += tmp;
           }
           agedPayableList.push(splashArrayAgedPayablesReport[i]);
       }
       for(j = 0 ; j < 6; j ++){
           totalSum[j] += sum[j] - 0;
-          sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold");
+          sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold", "text-right listhr");
       }
       agedPayableList.push([
-          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold'),
-          "",
-          "",
-          "",
+          GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold', "listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
           sum[0],
           sum[1],
           sum[2],
@@ -237,14 +251,13 @@ Template.agedpayables.onRendered(() => {
           sum[5],
       ]);
       for(j = 0 ; j < 6; j ++){
-          totalSum[j] = totalSum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "table-cells text-bold") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "text-danger text-bold");
+          totalSum[j] = totalSum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "text-danger text-bold", "text-right listhr");
       }
       agedPayableList.push([
-          GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold'),
-          "",
-          "",
-          "",
-          "",
+          GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold', "listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
+          GlobalFunctions.generateSpan("","","listhr"),
           totalSum[0],
           totalSum[1],
           totalSum[2],
@@ -255,7 +268,7 @@ Template.agedpayables.onRendered(() => {
       templateObject.transactiondatatablerecords.set(agedPayableList);
 
       setTimeout(function () {
-      $('#tableExport').DataTable({
+      $('#tableExport1').DataTable({
         data: agedPayableList,
         searching: false,
         "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -1408,13 +1421,13 @@ Template.agedpayables.events({
         localStorage.setItem("VS1AgedPayables_Report", "");
         $("#dateFrom").attr("readonly", true);
         $("#dateTo").attr("readonly", true);
-        templateObject.getAgedPayableReports(null, null, true);
+        templateObject.getAgedPayablesData(null, null, true);
       },
       "change #dateTo, change #dateFrom": (e) => {
         let templateObject = Template.instance();
         LoadingOverlay.show();
         localStorage.setItem("VS1AgedPayables_Report", "");
-        templateObject.getAgedPayableReports(
+        templateObject.getAgedPayablesData(
           GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
           GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
           false

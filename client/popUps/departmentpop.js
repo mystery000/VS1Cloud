@@ -2,12 +2,16 @@ import {TaxRateService} from "../settings/settings-service";
 import { ReactiveVar } from 'meteor/reactive-var';
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import {
+    ProductService
+} from "../product/product-service";
 
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './departmentpop.html';
 
 let sideBarService = new SideBarService();
+let productService = new ProductService();
 Template.departmentpop.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -17,6 +21,38 @@ Template.departmentpop.onCreated(function(){
     templateObject.roomrecords = new ReactiveVar([]);
 
     templateObject.departlist = new ReactiveVar([]);
+
+
+    templateObject.getDataTableList = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+        var dataList = [
+            data.ClassID || "",
+            data.ClassName || "",
+            data.Description || "",
+            data.ClassGroup || "",
+            data.ClassName,
+            data.Level1 || "",
+            data.SiteCode || "",
+            linestatus
+        ];
+        return dataList;
+    }
+    let headerStructure = [
+        { index: 0, label: '#ID', class: 'colDeptID', active: false, display: false, width: "10" },
+        { index: 1, label: 'Department Name', class: 'colDeptName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+        { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.departmentpop.onRendered(function() {
@@ -111,24 +147,41 @@ Template.departmentpop.onRendered(function() {
     };
     templateObject.getAllEmployees();
 
-    templateObject.getRooms = function () {
+    templateObject.getRooms = function() {
+        getVS1Data('TProductBin').then(function (dataObject) {
+            if (dataObject.length == 0) {
+                productService.getBins().then(async function (data) {
+                    await addVS1Data('TProductBin', JSON.stringify(data));
+                    templateObject.setBinRecords(data);
+                }).catch(function (err) {
 
-        taxRateService.getBins().then(function (data) {
-            let binList = [];
-            for (let i = 0; i < data.tproductbin.length; i++) {
-
-                let dataObj = {
-                    roomid: data.tproductbin[i].BinNumber || ' ',
-                    roomname: data.tproductbin[i].BinLocation || ' '
-                };
-                if(data.tproductbin[i].BinLocation.replace(/\s/g, '') != ''){
-                    binList.push(dataObj);
-                }
-
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                templateObject.setBinRecords(data);
             }
-            templateObject.roomrecords.set(binList);
+        }).catch(function (err) {
+            productService.getBins().then(async function (data) {
+                await addVS1Data('TProductBin', JSON.stringify(data));
+                templateObject.setBinRecords(data);
+            }).catch(function (err) {
+            });
         });
     };
+    templateObject.setBinRecords = function(data){
+        let binList = [];
+        for (let i = 0; i < data.tproductbin.length; i++) {
+
+            let dataObj = {
+                roomid: data.tproductbin[i].BinNumber || ' ',
+                roomname: data.tproductbin[i].BinLocation || ' '
+            };
+            if (data.tproductbin[i].BinLocation.replace(/\s/g, '') != '') {
+                binList.push(dataObj);
+            }
+        }
+        templateObject.roomrecords.set(binList);
+    }
     templateObject.getRooms();
 
     templateObject.getDeptList = function () {
@@ -1400,5 +1453,33 @@ Template.departmentpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getDepartmentDataList;
+    },
+    searchAPI: function() {
+        return sideBarService.getDepartmentDataList;
+    },
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });

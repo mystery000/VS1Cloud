@@ -1184,7 +1184,7 @@ Template.header.onRendered(function () {
                     }
                 }).catch(function (err) {
                     $('.fullScreenSpin').css('display', 'none');
-                });                
+                });
             } else {
                 productService.getGlobalSearchReport(searchName).then(function (data) {
                     let dataSelectID = '';
@@ -1758,7 +1758,7 @@ Template.header.onRendered(function () {
     var erpGet = erpDb();
 
     var LoggedDB = erpGet.ERPDatabase;
-    if (loggedUserEventFired) {
+    if (JSON.parse(loggedUserEventFired)) {
         templateObject.getBankDescription();
         templateObject.getCompanyInfo();
         $(document).ready(function () {

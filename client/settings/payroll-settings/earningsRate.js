@@ -34,17 +34,49 @@ Template.earningRateSettings.onCreated(function() {
   templateObject.currentDrpDownID = new ReactiveVar();
   templateObject.taxraterecords = new ReactiveVar([]);
   // templateObject.Accounts = new ReactiveVar([]);
+  templateObject.tableheaderrecords4 = new ReactiveVar([]);
 
   templateObject.earningRates = new ReactiveVar([]);
   templateObject.earningTypes = new ReactiveVar([]);
   templateObject.earnings = new ReactiveVar([]);
+
+  templateObject.getDataTableList4 = function(data){
+    let dataList = [
+        data.fields.ID || 0,
+        data.fields.EarningsName || '',
+        data.fields.EarningType || '',
+        data.fields.EarningsDisplayName || '',
+        data.fields.EarningsRateType || '',
+        '100',
+        data.fields.ExpenseAccount || '',
+        data.fields.ExpenseAccount || '',
+        data.fields.EarningsExemptPaygWithholding || '',
+        data.fields.EarningsExemptSuperannuationGuaranteeCont || '',
+        data.fields.EarningsReportableW1onActivityStatement || '',
+        data.fields.Active == true ? '' : 'In-Active',
+       '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    ];
+    return dataList;
+  }
+  let headerStructure4  = [
+    { index: 0, label: 'ID', class: 'colEarningsID', active: false, display: true, width: "" },
+    { index: 1, label: 'Earnings Name', class: 'colEarningsNames', active: true, display: true, width: "100" },
+    { index: 2, label: 'Earnings Type', class: 'colEarningsType', active: true, display: true, width: "80" },
+    { index: 3, label: 'Display Name', class: 'colEarningsDisplayName', active: true, display: true, width: "50" },
+    { index: 4, label: 'Rate Type', class: 'colEarningsratetype', active: true, display: true, width: "50" },
+    { index: 5, label: 'Amount', class: 'colEarningsAmount', active: true, display: true, width: "50" },
+    { index: 6, label: 'Account', class: 'colEarningsAccounts', active: true, display: true, width: "50" },
+    { index: 7, label: 'Account ID', class: 'colEarningsAccountsID', active: false, display: true, width: "" },
+    { index: 8, label: 'PAYG withholding', class: 'colEarningsPAYG', active: false, display: true, width: "" },
+    { index: 9, label: 'Superannuation Guarantee Contribution', class: 'colEarningsSuperannuation', active: false, display: true, width: "" },
+    { index: 10, label: 'Reportable as W1', class: 'colEarningsReportableasW1', active: false, display: true, width: "" },
+    { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+    { index: 12, label: '', class: 'colDeleteEarnings', active: true, display: true, width: "20" }
+  ];
+  templateObject.tableheaderrecords4.set(headerStructure4);
 });
 
 Template.earningRateSettings.onRendered(function() {
-    $('#edtEarningsType').editableSelect('add', function(item){
-        $(this).val(item.id);
-        $(this).text(item.name);
-    });
   const templateObject = Template.instance();
   const dataTableList = [];
   var splashArrayEarningList = new Array();
@@ -108,6 +140,11 @@ Template.earningRateSettings.onRendered(function() {
 
         await templateObject.earningTypes.set(earningTypes);
 
+        setTimeout(function () {
+            for(var i=0; i<earningTypes.length; i++){
+                $('#edtEarningsType').editableSelect('add', earningTypes[i].value);
+            }
+        }, 100);
     }
 
 
@@ -145,7 +182,7 @@ Template.earningRateSettings.onRendered(function() {
 
 
 
-        // const resp = await getVS1Data(erpObject.TEarningData);
+        // const resp = await getVS1Data(erpObject.TEarnings);
         // let data = resp.length > 0 ? JSON.parse(resp[0].data) : [];
         const response  = data.response;
 
@@ -647,7 +684,7 @@ Template.earningRateSettings.onRendered(function() {
     templateObject.initData = async (refresh = false) => {
         await templateObject.getAllTaxCodes(refresh);
         await templateObject.getEarningTypes(refresh);
-        await templateObject.loadEarnings(refresh);
+        // await templateObject.loadEarnings(refresh);
     }
 
     templateObject.initData();
@@ -965,7 +1002,7 @@ Template.earningRateSettings.onRendered(function() {
         let description = table.find(".productDesc").text() ||'';
         // let searchFilterID = templateObject.currentDrpDownID.get()
         let searchFilterID = $('#selectLineID').val();
-        $('#' + searchFilterID).val(name);
+        // $('#' + searchFilterID).val(name);
         $("#edtDeductionAccountID").val(accountID);
         // $("#edtDeductionDesctiption").val(description);
         $('#accountListModal').modal('toggle');
@@ -1187,6 +1224,36 @@ Template.earningRateSettings.helpers({
     earnings: () => {
         return Template.instance().earnings.get();
     },
+
+    tableheaderrecords4: () => {
+        return Template.instance().tableheaderrecords4.get();
+    },
+    apiFunction4:function() {
+        return sideBarService.getEarnings;
+    },
+    searchAPI4: function() {
+        return sideBarService.getEarningByName;
+    },
+    service4: ()=>{
+        return sideBarService;
+    },
+    datahandler4: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList4(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler4: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList4(data);
+            return dataReturn;
+        }
+    },
+    apiParams4: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    }
 });
 
 //

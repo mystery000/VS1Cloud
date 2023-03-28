@@ -64,7 +64,7 @@
 
                                             <!--New Room Begin-->
                                             {{#if isModuleGreenTrack}}
-                                            <a class="btn btn-primary btnAddDept btnAddRoomMobile" role="button" data-toggle="modal" href="#newRoomModal" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Room<br></a>
+                                            <!-- <a class="btn btn-primary btnAddDept btnAddRoomMobile" role="button" data-toggle="modal" href="#newRoomModal" style="margin: 12px;"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Room<br></a> -->
                                             <div class="modal fade" role="dialog" tabindex="-1" id="newRoomModal">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -161,7 +161,22 @@
                                             </div>
                                         </div>
 
-                                        {{> non_transactional_list tablename="tblDepartmentList"}}
+<!--                                        {{> non_transactional_list tablename="tblDepartmentList"}}-->
+                                        {{>datatablelist
+                                                tablename="tblDepartmentList"
+                                                apiName= apiFunction
+                                                indexeddbname = 'TDeptClassList'
+                                                tableheaderrecords = tableheaderrecords
+                                                exportfilename = 'Department List'
+                                                istransaction = false
+                                                apiParams= apiParams
+                                                datahandler = datahandler
+                                                service=service
+                                                lowercaseDataName='tdeptclasslist'
+                                                exIndexDBName = 'tdeptclasslist'
+                                                exdatahandler = exDataHandler
+                                                searchAPI = searchAPI
+                                        }}
                                     </div>
                                 </div>
                                 <div class="row no-gutters">

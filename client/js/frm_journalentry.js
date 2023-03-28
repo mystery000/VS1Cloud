@@ -13,6 +13,7 @@ import {
 import {
     UtilityService
 } from "../utility-service";
+import { FixedAssetService } from '../fixedassets/fixedasset-service';
 import {
     ProductService
 } from "../product/product-service";
@@ -45,6 +46,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let fixedAssetService = new FixedAssetService();
 var times = 0;
 let defaultCurrencyCode = CountryAbbr;
 
@@ -570,6 +572,7 @@ Template.journalentrycard.onRendered(() => {
                                             TaxTotal: totalTax || 0,
                                             taxRate: useData[d].fields.Lines[i].fields.TaxRate || 0,
                                             taxCode: useData[d].fields.Lines[i].fields.TaxCode || '',
+                                            department: useData[d].fields.Lines[i].fields.DeptName || '',
 
                                         };
 
@@ -998,6 +1001,21 @@ Template.journalentrycard.onRendered(() => {
 
     let table;
     $(document).ready(function() {
+        $('#costTypeLine').editableSelect();
+
+        $('#costTypeLine').editableSelect()
+            .on('select.editable-select', function (e, li) {
+                if (li) {
+                    const lineID = templateObject.currentLineID.get();
+                    const purchaseOrderData = templateObject.purchaseorderrecord.get();
+                    const lineItems = purchaseOrderData.LineItems;
+                    const index = lineItems.findIndex((item) => item.lineID === lineID);
+                    purchaseOrderData.LineItems[index].costTypeID = parseInt(li.val()) || 0;
+                    purchaseOrderData.LineItems[index].costTypeName = li.html();
+                    templateObject.purchaseorderrecord.set(purchaseOrderData);
+                }
+            });
+
         $('#addRow').on('click', function() {
             var rowData = $('#tblJournalEntryLine tbody>tr:last').clone(true);
             let tokenid = Random.id();
@@ -1992,6 +2010,45 @@ Template.journalentrycard.onRendered(function() {
     };
     tempObj.getAllTaxCodes();
 
+    tempObj.getAllCostTypes = function () {
+        getVS1Data("TCostTypes").then(function (dataObject) {
+            if (dataObject.length == 0) {
+                fixedAssetService.getCostTypeList().then(function (data) {
+                    tempObj.setAssetCostList(data);
+                }).catch(function (err) {
+                    $(".fullScreenSpin").css("display", "none");
+                });
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                tempObj.setAssetCostList(data);
+            }
+        }).catch(function (err) {
+            fixedAssetService.getCostTypeList().then(function (data) {
+                tempObj.setAssetCostList(data);
+            }).catch(function (err) {
+                $(".fullScreenSpin").css("display", "none");
+            });
+        });
+    }
+    tempObj.setAssetCostList = function (data) {
+        addVS1Data('TCostTypes', JSON.stringify(data));
+        let type_record = new Array();
+        for (let i = 0; i < data.tcosttypes.length; i ++) {
+            const costType = data.tcosttypes[i];
+            const typeField = {
+                id: costType.fields.ID,
+                typeName: costType.fields.TypeName
+            };
+            type_record.push(typeField);
+            $('#costTypeLine').editableSelect('add', function(){
+                $(this).val(typeField.id);
+                $(this).text(typeField.typeName);
+            });
+        }
+        tempObj.assetCostTypes.set(type_record);
+    };
+    tempObj.getAllCostTypes();
+
     $('#sltDepartment').editableSelect();
 
     $('#sltDepartment').editableSelect()
@@ -2077,6 +2134,92 @@ Template.journalentrycard.onRendered(function() {
 
 });
 Template.journalentrycard.helpers({
+    test: function(id, value){
+
+        setTimeout(() => {
+            let obj = $("#select-department-" + id);
+
+            obj.editableSelect();
+
+            $(".select-department").editableSelect()
+                .on('click.editable-select', function(e, li) {
+                    var $earch = $(this);
+                    var offset = $earch.offset();
+                    var deptDataName = e.target.value || '';
+                    $('#edtDepartmentID').val('');
+                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                        $('#departmentModal').modal('toggle');
+                    } else {
+                        if (deptDataName.replace(/\s/g, '') != '') {
+                            $('#newDeptHeader').text('Edit Department');
+
+                            getVS1Data('TDeptClass').then(function(dataObject) {
+                                if (dataObject.length == 0) {
+                                    $('.fullScreenSpin').css('display', 'inline-block');
+                                    sideBarService.getDepartment().then(function(data) {
+                                        for (let i = 0; i < data.tdeptclass.length; i++) {
+                                            if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                                $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                                $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                                $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                                $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                            }
+                                        }
+                                        setTimeout(function() {
+                                            $('.fullScreenSpin').css('display', 'none');
+                                            $('#newDepartmentModal').modal('toggle');
+                                        }, 200);
+                                    });
+                                } else {
+                                    let data = JSON.parse(dataObject[0].data);
+                                    let useData = data.tdeptclass;
+                                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        }
+                                    }
+                                    setTimeout(function() {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        $('#newDepartmentModal').modal('toggle');
+                                    }, 200);
+                                }
+                            }).catch(function(err) {
+                                $('.fullScreenSpin').css('display', 'inline-block');
+                                sideBarService.getDepartment().then(function(data) {
+                                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                                        }
+                                    }
+                                    setTimeout(function() {
+                                        $('.fullScreenSpin').css('display', 'none');
+                                        $('#newDepartmentModal').modal('toggle');
+                                    }, 200);
+                                });
+                            });
+                        } else {
+                            $('#departmentModal').modal();
+                            setTimeout(function() {
+                                $('#departmentList_filter .form-control-sm').focus();
+                                $('#departmentList_filter .form-control-sm').val('');
+                                $('#departmentList_filter .form-control-sm').trigger("input");
+                                var datatable = $('#departmentList').DataTable();
+                                datatable.draw();
+                                $('#departmentList_filter .form-control-sm').trigger("input");
+                            }, 500);
+                        }
+                    }
+                });
+        }, 1000);
+
+    },
+
     getTemplateList: function () {
         return template_list;
     },
@@ -2229,6 +2372,12 @@ Template.journalentrycard.helpers({
 });
 
 Template.journalentrycard.events({
+    'click .btnFixedAsset': function(e) {
+        $('#FixedAssetLineAddModal').modal();
+    },
+    'click #fixedAssetLine': function(event) {
+        $('#fixedassetlistpopModal').modal();
+    },
     // 'click input.basedOnSettings': function (event) {
     //     if (event.target.id == "basedOnEvent") {
     //         const value = $(event.target).prop('checked');
@@ -2753,28 +2902,28 @@ Template.journalentrycard.events({
           $('.modal-backdrop').css('display','none');
         }, delayTimeAfterSound);
       },
-    "click #tblCurrencyPopList tbody tr": (e) => {
-        const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
+    // "click #tblCurrencyPopList tbody tr": (e) => {
+    //     const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
 
-        const currencyCode = $(e.currentTarget).find(".colCode").text();
-        const currencyRate =
-          rateType == "buy"
-            ? $(e.currentTarget).find(".colBuyRate").text()
-            : $(e.currentTarget).find(".colSellRate").text();
+    //     const currencyCode = $(e.currentTarget).find(".colCode").text();
+    //     const currencyRate =
+    //       rateType == "buy"
+    //         ? $(e.currentTarget).find(".colBuyRate").text()
+    //         : $(e.currentTarget).find(".colSellRate").text();
 
-        $("#sltCurrency").val(currencyCode);
-        $("#sltCurrency").trigger("change");
-        $("#exchange_rate").val(currencyRate);
-        $("#exchange_rate").trigger("change");
-        $("#currencyModal").modal("toggle");
+    //     $("#sltCurrency").val(currencyCode);
+    //     $("#sltCurrency").trigger("change");
+    //     $("#exchange_rate").val(currencyRate);
+    //     $("#exchange_rate").trigger("change");
+    //     $("#currencyModal").modal("toggle");
 
-        $("#tblCurrencyPopList_filter .form-control-sm").val("");
+    //     $("#tblCurrencyPopList_filter .form-control-sm").val("");
 
-        setTimeout(function () {
-          $(".btnRefreshCurrency").trigger("click");
-          $(".fullScreenSpin").css("display", "none");
-        }, 1000);
-      },
+    //     setTimeout(function () {
+    //       $(".btnRefreshCurrency").trigger("click");
+    //       $(".fullScreenSpin").css("display", "none");
+    //     }, 1000);
+    //   },
     'click #sltCurrency': function(event) {
         $('#currencyModal').modal('toggle');
     },
@@ -4257,6 +4406,15 @@ Template.journalentrycard.events({
             $('.colMemo').css('display', 'none');
         }
     },
+    'click .chkcolFixedAsset': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colFixedAsset').css('display', 'table-cell');
+            $('.colFixedAsset').css('padding', '.75rem');
+            $('.colFixedAsset').css('vertical-align', 'top');
+        } else {
+            $('.colFixedAsset').css('display', 'none');
+        }
+    },
     'click .chkcolCreditEx': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colCreditEx').css('display', 'table-cell');
@@ -4294,6 +4452,12 @@ Template.journalentrycard.events({
         let range = $(event.target).val();
         $(".spWidthMemo").html(range + '%');
         $('.colMemo').css('width', range + '%');
+
+    },
+    'change .rngRangeFixedAsset': function(event) {
+
+        let range = $(event.target).val();
+        $('.colFixedAsset').css('width', range + '%');
 
     },
     'change .rngRangeCreditEx': function(event) {
@@ -4341,9 +4505,6 @@ Template.journalentrycard.events({
             }
 
             lineItems.push(lineItemObj);
-
-
-
         });
 
 

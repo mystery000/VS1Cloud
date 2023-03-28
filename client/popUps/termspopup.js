@@ -38,746 +38,113 @@ Template.termlistpop.onCreated(function() {
     templateObject.includePurchaseDefault = new ReactiveVar();
     templateObject.includePurchaseDefault.set(false);
 
+
+    templateObject.getDataTableList = function(data){
+        let linestatus = '';
+            if (data.Active == true) {
+                linestatus = "";
+            } else if (data.Active == false) {
+                linestatus = "In-Active";
+            };
+            let tdEOM = '';
+            let tdEOMPlus = '';
+            let tdCustomerDef = ''; //isSalesdefault
+            let tdSupplierDef = ''; //isPurchasedefault
+            let tdProgressPayment = ''; //isProgressPayment
+            let tdRequired = ''; //Required
+
+            //Check if EOM is checked
+            if (data.IsEOM == true) {
+                tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-' + data.ID + '" checked><label class="custom-control-label chkBox" for="iseom-' + data.ID + '"></label></div>';
+            } else {
+                tdEOM = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseom-' + data.ID + '"><label class="custom-control-label chkBox" for="iseom-' + data.ID + '"></label></div>';
+            }
+            //Check if EOM Plus is checked
+            if (data.IsEOMPlus == true) {
+                tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '" checked><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
+            } else {
+                tdEOMPlus = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="iseomplus-' + data.ID + '"></label></div>';
+            }
+            //Check if Customer Default is checked // //isSalesdefault
+            if (data.isSalesdefault == true) {
+                tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-' + data.ID + '" checked><label class="custom-control-label chkBox" for="isSalesdefault-' + data.ID + '"></label></div>';
+            } else {
+                tdCustomerDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isSalesdefault-' + data.ID + '"><label class="custom-control-label chkBox" for="isSalesdefault-' + data.ID + '"></label></div>';
+            }
+            //Check if Supplier Default is checked // isPurchasedefault
+            if (data.isPurchasedefault == true) {
+                tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="isPurchasedefault-' + data.ID + '" checked><label class="custom-control-label chkBox" for="isPurchasedefault-' + data.ID + '"></label></div>';
+            } else {
+                tdSupplierDef = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iseomplus-' + data.ID + '"><label class="custom-control-label chkBox" for="isPurchasedefault-' + data.ID + '"></label></div>';
+            }
+            //Check if is progress payment is checked
+            if (data.IsProgressPayment == true) {
+                tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-' + data.ID + '" checked><label class="custom-control-label chkBox" for="IsProgressPayment-' + data.ID + '"></label></div>';
+            } else {
+                tdProgressPayment = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="IsProgressPayment-' + data.ID + '"><label class="custom-control-label chkBox" for="IsProgressPayment-' + data.ID + '"></label></div>';
+            }
+            //Check if Required is checked
+            if (data.Required == true) {
+                tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-' + data.ID + '" checked><label class="custom-control-label chkBox" for="Required-' + data.ID + '"></label></div>';
+            } else {
+                tdRequired = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="Required-' + data.ID + '"><label class="custom-control-label chkBox" for="Required-' + data.ID + '"></label></div>';
+            }
+
+            //Check if ProgressPaymentfirstPayonSaleDate is checked
+            if (data.ProgressPaymentfirstPayonSaleDate == true) {
+                tdPayOnSale = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="ProgressPaymentfirstPayonSaleDate-' + data.ID + '" checked><label class="custom-control-label chkBox" for="ProgressPaymentfirstPayonSaleDate-' + data.ID + '"></label></div>';
+            } else {
+                tdPayOnSale = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="ProgressPaymentfirstPayonSaleDate-' + data.ID + '"><label class="custom-control-label chkBox" for="ProgressPaymentfirstPayonSaleDate-' + data.ID + '"></label></div>';
+            };
+
+            var dataList = [
+                data.ID || "",
+                data.Terms || "",
+                data.TermsAmount || "",
+                tdEOM,
+                tdEOMPlus,
+                data.Description || "",
+                tdCustomerDef,
+                tdSupplierDef,
+                linestatus,
+                tdProgressPayment,
+                tdRequired,
+                data.EarlyPaymentDiscount || 0.00,
+                data.EarlyPaymentDays || 0.00,
+                data.ProgressPaymentType || "",
+                data.ProgressPaymentDuration || 0.00,
+                data.ProgressPaymentInstallments || 0.00,
+                data.ProgressPaymentfirstPayonSaleDate || 0.00,
+            ];
+        // let dataList = [];
+        return dataList;
+    }
+
+    let headerStructure  = [
+        { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
+        { index: 2, label: 'Terms Amount', class: 'colTermsAmount', active: true, display: true, width: "120" },
+        { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
+        { index: 4, label: 'EOM Plus', class: 'colIsEOMPlus', active: true, display: true, width: "80" },
+        { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
+        { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "130" },
+        { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "130" },
+        { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 9, label: 'Is Progress Payment', class: 'colIsProgressPayment', active: false, display: true, width: "200" },
+        { index: 10, label: 'Required', class: 'colRequired', active: false, display: true, width: "100" },
+        { index: 11, label: 'Early Payment Discount', class: 'colEarlyPayDiscount', active: false, display: true, width: "200" },
+        { index: 12, label: 'Early Payment Days', class: 'colEarlyPay', active: false, display: true, width: "150" },
+        { index: 13, label: 'Payment Type', class: 'colProgressPayType', active: false, display: true, width: "150" },
+        { index: 14, label: 'Payment Duration', class: 'colProgressPayDuration', active: false, display: true, width: "100" },
+        { index: 15, label: 'Pay On Sale Date', class: 'colPayOnSale', active: false, display: true, width: "150" },
+    ];
+
+    templateObject.tableheaderrecords.set(headerStructure)
+
 });
 
 Template.termlistpop.onRendered(function() {
-    let templateObject = Template.instance();
-    let taxRateService = new TaxRateService();
-    const dataTableList = [];
-    const tableHeaderList = [];
-    const deptrecords = [];
-    let deptprodlineItems = [];
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
-    function MakeNegative() {
-        $('td').each(function() {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-        });
-    };
-
-    templateObject.getTaxRates = function() {
-        getVS1Data('TTermsVS1').then(function(dataObject) {
-            if (dataObject.length == 0) {
-                taxRateService.getTermsVS1().then(function(data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let setISCOD = false;
-                    for (let i = 0; i < data.ttermsvs1.length; i++) {
-                        if ((data.ttermsvs1[i].IsDays == true) && (data.ttermsvs1[i].Days == 0)) {
-
-                            setISCOD = true;
-                        } else {
-                            setISCOD = false;
-                        }
-                        // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-                        var dataList = {
-                            id: data.ttermsvs1[i].Id || '',
-                            termname: data.ttermsvs1[i].TermsName || '',
-                            termdays: data.ttermsvs1[i].Days || 0,
-                            iscod: setISCOD || false,
-                            description: data.ttermsvs1[i].Description || '',
-                            iseom: data.ttermsvs1[i].IsEOM || 'false',
-                            iseomplus: data.ttermsvs1[i].IsEOMPlus || 'false',
-                            isPurchasedefault: data.ttermsvs1[i].isPurchasedefault || 'false',
-                            isSalesdefault: data.ttermsvs1[i].isSalesdefault || 'false'
-                        };
-
-                        dataTableList.push(dataList);
-                        //}
-                    }
-
-
-                    templateObject.datatablerecords.set(dataTableList);
-
-                    if (templateObject.datatablerecords.get()) {
-
-                        Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
-                            if (error) {
-
-                            } else {
-                                if (result) {
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if (hiddenColumn == true) {
-
-                                            $("." + columnClass + "").addClass('hiddenColumn');
-                                            $("." + columnClass + "").removeClass('showColumn');
-                                        } else if (hiddenColumn == false) {
-                                            $("." + columnClass + "").removeClass('hiddenColumn');
-                                            $("." + columnClass + "").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    }
-
-                    $('.fullScreenSpin').css('display', 'none');
-                    setTimeout(function() {
-                        $('#termsList').DataTable({
-                            columnDefs: [{
-                                "orderable": false,
-                                "targets": -1
-                            }],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [{
-                                    extend: 'csvHtml5',
-                                    text: '',
-                                    download: 'open',
-                                    className: "btntabletocsv hiddenColumn",
-                                    filename: "termsList_" + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                }, {
-                                    extend: 'print',
-                                    download: 'open',
-                                    className: "btntabletopdf hiddenColumn",
-                                    text: '',
-                                    title: 'Term List',
-                                    filename: "termsList_" + moment().format(),
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                },
-                                {
-                                    extend: 'excelHtml5',
-                                    title: '',
-                                    download: 'open',
-                                    className: "btntabletoexcel hiddenColumn",
-                                    filename: "termsList_" + moment().format(),
-                                    orientation: 'portrait',
-                                    exportOptions: {
-                                        columns: ':visible'
-                                    }
-                                    // ,
-                                    // customize: function ( win ) {
-                                    //   $(win.document.body).children("h1:first").remove();
-                                    // }
-
-                                }
-                            ],
-                            // bStateSave: true,
-                            // rowId: 0,
-                            paging: false,
-                            // "scrollY": "400px",
-                            // "scrollCollapse": true,
-                            info: true,
-                            responsive: true,
-                            "order": [
-                                [0, "asc"]
-                            ],
-                            // "aaSorting": [[1,'desc']],
-                            action: function() {
-                                $('#termsList').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function(oSettings) {
-                                setTimeout(function() {
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function () {
-                                $("<button class='btn btn-primary btnAddNewTerm' data-dismiss='modal' data-toggle='modal' data-target='#newTermsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#termsList_filter");
-                                $("<button class='btn btn-primary btnRefreshTerms' type='button' id='btnRefreshTerms' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#termsList_filter");
-                            },
-
-                        }).on('page', function() {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function() {
-
-                        }).on('length.dt', function(e, settings, len) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        });
-                        $('.fullScreenSpin').css('display', 'none');
-                    }, 10);
-
-
-                    var columns = $('#termsList th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i, v) {
-                        if (v.hidden == false) {
-                            columVisible = true;
-                        }
-                        if ((v.className.includes("hiddenColumn"))) {
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
-
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || '',
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                }).catch(function(err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display', 'none');
-                    // Meteor._reload.reload();
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.ttermsvs1;
-                let lineItems = [];
-                let lineItemObj = {};
-                let setISCOD = false;
-                for (let i = 0; i < useData.length; i++) {
-                    if ((useData[i].IsDays == true) && (useData[i].Days == 0)) {
-
-                        setISCOD = true;
-                    } else {
-                        setISCOD = false;
-                    }
-                    // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-                    var dataList = {
-                        id: useData[i].Id || '',
-                        termname: useData[i].TermsName || '',
-                        termdays: useData[i].Days || 0,
-                        iscod: setISCOD || false,
-                        description: useData[i].Description || '',
-                        iseom: useData[i].IsEOM || 'false',
-                        iseomplus: useData[i].IsEOMPlus || 'false',
-                        isPurchasedefault: useData[i].isPurchasedefault || 'false',
-                        isSalesdefault: useData[i].isSalesdefault || 'false'
-                    };
-
-                    dataTableList.push(dataList);
-                    //}
-                }
-
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#termsList').DataTable({
-                        columnDefs: [{
-                            "orderable": false,
-                            "targets": -1
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "termsList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Term List',
-                                filename: "termsList_" + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "termsList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                                // ,
-                                // customize: function ( win ) {
-                                //   $(win.document.body).children("h1:first").remove();
-                                // }
-
-                            }
-                        ],
-                        // bStateSave: true,
-                        // rowId: 0,
-                        paging: false,
-                        // "scrollY": "400px",
-                        // "scrollCollapse": true,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#termsList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewTerm' data-dismiss='modal' data-toggle='modal' data-target='#newTermsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#termsList_filter");
-                            $("<button class='btn btn-primary btnRefreshTerms' type='button' id='btnRefreshTerms' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#termsList_filter");
-                        },
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 10);
-
-
-                var columns = $('#termsList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-            }
-        }).catch(function(err) {
-            taxRateService.getTermsVS1().then(function(data) {
-                let lineItems = [];
-                let lineItemObj = {};
-                let setISCOD = false;
-                for (let i = 0; i < data.ttermsvs1.length; i++) {
-                    if ((data.ttermsvs1[i].IsDays == true) && (data.ttermsvs1[i].Days == 0)) {
-
-                        setISCOD = true;
-                    } else {
-                        setISCOD = false;
-                    }
-                    // let taxRate = (data.tdeptclass[i].fields.Rate * 100).toFixed(2) + '%';
-                    var dataList = {
-                        id: data.ttermsvs1[i].Id || '',
-                        termname: data.ttermsvs1[i].TermsName || '',
-                        termdays: data.ttermsvs1[i].Days || 0,
-                        iscod: setISCOD || false,
-                        description: data.ttermsvs1[i].Description || '',
-                        iseom: data.ttermsvs1[i].IsEOM || 'false',
-                        iseomplus: data.ttermsvs1[i].IsEOMPlus || 'false',
-                        isPurchasedefault: data.ttermsvs1[i].isPurchasedefault || 'false',
-                        isSalesdefault: data.ttermsvs1[i].isSalesdefault || 'false'
-                    };
-
-                    dataTableList.push(dataList);
-                    //}
-                }
-
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if (templateObject.datatablerecords.get()) {
-
-                    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'termsList', function(error, result) {
-                        if (error) {
-
-                        } else {
-                            if (result) {
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if (hiddenColumn == true) {
-
-                                        $("." + columnClass + "").addClass('hiddenColumn');
-                                        $("." + columnClass + "").removeClass('showColumn');
-                                    } else if (hiddenColumn == false) {
-                                        $("." + columnClass + "").removeClass('hiddenColumn');
-                                        $("." + columnClass + "").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function() {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display', 'none');
-                setTimeout(function() {
-                    $('#termsList').DataTable({
-                        columnDefs: [{
-                            "orderable": false,
-                            "targets": -1
-                        }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [{
-                                extend: 'csvHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "termsList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            }, {
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Term List',
-                                filename: "termsList_" + moment().format(),
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                            },
-                            {
-                                extend: 'excelHtml5',
-                                title: '',
-                                download: 'open',
-                                className: "btntabletoexcel hiddenColumn",
-                                filename: "termsList_" + moment().format(),
-                                orientation: 'portrait',
-                                exportOptions: {
-                                    columns: ':visible'
-                                }
-                                // ,
-                                // customize: function ( win ) {
-                                //   $(win.document.body).children("h1:first").remove();
-                                // }
-
-                            }
-                        ],
-                        // bStateSave: true,
-                        // rowId: 0,
-                        paging: false,
-                        // "scrollY": "400px",
-                        // "scrollCollapse": true,
-                        info: true,
-                        responsive: true,
-                        "order": [
-                            [0, "asc"]
-                        ],
-                        // "aaSorting": [[1,'desc']],
-                        action: function() {
-                            $('#termsList').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function(oSettings) {
-                            setTimeout(function() {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                            $("<button class='btn btn-primary btnAddNewTerm' data-dismiss='modal' data-toggle='modal' data-target='#newTermsModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#termsList_filter");
-                            $("<button class='btn btn-primary btnRefreshTerms' type='button' id='btnRefreshTerms' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#termsList_filter");
-                        }
-
-                    }).on('page', function() {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function() {
-
-                    }).on('length.dt', function(e, settings, len) {
-                        setTimeout(function() {
-                            MakeNegative();
-                        }, 100);
-                    });
-                    $('.fullScreenSpin').css('display', 'none');
-                }, 10);
-
-
-                var columns = $('#termsList th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i, v) {
-                    if (v.hidden == false) {
-                        columVisible = true;
-                    }
-                    if ((v.className.includes("hiddenColumn"))) {
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || '',
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-            }).catch(function(err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display', 'none');
-                // Meteor._reload.reload();
-            });
-        });
-
-    }
-
-    templateObject.getTaxRates();
-
-    $(document).on('click', '.table-remove', function() {
-        event.stopPropagation();
-        event.stopPropagation();
-        var targetID = $(event.target).closest('tr').attr('id'); // table row ID
-        $('#selectDeleteLineID').val(targetID);
-        $('#deleteLineModal').modal('toggle');
-        // if ($('.termsList tbody>tr').length > 1) {
-        // // if(confirm("Are you sure you want to delete this row?")) {
-        // this.click;
-        // $(this).closest('tr').remove();
-        // //} else { }
-        // event.preventDefault();
-        // return false;
-        // }
-    });
-
-    $('#termsList tbody').on('click', 'tr .colName, tr .colIsDays, tr .colIsEOM, tr .colDescription, tr .colIsCOD, tr .colIsEOMPlus, tr .colCustomerDef, tr .colSupplierDef', function() {
-        var listData = $(this).closest('tr').attr('id');
-        var is7days = false;
-        var is30days = false;
-        var isEOM = false;
-        var isEOMPlus = false;
-        var isSalesDefault = false;
-        var isPurchaseDefault = false;
-        if (listData) {
-            $('#add-terms-title').text('Edit Term ');
-            //$('#isformcreditcard').removeAttr('checked');
-            if (listData !== '') {
-                listData = Number(listData);
-                //taxRateService.getOneTerms(listData).then(function (data) {
-
-                var termsID = listData || '';
-                var termsName = $(event.target).closest("tr").find(".colName").text() || '';
-                var description = $(event.target).closest("tr").find(".colDescription").text() || '';
-                var days = $(event.target).closest("tr").find(".colIsDays").text() || 0;
-                //let isDays = data.fields.IsDays || '';
-                if ($(event.target).closest("tr").find(".colIsEOM .chkBox").is(':checked')) {
-                    isEOM = true;
-                }
-
-                if ($(event.target).closest("tr").find(".colIsEOMPlus .chkBox").is(':checked')) {
-                    isEOMPlus = true;
-                }
-
-                if ($(event.target).closest("tr").find(".colCustomerDef .chkBox").is(':checked')) {
-                    isSalesDefault = true;
-                }
-
-                if ($(event.target).closest("tr").find(".colSupplierDef .chkBox").is(':checked')) {
-                    isPurchaseDefault = true;
-                }
-
-                if (isEOM == true || isEOMPlus == true) {
-                    isDays = false;
-                } else {
-                    isDays = true;
-                }
-
-
-                $('#edtTermsID').val(termsID);
-                $('#edtName').val(termsName);
-                $('#edtName').prop('readonly', true);
-                $('#edtDesc').val(description);
-                $('#edtDays').val(days);
-
-
-                // if((isDays == true) && (days == 7)){
-                //   templateObject.include7Days.set(true);
-                // }else{
-                //   templateObject.include7Days.set(false);
-                // }
-                if ((isDays == true) && (days == 0)) {
-                    templateObject.includeCOD.set(true);
-                } else {
-                    templateObject.includeCOD.set(false);
-                }
-
-                if ((isDays == true) && (days == 30)) {
-                    templateObject.include30Days.set(true);
-                } else {
-                    templateObject.include30Days.set(false);
-                }
-
-                if (isEOM == true) {
-                    templateObject.includeEOM.set(true);
-                } else {
-                    templateObject.includeEOM.set(false);
-                }
-
-                if (isEOMPlus == true) {
-                    templateObject.includeEOMPlus.set(true);
-                } else {
-                    templateObject.includeEOMPlus.set(false);
-                }
-
-
-                if (isSalesDefault == true) {
-                    templateObject.includeSalesDefault.set(true);
-                } else {
-                    templateObject.includeSalesDefault.set(false);
-                }
-
-                if (isPurchaseDefault == true) {
-                    templateObject.includePurchaseDefault.set(true);
-                } else {
-                    templateObject.includePurchaseDefault.set(false);
-                }
-
-                //});
-
-
-                $(this).closest('tr').attr('data-target', '#myModal');
-                $(this).closest('tr').attr('data-toggle', 'modal');
-
-            }
-
-        }
-
-    });
+    
 });
 
 
@@ -1343,7 +710,39 @@ Template.termlistpop.helpers({
     },
     loggedCompany: () => {
         return localStorage.getItem('mySession') || '';
-    }
+    },
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getTermsDataList;
+    },
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+    },
+    apiParams: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter']
+    },
+    searchAPI: function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getOneTermsByTermName
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
 });
 
 Template.registerHelper('equals', function(a, b) {

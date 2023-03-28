@@ -45,64 +45,64 @@ Template.salesreport.onRendered(() => {
   LoadingOverlay.show();
 
   let reset_data = [
-    { index: 1, label: 'Customer ID', class: 'colCustomerID', active: true, display: true, width: "110" },
-    { index: 2, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "100" },
-    { index: 3, label: 'Invoice~Number', class: 'colInvoiceNumber', active: true, display: true, width: "140" },
-    { index: 4, label: 'Transaction~Type', class: 'colTransactionType', active: true, display: true, width: "150" },
-    { index: 5, label: 'Customer~Type', class: 'colCustomerType', active: true, display: true, width: "140" },
-    { index: 6, label: 'Amount(Ex)', class: 'colAmountEx', active: true, display: true, width: "100" },
-    { index: 7, label: 'Tax', class: 'colTax', active: true, display: true, width: "85" },
-    { index: 8, label: 'Amount(Inc)', class: 'colAmountInc', active: true, display: true, width: "110" },
-    { index: 9, label: 'Qty Shipped', class: 'colQtyShipped', active: true, display: true, width: "130" },
-    { index: 10, label: 'UOM', class: 'colUOM', active: false, display: true, width: "85" },
-    { index: 11, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
-    { index: 12, label: 'Catagory', class: 'colCatagory', active: true, display: true, width: "85" },
-    { index: 13, label: 'Switch', class: 'colSwitch', active: true, display: true, width: "85" },
-    { index: 14, label: 'Dept', class: 'colDept', active: true, display: true, width: "85" },
-    { index: 15, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
-    { index: 16, label: 'Employee~Name', class: 'colEmployeeName', active: true, display: true, width: "150" },
-    { index: 17, label: 'Ship Date', class: 'colShipDate', active: true, display: true, width: "100" },
-    { index: 18, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
-    { index: 19, label: 'Inc', class: 'colInc', active: false, display: true, width: "85" },
-    { index: 20, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
-    { index: 21, label: 'Inc', class: 'colInc', active: false, display: true, width: "85" },
-    { index: 22, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
-    { index: 23, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "85" },
-    { index: 24, label: 'Line Tax', class: 'colLineTax', active: true, display: true, width: "85" },
-    { index: 25, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
-    { index: 26, label: 'Inc', class: 'colInc', active: false, display: true, width: "85" },
-    { index: 27, label: 'Discount $', class: 'colDiscountdollar', active: true, display: true, width: "100" },
-    { index: 28, label: 'Discount %', class: 'colDiscountpercent', active: true, display: true, width: "100" },
-    { index: 29, label: 'Percent', class: 'colPercent', active: true, display: true, width: "85" },
-    { index: 30, label: 'Gross', class: 'colGross', active: true, display: true, width: "65" },
-    { index: 31, label: 'Till', class: 'colTill', active: true, display: true, width: "65" },
-    { index: 32, label: 'Area', class: 'colArea', active: true, display: true, width: "65" },
-    { index: 33, label: 'Department Name', class: 'colDepartment', active: true, display: true, width: "150" },
-    { index: 34, label: 'Source', class: 'colSource', active: true, display: true, width: "85" },
-    { index: 35, label: 'Type', class: 'colType', active: true, display: true, width: "85" },
-    { index: 36, label: 'Sale Id', class: 'colSaleID', active: false, display: true, width: "85" },
-    { index: 37, label: 'Due Date', class: 'colDueDate', active: false, display: true, width: "85" },
-    { index: 38, label: 'Sales Ref No', class: 'colSalesRefNo', active: false, display: true, width: "150" },
-    { index: 39, label: 'Shipped To~ Address', class: 'colShippedToAddress', active: false, display: true, width: "150" },
-    { index: 40, label: 'Time of Sale', class: 'colTimeofSale', active: false, display: true, width: "150" },
-    { index: 41, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
-    { index: 42, label: 'Comments', class: 'colComments', active: false, display: true, width: "85" },
-    { index: 43, label: 'Original No', class: 'colOriginalNo', active: false, display: true, width: "100" },
-    { index: 44, label: 'PO Number', class: 'colPONumber', active: false, display: true, width: "85" },
-    { index: 45, label: 'Consignment~ Note', class: 'colConsignmentNote', active: false, display: true, width: "150" },
-    { index: 46, label: 'Lines Ref No', class: 'colLinesRefNo', active: false, display: true, width: "150" },
-    { index: 47, label: 'Preferred Supplier', class: 'colPreferredSupplier', active: false, display: true, width: "150" },
-    { index: 48, label: 'Supplier Product code', class: 'colSupplierProductCode', active: false, display: true, width: "150" },
-    { index: 49, label: 'POS Source', class: 'colPOSSource', active: false, display: true, width: "85" },
-    { index: 50, label: 'Warranty Ends On', class: 'colWarrantyEnsOn', active: false, display: true, width: "150" },
-    { index: 51, label: 'Warranty Period', class: 'colWarrantyPeriod', active: false, display: true, width: "150" },
-    { index: 52, label: 'POS Post Code', class: 'colPOSPostCode', active: false, display: true, width: "150" },
-    { index: 53, label: 'Line~ Ship date', class: 'colLineShipDate', active: false, display: true, width: "150" },
-    { index: 54, label: 'Markup $', class: 'colMarkupdollar', active: false, display: true, width: "85" },
-    { index: 55, label: 'Markup %', class: 'colMarkuppercent', active: false, display: true, width: "85" },
-    { index: 56, label: 'Run Name', class: 'colRunName', active: false, display: true, width: "85" },
-    { index: 57, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "85" },
-    { index: 58, label: 'Globalref', class: 'colGlobalref', active: false, display: true, width: "85" },
+    { index: 1, label: 'Company', class: 'colCustomerID', active: true, display: true, width: "150" },
+    { index: 2, label: 'Type.', class: 'colSaleDate', active: true, display: true, width: "150" },
+    { index: 3, label: 'Sales No', class: 'colInvoiceNumber', active: true, display: true, width: "150" },
+    { index: 4, label: 'Sales Date', class: 'colTransactionType', active: true, display: true, width: "150" },
+    { index: 5, label: 'Employee Name', class: 'colCustomerType', active: true, display: true, width: "150" },
+    { index: 6, label: 'Amount (Ex)', class: 'colAmountEx text-right', active: true, display: true, width: "150" },
+    { index: 7, label: 'Total Tax', class: 'colTax text-right', active: true, display: true, width: "150" },
+    { index: 8, label: 'Amount (Inc)', class: 'colAmountInc text-right', active: true, display: true, width: "150" },
+    { index: 9, label: 'Balance', class: 'colQtyShipped text-right', active: true, display: true, width: "150" },
+    // { index: 10, label: 'Qty Shipped', class: 'colUOM', active: false, display: true, width: "85" },
+    // { index: 11, label: 'Product ID', class: 'colProductID', active: false, display: true, width: "100" },
+    // { index: 12, label: 'Catagory', class: 'colCatagory', active: false, display: true, width: "85" },
+    // { index: 13, label: 'Switch', class: 'colSwitch', active: false, display: true, width: "85" },
+    // { index: 14, label: 'Dept', class: 'colDept', active: false, display: true, width: "85" },
+    // { index: 15, label: 'Description', class: 'colDescription', active: false, display: true, width: "100" },
+    // { index: 16, label: 'Employee~Name', class: 'colEmployeeName', active: false, display: true, width: "150" },
+    // { index: 17, label: 'Ship Date', class: 'colShipDate', active: false, display: true, width: "100" },
+    // { index: 18, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
+    // { index: 19, label: 'Inc', class: 'colInc', active: false, display: true, width: "85" },
+    // { index: 20, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
+    // { index: 21, label: 'Inc', class: 'colInc', active: false, display: true, width: "85" },
+    // { index: 22, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
+    // { index: 23, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "85" },
+    // { index: 24, label: 'Line Tax', class: 'colLineTax', active: false, display: true, width: "85" },
+    // { index: 25, label: 'Ex', class: 'colEx', active: false, display: true, width: "85" },
+    // { index: 26, label: 'Inc', class: 'colInc', active: false, display: true, width: "85" },
+    // { index: 27, label: 'Discount $', class: 'colDiscountdollar', active: false, display: true, width: "100" },
+    // { index: 28, label: 'Discount %', class: 'colDiscountpercent', active: false, display: true, width: "100" },
+    // { index: 29, label: 'Percent', class: 'colPercent', active: false, display: true, width: "85" },
+    // { index: 30, label: 'Gross', class: 'colGross', active: false, display: true, width: "65" },
+    // { index: 31, label: 'Till', class: 'colTill', active: false, display: true, width: "65" },
+    // { index: 32, label: 'Area', class: 'colArea', active: false, display: true, width: "65" },
+    // { index: 33, label: 'Department Name', class: 'colDepartment', active: false, display: true, width: "150" },
+    // { index: 34, label: 'Source', class: 'colSource', active: false, display: true, width: "85" },
+    // { index: 35, label: 'Type', class: 'colType', active: false, display: true, width: "85" },
+    // { index: 36, label: 'Sale Id', class: 'colSaleID', active: false, display: true, width: "85" },
+    // { index: 37, label: 'Due Date', class: 'colDueDate', active: false, display: true, width: "85" },
+    // { index: 38, label: 'Sales Ref No', class: 'colSalesRefNo', active: false, display: true, width: "150" },
+    // { index: 39, label: 'Shipped To~ Address', class: 'colShippedToAddress', active: false, display: true, width: "150" },
+    // { index: 40, label: 'Time of Sale', class: 'colTimeofSale', active: false, display: true, width: "150" },
+    // { index: 41, label: 'Memo', class: 'colMemo', active: false, display: true, width: "85" },
+    // { index: 42, label: 'Comments', class: 'colComments', active: false, display: true, width: "85" },
+    // { index: 43, label: 'Original No', class: 'colOriginalNo', active: false, display: true, width: "100" },
+    // { index: 44, label: 'PO Number', class: 'colPONumber', active: false, display: true, width: "85" },
+    // { index: 45, label: 'Consignment~ Note', class: 'colConsignmentNote', active: false, display: true, width: "150" },
+    // { index: 46, label: 'Lines Ref No', class: 'colLinesRefNo', active: false, display: true, width: "150" },
+    // { index: 47, label: 'Preferred Supplier', class: 'colPreferredSupplier', active: false, display: true, width: "150" },
+    // { index: 48, label: 'Supplier Product code', class: 'colSupplierProductCode', active: false, display: true, width: "150" },
+    // { index: 49, label: 'POS Source', class: 'colPOSSource', active: false, display: true, width: "85" },
+    // { index: 50, label: 'Warranty Ends On', class: 'colWarrantyEnsOn', active: false, display: true, width: "150" },
+    // { index: 51, label: 'Warranty Period', class: 'colWarrantyPeriod', active: false, display: true, width: "150" },
+    // { index: 52, label: 'POS Post Code', class: 'colPOSPostCode', active: false, display: true, width: "150" },
+    // { index: 53, label: 'Line~ Ship date', class: 'colLineShipDate', active: false, display: true, width: "150" },
+    // { index: 54, label: 'Markup $', class: 'colMarkupdollar', active: false, display: true, width: "85" },
+    // { index: 55, label: 'Markup %', class: 'colMarkuppercent', active: false, display: true, width: "85" },
+    // { index: 56, label: 'Run Name', class: 'colRunName', active: false, display: true, width: "85" },
+    // { index: 57, label: 'Print Name', class: 'colPrintName', active: false, display: true, width: "85" },
+    // { index: 58, label: 'Globalref', class: 'colGlobalref', active: false, display: true, width: "85" },
   ];
   templateObject.salesreportth.set(reset_data);
 
@@ -453,6 +453,19 @@ Template.salesreport.onRendered(() => {
   // templateObject.getAllProductData();
   templateObject.getDepartments();
 
+  if (url.indexOf("?dateFrom") > 0) {
+    url = new URL(window.location.href);
+    var getDateFrom = url.searchParams.get("dateFrom");
+    var getLoadDate = url.searchParams.get("dateTo");
+    if( typeof getDateFrom === undefined || getDateFrom == "" || getDateFrom === null){
+      let currentUrl = FlowRouter.current().queryParams;
+      getDateFrom = currentUrl.dateFrom
+      getLoadDate = currentUrl.dateTo
+    }
+    $("#dateFrom").datepicker('setDate', moment(getDateFrom).format('DD/MM/YYYY'));
+    $("#dateTo").datepicker('setDate', moment(getLoadDate).format('DD/MM/YYYY'));
+  }
+
   templateObject.getSalesReports(
     GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
     GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
@@ -572,118 +585,20 @@ Template.salesreport.events({
   //     }
   //     // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
   // },
-  'click .btnPrintReport': function (event) {
-    $('.fullScreenSpin').css('display', 'inline-block')
+
+  "click .btnPrintReport": function (event) {
     playPrintAudio();
-    setTimeout(async function () {
-      let targetElement = document.getElementsByClassName('printReport')[0];
-      targetElement.style.width = "210mm";
-      targetElement.style.backgroundColor = "#ffffff";
-      targetElement.style.padding = "20px";
-      targetElement.style.height = "fit-content";
-      targetElement.style.fontSize = "13.33px";
-      targetElement.style.color = "#000000";
-      targetElement.style.overflowX = "visible";
-      let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
-      let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
-      for (let k = 0; k < targetTds.length; k++) {
-        $(targetTds[k]).attr('style', 'min-width: 0px !important')
-      }
-      for (let j = 0; j < targetThs.length; j++) {
-        $(targetThs[j]).attr('style', 'min-width: 0px !important')
-      }
-
-      let docTitle = "Sales Report.pdf";
-
-
-      var opt = {
-        margin: 0,
-        filename: docTitle,
-        image: {
-          type: 'jpeg',
-          quality: 0.98
-        },
-        html2canvas: {
-          scale: 2
-        },
-        jsPDF: {
-          unit: 'in',
-          format: 'a4',
-          orientation: 'portrait'
-        }
-      };
-      let source = targetElement;
-
-      async function getAttachments() {
-        return new Promise(async (resolve, reject) => {
-          html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function (dataObject) {
-            let pdfObject = "";
-            let base64data = dataObject.split(',')[1];
-            pdfObject = {
-              filename: docTitle,
-              content: base64data,
-              encoding: 'base64'
-            }
-            let attachments = [];
-            attachments.push(pdfObject);
-            resolve(attachments)
-          })
-        })
-      }
-
-      async function checkBasedOnType() {
-        return new Promise(async (resolve, reject) => {
-          let values = [];
-          let basedOnTypeStorages = Object.keys(localStorage);
-          basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-            let employeeId = storage.split('_')[2];
-            return storage.includes('BasedOnType_')
-            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
-          });
-          let i = basedOnTypeStorages.length;
-          if (i > 0) {
-            while (i--) {
-              values.push(localStorage.getItem(basedOnTypeStorages[i]));
-            }
-          }
-          for (let j = 0; j < values.length; j++) {
-            let value = values[j];
-            let reportData = JSON.parse(value);
-            reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-            if (reportData.BasedOnType.includes("P")) {
-              if (reportData.FormID == 1) {
-                let formIds = reportData.FormIDs.split(',');
-                if (formIds.includes("68")) {
-                  reportData.FormID = 68;
-                  reportData.attachments = await getAttachments()
-                  Meteor.call('sendNormalEmail', reportData);
-                  resolve()
-                }
-              } else {
-                if (reportData.FormID == 68) {
-                  reportData.attachments = await getAttachments()
-                  Meteor.call('sendNormalEmail', reportData);
-                  resolve()
-                }
-              }
-            }
-            if (j == values.length - 1) { resolve() }
-          }
-        })
-      }
-      await checkBasedOnType();
-      $('.fullScreenSpin').css('display', 'none')
-
-
-      document.title = 'Sales Report';
+    setTimeout(function () {
+      $("a").attr("href", "/");
+      document.title = "Sales Report";
       $(".printReport").print({
         title: document.title + " | Sales Report | " + loggedCompany,
         noPrintSelector: ".addSummaryEditor",
+        mediaPrint: false,
       });
-      targetElement.style.width = "100%";
-      targetElement.style.backgroundColor = "#ffffff";
-      targetElement.style.padding = "0px";
-      targetElement.style.fontSize = "1rem";
+      setTimeout(function () {
+        $("a").attr("href", "#");
+      }, 100);
     }, delayTimeAfterSound);
   },
   'click .btnExportReport': function () {
@@ -699,6 +614,8 @@ Template.salesreport.events({
     const filename = loggedCompany + '-Sales' + '.csv';
     utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
     let rows = [];
+    LoadingOverlay.hide();
+
     // reportService.getSalesDetailsData(formatDateFrom,formatDateTo,false).then(function (data) {
     //     if(data.tsaleslist){
     //         rows[0] = ['Company','Type', 'Sales No.', 'Sales Date', 'Employee Name', 'Total Amount (Ex)', 'Total Tax', 'Total Amount (Inc)', 'Balance'];
