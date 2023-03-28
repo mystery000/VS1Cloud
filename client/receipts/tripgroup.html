@@ -155,7 +155,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <table id="tripGroupList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tripGroupList">
+                                        <table id="tripGroupList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tripGroupList">
                                             <thead>
                                             <tr class="dnd-moved">
                                                 <th class="th colName">Trip-Group Name</th>
@@ -174,22 +174,7 @@
                                                 {{/each}}
                                             {{/if}}
                                             </tbody>
-                                        </table> -->
-                                        {{>datatablelist
-                                            tablename="tripGroupList"
-                                            apiName= apiFunction
-                                            indexeddbname = 'TTripGroup'
-                                            tableheaderrecords = tableheaderrecords
-                                            exportfilename = 'Trip Group List'
-                                            istransaction = false
-                                            apiParams= apiParams
-                                            datahandler = datahandler
-                                            service=service
-                                            lowercaseDataName='ttripgroup'
-                                            exIndexDBName = 'ttripgroup'
-                                            exdatahandler = exDataHandler
-                                            searchAPI = searchAPI
-                                        }}
+                                        </table>
                                     </div>
                                 </div>
                                 <div class="row no-gutters">
