@@ -16,6 +16,11 @@ let fixedAssetService = new FixedAssetService();
 Template.fixedAssetListTable.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.tableheaderrecords = new ReactiveVar();
+  templateObject.datatablerecords = new ReactiveVar([]);
+  templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.displayfields = new ReactiveVar([]);
+  templateObject.reset_data = new ReactiveVar([]);
+  templateObject.selectedFile = new ReactiveVar();
   templateObject.getDataTableList = function (data) {
     const dataList = [
       data.AssetID || "",
@@ -51,6 +56,40 @@ Template.fixedAssetListTable.onCreated(function () {
       //data.Active ? "" : "In-Active",
     ];
     return dataList;
+  };
+
+  templateObject.getDateStr = function (dateVal) {
+    if (!dateVal) return "";
+    const dateObj = new Date(dateVal);
+    var hh =
+      dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
+    var min =
+      dateObj.getMinutes() < 10
+        ? "0" + dateObj.getMinutes()
+        : dateObj.getMinutes();
+    var ss =
+      dateObj.getSeconds() < 10
+        ? "0" + dateObj.getSeconds()
+        : dateObj.getSeconds();
+    var month =
+      dateObj.getMonth() < 9
+        ? "0" + (dateObj.getMonth() + 1)
+        : dateObj.getMonth() + 1;
+    var date =
+      dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate();
+    return (
+      dateObj.getFullYear() +
+      "-" +
+      month +
+      "-" +
+      date +
+      " " +
+      hh +
+      ":" +
+      min +
+      ":" +
+      ss
+    );
   };
 
   let headerStructure = [
@@ -324,28 +363,46 @@ Template.fixedAssetListTable.events({
   "click .templateDownload": function () {
     let utilityService = new UtilityService();
     let rows = [];
-    const filename = "SampleBOM" + ".csv";
+    const filename = "SampleFixedAssets" + ".csv";
     rows[0] = [
-      "Product Name",
-      "Product Description",
-      "Process Name",
-      "Stock Count",
-      "Sub products & raws",
-      "Attachments",
+      "Asset Name",
+      "Asset Description",
+      "Color",
+      "Brand Name",
+      "Manufacture",
+      "Model",
+      "Asset Code",
+      "Asset Type",
+      "Department",
+      "Purch Date",
+      "Depreciation Start Date",
+      "Purch Cost",
+      "Asset Condition",
+      "Size",
+      "Shape",
     ];
     rows[1] = [
-      "Bicycle",
-      "a toy",
-      "Assembly",
-      "1",
-      "handler, wheel",
-      "No attachment",
+      "Ford Pickup",
+      "",
+      "Blue",
+      "Courier",
+      "Ford",
+      "HT",
+      "6543",
+      "Vehicles",
+      "",
+      "01/08/2008",
+      "01/08/2008",
+      "25",
+      "Excellent",
+      "Ute",
+      "",
     ];
     utilityService.exportToCsv(rows, filename, "csv");
   },
   "click .templateDownloadXLSX": function (e) {
     e.preventDefault(); //stop the browser from following
-    window.location.href = "sample_imports/SampleBOM.xlsx";
+    window.location.href = "sample_imports/SampleFixedAssets.xlsx";
   },
   "click .btnUploadFile": function (event) {
     $("#attachment-upload").val("");
@@ -417,40 +474,38 @@ Template.fixedAssetListTable.events({
   "click .btnImport": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     let templateObject = Template.instance();
-    let productService = new ProductService();
+    let fixedAssetService = new FixedAssetService();
     let objDetails;
-    var saledateTime = new Date();
     //let empStartDate = new Date().format("YYYY-MM-DD");
     Papa.parse(templateObject.selectedFile.get(), {
       complete: function (results) {
         if (results.data.length > 0) {
           if (
-            results.data[0][0] == "Product Name" &&
-            results.data[0][1] == "Product Description" &&
-            results.data[0][2] == "Process Name" &&
-            results.data[0][3] == "Stock Count" &&
-            results.data[0][4] == "Sub products & raws" &&
-            results.data[0][5] == "Attachments"
+            results.data[0][0] == "Asset Name" &&
+            results.data[0][1] == "Asset Description" &&
+            results.data[0][2] == "Colour" &&
+            results.data[0][3] == "Brand Name" &&
+            results.data[0][4] == "Manufacture" &&
+            results.data[0][5] == "Model" &&
+            results.data[0][6] == "Asset Code" &&
+            results.data[0][7] == "Asset Type" &&
+            results.data[0][8] == "Department" &&
+            results.data[0][9] == "Purch Date" &&
+            results.data[0][10] == "Depreciation Start Date" &&
+            results.data[0][11] == "Purch Cost" &&
+            results.data[0][12] == "Asset Condition" &&
+            results.data[0][13] == "Size" &&
+            results.data[0][14] == "Shape"
           ) {
             let dataLength = results.data.length * 500;
             setTimeout(function () {
               // $('#importModal').modal('toggle');
               //Meteor._reload.reload();
               $(".fullScreenSpin").css("display", "none");
-              window.open("/bomlist?success=true", "_self");
+              // window.open("/fixedassetlist?success=true", "_self");
             }, parseInt(dataLength));
 
             for (let i = 0; i < results.data.length - 1; i++) {
-              let subs = [];
-              let subTitles = results.data[i + 1][4].split(",");
-              for (let j = 0; j < subTitles.length; j++) {
-                subs.push({
-                  productName: subTitles[j],
-                  process: "",
-                  qty: 1,
-                  attachments: [],
-                });
-              }
               // objDetails = {
               //   type: "TProcTree",
               //   fields: {
@@ -469,22 +524,31 @@ Template.fixedAssetListTable.events({
               //     // Billcountry:results.data[i+1][10]
               //   },
               // };
-              objDetails = {
-                Caption: results.data[i + 1][0].trim(),
-                Description: results.data[i + 1][1].trim(),
-                CustomInputClass: "",
-                Info: results.data[i + 1][2],
-                ProcStepItemRef: "vs1BOM",
-                QtyVariation: 1,
-                TotalQtyOriginal: parseFloat(results.data[i + 1][3]),
-                Details: JSON.stringify(subs),
-                Value: "",
+              let dop = templateObject.getDateStr(results.data[i + 1][9]);
+              // dop = moment(dop).format("YYYY-MM-DD");
 
-                // BillStreet: results.data[i+1][6],
-                // BillStreet2: results.data[i+1][7],
-                // BillState: results.data[i+1][8],
-                // BillPostCode:results.data[i+1][9],
-                // Billcountry:results.data[i+1][10]
+              objDetails = {
+                Active: true,
+                AssetCode: results.data[i + 1][6],
+                AssetName: results.data[i + 1][0],
+                Description: results.data[i + 1][1],
+                AssetType: results.data[i + 1][7],
+                PurchDate: dop,
+                DepreciationStartDate: templateObject.getDateStr(
+                  results.data[i + 1][10]
+                ),
+                PurchCost:
+                  parseFloat(
+                    results.data[i + 1][10].replace(/[^0-9.-]+/g, "")
+                  ) || 0,
+                SupplierName: "",
+                Manufacture: results.data[i + 1][4],
+                BrandName: results.data[i + 1][3],
+                Model: results.data[i + 1][5],
+                AssetCondition: results.data[i + 1][12],
+                Colour: results.data[i + 1][2],
+                Size: results.data[i + 1][13],
+                Shape: results.data[i + 1][14],
               };
               if (results.data[i + 1][0]) {
                 if (results.data[i + 1][0] !== "") {
@@ -495,21 +559,37 @@ Template.fixedAssetListTable.events({
                   //     //$('.fullScreenSpin').css('display','none');
                   //     swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => { if (result.value) { Meteor._reload.reload(); } else if (result.dismiss === 'cancel') {}});
                   // });
-                  productService
-                    .saveBOMProduct({
-                      type: "TProcTree",
+
+                  fixedAssetService
+                    .saveTFixedAsset({
+                      type: "TFixedAssets",
                       fields: objDetails,
                     })
-                    .then(function () {
-                      productService
-                        .getAllBOMProducts(initialDataLoad, 0)
-                        .then(function (dataReturn) {
-                          addVS1Data(
-                            "TProcTree",
-                            JSON.stringify(dataReturn)
-                          ).then(function () {});
-                          FlowRouter.go("/bomlist?success=true");
-                        });
+                    .then((data) => {
+                      // fixedAssetService
+                      //   .getTFixedAssetsList()
+                      //   .then(function (data) {
+                      //     addVS1Data("TFixedAssets", JSON.stringify(data));
+                      //   })
+                      //   .catch(function (err) {
+                      //     $(".fullScreenSpin").css("display", "none");
+                      //   });
+                      // FlowRouter.go('/fixedassetlist');
+                    })
+                    .catch((err) => {
+                      $(".fullScreenSpin").css("display", "none");
+                      swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                      }).then((result) => {
+                        if (result.value) {
+                          // Meteor._reload.reload();
+                        } else if (result.dismiss === "cancel") {
+                        }
+                      });
                     });
 
                   // let bomProducts = localStorage.getItem("TProcTree")
