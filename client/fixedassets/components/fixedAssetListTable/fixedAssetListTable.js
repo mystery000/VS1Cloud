@@ -285,17 +285,23 @@ Template.fixedAssetListTable.onRendered(function () {
 Template.fixedAssetListTable.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    fixedAssetService.getTFixedAssetsList().then(function (data) {
-      addVS1Data("TFixedAssetsList", JSON.stringify(data))
-        .then(function (datareturn) {
-          Meteor._reload.reload();
-        })
-        .catch(function (err) {
-          Meteor._reload.reload();
-        });
-    }).catch(function (err) {
-      Meteor._reload.reload();
-    });
+    fixedAssetService
+      .getTFixedAssetsList()
+      .then(function (data) {
+        addVS1Data("TFixedAssets", JSON.stringify(data))
+          .then(function (datareturn) {
+            // Meteor._reload.reload();
+            window.open("/fixedassetlist", "_self");
+          })
+          .catch(function (err) {
+            // Meteor._reload.reload();
+            window.open("/fixedassetlist", "_self");
+          });
+      })
+      .catch(function (err) {
+        // Meteor._reload.reload();
+        window.open("/fixedassetlist", "_self");
+      });
   },
 
   "click #btnNewFixedAsset": function () {
