@@ -8,60 +8,102 @@ let fixedAssetService = new FixedAssetService();
 Template.servicelogcard.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.currentServiceLogID = new ReactiveVar(0);
+  templateObject.fixedAssets = new ReactiveVar([]);
 
   templateObject.asset_id = new ReactiveVar(0);
   templateObject.asset_code = new ReactiveVar('');
   templateObject.asset_name = new ReactiveVar('');
-  templateObject.servicelog_status = new ReactiveVar(false);
+  templateObject.asset_status = new ReactiveVar(false);
 });
 
 Template.servicelogcard.onRendered(function () {
   let templateObject = Template.instance();
 
+  templateObject.getFixedAssetsList = function () {
+    getVS1Data("TFixedAssets").then(function (dataObject) {
+      if (dataObject.length == 0) {
+        fixedAssetService.getTFixedAssetsList().then(function (data) {
+          setFixedAssetsList(data);
+        }).catch(function (err) {
+          $(".fullScreenSpin").css("display", "none");
+        });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        setFixedAssetsList(data);
+      }
+    }).catch(function (err) {
+      fixedAssetService.getTFixedAssetsList().then(function (data) {
+        setFixedAssetsList(data);
+      }).catch(function (err) {
+        $(".fullScreenSpin").css("display", "none");
+      });
+    });
+  };
+
+  // $(".fullScreenSpin").css("display", "inline-block");
+  templateObject.getFixedAssetsList();
+
+  function setFixedAssetsList(data) {
+    const dataTableList = [];
+    for (const asset of data.tfixedassets) {
+      const dataList = {
+        id: asset.fields.ID || "",
+        assetname: asset.fields.AssetName || "",
+        assetcode: asset.fields.AssetCode || "",
+      };
+      dataTableList.push(dataList);
+    }
+    templateObject.fixedAssets.set(dataTableList);
+    templateObject.fixedAssets.get().forEach((asset, index) => {
+      $('#edtAssetCode').editableSelect('add', function(){
+        $(this).val(index);
+        $(this).text(asset.assetcode);
+      });
+    });
+    $('#edtAssetCode').editableSelect();
+  }
+
+  $('#edtAssetCode').editableSelect();
+  $('#edtAssetCode').editableSelect()
+  .on('select.editable-select', function (e, li) {
+    if (li) {
+      const index = parseInt(li.val() || -1);
+      if (index >= 0) {
+        const assetsList = templateObject.fixedAssets.get();
+        templateObject.asset_id.set(assetsList[index].id);
+        templateObject.asset_code.set(assetsList[index].assetcode);
+        templateObject.asset_name.set(assetsList[index].assetname);
+      }
+    }
+  });
+
   let cServiceID = parseInt(FlowRouter.current().queryParams.id || '0');
   templateObject.currentServiceLogID.set(cServiceID);
 
   if (cServiceID > 0) {
-    getVS1Data("TServiceLogList").then(function (dataObject) {
-      if (dataObject.length === 0) {
-        fixedAssetService.getServiceLogList().then(function (data) {
-          addVS1Data("TServiceLogList", JSON.stringify(data));
-          findServiceLogByID(data, cServiceID);
-        });
-      }
-      else {
-        const workData = JSON.parse(dataObject[0].data);
-        findServiceLogByID(workData, cServiceID);
-      }
-    }).catch(function (err) {
-    });
-    function findServiceLogByID(data, id) {
-      const assetData = data.tserviceloglist.filter((log) => log.ServiceID === id);
-      if (assetData.length > 0) {
-        const assetInfo = assetData[0];
-        initializeCard(assetInfo);
-      }
-    }
-    function initializeCard (recordInfo) {
-      templateObject.asset_id.set(recordInfo.AssetID);
-      templateObject.asset_code.set(recordInfo.AssetCode);
-      $("#edtAssetCode").val(recordInfo.AssetCode);
-      templateObject.asset_name.set(recordInfo.AssetName);
-      $("#edtAssetName").val(recordInfo.AssetName);
+    fixedAssetService.getServiceLogDetail(cServiceID).then((data) => {
+      const serviceData = data.tserviceloglist;
+      if (serviceData.length > 0) {
+        const recordInfo = serviceData[0];
+        templateObject.asset_id.set(recordInfo.AssetID);
+        templateObject.asset_code.set(recordInfo.AssetCode);
+        $("#edtAssetCode").val(recordInfo.AssetCode);
+        templateObject.asset_name.set(recordInfo.AssetName);
+        $("#edtAssetName").val(recordInfo.AssetName);
 
-      $("#edtServiceProvider").val(recordInfo.ServiceProvider);
-      // ServiceType: $("#edtServiceProvider").val(),
-      $("#dtServiceDate").val(getDatePickerForm(recordInfo.ServiceDate));
-      $("#dtNextServiceDate").val(getDatePickerForm(recordInfo.NextServiceDate));
-      $('#edtHours').val(recordInfo.HoursForNextService);
-      $('#edtKms').val(recordInfo.KmsForNextService);
-      $("#txtServiceNotes").val(recordInfo.ServiceNotes);
-      templateObject.servicelog_status.set(recordInfo.Done);
-      if(recordInfo.Done) {
-        $("#chkDone").trigger("click");
+        $("#edtServiceProvider").val(recordInfo.ServiceProvider);
+        // ServiceType: $("#edtServiceProvider").val(),
+        $("#dtServiceDate").val(getDatePickerForm(recordInfo.ServiceDate));
+        $("#dtNextServiceDate").val(getDatePickerForm(recordInfo.NextServiceDate));
+        $('#edtHours').val(recordInfo.HoursForNextService);
+        $('#edtKms').val(recordInfo.KmsForNextService);
+        $("#txtServiceNotes").val(recordInfo.ServiceNotes);
+        if(recordInfo.Done) {
+          $("#chkDone").trigger("click");
+        }
+
       }
-    }
-    
+    });
   }
 
   $("#date-input,#dtServiceDate,#dtNextServiceDate").datepicker({
@@ -87,19 +129,6 @@ Template.servicelogcard.onRendered(function () {
     else
       return '';
   }
-
-  $('#edtAssetCode').editableSelect();
-
-  $(document).on("click", "#tblFixedAssetList tbody tr", function(e) {
-    const assetId = parseInt($(this).find('td.colFixedID').html());
-    const assetName = $(this).find('td.colAssetName').html();
-    const assetCode = $(this).find('td.colAssetCode').html();
-    templateObject.asset_id.set(assetId);
-    templateObject.asset_name.set(assetName);
-    templateObject.asset_code.set(assetCode);
-    $('input#edtAssetCode').val(assetCode);
-    $('#fixedassetlistpopModal').modal('hide');
-  });
 });
 
 Template.servicelogcard.events({
@@ -118,7 +147,7 @@ Template.servicelogcard.events({
         HoursForNextService: parseInt($('#edtHours').val()) || 0,
         KmsForNextService: parseInt($('#edtKms').val()) || 0,
         ServiceNotes: $("#txtServiceNotes").val(),
-        Done: templateObject.servicelog_status.get()
+        Done: templateObject.asset_status.get()
       }
     };
 
@@ -151,16 +180,10 @@ Template.servicelogcard.events({
       });
     }
   },
-
-  "click input#edtAssetCode": function() {
-    $('#fixedassetlistpopModal').modal('show');
-  },
-
   "click input#chkDone": function() {
     const templateObject = Template.instance();
-    templateObject.servicelog_status.set(!templateObject.servicelog_status.get());
+    templateObject.asset_status.set(!templateObject.asset_status.get());
   },
-  
   "click button.btnBack": function() {
     FlowRouter.go('/serviceloglist');
   }
