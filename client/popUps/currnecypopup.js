@@ -824,7 +824,7 @@ Template.currencypop.events({
         var currencyid = listData || "";
         var country = $(event.target).closest("tr").find(".colCountry").text() || "";
         var currencyCode = $(event.target).closest("tr").find(".colCode").text() || "";
-        var currencySymbol = $(event.target).closest("tr").find(".colCurrencySymbol").text() || "";
+        var currencySymbol = $(event.target).closest("tr").find(".colSymbol").text() || "";
         var currencyName = $(event.target).closest("tr").find(".colCurrency").text() || "";
         var currencyDesc = $(event.target).closest("tr").find(".colDescription").text() || "";
         var currencyBuyRate = $(event.target).closest("tr").find(".colBuyRate").text() || 0;

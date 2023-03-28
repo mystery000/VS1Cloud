@@ -2141,9 +2141,7 @@ Template.customfieldpop.events({
     var url = FlowRouter.current().path;
     let fieldData = [];
     let checkChckBox = false;
-    let parent = $(event.target).closest('.modal-dialog');
-    let fields= $(parent).find('.customfieldcommon');
-    $(fields).each(function () {
+    $(".customfieldcommon").each(function () {
       if (
         $(this).closest(".custom-switch").find("[type=checkbox]").is(":checked")
       ) {
@@ -2165,7 +2163,6 @@ Template.customfieldpop.events({
     $(".fullScreenSpin").css("display", "inline-block");
     if (
       url.includes("/invoicecard") ||
-      url.includes("/invoicetemp") ||
       url.includes("/salesordercard") ||
       url.includes("/quotecard") ||
       url.includes("/refundcard")
@@ -2226,6 +2223,7 @@ Template.customfieldpop.events({
             },
           };
         }
+
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           if (i == 0) {
             $(".lblCustomField1").text(fieldData[i].name);
@@ -2285,6 +2283,7 @@ Template.customfieldpop.events({
             },
           };
         }
+
         organisationService.saveCustomField(objDetails1).then(function (objDetails) {
           if (i == 0) {
             $(".lblCustomField1").text(fieldData[i].name);
