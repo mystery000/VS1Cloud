@@ -428,34 +428,7 @@ Template.templatesettings.onRendered(function () {
 
   let templateObject = Template.instance();
 
-  $(document).on("click", ".templateItem #btnEditTemplate", function (e) {
-    title = $(this).parent().parent().attr("data-id");
-    number = $(this).parent().parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-    templateObject.generateInvoiceData(title, number);
-    $(".modal-title#templatePreviewLabel").css("display", "none");
-    $("#templatePreviewModal #templatePreviewInput").css("display", "block");
-    $("#editPrintMore").css("display", "block");
-    $('#templatePreviewModal .btnCopyReport').css("display", "block");
-    $('#templatePreviewModal .btnImportReport').css("display", "block");
-    $("#templatePreviewModal #templatePreviewInput").val(
-      $('input[name="' + title + "_" + number + '"]').val()
-    );
-    // localStorage.setItem("print_template_detail", $('input[name="' + title + "_" + number + '"]').val());
-    templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
-  });
-  $(document).on("click", ".templateItem #btnPreviewTemplate", function (e) {
-    title = $(this).parent().parent().attr("data-id");
-    number = $(this).parent().parent().attr("data-template-id"); //e.getAttribute("data-template-id");
-    templateObject.generateInvoiceData(title, number);
-    $(".modal-title#templatePreviewLabel").css("display", "block");
-    $("#templatePreviewModal #templatePreviewInput").css("display", "none");
-    $('#templatePreviewModal .btnCopyReport').css("display", "none");
-    $('#templatePreviewModal .btnImportReport').css("display", "none");
-    $("#editPrintMore").css("display", "none");
-    $("#templatePreviewModal .modal-title").text(
-      $('input[name="' + title + "_" + number + '"]').val()
-    );
-  });
+
 
   templateObject.setPrintTemplateDetail = function (input_value) {
     addVS1Data("TPrintTemplateDetail", JSON.stringify(input_value));
@@ -1898,46 +1871,35 @@ Template.templatesettings.onRendered(function () {
 
   ];
 
+  $("#templatePreviewModal").on("hide.bs.modal", function(){
+    if(table) {
+      table.destroy()
+    }
+  })
+
   function loadDataTable(num) {
     // Adjust any columnDef widths set by the user
     columnDefs.map((item) => {
       item.className = item.title
       if(item.className == "Bin Location") item.className = `${item.className} hiddenColumn`
     });
+
     setUserColumnsDefWidths();
+
     table = $('#' + tableId + num).DataTable({
       data: dataSet,
       destroy: true,
-      autoWidth: true,
+      autoWidth: false,
       deferRender: true,
       dom: 't',
-      // scrollY: 300,
-      // scrollX: true,
-      // scrollCollapse: true,
-      // scroller: true,
-      colReorder: true,
+      colReorder: false,
       columnDefs: columnDefs,
       "order": [[1, "asc"]],
       initComplete: function (settings) {
 
-        //Add JQueryUI resizable functionality to each th in the ScrollHead table
-
-        // $('#' + tableId + num + '_wrapper .dataTables_scrollHead thead th').resizable({
-
-        //   handles: "e",
-
-        //   alsoResize: '#' + tableId + num + '_wrapper .dataTables_scrollHead table', //Not essential but makes the resizing smoother
-
-        //   stop: function () {
-
-        //     saveColumnSettings();
-
-        //     loadDataTable(num);
-        //   }
-        // });
       },
     });
-    // table.colReorder.move( 0, 1 );
+
     tableResize();
   }
 
@@ -1951,7 +1913,7 @@ Template.templatesettings.onRendered(function () {
 
     if (userColumnDefs.length === 0 ) return;
 
-    columnDefs.forEach( function(columnDef) {
+    columnDefs = columnDefs.map( function(columnDef) {
 
       // Check if there is a width specified for this column
       userColumnDef = userColumnDefs.find( function(column) {
@@ -1964,6 +1926,8 @@ Template.templatesettings.onRendered(function () {
         columnDef.width = userColumnDef.width + 'px';
 
       }
+
+      return columnDef;
 
     });
 
@@ -2482,11 +2446,11 @@ Template.templatesettings.onRendered(function () {
       value[value.length] = "false";
     }
 
-    object_invoce[0]["fields"][abnString] = ['', 'left', true]
-    object_invoce[0]["fields"][repString] = ['', 'left', true]
-    object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
-    object_invoce[0]["fields"][dateString] = ['', 'left', true]
-    object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
+    // object_invoce[0]["fields"][abnString] = ['', 'left', true]
+    // object_invoce[0]["fields"][repString] = ['', 'left', true]
+    // object_invoce[0]["fields"][custOrderString] = ['', 'left', true]
+    // object_invoce[0]["fields"][dateString] = ['', 'left', true]
+    // object_invoce[0]["fields"][dueDateString] = ['', 'left', true]
 
     if(object_invoce[0]['fields']["Bin Location"])
       object_invoce[0]['fields']["Bin Location"] = ['15', 'left', false];
@@ -3052,7 +3016,7 @@ Template.templatesettings.onRendered(function () {
         customfieldlabel1: "customfield1",
         customfieldlabel2: "customfield2",
         customfieldlabel3: "customfield3",
-        showFX: "AUD",
+        showFX: "AUD",  
         comment: "Customer Payment Template Preview",
       };
     }
@@ -10479,7 +10443,37 @@ Template.templatesettings.events({
 
   "click .resetPrintTable": function() {
 
-  }
+  },
+  "click .btnPreviewTemplate" : function (event) {
+    const title = $(event.target).parent().parent().data("id");
+    const number = $(event.target).parent().parent().data("template-id");
+    const templateObject = Template.instance()
+    templateObject.generateInvoiceData(title, number);
+    $(".modal-title#templatePreviewLabel").css("display", "block");
+    $("#templatePreviewModal #templatePreviewInput").css("display", "none");
+    $('#templatePreviewModal .btnCopyReport').css("display", "none");
+    $('#templatePreviewModal .btnImportReport').css("display", "none");
+    $("#editPrintMore").css("display", "none");
+    $("#templatePreviewModal .modal-title").text(
+      $('input[name="' + title + "_" + number + '"]').val()
+    );
+  },
+
+  "click .btnEditTemplate": function(event) {
+    const title = $(event.target).parent().parent().data("id");
+    const number = $(event.target).parent().parent().data("template-id");
+    const templateObject = Template.instance()
+    templateObject.generateInvoiceData(title, number);
+    $(".modal-title#templatePreviewLabel").css("display", "none");
+    $("#templatePreviewModal #templatePreviewInput").css("display", "block");
+    $("#editPrintMore").css("display", "block");
+    $('#templatePreviewModal .btnCopyReport').css("display", "block");
+    $('#templatePreviewModal .btnImportReport').css("display", "block");
+    $("#templatePreviewModal #templatePreviewInput").val(
+      $('input[name="' + title + "_" + number + '"]').val()
+    );
+    templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
+  },
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;

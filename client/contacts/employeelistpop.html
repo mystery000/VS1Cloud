@@ -1,7 +1,9 @@
 <template name="employeelistpop">
     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
         <div class="card-body rounded" style="margin: 0px;">
+            <style>
 
+            </style>
             {{>datatablelist
                     tablename="tblEmployeelist"
                     apiName= apiFunction
@@ -16,6 +18,8 @@
                     exIndexDBName = 'temployeelist'
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
+                    orderby = 1
+                    orderdesc = 'asc'
             }}
 
             <!-- Start {{> optionNavSalesOverview}} -->

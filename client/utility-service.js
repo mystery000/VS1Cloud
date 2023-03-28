@@ -171,38 +171,6 @@ const XLSX = require("xlsx");
             link.remove();
             window.URL.revokeObjectURL(link.href);
         },
-        tableToSpreadSheet: async function (options) {
-            const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
-                try {
-                    return window.self === window.top;
-                } catch {
-                    return false;
-                }
-            })();
-
-            if (supportsFileSystemAccess) {
-                try {
-                    const handle = await showSaveFilePicker({
-                        suggestedName: options.filename,
-                        type: [{
-                            description: 'XLSX file',
-                            accept: { "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": ['.xlsx', '.xls'] }
-                        }]
-                    });
-                    const writable = await handle.createWritable();
-                    const Excel = await fetch('downloads/Template FIles/' + options.filename).then((res) => res.blob())
-                    const data = new Blob([Excel], { type: "application/vnd.ms-excel" });
-                    await writable.write(data);
-                    await writable.close();
-                    return;
-                } catch (err) {
-                    if (err.name == 'AbortError') {
-                        return;
-                    }
-                }
-            }
-            // this.download('downloads/Template FIles/' + options.filename, options.filename);
-        },
         //Insertion point end
         tableToXlsx: async function (options) {
 
@@ -283,6 +251,7 @@ const XLSX = require("xlsx");
             }
             return this;
         },
+        //NormanScott added for spreadsheet
         tableToSpreadSheet: async function (options) {
             const supportsFileSystemAccess = 'showSaveFilePicker' in window && (() => {
                 try {
@@ -306,7 +275,18 @@ const XLSX = require("xlsx");
                     const writable = await handle.createWritable();
                     await writable.write(data);
                     await writable.close();
-                    swal('Success', 'SpreadSheet Created Successfully!', 'success');
+                    swal({
+                        title: "Success",
+                        html: "<div id=\"swal2-content\" class=\"swal2-content\" style=\"display: block;\">SpreadSheet Created Successfully!<br>Would you like to open SpreadSheet help guide?</div>",
+                        type: "success",
+                        showCancelButton: true,
+                        confirmButtonColor: "rgb(140, 212, 245)",
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "No",
+                    }).then(function(confirm){
+                        if(confirm.value == true)
+                            window.open('downloads/SpreadSheetHelpFile.pdf');
+                    });
                     return;
                 } catch (err) {
                     if (err.name == 'AbortError') {
@@ -316,6 +296,7 @@ const XLSX = require("xlsx");
             }
         }
     });
+    //Insertion point end
 })(jQuery);
 
 export class UtilityService {
@@ -1590,4 +1571,23 @@ export class UtilityService {
         }
     }
 
+    waitForElm(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+    
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+    
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
 }

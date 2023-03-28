@@ -57,7 +57,7 @@ export default class TableHandler {
             //this.saveTableColumns(tableName);
         }else{
           if ((tableName != "tblBasReturnList")) {
-            this.saveTableColumns(tableName);
+            // this.saveTableColumns(tableName);
           };
         };
 

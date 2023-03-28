@@ -806,11 +806,11 @@ Template.accountsoverview.onRendered(function() {
                     });
                     setTimeout(function() {
                         makeNegativeGlobal();
-                        $('#tblAccountTreeOverview tbody td').attr('style', 'padding: 0 12px 0 12px !important')
+                        // $('#tblAccountTreeOverview tbody td').attr('style', 'padding: 0 12px 0 12px !important')
                         $('#tblAccountTreeOverview .tt-details-control').attr('style', 'padding: 0 !important; border-right-width: 0; width: 30px; position: relative; z-index: 100;')
                         $('#tblAccountTreeOverview th.colAccountName').attr('style', 'padding-left: 0')
-                        $('#tblAccountTreeOverview td.colAccountName').attr('style', 'padding: 0 12px 0 0px !important')
-                        $('#tblAccountTreeOverview tbody tr.has-parent.level-1 td.colAccountName').attr('style', 'padding: 0 12px 0 18px !important')
+                        $('#tblAccountTreeOverview td.colAccountName').attr('style', 'padding-left: 0 !important')
+                        $('#tblAccountTreeOverview tbody tr.has-parent.level-1 td.colAccountName').attr('style', 'padding-left: 18px !important')
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },

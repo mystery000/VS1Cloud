@@ -1,8 +1,7 @@
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ReactiveVar } from "meteor/reactive-var";
+
 import { FixedAssetService } from "../../fixedasset-service";
-import { SideBarService } from "../../../js/sidebar-service";
-import { UtilityService } from "../../../utility-service";
 import "../../../lib/global/indexdbstorage.js";
 import { Template } from 'meteor/templating';
 
@@ -85,6 +84,10 @@ Template.fixedassetlistpop.onCreated(function () {
 });
 
 Template.fixedassetlistpop.onRendered(function () {
+  // $("#tblFixedAssetList tbody").on("click", "tr", function () {
+  //   var assetID = parseInt($(this).find(".AssetRegisterId").html());
+  //   FlowRouter.go("/fixedassetcard?assetId=" + assetID);
+  // });
 });
 
 Template.fixedassetlistpop.events({

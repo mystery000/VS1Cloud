@@ -7,6 +7,7 @@ import {
 import {
     CoreService
 } from '../js/core-service';
+import {ContactService} from "../../client/contacts/contact-service";
 import {
     DashBoardService
 } from "../Dashboard/dashboard-service";
@@ -47,6 +48,7 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let fixedAssetService = new FixedAssetService();
+let contactService = new ContactService();
 var times = 0;
 let defaultCurrencyCode = CountryAbbr;
 
@@ -105,6 +107,74 @@ Template.journalentrycard.onCreated(() => {
     templateObject.totalDebitInc.set(Currency + '0.00');
     templateObject.currencyList = new ReactiveVar([]);
     templateObject.hasFollow = new ReactiveVar(false);
+
+    templateObject.transactiondatatablerecords = new ReactiveVar([]);
+    templateObject.datatablerecords = new ReactiveVar([]);
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data) {
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance)|| 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SOBalance)|| 0.00;
+
+        let dataList = [
+            data.ClientID || '',
+            data.Company || '-',
+            data.JobName || '',
+            data.Phone || '',
+            balance || 0.00,
+            salesOrderBalance || 0.00,
+            data.Notes || '',
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "20" },
+        { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "120" },
+        { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "120" },
+        { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "100" },
+        { index: 4, label: "Balance", class: "colBalance", active: true, display: true, width: "90" },
+        { index: 5, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "115" },
+        { index: 6, label: "Notes", class: "colNotes", active: true, display: true, width: "100" },
+        { index: 7, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+
+    templateObject.tableheaderrecords_d = new ReactiveVar([]);
+
+    templateObject.getDataTableList_d = function(data) {
+        let linestatus = '';
+        if (data.Active == true) {
+            linestatus = "";
+        } else if (data.Active == false) {
+            linestatus = "In-Active";
+        };
+
+        var dataList = [
+            data.ClassID || "",
+            data.ClassName || "",
+            data.Description || "",
+            data.ClassGroup || "",
+            data.ClassName,
+            data.Level1 || "",
+            data.SiteCode || "",
+            linestatus
+        ];
+        return dataList;
+    }
+
+    let headerStructure_d = [
+        { index: 0, label: 'ID', class: 'colDeptID', active: false, display: false, width: "10" },
+        { index: 1, label: 'Department Name', class: 'colDeptClassName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "100%" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: true, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: true, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: true, display: true, width: "250" },
+        { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+    ];
+    templateObject.tableheaderrecords_d.set(headerStructure_d);
 });
 Template.journalentrycard.onRendered(() => {
     let templateObject = Template.instance();
@@ -595,6 +665,7 @@ Template.journalentrycard.onRendered(() => {
                                 };
                                 setTimeout(function() {
                                     $('#sltDepartment').val(department);
+                                    $("#edtEnrtyNo").val(useData[d].fields.ID);
                                 }, 200);
 
                                 if (useData[d].fields.IsReconciled) {
@@ -1752,6 +1823,34 @@ Template.journalentrycard.onRendered(() => {
         // });
     };
 
+    templateObject.setTableColumnWidth = function(){
+        let obj = localStorage.getItem('frm_journalentry_settings');
+
+        if(obj){
+            obj = JSON.parse(obj);
+
+            for (let i = 0; i < obj.length ; i ++) {
+                let lineItem = obj[i];
+
+                let thClass = lineItem.thclass;
+                let hiddenFlag = lineItem.hidden;
+                let width = lineItem.width;
+                let index = lineItem.index;
+
+                if(hiddenFlag){
+                    $("#tblJournalEntryLine ." + thClass).css("display", "none");
+                    $(document.querySelectorAll('#myModal2 .columnSettings')[parseInt(index)]).find("input.custom-control-input")[0].checked = false;
+                }
+
+                if(width && width != '0'){
+                    $("#tblJournalEntryLine ." + thClass).css("width", width + "px");
+                    $(document.querySelectorAll('#myModal2 .columnSettings')[parseInt(index)]).find("input.widthElement").val(parseInt(width));
+                }
+            }
+        }
+    }
+
+    templateObject.setTableColumnWidth();
 });
 
 
@@ -2049,84 +2148,6 @@ Template.journalentrycard.onRendered(function() {
     };
     tempObj.getAllCostTypes();
 
-    $('#sltDepartment').editableSelect();
-
-    $('#sltDepartment').editableSelect()
-        .on('click.editable-select', function(e, li) {
-            var $earch = $(this);
-            var offset = $earch.offset();
-            var deptDataName = e.target.value || '';
-            $('#edtDepartmentID').val('');
-            if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                $('#departmentModal').modal('toggle');
-            } else {
-                if (deptDataName.replace(/\s/g, '') != '') {
-                    $('#newDeptHeader').text('Edit Department');
-
-                    getVS1Data('TDeptClass').then(function(dataObject) {
-                        if (dataObject.length == 0) {
-                            $('.fullScreenSpin').css('display', 'inline-block');
-                            sideBarService.getDepartment().then(function(data) {
-                                for (let i = 0; i < data.tdeptclass.length; i++) {
-                                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                        $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                        $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                        $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                        $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                    }
-                                }
-                                setTimeout(function() {
-                                    $('.fullScreenSpin').css('display', 'none');
-                                    $('#newDepartmentModal').modal('toggle');
-                                }, 200);
-                            });
-                        } else {
-                            let data = JSON.parse(dataObject[0].data);
-                            let useData = data.tdeptclass;
-                            for (let i = 0; i < data.tdeptclass.length; i++) {
-                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newDepartmentModal').modal('toggle');
-                            }, 200);
-                        }
-                    }).catch(function(err) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getDepartment().then(function(data) {
-                            for (let i = 0; i < data.tdeptclass.length; i++) {
-                                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                }
-                            }
-                            setTimeout(function() {
-                                $('.fullScreenSpin').css('display', 'none');
-                                $('#newDepartmentModal').modal('toggle');
-                            }, 200);
-                        });
-                    });
-                } else {
-                    $('#departmentModal').modal();
-                    setTimeout(function() {
-                        $('#departmentList_filter .form-control-sm').focus();
-                        $('#departmentList_filter .form-control-sm').val('');
-                        $('#departmentList_filter .form-control-sm').trigger("input");
-                        var datatable = $('#departmentList').DataTable();
-                        datatable.draw();
-                        $('#departmentList_filter .form-control-sm').trigger("input");
-                    }, 500);
-                }
-            }
-        });
-
     $(document).on("click", "#departmentList tbody tr", function(e) {
         $('#sltDepartment').val($(this).find(".colDeptName").text());
         $('#departmentModal').modal('toggle');
@@ -2134,90 +2155,68 @@ Template.journalentrycard.onRendered(function() {
 
 });
 Template.journalentrycard.helpers({
-    test: function(id, value){
+    datatablerecords : () => {
+        return Template.instance().datatablerecords.get().sort(function(a, b){
+            if (a.company == 'NA') {
+                return 1;
+            }
+            else if (b.company == 'NA') {
+                return -1;
+            }
+            return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
+        });
+    },
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllTCustomerList;
+    },
+    searchAPI: function() {
+        return sideBarService.getNewCustomerByNameOrID;
+    },
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    onloadedLineCustomerJob: function(){
 
         setTimeout(() => {
-            let obj = $("#select-department-" + id);
+            $('td .lineCustomerJob').editableSelect();
 
-            obj.editableSelect();
+            $('td .lineCustomerJob').editableSelect()
+            .on('click.editable-select', function(e, li) {
+                var $earch = $(this);
+                var offset = $earch.offset();
+                var deptDataName = e.target.value || '';
+                $('#edtDepartmentID').val('');
 
-            $(".select-department").editableSelect()
-                .on('click.editable-select', function(e, li) {
-                    var $earch = $(this);
-                    var offset = $earch.offset();
-                    var deptDataName = e.target.value || '';
-                    $('#edtDepartmentID').val('');
-                    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-                        $('#departmentModal').modal('toggle');
-                    } else {
-                        if (deptDataName.replace(/\s/g, '') != '') {
-                            $('#newDeptHeader').text('Edit Department');
+                $("#selected-customer").val(e.target.parentElement.id);
 
-                            getVS1Data('TDeptClass').then(function(dataObject) {
-                                if (dataObject.length == 0) {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    sideBarService.getDepartment().then(function(data) {
-                                        for (let i = 0; i < data.tdeptclass.length; i++) {
-                                            if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                                $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                                $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                                $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                                $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                            }
-                                        }
-                                        setTimeout(function() {
-                                            $('.fullScreenSpin').css('display', 'none');
-                                            $('#newDepartmentModal').modal('toggle');
-                                        }, 200);
-                                    });
-                                } else {
-                                    let data = JSON.parse(dataObject[0].data);
-                                    let useData = data.tdeptclass;
-                                    for (let i = 0; i < data.tdeptclass.length; i++) {
-                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                        }
-                                    }
-                                    setTimeout(function() {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newDepartmentModal').modal('toggle');
-                                    }, 200);
-                                }
-                            }).catch(function(err) {
-                                $('.fullScreenSpin').css('display', 'inline-block');
-                                sideBarService.getDepartment().then(function(data) {
-                                    for (let i = 0; i < data.tdeptclass.length; i++) {
-                                        if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                                            $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                                            $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                                            $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                                            $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                                        }
-                                    }
-                                    setTimeout(function() {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                        $('#newDepartmentModal').modal('toggle');
-                                    }, 200);
-                                });
-                            });
-                        } else {
-                            $('#departmentModal').modal();
-                            setTimeout(function() {
-                                $('#departmentList_filter .form-control-sm').focus();
-                                $('#departmentList_filter .form-control-sm').val('');
-                                $('#departmentList_filter .form-control-sm').trigger("input");
-                                var datatable = $('#departmentList').DataTable();
-                                datatable.draw();
-                                $('#departmentList_filter .form-control-sm').trigger("input");
-                            }, 500);
-                        }
-                    }
-                });
+                if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+                    $("#customerListModal").modal();
+                }
+            });
         }, 1000);
-
     },
 
     getTemplateList: function () {
@@ -2369,11 +2368,77 @@ Template.journalentrycard.helpers({
         }
         return false;
     },
+
+    // For Department DataTable
+    apiFunction_d:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getDepartmentDataList;
+    },
+
+    searchAPI_d: function() {
+        return sideBarService.getDepartmentDataList;
+    },
+
+    service_d: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler_d: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList_d(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_d: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList_d(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_d: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+    tableheaderrecords_d: () => {
+        return Template.instance().tableheaderrecords_d.get();
+    },
 });
 
 Template.journalentrycard.events({
+    'click #tblDepartmentList_frmj tbody tr': function(e){
+        let val = $(e.target.parentElement).find(".colDeptClassName").text();
+        let selectedId = $("#selected-department").val();
+
+        $("#" + selectedId).val(val);
+
+        $("#departmentModal").modal("hide");
+    },
+    'click #tblCustomerlist_frmj tbody tr': function(e){
+        let val = $(e.target.parentElement).find(".colCompany").text();
+        let selectedId = $("#selected-customer").val();
+
+        $("#" + selectedId).find("input").val(val);
+
+        $("#customerListModal").modal("hide");
+    },
+    'click #tblFixedAssetList_frmj tbody tr': function(e){
+        let val = $(e.target.parentElement).find(".colAssetName ").text();
+        let selectedId = $("#selected-fixedasset").val();
+
+        $("#" + selectedId).text(val);
+
+        $("#fixedassetlistpopModal").modal("hide");
+    },
     'click .btnFixedAsset': function(e) {
-        $('#FixedAssetLineAddModal').modal();
+        // $('#FixedAssetLineAddModal').modal();
+        $("#selected-fixedasset").val(e.target.parentElement.id);
+
+        $('#fixedassetlistpopModal').modal();
     },
     'click #fixedAssetLine': function(event) {
         $('#fixedassetlistpopModal').modal();
@@ -4415,6 +4480,24 @@ Template.journalentrycard.events({
             $('.colFixedAsset').css('display', 'none');
         }
     },
+    'click .chkcolDepartment': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colDepartment').css('display', 'table-cell');
+            $('.colDepartment').css('padding', '.75rem');
+            $('.colDepartment').css('vertical-align', 'top');
+        } else {
+            $('.colDepartment').css('display', 'none');
+        }
+    },
+    'click .chkcolCustomerJob': function(event) {
+        if ($(event.target).is(':checked')) {
+            $('.colCustomerJob').css('display', 'table-cell');
+            $('.colCustomerJob').css('padding', '.75rem');
+            $('.colCustomerJob').css('vertical-align', 'top');
+        } else {
+            $('.colCustomerJob').css('display', 'none');
+        }
+    },
     'click .chkcolCreditEx': function(event) {
         if ($(event.target).is(':checked')) {
             $('.colCreditEx').css('display', 'table-cell');
@@ -4436,42 +4519,48 @@ Template.journalentrycard.events({
     'change .rngRangeAccountName': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthAccountName").html(range + '%');
-        $('.colAccountName').css('width', range + '%');
+        $(".spWidthAccountName").html(range + 'px');
+        $('.colAccountName').css('width', range + 'px');
 
     },
     'change .rngRangeAccountNo': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthAccountNo").html(range + '%');
-        $('.colAccountNo').css('width', range + '%');
+        $(".spWidthAccountNo").html(range + 'px');
+        $('.colAccountNo').css('width', range + 'px');
 
     },
     'change .rngRangeMemo': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthMemo").html(range + '%');
-        $('.colMemo').css('width', range + '%');
+        $(".spWidthMemo").html(range + 'px');
+        $('.colMemo').css('width', range + 'px');
 
     },
     'change .rngRangeFixedAsset': function(event) {
-
         let range = $(event.target).val();
-        $('.colFixedAsset').css('width', range + '%');
-
+        $('.colFixedAsset').css('width', range + 'px');
+    },
+    'change .rngRangeDepartment': function(event) {
+        let range = $(event.target).val();
+        $('.colDepartment').css('width', range + 'px');
+    },
+    'change .rngRangeCustomerJob': function(event) {
+        let range = $(event.target).val();
+        $('.colCustomerJob').css('width', range + 'px');
     },
     'change .rngRangeCreditEx': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthCreditEx").html(range + '%');
-        $('.colCreditEx').css('width', range + '%');
+        $(".spWidthCreditEx").html(range + 'px');
+        $('.colCreditEx').css('width', range + 'px');
 
     },
     'change .rngRangeDebitEx': function(event) {
 
         let range = $(event.target).val();
-        $(".spWidthDebitEx").html(range + '%');
-        $('.colDebitEx').css('width', range + '%');
+        $(".spWidthDebitEx").html(range + 'px');
+        $('.colDebitEx').css('width', range + 'px');
 
     },
     'blur .divcolumn': function(event) {
@@ -4485,7 +4574,7 @@ Template.journalentrycard.events({
         setTimeout(function(){
         let lineItems = [];
 
-        $('.columnSettings').each(function(index) {
+        $('#myModal2 .columnSettings').each(function(index) {
             var $tblrow = $(this);
             var colTitle = $tblrow.find(".divcolumn").text() || '';
             var colWidth = $tblrow.find(".custom-range").val() || 0;
@@ -4507,6 +4596,7 @@ Template.journalentrycard.events({
             lineItems.push(lineItemObj);
         });
 
+        localStorage.setItem('frm_journalentry_settings', JSON.stringify(lineItems));
 
         var getcurrentCloudDetails = CloudUser.findOne({
             _id: localStorage.getItem('mycloudLogonID'),
