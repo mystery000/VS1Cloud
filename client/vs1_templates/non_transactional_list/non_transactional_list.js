@@ -13512,7 +13512,7 @@ Template.non_transactional_list.onRendered(function() {
 
     // Get AssetRegisterList
     templateObject.getAssetRegisterData = function (activeFlag = 'all') {
-      getVS1Data("TFixedAssets").then(function (dataObject) {
+      getVS1Data("TFixedAssetsList").then(function (dataObject) {
         if (dataObject.length == 0) {
           fixedAssetService.getTFixedAssetsList().then(function (data) {
             templateObject.setAssetRegisterList(data, activeFlag);
@@ -13747,7 +13747,7 @@ Template.non_transactional_list.onRendered(function() {
 
     // Get FixedAssetList
     templateObject.getFixedAssetData = function (activeFlag) {
-      getVS1Data("TFixedAssets").then(function (dataObject) {
+      getVS1Data("TFixedAssetsList").then(function (dataObject) {
         if (dataObject.length == 0) {
           fixedAssetService.getTFixedAssetsList().then(function (data) {
             templateObject.setFixedAssetList(data, activeFlag);
