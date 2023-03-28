@@ -4,7 +4,8 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { FixedAssetService } from "../../fixedasset-service";
 import "../../../lib/global/indexdbstorage.js";
 import { Template } from 'meteor/templating';
-
+import { UtilityService } from "../../..//utility-service";
+import { SideBarService } from '../../../js/sidebar-service';
 import "./fixedassetlistpop.html";
 import moment from "moment";
 let sideBarService = new SideBarService();
