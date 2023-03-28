@@ -72,6 +72,7 @@ Template.clockOnOff.onRendered(function () {
       $('#employeeListPOPModal').modal();              
     }
   });
+
   $("#clockonoffModal").modal("show");
   
   $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
@@ -196,6 +197,7 @@ Template.clockOnOff.events({
     } else {
     }
   },
+
   'change #endTime': function () {
     const templateObject = Template.instance();
     let date = new Date();
@@ -210,13 +212,18 @@ Template.clockOnOff.events({
  
   
   'click .btnSaveTimeSheetOne': async function () {
+
+    
     
     playSaveAudio();
-
+   
+     
     let templateObject = Template.instance();
     let contactService = new ContactService();
     
     setTimeout(async function(){
+      
+      $('.fullScreenSpin').css('display', 'inline-block'); 
       LoadingOverlay.show();
       let checkStatus = "";
       let checkStartTime = "";
@@ -238,7 +245,7 @@ Template.clockOnOff.events({
         "-" +
         ("0" + endDateGet.getDate()).slice(-2);
       
-        var startTime = $("#startTime").val() || "";
+      var startTime = $("#startTime").val() || "";
       var endTime = $("#endTime").val() || "";
       var edthour = $("#txtBookedHoursSpent").val() || "00:01";
       let hours = templateObject.timeToDecimal(edthour);

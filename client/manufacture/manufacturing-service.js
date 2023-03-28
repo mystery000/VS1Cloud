@@ -54,12 +54,74 @@ export class ManufacturingService extends BaseService {
       return this.POST(this.ERPObjects.TVS1Workorder, data)
     }
 
-    getWorkOrder() {
-        let options = "";
-        options = {
-            ListType: 'Detail',
-        }
-        return this.getList(this.ERPObjects.TVS1Workorder, options)
+    getWorkOrderList() {
+       
+        let workorders = [
+          {
+              "type": "TVS1Workorder",
+              "fields": {
+                  "LID": "1000",
+                  "Customer": "Workshop",
+                  "OrderTo": "Workshop\n \n\n ",
+                  "PONumber": "",
+                  "SaleDate": "09/03/2023",
+                  "DueDate": "09/03/2023",
+                  "BOMStructure": "{\"Id\":8077,\"MsTimeStamp\":\"2023-02-23 13:10:21\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8077\",\"Caption\":\"Wagon\",\"CustomInputClass\":\"\",\"Description\":\"Childs Red Wagon\",\"Details\":\"[{\\\"productName\\\":\\\"Handle\\\",\\\"qty\\\":\\\"1\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Tray\\\",\\\"qty\\\":\\\"1\\\",\\\"process\\\":\\\"Welding\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Hub\\\",\\\"qty\\\":\\\"1\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Purple\\\",\\\"qty\\\":\\\"1\\\",\\\"process\\\":\\\"Painting\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Wheel Assembly\\\",\\\"qty\\\":\\\"4.00000\\\",\\\"process\\\":\\\"Assembly\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":5,\"TotalQtyOriginal\":636,\"Value\":\"\"}",
+                  "OrderDate": "2023-03-09T08:08:01.218Z",
+                  "StartTime": "",
+                  "ProductName": "Wagon",
+                  "ShipDate": "09/03/2023",
+                  "Quantity": 1,
+                  "ID": "1000",
+                  "UpdateFromPO": false,
+                  "POStatus": "not created",
+                  "Status": "unscheduled",
+                  "TrackedTime": 0,
+                  "StartedTimes": "[]",
+                  "PausedTimes": "[]",
+                  "StoppedTime": "",
+                  "EmployeeId"  : "",
+                  "EmployeeName" : "",
+              }
+          },
+          {
+              "type": "TVS1Workorder",
+              "fields": {
+                  "LID": "1001",
+                  "Customer": "Workshop",
+                  "OrderTo": "Workshop\n \n\n ",
+                  "PONumber": "",
+                  "SaleDate": "09/03/2023",
+                  "DueDate": "09/03/2023",
+                  "BOMStructure": "{\"Id\":8076,\"MsTimeStamp\":\"2023-02-23 13:05:06\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8076\",\"Caption\":\"Wheel Assembly\",\"CustomInputClass\":\"\",\"Description\":\"\",\"Details\":\"[{\\\"productName\\\":\\\"Bridgestone Wheels\\\",\\\"qty\\\":\\\"1\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":1,\"TotalQtyOriginal\":-34,\"Value\":\"\"}",
+                  "OrderDate": "2023-03-09T08:22:57.348Z",
+                  "StartTime": "",
+                  "ProductName": "Wheel Assembly",
+                  "ShipDate": "09/03/2023",
+                  "Quantity": 1,
+                  "ID": "1001",
+                  "UpdateFromPO": false,
+                  "POStatus": "not created",
+                  "Status": "unscheduled",
+                  "TrackedTime": 0,
+                  "StartedTimes": "[]",
+                  "PausedTimes": "[]",
+                  "StoppedTime": "",
+                  "EmployeeId"  : "",
+                  "EmployeeName" : ""
+              }
+          }
+        ];
+
+        return workorders;
     }
+
+    getWorkOrder() {
+      let options = "";
+      options = {
+          ListType: 'Detail',
+      }
+      return this.getList(this.ERPObjects.TVS1Workorder, options)
+    }  
   
 }

@@ -5,6 +5,9 @@ import '../imports/startup/client/serviceWorker.js';
 // client/main.js
 import './body.html';
 import './Login/vs1_login.html';
+//Danila add
+import './payroll/clockonoff/process_clock_list.js';
+
 
 import './vs1_templates/leave_confirm_script/leave_confirm_script.html';
 // import './setup/setup.html';
