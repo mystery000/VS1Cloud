@@ -75,6 +75,9 @@ Template.payrollproductlistpop.onCreated(() => {
             utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
             data.fields.TotalQtyInStock,
             data.fields.TaxCodeSales || '',
+            data.fields.ID || '',
+            JSON.stringify(data.fields.ExtraSellPrice)||null,
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100)
         ];
         return dataList;
     }
@@ -88,7 +91,9 @@ Template.payrollproductlistpop.onCreated(() => {
         { index: 5, label: "Sales Price", class: "colSalesPrice text-right", active: true, display: true, width: "100" },
         { index: 6, label: "Quantity", class: "colQuantity text-right", active: true, display: true, width: "100" },
         { index: 7, label: "Tax Rate", class: "colTaxRate", active: true, display: true, width: "100" },
-        { index: 8, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+        { index: 8, label: "Product ID", class: "colProductPODID", active: false, display: true, width: "100" },
+        { index: 9, label: "Extra Sell Price", class: "colExtraSellPrice", active: false, display: true, width: "100" },
+        { index: 10, label: "Sale Price Inc", class: "colSalePriceInc", active: false, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
