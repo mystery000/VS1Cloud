@@ -155,215 +155,215 @@ Template.termlistpop.events({
           $('#edtName').focus();
         }, 1000);
     },
-    'click #btnNewInvoice': function(event) {
-        // FlowRouter.go('/invoicecard');
-    },
-    'click .chkDatatable': function(event) {
-        var columns = $('#termsList th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    // 'click #btnNewInvoice': function(event) {
+    //     // FlowRouter.go('/invoicecard');
+    // },
+    // 'click .chkDatatable': function(event) {
+    //     var columns = $('#termsList th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
+    //     $.each(columns, function(i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
 
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'termsList'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .resetTable': function(event) {
+    //     var getcurrentCloudDetails = CloudUser.findOne({
+    //         _id: localStorage.getItem('mycloudLogonID'),
+    //         clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
+    //     });
+    //     if (getcurrentCloudDetails) {
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({
+    //                 userid: clientID,
+    //                 PrefName: 'termsList'
+    //             });
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.remove({
+    //                     _id: checkPrefDetails._id
+    //                 }, function(err, idTag) {
+    //                     if (err) {
 
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
+    //                     } else {
+    //                         Meteor._reload.reload();
+    //                     }
+    //                 });
 
-                }
-            }
-        }
-    },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
+    //             }
+    //         }
+    //     }
+    // },
+    // 'click .saveTable': function(event) {
+    //     let lineItems = [];
+    //     $('.columnSettings').each(function(index) {
+    //         var $tblrow = $(this);
+    //         var colTitle = $tblrow.find(".divcolumn").text() || '';
+    //         var colWidth = $tblrow.find(".custom-range").val() || 0;
+    //         var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+    //         var colHidden = false;
+    //         if ($tblrow.find(".custom-control-input").is(':checked')) {
+    //             colHidden = false;
+    //         } else {
+    //             colHidden = true;
+    //         }
+    //         let lineItemObj = {
+    //             index: index,
+    //             label: colTitle,
+    //             hidden: colHidden,
+    //             width: colWidth,
+    //             thclass: colthClass
+    //         }
 
-            lineItems.push(lineItemObj);
-        });
+    //         lineItems.push(lineItemObj);
+    //     });
 
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'termsList'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'termsList',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
+    //     var getcurrentCloudDetails = CloudUser.findOne({
+    //         _id: localStorage.getItem('mycloudLogonID'),
+    //         clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
+    //     });
+    //     if (getcurrentCloudDetails) {
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({
+    //                 userid: clientID,
+    //                 PrefName: 'termsList'
+    //             });
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.update({
+    //                     _id: checkPrefDetails._id
+    //                 }, {
+    //                     $set: {
+    //                         userid: clientID,
+    //                         username: clientUsername,
+    //                         useremail: clientEmail,
+    //                         PrefGroup: 'salesform',
+    //                         PrefName: 'termsList',
+    //                         published: true,
+    //                         customFields: lineItems,
+    //                         updatedAt: new Date()
+    //                     }
+    //                 }, function(err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
+    //                     }
+    //                 });
 
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'termsList',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
+    //             } else {
+    //                 CloudPreference.insert({
+    //                     userid: clientID,
+    //                     username: clientUsername,
+    //                     useremail: clientEmail,
+    //                     PrefGroup: 'salesform',
+    //                     PrefName: 'termsList',
+    //                     published: true,
+    //                     customFields: lineItems,
+    //                     createdAt: new Date()
+    //                 }, function(err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
 
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     }
+    //     $('#myModal2').modal('toggle');
+    // },
+    // 'blur .divcolumn': function(event) {
+    //     let columData = $(event.target).text();
 
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#termsList').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+    //     var datable = $('#termsList').DataTable();
+    //     var title = datable.column(columnDatanIndex).header();
+    //     $(title).html(columData);
 
-    },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
+    // },
+    // 'change .rngRange': function(event) {
+    //     let range = $(event.target).val();
+    //     $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
 
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#termsList th');
-        $.each(datable, function(i, v) {
+    //     let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     var datable = $('#termsList th');
+    //     $.each(datable, function(i, v) {
 
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
+    //         if (v.innerText == columnDataValue) {
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("." + replaceClass + "").css('width', range + 'px');
 
-            }
-        });
+    //         }
+    //     });
 
-    },
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        var columns = $('#termsList th');
+    // },
+    // 'click .btnOpenSettings': function(event) {
+    //     let templateObject = Template.instance();
+    //     var columns = $('#termsList th');
 
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i, v) {
+    //         if (v.hidden == false) {
+    //             columVisible = true;
+    //         }
+    //         if ((v.className.includes("hiddenColumn"))) {
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
 
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
-    'click #exportbtn': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#termsList_wrapper .dt-buttons .btntabletoexcel').click();
-        $('.fullScreenSpin').css('display', 'none');
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || '',
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
+    // 'click #exportbtn': function() {
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     jQuery('#termsList_wrapper .dt-buttons .btntabletoexcel').click();
+    //     $('.fullScreenSpin').css('display', 'none');
 
-    },
-    'click .btnRefresh': function() {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        sideBarService.getTermsVS1().then(function(dataReload) {
-            addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
-                location.reload(true);
-            }).catch(function(err) {
-                location.reload(true);
-            });
-        }).catch(function(err) {
-            location.reload(true);
-        });
-    },
+    // },
+    // 'click .btnRefresh': function() {
+    //     $('.fullScreenSpin').css('display', 'inline-block');
+    //     sideBarService.getTermsVS1().then(function(dataReload) {
+    //         addVS1Data('TTermsVS1', JSON.stringify(dataReload)).then(function(datareturn) {
+    //             location.reload(true);
+    //         }).catch(function(err) {
+    //             location.reload(true);
+    //         });
+    //     }).catch(function(err) {
+    //         location.reload(true);
+    //     });
+    // },
     'click .btnDeleteTerms': function() {
         playDeleteAudio();
         let taxRateService = new TaxRateService();
@@ -631,28 +631,28 @@ Template.termlistpop.events({
             $box.prop("checked", false);
         }
     },
-    'keydown #edtDays': function(event) {
-        if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-            // Allow: Ctrl+A, Command+A
-            (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
-            // Allow: home, end, left, right, down, up
-            (event.keyCode >= 35 && event.keyCode <= 40)) {
-            // let it happen, don't do anything
-            return;
-        }
+    // 'keydown #edtDays': function(event) {
+    //     if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+    //         // Allow: Ctrl+A, Command+A
+    //         (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+    //         // Allow: home, end, left, right, down, up
+    //         (event.keyCode >= 35 && event.keyCode <= 40)) {
+    //         // let it happen, don't do anything
+    //         return;
+    //     }
 
-        if (event.shiftKey == true) {
-            event.preventDefault();
-        }
+    //     if (event.shiftKey == true) {
+    //         event.preventDefault();
+    //     }
 
-        if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-            (event.keyCode >= 96 && event.keyCode <= 105) ||
-            event.keyCode == 8 || event.keyCode == 9 ||
-            event.keyCode == 37 || event.keyCode == 39 ||
-            event.keyCode == 46 || event.keyCode == 190) {} else {
-            event.preventDefault();
-        }
-    }
+    //     if ((event.keyCode >= 48 && event.keyCode <= 57) ||
+    //         (event.keyCode >= 96 && event.keyCode <= 105) ||
+    //         event.keyCode == 8 || event.keyCode == 9 ||
+    //         event.keyCode == 37 || event.keyCode == 39 ||
+    //         event.keyCode == 46 || event.keyCode == 190) {} else {
+    //         event.preventDefault();
+    //     }
+    // }
 
 
 });

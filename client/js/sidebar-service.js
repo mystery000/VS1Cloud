@@ -2379,9 +2379,8 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCorrespondence, options);
   }
 
-  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,isDeleted) {
+  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,deleteFilter) {
     let options = "";
-    if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
         OrderBy: "TransactionDate desc",
@@ -2402,28 +2401,21 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    }else{
-      if (ignoreDate == true) {
-        options = {
-          OrderBy: "TransactionDate desc",
-          IgnoreDates: true,
-          IsDetailReport: true,
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
-        };
-      } else {
-        options = {
-          OrderBy: "TransactionDate desc",
-          IgnoreDates: false,
-          DateFrom: '"' + dateFrom + '"',
-          DateTo: '"' + dateTo + '"',
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
-        };
-      }
-    }
+    
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TJournalEntryList, options);
   }
+
+  searchTJournalEntryListData(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: "TransactionDate desc",
+      IgnoreDates:true,
+      search: 'AccountName='+ dataSearchName+ ' OR ClassName="' + dataSearchName + '" OR GJID="' + dataSearchName + '" OR Memo="' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TJournalEntryList, options);
+  }
+
 
   getSalesListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom,isDeleted) {
     let options = "";
