@@ -578,9 +578,7 @@ openDb = function (dbName) {
       db.createObjectStore('TFavSupplierSummaryReport', {keyPath: 'EmployeeEmail'});
 
       db.createObjectStore("TReconciliationBankAccountsList", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("CloudAppointmentStartStopAccessLevel", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("CloudAppointmentAllocationLaunch", { keyPath: "EmployeeEmail" });
-      db.createObjectStore("CloudAppointmentCreateAppointment", { keyPath: "EmployeeEmail" });
+
       db.createObjectStore("TEftFilesCreated", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TEftBankRuleList", { keyPath: "EmployeeEmail" });
     };
@@ -648,7 +646,6 @@ addVS1Data = async function (objectName, vs1Data) {
   let transaction = await db.transaction([objectName], "readwrite");
 
   transaction.oncomplete = function (event) {};
-
   let currentDate = new Date();
   let hours = currentDate.getHours(); //returns 0-23
   let minutes = currentDate.getMinutes(); //returns 0-59
@@ -846,7 +843,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 252);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 251);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };
