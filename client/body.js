@@ -727,4 +727,5 @@ Template.registerHelper('equals', function(a, b) {
 
 Template.registerHelper('notEquals', function(a, b) {
     return a != b;
+	
 });
