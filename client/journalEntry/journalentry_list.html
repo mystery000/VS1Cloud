@@ -175,42 +175,12 @@
 
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 12px;">
-
-                    <div class="table-responsive">
-                        <style>
-                            th {
-                                background-color: #ededed;
-                                white-space: nowrap;
+                    <style>
+                           th.colEntryNo, th.colDebitAmount, th.colCreditAmount, th.colTaxAmount {
+                                text-align: left!important;
                             }
-                            .table-striped tbody tr:nth-of-type(odd) {
-                                background-color: white !important;
-                            }
-
-                            .table-striped tbody tr:nth-of-type(even) {
-                                background-color: #0000000d !important;
-                            }
-
-                            .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
-                                padding: .75rem!important;
-                            }
-                            .hiddenColumn{
-                                display:none;
-                            }
-                            .showColumn {
-                                display:table-cell;
-                                padding:.75rem;
-                                vertical-align:top;
-                            }
-
-                            input[type=number]::-webkit-inner-spin-button,
-                            input[type=number]::-webkit-outer-spin-button {
-                                opacity: 1;
-                            }
-                            .text-deleted{
-                                background-color: #e74a3b !important; color:#fff;
-                            }
-                        </style>
-                        {{>datatablelist
+                    </style>
+                           {{>datatablelist
                             tablename="tblJournalList"
                             apiName= apiFunction
                             indexeddbname = 'TJournalEntryList'
@@ -222,8 +192,10 @@
                             service=service
                             lowercaseDataName='tjournalentrylist'
                             exIndexDBName = 'tjournalentrylist'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
                         }}
-                    </div>
                 </div>
             </div>
         </div>

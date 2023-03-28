@@ -36,7 +36,7 @@ Template.receiptcategory.onCreated(function(){
             currentData.CategoryName || "",
             currentData.CategoryDesc || "",
             currentData.CategoryPostAccount || "",
-            currentData.Active ? "" : "In-Active",
+            linestatus,
         ];
         return dataList;
     }
@@ -76,222 +76,222 @@ Template.receiptcategory.onRendered(function() {
     //                 let hiddenColumn = customcolumn[i].hidden;
     //                 let columnClass = columHeaderUpdate.split('.')[1];
     //                 let columnWidth = customcolumn[i].width;
-    //                 $("th."+columnClass+"").html(columData);
+    //                 $("t+-h."+columnClass+"").html(columData);
     //                 $("th."+columnClass+"").css('width',""+columnWidth+"px");
     //             }
     //         }
     //     }
     // });
 
-    templateObject.getReceiptCategoryList = function(){
-        getVS1Data('TReceiptCategory').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                receiptService.getAllReceiptCategorys().then(function(data){
-                    setReceiptCategory(data);
-                });
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                setReceiptCategory(data);
-            }
-        }).catch(function (err) {
-            receiptService.getAllReceiptCategorys().then(function(data){
-                setReceiptCategory(data);
-            });
-        });
-    };
-    function setReceiptCategory(data) {
-        for (let i in data.treceiptcategory){
-            if (data.treceiptcategory.hasOwnProperty(i)) {
-                let obj = {
-                    id: data.treceiptcategory[i].Id || ' ',
-                    categoryName: data.treceiptcategory[i].CategoryName || ' ',
-                    description: data.treceiptcategory[i].CategoryDesc || ' ',
-                };
-                receiptCategoryList.push(obj);
-                if (data.treceiptcategory[i].CategoryName == "Materials") {
-                    needAddMaterials = false;
-                }
-                if (data.treceiptcategory[i].CategoryName == "Meals & Entertainment") {
-                    needAddMealsEntertainment = false;
-                }
-                if (data.treceiptcategory[i].CategoryName == "Office Supplies") {
-                    needAddOfficeSupplies = false;
-                }
-                if (data.treceiptcategory[i].CategoryName == "Travel") {
-                    needAddTravel = false;
-                }
-                if (data.treceiptcategory[i].CategoryName == "Vehicle") {
-                    needAddVehicle = false;
-                }
-            }
-        }
-        addDefaultValue();
-        templateObject.receiptcategoryrecords.set(receiptCategoryList);
-        $('.fullScreenSpin').css('display','none');
-    }
-    //templateObject.getReceiptCategoryList();
-    function addDefaultValue() {
-        let needAddDefault = true;
-        if (!needAddMaterials && !needAddMealsEntertainment && !needAddOfficeSupplies && !needAddTravel && !needAddVehicle ) {
-            needAddDefault = false;
-        }
-        if (needAddDefault) {
-            let isSaved = false;
-            if (needAddMaterials) {
-                receiptService.getOneReceiptCategoryDataExByName("Materials").then(function (receiptCategory) {
-                    let objMaterials;
-                    if (receiptCategory.treceiptcategory.length == 0) {
-                        objMaterials = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Active: true,
-                                CategoryName: "Materials",
-                                CategoryDesc: "Default Value"
-                            }
-                        }
-                    } else {
-                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
-                        objMaterials = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Id: categoryID,
-                                Active: true
-                            }
-                        }
-                    }
-                    receiptService.saveReceiptCategory(objMaterials).then(function (result) {
-                        isSaved = true;
-                    }).catch(function (err) {
-                    });
-                })
-            }
-            if (needAddMealsEntertainment) {
-                receiptService.getOneReceiptCategoryDataExByName("Meals & Entertainment").then(function (receiptCategory) {
-                    let objMealsEntertainment;
-                    if (receiptCategory.treceiptcategory.length == 0) {
-                        objMealsEntertainment = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Active: true,
-                                CategoryName: "Meals & Entertainment",
-                                CategoryDesc: "Default Value"
-                            }
-                        }
-                    } else {
-                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
-                        objMealsEntertainment = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Id: categoryID,
-                                Active: true
-                            }
-                        }
-                    }
-                    receiptService.saveReceiptCategory(objMealsEntertainment).then(function (result) {
-                        isSaved = true;
-                    }).catch(function (err) {
-                    });
-                })
-            }
-            if (needAddOfficeSupplies) {
-                receiptService.getOneReceiptCategoryDataExByName("Office Supplies").then(function (receiptCategory) {
-                    let objOfficeSupplies;
-                    if (receiptCategory.treceiptcategory.length == 0) {
-                        objOfficeSupplies = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Active: true,
-                                CategoryName: "Office Supplies",
-                                CategoryDesc: "Default Value"
-                            }
-                        }
-                    } else {
-                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
-                        objOfficeSupplies = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Id: categoryID,
-                                Active: true
-                            }
-                        }
-                    }
-                    receiptService.saveReceiptCategory(objOfficeSupplies).then(function (result) {
-                        isSaved = true;
-                    }).catch(function (err) {
-                    });
-                })
-            }
-            if (needAddTravel) {
-                receiptService.getOneReceiptCategoryDataExByName("Travel").then(function (receiptCategory) {
-                    let objTravel;
-                    if (receiptCategory.treceiptcategory.length == 0) {
-                        objTravel = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Active: true,
-                                CategoryName: "Travel",
-                                CategoryDesc: "Default Value"
-                            }
-                        }
-                    } else {
-                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
-                        objTravel = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Id: categoryID,
-                                Active: true
-                            }
-                        }
-                    }
-                    receiptService.saveReceiptCategory(objTravel).then(function (result) {
-                        isSaved = true;
-                    }).catch(function (err) {
-                    });
-                })
-            }
-            if (needAddVehicle) {
-                receiptService.getOneReceiptCategoryDataExByName("Vehicle").then(function (receiptCategory) {
-                    let objVehicle;
-                    if (receiptCategory.treceiptcategory.length == 0) {
-                        objVehicle = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Active: true,
-                                CategoryName: "Vehicle",
-                                CategoryDesc: "Default Value"
-                            }
-                        }
-                    } else {
-                        let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
-                        objVehicle = {
-                            type: "TReceiptCategory",
-                            fields: {
-                                Id: categoryID,
-                                Active: true
-                            }
-                        }
-                    }
-                    receiptService.saveReceiptCategory(objVehicle).then(function (result) {
-                        isSaved = true;
-                    }).catch(function (err) {
-                    });
-                })
-            }
-            setTimeout(function () {
-                if (isSaved) {
-                    receiptService.getAllReceiptCategorys().then(function (dataReload) {
-                        addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function (datareturn) {
-                            Meteor._reload.reload();
-                        }).catch(function (err) {
-                            Meteor._reload.reload();
-                        });
-                    }).catch(function (err) {
-                        Meteor._reload.reload();
-                    });
-                }
-            }, 5000);
-        }
-    }
+    // templateObject.getReceiptCategoryList = function(){
+    //     getVS1Data('TReceiptCategory').then(function (dataObject) {
+    //         if (dataObject.length == 0) {
+    //             receiptService.getAllReceiptCategorys().then(function(data){
+    //                 setReceiptCategory(data);
+    //             });
+    //         } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             setReceiptCategory(data);
+    //         }
+    //     }).catch(function (err) {
+    //         receiptService.getAllReceiptCategorys().then(function(data){
+    //             setReceiptCategory(data);
+    //         });
+    //     });
+    // };
+    // function setReceiptCategory(data) {
+    //     for (let i in data.treceiptcategory){
+    //         if (data.treceiptcategory.hasOwnProperty(i)) {
+    //             let obj = {
+    //                 id: data.treceiptcategory[i].Id || ' ',
+    //                 categoryName: data.treceiptcategory[i].CategoryName || ' ',
+    //                 description: data.treceiptcategory[i].CategoryDesc || ' ',
+    //             };
+    //             receiptCategoryList.push(obj);
+    //             if (data.treceiptcategory[i].CategoryName == "Materials") {
+    //                 needAddMaterials = false;
+    //             }
+    //             if (data.treceiptcategory[i].CategoryName == "Meals & Entertainment") {
+    //                 needAddMealsEntertainment = false;
+    //             }
+    //             if (data.treceiptcategory[i].CategoryName == "Office Supplies") {
+    //                 needAddOfficeSupplies = false;
+    //             }
+    //             if (data.treceiptcategory[i].CategoryName == "Travel") {
+    //                 needAddTravel = false;
+    //             }
+    //             if (data.treceiptcategory[i].CategoryName == "Vehicle") {
+    //                 needAddVehicle = false;
+    //             }
+    //         }
+    //     }
+    //     addDefaultValue();
+    //     templateObject.receiptcategoryrecords.set(receiptCategoryList);
+    //     $('.fullScreenSpin').css('display','none');
+    // }
+    // //templateObject.getReceiptCategoryList();
+    // function addDefaultValue() {
+    //     let needAddDefault = true;
+    //     if (!needAddMaterials && !needAddMealsEntertainment && !needAddOfficeSupplies && !needAddTravel && !needAddVehicle ) {
+    //         needAddDefault = false;
+    //     }
+    //     if (needAddDefault) {
+    //         let isSaved = false;
+    //         if (needAddMaterials) {
+    //             receiptService.getOneReceiptCategoryDataExByName("Materials").then(function (receiptCategory) {
+    //                 let objMaterials;
+    //                 if (receiptCategory.treceiptcategory.length == 0) {
+    //                     objMaterials = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Active: true,
+    //                             CategoryName: "Materials",
+    //                             CategoryDesc: "Default Value"
+    //                         }
+    //                     }
+    //                 } else {
+    //                     let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+    //                     objMaterials = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Id: categoryID,
+    //                             Active: true
+    //                         }
+    //                     }
+    //                 }
+    //                 receiptService.saveReceiptCategory(objMaterials).then(function (result) {
+    //                     isSaved = true;
+    //                 }).catch(function (err) {
+    //                 });
+    //             })
+    //         }
+    //         if (needAddMealsEntertainment) {
+    //             receiptService.getOneReceiptCategoryDataExByName("Meals & Entertainment").then(function (receiptCategory) {
+    //                 let objMealsEntertainment;
+    //                 if (receiptCategory.treceiptcategory.length == 0) {
+    //                     objMealsEntertainment = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Active: true,
+    //                             CategoryName: "Meals & Entertainment",
+    //                             CategoryDesc: "Default Value"
+    //                         }
+    //                     }
+    //                 } else {
+    //                     let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+    //                     objMealsEntertainment = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Id: categoryID,
+    //                             Active: true
+    //                         }
+    //                     }
+    //                 }
+    //                 receiptService.saveReceiptCategory(objMealsEntertainment).then(function (result) {
+    //                     isSaved = true;
+    //                 }).catch(function (err) {
+    //                 });
+    //             })
+    //         }
+    //         if (needAddOfficeSupplies) {
+    //             receiptService.getOneReceiptCategoryDataExByName("Office Supplies").then(function (receiptCategory) {
+    //                 let objOfficeSupplies;
+    //                 if (receiptCategory.treceiptcategory.length == 0) {
+    //                     objOfficeSupplies = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Active: true,
+    //                             CategoryName: "Office Supplies",
+    //                             CategoryDesc: "Default Value"
+    //                         }
+    //                     }
+    //                 } else {
+    //                     let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+    //                     objOfficeSupplies = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Id: categoryID,
+    //                             Active: true
+    //                         }
+    //                     }
+    //                 }
+    //                 receiptService.saveReceiptCategory(objOfficeSupplies).then(function (result) {
+    //                     isSaved = true;
+    //                 }).catch(function (err) {
+    //                 });
+    //             })
+    //         }
+    //         if (needAddTravel) {
+    //             receiptService.getOneReceiptCategoryDataExByName("Travel").then(function (receiptCategory) {
+    //                 let objTravel;
+    //                 if (receiptCategory.treceiptcategory.length == 0) {
+    //                     objTravel = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Active: true,
+    //                             CategoryName: "Travel",
+    //                             CategoryDesc: "Default Value"
+    //                         }
+    //                     }
+    //                 } else {
+    //                     let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+    //                     objTravel = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Id: categoryID,
+    //                             Active: true
+    //                         }
+    //                     }
+    //                 }
+    //                 receiptService.saveReceiptCategory(objTravel).then(function (result) {
+    //                     isSaved = true;
+    //                 }).catch(function (err) {
+    //                 });
+    //             })
+    //         }
+    //         if (needAddVehicle) {
+    //             receiptService.getOneReceiptCategoryDataExByName("Vehicle").then(function (receiptCategory) {
+    //                 let objVehicle;
+    //                 if (receiptCategory.treceiptcategory.length == 0) {
+    //                     objVehicle = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Active: true,
+    //                             CategoryName: "Vehicle",
+    //                             CategoryDesc: "Default Value"
+    //                         }
+    //                     }
+    //                 } else {
+    //                     let categoryID = receiptCategory.treceiptcategory[0].fields.ID;
+    //                     objVehicle = {
+    //                         type: "TReceiptCategory",
+    //                         fields: {
+    //                             Id: categoryID,
+    //                             Active: true
+    //                         }
+    //                     }
+    //                 }
+    //                 receiptService.saveReceiptCategory(objVehicle).then(function (result) {
+    //                     isSaved = true;
+    //                 }).catch(function (err) {
+    //                 });
+    //             })
+    //         }
+    //         setTimeout(function () {
+    //             if (isSaved) {
+    //                 receiptService.getAllReceiptCategorys().then(function (dataReload) {
+    //                     addVS1Data('TReceiptCategory', JSON.stringify(dataReload)).then(function (datareturn) {
+    //                         Meteor._reload.reload();
+    //                     }).catch(function (err) {
+    //                         Meteor._reload.reload();
+    //                     });
+    //                 }).catch(function (err) {
+    //                     Meteor._reload.reload();
+    //                 });
+    //             }
+    //         }, 5000);
+    //     }
+    // }
 
     $(document).on('click', '.table-remove', function(event) {
         event.stopPropagation();

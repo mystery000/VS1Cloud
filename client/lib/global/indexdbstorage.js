@@ -581,6 +581,10 @@ openDb = function (dbName) {
 
       db.createObjectStore("TEftFilesCreated", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TEftBankRuleList", { keyPath: "EmployeeEmail" });
+
+      db.createObjectStore("CloudAppointmentStartStopAccessLevel", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("CloudAppointmentAllocationLaunch", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("CloudAppointmentCreateAppointment", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
