@@ -156,28 +156,6 @@ Template.fixedassetcard.onRendered(function () {
       }
     });
 
-  $('#edtDepreciationType2').editableSelect()
-  .on('select.editable-select', function (e, li) {
-    if (li) {
-      templateObject.edtDepreciationType2.set(parseInt(li.val() || 0));
-      const val = parseInt(li.val() || 0);
-      switch(val) {
-        case 0:
-          $('select#edtSalvageType2').val(1);
-          $('input#edtSalvage2').val(0);
-          break;
-        case 1:
-          $('select#edtSalvageType2').val(1);
-          break;
-        case 2:
-          $('input#edtSalvage2').val(100);
-          $('select#edtSalvageType2').val(2);
-          break;
-      }
-      templateObject.deprecitationPlans2.set([]);
-    }
-  });
-  
   $("#date-input, #edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate, #edtInsuranceEndDate, #edtDateLastTest, #edtDateNextTest, #edtWarrantyExpiresDate, #edtDisposalDate2, #edtDisposalDate, #edtLastTestDate, #edtNextTestDate").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
@@ -194,10 +172,9 @@ Template.fixedassetcard.onRendered(function () {
   let currentAssetID = parseInt(FlowRouter.current().queryParams.assetId || '0');
   templateObject.currentAssetID.set(currentAssetID);
   if (currentAssetID > 0) {
-    getVS1Data("TFixedAssetsList").then(function (dataObject) {
-      if (dataObject.length === 0) {
-        fixedAssetService.getTFixedAssetsList(25, 1).then(function (data) {
-          addVS1Data('TFixedAssets', JSON.stringify(data))
+    getVS1Data("TFixedAssets").then(function (dataObject) {
+      if (dataObject.length == 0) {
+        fixedAssetService.getTFixedAssetsList().then(function (data) {
           findFixedAssetByID(data, currentAssetID);
         });
       }
@@ -216,10 +193,10 @@ Template.fixedassetcard.onRendered(function () {
     });
   }
 
-  function findFixedAssetByID(data, assetID) {
-    const assetData = data.tfixedassetslist.filter((asset) => asset.AssetID === assetID);
+  function findFixedAssetByID(data, assetID) { 
+    const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == assetID);
     if (assetData.length > 0) {
-      const assetInfo = assetData[0];
+      const assetInfo = assetData[0].fields;
       initializeCard(assetInfo);
     }
   }
@@ -623,7 +600,7 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans2.set([]);
       return;
     }
-    // console.log('depreciation2', totalDepreciationVal);
+    console.log('depreciation2', totalDepreciationVal);
     if (!enterAmountFlag && yearEnding !== 0) {
       startYear = yearEnding - life + 1;
     }
