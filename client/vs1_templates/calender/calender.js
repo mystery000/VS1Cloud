@@ -2274,7 +2274,6 @@ Template.calender.onRendered(function() {
                 }, 500);
             },
             eventContent: function(event) {
-                console.log('eventContent')
                 let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                 let eventLeave  = [];
                 let eventStatus = [];
@@ -7097,7 +7096,6 @@ Template.calender.events({
         }
     },
     'change #formCheck-on': function() {
-        console.log('OK')
         if ($('#formCheck-on').is(":checked")) {
             $("#formCheck-after").prop("checked", false);
         }
