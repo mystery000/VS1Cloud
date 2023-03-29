@@ -1010,9 +1010,12 @@ Template.new_workorder.events({
                     // temp = {...temp, isStarted: true}
                     templateObject.workorderrecord.set(temp);
                     record = templateObject.workorderrecord.get();
+
+                    let seq = 0;
+
                     let objDetail = {
-                    //    LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
-                        LID: $('#ponumber').val() + "_" + (count + 1).toString(),
+                        LID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                       // LID: $('#ponumber').val() + "_" + (count + 1).toString(),
                         Customer: $('#edtCustomerName').val() || '',
                         OrderTo: $('#txabillingAddress').val() || '',
                         PONumber: $('#ponumber').val()||'',
@@ -1029,8 +1032,8 @@ Template.new_workorder.events({
                         // ProductID: record.productid,
                         Quantity: record.quantity || 1,
                         InProgress: record.isStarted,
-                        //ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
-                        ID: $('#ponumber').val() + "_" + (count + 1).toString(),
+                        ID: templateObject.salesOrderId.get() + "_" + (count + 1).toString(),
+                        //ID: $('#ponumber').val() + "_" + (count + 1).toString(),
 
                         UpdateFromPO: templateObject.updateFromPO.get(),
                         POStatus: record.poStatus,
