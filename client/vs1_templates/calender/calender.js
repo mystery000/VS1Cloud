@@ -1829,6 +1829,8 @@ Template.calender.onRendered(function() {
                     document.getElementById("product-list").value = result[0].product || "";
                     document.getElementById("product-list-1").value = result[0].product || "";
                     console.log('result[0]:',result[0])
+                    $(".chkBox").prop("checked", false);
+                    $(`.tblInventoryCheckbox .colChkBox`).closest('tr').removeClass('checkRowSelected');
                     if (result[0].extraProducts && result[0].extraProducts != "") {
                         let extraProducts = result[0].extraProducts.split(":");
                         console.log('extraProducts:',extraProducts)
@@ -7097,11 +7099,13 @@ Template.calender.events({
         }
     },
     'change #formCheck-on': function() {
+        console.log('OK')
         if ($('#formCheck-on').is(":checked")) {
             $("#formCheck-after").prop("checked", false);
         }
     },
     'change #formCheck-after': function() {
+        console.log('OMG')
         if ($('#formCheck-after').is(":checked")) {
             $("#formCheck-on").prop("checked", false);
         }
