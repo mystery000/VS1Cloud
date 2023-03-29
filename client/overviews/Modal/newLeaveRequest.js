@@ -653,7 +653,8 @@ Template.newLeaveRequestModal.events({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
                             ID: parseInt(deleteID),
-                            Status: 'Deleted'
+                            Status: 'Deleted',
+                            Active:false,
                         }),
                     })
 
