@@ -467,6 +467,26 @@ Template.calender.onRendered(function() {
         openAppointModalDirectly(FlowRouter.current().queryParams.supplierid,templateObject,true);
     }
 
+    templateObject.saveLeaveRequestLocalDB = async function() {
+        const employeePayrolApis = new EmployeePayrollApi();
+        // now we have to make the post request to save the data in database
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
+            employeePayrolApis.collectionNames.TLeavRequest
+        );
+
+        employeePayrolEndpoint.url.searchParams.append("ListType","'Detail'");
+        const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
+
+        if (employeePayrolEndpointResponse.ok == true) {
+            const employeePayrolEndpointJsonResponse = await employeePayrolEndpointResponse.json();
+            if (employeePayrolEndpointJsonResponse.tleavrequest.length) {
+                await addVS1Data('TLeavRequest', JSON.stringify(employeePayrolEndpointJsonResponse))
+            }
+            return employeePayrolEndpointJsonResponse
+        }
+        return '';
+    };
+
     templateObject.getEmployeesList = async function() {
         let leaveArr = [];
         let data = []
