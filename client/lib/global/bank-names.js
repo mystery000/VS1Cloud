@@ -3,7 +3,8 @@ export class BankNameService extends BaseService {
     getBankNameList() {
         let options = {
             PropertyList: 'BankName,BankCode',
-            select: "[Active]=true and [regionId]=1"
+            select: "[Active]=true",
+            Region: localStorage.getItem('ERPLoggedCountry')
         };
         return this.getList(this.ERPObjects.TBankCode, options);        
     }    
