@@ -322,7 +322,7 @@ Template.productview.onRendered(function () {
         $("#UOMListModal").modal("toggle");
       });
 
-      $(document).on("click", "#departmentList tbody tr", function (e) {
+      $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
         let table = $(this);
         let deptName = table.find(".colDeptName").text();
         templateObject.bindept.set(deptName);

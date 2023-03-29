@@ -43,51 +43,53 @@
     <div class="col-12">
       <div class="card mb-3">
         <div class="row d-xl-flex flex-row justify-content-between" style="padding: 0px 20px; align-items: center;">
-          <div class="flex-grow-1 mb-1">
-            {{> vs1_button
-              color='primary'
-              classes='btnRefresh'
-              type='button'
-              id="btnRefresh"
-              iconName=' la la-lightbulb-o'
-              title='Refresh'
-            }}
-            {{> vs1_button
-              color='primary'
-              classes='btnNewFixedAsset'
-              type='button'
-              id="btnNewFixedAsset" 
-              iconName='plus'
-              title='New Fixed Asset'
-            }}
-            {{> vs1_button
-              color='primary'
-              classes='btnAssetCostReport'
-              type='button'
-              id="btnAssetCostReport" 
-              title='Asset Cost Report'
-            }}
-            {{> vs1_button
-              color='primary'
-              classes='btnAssetRegister'
-              type='button'
-              id="btnAssetRegister"
-              title='Asset Register'
-            }}
-            {{> vs1_button
-              color='primary'
-              classes='btnServiceLogs'
-              type='button'
-              id="btnServiceLogs" 
-              iconName=''
-              title='Service Logs'
-            }}
-          </div>
 
-          <div class="d-xl-flex justify-content-xl-end align-items-xl-start">
-            {{> export_import_print_display_button tablename="tblFixedAssetList"}}
-          </div>
+            {{#if equals isHideButton false}}
+              <div class="flex-grow-1 mb-1">
+                {{> vs1_button
+                  color='primary'
+                  classes='btnRefresh'
+                  type='button'
+                  id="btnRefresh"
+                  iconName=' la la-lightbulb-o'
+                  title='Refresh'
+                }}
+                {{> vs1_button
+                  color='primary'
+                  classes='btnNewFixedAsset'
+                  type='button'
+                  id="btnNewFixedAsset"
+                  iconName='plus'
+                  title='New Fixed Asset'
+                }}
+                {{> vs1_button
+                  color='primary'
+                  classes='btnAssetCostReport'
+                  type='button'
+                  id="btnAssetCostReport"
+                  title='Asset Cost Report'
+                }}
+                {{> vs1_button
+                  color='primary'
+                  classes='btnAssetRegister'
+                  type='button'
+                  id="btnAssetRegister"
+                  title='Asset Register'
+                }}
+                {{> vs1_button
+                  color='primary'
+                  classes='btnServiceLogs'
+                  type='button'
+                  id="btnServiceLogs"
+                  iconName=''
+                  title='Service Logs'
+                }}
+              </div>
 
+              <div class="d-xl-flex justify-content-xl-end align-items-xl-start">
+                {{> export_import_print_display_button Import="hiddenButton" tablename="tblFixedAssetList"}}
+              </div>
+            {{/if}}
           <div class="modal fade" role="dialog" tabindex="-1" id="importFixedAssetModal">
             <div class="modal-dialog" role="document">
               <div class="modal-content">

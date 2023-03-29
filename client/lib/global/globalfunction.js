@@ -6,9 +6,9 @@ import { Session } from 'meteor/session';
 import { HTTP } from "meteor/http";
 let sideBarService = new SideBarService();
 modalDraggable = function () {
-  $.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
+  //$.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
     $('.modal-dialog').draggable({
-        containment: "body",
+        appendTo: "body",
         "handle":".modal-header, .modal-footer"
     });
 $(document).ready(function(){
@@ -624,6 +624,24 @@ batchUpdateCall = function (url, flag = false) {
     if (localStorage.getItem("enteredURL") != null) {
         FlowRouter.go(localStorage.getItem("enteredURL"));
         localStorage.removeItem("enteredURL");
+    }
+};
+
+/**
+ * Damien
+ * Date Format Function
+ * params
+ *   dateStr: javascript date string
+ * return
+ *   converted date with correct date format based on company country ( the country got from localStorage )
+* */
+formatDateByCountry = function(dateStr){
+    let country = localStorage.getItem('vs1companyCountry');
+
+    if(country == 'United States'){
+        return moment(dateStr).format('MM/DD/YYYY');
+    }else{
+        return moment(dateStr).format('DD/MM/YYYY');
     }
 };
 

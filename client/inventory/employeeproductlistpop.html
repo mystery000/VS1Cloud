@@ -10,62 +10,33 @@
               <div style="margin: 4px; margin-bottom: 8px;">
                   <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
               </div>
-  -->
+  -->          
+            <div class="col-5 col-md-7 d-xl-flex justify-content-xl-end align-items-xl-start">
+                {{> export_import_print_display_button Import="hiddenButton" tablename="tblInventoryService"}}
+            </div>
               <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
               <div class="card-body p-1 rounded">
-                  <div class="table-responsive">
-                      <style>
-                          .th.chkBox {
-                              width: 2% !important;
-                          }
-                          .thQty {
-                              width: 8% !important;
-                          }
-                          .thSalesPrice {
-                              width: 8% !important;
-                          }
-                          .thSalesPrice {
-                              width: 8% !important;
-                          }
-                          .thTax {
-                              width: 8% !important;
-                          }
-                          .thCostPrice {
-                              width: 8% !important;
-                          }
-                          .thProductName {
-                              width: 20% !important;
-                          }
-
-                          .thColBarcode {
-                              width: 15% !important;
-                          }
-                      </style>
-                      <table id="tblInventoryService" class="table table-striped table-bordered tblInventoryService">
-                          <thead>
-                              <tr class="dnd-moved">
-                                  <th class="th chkBox" style="width:15px!important;">
-                                        <div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
-                                                for="formCheck-All"></label></div>
-                                  </th>
-                                  <th class="thProductName" style="width: 20% !important;">Product Name</th>
-                                  <th>Sales Description</th>
-                                  <th class="thColBarcode">Barcode</th>
-                                  <th class="thCostPrice" style="width: 8% !important;text-align: left!important;">Cost Price</th>
-                                  <th class="thSalesPrice" style="width: 8% !important;text-align: left!important;">Sale Price</th>
-                                  <th class="thQty" style="width: 8% !important;">Quantity</th>
-                                  <th class="thTax" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
-                                  <th class="thProuctPOPID hiddenColumn">Prouct ID</th>
-                                  <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
-                                  <!-- <th class="thColBarcode hiddenColumn">Prouct Barcode</th> -->
-                                  <th class="thSalesPriceInc hiddenColumn">Sale Price Inc</th>
-                              </tr>
-                          </thead>
-                          <tbody>
-
-                          </tbody>
-                      </table>
-                  </div>
+                <style>
+                    td.colAmountEx, td.colTax, td.colAmount{
+                        text-align: right !important;
+                    }
+                </style>
+                {{>datatablelist
+                    tablename="tblInventoryService"
+                    apiName= apiFunction
+                    indexeddbname = 'TProductWeb'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Inventory Service List'
+                    istransaction = true
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tproductvs1'
+                    exIndexDBName = 'tproductwebex'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+                    orderby = '[[ 0, "desc" ],[ 1, "asc" ]]'
+                }}
               </div>
           </div>
           <!-- <div class="modal-footer"><button class="btn btn-success btnSaveProducts"  id="btnSaveProducts" type="button">Save</button></div> -->
