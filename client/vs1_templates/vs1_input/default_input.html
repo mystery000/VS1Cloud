@@ -11,7 +11,6 @@
   <div class="form-group {{#unless isjobelement}} {{#if divClass}} {{divClass}} {{else}} d-none {{/if}} {{else}} {{#if jobdivClass}} {{jobdivClass}} {{else}} d-none {{/if}} {{/unless}}">
   {{#if label}}
     <label>{{label}}</label>
-    {{/if}}
     {{#if placeholder }}
     <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
       value="{{defaultValue}}" placeholder="{{placeholder}}" style="cursor: pointer;">
