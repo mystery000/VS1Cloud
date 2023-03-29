@@ -480,7 +480,9 @@ Template.calender.onRendered(function() {
         if (data.tleavrequest.length > 0) {
             data.tleavrequest.forEach((item) => {
                 const fields = item.fields;
-                leaveArr.push(fields);
+                if(fields.Status !== "Deleted" && fields.Active){
+                    leaveArr.push(fields);
+                }
             });
         }
         templateObject.leaveemployeerecords.set(leaveArr);
@@ -574,16 +576,12 @@ Template.calender.onRendered(function() {
                             fields: {
                                 ID: useData[i].fields.ID,
                                 CustFld6: selectedColor,
-                                Email: useData[i].fields.Email ||
-                                    useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
+                                Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
                                 Sex: useData[i].fields.Sex || "M",
-                                DateStarted: useData[i].fields.DateStarted ||
-                                    moment().format("YYYY-MM-DD"),
-                                DOB: useData[i].fields.DOB ||
-                                    moment("2018-07-01").format("YYYY-MM-DD"),
+                                DateStarted: useData[i].fields.DateStarted || moment().format("YYYY-MM-DD"),
+                                DOB: useData[i].fields.DOB || moment("2018-07-01").format("YYYY-MM-DD"),
                             },
                         };
-
                         contactService.saveEmployeeEx(objDetails).then(function(data) {
                         });
                     }
@@ -2276,7 +2274,7 @@ Template.calender.onRendered(function() {
                 }, 500);
             },
             eventContent: function(event) {
-
+                console.log('eventContent')
                 let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                 let eventLeave  = [];
                 let eventStatus = [];
