@@ -302,11 +302,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
                 { index: 2, label: 'BSB', class: 'colBsb', active: true, display: true, width: "100" },
                 { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
-                { index: 4, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "100" },
-                { index: 5, label: 'Lodgement References', class: 'colLodgement', active: true, display: true, width: "100" },
+                { index: 4, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "200" },
+                { index: 5, label: 'Lodgement References', class: 'colLodgement', active: true, display: true, width: "200" },
                 { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
                 { index: 7, label: 'From BSB', class: 'colFromBsb', active: true, display: true, width: "100" },
-                { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "100" },
+                { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "200" },
             ];
         } else if (currenttablename == "tblTimeSheet") {
             reset_data = [
@@ -2217,15 +2217,16 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         MakeNegative();
                     }, 100);
                 },
-                language: { search: "", searchPlaceholder: "Search List..." },
+                // language: { search: "", searchPlaceholder: "Search List..." },
+                searching: false,
                 "fnInitComplete": function(oSettings) {                    
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
-                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
-                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    }
-                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    // if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // } else {
+                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    // }
+                    // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     checkBoxClickByName();
                     $("th div.colChkBoxAll").css("margin-left", "18px")
                 },
