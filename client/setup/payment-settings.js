@@ -119,7 +119,7 @@ Template.wizard_payment.onCreated(() => {
     { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
     { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "150" },
     { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "100" },
-    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 })
