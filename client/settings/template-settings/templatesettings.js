@@ -10474,6 +10474,10 @@ Template.templatesettings.events({
     );
     templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
   },
+
+  'click .chkGlobalSettings, keyup .template-name-input, change input': function (event) {
+    $('.top-panel').css('display', 'inline-block');
+  },
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;
