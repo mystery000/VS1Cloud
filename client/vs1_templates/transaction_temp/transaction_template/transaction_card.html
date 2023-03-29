@@ -1,0 +1,55 @@
+<template name="transaction_card">
+    <div class="container-fluid trasmodule" style="padding-right: 0px;padding-left: 0px;">
+        <div class="fullScreenSpin" style="display:none;">
+          <div class="spinner"></div>
+        </div>
+        <form>
+        {{> transactionheader
+            includeClient=includeClient
+            includeAddress=includeAddress 
+            Category=Category 
+            TranascationType=TransactionType 
+            clientType=clientType 
+            payment=payment 
+            headerfields=headerfields 
+            headerbuttons=headerbuttons 
+            currency=true
+            balanceDue= transactionrecord.balanceDue
+            isPaid=transactionrecord.ispaid
+            data=transactionrecord
+            gridTableId=gridTableId
+            printTableId=printTableId
+        }}
+
+        {{> transactiongrid
+            tablename= gridTableId
+            recordLineItems= transactionrecord.LineItems
+            isForeignEnabled=isForeignEnabled
+            canShowBackOrder=true
+            canShowUOM=true
+            includeBOnShippedQty=includeBOnShippedQty
+            isBatchSerialNoTracking=isBatchSerialNoTracking
+            getDefaultCurrency=getDefaultCurrency
+            mainselector='lineProductName'
+            selectorfield='colProductName'
+        }}
+
+        {{>transactionfooter
+            recordLineItems=transactionrecord.LineItems
+            isPartialPaid=transactionrecord.isPartialPaid
+            SubTotal=transactionrecord.SubTotal
+            TotalTax=transactionrecord.TotalTax
+            NetTotal=transactionrecord.Total
+            TotalDiscount=transactionrecord.TotalDiscount
+            Total=transactionrecord.Total
+            TotalPaid=transactionrecord.totalPaid
+            BalanceDue=transactionrecord.balanceDue
+            footerFields = footerFields
+            AttachmentCount=AttachmentCount
+             TransactionType=TransactionType
+             selectedLineId=selectedLineId
+          }}
+
+        </form>
+    </div>
+</template>
