@@ -300,10 +300,12 @@ Template.fixedAssetListTable.onRendered(function () {
 });
 
 Template.fixedAssetListTable.events({
-  "click .btnRefresh": function () {
+  "click .btnRefresh": async function () {
     $(".fullScreenSpin").css("display", "inline-block");
+    let templateObject = new Template.instance();
+    await clearData("TFixedAssetsList");
     fixedAssetService.getTFixedAssetsList().then(function (data) {
-        addVS1Data("TFixedAssets", JSON.stringify(data)).then(function (datareturn) {
+        addVS1Data("TFixedAssetsList", JSON.stringify(data)).then(function (datareturn) {
             // Meteor._reload.reload();
             window.open("/fixedassetlist", "_self");
           }).catch(function (err) {
@@ -470,10 +472,11 @@ Template.fixedAssetListTable.events({
             results.data[0][14] == "Shape"
           ) {
             let dataLength = results.data.length * 500;
-            setTimeout(function () {
+            setTimeout(async function () {
               // $('#importModal').modal('toggle');
               //Meteor._reload.reload();
               $(".fullScreenSpin").css("display", "none");
+              await clearData("TFixedAssets");
               window.open("/fixedassetlist?success=true", "_self");
             }, parseInt(dataLength));
 
@@ -507,7 +510,7 @@ Template.fixedAssetListTable.events({
                 AssetType: results.data[i + 1][7],
                 PurchDate: dop,
                 DepreciationStartDate: templateObject.getDateStr(results.data[i + 1][10]),
-                PurchCost: parseFloat(results.data[i + 1][10].replace(/[^0-9.-]+/g, "")) || 0,
+                PurchCost: parseFloat(results.data[i + 1][11].replace(/[^0-9.-]+/g, "")) || 0,
                 SupplierName: "",
                 Manufacture: results.data[i + 1][4],
                 BrandName: results.data[i + 1][3],
@@ -530,7 +533,7 @@ Template.fixedAssetListTable.events({
                   fixedAssetService.saveTFixedAsset({  type: "TFixedAssets",  fields: objDetails,})
                     .then((data) => {
                       fixedAssetService.getTFixedAssetsList().then(function (data) {
-                          addVS1Data("TFixedAssets", JSON.stringify(data));
+                          addVS1Data("TFixedAssetsList", JSON.stringify(data));
                         }).catch(function (err) {
                           $(".fullScreenSpin").css("display", "none");
                         });
