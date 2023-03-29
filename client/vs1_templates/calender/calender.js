@@ -487,6 +487,71 @@ Template.calender.onRendered(function() {
         return '';
     };
 
+    function setEmployeeRecordsData(data){
+        let lineItems = [];
+        let lineItemObj = {};
+        let totalUser = 0;
+        let totAmount = 0;
+        let totAmountOverDue = 0;
+
+        for (let i = 0; i < data.temployee.length; i++) {
+            let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+
+            if (randomColor.length < 6) {
+                randomColor = randomColor + "6";
+            }
+            let selectedColor = "#" + randomColor;
+            if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
+                if (data.temployee[i].fields.CustFld8 == "false") {
+                    templateObject.includeAllProducts.set(false);
+                }
+            }
+
+            if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
+                if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
+                    var dataList = {
+                        id: data.temployee[i].fields.ID || "",
+                        employeeName: data.temployee[i].fields.EmployeeName || "",
+                        color: data.temployee[i].fields.CustFld6 || selectedColor,
+                        priority: data.temployee[i].fields.CustFld5 || "0",
+                        override: data.temployee[i].fields.CustFld14 || "false",
+                        custFld7: data.temployee[i].fields.CustFld7 || "",
+                        custFld8: data.temployee[i].fields.CustFld8 || "",
+                    };
+                    lineItems.push(dataList);
+                    allEmployees.push(dataList);
+                }
+            } else {
+                var dataList = {
+                    id: data.temployee[i].fields.ID || "",
+                    employeeName: data.temployee[i].fields.EmployeeName || "",
+                    color: data.temployee[i].fields.CustFld6 || selectedColor,
+                    priority: data.temployee[i].fields.CustFld5 || "0",
+                    override: data.temployee[i].fields.CustFld14 || "false",
+                    custFld7: data.temployee[i].fields.CustFld7 || "",
+                    custFld8: data.temployee[i].fields.CustFld8 || "",
+                };
+                lineItems.push(dataList);
+                allEmployees.push(dataList);
+            }
+        }
+        lineItems.sort(function(a, b) {
+            if (a.employeeName == "NA") {
+                return 1;
+            } else if (b.employeeName == "NA") {
+                return -1;
+            }
+            return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
+        });
+        templateObject.employeerecords.set(lineItems);
+
+        if (templateObject.employeerecords.get()) {
+            setTimeout(function() {
+                $(".counter").text(lineItems.length + " items");
+            }, 100);
+        }
+    }
+
     templateObject.getEmployeesList = async function() {
         let leaveArr = [];
         let data = []
@@ -509,212 +574,17 @@ Template.calender.onRendered(function() {
         getVS1Data("TEmployee").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 contactService.getAllEmployeeSideData().then(function(data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let totalUser = 0;
-                    let totAmount = 0;
-                    let totAmountOverDue = 0;
-
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                        if (randomColor.length < 6) {
-                            randomColor = randomColor + "6";
-                        }
-                        let selectedColor = "#" + randomColor;
-                        if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
-                            if (data.temployee[i].fields.CustFld8 == "false") {
-                                templateObject.includeAllProducts.set(false);
-                            }
-                        }
-
-                        if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
-                            if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
-                                var dataList = {
-                                    id: data.temployee[i].fields.ID || "",
-                                    employeeName: data.temployee[i].fields.EmployeeName || "",
-                                    color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                    priority: data.temployee[i].fields.CustFld5 || "0",
-                                    override: data.temployee[i].fields.CustFld14 || "false",
-                                    custFld7: data.temployee[i].fields.CustFld7 || "",
-                                    custFld8: data.temployee[i].fields.CustFld8 || "",
-                                };
-                                lineItems.push(dataList);
-                                allEmployees.push(dataList);
-                            }
-                        } else {
-                            var dataList = {
-                                id: data.temployee[i].fields.ID || "",
-                                employeeName: data.temployee[i].fields.EmployeeName || "",
-                                color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                priority: data.temployee[i].fields.CustFld5 || "0",
-                                override: data.temployee[i].fields.CustFld14 || "false",
-                                custFld7: data.temployee[i].fields.CustFld7 || "",
-                                custFld8: data.temployee[i].fields.CustFld8 || "",
-                            };
-                            lineItems.push(dataList);
-                            allEmployees.push(dataList);
-                        }
-                    }
-                    lineItems.sort(function(a, b) {
-                        if (a.employeeName == "NA") {
-                            return 1;
-                        } else if (b.employeeName == "NA") {
-                            return -1;
-                        }
-                        return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
-                    });
-                    templateObject.employeerecords.set(lineItems);
-
-                    if (templateObject.employeerecords.get()) {
-                        setTimeout(function() {
-                            $(".counter").text(lineItems.length + " items");
-                        }, 100);
-                    }
+                    setEmployeeRecordsData(data)
                 })
                 .catch(function(err) {});
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.temployee;
-                let lineItems = [];
-                let lineItemObj = {};
-                let totalUser = 0;
-
-                let totAmount = 0;
-                let totAmountOverDue = 0;
-                for (let i = 0; i < useData.length; i++) {
-                    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                    if (randomColor.length < 6) {
-                        randomColor = randomColor + "6";
-                    }
-                    let selectedColor = "#" + randomColor;
-                    if (useData[i].fields.CustFld6 == "") {
-                        objDetails = {
-                            type: "TEmployeeEx",
-                            fields: {
-                                ID: useData[i].fields.ID,
-                                CustFld6: selectedColor,
-                                Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
-                                Sex: useData[i].fields.Sex || "M",
-                                DateStarted: useData[i].fields.DateStarted || moment().format("YYYY-MM-DD"),
-                                DOB: useData[i].fields.DOB || moment("2018-07-01").format("YYYY-MM-DD"),
-                            },
-                        };
-                        contactService.saveEmployeeEx(objDetails).then(function(data) {
-                        });
-                    }
-
-                    if (localStorage.getItem("mySessionEmployee") == useData[i].fields.EmployeeName) {
-                        if (useData[i].fields.CustFld8 == "false") {
-                            templateObject.includeAllProducts.set(false);
-                        }
-                    }
-
-                    if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
-                        if ( useData[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
-                            var dataList = {
-                                id: useData[i].fields.ID || "",
-                                employeeName: useData[i].fields.EmployeeName || "",
-                                color: useData[i].fields.CustFld6 || selectedColor,
-                                priority: useData[i].fields.CustFld5 || "0",
-                                override: useData[i].fields.CustFld14 || "false",
-                                custFld7: useData[i].fields.CustFld7 || "",
-                                custFld8: useData[i].fields.CustFld8 || "",
-                            };
-                            lineItems.push(dataList);
-                        }
-                    } else {
-                        var dataList = {
-                            id: useData[i].fields.ID || "",
-                            employeeName: useData[i].fields.EmployeeName || "",
-                            color: useData[i].fields.CustFld6 || selectedColor,
-                            priority: useData[i].fields.CustFld5 || "0",
-                            override: useData[i].fields.CustFld14 || "false",
-                            custFld7: useData[i].fields.CustFld7 || "",
-                            custFld8: useData[i].fields.CustFld8 || "",
-                        };
-                        lineItems.push(dataList);
-                    }
-                }
-                lineItems.sort(function(a, b) {
-                    if (a.employeeName == "NA") {
-                        return 1;
-                    } else if (b.employeeName == "NA") {
-                        return -1;
-                    }
-                    return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
-                });
-                templateObject.employeerecords.set(lineItems);
-
-                if (templateObject.employeerecords.get()) {
-                    setTimeout(function() {
-                        $(".counter").text(lineItems.length + " items");
-                    }, 100);
-                }
+                setEmployeeRecordsData(data)
             }
         })
         .catch(function(err) {
             contactService.getAllEmployeeSideData().then(function(data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let totalUser = 0;
-
-                    let totAmount = 0;
-                    let totAmountOverDue = 0;
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                        if (randomColor.length < 6) {
-                            randomColor = randomColor + "6";
-                        }
-                        let selectedColor = "#" + randomColor;
-                        if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
-                            if (useData[i].fields.CustFld8 == "false") {
-                                templateObject.includeAllProducts.set(false);
-                            }
-                        }
-                        if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
-                            if ( data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
-                                var dataList = {
-                                    id: data.temployee[i].fields.ID || "",
-                                    employeeName: data.temployee[i].fields.EmployeeName || "",
-                                    color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                    priority: data.temployee[i].fields.CustFld5 || "0",
-                                    override: data.temployee[i].fields.CustFld14 || "false",
-                                    custFld7: data.temployee[i].fields.CustFld7 || "",
-                                    custFld8: data.temployee[i].fields.CustFld8 || "",
-                                };
-                                lineItems.push(dataList);
-                            }
-                        } else {
-                            var dataList = {
-                                id: data.temployee[i].fields.ID || "",
-                                employeeName: data.temployee[i].fields.EmployeeName || "",
-                                color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                priority: data.temployee[i].fields.CustFld5 || "0",
-                                override: data.temployee[i].fields.CustFld14 || "false",
-                                custFld7: data.temployee[i].fields.CustFld7 || "",
-                                custFld8: data.temployee[i].fields.CustFld8 || "",
-                            };
-                            lineItems.push(dataList);
-                        }
-                    }
-                    lineItems.sort(function(a, b) {
-                        if (a.employeeName == "NA") {
-                            return 1;
-                        } else if (b.employeeName == "NA") {
-                            return -1;
-                        }
-                        return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
-                    });
-                    templateObject.employeerecords.set(lineItems);
-
-                    if (templateObject.employeerecords.get()) {
-                        setTimeout(function() {
-                            $(".counter").text(lineItems.length + " items");
-                        }, 100);
-                    }
+                setEmployeeRecordsData(data)
                 })
                 .catch(function(err) {});
         });
@@ -1052,15 +922,11 @@ Template.calender.onRendered(function() {
             dayHeaderFormat: function(date) {
                 if (LoggedCountry == "United States") {
                     return (
-                        moment(date.date.marker).format("ddd") +
-                        " " +
-                        moment(date.date.marker).format("MM/DD")
+                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD")
                     );
                 } else {
                     return (
-                        moment(date.date.marker).format("ddd") +
-                        " " +
-                        moment(date.date.marker).format("DD/MM")
+                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM")
                     );
                 }
             },
@@ -1669,21 +1535,17 @@ Template.calender.onRendered(function() {
             navLinks: true, // can click day/week names to navigate views
             selectable: true,
             selectMirror: true,
-            // dayHeaderFormat: function(date) {
-            //     if (LoggedCountry == "United States") {
-            //         return (
-            //             moment(date.date.marker).format("ddd") +
-            //             " " +
-            //             moment(date.date.marker).format("MM/DD")
-            //         );
-            //     } else {
-            //         return (
-            //             moment(date.date.marker).format("ddd") +
-            //             " " +
-            //             moment(date.date.marker).format("DD/MM")
-            //         );
-            //     }
-            // },
+            dayHeaderFormat: function(date) {
+                if (LoggedCountry == "United States") {
+                    return (
+                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD")
+                    );
+                } else {
+                    return (
+                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM")
+                    );
+                }
+            },
             select: function(info) {
                 $("#frmAppointment")[0].reset();
                 $(".paused").hide();
