@@ -2814,16 +2814,12 @@ Template.internal_transaction_list_with_switchbox.events({
             });
             templateObject.transactiondatatablerecords.set(newColumns);
         }
-        console.log('checked:',($(event.target).is(':checked')));
         if ($(event.target).is(':checked')) {
             let currentTableData = templateObject.transactiondatatablerecords.get();
             let itemID = $(event.target).closest('tr').find('.colID').text();
             let index = currentTableData.findIndex(item => item[1] == itemID);
-            console.log('index:',index)
             let targetRow = currentTableData[index];
-            console.log('targetRow:',targetRow)
             let chk = Array.isArray(targetRow) ? targetRow[0] : "";
-            console.log('chk:',chk)
             if(chk != ""){
                 chk = chk.replace('<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox"', '<input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" checked');
                 targetRow.splice(0, 1, chk);
