@@ -192,7 +192,7 @@ Template.fixedassetcard.onRendered(function () {
     });
   }
 
-  function findFixedAssetByID(data, assetID) {
+  function findFixedAssetByID(data, assetID) { 
     const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == assetID);
     if (assetData.length > 0) {
       const assetInfo = assetData[0].fields;
@@ -599,6 +599,7 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans2.set([]);
       return;
     }
+    console.log('depreciation2', totalDepreciationVal);
     if (!enterAmountFlag && yearEnding !== 0) {
       startYear = yearEnding - life + 1;
     }
