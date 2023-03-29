@@ -61,35 +61,12 @@ Template.fixedAssetListTable.onCreated(function () {
   templateObject.getDateStr = function (dateVal) {
     if (!dateVal) return "";
     const dateObj = new Date(dateVal);
-    var hh =
-      dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
-    var min =
-      dateObj.getMinutes() < 10
-        ? "0" + dateObj.getMinutes()
-        : dateObj.getMinutes();
-    var ss =
-      dateObj.getSeconds() < 10
-        ? "0" + dateObj.getSeconds()
-        : dateObj.getSeconds();
-    var month =
-      dateObj.getMonth() < 9
-        ? "0" + (dateObj.getMonth() + 1)
-        : dateObj.getMonth() + 1;
-    var date =
-      dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate();
-    return (
-      dateObj.getFullYear() +
-      "-" +
-      month +
-      "-" +
-      date +
-      " " +
-      hh +
-      ":" +
-      min +
-      ":" +
-      ss
-    );
+    var hh = dateObj.getHours() < 10 ? "0" + dateObj.getHours() : dateObj.getHours();
+    var min = dateObj.getMinutes() < 10   ? "0" + dateObj.getMinutes()   : dateObj.getMinutes();
+    var ss = dateObj.getSeconds() < 10   ? "0" + dateObj.getSeconds()   : dateObj.getSeconds();
+    var month = dateObj.getMonth() < 9   ? "0" + (dateObj.getMonth() + 1)   : dateObj.getMonth() + 1;
+    var date = dateObj.getDate() < 10 ? "0" + dateObj.getDate() : dateObj.getDate();
+    return ( dateObj.getFullYear() + "-" + month + "-" + date + " " + hh + ":" + min + ":" + ss);
   };
 
   let headerStructure = [
@@ -325,20 +302,15 @@ Template.fixedAssetListTable.onRendered(function () {
 Template.fixedAssetListTable.events({
   "click .btnRefresh": function () {
     $(".fullScreenSpin").css("display", "inline-block");
-    fixedAssetService
-      .getTFixedAssetsList()
-      .then(function (data) {
-        addVS1Data("TFixedAssets", JSON.stringify(data))
-          .then(function (datareturn) {
+    fixedAssetService.getTFixedAssetsList().then(function (data) {
+        addVS1Data("TFixedAssets", JSON.stringify(data)).then(function (datareturn) {
             // Meteor._reload.reload();
             window.open("/fixedassetlist", "_self");
-          })
-          .catch(function (err) {
+          }).catch(function (err) {
             // Meteor._reload.reload();
             window.open("/fixedassetlist", "_self");
           });
-      })
-      .catch(function (err) {
+      }).catch(function (err) {
         // Meteor._reload.reload();
         window.open("/fixedassetlist", "_self");
       });
@@ -502,7 +474,7 @@ Template.fixedAssetListTable.events({
               // $('#importModal').modal('toggle');
               //Meteor._reload.reload();
               $(".fullScreenSpin").css("display", "none");
-              // window.open("/fixedassetlist?success=true", "_self");
+              window.open("/fixedassetlist?success=true", "_self");
             }, parseInt(dataLength));
 
             for (let i = 0; i < results.data.length - 1; i++) {
@@ -534,13 +506,8 @@ Template.fixedAssetListTable.events({
                 Description: results.data[i + 1][1],
                 AssetType: results.data[i + 1][7],
                 PurchDate: dop,
-                DepreciationStartDate: templateObject.getDateStr(
-                  results.data[i + 1][10]
-                ),
-                PurchCost:
-                  parseFloat(
-                    results.data[i + 1][10].replace(/[^0-9.-]+/g, "")
-                  ) || 0,
+                DepreciationStartDate: templateObject.getDateStr(results.data[i + 1][10]),
+                PurchCost: parseFloat(results.data[i + 1][10].replace(/[^0-9.-]+/g, "")) || 0,
                 SupplierName: "",
                 Manufacture: results.data[i + 1][4],
                 BrandName: results.data[i + 1][3],
@@ -560,23 +527,15 @@ Template.fixedAssetListTable.events({
                   //     swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => { if (result.value) { Meteor._reload.reload(); } else if (result.dismiss === 'cancel') {}});
                   // });
 
-                  fixedAssetService
-                    .saveTFixedAsset({
-                      type: "TFixedAssets",
-                      fields: objDetails,
-                    })
+                  fixedAssetService.saveTFixedAsset({  type: "TFixedAssets",  fields: objDetails,})
                     .then((data) => {
-                      // fixedAssetService
-                      //   .getTFixedAssetsList()
-                      //   .then(function (data) {
-                      //     addVS1Data("TFixedAssets", JSON.stringify(data));
-                      //   })
-                      //   .catch(function (err) {
-                      //     $(".fullScreenSpin").css("display", "none");
-                      //   });
+                      fixedAssetService.getTFixedAssetsList().then(function (data) {
+                          addVS1Data("TFixedAssets", JSON.stringify(data));
+                        }).catch(function (err) {
+                          $(".fullScreenSpin").css("display", "none");
+                        });
                       // FlowRouter.go('/fixedassetlist');
-                    })
-                    .catch((err) => {
+                    }).catch((err) => {
                       $(".fullScreenSpin").css("display", "none");
                       swal({
                         title: "Oooops...",
