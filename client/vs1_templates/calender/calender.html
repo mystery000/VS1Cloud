@@ -2026,7 +2026,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" role="dialog" id="event-modal">
+    <div class="modal fade" role="dialog" id="event-modal" style="z-index: 1049;">
         <form id="frmAppointment">
             <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable modalCreateOuter" role="document">
                 <div class="modal-content modalCreateAppointments" id="modalCreateAppointments">
@@ -2403,4 +2403,637 @@
             </div>
         </form>
     </div>
+     <!-- Modal print-button -modal -->
+     <div class="modal fade stopAppointment" role="dialog" tabindex="-1" id="stopAppointment">
+        <div class="modal-dialog modal-sm" role="document" style="max-width: 800px;">
+            <div class="modal-content">
+                <div class="modal-header" style="padding-bottom: 8px;">
+                    <h4>Stop Appointment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="swal2-icon swal2-warning" style="display: block;">!</div>
+                    <div class="swal2-contentwrapper">
+                        <!-- <h2 class="swal2-title" id="swal2-title">Stop Appointment</h2> -->
+                        <div id="swal2-content" class="swal2-content" style="display: block; text-align:center">Once an appointment has ended, it cannot be restarted.</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 col-md-8 colProductService2" id="colProductService2">
+                            <div class="form-group flex-grow-1" style="margin: 20px 0px;">
+                                <label>Product / Service for Appointment</label>
+                                <input type="search" autocomplete="off" id="product-list-1" name="product-list-1" class="form-control es-input product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                <ul class="es-list" style="top: 77px; left: 12px; width: 350px;"></ul>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> {{attachmentCount}} <i
+                                    class="fa fa-paperclip"></i></button>
+                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera"
+                                    aria-hidden="true"></i></button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <!-- <button class="btn btn-primary addExtraProduct" type="button" style="margin-bottom: 36px; margin-left: 16px;">Extra Product / Service Fees</button> -->
+                            <table id="tblExtraProducts" style="width:100%" class="table table-striped table-bordered tblInventory">
+                                <thead>
+                                    <tr class="dnd-moved">
+                                        <th class="thProductName" style="width: 25% !important;">Product Name</th>
+                                        <th class="colDescription">Sales Description</th>
+                                        <!-- <th class="thColBarcode hiddenColumn">Barcode</th> -->
+                                        <th class="thCostPrice hiddenColumn" style="width: 13% !important;text-align: left!important;">Cost Price</th>
+                                        <th class="thSalesPrice" style="width: 13% !important;text-align: left!important;">Sale Price</th>
+                                        <th class="thQty hiddenColumn" style="width: 8% !important;">Quantity</th>
+                                        <th class="thTax hiddenColumn" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
+
+                                        <th style="width: 25px !important;"></th>
+                                        <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each item in extraProductFees}}
+                                    <tr class="dnd-moved" id={{item.Id}}>
+                                        <td class="thProductName">
+                                            <input class="es-input highlightSelect lineProductName" type="search" value="{{item.ProductName}}" itemid="{{item.Id}}">
+                                        </td>
+                                        <td class="lineProductDesc colDescription">{{item.SalesDescription}}</td>
+                                        <!-- <th class="thColBarcode hiddenColumn">Barcode</th> -->
+                                        <td class="thCostPrice hiddenColumn" style="text-align: left!important;"></td>
+                                        <td class="thSalesPrice lineSalesPrice" style="text-align: left!important;">{{item.SellQty1Price}}</td>
+                                        <td class="thQty hiddenColumn">Quantity</td>
+                                        <td class="thTax hiddenColumn" style="text-align: left!important;">Tax Rate</td>
+                                        <td>
+                                            <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
+                                            class="fa fa-remove"></i></button></span>
+                                        </td>
+                                        <td class="thExtraSellPrice hiddenColumn">Prouct ID</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-primary" type="button" id="addRow" style="margin: 12px;">+ Add New Entry</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col colNotes" id="colNotes">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                <label>Enter Extra Work Done and Materials Used</label>
+                                <textarea class="border rounded form-control txtNotes" rows="4" id="txtNotes-1" name="txtNotes-1" style="width: 100%; border: 1px solid #d1d3e2 !important;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding: 6px;">
+                    <button class="btn btn-primary" type="button" id="btnEndAppointment" autocomplete="off">End Appointment</button>
+                    <button class="btn btn-light" data-dismiss="modal" type="button" id="btnCloseStopAppointment">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade appointmentLeaveConfirmModal" role="dialog" tabindex="-1" id="appointmentLeaveConfirmModal">
+        <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Choose request type</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body d-flex align-items-center justify-content-center flex-column">
+                        <button class="btn btn-primary btnCreateAppointmentRequest w-50" type="button" id="btnCreateAppointmentRequest" name="btnCreateAppointmentRequest">Appointment</button>
+                        <button class="btn btn-primary btnCreateLeaveRequest w-50 mt-3" type="button" id="btnCreateLeaveRequest" name="btnCreateLeaveRequest">LeaveRequest</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal1">
+        {{> productlistpopwithcheckboxes}}
+    </div>
+    <div class="modal fade" role="dialog" id="frmOptions">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Appointment Options</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
+                    <div class="row">
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer" id="deleteAll"><i class="far fa-trash-alt text-danger" style="width: 16px;"></i> Delete this Appointment and following Appointments</a>
+                        </div>
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer" id="copyappointment"><i class="far fa-copy text-warning" style="width: 16px;"></i> Copy this Appointment to Another Day</a>
+                        </div>
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer btnRepeatApp" id="btnRepeatApp"><i class="fas fa-redo-alt text-info" style="width: 16px;"></i> Repeat This Appointment</a>
+                        </div>
+                        <div class="col-12">
+                            <a role="presentation" class="dropdown-item pointer" id="createInvoice" data-toggle="modal"><i class="fas fa-file-invoice-dollar text-success" style="width: 16px;"></i> Create Invoice</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary btnAppOptionsModal" id="btnAppOptionsModal" type="button" data-dismiss="modal"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div role="dialog" tabindex="-1" class="modal fade repeatAppointments" id="myModal2">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 style="margin: 0px;">Repeat Appointments</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col"><label class="col-form-label" style="width: 100%;">Repeat Appointment Every</label></div>
+                        </div>
+                        <div class="row no-gutters">
+                            <div class="col" style="margin-right: 4px;">
+                                <select id="frequency" class="float-right form-control">
+                                    <option value=""></option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </div>
+                            <div class="col" style="margin-left: 4px;">
+                                <select id="period" class="float-right form-control">
+                                    <option value="days">Days</option>
+                                    <option value="weeks">Weeks</option>
+                                    <option value="months">Months</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col repeatOn"><label class="col-form-label" style="width: 100%;">Repeat On</label></div>
+                        </div>
+                        <style>
+                            .select-size input {
+                                display: none;
+                            }
+
+                            .day-active {
+                                background: #00a3d3 !important;
+                                color: #fff !important;
+                            }
+
+                            .normal-day {
+                                background: #fff;
+                                color: #858796;
+                            }
+
+                            .radioLabel {
+                                display: inline-block;
+                                width: 50px;
+                                height: 50px;
+                                text-align: center;
+                                border: 1px solid #ddd;
+                                line-height: 50px;
+                                cursor: pointer;
+                                border-radius: 25px;
+                            }
+
+                            .file-name span {
+                                width: 100%;
+                                float: left;
+                            }
+
+                            #file-display .fileIocns i.fa.fa-file {
+                                color: rgb(252, 181, 38);
+                                font-size: 24px;
+                            }
+
+                            #file-display {
+                                padding: 0;
+                                margin: 0;
+                            }
+
+                            .uploaded-element {
+                                display: inherit;
+                            }
+
+                            .uploaded-element {
+
+                                border: 1px solid rgb(237, 237, 237);
+                                border-top: none;
+
+                                float: left;
+                                width: 100%;
+                                display: flex;
+                                align-items: center;
+                                padding: 1rem;
+                            }
+
+                            #file-display .fileIocns {
+                                background-image: url(img/file_icons-samall.png);
+                                background-repeat: no-repeat;
+                                background-position: 0 -105px;
+                            }
+
+                            #file-display .fileIocns {
+                                float: left;
+                                margin-right: 10px;
+                            }
+
+                            .file-name {
+                                float: left;
+                                width: 87%;
+                            }
+
+                            .uploaded-element-header {
+                                border: 1px solid rgb(237, 237, 237);
+                                border-top: none;
+                                float: left;
+                                width: 100%;
+                                display: flex;
+                                align-items: center;
+                                padding: 10px;
+                                background: #e3e6f0;
+                            }
+
+                            .uploaded-header {
+                                width: 100%;
+                                text-align: center;
+                            }
+
+                            .uploaded-element .confirm-action a.confirm-delete-attachment {
+                                padding: 6px 13px 5px;
+                                background-color: rgb(216, 68, 68) !important;
+                                border-color: rgb(197, 112, 119) rgb(169, 29, 29) rgb(169, 29, 29) rgb(197, 112, 119);
+                                color: rgb(255, 255, 255) !important;
+                                text-shadow: 1px 1px 1px rgba(30, 30, 30, 0.15);
+                                line-height: initial;
+                                font-size: 12px;
+                                float: left;
+                            }
+
+                            button.save-to-library {
+                                padding: 6px 13px 5px;
+                                border-radius: 4px;
+                                background: linear-gradient(rgb(255, 255, 255), rgb(230, 234, 236));
+                                border: 1px solid rgb(230, 230, 230);
+                                border-color: rgb(230, 230, 230) rgb(179, 179, 179) rgb(179, 179, 179) rgb(230, 230, 230) !important;
+                                color: rgb(204, 0, 0) !important;
+                                font-weight: bold;
+                                margin-left: 10px !important;
+                                font-size: 12px;
+                            }
+
+                            .uploaded-element {
+                                display: inherit;
+                            }
+
+                            /* HERE */
+                            #files_view .modal-title {
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                width: 70%;
+                            }
+
+                            #files_view .modal-title {
+                                color: #333;
+                                font-size: 18px;
+                                font-weight: 700;
+                                text-rendering: optimizelegibility;
+                                padding: 9px 0;
+                                padding-left: 15px;
+                                padding-top: 11px;
+                            }
+
+                            #files_view .modal-dialog {
+                                /* width: 750px; */
+                                margin: 30px auto;
+                            }
+
+                            #files_view .modal-header .close {
+                                margin-top: 0;
+                                width: 46px;
+                                height: 46px;
+                                padding: 6px 0 0;
+                                border-left: 1px solid #ddd;
+                                opacity: 1;
+                                margin: 0;
+                            }
+
+                            #files_view .modal-header {
+                                padding: 0;
+                                display: block;
+                            }
+
+                            #files_view .modal-body {
+                                background-color: rgb(250, 251, 251);
+                            }
+
+                            #files_view .image-previewer img {
+                                border: 3px solid #fff;
+                                box-shadow: 2px 2px 8px rgba(0, 0, 0, .2);
+                                width: 100%;
+                            }
+
+                            .download_button {
+                                width: 100%;
+                                text-align: center;
+                                margin-top: 20px;
+                            }
+                        </style>
+                        <div class="row">
+                            <div class="col">
+                                <div class="select-size">
+                                    <input class="radioInput" type="radio" name="monday" id="monday" />
+                                    <input class="radioInput" type="radio" name="tuesday" id="tuesday" />
+                                    <input class="radioInput" type="radio" name="wednesday" id="wednesday" />
+                                    <input class="radioInput" type="radio" name="thursday" id="thursday" />
+                                    <input class="radioInput" type="radio" name="friday" id="friday" />
+                                    <input class="radioInput" type="radio" name="saturday" id="saturday" />
+                                    <input class="radioInput" type="radio" name="sunday" id="sunday" />
+
+                                    <label class="radioLabel normal-day" for="monday">M</label>
+                                    <label class="radioLabel normal-day" for="tuesday">T</label>
+                                    <label class="radioLabel normal-day" for="wednesday">W</label>
+                                    <label class="radioLabel normal-day" for="thursday">T</label>
+                                    <label class="radioLabel normal-day" for="friday">F</label>
+                                    <label class="radioLabel normal-day" for="saturday">S</label>
+                                    <label class="radioLabel normal-day" for="sunday">S</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col"><label class="col-form-label" style="width: 100%;">Ends</label></div>
+                        </div>
+                        <div class="row no-gutters" style="margin-bottom: 4px;">
+                            <div class="col d-xl-flex align-items-xl-center">
+                                On
+                            </div>
+                            <div class="col">
+                                <div class="form-group" style="margin: 8px 0px;">
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control formClassDate" id="finalDate" name="finalDate" value="{{invoicerecord.saledate}}">
+                                        <div class="input-group-addon" style="">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success" id="btnSaveRepeat" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="frmOnHoldModal">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Reason For Pausing Job</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 24px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="break" value="Break" /><label class="custom-control-label" for="break">Break</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="lunch" value="Lunch" /><label class="custom-control-label" for="lunch">Lunch</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="purchase" value="Purchase" /><label class="custom-control-label" for="purchase">Purchase</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px 0px 0px;">
+                                <label>Notes</label><textarea class="form-control" id="txtpause-notes">
+                                </textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btnPauseJob"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" id="frmNewDate">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Select New Date</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 10px; overflow-x: hidden;">
+                    <div class="row">
+                        <div class="col-8 colStartDate" id="colStartDate">
+                            <div class="form-group" style="margin: 8px 0px;">
+                                <label>Start Date</label>
+                                <div class="input-group date" style="cursor: pointer;">
+                                    <input type="text" class="form-control formClassDate statementDate" id="startDate" name="startDate" value="{{invoicerecord.saledate}}">
+                                    <div class="input-group-addon" style="">
+                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success btnSaveAppointment" style="margin: 14px;" id="btnCopyAppointment" name="btnCopyAppointment"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                        <button class="btn btn-secondary btnAppOptionsModal" id="btnAppOptionsModal" type="button" data-dismiss="modal"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
+        {{> payrollproductlistpop}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
+        {{> newproductpop}}
+    </div>
+    <style>
+        .customerListModalInner {
+            margin: 0px !important;
+            max-width: 100vw !important;
+        }
+        .customerListContent {
+            max-height: 100vh !important;
+            height: 100vh !important;
+        }
+        .mainCustomerModalBody {
+            overflow-x: hidden !important;
+            overflow-x: hidden;
+        }
+    </style>
+        <div class="modal fade" role="dialog" tabindex="-1" id="settingsModal">
+            <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+                <div class="modal-content">
+                    <form id="appointmentOptions" name="appointmentOptions">
+                        <div class="modal-header">
+                            <h4>Appointment Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body" style="padding: 24px;">
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="showSaturday" /><label class="custom-control-label" for="showSaturday">Show Saturday</label></div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 1em;">
+                                <div class="col-12">
+                                    <div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" id="showSunday" /><label class="custom-control-label" for="showSunday">Show Sunday</label></div>
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 1em;">
+                                <div class="col-12">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px 0px 0px;">
+                                        <label style="margin-bottom: 0px;">Show Hours</label>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>From</label>
+                                        <input type="time" id="hoursFrom" class="form-control" value="08:00">
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>To</label>
+                                        <input type="time" id="hoursTo" class="form-control" value="17:00">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Default Booking Time</label>
+                                        <select id="defaultTime" class="form-control">
+                                            <option>1 Hour</option>
+                                            <option>2 Hours</option>
+                                            <option>3 Hours</option>
+                                            <option>4 Hours</option>
+                                            <option>5 Hours</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Show Time In</label>
+                                        <select id="showTimeIn" class="form-control">
+                                            <option value="">Don't Round</option>
+                                            <option value="">30 Minutes</option>
+                                            <option value="" selected>1 Hour</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                        <label>Minimum Charge Time</label>
+                                        <select id="chargeTime" class="form-control">
+                                            <option selected>1 Hour</option>
+                                            <option>2 Hours</option>
+                                            <option>3 Hours</option>
+                                            <option>4 Hours</option>
+                                            <option>5 Hours</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 colProductService" id="colProductService">
+                                    <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Default Product /
+                                            Service</label>
+                                        <select id="productlist" name="productlist" class="form-control">
+                                            {{#if datatablerecords}}
+                                                {{#each item in datatablerecords}}
+                                                    <option value="{{item.id}}">{{item.productname}}</option>
+                                                {{/each}}
+                                            {{/if}}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+    
+                        </div>
+                        <div class="modal-footer">
+                          <button class="btn btn-success btnSaveSettings" style="margin:12px;" type="submit"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+                          <button class="btn btn-warning btnResetSettings" style="margin:12px;" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                          <button class="btn btn-secondary" data-dismiss="modal" style="margin:12px;" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <div class="modal fade employeeListModal" role="dialog" tabindex="-1" id="employeeListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Employee List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody" style="padding: 0px; overflow-x: hidden;">
+                    {{> employeelistpop}}
+                    <!-- {{> customerlistpop}} -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade customerListModal" role="dialog" tabindex="-1" id="customerListModal">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
+            <div class="modal-content customerListContent">
+                <div class="modal-header">
+                    <h4>Customer List</h4><button type="button" class="close checkclose" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 0px; overflow-x: hidden;">
+                    <input type="hidden" style="width: 100%; display:none;" id="customerSelectLineID" name="customerSelectLineID" readonly>
+                    {{> customerlistpop}}
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light checkclose" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="resource-view">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Resource Allocations</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="currentDate" name="currentDate">
+                    <div id='resourceview'></div>
+
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                    <button class="btn btn-primary" type="button" style="background-color: #00A3D3; border-color: #00A3D3;">Select</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {{> newLeaveRequestModal}}
 </template>
