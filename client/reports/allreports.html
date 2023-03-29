@@ -57,11 +57,32 @@
                 min-width: 100%;
                 height: 455px;
             }
+
+            .all-reports ul {
+                padding: 0;
+               
+            }
+
+            .all-reports ul li:not(:first-child) {
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
+            .all-reports ul li:first-child  {
+                padding-bottom: 4px
+            }
+            .all-reports ul li:last-child  {
+                padding-bottom: 0
+            }
+
+            .all-reports ul li:not(:last-child) {
+                border-bottom: 1px solid rgba(0,0,0, .1);
+            }
         </style>
         <div class="row justify-content-center">
             <div class="col-12 col-md-10">
                 <div class="row justify-content-center">
-                    <div class="col-12">
+                    <div class="col-12 all-reports">
                         <!-- <div class="row justify-content-center"> -->
                         <div class="row">
                             <div class="col-12 col-md-3" id="favorites">
@@ -72,7 +93,18 @@
                                     <div class="card-body" style="overflow-x: auto;">
                                         {{#if noFavorite}}
                                         <div class="text-center">You have no favorite reports.</div>
+                                        {{else}}
+                                            {{#each report in favoritereports}}
+                                                    <li class="report-item d-flex align-items-center justify-content-between">
+                                                        <a  style="text-decoration: none;">{{report.label}}</a>
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input removeFavChkbox" type="checkbox" id="formCheck-fav-{{tolowercase report.id}}" data-id="{{report.id}}" >
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-fav-{{tolowercase report.id}}"></label>
+                                                        </div>
+                                                    </li>
+                                                {{/each}}
                                         {{/if}}
+
                                         
                                     </div>
                                 </div>
@@ -89,10 +121,14 @@
                                             <ul>
                                                 {{#each report in group.reports}}
                                                     <li class="report-item d-flex align-items-center justify-content-between">
-                                                        <a  style="text-decoration: none;">{{report.label}}</a>
+                                                        <a  style="text-decoration: none;" href="{{report.route }}">{{report.label}}</a>
                                                         <div class="custom-control custom-checkbox">
-                                                            <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-{{tolowercase report.label}}" data-label="{{report.label}}" checked="{{isFavorite report.label}}">
-                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-{{tolowercase report.label}}"></label>
+                                                            {{#if isFavorite report.id}}
+                                                            <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-{{report.id}}" data-id="{{report.id}}" checked>
+                                                            {{else}}
+                                                            <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-{{report.id}}" data-id="{{report.id}}" >
+                                                            {{/if}}
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-{{report.id}}"></label>
                                                         </div>
                                                     </li>
                                                 {{/each}}

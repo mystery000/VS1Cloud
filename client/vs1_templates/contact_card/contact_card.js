@@ -557,7 +557,6 @@ Template.contact_card.onCreated(function () {
         getVS1Data("TJobVS1")
             .then(res => {
                 const jobData = JSON.parse(res[0].data)
-                console.log(jobData)
                 let latestJobId;
                 if (jobData.tjobvs1.length) {
                     latestJobId = jobData.tjobvs1[jobData.tjobvs1.length - 1].Id;
