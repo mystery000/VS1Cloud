@@ -155,19 +155,29 @@
 
 
                 </div>
-                <div class="col-sm-6 text-right float-left flex-grow-1 pl-0">
-                  <button id="exportbtn" class="btn btn-primary btnNav vs1ButtonMargin" type="button"><i
-                    class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                  <button class="btn btn-primary btnNav vs1ButtonMargin" role="button" data-toggle="modal" href="#importModal">
-                    <i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                  <button class="btn btn-primary printConfirm btnNav vs1ButtonMargin" type="button"><i
-                      class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                <div class="col-sm-6 text-right float-left flex-grow-1 d-xl-flex justify-content-xl-end align-items-xl-start pl-0">
+                  {{> export_import_print_display_button DisplaySettings="hiddenButton" tablename="tblSetupSupplierlist"}}
                   <button class="btn btn-success float-right confirmBtn" type="button"
-                    style="margin: 12px; margin-right: 0" data-step-id="9">Confirm</button>
+                    style="margin: 14px 0 0 15px; margin-right: 0" data-step-id="9">Confirm</button>
                 </div>
               </div>
               <div class="table-responsive">
-                {{>non_transactional_list tablename='tblSetupSupplierlist'}}
+                <!-- {{>non_transactional_list tablename='tblSetupSupplierlist'}} -->
+                {{>datatablelist
+                  tablename="tblSetupSupplierlist"
+                  apiName= apiFunction
+                  indexeddbname = 'TSupplierVS1List'
+                  tableheaderrecords = tableheaderrecords
+                  exportfilename = 'Setup Supplier List'
+                  istransaction = false
+                  apiParams= apiParams
+                  datahandler = datahandler
+                  service=service
+                  lowercaseDataName='tsuppliervs1list'
+                  exIndexDBName = 'tsuppliervs1list'
+                  exdatahandler = exDataHandler
+                  searchAPI = searchAPI
+                }}
               </div>
             </div>
             <div class="row no-gutters">
@@ -186,7 +196,7 @@
   <div class="modal fade" role="dialog" tabindex="-1" id="addSupplierModal">
     {{> addsupplierpop}}
   </div>
-  <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -267,5 +277,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+  {{> import_template}}
+    <script>
+        modalDraggable();
+    </script>
 </template>
