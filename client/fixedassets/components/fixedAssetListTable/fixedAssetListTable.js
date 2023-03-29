@@ -55,7 +55,7 @@ Template.fixedAssetListTable.onCreated(function () {
   let headerStructure = [
     {
       index: 0,
-      label: "#ID",
+      label: "ID",
       class: "colFixedID",
       active: false,
       display: true,
@@ -175,7 +175,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 15,
-      label: "#Notes",
+      label: "Notes",
       class: "colNotes",
       active: false,
       display: true,
@@ -231,7 +231,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 22,
-      label: "#Warranty Type",
+      label: "Warranty Type",
       class: "colWarrantyType",
       active: false,
       display: true,
@@ -239,7 +239,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 23,
-      label: "#Warranty Expires Date",
+      label: "Warranty Expires Date",
       class: "colWarrantyExpiresDate",
       active: false,
       display: true,
@@ -247,7 +247,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 24,
-      label: "#Insured By",
+      label: "Insured By",
       class: "colInsuredBy",
       active: false,
       display: true,
@@ -255,7 +255,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 25,
-      label: "#Insurance Policy",
+      label: "Insurance Policy",
       class: "colInsurancePolicy",
       active: false,
       display: true,
@@ -263,7 +263,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 26,
-      label: "#Insured Until",
+      label: "Insured Until",
       class: "colInsuredUntil",
       active: false,
       display: true,
