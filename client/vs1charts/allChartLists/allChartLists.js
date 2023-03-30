@@ -118,12 +118,12 @@ var _chartGroup = "";
 var _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
     () => {
-        $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
+        // $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
 
-        $("#btnDone").addClass("showelement");
-        $("#btnDone").removeClass("hideelement");
-        $("#btnCancel").addClass("showelement");
-        $("#btnCancel").removeClass("hideelement");
+        // $("#btnDone").addClass("showelement");
+        // $("#btnDone").removeClass("hideelement");
+        // $("#btnCancel").addClass("showelement");
+        // $("#btnCancel").removeClass("hideelement");
         $("#editcharts").addClass("hideelement");
         $("#editcharts").removeClass("showelement");
         $(".btnchartdropdown").addClass("hideelement");
