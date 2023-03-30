@@ -160,7 +160,22 @@
                 </div>
               </div>
               <div class="table-responsive">
-                {{>non_transactional_list tablename="tblInventoryOverview"}}
+
+                  {{>datatablelist
+                          tablename="tblInventoryOverview"
+                          apiName= apiFunction
+                          indexeddbname = 'TProductQtyList'
+                          tableheaderrecords = tableheaderrecords
+                          exportfilename = 'Inventory Overview'
+                          istransaction = false
+                          apiParams= apiParams
+                          datahandler = datahandler
+                          service=service
+                          lowercaseDataName='tproductqtylist'
+                          exIndexDBName = 'tproductqtylist'
+                          exdatahandler = exDataHandler
+                          searchAPI = searchAPI
+                  }}
               </div>
             </div>
             <div class="row no-gutters">

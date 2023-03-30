@@ -6,13 +6,14 @@ import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 import { UtilityService } from "../../utility-service";
 import { ContactService } from "../../contacts/contact-service";
+import {SideBarService} from "../../js/sidebar-service";
 
 const utilityService = new UtilityService();
 const contactService = new ContactService();
 
 
 Template.wizard_employment.onCreated(() => {
-  const templateObject = Template.instance();
+  let templateObject = Template.instance();
   templateObject.selectedFile = new ReactiveVar();
   templateObject.currentEmployees = new ReactiveVar([]);
   templateObject.editableEmployee = new ReactiveVar();
@@ -36,6 +37,54 @@ Template.wizard_employment.onCreated(() => {
     });
   };
 
+  templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    };
+    var dataList = [
+      data.EmployeeID || "",
+      data.EmployeeName || "",
+      data.FirstName || "",
+      data.LastName || "",
+      data.Phone || "",
+      data.Mobile || '',
+      data.Email || '',
+      data.DefaultClassName || '',
+      data.CustFld1 || '',
+      data.CustFld2 || '',
+      linestatus,
+      data.Street || "",
+      data.Street2 || "",
+      data.State || "",
+      data.Postcode || "",
+      data.Country || "",
+    ];
+    return dataList;
+  }
+  let headerStructure = [
+    { index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10" },
+    { index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200" },
+    { index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100" },
+    { index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100" },
+    { index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+    { index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "95" },
+    { index: 6, label: 'Email', class: 'colEmail', active: true, display: true, width: "200" },
+    { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "80" },
+    { index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120" },
+    { index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120" },
+    { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    { index: 11, label: 'Address', class: 'colAddress', active: true, display: true, width: "" },
+    { index: 12, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
+    { index: 13, label: 'State', class: 'colState', active: false, display: true, width: "120" },
+    { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
+    { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
+
 })
 
 Template.wizard_employment.onRendered(() => [
@@ -57,6 +106,44 @@ Template.wizard_employment.helpers({
   },
   editableEmployee: () => {
     return Template.instance().editableEmployee.get();
+  },
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllTEmployeeList;
+  },
+
+  searchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllTEmployeeList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 })
 Template.wizard_employment.events({

@@ -5,6 +5,8 @@ import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 import { UtilityService } from "../../utility-service";
 import { ContactService } from "../../contacts/contact-service";
+import moment from "moment";
+import {SideBarService} from "../../js/sidebar-service";
 
 const utilityService = new UtilityService();
 const contactService = new ContactService();
@@ -13,6 +15,62 @@ const contactService = new ContactService();
 Template.wizard_suppliers.onCreated(() => {
   Template.wizard_suppliers.inheritsEventsFrom('non_transactional_list');
   Template.wizard_suppliers.inheritsHelpersFrom('non_transactional_list');
+
+  let templateObject = Template.instance();
+  templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active"
+    };
+
+    let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+    let creditBalance = utilityService.modifynegativeCurrencyFormat(data.ExcessAmount) || 0.00;
+    let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+    let creditLimit = utilityService.modifynegativeCurrencyFormat(data.SupplierCreditLimit) || 0.00;
+    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
+    var dataList = [
+      data.ClientID || '',
+      data.Company || '',
+      data.Phone || '',
+      arBalance || 0.00,
+      creditBalance || 0.00,
+      balance || 0.00,
+      creditLimit || 0.00,
+      salesOrderBalance || 0.00,
+      data.Suburb || '',
+      data.Country || '',
+      data.Notes || '',
+      //
+      // data.Email || '',
+      // data.AccountNo || '',
+      // data.ClientNo || '',
+      // data.JobTitle || '',
+      // data.CUSTFLD1 || '',
+      // data.CUSTFLD2 || '',
+      // data.POState || '',
+      // data.Postcode || '',
+      // linestatus,
+    ];
+    return dataList;
+  }
+  let headerStructure = [
+    { index: 0, label: 'ID', class: 'colSupplierID colID', active: false, display: true, width: "20" },
+    { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+    { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+    { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+    { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+    { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+    { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
+    { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+    { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
+    { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
+    { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 })
 
 Template.wizard_suppliers.onRendered(() => {
@@ -20,7 +78,44 @@ Template.wizard_suppliers.onRendered(() => {
 })
 
 Template.wizard_suppliers.helpers({
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllSuppliersDataVS1List;
+  },
 
+  searchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllSuppliersDataVS1List;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
 })
 
 Template.wizard_suppliers.events({

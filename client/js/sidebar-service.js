@@ -3112,8 +3112,8 @@ export class SideBarService extends BaseService {
   getOneTermsByTermName(keyword) {
     let options={
       ListType:'Detail',
-      select:"[Terms] f7like '"+keyword+"'",
-      Search: "Active = true",
+      //select:"[Terms] f7like '"+keyword+"'",
+      Search: "Active = true and Terms like '%" + keyword + "%'",
     }
     return this.getList(this.ERPObjects.TTermsVS1List, options);
   }

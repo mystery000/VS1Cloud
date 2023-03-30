@@ -266,7 +266,22 @@
                   </div>
                 </div>
 
-                {{> non_transactional_list tablename='tblTermsList'}}
+<!--                {{> non_transactional_list tablename='tblTermsList'}}-->
+                  {{>datatablelist
+                          tablename="tblTermsList"
+                          apiName= apiFunction
+                          indexeddbname = 'TTermsVS1List'
+                          tableheaderrecords = tableheaderrecords
+                          exportfilename = 'Terms List'
+                          istransaction = false
+                          apiParams= apiParams
+                          datahandler = datahandler
+                          service=service
+                          lowercaseDataName='ttermsvs1list'
+                          exIndexDBName = 'ttermsvs1list'
+                          exdatahandler = exDataHandler
+                          searchAPI = searchAPI
+                  }}
               </div>
             </div>
             <div class="row no-gutters">
