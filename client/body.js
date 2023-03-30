@@ -342,15 +342,6 @@ import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
-import './vs1_templates/contact_card/contact_card.js';
-import './vs1_templates/vs1_tab/vs1_tab_address.html';
-import './vs1_templates/vs1_tab/vs1_tab_crm.html';
-import './vs1_templates/vs1_tab/vs1_tab_note.html';
-import './vs1_templates/vs1_tab/vs1_tab_invoicing.html';
-import './vs1_templates/vs1_tab/vs1_tab_attachments.html';
-import './vs1_templates/vs1_tab/vs1_tab_custom_fields.html';
-import './vs1_templates/vs1_tab/vs1_tab_tax.html';
-import './vs1_templates/template_buttons/export_refresh_import_print_display_button.js';
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
