@@ -318,7 +318,6 @@ Template.paymentoverview.onRendered(function() {
     }
 
     $('#tblPaymentOverview tbody').on('click', 'tr', function() {
-        console.log('clicked ~~~~~~~~~~~~~~~~~~~~~~~');
         var listData = $(this).closest('tr').find(".colID").text() || '';
         var transactiontype = $(this).closest("tr").find(".colType").text() || '';
         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
