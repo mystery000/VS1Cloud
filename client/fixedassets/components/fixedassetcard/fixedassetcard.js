@@ -156,28 +156,6 @@ Template.fixedassetcard.onRendered(function () {
       }
     });
 
-  $('#edtDepreciationType2').editableSelect()
-  .on('select.editable-select', function (e, li) {
-    if (li) {
-      templateObject.edtDepreciationType2.set(parseInt(li.val() || 0));
-      const val = parseInt(li.val() || 0);
-      switch(val) {
-        case 0:
-          $('select#edtSalvageType2').val(1);
-          $('input#edtSalvage2').val(0);
-          break;
-        case 1:
-          $('select#edtSalvageType2').val(1);
-          break;
-        case 2:
-          $('input#edtSalvage2').val(100);
-          $('select#edtSalvageType2').val(2);
-          break;
-      }
-      templateObject.deprecitationPlans2.set([]);
-    }
-  });
-  
   $("#date-input, #edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate, #edtInsuranceEndDate, #edtDateLastTest, #edtDateNextTest, #edtWarrantyExpiresDate, #edtDisposalDate2, #edtDisposalDate, #edtLastTestDate, #edtNextTestDate").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
@@ -216,10 +194,10 @@ Template.fixedassetcard.onRendered(function () {
     });
   }
 
-  function findFixedAssetByID(data, assetID) {
-    const assetData = data.tfixedassetslist.filter((asset) => asset.AssetID === assetID);
+  function findFixedAssetByID(data, assetID) { 
+    const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == assetID);
     if (assetData.length > 0) {
-      const assetInfo = assetData[0];
+      const assetInfo = assetData[0].fields;
       initializeCard(assetInfo);
     }
   }
@@ -407,7 +385,7 @@ Template.fixedassetcard.events({
   "click button.btnSave": function() {
     const templateObject = Template.instance();
     const depPlans = templateObject.deprecitationPlans.get(),
-        depPlans2 = templateObject.deprecitationPlans.get(), 
+        depPlans2 = templateObject.deprecitationPlans.get(),
         planList = new Array(), planList2 = new Array();
     for (let i = 0; i < depPlans.length; i++) {
       const plan = {
@@ -530,10 +508,10 @@ Template.fixedassetcard.events({
 
     const accumulateDepVal = parseInt($('input#edtAccumulatedDepreciation').val()) || 0;
     const yearEnding = parseInt($('input#edtForYearEnding').val()) || 0;
-    
+
 
     const salvage = parseInt($('input#edtSalvage').val()) || 0;
-    
+
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
     let startYear = startDate.getFullYear();
 
@@ -600,10 +578,10 @@ Template.fixedassetcard.events({
 
     const accumulateDepVal = parseInt($('input#edtAccumulatedDepreciation2').val()) || 0;
     const yearEnding = parseInt($('input#edtForYearEnding2').val()) || 0;
-    
+
 
     const salvage = parseInt($('input#edtSalvage2').val()) || 0;
-    
+
     const startDate = new Date($("#edtDepreciationStartDate").datepicker("getDate"));
     let startYear = startDate.getFullYear();
 
@@ -623,7 +601,7 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans2.set([]);
       return;
     }
-    // console.log('depreciation2', totalDepreciationVal);
+    console.log('depreciation2', totalDepreciationVal);
     if (!enterAmountFlag && yearEnding !== 0) {
       startYear = yearEnding - life + 1;
     }
