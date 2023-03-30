@@ -74,7 +74,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 0,
       label: "ID",
       class: "AssetRegisterId",
-      active: true,
+      active: false,
       display: true,
       width: "60",
     },
@@ -220,7 +220,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "AssetStatus",
       active: true,
       display: true,
-      width: "100",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);

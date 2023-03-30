@@ -47,7 +47,7 @@ Template.serviceloglisttable.onCreated(function () {
       index: 0,
       label: "ID",
       class: "LogId",
-      active: true,
+      active: false,
       display: true,
       width: "150",
     },
@@ -105,7 +105,7 @@ Template.serviceloglisttable.onCreated(function () {
       class: "ServiceStatus",
       active: true,
       display: true,
-      width: "150",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
