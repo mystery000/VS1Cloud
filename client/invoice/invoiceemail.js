@@ -37,8 +37,8 @@ Template.invoiceemail.onCreated(function () {
       totalAmount || 0.00,
       totalPaid || 0.00,
       totalOutstanding || 0.00,
-      data.fields.SalesStatus || '',
       data.fields.Comments || '',
+      data.fields.SalesStatus || '',
     ];
     return dataList;
   }
@@ -54,8 +54,8 @@ Template.invoiceemail.onCreated(function () {
     { index: 7, label: "Amount (Inc)", class: "colAmount", active: true, display: true, width: "100" },
     { index: 8, label: "Paid", class: "colPaid", active: true, display: true, width: "100" },
     { index: 9, label: "Outstanding", class: "colOutstanding", active: true, display: true, width: "100" },
-    { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
-    { index: 11, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
+    { index: 10, label: "Comments", class: "colComments", active: true, display: true, width: "280" },
+    { index: 11, label: "Status", class: "colStatus", active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
