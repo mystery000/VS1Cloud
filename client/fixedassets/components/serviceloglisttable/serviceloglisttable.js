@@ -19,9 +19,9 @@ Template.serviceloglisttable.onCreated(function () {
       data.AssetCode || "",
       data.AssetName || "",
       data.ServiceType || "",
-      data.ServiceDate || "",
+      moment(data.ServiceDate).format("DD/MM/YYYY") || "",
       data.ServiceProvider || "",
-      data.NextServiceDate || "",
+      moment(data.NextServiceDate).format("DD/MM/YYYY") || "",
       data.Done ? "Completed" : "Pending",
     ];
     return dataList;

@@ -143,7 +143,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 11,
-      label: "#Serial",
+      label: "Serial",
       class: "colSerial",
       active: false,
       display: true,
