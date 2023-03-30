@@ -143,6 +143,10 @@ Template.mobileapp.events({
 
         let inputStatus = Template.instance().inputStatus.get();
 
+        let isMobile = window.innerWidth < 468;
+
+        console.log(isMobile);
+
 
         if(inputStatus == "enterJobNumber"){
 
@@ -161,24 +165,46 @@ Template.mobileapp.events({
                     let workOrderList = manufacturingService.getWorkOrderList();
                     $(".mobile-left-workorder-list").css('display', 'block');
                     let workOrderData = workOrderList;
-                                       
-                    let table = $("#tblWorkOrderList").DataTable({
-                        data: workOrderData,
-                        paging: false,
-                        searching: false,
-                        destroy:true,
-                        dom: 't',
-                        scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                        scrollCollapse: true,
-                        autoWidth: true,
-                        sScrollXInner: "100%",
-                        columns: [
-                            { title: 'Work Order.', mData: 'fields.ID' },
-                            { title: 'Customer', mData: 'fields.Customer' },
-                            { title: 'Sale Date', mData: 'fields.SaleDate' },
-                        ]
-                    })
 
+                    if(!isMobile) {
+                        let table = $("#tblWorkOrderList").DataTable({
+                            data: workOrderData,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Work Order.', mData: 'fields.ID' },
+                                { title: 'Customer', mData: 'fields.Customer' },
+                                { title: 'Sale Date', mData: 'fields.SaleDate' },
+                            ]
+                        })
+
+                    }else {
+                        let table = $("#tblWorkOrderList").DataTable({
+                            data: workOrderData,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: '300px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Work Order.', mData: 'fields.ID' },
+                                { title: 'Customer', mData: 'fields.Customer' },
+                                { title: 'Sale Date', mData: 'fields.SaleDate' },
+                            ]
+                        })
+
+                    }
+                                     
+                    
                     $("#startBreakContainer").css('display', 'none');
                     $("#btnOpentList").prop('disabled', true);
 
@@ -192,24 +218,46 @@ Template.mobileapp.events({
 
                     $(".mobile-left-workorder-list").css('display', 'block');
                     let workOrderData = JSON.parse(dataObject[0].data);
+                    
+                    if(!isMobile) {
 
+                        let table = $("#tblWorkOrderList").DataTable({
+                            data: workOrderData.tvs1workorder,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Work Order.', mData: 'fields.ID' },
+                                { title: 'Customer', mData: 'fields.Customer' },
+                                { title: 'Sale Date', mData: 'fields.SaleDate' },
+                            ]
+                        })
 
-                    let table = $("#tblWorkOrderList").DataTable({
-                        data: workOrderData.tvs1workorder,
-                        paging: false,
-                        searching: false,
-                        destroy:true,
-                        dom: 't',
-                        scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                        scrollCollapse: true,
-                        autoWidth: true,
-                        sScrollXInner: "100%",
-                        columns: [
-                            { title: 'Work Order.', mData: 'fields.ID' },
-                            { title: 'Customer', mData: 'fields.Customer' },
-                            { title: 'Sale Date', mData: 'fields.SaleDate' },
-                        ]
-                    })
+                    }else {
+
+                        let table = $("#tblWorkOrderList").DataTable({
+                            data: workOrderData.tvs1workorder,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: '300px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Work Order.', mData: 'fields.ID' },
+                                { title: 'Customer', mData: 'fields.Customer' },
+                                { title: 'Sale Date', mData: 'fields.SaleDate' },
+                            ]
+                        })
+
+                    }                    
 
                     $("#startBreakContainer").css('display', 'none');
                     $("#btnOpentList").prop('disabled', true);
@@ -222,23 +270,44 @@ Template.mobileapp.events({
                     $(".mobile-left-workorder-list").css('display', 'block');
                     let workOrderData = workOrderList;
 
-                                       
-                    let table = $("#tblWorkOrderList").DataTable({
-                        data: workOrderData,
-                        paging: false,
-                        searching: false,
-                        destroy:true,
-                        dom: 't',
-                        scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                        scrollCollapse: true,
-                        autoWidth: true,
-                        sScrollXInner: "100%",
-                        columns: [
-                            { title: 'Work Order.', mData: 'fields.ID' },
-                            { title: 'Customer', mData: 'fields.Customer' },
-                            { title: 'Sale Date', mData: 'fields.SaleDate' },
-                        ]
-                    })
+                    if(!isMobile) {
+                        let table = $("#tblWorkOrderList").DataTable({
+                            data: workOrderData,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Work Order.', mData: 'fields.ID' },
+                                { title: 'Customer', mData: 'fields.Customer' },
+                                { title: 'Sale Date', mData: 'fields.SaleDate' },
+                            ]
+                        })
+
+                    } else {
+                        let table = $("#tblWorkOrderList").DataTable({
+                            data: workOrderData,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: '300px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Work Order.', mData: 'fields.ID' },
+                                { title: 'Customer', mData: 'fields.Customer' },
+                                { title: 'Sale Date', mData: 'fields.SaleDate' },
+                            ]
+                        })
+
+                    }                  
+                    
 
                     $("#startBreakContainer").css('display', 'none');
                     $("#btnOpentList").prop('disabled', true);
@@ -248,14 +317,11 @@ Template.mobileapp.events({
                     }).catch(function(err){
                     });
                 
-            }) 
-
-
-
-                
+            })                 
 
 
         }
+
         if (inputStatus == "enterProcess") {
 
             $(".mobile-left-employee-list").css('display', 'none');
@@ -273,21 +339,43 @@ Template.mobileapp.events({
                         
                         let table_data = JSON.parse(processData);
 
-                        let table = $("#tblJobProcessList").DataTable({
-                            data: table_data.tprocessstep,
-                            paging: false,
-                            searching: false,
-                            destroy:true,
-                            dom: 't',
-                            scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                            scrollCollapse: true,
-                            autoWidth: true,
-                            sScrollXInner: "100%",
-                            columns: [
-                                { title: 'Process Name', mData: 'fields.KeyValue' },
+                        if(!isMobile) {
+                            let table = $("#tblJobProcessList").DataTable({
+                                data: table_data.tprocessstep,
+                                paging: false,
+                                searching: false,
+                                destroy:true,
+                                dom: 't',
+                                scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                                scrollCollapse: true,
+                                autoWidth: true,
+                                sScrollXInner: "100%",
+                                columns: [
+                                    { title: 'Process Name', mData: 'fields.KeyValue' },
+    
+                                ]
+                            })
 
-                            ]
-                        })
+                        }else {
+                            let table = $("#tblJobProcessList").DataTable({
+                                data: table_data.tprocessstep,
+                                paging: false,
+                                searching: false,
+                                destroy:true,
+                                dom: 't',
+                                scrollY: '300px',
+                                scrollCollapse: true,
+                                autoWidth: true,
+                                sScrollXInner: "100%",
+                                columns: [
+                                    { title: 'Process Name', mData: 'fields.KeyValue' },
+    
+                                ]
+                            })
+
+                        }
+
+                       
 
 
                         $("#startBreakContainer").css('display', 'none');
@@ -305,21 +393,44 @@ Template.mobileapp.events({
                 } else {
                     $(".mobile-left-jobprocess-list").css('display', 'block');
                     let processData = JSON.parse(dataObject[0].data);
-                    let table = $("#tblJobProcessList").DataTable({
-                        data: processData.tprocessstep,
-                        paging: false,
-                        searching: false,
-                        destroy:true,
-                        dom: 't',
-                        scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                        scrollCollapse: true,
-                        autoWidth: true,
-                        sScrollXInner: "100%",
-                        columns: [
-                            { title: 'Process Name', mData: 'fields.KeyValue' },
 
-                        ]
-                    })
+                    if(!isMobile) {
+                        let table = $("#tblJobProcessList").DataTable({
+                            data: processData.tprocessstep,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Process Name', mData: 'fields.KeyValue' },
+    
+                            ]
+                        })
+
+                    }else {
+                        
+                        let table = $("#tblJobProcessList").DataTable({
+                            data: processData.tprocessstep,
+                            paging: false,
+                            searching: false,
+                            destroy:true,
+                            dom: 't',
+                            scrollY: '300px',
+                            scrollCollapse: true,
+                            autoWidth: true,
+                            sScrollXInner: "100%",
+                            columns: [
+                                { title: 'Process Name', mData: 'fields.KeyValue' },
+    
+                            ]
+                        })
+
+                    }
+                    
 
 
                     $("#startBreakContainer").css('display', 'none');
@@ -337,21 +448,42 @@ Template.mobileapp.events({
 
                         $(".mobile-left-jobprocess-list").css('display', 'block');
                         let processData = JSON.parse(data);
-                        let table = $("#tblJobProcessList").DataTable({
-                            data: processData.tprocessstep,
-                            paging: false,
-                            searching: false,
-                            destroy:true,
-                            dom: 't',
-                            scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                            scrollCollapse: true,
-                            autoWidth: true,
-                            sScrollXInner: "100%",
-                            columns: [
-                                { title: 'Process Name', mData: 'fields.KeyValue' },
+                        if(!isMobile) {
+                            let table = $("#tblJobProcessList").DataTable({
+                                data: processData.tprocessstep,
+                                paging: false,
+                                searching: false,
+                                destroy:true,
+                                dom: 't',
+                                scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                                scrollCollapse: true,
+                                autoWidth: true,
+                                sScrollXInner: "100%",
+                                columns: [
+                                    { title: 'Process Name', mData: 'fields.KeyValue' },
+    
+                                ]
+                            })
 
-                            ]
-                        })
+                        }else {
+                            let table = $("#tblJobProcessList").DataTable({
+                                data: processData.tprocessstep,
+                                paging: false,
+                                searching: false,
+                                destroy:true,
+                                dom: 't',
+                                scrollY: '300px',
+                                scrollCollapse: true,
+                                autoWidth: true,
+                                sScrollXInner: "100%",
+                                columns: [
+                                    { title: 'Process Name', mData: 'fields.KeyValue' },
+    
+                                ]
+                            })
+
+                        }
+                        
 
 
                         $("#startBreakContainer").css('display', 'none');
@@ -375,25 +507,47 @@ Template.mobileapp.events({
             getVS1Data('TEmployee').then(function (dataObject) {
                 $(".mobile-left-employee-list").css('display', 'block');
                 let empdata = JSON.parse(dataObject[0].data);
+                if(!isMobile) {
+                    let table = $("#tblEmployeeList").DataTable({
+                        data: empdata.temployee,
+                        paging: false,
+                        searching: false,
+                        destroy:true,
+                        dom: 't',
+                        scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
+                        scrollCollapse: true,
+                        autoWidth: true,
+                        sScrollXInner: "100%",
+                        columns: [
+                            
+                            { title: 'EmpId', mData: 'fields.ID' },
+    
+                            { title: 'FirstName', mData: 'fields.FirstName' },
+                            { title: 'LastName', mData: 'fields.LastName' },
+                        ]
+                    });
 
-                let table = $("#tblEmployeeList").DataTable({
-                    data: empdata.temployee,
-                    paging: false,
-                    searching: false,
-                    destroy:true,
-                    dom: 't',
-                    scrollY: document.getElementsByClassName('mobile-right-btn-containner')[0].clientHeight - 58 + 'px',
-                    scrollCollapse: true,
-                    autoWidth: true,
-                    sScrollXInner: "100%",
-                    columns: [
-                        
-                        { title: 'EmpId', mData: 'fields.ID' },
-
-                        { title: 'FirstName', mData: 'fields.FirstName' },
-                        { title: 'LastName', mData: 'fields.LastName' },
-                    ]
-                })
+                }else {
+                    let table = $("#tblEmployeeList").DataTable({
+                        data: empdata.temployee,
+                        paging: false,
+                        searching: false,
+                        destroy:true,
+                        dom: 't',
+                        scrollY: '300px',
+                        scrollCollapse: true,
+                        autoWidth: true,
+                        sScrollXInner: "100%",
+                        columns: [
+                            
+                            { title: 'EmpId', mData: 'fields.ID' },
+    
+                            { title: 'FirstName', mData: 'fields.FirstName' },
+                            { title: 'LastName', mData: 'fields.LastName' },
+                        ]
+                    });
+                }
+                
                 // $('#tblEmployeeList tbody').on('click', 'tr', function () {
                 //     var data = table.row(this).data();
 
@@ -558,7 +712,7 @@ Template.mobileapp.events({
         // Template.instance().isSelectEmployeeName.set(false);
         // Template.instance().isSelectEmployeeNumber.set(false);
 
-        Template.instance().inputStatus.set("enterJobNumber");
+      //  Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
@@ -583,7 +737,7 @@ Template.mobileapp.events({
         // Template.instance().isSelectEmployeeName.set(false);
         // Template.instance().isSelectEmployeeNumber.set(false);
        
-        Template.instance().inputStatus.set("enterJobNumber");
+      //  Template.instance().inputStatus.set("enterJobNumber");
 
 
         $('#btnClockOut_phone').prop('disabled', true);
@@ -728,14 +882,8 @@ Template.mobileapp.events({
 
         let inputValue  = $(".mobile-main-input").val();
         let isClockin = Template.instance().isClockin.get();
-        let isEnterJobProcess = Template.instance().isEnterJobProcess.get();
-        let isEnterJobNumber = Template.instance().isEnterJobNumber.get();
-        let isSelectEmployeeNumber = Template.instance().isSelectEmployeeNumber.get();
-        let isSelectEmployeeName = Template.instance().isSelectEmployeeName.get();
-
+        
         let inputStatus = Template.instance().inputStatus.get();
-
-
 
         $("#btnOpentList").removeAttr('disabled');  //openlist button enable
         $(".mobile-left-workorder-list").css('display', 'none'); // workorder list none
@@ -776,8 +924,7 @@ Template.mobileapp.events({
                 
             });           
                      
-
-           
+          
 
         }
 
