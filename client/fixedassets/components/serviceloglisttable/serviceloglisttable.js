@@ -45,7 +45,7 @@ Template.serviceloglisttable.onCreated(function () {
     // { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
     {
       index: 0,
-      label: "#ID",
+      label: "ID",
       class: "LogId",
       active: true,
       display: true,
