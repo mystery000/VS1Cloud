@@ -44,6 +44,7 @@ Template.wizard_suppliers.onCreated(() => {
       data.Suburb || '',
       data.Country || '',
       data.Notes || '',
+        data.Active ? "" : "In-Active",
       //
       // data.Email || '',
       // data.AccountNo || '',
@@ -58,17 +59,18 @@ Template.wizard_suppliers.onCreated(() => {
     return dataList;
   }
   let headerStructure = [
-    { index: 0, label: 'ID', class: 'colSupplierID colID', active: false, display: true, width: "20" },
+    { index: 0, label: 'ID', class: 'colSupplierID colID', active: false, display: true, width: "10" },
     { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-    { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-    { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+    { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+    { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
     { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-    { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-    { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
-    { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-    { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
-    { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-    { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+    { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+    { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+    { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+    { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "110" },
+    { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+    { index: 10, label: 'Comments', clasds: 'colNotes', active: true, display: true, width: "110" },
+    { index: 11, label: 'Status', clasds: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 })
@@ -88,7 +90,7 @@ Template.wizard_suppliers.helpers({
 
   searchAPI: function() {
     let sideBarService = new SideBarService();
-    return sideBarService.getAllSuppliersDataVS1List;
+    return sideBarService.getOneSupplierDataExByName;
   },
 
   service: ()=>{
