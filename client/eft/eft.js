@@ -5,7 +5,6 @@ import { EftService } from './eft-service';
 import { Template } from 'meteor/templating';
 import { UtilityService } from '../utility-service.js';
 import './eft.html';
-import './transactionCodeModal/transactionCodeModal.js'
 
 let utilityService = new UtilityService();
 let eftService = new EftService();
@@ -13,11 +12,11 @@ let selectLineId
 
 Template.eft_export.onCreated(function () {
     let templateObject = Template.instance();
-    templateObject.eftOptionsList = new ReactiveVar([]);
+    templateObject.eftOptionsList = new ReactiveVar([]);    
     templateObject.transactionDescriptions = new ReactiveVar([]);
     templateObject.eftRowId = new ReactiveVar(null);
     templateObject.tabadescriptiverecordList = new ReactiveVar([]);
-    templateObject.tabadetailrecordList = new ReactiveVar([]);
+    templateObject.tabadetailrecordList = new ReactiveVar([]);    
 });
 
 Template.eft_export.onRendered(function () {
@@ -25,31 +24,27 @@ Template.eft_export.onRendered(function () {
     // tempcode
     templateObject.eftRowId.set(Random.id());
 
-    $(() => utilityService.waitForElm("#accountListModal tbody td").then(() => {
-        setTimeout(() => {
-            let currentDate = moment(new Date()).format('DD/MM/YYYY');
-            $('.eftProcessingDate').datepicker({
-                showOn: 'button',
-                buttonText: 'Show Date',
-                buttonImageOnly: true,
-                buttonImage: '/img/imgCal2.png',
-                constrainInput: false,
-                dateFormat: 'yy/mm/dd',
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '-90:+10',
-                onSelect: function (dateText, inst) {
-                    // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
-                },
-            });
-            $(".eftProcessingDate").val(currentDate);
-            $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))
-            $('#accountListModal').modal('show');
+    $(() => {
+        let currentDate = moment(new Date()).format('DD/MM/YYYY');
+        $('.eftProcessingDate').datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            constrainInput: false,
+            dateFormat: 'yy/mm/dd',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '-90:+10',
+            onSelect: function (dateText, inst) {
+                // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+            },
         });
-    }))
-
+        $(".eftProcessingDate").val(currentDate);
+        $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))                
+    })
 
     templateObject.loadTabaDescriptiveRecord = () => {
         let descriptiveList = [];
@@ -165,6 +160,7 @@ Template.eft_export.onRendered(function () {
             const accountTypeList = [];
             var accountDataName = e.target.value || '';
             if (e.pageX > offset.left + $earch.width() - 8) {
+                selectLineId = undefined
                 $('#accountListModal').modal();
                 $('.fullScreenSpin').css('display', 'none');
             } else {
@@ -232,21 +228,21 @@ Template.eft_export.onRendered(function () {
         let colAccountID = table.find('.colAccountId').text();
         let lineProductName = table.find('.colAccountName').text();
         if (selectLineId === undefined) {
-            $('.colAccount').removeClass('boldtablealertsborder');
+            $('.colAccount').removeClass('boldtablealertsborder');            
             if (colAccountID) {
                 $('.fullScreenSpin').css('display', 'inline-block');
                 $('#eftaccountid').val(colAccountID).trigger('change')
                 // templateObject.loadTABADetailRecordById(colAccountID);
                 templateObject.loadTabaDescriptiveRecordById(colAccountID);
-            }
+            }        
             let lineProductDesc = table.find('.colDescription').text();
             let lineAccoutNo = table.find('.colAccountNo').text();
-            let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";
+            let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";            
             $('#sltBankAccountName').val(lineProductName);
             $('#sltBankName').val(lineBankName)
         } else {
             $(`tr#${selectLineId} .sltEftTblAccountName`).val(lineProductName);
-        }
+        }        
         $('#accountListModal').modal('toggle');
     });
 
@@ -311,7 +307,7 @@ Template.eft_export.onRendered(function () {
 
     $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.colTransactionCode').text();
+        let transactionDescription = table.find('.colTransactionCode').text();        
         $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
     });
@@ -320,6 +316,8 @@ Template.eft_export.onRendered(function () {
         selectLineId = $(this).closest('tr').attr('id')
         $('#accountListModal').modal('show');
     })
+
+    setTimeout(() => $('#accountListModal').modal(), 3000)
 });
 
 Template.eft_export.events({
@@ -413,7 +411,7 @@ Template.eft_export.events({
 
     'click .btnDoEftExport': (e) => {
         playSaveAudio();
-        setTimeout(function () {
+        setTimeout(async function () {
             let sltAccountType = $('#sltBankAccountName').val() || "";
             let sltBankName = $('#sltBankName').val() || "";
             let eftProcessingDate = $('#eftProcessingDate').val() || "";
@@ -440,6 +438,14 @@ Template.eft_export.events({
                 swal('Please input Transaction Description', '', 'error');
                 return false;
             }
+            let currentEftFilesCreatedData = await getVS1Data('TEftFilesCreated');
+            if (currentEftFilesCreatedData && currentEftFilesCreatedData.length) {
+                let saveEftFilesCreateData = JSON.parse(currentEftFilesCreatedData[0].data)
+                let newId = Random.id()
+                saveEftFilesCreateData = {teftfilescreated: [...saveEftFilesCreateData.teftfilescreated, 
+                    [newId, sltAccountType, sltBankName, eftProcessingDate, eftUserName, sltTransactionDescription]]}
+                await addVS1Data('TEftFilesCreated', JSON.stringify(saveEftFilesCreateData))
+            }            
             eftNumberUser =
                 eftNumberUser.length >= 6 ? eftNumberUser : '0'.repeat(6 - eftNumberUser.length) + eftNumberUser;
             var arrData = [];
