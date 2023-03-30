@@ -266,15 +266,15 @@ Template.mobileapp.events({
                 if(dataObject.length == 0) {
 
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
-
-                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
-                                                                        }).catch(function(err){
-                                                                        });
+                    
 
                         $(".mobile-left-jobprocess-list").css('display', 'block');
-                        let processData = JSON.parse(data);
+                        let processData = JSON.stringify(data);
+                        
+                        let table_data = JSON.parse(processData);
+
                         let table = $("#tblJobProcessList").DataTable({
-                            data: processData.tprocessstep,
+                            data: table_data.tprocessstep,
                             paging: false,
                             searching: false,
                             destroy:true,
@@ -293,6 +293,11 @@ Template.mobileapp.events({
                         $("#startBreakContainer").css('display', 'none');
                         $(".mobile-left-btn-containner").css('display', 'none');
                         $("#btnOpentList").prop('disabled', true);
+
+                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn){
+                                  
+                        }).catch(function(err){
+                        });
 
                     })
 
@@ -506,7 +511,7 @@ Template.mobileapp.events({
     'click #btnClockIn': function(e, instance) {
         Template.instance().isClockin.set(true);
         
-        Template.instance().inputStatus.set("enterEmployee");
+       // Template.instance().inputStatus.set("enterEmployee");
 
        // $(".mobile-checkin-container").css('display', 'block');
         if (window.screen.width <= 480) {
@@ -525,9 +530,9 @@ Template.mobileapp.events({
 
     'click #btnClockIn_phone': function(e, instance) {
         Template.instance().isClockin.set(true);
-        Template.instance().isEnterJobNumber.set(false);
-        Template.instance().isEnterJobProcess.set(false);
-        Template.instance().isSelectEmployeeNumber.set(true);
+        // Template.instance().isEnterJobNumber.set(false);
+        // Template.instance().isEnterJobProcess.set(false);
+        // Template.instance().isSelectEmployeeNumber.set(true);
 
         // $(".mobile-checkin-container").css('display', 'block');
 
@@ -548,10 +553,12 @@ Template.mobileapp.events({
     'click #btnClockOut': function (e, instance) {
 
         Template.instance().isClockin.set(false);
-        Template.instance().isEnterJobProcess.set(false);
-        Template.instance().isEnterJobNumber.set(true);
-        Template.instance().isSelectEmployeeName.set(false);
-        Template.instance().isSelectEmployeeNumber.set(false);
+        // Template.instance().isEnterJobProcess.set(false);
+        // Template.instance().isEnterJobNumber.set(true);
+        // Template.instance().isSelectEmployeeName.set(false);
+        // Template.instance().isSelectEmployeeNumber.set(false);
+
+        Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
@@ -563,6 +570,7 @@ Template.mobileapp.events({
         $("#btnStartBreak").css('background', '#0084D1');
         $("#btnStopJob").css('background', '#0084D1');
         $('#btnStopJob').prop('disabled', true);
+        $("#btnStopBreak").css('background', '#0084D1');
         $('#btnStopBreak').prop('disabled', true);
         $(".mobile-header-status-text").text("Enter Job Number");
     },
@@ -570,10 +578,13 @@ Template.mobileapp.events({
     'click #btnClockOut_phone': function (e, instance) {
 
         Template.instance().isClockin.set(false);
-        Template.instance().isEnterJobProcess.set(false);
-        Template.instance().isEnterJobNumber.set(true);
-        Template.instance().isSelectEmployeeName.set(false);
-        Template.instance().isSelectEmployeeNumber.set(false);
+        // Template.instance().isEnterJobProcess.set(false);
+        // Template.instance().isEnterJobNumber.set(true);
+        // Template.instance().isSelectEmployeeName.set(false);
+        // Template.instance().isSelectEmployeeNumber.set(false);
+       
+        Template.instance().inputStatus.set("enterJobNumber");
+
 
         $('#btnClockOut_phone').prop('disabled', true);
         $("#btnClockOut_phone").css('background', '#0084D1');
@@ -585,6 +596,7 @@ Template.mobileapp.events({
         $("#btnStartBreak_phone").css('background', '#0084D1');
         $("#btnStopJob_phone").css('background', '#0084D1');
         $('#btnStopJob_phone').prop('disabled', true);
+        $("#btnStopBreak_phone").css('background', '#0084D1');
         $('#btnStopBreak_phone').prop('disabled', true);
         $(".mobile-header-status-text").text("Enter Job Number");
     },
@@ -1076,14 +1088,13 @@ Template.mobileapp.events({
             const currentTime = now.toLocaleTimeString(); // returns a formatted string like "3:30:45 PM"
            
             // console.log(currentTime);
-           
+
             $(".mobile-main-input").val("Job Paused  " + currentTime);
-           
             Template.instance().lunchState.set(true);
-         }else{
+        } else{
             $(".mobile-main-input").val("Job Started ");
             Template.instance().lunchState.set(false);
-         }        
+        }        
     },
 
     'change #purchaseCheck': function(event) {
