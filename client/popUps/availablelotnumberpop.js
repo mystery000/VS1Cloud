@@ -37,6 +37,14 @@ Template.availablelotnumberpop.onRendered(async () => {
             }
         }
     });
+
+    // Damien
+    // Set focus when open account list modal
+    $( "#availableLotNumberModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblAvailableLotCheckbox_filter .form-control-sm').get(0).focus();
+        }, 500);
+    });
 });
 Template.availablelotnumberpop.helpers({});
 Template.availablelotnumberpop.events({
