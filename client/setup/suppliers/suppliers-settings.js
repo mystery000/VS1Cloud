@@ -44,7 +44,7 @@ Template.wizard_suppliers.onCreated(() => {
       data.Suburb || '',
       data.Country || '',
       data.Notes || '',
-        data.Active ? "" : "In-Active",
+      data.Active ? "" : "In-Active",
       //
       // data.Email || '',
       // data.AccountNo || '',

@@ -98,26 +98,27 @@ Template.wizard_terms.onCreated(() => {
       data.ProgressPaymentDuration || 0.00,
       data.ProgressPaymentInstallments || 0.00,
       data.ProgressPaymentfirstPayonSaleDate || 0.00,
+      data.Active ? "" : "In-Active",
     ];
     return dataList;
   }
   let headerStructure = [
     { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
-    { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
-    { index: 2, label: 'Terms Amount', class: 'colTermsAmount', active: true, display: true, width: "120" },
+    { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "200" },
+    { index: 2, label: 'Terms Amount', class: 'colTermsAmount', active: true, display: true, width: "110" },
     { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
     { index: 4, label: 'EOM Plus', class: 'colIsEOMPlus', active: true, display: true, width: "80" },
-    { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "130" },
-    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "130" },
-    { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-    { index: 9, label: 'Is Progress Payment', class: 'colIsProgressPayment', active: false, display: true, width: "200" },
-    { index: 10, label: 'Required', class: 'colRequired', active: false, display: true, width: "100" },
-    { index: 11, label: 'Early Payment Discount', class: 'colEarlyPayDiscount', active: false, display: true, width: "200" },
-    { index: 12, label: 'Early Payment Days', class: 'colEarlyPay', active: false, display: true, width: "150" },
-    { index: 13, label: 'Payment Type', class: 'colProgressPayType', active: false, display: true, width: "150" },
-    { index: 14, label: 'Payment Duration', class: 'colProgressPayDuration', active: false, display: true, width: "100" },
-    { index: 15, label: 'Pay On Sale Date', class: 'colPayOnSale', active: false, display: true, width: "150" },
+    { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "300" },
+    { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "110" },
+    { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "110" },
+    { index: 9, label: 'Is Progress Payment', class: 'colIsProgressPayment', active: false, display: true, width: "110" },
+    { index: 10, label: 'Required', class: 'colRequired', active: false, display: true, width: "110" },
+    { index: 11, label: 'Early Payment Discount', class: 'colEarlyPayDiscount', active: false, display: true, width: "110" },
+    { index: 12, label: 'Early Payment Days', class: 'colEarlyPay', active: false, display: true, width: "110" },
+    { index: 13, label: 'Payment Type', class: 'colProgressPayType', active: false, display: true, width: "110" },
+    { index: 14, label: 'Payment Duration', class: 'colProgressPayDuration', active: false, display: true, width: "110" },
+    { index: 15, label: 'Pay On Sale Date', class: 'colPayOnSale', active: false, display: true, width: "80" },
+    { index: 18, label: "Status", class: "colStatus", width: "120", active: true, display: true },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });

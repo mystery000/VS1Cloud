@@ -144,30 +144,30 @@ Template.wizard_inventory.onCreated(function () {
             data.PurchaseDescription || "",
             data.CUSTFLD1 || "",
             data.CUSTFLD2 || "",
-            data.Active ? "" : "In-Active"
+            data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
   let headerStructure = [
       { index: 0, label: "#ID", class: "ProductID", width: "10", active: false, display: true },
-      { index: 1, label: "Product Name", class: "ProductName", width: "150", active: true, display: true },
+      { index: 1, label: "Product Name", class: "ProductName", width: "200", active: true, display: true },
       { index: 2, label: "Sales Description", class: "SalesDescription", width: "300", active: true, display: true },
-      { index: 3, label: "Available", class: "Available", width: "80", active: true, display: true },
-      { index: 4, label: "On SO", class: "OnSO", width: "80", active: true, display: true },
-      { index: 5, label: "On BO", class: "OnBO", width: "80", active: true, display: true },
-      { index: 6, label: "In Stock", class: "InStock", width: "80", active: true, display: true },
-      { index: 7, label: "On Order", class: "OnOrder", width: "80", active: true, display: true },
-      { index: 8, label: "Cost Price (Ex)", class: "CostPrice", width: "135", active: false, display: true },
-      { index: 9, label: "Cost Price (Inc)", class: "CostPriceInc", width: "135", active: true, display: true },
-      { index: 10, label: "Sale Price (Ex)", class: "SalePrice", width: "135", active: false, display: true },
-      { index: 11, label: "Sale Price (Inc)", class: "SalePriceInc", width: "135", active: true, display: true },
+      { index: 3, label: "Available", class: "Available", width: "110", active: true, display: true },
+      { index: 4, label: "On SO", class: "OnSO", width: "110", active: true, display: true },
+      { index: 5, label: "On BO", class: "OnBO", width: "110", active: true, display: true },
+      { index: 6, label: "In Stock", class: "InStock", width: "110", active: true, display: true },
+      { index: 7, label: "On Order", class: "OnOrder", width: "110", active: true, display: true },
+      { index: 8, label: "Cost Price (Ex)", class: "CostPrice", width: "110", active: false, display: true },
+      { index: 9, label: "Cost Price (Inc)", class: "CostPriceInc", width: "110", active: true, display: true },
+      { index: 10, label: "Sale Price (Ex)", class: "SalePrice", width: "110", active: false, display: true },
+      { index: 11, label: "Sale Price (Inc)", class: "SalePriceInc", width: "110", active: true, display: true },
       { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
-      { index: 13, label: "Barcode", class: "Barcode", width: "80", active: false, display: true },
-      { index: 14, label: "Department", class: "Departmentth", width: "100", active: false, display: true },
-      { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "80", active: false, display: true },
-      { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "80", active: false, display: true },
-      { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "80", active: false, display: true },
-      { index: 18, label: "Status", class: "colStatus", width: "150", active: true, display: true },
+      { index: 13, label: "Barcode", class: "Barcode", width: "200", active: false, display: true },
+      { index: 14, label: "Department", class: "Departmentth", width: "110", active: false, display: true },
+      { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "300", active: false, display: true },
+      { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "100", active: false, display: true },
+      { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "100", active: false, display: true },
+      { index: 18, label: "Status", class: "colStatus", width: "120", active: true, display: true },
     ];
   templateObject.tableheaderrecords.set(headerStructure);
 
