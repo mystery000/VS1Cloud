@@ -2,7 +2,6 @@ import { ReactiveVar } from "meteor/reactive-var";
 import "../lib/global/erp-objects";
 import "../lib/global/indexdbstorage.js";
 import "jquery-editable-select";
-import { bankNameList } from "../lib/global/bank-names";
 import { AccountService } from "../accounts/account-service";
 import LoadingOverlay from "../LoadingOverlay";
 import { Template } from "meteor/templating";
@@ -130,14 +129,12 @@ function setBankAccountData(data, i = 0) {
 
 Template.newstatementrule.onCreated(function () {
   const templateObject = Template.instance();
-  templateObject.bankRuleData = new ReactiveVar([]);
-  templateObject.bankNames = new ReactiveVar([]);
+  templateObject.bankRuleData = new ReactiveVar([]);  
   templateObject.importData = new ReactiveVar([]);
 });
 
 Template.newstatementrule.onRendered(function () {
-  const templateObject = Template.instance();
-  templateObject.bankNames.set(bankNameList);
+  const templateObject = Template.instance();  
   templateObject.bankRuleData.set([]);
   $("#bankAccountName").editableSelect();
   $("#bankAccountName")
@@ -352,14 +349,7 @@ Template.newstatementrule.events({
 Template.newstatementrule.helpers({
   bankRuleData: () => {
     return Template.instance().bankRuleData.get();
-  },
-  bankNames: () => {
-    return Template.instance()
-      .bankNames.get()
-      .sort(function (a, b) {
-        return a.name > b.name ? 1 : -1;
-      });
-  },
+  }, 
   previewColumn: () =>
     [...Template.instance().bankRuleData.get()].sort((a, b) =>
       a.order > b.order ? 1 : -1
