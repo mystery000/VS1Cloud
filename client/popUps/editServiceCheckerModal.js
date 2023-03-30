@@ -4,7 +4,6 @@ import { OrganisationService } from "../js/organisation-service";
 import { SideBarService } from "../js/sidebar-service";
 import LoadingOverlay from "../LoadingOverlay";
 import { TaxRateService } from "../settings/settings-service";
-import { bankNameList } from "../lib/global/bank-names";
 
 import { Template } from 'meteor/templating';
 import './editServiceCheckerModal.html';
@@ -32,8 +31,7 @@ Template.editServiceCheckerModal.onCreated(function () {
   templateObject.accountList = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
   templateObject.expenseCategories = new ReactiveVar([]);
-  templateObject.taxRates = new ReactiveVar([]);
-  templateObject.bankNames = new ReactiveVar([]);
+  templateObject.taxRates = new ReactiveVar([]);  
 });
 
 Template.editServiceCheckerModal.onRendered(function () {
@@ -90,12 +88,5 @@ Template.editServiceCheckerModal.helpers({
   },
   expenseCategories: () => {
     return Template.instance().expenseCategories.get();
-  },
-  bankNames: () => {
-    return Template.instance()
-      .bankNames.get()
-      .sort(function (a, b) {
-        return a.name > b.name ? 1 : -1;
-      });
-  },
+  },  
 });
