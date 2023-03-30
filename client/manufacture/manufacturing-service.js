@@ -55,7 +55,13 @@ export class ManufacturingService extends BaseService {
     }
 
     getWorkOrderList() {
-       
+
+       const now = new Date();
+       const isoStr = now.toISOString();
+       const localeDateStr = now.toLocaleDateString();
+
+
+
         let workorders = [
           {
               "type": "TVS1Workorder",
@@ -64,13 +70,13 @@ export class ManufacturingService extends BaseService {
                   "Customer": "Workshop",
                   "OrderTo": "Workshop\n \n\n ",
                   "PONumber": "",
-                  "SaleDate": "09/03/2023",
-                  "DueDate": "09/03/2023",
-                  "BOMStructure": "{\"Id\":8077,\"MsTimeStamp\":\"2023-02-23 13:10:21\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8077\",\"Caption\":\"Wagon\",\"CustomInputClass\":\"\",\"Description\":\"Childs Red Wagon\",\"Details\":\"[{\\\"productName\\\":\\\"Handle\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Tray\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Welding\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Hub\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Purple\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Painting\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Wheel Assembly\\\",\\\"qty\\\":\\\"4.00000\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Assembly\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":5,\"TotalQtyOriginal\":636,\"Value\":\"\"}",
-                  "OrderDate": "2023-03-09T08:08:01.218Z",
+                  "SaleDate": localeDateStr,
+                  "DueDate": localeDateStr,
+                  "BOMStructure": "{\"Id\":8077,\"MsTimeStamp\":\"2023-02-23 13:10:21\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8077\",\"Caption\":\"Wagon\",\"CustomInputClass\":\"\",\"Description\":\"Childs Red Wagon\",\"Details\":\"[{\\\"productName\\\":\\\"Handle\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Tray\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Welding\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Hub\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Purple\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Painting\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Wheel Assembly\\\",\\\"qty\\\":\\\"4.00000\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Assembly\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":5,\"TotalQtyOriginal\":636,\"TotalChangeQty\":0,\"Value\":\"\"}",
+                  "OrderDate": isoStr,
                   "StartTime": "",
                   "ProductName": "Wagon",
-                  "ShipDate": "09/03/2023",
+                  "ShipDate": localeDateStr,
                   "Quantity": 1,
                   "ID": "1000",
                   "UpdateFromPO": false,
@@ -91,13 +97,13 @@ export class ManufacturingService extends BaseService {
                   "Customer": "Workshop",
                   "OrderTo": "Workshop\n \n\n ",
                   "PONumber": "",
-                  "SaleDate": "09/03/2023",
-                  "DueDate": "09/03/2023",
-                  "BOMStructure": "{\"Id\":8076,\"MsTimeStamp\":\"2023-02-23 13:05:06\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8076\",\"Caption\":\"Wheel Assembly\",\"CustomInputClass\":\"\",\"Description\":\"\",\"Details\":\"[{\\\"productName\\\":\\\"Bridgestone Wheels\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":1,\"TotalQtyOriginal\":-34,\"Value\":\"\"}",
-                  "OrderDate": "2023-03-09T08:22:57.348Z",
+                  "SaleDate": localeDateStr,
+                  "DueDate": localeDateStr,
+                  "BOMStructure": "{\"Id\":8076,\"MsTimeStamp\":\"2023-02-23 13:05:06\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8076\",\"Caption\":\"Wheel Assembly\",\"CustomInputClass\":\"\",\"Description\":\"\",\"Details\":\"[{\\\"productName\\\":\\\"Bridgestone Wheels\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":1,\"TotalQtyOriginal\":-34,\"TotalChangeQty\":0,\"Value\":\"\"}",
+                  "OrderDate": isoStr,
                   "StartTime": "",
                   "ProductName": "Wheel Assembly",
-                  "ShipDate": "09/03/2023",
+                  "ShipDate": localeDateStr,
                   "Quantity": 1,
                   "ID": "1001",
                   "UpdateFromPO": false,

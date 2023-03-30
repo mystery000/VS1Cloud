@@ -145,8 +145,6 @@ Template.mobileapp.events({
 
         let isMobile = window.innerWidth < 468;
 
-        console.log(isMobile);
-
 
         if(inputStatus == "enterJobNumber"){
 
@@ -1121,10 +1119,11 @@ Template.mobileapp.events({
                 data: BomDataList,
                 paging: true,
                 searching: false,
-                destroy:true,
+                destroy: true,
                 dom: 't',
                 ordering: false,
                 editable:true,
+                info:true,
                 columns: [
                     { title: 'Item', mData: 'item' },
                     { title: 'UOM', mData: 'uom' },
@@ -1136,13 +1135,16 @@ Template.mobileapp.events({
                 responsive: true,
             })
 
+
+
+
             $('#tblWastageForm').on( 'click', 'tbody td.editable', function () {
                 $(this).attr('contenteditable', 'true');
 
             } );
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
-                
+                                           
                 var cell = wastage_table.cell(this);
                 var index = cell.index();
                 var column = index.column;
@@ -1155,7 +1157,6 @@ Template.mobileapp.events({
                     nextCell.data(prev_val - cur_val);                             
                            
             } );
-
 
         }
 
@@ -1217,7 +1218,7 @@ Template.mobileapp.events({
         if($('#breakCheck').is(":checked") == true){
             const now = new Date();
             const currentTime = now.toLocaleTimeString(); // returns a formatted string like "3:30:45 PM"
-            console.log(currentTime);
+
             $(".mobile-main-input").val("Job Paused  " + currentTime);
             Template.instance().breakState.set(true);
          }else{
@@ -1233,9 +1234,7 @@ Template.mobileapp.events({
         if($('#lunchCheck').is(":checked") == true){
             const now = new Date();
             const currentTime = now.toLocaleTimeString(); // returns a formatted string like "3:30:45 PM"
-           
-            // console.log(currentTime);
-
+         
             $(".mobile-main-input").val("Job Paused  " + currentTime);
             Template.instance().lunchState.set(true);
         } else{
