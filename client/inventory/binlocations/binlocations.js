@@ -1387,7 +1387,6 @@ Template.binlocationslist.events({
           getVS1Data('TProductBin').then(function (dataObject) {
             let data = JSON.parse(dataObject[0].data);
             if(data.tproductbin.length > 0) {
-              alert();
               let dataArray = {
                 BinLocation: editbinname,
                 BinNumber: editbinnum,
