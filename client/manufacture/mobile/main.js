@@ -412,7 +412,15 @@ Template.mobileapp.events({
         $(".mobile-right-btn-containner").css('display', 'flex');
     },
     'click .mobile-btn-number': function(e, instance) {
+
+        // if(Template.instance().inputStatus.get() == "stopJob") {
+        //     $(".mobile-stop-job-input").val($(".mobile-stop-job-input").val() + e.target.attributes.calcvalue.nodeValue)     
+        // } else {
+        //     $(".mobile-main-input").val($(".mobile-main-input").val() + e.target.attributes.calcvalue.nodeValue)
+        // }
+
         $(".mobile-main-input").val($(".mobile-main-input").val() + e.target.attributes.calcvalue.nodeValue)
+        
     },
     'click #phoneQrCodeScan': function(e, instance) {
         $('#tblPhoneEmployeeListContent').css('display', 'none');
@@ -498,7 +506,7 @@ Template.mobileapp.events({
     'click #btnClockIn': function(e, instance) {
         Template.instance().isClockin.set(true);
         
-        Template.instance().inputStatus.set("enterEmplyoee");
+        Template.instance().inputStatus.set("enterEmployee");
 
        // $(".mobile-checkin-container").css('display', 'block');
         if (window.screen.width <= 480) {
@@ -651,6 +659,8 @@ Template.mobileapp.events({
         $(".mobile-header-status-text").text("Stop Job");
         $(".mobile-main-input").val("Stop Job");
 
+        Template.instance().inputStatus.set("stopJob");
+
     },
 
     'click #btnStopJob_phone': function(e, instance) {
@@ -665,6 +675,9 @@ Template.mobileapp.events({
 
         $(".mobile-header-status-text").text("Stop Job");
         $(".mobile-main-input").val("Stop Job");
+
+        Template.instance().inputStatus.set("stopJob");
+
 
     },
 
@@ -711,8 +724,6 @@ Template.mobileapp.events({
         let inputStatus = Template.instance().inputStatus.get();
 
 
-        console.log(inputStatus);
-
 
         $("#btnOpentList").removeAttr('disabled');  //openlist button enable
         $(".mobile-left-workorder-list").css('display', 'none'); // workorder list none
@@ -747,16 +758,12 @@ Template.mobileapp.events({
                     templateObject.jobNumber.set(inputValue);
 
                     $(".mobile-main-input").val("");
-                    templateObject.inputStatus.set("enterProcess");
-
-                            
+                    templateObject.inputStatus.set("enterProcess");                           
         
                 }
                 
-            }); 
-            
-
-                       
+            });           
+                     
 
            
 
@@ -1049,8 +1056,10 @@ Template.mobileapp.events({
 
 
         if($('#breakCheck').is(":checked") == true){
-
-            $(".mobile-main-input").val("Job Paused ");
+            const now = new Date();
+            const currentTime = now.toLocaleTimeString(); // returns a formatted string like "3:30:45 PM"
+            console.log(currentTime);
+            $(".mobile-main-input").val("Job Paused  " + currentTime);
             Template.instance().breakState.set(true);
          }else{
             $(".mobile-main-input").val("Job Started ");
@@ -1063,8 +1072,13 @@ Template.mobileapp.events({
         $('#purchaseCheck').prop('checked', false);
 
         if($('#lunchCheck').is(":checked") == true){
-
-            $(".mobile-main-input").val("Job Paused ");
+            const now = new Date();
+            const currentTime = now.toLocaleTimeString(); // returns a formatted string like "3:30:45 PM"
+           
+            // console.log(currentTime);
+           
+            $(".mobile-main-input").val("Job Paused  " + currentTime);
+           
             Template.instance().lunchState.set(true);
          }else{
             $(".mobile-main-input").val("Job Started ");
@@ -1075,14 +1089,17 @@ Template.mobileapp.events({
     'change #purchaseCheck': function(event) {
         $('#breakCheck').prop('checked', false);
         $('#lunchCheck').prop('checked', false);
+        
         if($('#breakCheck').is(":checked") == true) {
-
-            $(".mobile-main-input").val("Job Paused ");
+            const now = new Date();
+            const currentTime = now.toLocaleTimeString(); // returns a formatted string like "3:30:45 PM"
+            $(".mobile-main-input").val("Job Paused  " + currentTime);            
             Template.instance().purchaseState.set(true);
-         }else{
+        
+        }else {
             $(".mobile-main-input").val("Job Started ");
             Template.instance().purchaseState.set(false);
-         }
+        }
     },
 
 
