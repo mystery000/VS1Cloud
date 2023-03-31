@@ -8,7 +8,7 @@ let sideBarService = new SideBarService();
 modalDraggable = function () {
   $.fn.dataTable.ext.errMode = 'none'; //Remove datatable Errors
     $('.modal-dialog').draggable({
-        containment: "body",
+        appendTo: "body",
         "handle":".modal-header, .modal-footer"
     });
 $(document).ready(function(){

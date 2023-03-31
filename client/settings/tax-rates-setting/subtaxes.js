@@ -742,7 +742,6 @@ Template.subTaxesSettings.events({
       };
       tableHeaderList.push(datatablerecordObj);
     });
-    console.log("tableHeaderList", tableHeaderList)
     templateObject.tableheaderrecords.set(tableHeaderList);
   },
   'click .btnRefresh': function () {
