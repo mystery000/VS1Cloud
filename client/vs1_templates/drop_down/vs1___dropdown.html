@@ -1,22 +1,22 @@
 <template name="vs1___dropdown">
-    <label>{{label}}</label>
+    {{#if label}}<label>{{label}}</label>{{/if}}
     <select 
         type="search" 
         class="form-control vs1dropdown {{classes}} {{id}}" 
         id="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
         name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" 
-        custid=" " 
+        custid="{{custid}}"
         custtaxcode=" " 
         disabled = "{{disabled}}"
         suppid=" "
-        style="background-color:rgb(255, 255, 255); cursor: pointer;">
+        style="background-color:rgb(255, 255, 255); cursor: pointer; {{#if noBorder}}border: 0; outline:0; padding-top:0; padding-bottom:0; line-height:1.2; background-color: transparent{{/if}}">
     </select>
     <div class="modal fade vs1_dropdown_modal" id="{{modalId}}">
         {{#if innerModal}}
             {{#if listTemp}}
-                {{> Template.dynamic template=listTemp}}
+                {{> Template.dynamic template=listTemp data=listparam}}
             {{/if}}
-        {{else}}
+    {{else}}
             <div class="modal-dialog modal-xl  modal-dialog-scrollable" role="document" style="max-width: 90vw">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -24,7 +24,7 @@
                     </div>
                     <div class="modal-body">
                         {{#if listTemp}}
-                        {{> Template.dynamic template=listTemp}}
+                        {{> Template.dynamic template=listTemp data=listparam}}
                         {{/if}}
                     </div>
                 </div>

@@ -1,18 +1,18 @@
 // @ts-nocheck
-import {ContactService} from "./contact-service";
+import {ContactService} from "../../../client/contacts/contact-service";
 import {ReactiveVar} from 'meteor/reactive-var';
-import {UtilityService} from "../utility-service";
-import {CountryService} from '../js/country-service';
-import '../lib/global/erp-objects';
+import {UtilityService} from "../../../client/utility-service";
+import {CountryService} from '../../../client/js/country-service';
+import '../../../client/lib/global/erp-objects';
 import 'jquery-ui-dist/external/jquery/jquery';
 import 'jquery-ui-dist/jquery-ui';
 import 'jQuery.print/jQuery.print.js';
 import 'jquery-editable-select';
-import {SideBarService} from '../js/sidebar-service';
-import '../lib/global/indexdbstorage.js';
-import {CRMService} from "../crm/crm-service";
+import {SideBarService} from '../../../client/js/sidebar-service';
+import '../../../client/lib/global/indexdbstorage.js';
+import {CRMService} from "../../../client/crm/crm-service";
 import {Template} from 'meteor/templating';
-import './addCustomer.html';
+import './contact_card.html';
 import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 import moment from "moment";
 
@@ -22,7 +22,6 @@ const crmService = new CRMService();
 const contactService = new ContactService();
 const countryService = new CountryService();
 
-
 function MakeNegative() {
     $('td').each(function () {
         if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
@@ -30,7 +29,7 @@ function MakeNegative() {
 }
 
 
-Template.customerscard.onCreated(function () {
+Template.contact_card.onCreated(function () {
     const templateObject = Template.instance();
     templateObject.records = new ReactiveVar();
     templateObject.countryData = new ReactiveVar();
@@ -89,6 +88,41 @@ Template.customerscard.onCreated(function () {
     templateObject.checkedSales = new ReactiveVar(false);
 
     templateObject.currentTab = new ReactiveVar("")
+
+    //Added on 3.17
+    templateObject.tableheaderrecords = new ReactiveVar([])
+    templateObject.customfields = new ReactiveVar([])
+    // 3.22
+    templateObject.tablename = new ReactiveVar('tbl_');
+
+    let customFieldsStructure = [
+        { index: 0, divClass: 'checkbox1div', order: 1 },
+        { index: 1, divClass: 'checkbox2div', order: 2 },
+        { index: 2, divClass: 'checkbox3div', order: 3 },
+        { index: 3, divClass: 'checkbox4div', order: 4 },
+    ];
+    templateObject.customfields.set(customFieldsStructure);
+
+    let headerStructure = [
+        {index: 0, label: 'Company Name', id: 'edtCustomerCompany', divClass: 'col-md-3 pl-1',jobdivClass:'col-6', type: "default", display: false},
+        {index: 1, label: 'Customer Email', id: 'edtCustomerEmail', divClass: 'col-md-4 pl-1', jobdivClass:'col-6', type: "default", display: true},
+        {index: 2, label: 'Sales Quota', id: 'edtSalesQuota', divClass: 'col-md-2 pl-1 pr-1', type: "default", display: true, isValue: true},
+        {index: 3, label: 'Status', id: 'leadStatus', divClass: 'col-md-3 pl-1', type: "search", listModalId: 'status_modal', listModalTemp:'statuspop', colName:'colStatusName', editModalId: 'newStatusPopModal', editModalTemp:'newstatuspop', editable: true, innermodal:true},
+        {index: 4, label: 'Title', id: 'edtCustomerTitle', divClass: 'col-6 pl-1', jobdivClass:'col-12',type: "search", listModalId: 'customerTitleModal', listModalTemp:'title_list_pop', colName:'colTitleName', editModalId: 'customerTitleModal', editModalTemp:'customerTitleModal', editable: false, innermodal:true},
+        {index: 5, label: 'First Name', id: 'edtFirstName', divClass: 'col-2 pl-1',jobdivClass:'col-4',id: 'edtCustomerCompany', type: "default", display: true, width: "100"},
+        {index: 6, label: 'Middle Name', id: 'edtMiddleName', divClass: 'col-2 pl-1', jobdivClass:'col-4',type: "default", display: true, width: "100"},
+        {index: 7, label: 'Last Name', id: 'edtLastName', divClass: 'col-2 pl-1', jobdivClass:'col-4',type: "default", display: true, width: "60"},
+        {index: 8, label: 'Job Name', id: 'edtJobName', jobdivClass:'col-6',type: "default", display: true, width: "100"},
+        {index: 9, label: 'Job Number', id: 'edtJobNumber', jobdivClass:'col-6',type: "default", display: true, width: "60"},
+        {index: 10, label: 'Phone', id: 'edtCustomerPhone', divClass: 'flex-grow-1 m-1 pr-1', jobdivClass:'col-4',type: "default", display: true, width: "60"},
+        {index: 11, label: 'Mobile', id: 'edtCustomerMobile', divClass: 'flex-grow-1 m-1', jobdivClass:'col-4',type: "default", display: true, width: "60"},
+        {index: 12, label: 'Fax', id: 'edtCustomerFax', divClass: 'flex-grow-1 m-1 pl-1', jobdivClass:'col-4',type: "default", display: true, width: "60"},
+        {index: 13, label: 'Skype ID', id: 'edtCustomerSkypeID', divClass: 'col-md-3 m-1 p-0', jobdivClass:'col-4',type: "default", display: true, width: "60"},
+        {index: 14, label: 'Website', id: 'edtCustomerWebsite', divClass: 'col-md-3 m-1 p-0', jobdivClass:'col-4',type: "default", display: true, width: "60"},
+        {index: 15, label: 'Rep', id: 'leadRep', divClass: 'col-md-2 m-1 p-0', type: "search", listModalId: 'employeeListCRMModal', listModalTemp:'employeelistpop', colName:'colEmployeeName', editModalId: 'employeeListCRMModal', innermodal:false},
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
+
     let currentId = FlowRouter.current().queryParams;
     // Methods
     templateObject.updateTaskSchedule = function (id, date) {
@@ -1142,21 +1176,9 @@ Template.customerscard.onCreated(function () {
         return dataList;
         //}
     }
-
-    let headerStructure = [
-        {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: ""},
-        {index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
-        {index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100"},
-        {index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150"},
-        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250"},
-        {index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100"},
-        {index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100"},
-        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "60"},
-    ];
-    templateObject.tableheaderrecords.set(headerStructure);
 });
 
-Template.customerscard.onRendered(function () {
+Template.contact_card.onRendered(function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
 
@@ -1462,13 +1484,13 @@ Template.customerscard.onRendered(function () {
 
             $('#sltTerms').editableSelect();
             $("#sltCurrency").editableSelect();
-            $('#sltTerms').editableSelect().on('click.editable-select', function (e, li) {
-                $('#selectLineID').val('sltTerms');
-                let $each = $(this);
-                let offset = $each.offset();
-                const termsDataName = e.target.value || '';
-                editableTerms(e, $each, offset, termsDataName);
-            });
+            // $('#sltTerms').editableSelect().on('click.editable-select', function (e, li) {
+            //     $('#selectLineID').val('sltTerms');
+            //     let $each = $(this);
+            //     let offset = $each.offset();
+            //     const termsDataName = e.target.value || '';
+            //     editableTerms(e, $each, offset, termsDataName);
+            // });
             $('#editCustomerTitle').select();
             $('#editCustomerTitle').editableSelect();
 
@@ -1500,14 +1522,14 @@ Template.customerscard.onRendered(function () {
             });
 
             $('#sltCustomerType').editableSelect();
-            $('#sltCustomerType').editableSelect().on('click.editable-select', function (e, li) {
-                $('#selectLineID').val('sltCustomerType');
-                const $each = $(this);
-                const offset = $each.offset();
-                const clientTypeDataName = e.target.value || '';
-                editableCustomerType(e, $each, offset, clientTypeDataName);
+            // $('#sltCustomerType').editableSelect().on('click.editable-select', function (e, li) {
+            //     $('#selectLineID').val('sltCustomerType');
+            //     const $each = $(this);
+            //     const offset = $each.offset();
+            //     const clientTypeDataName = e.target.value || '';
+            //     editableCustomerType(e, $each, offset, clientTypeDataName);
 
-            });
+            // });
 
             $('#sltJobCustomerType').editableSelect();
             $('#sltJobCustomerType').editableSelect().on('click.editable-select', function (e, li) {
@@ -1539,16 +1561,7 @@ Template.customerscard.onRendered(function () {
         }, 3000);
     });
 
-    // $(document).on('click', '#editCustomerTitle', function (e, li) {
-    //     const $earch = $(this);
-    //     const offset = $earch.offset();
-    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-    //         $('#customerTitlePopModal').modal('toggle');
-    //     } else {
-    //         $('#customerTitlePopModal').modal();
-    //     }
-    // });
-
+    
     $(document).on("click", "#termsList tbody tr", function (e) {
         let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
         $('#' + selectedTermsDropdownID + '').val($(this).find(".colName").text());
@@ -1815,75 +1828,7 @@ Template.customerscard.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
-    // $(document).on('click', '#leadStatus', function (e, li) {
-    //     const $earch = $(this);
-    //     const offset = $earch.offset();
-    //     $('#statusId').val('');
-    //     const statusDataName = e.target.value || '';
-    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-    //         $('#statusPopModal').modal('toggle');
-    //     } else {
-    //         if (statusDataName.replace(/\s/g, '') != '') {
-    //             $('#newStatusHeader').text('Edit Status');
-    //             $('#newStatus').val(statusDataName);
-    //             getVS1Data('TLeadStatusType').then(function (dataObject) {
-    //                 if (dataObject.length == 0) {
-    //                     $('.fullScreenSpin').css('display', 'inline-block');
-    //                     sideBarService.getAllLeadStatus().then(function (data) {
-    //                         for (let i in data.tleadstatustype) {
-    //                             if (data.tleadstatustype[i].TypeName === statusDataName) {
-    //                                 $('#statusId').val(data.tleadstatustype[i].Id);
-    //                             }
-    //                         }
-    //                         $('.fullScreenSpin').css('display', 'none');
-    //                         $('#newStatusPopModal').modal('toggle');
-    //                     });
-    //                 } else {
-    //                     let data = JSON.parse(dataObject[0].data);
-    //                     let useData = data.tleadstatustype;
-    //                     for (let i in useData) {
-    //                         if (useData[i].TypeName === statusDataName) {
-    //                             $('#statusId').val(useData[i].Id);
-    //                         }
-    //                     }
-    //                     $('.fullScreenSpin').css('display', 'none');
-    //                     $('#newStatusPopModal').modal('toggle');
-    //                 }
-    //             }).catch(function (err) {
-    //                 $('.fullScreenSpin').css('display', 'inline-block');
-    //                 sideBarService.getAllLeadStatus().then(function (data) {
-    //                     for (let i in data.tleadstatustype) {
-    //                         if (data.tleadstatustype.hasOwnProperty(i)) {
-    //                             if (data.tleadstatustype[i].TypeName === statusDataName) {
-    //                                 $('#statusId').val(data.tleadstatustype[i].Id);
-    //                             }
-    //                         }
-    //                     }
-    //                     setTimeout(function () {
-    //                         $('.fullScreenSpin').css('display', 'none');
-    //                         $('#newStatusPopModal').modal('toggle');
-    //                     }, 200);
-    //                 });
-    //             });
-    //             setTimeout(function () {
-    //                 $('.fullScreenSpin').css('display', 'none');
-    //                 $('#newStatusPopModal').modal('toggle');
-    //             }, 200);
-
-    //         } else {
-    //             $('#statusPopModal').modal();
-    //             $('#tblStatusPopList_filter .form-control-sm').focus();
-    //             $('#tblStatusPopList_filter .form-control-sm').val('');
-    //             $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-    //         }
-    //     }
-    // });
-    $(document).on('click', '#leadRep', function (e, li) {
-        if ($('#employeeListCRMModal').hasClass('show') == false) {
-            $('#employeeListCRMModal').modal('show');
-        }
-    })
-
+    
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
         $('#editCustomerTitle').val($(this).find(".colTypeName").text());
         $('#customerTitlePopModal').modal('toggle');
@@ -1917,7 +1862,7 @@ Template.customerscard.onRendered(function () {
     });
 });
 
-Template.customerscard.events({
+Template.contact_card.events({
     'keyup .txtSearchCustomers': function (event) {
         if ($(event.target).val() != '') {
             $(".btnRefreshCustomers").addClass('btnSearchAlert');
@@ -3669,7 +3614,7 @@ Template.customerscard.events({
     }
 });
 
-Template.customerscard.helpers({
+Template.contact_card.helpers({
     record: () => {
         let temp = Template.instance().records.get();
         return temp;
@@ -3715,6 +3660,9 @@ Template.customerscard.helpers({
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
+    },
+    customfields: () => {
+        return Template.instance().customfields.get();
     },
     tableheaderrecordsjob: () => {
         return Template.instance().tableheaderrecordsjob.get();
@@ -3881,6 +3829,24 @@ Template.customerscard.helpers({
     apiParams: function () {
         return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
     },
+
+    getDefaultValue (record) {
+        let utilityService = new UtilityService();
+        if(record.id == 'edtSalesQuota') {
+            let amount = item.salesQuota;
+            if (isNaN(amount) || !amount) {
+                amount = (amount === undefined || amount === null || amount.length === 0) ? 0 : amount;
+                amount = (amount) ? Number(amount.replace(/[^0-9.-]+/g, "")) : 0;
+            }
+            return utilityService.modifynegativeCurrencyFormat(amount) || 0.00;
+        } else {
+            return '';
+        }
+    },
+
+    tablename:()=>{
+        return Template.instance().tablename.get()
+    }
 });
 
 Template.registerHelper('equals', function (a, b) {
@@ -4312,4 +4278,5 @@ function openEditTaskModals(id, type) {
         // }).catch(function(err) {
         // })
     });
+    
 }
