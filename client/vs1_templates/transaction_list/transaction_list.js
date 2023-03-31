@@ -2477,35 +2477,33 @@ Template.transaction_list.onRendered(function() {
 
         for (let t = 0; t < workorderdata.length; t++) {
 
-              bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);
-            
+              bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
               
               let bomdetails = JSON.parse(bomData.Details);
 
-            
               for(let i = 0; i < bomdetails.length; i++) {
-                tempData = [
-                    '',
-                    '',
-                    workorderdata[t].fields.EmployeeId || i,
-                    workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                    workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
-                    workorderdata[t].fields.ID || '',
-                    bomdetails[i].process || '',
-                    workorderdata[t].fields.ProductName || '',
-                    workorderdata[t].fields.TrackedTime || 0,
+                if(bomdetails[i].process != '' ){
+                    tempData = [
+                        '',
+                        '',
+                        workorderdata[t].fields.EmployeeId || i,
+                        workorderdata[t].fields.EmployeeName || 'Dene Mill',
+                        workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                        workorderdata[t].fields.ID || '',
+                        bomdetails[i].process || '',
+                        workorderdata[t].fields.ProductName || '',
+                        workorderdata[t].fields.TrackedTime || 0,
+                        workorderdata[t].fields.Note || '',
+                        workorderdata[t].fields.Status || ''                  
+        
+                    ];
+    
+                    splashArrayProcessClockList.push(tempData);
 
-                    workorderdata[t].fields.Note || '',
-
-                    workorderdata[t].fields.Status || ''                  
-
-
-                ];
-
-              splashArrayProcessClockList.push(tempData);
+                }
+                
              }           
         }
-
 
         templateObject.datatablerecords.set(splashArrayProcessClockList);
 
