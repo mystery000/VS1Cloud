@@ -459,6 +459,31 @@ Template.process_clock_template.events({
             return false;
         }
 
+        let groups = [];
+
+        $("#tblProcessClockList tr").each(function() {
+            
+            // If the checkbox is checked, add its value to the corresponding group
+            if ($(this).find("input[type='checkbox']").is(":checked")) {
+                var empName = $(this).closest("tr").find("td:eq(3)").text();
+               // var clockedTime = $(this).closest("tr").find("td:eq(8)").text();
+                var pauseTime ;
+                if(type == "Lunch") {
+                    pauseTime = 45/60;
+                } else if(type == "Break" ) {
+                    pauseTime = 15/40 ;
+                } else {
+                    pauseTime = 0;
+                }
+               var temp = {EmpName: empName, PauseTime: pauseTime} ;
+                groups.push(temp);
+            }
+        });
+
+        console.log(groups);  
+
+
+
         $('.fullScreenSpin').css('display', 'none');
 
         swal('The Group Clock On/Off  is saved', '', 'success');

@@ -353,6 +353,9 @@ Template.clockOnOff.events({
               //   $("#employee_name").val() + " you are now Clocked On",
               //   "now-success"
               // );
+
+              console.log(data);
+              
               addVS1Data("TTimeSheet", JSON.stringify(data));
 
               $("#employeeStatusField").removeClass("statusOnHold");
