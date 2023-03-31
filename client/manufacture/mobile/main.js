@@ -690,6 +690,7 @@ Template.mobileapp.events({
         if (window.screen.width <= 480) {
             $(".mobile-right-btn-containner").css('display', 'none');
         }
+
         $("#btnClockIn_phone").css('background', '#999');
         $("#btnStartJob_phone").css('background', '#00AE00');
         $("#btnStartBreak_phone").css('background', '#00AE00');
@@ -704,7 +705,7 @@ Template.mobileapp.events({
     'click #btnClockOut': function (e, instance) {
 
         Template.instance().isClockin.set(false);
-        //  Template.instance().inputStatus.set("enterJobNumber");
+        Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
@@ -724,9 +725,8 @@ Template.mobileapp.events({
     'click #btnClockOut_phone': function (e, instance) {
 
         Template.instance().isClockin.set(false);
-                       
-      //  Template.instance().inputStatus.set("enterJobNumber");
 
+        Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut_phone').prop('disabled', true);
         $("#btnClockOut_phone").css('background', '#0084D1');
