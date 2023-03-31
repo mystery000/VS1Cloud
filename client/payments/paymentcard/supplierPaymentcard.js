@@ -3587,6 +3587,9 @@ $(document).ready(function () {
                 $("#eftNumberUser").val(data.fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
                 $('#sltBankAccountName').val(data.fields.AccountName);
+                $('#edtForeignAmount').val(data.fields.ForeignCurrencyAmount);
+                $('#edtVariation').val(data.fields.ForeignVariationAmount);
+                $('#edtApplied').val(data.fields.ForeignApplied);
 
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
@@ -3834,6 +3837,9 @@ $(document).ready(function () {
                 $("#eftUserName").val(useData[d].fields.CompanyName);
                 $("#eftNumberUser").val(useData[d].fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
+                  $('#edtForeignAmount').val(useData[d].fields.ForeignCurrencyAmount);
+                  $('#edtVariation').val(useData[d].fields.ForeignVariationAmount);
+                  $('#edtApplied').val(useData[d].fields.ForeignApplied);
 
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
