@@ -444,7 +444,6 @@ Template.datatablelist.onRendered(async function () {
         let aitems = [];
 
         const tabledraw = () => {
-            console.log(colDef);
             $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,
@@ -783,7 +782,6 @@ Template.datatablelist.onRendered(async function () {
 
         async function getColDef() {
             let items =await templateObject.displayfields.get();
-            console.log(items);
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
