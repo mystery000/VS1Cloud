@@ -16,9 +16,100 @@ Template.adduompop.onCreated(function () {
     templateObject.includeSalesDefault.set(false);
     templateObject.includePurchaseDefault = new ReactiveVar();
     templateObject.includePurchaseDefault.set(false);
+    templateObject.record = new ReactiveVar();
 });
 
-Template.adduompop.onRendered(function () {});
+Template.adduompop.onRendered(async function () {
+    let templateObject = Template.instance();
+    templateObject.getUOMData = async function () {
+        return new Promise((resolve, reject) => {
+            if(templateObject.data.name) {
+                let name = templateObject.data.name;
+                getVS1Data("TUnitOfMeasure").then(function(dataObject) {
+                    if(dataObject.length ==0) {
+                        sideBarService.getUOMVS1ByName(name).then(function(data) {
+                            if(data.tunitofmeasure.length > 0){
+                                resolve(data.tunitofmeasure[0])
+                            } else {
+                                resolve(null)
+                            }
+                        })
+                    }else {
+                        let data = JSON.parse(dataObject[0].data);
+                        let useData = data.tunitofmeasure;
+                        let added = false;
+                        for(let i=0; i< useData.length; i++) {
+                            if(useData[i].fields.UOMName == name) {
+                                added = true;
+                                resolve(useData[i]);
+                            }
+                        }
+                        if(added == false) {
+                            sideBarService.getUOMVS1ByName(name).then(function(data) {
+                                if(data.tunitofmeasure.length > 0) {
+                                    resolve(data.tunitofmeasure[0])
+                                } else {
+                                    resolve(null)
+                                }
+                            })  
+                        }
+                    }
+                }).catch(function(e) {
+                    sideBarService.getUOMVS1ByName(name).then(function(data) {
+                        if(data.tunitofmeasure.length > 0) {
+                            resolve(data.tunitofmeasure[0])
+                        } else {
+                            resolve(null)
+                        }
+                    })
+                })
+            } else {
+                resolve(null);
+            }
+        })
+    }
+
+    let data = await templateObject.getUOMData();
+    let record = "";
+    if(data && data != null) {
+        $("#edtUOMNamePop").attr("readonly", true);
+        let taxRate = (
+            data.fields.Rate * 100
+        ).toFixed(2);
+        var taxRateID = data.fields.ID || "";
+        var taxRateName =
+            data.fields.UOMName || "";
+        var taxRateDesc =
+            data.fields.Description || "";
+        var multi = data.fields.Multiplier || 0;
+        var salesDefault = data.fields.SalesDefault || false;
+        templateObject.includeSalesDefault.set(salesDefault);
+        var purchaseDefault = data.fields.PurchasesDefault || false;
+        templateObject.includePurchaseDefault.set(purchaseDefault)
+        // $("#edtUOMID").val(taxRateID);
+        // $("#edtUOMNamePop").val(taxRateName);
+        // $("#edtTaxRatePop").val(taxRate);
+        // $("#edtTaxDescPop").val(taxRateDesc);
+        record = {
+            unitName: taxRateName,
+            unitDescription: taxRateDesc,
+            unitID: taxRateID,
+            unitMutli: multi,
+        }
+        templateObject.record.set(record)
+    }else {
+        record = {
+            unitName: '',
+            unitDescription: '',
+            unitID: '',
+            unitMutli: 0,
+        }
+        templateObject.record.set(record);
+        templateObject.includeSalesDefault.set(false);
+        templateObject.includePurchaseDefault.set(false);
+    }
+
+});
 
 Template.adduompop.events({
     'click .btnSaveUOM': function () {
@@ -217,4 +308,8 @@ Template.adduompop.events({
     },
 });
 
-Template.adduompop.helpers({});
+Template.adduompop.helpers({
+    record: ()=>{
+        return Template.instance().record.get();
+    }
+});

@@ -15,8 +15,8 @@ Template.bankNameModal.onCreated(function () {
 
   templateObject.getDataTableList = function(data) {
     let dataList = [
-        data[0],
-        data[1]
+        data.BankCode || "",
+        data.BankName || ""
     ];
     return dataList;
   }

@@ -122,6 +122,12 @@ Template.eft_export.onRendered(function () {
                     $('#sltTransactionDescription').val(descriptiveList[0].TransactionDescription);
                 }
                 $('.fullScreenSpin').css('display', 'none');
+
+                /* Damien */
+                // For Focus into search field
+                setTimeout(function() {
+                    $("#tblEftExportCheckbox_filter .form-control-sm").get(0).focus();
+                }, 500);
             });
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
