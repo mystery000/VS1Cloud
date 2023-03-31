@@ -51,12 +51,11 @@ Template.salesoverview.onCreated(function () {
     };
 
     let dataList = [
-      data.SaleDate != ""
-        ? moment(data.SaleDate).format("YYYY/MM/DD")
-        : data.SaleDate,
-      data.SaleDate != ""
-        ? moment(data.SaleDate).format("DD/MM/YYYY")
-        : data.SaleDate,
+      '<span style="display: none">' + (data.SaleDate != ""
+      ? moment(data.SaleDate).format("DD/MM/YYYY")
+      : data.SaleDate) + '</span>' + (data.SaleDate != ""
+      ? moment(data.SaleDate).format("DD/MM/YYYY")
+      : data.SaleDate),
       data.SaleId || "",
       data.Type || "",
       data.CustomerName || "",
@@ -73,19 +72,18 @@ Template.salesoverview.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: 'Sort Date', class:'colSortDate', active: false, display: true, width: "100" },
-    { index: 1, label: 'Sale Date', class:'colSaleDate', active: true, display: true, width: "100" },
-    { index: 2, label: 'Sales No.', class:'colSalesNo', active: true, display: true, width: "100" },
-    { index: 3, label: 'Type', class:'colType', active: true, display: true, width: "100" },
-    { index: 4, label: 'Customer', class:'colCustomer', active: true, display: true, width: "300" },
-    { index: 5, label: 'Amount (Ex)', class:'colAmountEx', active: true, display: true, width: "150" },
-    { index: 6, label: 'Tax', class:'colTax', active: true, display: true, width: "80" },
-    { index: 7, label: 'Amount (Inc)', class:'colAmount', active: true, display: true, width: "150" },
-    { index: 8, label: 'Paid', class:'colPaid', active: true, display: true, width: "80" },
-    { index: 9, label: 'Balance Outstanding', class:'colBalanceOutstanding', active: true, display: true, width: "200" },
-    { index: 10, label: 'Employee', class:'colEmployee', active: true, display: true, width: "100" },
-    { index: 11, label: 'Comments', class: 'colComments', active: true, display: true, width: "100" },
-    { index: 12, label: 'Status', class:'colStatus', active: true, display: true, width: "100" },
+    { index: 0, label: 'Sale Date', class:'colSaleDate', active: true, display: true, width: "100" },
+    { index: 1, label: 'Sales No.', class:'colSalesNo', active: true, display: true, width: "100" },
+    { index: 2, label: 'Type', class:'colType', active: true, display: true, width: "100" },
+    { index: 3, label: 'Customer', class:'colCustomer', active: true, display: true, width: "300" },
+    { index: 4, label: 'Amount (Ex)', class:'colAmountEx', active: true, display: true, width: "150" },
+    { index: 5, label: 'Tax', class:'colTax', active: true, display: true, width: "80" },
+    { index: 6, label: 'Amount (Inc)', class:'colAmount', active: true, display: true, width: "150" },
+    { index: 7, label: 'Paid', class:'colPaid', active: true, display: true, width: "80" },
+    { index: 8, label: 'Balance Outstanding', class:'colBalanceOutstanding', active: true, display: true, width: "200" },
+    { index: 9, label: 'Employee', class:'colEmployee', active: true, display: true, width: "100" },
+    { index: 10, label: 'Comments', class: 'colComments', active: true, display: true, width: "100" },
+    { index: 11, label: 'Status', class:'colStatus', active: true, display: true, width: "100" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
