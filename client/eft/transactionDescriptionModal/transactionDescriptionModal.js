@@ -1,7 +1,6 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { Template } from 'meteor/templating';
 import './transactionDescriptionModal.html'
-import {BankNameService} from "../../lib/global/bank-names";
 import {SideBarService} from "../../js/sidebar-service";
 
 let sideBarService = new SideBarService();
