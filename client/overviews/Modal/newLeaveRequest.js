@@ -554,7 +554,6 @@ Template.newLeaveRequestModal.events({
                 return false;
             } else {
                 $('.fullScreenSpin').css('display', 'block');
-                console.log('employeeID:',employeeID)
                 let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
                 let dbEndDate   = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
                 let leaveRequestSettings = new LeaveRequest({
