@@ -78,9 +78,9 @@ Template.payrolloverview.onCreated(function () {
       firstName,
       lastName,
       timeSheetDate,
-      status === ""?"Draft":status,
       msTimeStamp,
       parseFloat(data.fields.Hours) || '',
+      status === ""?"Draft":status,
     ];
     return dataTimeSheetList;
   }
