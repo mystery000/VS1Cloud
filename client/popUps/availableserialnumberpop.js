@@ -27,6 +27,14 @@ Template.availableserialnumberpop.onRendered(async () => {
             }
         }
     });
+
+    // Damien
+    // Set focus when open account list modal
+    $( "#availableSerialNumberModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblAvailableSNCheckbox_filter .form-control-sm').get(0).focus();
+        }, 500);
+    });
 });
 Template.availableserialnumberpop.helpers({});
 Template.availableserialnumberpop.events({

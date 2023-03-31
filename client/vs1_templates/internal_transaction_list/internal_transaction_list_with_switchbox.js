@@ -2778,7 +2778,18 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     $('#eftaccountid').on('change', function(event) {
         if (currenttablename == "tblEftExportCheckbox") templateObject.getEftExportData()
         tableResize()
-    })
+    });
+
+
+    $('#' + currenttablename)
+
+        // Damien
+    // Set focus when open account list modal
+    setTimeout(function() {
+        $('#' + currenttablename).on('shown.bs.modal', function(){
+            $('#' + currenttablename+'_filter .form-control-sm').get(0).focus();
+        });
+    }, 500);
 });
 
 Template.internal_transaction_list_with_switchbox.events({

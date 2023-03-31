@@ -8,19 +8,19 @@
   defaultValue
 -->
 <template name="default_input">
-  <div class="form-group">
+  <div class="form-group {{#unless isjobelement}} {{#if divClass}} {{divClass}} {{else}} d-none {{/if}} {{else}} {{#if jobdivClass}} {{jobdivClass}} {{else}} d-none {{/if}} {{/unless}}">
+  {{#if label}}
     <label>{{label}}</label>
+  {{/if}}
     {{#if placeholder }}
     <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
       value="{{defaultValue}}" placeholder="{{placeholder}}" style="cursor: pointer;">
+    {{elseif equals type "search" }}
+    <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
+      value="{{defaultValue}}" style="cursor: pointer;">
     {{else}}
-      {{#if equals type "search" }}
-      <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
-        value="{{defaultValue}}" style="cursor: pointer;">
-      {{else}}
-      <input class="form-control {{classes}}" type="{{type}}" id="{{id}}" name="{{name}}" readonly="{{readonly}}"
-        value="{{defaultValue}}">
-      {{/if}}
+    <input class="form-control {{classes}}" type="{{type}}" id="{{#unless isjobelement}} {{id}} {{else}} job{{id}} {{/unless}}" name="{{#unless isjobelement}} {{name}} {{else}} job{{name}} {{/unless}}" readonly="{{readonly}}"
+      value="{{defaultValue}}">
     {{/if}}
   </div>
 </template>

@@ -1,0 +1,15 @@
+<template name="vs1_tab_note">
+  <div class="tab-pane border rounded-0" role="tabpanel" id="{{id}}"
+    style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+    <div class="row no-gutters" style="margin: 12px;">
+      <div class="col">
+        <div
+          class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start"
+          style="margin: 4px;"><label>Notes</label>
+          <textarea class="border rounded flex-grow-1" style="width: 100%;height: 116px;" rows="4" id="txaNotes"
+            name="txaNotes">{{record.notes}}</textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
