@@ -7,6 +7,11 @@ import { ReportService } from '../report-service';
 import { UtilityService } from '../../utility-service';
 import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
 import Datehandler from '../../DateHandler';
+import GlobalFunctions from '../../GlobalFunctions';
+import LoadingOverlay from '../../LoadingOverlay';
+
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
@@ -22,7 +27,8 @@ Template.reportcard.onCreated(function(){
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
     templateObject.deptrecords = new ReactiveVar();
-    templateObject.agedpayablesth = new ReactiveVar([]);
+    templateObject.reset_data = new ReactiveVar([]);
+    templateObject.reportdata = new ReactiveVar([]);
   
     FxGlobalFunctions.initVars(templateObject);
     templateObject.reportOptions = new ReactiveVar();
@@ -30,24 +36,12 @@ Template.reportcard.onCreated(function(){
 })
 
 Template.reportcard.onRendered(function() {
-    let templateObject = Template.instance();
+  let templateObject = Template.instance();
     LoadingOverlay.show();
   
     templateObject.init_reset_data = function () {
-      let reset_data = [];
-      reset_data = [
-          { index: 1, label: 'Contact', class: 'colName', active: true, display: true, width: "150" },
-          { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "150" },
-          { index: 3, label: 'PO No.', class: 'colPONumber', active: true, display: true, width: "150" },
-          { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "150" },
-          { index: 5, label: 'Amount Due', class: 'colAmountDue text-right', active: true, display: true, width: "150" },
-          { index: 6, label: 'Current', class: 'colCurrent text-right', active: true, display: true, width: "150" },
-          { index: 7, label: '1 - 30 Days', class: 'col130Days text-right', active: true, display: true, width: "150" },
-          { index: 8, label: '30 - 60 Days', class: 'col3060Days text-right', active: true, display: true, width: "150" },
-          { index: 9, label: '60 - 90 Days', class: 'col6090Days text-right', active: true, display: true, width: "150" },
-          { index: 10, label: '> 90 Days', class: 'col90Days text-right', active: true, display: true, width: "150" },
-      ];
-      templateObject.agedpayablesth.set(reset_data);
+      let reset_data = templateObject.data.displaysettings;
+      templateObject.reset_data.set(reset_data);
     }
     templateObject.init_reset_data();
   
@@ -58,28 +52,27 @@ Template.reportcard.onRendered(function() {
       Datehandler.initOneMonth();
     };
     templateObject.setDateAs = (dateFrom = null) => {
-      templateObject.dateAsAt.set((dateFrom) ? moment(dateFrom).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
+      templateObject.dateAsAt.set((dateFrom) ? moment(new Date(dateFrom)).format("DD/MM/YYYY") : moment().format("DD/MM/YYYY"))
     };
     templateObject.initDate();
   
-    templateObject.getAgedPayablesData = async function (dateFrom, dateTo, ignoreDate, contactID) {
-  
+    templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate, contactID) {
       templateObject.setDateAs(dateFrom);
       getVS1Data('TAPReport').then(function (dataObject) {
         if (dataObject.length == 0) {
           sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
             await addVS1Data('TAPReport', JSON.stringify(data));
-            templateObject.displayAgedPayablesData(data);
+            templateObject.displayReportData(data);
           }).catch(function (err) {
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
-          templateObject.displayAgedPayablesData(data);
+          templateObject.displayReportData(data);
         }
       }).catch(function (err) {
         sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
           await addVS1Data('TAPReport', JSON.stringify(data));
-          templateObject.displayAgedPayablesData(data);
+          templateObject.displayReportData(data);
         }).catch(function (err) {
   
         });
@@ -99,140 +92,117 @@ Template.reportcard.onRendered(function() {
       $("#dateTo").datepicker('setDate', moment(getLoadDate).format('DD/MM/YYYY'));
     }
   
-    templateObject.getAgedPayablesData(
+    templateObject.getReportData(
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
       false
     );
-    templateObject.displayAgedPayablesData = async function (data) {
-      var splashArrayAgedPayablesReport = new Array();
-      let deleteFilter = false;
-      if (data.Params.Search.replace(/\s/g, "") == "") {
-        deleteFilter = true;
-      } else {
-        deleteFilter = false;
-      };
-      for (let i = 0; i < data.tapreport.length; i++) {
-        var dataList = [
-            data.tapreport[i].Name || "",
-            data.tapreport[i].Type || "",
-            data.tapreport[i].PONumber || "",
-            data.tapreport[i].DueDate || "",
-            data.tapreport[i].AmountDue || 0,
-            data.tapreport[i].Current || 0,
-            data.tapreport[i]["30Days"] || 0,
-            data.tapreport[i]["60Days"] || 0,
-            data.tapreport[i]["90Days"] || 0,
-            data.tapreport[i]["120Days"] || 0,
-        ];
-        splashArrayAgedPayablesReport.push(dataList);
-      }
-        splashArrayAgedPayablesReport.sort(GlobalFunctions.sortFunction);
-  
-        let start;
-        if(splashArrayAgedPayablesReport.length != 0) start = splashArrayAgedPayablesReport[0][0] || '';
-        let sum, totalSum;
-        sum = new Array(6);
-        totalSum = new Array(6);
-  
-        let T_AccountName = start;
-        let agedPayableList = [];
-        agedPayableList.push([
-            GlobalFunctions.generateSpan(T_AccountName, "table-cells text-bold"),
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            ""
-        ]);
-        let j;
-        for(j = 0 ; j < 6; j ++)  sum[j] = 0, totalSum[j] = 0;
-        for(let i = 0 ; i < splashArrayAgedPayablesReport.length ; i ++){
-            if(start != splashArrayAgedPayablesReport[i][0]) {
-                start = splashArrayAgedPayablesReport[i][0];
-                for(j = 0 ; j < 6; j ++){
-                    totalSum[j] += (sum[j] - 0);
-                    sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold", "text-right listhr");
+    templateObject.displayReportData = async function (data) {
+      let lowercasename = templateObject.data.lowercasename || templateObject.data.indexDBName.toLowerCase();
+      if(data[lowercasename] && data[lowercasename].length > 0) {
+        function groupBy(xs, prop) {
+          var grouped = {};
+          for (var i=0; i<xs.length; i++) {
+            var p = xs[i][prop];
+            if (!grouped[p]) { grouped[p] = []; }
+            grouped[p].push(xs[i]);
+          }
+          return grouped;
+        }
+        let groupedData = groupBy(data[lowercasename], templateObject.data.mainfieldname);
+        let keys = Object.keys(groupedData)
+        let sumFieldsIndex=[];
+        let datatableArr = [];
+        let displaysettings = templateObject.reset_data.get();
+        displaysettings.forEach((item, index) => {
+          if(item.calc == true) {
+            sumFieldsIndex.push(index)
+          }
+        });
+
+        for(let i = 0; i< keys.length; i ++) {
+          let subArr = [];
+          if(groupedData[keys[i]].length > 0) {
+            for(let j = 0; j<groupedData[keys[i]].length; j++) {
+              let line = templateObject.data.datahandler(groupedData[keys[i]][j]);
+              line[0] = ''
+              subArr.push(line)
+            }
+            let calcedValues = [];
+            for(let x = 0; x < sumFieldsIndex.length; x++) {
+              calcedValues.push(0)
+            }
+            for(let k = 0 ; k< sumFieldsIndex.length; k++) {
+              let index = sumFieldsIndex[k];
+              if(index != undefined) {
+                for(n = 0; n< subArr.length; n++) {
+                  calcedValues[k] = calcedValues[k] + subArr[n][index];
                 }
-                agedPayableList.push([
-                    GlobalFunctions.generateSpan(`Total ${T_AccountName}`, "table-cells text-bold", "listhr"),
-                    GlobalFunctions.generateSpan("","","listhr"),
-                    GlobalFunctions.generateSpan("","","listhr"),
-                    GlobalFunctions.generateSpan("","","listhr"),
-                    sum[0],
-                    sum[1],
-                    sum[2],
-                    sum[3],
-                    sum[4],
-                    sum[5],
-                ]);
-                agedPayableList.push([
-                    GlobalFunctions.generateSpan(splashArrayAgedPayablesReport[i][0], "table-cells text-bold"),
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    "",
-                    ""
-                ]);
-                for(j = 0 ; j < 6; j ++) sum[j] = 0;
+              }
             }
-            T_AccountName = splashArrayAgedPayablesReport[i][0];
-            splashArrayAgedPayablesReport[i][0] = "";
-            splashArrayAgedPayablesReport[i][1] = GlobalFunctions.generateSpan(splashArrayAgedPayablesReport[i][1], 'text-primary');
-            splashArrayAgedPayablesReport[i][2] = GlobalFunctions.generateSpan(splashArrayAgedPayablesReport[i][2], 'text-primary');
-            splashArrayAgedPayablesReport[i][3] = GlobalFunctions.generateSpan(GlobalFunctions.formatDate(splashArrayAgedPayablesReport[i][3]), 'text-primary');
-            let tmp;
-            for(j = 0 ; j < 6; j ++) {
-                tmp = splashArrayAgedPayablesReport[i][4 + j] - 0;
-                splashArrayAgedPayablesReport[i][4 + j] = (tmp >= 0) ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-success', "text-right") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(tmp), 'text-danger', "text-right");
-                sum[j] += tmp;
+            let newLine = templateObject.data.datahandler('');
+            newLine[0] = keys[i] + ' Total';
+            for(let o = 0; o<sumFieldsIndex.length; o++) {
+              newLine[sumFieldsIndex[o]] = calcedValues[o]
             }
-            agedPayableList.push(splashArrayAgedPayablesReport[i]);
+            subArr.push(newLine)
+
+            subArr.forEach((item, index)=> {
+              for(let p=0; p<sumFieldsIndex.length; p++) {
+                item[sumFieldsIndex[p]] = GlobalFunctions.showCurrency(item[sumFieldsIndex[p]])
+              }
+            })
+          }
+          let obj = {
+            type: keys[i],
+            subArr: subArr
+          }
+          datatableArr.push(obj)
+         
+
+          // datatableArr.forEach((sub)=>{
+           
+          // })
         }
-        for(j = 0 ; j < 6; j ++){
-            totalSum[j] += sum[j] - 0;
-            sum[j] = sum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(sum[j]), "text-danger text-bold", "text-right listhr");
-        }
-        agedPayableList.push([
-            GlobalFunctions.generateSpan(`Total ${T_AccountName}`, 'table-cells text-bold', "listhr"),
-            GlobalFunctions.generateSpan("","","listhr"),
-            GlobalFunctions.generateSpan("","","listhr"),
-            GlobalFunctions.generateSpan("","","listhr"),
-            sum[0],
-            sum[1],
-            sum[2],
-            sum[3],
-            sum[4],
-            sum[5],
-        ]);
-        for(j = 0 ; j < 6; j ++){
-            totalSum[j] = totalSum[j] >= 0 ? GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "table-cells text-bold", "text-right listhr") : GlobalFunctions.generateSpan(GlobalFunctions.showCurrency(totalSum[j]), "text-danger text-bold", "text-right listhr");
-        }
-        agedPayableList.push([
-            GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold', "listhr"),
-            GlobalFunctions.generateSpan("","","listhr"),
-            GlobalFunctions.generateSpan("","","listhr"),
-            GlobalFunctions.generateSpan("","","listhr"),
-            totalSum[0],
-            totalSum[1],
-            totalSum[2],
-            totalSum[3],
-            totalSum[4],
-            totalSum[5],
-        ]);
-        templateObject.transactiondatatablerecords.set(agedPayableList);
-  
+        let totalLine = templateObject.data.datahandler('');
+        let totalValues = [];
+            for(let x = 0; x < sumFieldsIndex.length; x++) {
+              totalValues.push(0)
+            }
+            for(let k = 0 ; k< sumFieldsIndex.length; k++) {
+              let index = sumFieldsIndex[k];
+              if(index != undefined) {
+                for(n = 0; n< datatableArr.length; n++) {
+                  let subArray = datatableArr[n].subArr;
+                  totalValues[k] = totalValues[k] + removeCurrencySymbol(subArray[subArray.length-1][index]);
+                }
+              }
+            }
+
+            function removeCurrencySymbol (data) {
+              let retVal = Number(data.replace(/[^0-9.-]+/g,""));
+              return retVal
+            }
+            for(let o = 0; o<sumFieldsIndex.length; o++) {
+              if(totalValues[o].toString().includes('-')) {
+
+                totalLine[sumFieldsIndex[o]] = Currency + (totalValues[o]).toString();
+                totalLine[sumFieldsIndex[o]].replace('-', '');
+                totalLine[sumFieldsIndex[o]] = '-'+totalLine[sumFieldsIndex[o]];
+              } else {
+                totalLine[sumFieldsIndex[o]] = Currency + (totalValues[o]).toString();
+              }
+            }
+
+            datatableArr.push({type:'total', subArr: [totalLine]})
+
+        // }        
+        templateObject.reportdata.set(datatableArr)
+      }
+
         setTimeout(function () {
-        $('#tableExport1').DataTable({
-          data: agedPayableList,
+        $('#tableExport').DataTable({
+          // data: agedPayableList,
           searching: false,
           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
           columnDefs: [
@@ -317,30 +287,275 @@ Template.reportcard.onRendered(function() {
       $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
   
-  
-    // ------------------------------------------------------------------------------------------------------
-    // $("#tblgeneralledger tbody").on("click", "tr", function () {
-    //   var listData = $(this).closest("tr").children('td').eq(8).text();
-    //   var checkDeleted = $(this).closest("tr").find(".colStatus").text() || "";
-  
-    //   if (listData) {
-    //     if (checkDeleted == "Deleted") {
-    //       swal("You Cannot View This Transaction", "Because It Has Been Deleted", "info");
-    //     } else {
-    //       FlowRouter.go("/journalentrycard?id=" + listData);
-    //     }
-    //   }
-    // });
-  
-  
     LoadingOverlay.hide();
     
 })
 
 Template.reportcard.helpers({
-
+  reportdata: ()=> {
+    return Template.instance().reportdata.get();
+  },
+  reset_data: ()=> {
+    return Template.instance().reset_data.get()
+  },
+  dateAsAt: () => {
+    return Template.instance().dateAsAt.get();
+  }
 })
 
 Template.reportcard.events({
+  'click .chkDatatable': function (event) {
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+    if ($(event.target).is(':checked')) {
+      $('.' + columnDataValue).addClass('showColumn');
+      $('.' + columnDataValue).removeClass('hiddenColumn');
+    } else {
+      $('.' + columnDataValue).addClass('hiddenColumn');
+      $('.' + columnDataValue).removeClass('showColumn');
+    }
+  },
 
+  'click .btnOpenReportSettings': () => {
+    let templateObject = Template.instance();
+    // let currenttranstablename = templateObject.data.tablename||";
+    $(`thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow.attr('data-class') || "";
+      $('.rngRange' + colthClass).val(colWidth);
+    });
+    $('.' + templateObject.data.tablename + '_Modal').modal('toggle');
+  },
+
+  'change .custom-range': async function (event) {
+    //   const tableHandler = new TableHandler();
+    let range = $(event.target).val() || 0;
+    let colClassName = $(event.target).attr("valueclass");
+    await $('.' + colClassName).css('width', range);
+    //   await $('.colAccountTree').css('width', range);
+    $('.dataTable').resizable();
+  },
+
+  'click .btnRefresh': function () {
+    $('.fullScreenSpin').css('display', 'inline-block');
+    Meteor._reload.reload();
+  },
+
+  'click td a': function (event) {
+        let redirectid = $(event.target).closest('tr').attr('id');
+
+        let transactiontype = $(event.target).closest('tr').attr('class'); ;
+
+        if (redirectid && transactiontype) {
+            if (transactiontype === 'Bill') {
+                window.open('/billcard?id=' + redirectid, '_self');
+            } else if (transactiontype === 'PO') {
+                window.open('/purchaseordercard?id=' + redirectid, '_self');
+            } else if (transactiontype === 'Credit') {
+                window.open('/creditcard?id=' + redirectid, '_self');
+            } else if (transactiontype === 'Supplier Payment') {
+                window.open('/supplierpaymentcard?id=' + redirectid, '_self');
+            }
+        }
+        // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+    },
+
+    'click .btnPrintReport': function (event) {
+      let templateObject = Template.instance();
+      $('.fullScreenSpin').css('display', 'inline-block')
+      playPrintAudio();
+      setTimeout(async function(){
+        let targetElement = document.getElementsByClassName('printReport')[0];
+        targetElement.style.width = "210mm";
+        targetElement.style.backgroundColor = "#ffffff";
+        targetElement.style.padding = "20px";
+        targetElement.style.height = "fit-content";
+        targetElement.style.fontSize = "13.33px";
+        targetElement.style.color = "#000000";
+        targetElement.style.overflowX = "visible";
+        let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
+        let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
+        for (let k = 0; k< targetTds.length; k++) {
+            $(targetTds[k]).attr('style', 'min-width: 0px !important')
+        }
+        for (let j = 0; j< targetThs.length; j++) {
+            $(targetThs[j]).attr('style', 'min-width: 0px !important')
+        }
+
+        let docTitle = templateObject.data.printDocTitle;
+
+
+        var opt = {
+            margin: 0,
+            filename: docTitle,
+            image: {
+                type: 'jpeg',
+                quality: 0.98
+            },
+            html2canvas: {
+                scale: 2
+            },
+            jsPDF: {
+                unit: 'in',
+                format: 'a4',
+                orientation: 'portrait'
+            }
+        };
+        let source = targetElement;
+
+        async function getAttachments () {
+          return new Promise(async(resolve, reject)=> {
+            html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+              let pdfObject = "";
+              let base64data = dataObject.split(',')[1];
+              pdfObject = {
+                filename: docTitle,
+                content: base64data,
+                encoding: 'base64'
+              }
+              let attachments = [];
+              attachments.push(pdfObject);
+              resolve(attachments)
+            })
+          })
+        }
+
+
+        async function checkBasedOnType() {
+          return new Promise(async(resolve, reject)=>{
+            let values = [];
+            let typeIndex = templateObject.data.typeIndex;
+            let basedOnTypeStorages = Object.keys(localStorage);
+            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+                let employeeId = storage.split('_')[2];
+                return storage.includes('BasedOnType_');
+                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
+            });
+            let i = basedOnTypeStorages.length;
+            if (i > 0) {
+                while (i--) {
+                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
+                }
+            }
+            for (let j =0; j<values.length; j++) {
+              let value = values[j]
+              let reportData = JSON.parse(value);
+              reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+              if (reportData.BasedOnType.includes("P")) {
+                  if (reportData.FormID == 1) {
+                      let formIds = reportData.FormIDs.split(',');
+                      if (formIds.includes(typeIndex.toString())) {
+                          reportData.FormID = typeIndex;
+                          reportData.attachments = await getAttachments()
+                          Meteor.call('sendNormalEmail', reportData);
+                          resolve();
+                      }
+                  } else {
+                      if (reportData.FormID == typeIndex) {
+                        reportData.attachments = await getAttachments();
+                        Meteor.call('sendNormalEmail', reportData);
+                        resolve();
+                      }
+                  }
+              }
+              if(j == values.length -1) {resolve()}
+            }
+
+          })
+        }
+
+        await checkBasedOnType()
+
+        $('.fullScreenSpin').css('display', 'none');
+        document.title = templateObject.data.tabledisplayname + ' Report';
+        // document.title = 'Aged Payables Report';
+        $(".printReport").print({
+            title: document.title + " | "+templateObject.data.tabledisplayname+" | " + loggedCompany,
+            noPrintSelector: ".addSummaryEditor",
+        });
+
+        targetElement.style.width = "100%";
+        targetElement.style.backgroundColor = "#ffffff";
+        targetElement.style.padding = "0px";
+        targetElement.style.fontSize = "1rem";
+      }, delayTimeAfterSound);
+    },
+
+    'click .btnExportReport': function () {
+      $('.fullScreenSpin').css('display', 'inline-block');
+
+      let templateObject = Template.instance();
+
+      const filename = loggedCompany + ' - '+templateObject.data.tabledisplayname+'' + '.csv';
+      utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
+    },
+    'keyup #myInputSearch': function (event) {
+      $('.table tbody tr').show();
+      let searchItem = $(event.target).val();
+      if (searchItem != '') {
+          var value = searchItem.toLowerCase();
+          $('.table tbody tr').each(function () {
+              var found = 'false';
+              $(this).each(function () {
+                  if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                      found = 'true';
+                  }
+              });
+              if (found == 'true') {
+                  $(this).show();
+              } else {
+                  $(this).hide();
+              }
+          });
+      } else {
+          $('.table tbody tr').show();
+      }
+  },
+  'blur #myInputSearch': function (event) {
+      $('.table tbody tr').show();
+      let searchItem = $(event.target).val();
+      if (searchItem != '') {
+          var value = searchItem.toLowerCase();
+          $('.table tbody tr').each(function () {
+              var found = 'false';
+              $(this).each(function () {
+                  if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+                      found = 'true';
+                  }
+              });
+              if (found == 'true') {
+                  $(this).show();
+              } else {
+                  $(this).hide();
+              }
+          });
+      } else {
+          $('.table tbody tr').show();
+      }
+  },
+  "click #ignoreDate": function () {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem(templateObject.data.localStorageKeyName, "");
+    $("#dateFrom").attr("readonly", true);
+    $("#dateTo").attr("readonly", true);
+    templateObject.getReportData(null, null, true);
+  },
+  "change #dateTo, change #dateFrom": (e) => {
+    let templateObject = Template.instance();
+    LoadingOverlay.show();
+    localStorage.setItem(templateObject.data.localStorageKeyName, "");
+    templateObject.getReportData(
+      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      false
+    )
+  },
+  ...Datehandler.getDateRangeEvents(),
+
+  ...FxGlobalFunctions.getEvents(),
 })
+
+Template.registerHelper('lookup', function (obj, key) {
+  return obj[key];
+});
