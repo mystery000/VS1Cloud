@@ -77,7 +77,7 @@ Template.employeelistpop.onCreated(function () {
         {index: 12, label: 'State', class: 'colState', active: false, display: true, width: "120"},
         {index: 13, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80"},
         {index: 14, label: 'Country', class: 'colCountry', active: false, display: true, width: "200"},
-        {index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
+        {index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });

@@ -1,0 +1,39 @@
+<template name="vs1_tab_tax">
+  <div class="tab-pane border rounded-0" role="tabpanel" id="{{id}}"
+    style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+    <div class="row no-gutters d-xl-flex flex-column justify-content-xl-start" style="margin: 12px;">
+      <div class="col">
+        <div class="custom-control custom-switch" style="margin: 4px;"><input class="custom-control-input chkTaxExempt"
+            type="checkbox" id="formCheck-2" style=" cursor: pointer;" checked><label class="custom-control-label"
+            for="formCheck-2" style=" cursor: pointer;">Customer is tax
+            exempt</label></div>
+      </div>
+
+      {{#if equals record.taxcode "NT"}}
+      <script>
+        $('#formCheck-2').attr("checked", "checked");
+        $('#autoUpdate').css('display', 'none');
+      </script>
+      {{else}}
+      <script>
+        $('#formCheck-2').removeAttr("checked");
+        $('#autoUpdate').css('display', 'block');
+      </script>
+      {{/if}}
+
+      <div class="col d-xl-flex align-items-xl-end">
+        <div id="autoUpdate" style="display: none;">
+          <div
+            class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start"
+            style="margin: 4px;"><label class="text-nowrap">Tax
+              Code</label>
+            <select type="search" class="form-control taxCodeSelect" value="{{record.taxcode}}"
+              style="width: 260px; background-color:rgb(255, 255, 255); cursor: pointer;" id="sltTaxCode"
+              name="sltTaxCode">
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

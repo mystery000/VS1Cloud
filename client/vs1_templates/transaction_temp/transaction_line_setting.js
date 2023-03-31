@@ -87,6 +87,8 @@ export default class TransactionFields {
         { index: 11, label: "Amount (Ex)",        class: "AmountEx",       width: "155",       active: true,   display: true },
         { index: 12, label: "Amount (Inc)",       class: "AmountInc",      width: "155",       active: false,  display: true },
         { index: 13, label: "Units",              class: "Units",          width: "95",        active: true,   display: true },
+        { index: 14,  label: "Custom Field 1",     class: "CustomField1",  width: "124",       active: false,  display: true },
+        { index: 15,  label: "Custom Field 2",     class: "CustomField2",  width: "124",       active: false,  display: true },
     ];
     static initRefundLine = [
         { index: 0,  label: "Product Name",        class: "ProductName",   width: "200",       active: true,   display: true },
