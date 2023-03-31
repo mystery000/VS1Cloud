@@ -2444,44 +2444,33 @@ Template.transaction_list.onRendered(function() {
     templateObject.getProcessClockList = function(){
         getVS1Data('TVS1Workorder').then(async function (dataObject) {
             if (dataObject.length == 0) {
-                // let data = await CachedHttp.get(erpObject.TVS1Workorder, async() => {
-                //     return await sideBarService.getAllTimeSheetList();
-                // }, {
-                //     useIndexDb: true,
-                //     useLocalStorage: false,
-                //     fallBackToLocal: true,
-                //     forceOverride: refresh,
-                //     validate: cachedResponse => {
-                //         return true;
-                //     }
-                // });
-                // await addVS1Data('TVS1Workorder', JSON.stringify(data));
-                // templateObject.displayProcessClockList(data);
+                let workOrderList = manufacturingService.getWorkOrderList();
+                templateObject.displayProcessClockList(workOrderList);
+
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderList})).then(function(datareturn){
+                        
+                }).catch(function(err){
+                });
+
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                templateObject.displayProcessClockList(data);
+                templateObject.displayProcessClockList(data.tvs1workorder);
             }
         }).catch(async function (err) {
-            // let data = await CachedHttp.get(erpObject.TTimeSheet, async() => {
-            //     return await sideBarService.getAllTimeSheetList();
-            // }, {
-            //     useIndexDb: true,
-            //     useLocalStorage: false,
-            //     fallBackToLocal: true,
-            //     forceOverride: refresh,
-            //     validate: cachedResponse => {
-            //         return true;
-            //     }
-            // });
-            // await addVS1Data('TTimeSheet', JSON.stringify(data));
-            // templateObject.displayProcessClockList(data);
+            let workOrderList = manufacturingService.getWorkOrderList();
+                templateObject.displayProcessClockList(workOrderList);
+
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderList})).then(function(datareturn){
+                        
+                }).catch(function(err){
+            });
         });
     }
 
     templateObject.displayProcessClockList = function(data){
        
         let splashArrayProcessClockList = new Array();
-        let workorderdata = data.tvs1workorder;
+        let workorderdata = data;
         let bomData;
         let tempData;
 
@@ -2489,7 +2478,7 @@ Template.transaction_list.onRendered(function() {
         for (let t = 0; t < workorderdata.length; t++) {
 
               bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);
-              
+            
               
               let bomdetails = JSON.parse(bomData.Details);
 
@@ -2497,7 +2486,8 @@ Template.transaction_list.onRendered(function() {
               for(let i = 0; i < bomdetails.length; i++) {
                 tempData = [
                     '',
-                    workorderdata[t].fields.EmployeeID || i,
+                    '',
+                    workorderdata[t].fields.EmployeeId || i,
                     workorderdata[t].fields.EmployeeName || 'Dene Mill',
                     workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
                     workorderdata[t].fields.ID || '',
@@ -2513,12 +2503,7 @@ Template.transaction_list.onRendered(function() {
                 ];
 
               splashArrayProcessClockList.push(tempData);
-
-
-
-             }
-
-           
+             }           
         }
 
 
@@ -2559,7 +2544,7 @@ Template.transaction_list.onRendered(function() {
                     text: '',
                     download: 'open',
                     className: "btntabletocsv hiddenColumn",
-                    filename: "Pay Leave To Review - " + moment().format(),
+                    filename: "Process_Clock_On_Off- " + moment().format(),
                     orientation: 'portrait',
                     exportOptions: {
                         columns: ':visible'

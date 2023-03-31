@@ -60,8 +60,6 @@ export class ManufacturingService extends BaseService {
        const isoStr = now.toISOString();
        const localeDateStr = now.toLocaleDateString();
 
-
-
         let workorders = [
           {
               "type": "TVS1Workorder",
