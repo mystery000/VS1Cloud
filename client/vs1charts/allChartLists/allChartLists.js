@@ -732,10 +732,16 @@ Template.allChartLists.events({
         let templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "inline-block");
-            await saveCharts();
-            await chartsEditor.disable();
-            await templateObject.hideChartElements();
-            templateObject.checkChartToDisplay();
+            // await saveCharts();
+            // await chartsEditor.disable();
+            // await templateObject.hideChartElements();
+            // templateObject.checkChartToDisplay();
+            // if( $(ui.item[0]).hasClass("editCharts") == false ){
+              await ChartHandler.buildPositions();
+              await ChartHandler.saveCharts();
+              await ChartHandler.saveChartsInLocalDB();              
+              templateObject.checkChartToDisplay();
+            // } 
 
             $(".fullScreenSpin").css("display", "none");
             Meteor._reload.reload();
