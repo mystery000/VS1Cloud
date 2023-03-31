@@ -66,18 +66,19 @@ Template.payrollproductlistpop.onCreated(() => {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.getDataTableList = function(data) {
+      console.log('data ~~~~~~~~~~~~~~~~1', data);
         let dataList = [
             '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.fields.ID+'"></label></div>',
-            data.fields.ProductName || '-',  
-            data.fields.SalesDescription || '',
-            data.fields.BARCODE || '',
-            utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.BuyQty1Cost * 100) / 100),
-            utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
-            data.fields.TotalQtyInStock,
-            data.fields.TaxCodeSales || '',
-            data.fields.ID || '',
-            JSON.stringify(data.fields.ExtraSellPrice)||null,
-            utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100)
+            data.ProductName || '-',  
+            data.SalesDescription || '',
+            data.BARCODE || '',
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.BuyQty1Cost * 100) / 100),
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1Price * 100) / 100),
+            data.TotalQtyInStock,
+            data.TaxCodeSales || '',
+            data.ID || '',
+            JSON.stringify(data.ExtraSellPrice)||null,
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1PriceInc * 100) / 100)
         ];
         return dataList;
     }
@@ -294,11 +295,7 @@ Template.payrollproductlistpop.helpers({
         return Template.instance().tableheaderrecords.get();
     },
     apiFunction:function() { // do not use arrow function
-        return sideBarService.getProductServiceListVS1
-    },
-
-    searchAPI: function() {
-        return sideBarService.getProductServiceListVS1ByName
+        return sideBarService.getProductQTYServiceListVS1
     },
 
     apiParams: function() {

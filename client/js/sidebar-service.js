@@ -346,6 +346,27 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TProductVS1, options);
   }
 
+  getProductQTYServiceListVS1(limitcount, limitfrom, deleteFilter) {
+    let options = "";
+    if (limitcount == "All") {
+      options = {
+        IgnoreDates: true,
+        OrderBy: '"PARTSID desc"',
+        Search:"Active=true & ProductTypeCode='INV'",
+      };
+    } else {
+      options = {
+        IgnoreDates: true,
+        OrderBy: '"PARTSID desc"',
+        Search:"Active=true & ProductTypeCode='INV'",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    }
+    if (deleteFilter) options.Search = ""
+    return this.getList(this.ERPObjects.TProductQtyList, options);
+  }
+  
   getHolidayData(limitcount, limitfrom, deleteFilter = false) {
     let options = "";
     if (deleteFilter == true) {
