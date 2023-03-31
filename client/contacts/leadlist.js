@@ -13,7 +13,7 @@ import moment from "moment";
 import {CRMService} from "../crm/crm-service";
 
 let utilityService = new UtilityService();
-Template.leadlist.inheritsHooksFrom('non_transactional_list');
+//Template.leadlist.inheritsHooksFrom('non_transactional_list');
 Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
