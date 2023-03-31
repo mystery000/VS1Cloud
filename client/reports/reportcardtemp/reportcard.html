@@ -17,10 +17,10 @@
                 {{#if reportdata}}
                     {{#each object in reportdata}}
                         <tr>
-                            <td>{{object.type}}</td>
+                            <td class="{{mainfieldClass}}">{{object.type}}</td>
                             {{#each item in reset_data}}
                                 {{#unless equals item.label mainfieldname}}
-                                    <td></td>
+                                    <td class="{{item.class}}{{#if item.active}}{{else}} hiddenColumn{{/if}}"></td>
                                 {{/unless}}
                             {{/each}}
                         </tr>

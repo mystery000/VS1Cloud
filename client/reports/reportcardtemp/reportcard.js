@@ -29,9 +29,20 @@ Template.reportcard.onCreated(function(){
     templateObject.deptrecords = new ReactiveVar();
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.reportdata = new ReactiveVar([]);
+    templateObject.apiParams = new ReactiveVar([]);
   
     FxGlobalFunctions.initVars(templateObject);
     templateObject.reportOptions = new ReactiveVar();
+    templateObject.init_reset_data = function () {
+      let reset_data = templateObject.data.displaysettings;
+      templateObject.reset_data.set(reset_data);
+    }
+    templateObject.init_reset_data();
+
+    if(templateObject.data.listParam) {
+      let params = templateObject.data.listParam;
+      templateObject.apiParams.set(params);
+    }
 
 })
 
@@ -39,11 +50,7 @@ Template.reportcard.onRendered(function() {
   let templateObject = Template.instance();
     LoadingOverlay.show();
   
-    templateObject.init_reset_data = function () {
-      let reset_data = templateObject.data.displaysettings;
-      templateObject.reset_data.set(reset_data);
-    }
-    templateObject.init_reset_data();
+  
   
     // await reportService.getBalanceSheetReport(dateAOsf) :
   
@@ -56,26 +63,62 @@ Template.reportcard.onRendered(function() {
     };
     templateObject.initDate();
   
-    templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate, contactID) {
+    templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate, contactID=null) {
       templateObject.setDateAs(dateFrom);
-      getVS1Data('TAPReport').then(function (dataObject) {
+      let indexdbname = templateObject.data.indexDBName
+      getVS1Data(indexdbname).then(function (dataObject) {
         if (dataObject.length == 0) {
-          sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
-            await addVS1Data('TAPReport', JSON.stringify(data));
-            templateObject.displayReportData(data);
-          }).catch(function (err) {
-          });
+
+          let params = cloneDeep(templateObject.apiParams.get());
+              for (let i = 0; i < params.length; i++) {
+                  if (params[i] == 'ignoreDate') {
+                      params[i] = ignoreDate;
+                  } else if (params[i] == 'dateFrom') {
+                      params[i] = dateFrom
+                  } else if (params[i] == 'dateTo') {
+                      params[i] = dateTo
+                  } else if (params[i] == 'limitFrom') {
+                      params[i] = 0
+                  } else if (params[i] == 'limitCount') {
+                      params[i] = initialReportLoad
+                  } else if (params[i] == 'deleteFilter') {
+                      params[i] = false
+                  }
+              }
+          let that = templateObject.data.service;
+          templateObject.data.apiName.apply(that, params).then(async function(data) {
+            await addVS1Data(indexdbname, JSON.stringify(data));
+            templateObject.displayReportData(data)
+          }).catch(function(err) {
+
+          })
+        
         } else {
           let data = JSON.parse(dataObject[0].data);
           templateObject.displayReportData(data);
         }
       }).catch(function (err) {
-        sideBarService.getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID).then(async function (data) {
-          await addVS1Data('TAPReport', JSON.stringify(data));
-          templateObject.displayReportData(data);
-        }).catch(function (err) {
-  
-        });
+        let params = cloneDeep(templateObject.apiParams.get());
+              for (let i = 0; i < params.length; i++) {
+                  if (params[i] == 'ignoreDate') {
+                      params[i] = ignoreDate;
+                  } else if (params[i] == 'dateFrom') {
+                      params[i] = dateFrom
+                  } else if (params[i] == 'dateTo') {
+                      params[i] = dateTo
+                  } else if (params[i] == 'limitFrom') {
+                      params[i] = 0
+                  } else if (params[i] == 'limitCount') {
+                      params[i] = initialReportLoad
+                  } else if (params[i] == 'deleteFilter') {
+                      params[i] = false
+                  }
+              }
+          let that = templateObject.data.service;
+          templateObject.data.apiName.apply(that, params).then(async function(data) {
+            await addVS1Data(indexdbname, JSON.stringify(data));
+            templateObject.displayReportData(data)
+          }).catch(function(err) {})
       });
     }
     let url = FlowRouter.current().path;
@@ -159,10 +202,6 @@ Template.reportcard.onRendered(function() {
           }
           datatableArr.push(obj)
          
-
-          // datatableArr.forEach((sub)=>{
-           
-          // })
         }
         let totalLine = templateObject.data.datahandler('');
         let totalValues = [];
@@ -184,76 +223,52 @@ Template.reportcard.onRendered(function() {
               return retVal
             }
             for(let o = 0; o<sumFieldsIndex.length; o++) {
-              if(totalValues[o].toString().includes('-')) {
-
-                totalLine[sumFieldsIndex[o]] = Currency + (totalValues[o]).toString();
-                totalLine[sumFieldsIndex[o]].replace('-', '');
-                totalLine[sumFieldsIndex[o]] = '-'+totalLine[sumFieldsIndex[o]];
-              } else {
-                totalLine[sumFieldsIndex[o]] = Currency + (totalValues[o]).toString();
-              }
+            
+              totalLine[sumFieldsIndex[o]] = GlobalFunctions.showCurrency(totalValues[o])
             }
 
-            datatableArr.push({type:'total', subArr: [totalLine]})
+            datatableArr.push({type:'Total', subArr: [totalLine]})
 
         // }        
         templateObject.reportdata.set(datatableArr)
       }
+      getColumnDef = function () {
+        if(templateObject.reset_data.get()) {
+          let dispSettings = templateObject.reset_data.get();
+          let colDefs = [];
+
+          let items = [];
+          for (let i = 0; i < dispSettings.length; i++) {
+            if(dispSettings[i].display == true) {
+              items.push(dispSettings[i])
+            }
+          }
+          for(let j = 0; j< items.length ;  j ++) {
+            let item = {
+                targets:j,
+                className: items[i].active?items[i].class + " hiddenColumn": items[i].class,
+                title:items[i].label,
+                width:items[i].width+"px"
+            };
+            colDefs.push(item)
+          }
+
+          return colDefs
+        }
+      }
 
         setTimeout(function () {
         $('#tableExport').DataTable({
-          // data: agedPayableList,
           searching: false,
           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          columnDefs: [
-              {
-                  targets: 0,
-                  className: "colName",
-              },
-              {
-                  targets: 1,
-                  className: "colType"
-              },
-              {
-                  targets: 2,
-                  className: "colPONumber"
-              },
-              {
-                  targets: 3,
-                  className: "colDueDate",
-              },
-              {
-                  targets: 4,
-                  className: "colAmoutDue",
-              },
-              {
-                  targets: 5,
-                  className: "colCurrent",
-              },
-              {
-                  targets: 6,
-                  className: "col30Days",
-              },
-              {
-                  targets: 7,
-                  className: "col60Days",
-              },
-              {
-                  targets: 8,
-                  className: "col90Days",
-              },
-              {
-                  targets: 9,
-                  className: "col120Days",
-              },
-          ],
+          columnDefs: getColumnDef(),
           select: true,
           destroy: true,
           colReorder: true,
           pageLength: initialDatatableLoad,
           lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
           info: true,
-          // responsive: true,
+          responsive: true,
           "order": [],
           "bsort": false,
           action: function () {

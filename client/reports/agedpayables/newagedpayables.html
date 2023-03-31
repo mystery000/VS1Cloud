@@ -37,7 +37,8 @@
   {{/vs1_report_template}} -->
   {{> reportcard 
     datahandler=datahandler 
-    mainfieldname='Name' 
+    mainfieldname='Name'
+    mainfieldClass='colName'
     lowercasename='tapreport' 
     indexDBName='TAPReport' 
     displaysettings=displaysettings 
@@ -47,5 +48,8 @@
     printDocTitle='Aged Payables.pdf'
     typeIndex=6
     localStorageKeyName='VS1AgedPayables_Report'
+    listParam=listParams
+    apiName=apiFunction
+    printTaleName='printReport'
   }}
 </template>

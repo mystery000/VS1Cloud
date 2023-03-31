@@ -1045,6 +1045,10 @@ Template.newagedpayables.helpers({
 
   apifunction: function() {
     return sideBarService.getTAPReportPage;
+  },
+
+  listParams: function() {
+    return ['dateFrom', 'dateTo', 'ignoreDate']
   }
 });
 Template.registerHelper('equals', function (a, b) {
