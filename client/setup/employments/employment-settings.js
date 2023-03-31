@@ -39,12 +39,6 @@ Template.wizard_employment.onCreated(() => {
 
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.getDataTableList = function(data) {
-    let linestatus = '';
-    if (data.Active == true) {
-      linestatus = "";
-    } else if (data.Active == false) {
-      linestatus = "In-Active";
-    };
     var dataList = [
       data.EmployeeID || "",
       data.EmployeeName || "",
@@ -56,7 +50,6 @@ Template.wizard_employment.onCreated(() => {
       data.DefaultClassName || '',
       data.CustFld1 || '',
       data.CustFld2 || '',
-      linestatus,
       data.Street || "",
       data.Street2 || "",
       data.State || "",
@@ -77,12 +70,12 @@ Template.wizard_employment.onCreated(() => {
     { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "110" },
     { index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "100" },
     { index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "100" },
-    { index: 11, label: 'Address', class: 'colAddress', active: true, display: true, width: "110" },
-    { index: 12, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "110" },
-    { index: 13, label: 'State', class: 'colState', active: false, display: true, width: "110" },
-    { index: 14, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "110" },
-    { index: 15, label: 'Country', class: 'colCountry', active: false, display: true, width: "110" },
-    { index: 18, label: "Status", class: "colStatus", width: "120", active: true, display: true },
+    { index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: "110" },
+    { index: 11, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "110" },
+    { index: 12, label: 'State', class: 'colState', active: false, display: true, width: "110" },
+    { index: 13, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "110" },
+    { index: 14, label: 'Country', class: 'colCountry', active: false, display: true, width: "110" },
+    { index: 15, label: "Status", class: "colStatus", width: "120", active: true, display: true },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 
@@ -118,7 +111,7 @@ Template.wizard_employment.helpers({
 
   searchAPI: function() {
     let sideBarService = new SideBarService();
-    return sideBarService.getAllTEmployeeList;
+    return sideBarService.getNewEmployeeByNameOrID;
   },
 
   service: ()=>{

@@ -19,12 +19,6 @@ Template.wizard_suppliers.onCreated(() => {
   let templateObject = Template.instance();
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.getDataTableList = function(data) {
-    let linestatus = '';
-    if (data.Active == true) {
-      linestatus = "";
-    } else if (data.Active == false) {
-      linestatus = "In-Active"
-    };
 
     let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
     let creditBalance = utilityService.modifynegativeCurrencyFormat(data.ExcessAmount) || 0.00;
@@ -69,8 +63,8 @@ Template.wizard_suppliers.onCreated(() => {
     { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
     { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "110" },
     { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
-    { index: 10, label: 'Comments', clasds: 'colNotes', active: true, display: true, width: "110" },
-    { index: 11, label: 'Status', clasds: 'colStatus', active: true, display: true, width: "120" },
+    { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "110" },
+    { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 })

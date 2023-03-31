@@ -113,7 +113,7 @@ Template.wizard_inventory.onCreated(function () {
   let templateObject = Template.instance();
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.getDataTableList = function(data) {
-        let availableQty = data.AvailableQty||0;
+      let availableQty = data.AvailableQty||0;
       let checkIfSerialorLot;
         if(data.SNTracking == true){
             checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnSNTracking"  style="font-size: 22px;" ></i>';
@@ -163,7 +163,7 @@ Template.wizard_inventory.onCreated(function () {
       { index: 11, label: "Sale Price (Inc)", class: "SalePriceInc", width: "110", active: true, display: true },
       { index: 12, label: "Serial/Lot No", class: "SerialNo", width: "124", active: false, display: true },
       { index: 13, label: "Barcode", class: "Barcode", width: "200", active: false, display: true },
-      { index: 14, label: "Department", class: "Departmentth", width: "110", active: false, display: true },
+      { index: 14, label: "Department", class: "Department", width: "110", active: false, display: true },
       { index: 15, label: "Purchase Description", class: "PurchaseDescription", width: "300", active: false, display: true },
       { index: 16, label: "Custom Field 1", class: "ProdCustField1", width: "100", active: false, display: true },
       { index: 17, label: "Custom Field 2", class: "ProdCustField2", width: "100", active: false, display: true },

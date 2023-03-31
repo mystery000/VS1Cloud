@@ -78,7 +78,7 @@ export class CRMService extends BaseService {
             };
         }
         if(deleteFilter) options.Search = "";
-        return this.getList(this.ERPObjects.TProjectTasksList, options);
+        return this.getList(this.ERPObjects.Tprojectlist, options);
     }
 
     getAllAppointments(ClientName = '') {

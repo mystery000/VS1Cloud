@@ -1144,14 +1144,14 @@ Template.customerscard.onCreated(function () {
     }
 
     let headerStructure = [
-        {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: ""},
-        {index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
-        {index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100"},
-        {index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150"},
-        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250"},
-        {index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100"},
-        {index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100"},
-        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "60"},
+        {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: "10"},
+        {index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80"},
+        {index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110"},
+        {index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110"},
+        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
+        {index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110"},
+        {index: 6, label: 'IsCompleted', class: 'colCompleteTask', active: true, display: true, width: "40"},
+        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
