@@ -141,11 +141,11 @@ const chartsEditor = new ChartsEditor(
         $(".on-editor-change-mode").addClass("showelement");
     },
     () => {
-        $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
-        $("#btnDone").addClass("hideelement");
-        $("#btnDone").removeClass("showelement");
-        $("#btnCancel").addClass("hideelement");
-        $("#btnCancel").removeClass("showelement");
+        // $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
+        // $("#btnDone").addClass("hideelement");
+        // $("#btnDone").removeClass("showelement");
+        // $("#btnCancel").addClass("hideelement");
+        // $("#btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
@@ -674,10 +674,10 @@ Template.allChartLists.events({
         $(".fullScreenSpin").css("display", "block");
         chartsEditor.disable();
         const templateObject = Template.instance();
-        $("#btnDone").addClass("hideelement");
-        $("#btnDone").removeClass("showelement");
-        $("#btnCancel").addClass("hideelement");
-        $("#btnCancel").removeClass("showelement");
+        // $("#btnDone").addClass("hideelement");
+        // $("#btnDone").removeClass("showelement");
+        // $("#btnCancel").addClass("hideelement");
+        // $("#btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
