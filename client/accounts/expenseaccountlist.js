@@ -55,6 +55,7 @@ Template.expenseaccountlistpop.onCreated(function(e) {
 
     templateObject.getDataTableList = function(data) {
         let accBalance;
+        let usedCategories = [];
         if (!isNaN(data.Balance)) {
             accBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.0;
         } else {
