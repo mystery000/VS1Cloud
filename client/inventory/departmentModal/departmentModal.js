@@ -61,6 +61,14 @@ Template.departmentModal.onRendered(function () {
       });
   };
   templateObject.getDepartments();
+
+  // Damien
+  // For focus into search field
+  $( "#myModalDepartment" ).on('shown.bs.modal', function(){
+    setTimeout(function() {
+      $('#tblDepartmentCheckbox_filter .form-control-sm').get(0).focus()
+    }, 500);
+  });
 });
 
 Template.departmentModal.events({

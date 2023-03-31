@@ -57,8 +57,8 @@ Template.leadlist.onCreated(function(){
             data.POState || '',
             data.Postcode || '',
             data.Country || '',
-            linestatus,
             data.Notes || '',
+            linestatus,
         ];
         return dataList;
     }
@@ -66,25 +66,25 @@ Template.leadlist.onCreated(function(){
     let headerStructure = [
         { index: 0, label: '#ID', class: 'colLeadId', active: false, display: false, width: "10" },
         { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
         { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "90" },
-        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "110" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
         { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "200" },
         { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "200" },
         { index: 10, label: 'Client Number', class: 'colClientNo', active: false, display: true, width: "120" },
         { index: 11, label: 'Job Title', class: 'colJobTitle', active: false, display: true, width: "120" },
         { index: 12, label: 'Custom Field 1', class: 'colCustomField1', active: false, display: true, width: "120" },
         { index: 13, label: 'Custom Field 2', class: 'colCustomField2', active: false, display: true, width: "120" },
-        { index: 14, label: 'Address', class: 'colAddress', active: true, display: true, width: "80" },
-        { index: 15, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
-        { index: 16, label: 'State', class: 'colState', active: false, display: true, width: "120" },
+        { index: 14, label: 'Address', class: 'colAddress', active: true, display: true, width: "110" },
+        { index: 15, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "110" },
+        { index: 16, label: 'State', class: 'colState', active: false, display: true, width: "110" },
         { index: 17, label: 'Post Code', class: 'colPostcode', active: false, display: true, width: "80" },
-        { index: 18, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
-        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        { index: 20, label: 'Comments', class: 'colNotes', active: true, display: true, width: "" },
+        { index: 18, label: 'Country', class: 'colCountry', active: false, display: true, width: "110" },
+        { index: 19, label: 'Comments', class: 'colNotes', active: true, display: true, width: "300" },
+        { index: 20, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });

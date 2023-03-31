@@ -377,6 +377,15 @@ Template.productlistpopwithcheckboxes.onRendered(function() {
         }
     );
     html5QrcodeScannerProdModal.render(onScanSuccessProdModal);
+
+
+    // Set Focus
+    // Event Listener for Modal Shown
+    $( "#productListModal1" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblInventoryCheckbox_filter .form-control-sm').get(0).focus();
+        }, 500);
+    });
 });
 
 Template.productlistpopwithcheckboxes.events({
