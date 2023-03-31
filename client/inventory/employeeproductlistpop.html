@@ -11,9 +11,9 @@
                   <button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='icon ion-android-bulb' style='margin-right: 5px;'></i>Refresh</button>
               </div>
   -->          
-            <div class="col-5 col-md-7 d-xl-flex justify-content-xl-end align-items-xl-start">
+            <!-- <div class="col-5 col-md-7 d-xl-flex justify-content-xl-end align-items-xl-start">
                 {{> export_import_print_display_button Import="hiddenButton" tablename="tblInventoryService"}}
-            </div>
+            </div> -->
               <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
               <div class="card-body p-1 rounded">
                 <style>
@@ -24,10 +24,10 @@
                 {{>datatablelist
                     tablename="tblInventoryService"
                     apiName= apiFunction
-                    indexeddbname = 'TProductWeb'
+                    indexeddbname = 'TProductVS1'
                     tableheaderrecords = tableheaderrecords
                     exportfilename = 'Inventory Service List'
-                    istransaction = true
+                    istransaction = false
                     apiParams= apiParams
                     datahandler = datahandler
                     service=service
@@ -36,6 +36,9 @@
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
                     orderby = '[[ 0, "desc" ],[ 1, "asc" ]]'
+                    showPlusButton = true
+                    showPlusButtonDataTarget = "newProductModal"
+                    showPlusButtonClass = "btnNewProduct"
                 }}
               </div>
           </div>

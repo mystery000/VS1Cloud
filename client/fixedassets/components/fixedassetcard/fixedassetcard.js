@@ -195,9 +195,9 @@ Template.fixedassetcard.onRendered(function () {
   }
 
   function findFixedAssetByID(data, assetID) { 
-    const assetData = data.tfixedassets.filter((asset) => asset.fields.ID == assetID);
+    const assetData = data.tfixedassetslist.filter((asset) => asset.AssetID == assetID);
     if (assetData.length > 0) {
-      const assetInfo = assetData[0].fields;
+      const assetInfo = assetData[0];
       initializeCard(assetInfo);
     }
   }
