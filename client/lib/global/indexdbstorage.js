@@ -79,6 +79,7 @@ openDb = function (dbName) {
       });
       db.createObjectStore("TAppUser", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TJobVS1", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TJobVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TStockAdjustEntry", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TsalesOrderNonBackOrder", {
         keyPath: "EmployeeEmail",

@@ -138,7 +138,6 @@ Template.newsidenav.onCreated(function () {
     if (data.tpreference && data.tpreference.length > 0) {
       const latestAction = data.tpreference[data.tpreference.length - 1];
       const menuItem = JSON.parse(latestAction.fields.PrefValue);
-      console.log(menuItem.Location);
       if (menuItem.Location === "TopMenu") {
         templateObject.sideBarPositionClass.set('top');
         $('#sidebar').addClass('top');

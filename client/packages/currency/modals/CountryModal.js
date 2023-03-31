@@ -104,8 +104,7 @@ Template.CountryModal.events({
 
     // let countryName = $(e.currentTarget).attr("value");
     const countryName = $(e.currentTarget).find("td").text();
-    
-    //console.log("////////////",countryName)
+
     $(e.currentTarget).parents(".modal").modal("hide");
     
     $("#sedtCountry").val(countryName);

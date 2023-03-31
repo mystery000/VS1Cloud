@@ -631,24 +631,25 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierVS1, options);
   }
 
-  getAllJobssDataVS1(limitcount, limitfrom) {
+  getAllJobssDataVS1(limitcount, limitfrom, deleteFitler) {
     let options = "";
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
         orderby: '"PrintName asc"',
-        select: "[Active]=true",
+        Search: "Active=true",
       };
     } else {
       options = {
         orderby: '"PrintName asc"',
         ListType: "Detail",
-        select: "[Active]=true",
+        Search: 'Active = true',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TJobVS1, options);
+    if(deleteFitler) options.Search = "";
+    return this.getList(this.ERPObjects.TJobVS1List, options);
   }
 
   getAllExpenseCliamExDataVS1() {
@@ -1017,9 +1018,10 @@ export class SideBarService extends BaseService {
     options = {
       ListType: "Detail",
       orderby: '"PrintName asc"',
-      select: '[ClientName] f7like "' + dataSearchName + '"',
+      //select: '[ClientName] f7like "' + dataSearchName + '"',
+      Search: 'ClientName like "%' + dataSearchName + '%"',
     };
-    return this.getList(this.ERPObjects.TSupplierVS1, options);
+    return this.getList(this.ERPObjects.TSupplierVS1List, options);
   }
 
   getAllSuppliersDataVS1List(limitcount, limitfrom, deleteFilter) {
