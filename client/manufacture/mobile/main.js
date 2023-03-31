@@ -207,7 +207,7 @@ Template.mobileapp.events({
                     $("#btnOpentList").prop('disabled', true);
 
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderList})).then(function(datareturn){
-                        console.log("workorder data is inserted");
+                        
                     }).catch(function(err){
                     });
 
@@ -311,7 +311,7 @@ Template.mobileapp.events({
                     $("#btnOpentList").prop('disabled', true);
 
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderList})).then(function(datareturn){
-                        console.log("workorder data is inserted");
+
                     }).catch(function(err){
                     });
                 
@@ -637,7 +637,6 @@ Template.mobileapp.events({
     },
 
     'click #mobileBtnCancel': function(e, instance) {
-
 
         $("#qr-reader-productmodal").css('display', 'none');
         $(".mobile-main-input").val("");
@@ -1084,7 +1083,7 @@ Template.mobileapp.events({
 
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
-
+    
             // Set bom Structure for current workorder
             templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
 
@@ -1102,7 +1101,9 @@ Template.mobileapp.events({
             let BomDataList = [];
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
-            let change_to = bomStructureData.TotalQtyOriginal;
+
+
+            let change_to = bomStructureData.TotalChangeQty;
 
             let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
 
@@ -1110,8 +1111,9 @@ Template.mobileapp.events({
 
             let bomDetailData = JSON.parse(bomStructureData.Details);
 
+
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].qty) };
+                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].changed_qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].changed_qty) };
                 BomDataList.push(tempBomData);  
             }
 
@@ -1145,18 +1147,59 @@ Template.mobileapp.events({
 
             $('#tblWastageForm').on( 'change keyup input', 'tbody td.editable', function () {
                                            
-                var cell = wastage_table.cell(this);
-                var index = cell.index();
-                var column = index.column;
-                var row = index.row;
+                // var cell = wastage_table.cell(this);
+                // var index = cell.index();
+                // var column = index.column;
+                // var row = index.row;
 
-                var cur_val = parseFloat($(this).text());
-                var prev_val = parseFloat(cell.data());
+                // var cur_val = parseFloat($(this).text());
+                // var prev_val = parseFloat(cell.data());
                           
-                var nextCell = wastage_table.cell(row, column + 1);
-                    nextCell.data(prev_val - cur_val);                             
+                // var nextCell = wastage_table.cell(row, column + 1);
+                //     nextCell.data(prev_val - cur_val);    
+                
+                var total_qty = parseFloat($(this).parent().find("td:eq(2)").text());
+                var change_to_qty = parseFloat($(this).parent().find("td:eq(3)").text());
+                var wastage_qty = total_qty - change_to_qty;
+                $(this).parent().find("td:eq(4)").text(wastage_qty);
                            
             } );
+
+            $('.btn-save-wastage').on('click', function(e,instance) {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                $('.fullScreenSpin').css('display', 'none')
+        
+                var changed_temp = [];
+        
+                $("#tblWastageForm tr").each(function(){
+                    var thirdColumnValue = $(this).find("td:eq(3)").text();
+                    changed_temp.push(thirdColumnValue);
+        
+                });
+                 
+                bomStructureData.TotalChangeQty = changed_temp[1];
+              
+                for (let i = 0; i < bomDetailData.length; i++) {
+                    bomDetailData[i].changed_qty = changed_temp[i+2] ;
+                }
+                               
+                bomStructureData.Details = JSON.stringify(bomDetailData);
+                tempworkorder.fields = {...tempworkorder.fields, BOMStructure: JSON.stringify(bomStructureData) }
+                workorders.splice(workorderindex, 1, tempworkorder);
+
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+                       $('.fullScreenSpin').css('display', 'none')
+                       swal('The wastage is saved', '', 'success');
+                       $('#WastageModal').modal('toggle');
+                })
+         
+      
+        
+                
+        
+            });
+            
 
         }
 
@@ -1286,24 +1329,7 @@ Template.mobileapp.events({
         }
     }
     ,
-    'click .btn-save-wastage': function(e,instance) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('.fullScreenSpin').css('display', 'none')
-
-        var temp = [];
-
-        $("#tblWastageForm tr").each(function(){
-            var thirdColumnValue = $(this).find("td:eq(3)").text();
-            temp.push(thirdColumnValue);
-
-        });
-
-
-        swal('The wastage is saved', '', 'success');
-        $('#WastageModal').modal('toggle');
-
-    }
-    ,
+    
     'click .btn-cancel-wastage': function(e,instance) {
 
         $('#WastageModal').modal('toggle');
