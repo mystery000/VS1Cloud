@@ -59,7 +59,7 @@ Template.currenciessettings.onCreated(function () {
     { index: 0, label: 'ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
     { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
     { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
-    { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100", align:"right" },
+    { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100", align:"right" },
     { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
     { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
     { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
@@ -907,7 +907,7 @@ Template.currenciessettings.events({
     let currencyid = $(e.currentTarget).find('.colCurrencyID').text();
     let country = $(e.currentTarget).find('.colCountry').text();
     let currencyCode = $(e.currentTarget).find('.colCode').text();
-    let currencySymbol = $(e.currentTarget).find('.colCurrencySymbol').text();
+    let currencySymbol = $(e.currentTarget).find('.colSymbol').text();
     let currencyName = $(e.currentTarget).find('.colCurrency').text();
     let description = $(e.currentTarget).find('.colDescription').text();
     let buyRate = $(e.currentTarget).find('.colBuyRate').text();
