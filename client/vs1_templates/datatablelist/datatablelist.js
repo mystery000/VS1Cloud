@@ -444,6 +444,7 @@ Template.datatablelist.onRendered(async function () {
         let aitems = [];
 
         const tabledraw = () => {
+            console.log(colDef);
             $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,
@@ -536,7 +537,7 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: true,
+                responsive: false,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 //"autoWidth": false,
                 action: function () {
@@ -780,9 +781,9 @@ Template.datatablelist.onRendered(async function () {
 
         }*/
 
-        function getColDef() {
-            let items = templateObject.data.tableheaderrecords;
-          
+        async function getColDef() {
+            let items =await templateObject.displayfields.get();
+            console.log(items);
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
@@ -790,7 +791,7 @@ Template.datatablelist.onRendered(async function () {
                         visible: items[i].active,
                         className: items[i].class,
                         // className: items[i].class,
-                        title: items[i].label,
+                        title: items[i].custfieldlabel,
                         width: items[i].width
                     };
                     colDef.push(item);
