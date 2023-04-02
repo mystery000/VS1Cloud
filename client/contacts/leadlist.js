@@ -13,7 +13,7 @@ import moment from "moment";
 import {CRMService} from "../crm/crm-service";
 
 let utilityService = new UtilityService();
-Template.leadlist.inheritsHooksFrom('non_transactional_list');
+//Template.leadlist.inheritsHooksFrom('non_transactional_list');
 Template.leadlist.onCreated(function(){
     const templateObject = Template.instance();
     templateObject.datatablerecords = new ReactiveVar([]);
@@ -64,7 +64,7 @@ Template.leadlist.onCreated(function(){
     }
 
     let headerStructure = [
-        { index: 0, label: '#ID', class: 'colLeadId', active: false, display: false, width: "10" },
+        { index: 0, label: '#ID', class: 'colLeadId', active: false, display: true, width: "10" },
         { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
         { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
         { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },

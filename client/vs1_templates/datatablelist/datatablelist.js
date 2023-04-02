@@ -25,7 +25,7 @@ import 'datatables.net-buttons/js/buttons.html5';
 import 'datatables.net-buttons/js/buttons.flash';
 import 'datatables.net-buttons/js/buttons.print';
 import 'jszip';
-import '../../lib/global/colResizable.js';
+//import '../../lib/global/colResizable.js';
 // let _jsZip = jszip;
 
 
@@ -175,7 +175,8 @@ Template.datatablelist.onRendered(async function () {
                 display: savedHeaderInfo[r].display,            //display have to set by default value
                 width: savedHeaderInfo[r].width ? savedHeaderInfo[r].width : ''
             };
-            let currentTable = document.getElementById(currenttablename)
+            //let currentTable = document.getElementById(currenttablename)
+            /*
             if (savedHeaderInfo[r].active == true) {
                 if (currentTable) {
                     $('#' + currenttablename + ' .' + savedHeaderInfo[r].class).removeClass('hiddenColumn');
@@ -184,11 +185,10 @@ Template.datatablelist.onRendered(async function () {
                 if (currentTable && savedHeaderInfo[r].class) {
                     $('#' + currenttablename + ' .' + savedHeaderInfo[r].class).addClass('hiddenColumn');
                 }
-            };
+            };*/
             custFields.push(customData);
         }
         await templateObject.displayfields.set(custFields);
-
         let tableData = await templateObject.getTableData();
         await templateObject.displayTableData(tableData);
     }
@@ -536,7 +536,7 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: true,
+                responsive: false,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 //"autoWidth": false,
                 action: function () {
@@ -706,7 +706,7 @@ Template.datatablelist.onRendered(async function () {
             //   $('.colComment').css('width','262px');
             // }, 1000);
         }
-
+        /*
         function getColDef() {
             let items = templateObject.data.tableheaderrecords;
             for (let i = 0; i < $(".displaySettings").length; i ++) {
@@ -778,6 +778,31 @@ Template.datatablelist.onRendered(async function () {
                 }, 1000);
             }
 
+        }*/
+
+        async function getColDef() {
+            let items =await templateObject.displayfields.get();
+            if (items.length > 0) {
+                for (let i = 0; i < items.length; i++) {
+                    let item = {
+                        targets: i,
+                        visible: items[i].active,
+                        className: items[i].class,
+                        // className: items[i].class,
+                        title: items[i].custfieldlabel,
+                        width: items[i].width
+                    };
+                    colDef.push(item);
+                }
+                templateObject.columnDef.set(colDef)
+                tabledraw();
+                tableResize();
+            } else {
+                setTimeout(()=>{
+                    getColDef();
+                }, 1000);
+            }
+         
         }
         getColDef();
 
@@ -827,18 +852,27 @@ Template.datatablelist.events({
         event.preventDefault();
         // event.stopImmediatePropagation();
         event.stopImmediatePropagation();
+        let templateObject = Template.instance();
+        //let currenttablename = templateObject.data.tablename || '';
+        let table = $('#'+templateObject.data.tablename).DataTable();
         let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
-        if ($(event.target).is(':checked')) {
-            $('.' + columnDataValue).addClass('showColumn');
-            $('.' + columnDataValue).removeClass('hiddenColumn');
-        } else {
-            $('.' + columnDataValue).addClass('hiddenColumn');
-            $('.' + columnDataValue).removeClass('showColumn');
-        }
+        // Get the column API object
+        let dataColumnIndex = $(event.target).attr('data-column');
+        var column = table.column(dataColumnIndex);
+ 
+        // Toggle the visibility
+        column.visible(!column.visible());
+        // if ($(event.target).is(':checked')) {
+        //     $('.' + columnDataValue).addClass('showColumn');
+        //     $('.' + columnDataValue).removeClass('hiddenColumn');
+        // } else {
+        //     $('.' + columnDataValue).addClass('hiddenColumn');
+        //     $('.' + columnDataValue).removeClass('showColumn');
+        // }
 
-        const tableHandler = new TableHandler();
-        let range = $(event.target).closest("div").next().find(".custom-range").val();
-        await $('.' + columnDataValue).css('width', range);
+        // const tableHandler = new TableHandler();
+        // let range = $(event.target).closest("div").next().find(".custom-range").val();
+        // await $('.' + columnDataValue).css('width', range);
         // $('.dataTable').resizable();
 
         // setTimeout(() => {
