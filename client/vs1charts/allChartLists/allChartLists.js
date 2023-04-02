@@ -744,7 +744,7 @@ Template.allChartLists.events({
             // } 
 
             $(".fullScreenSpin").css("display", "none");
-            Meteor._reload.reload();
+            // Meteor._reload.reload();
         }, delayTimeAfterSound);
     },
 });
