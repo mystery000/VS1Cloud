@@ -14,12 +14,37 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
+let salesService = new SalesBoardService();
 Template.invoiceemail.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
 
   templateObject.getDataTableList = function(data){
+    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.TotalAmount)|| 0.00;
+    let totalTax = utilityService.modifynegativeCurrencyFormat(data.TotalTax) || 0.00;
+    let totalAmount = utilityService.modifynegativeCurrencyFormat(data.TotalAmountInc)|| 0.00;
+    let totalPaid = utilityService.modifynegativeCurrencyFormat(data.TotalPaid)|| 0.00;
+    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.TotalBalance)|| 0.00;
+    
+    let dataList = [
+      '<div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBox" type="checkbox" id="formCheck-' + data.ID + '"><label class="custom-control-label chkBox" for="formCheck-' + data.ID + '"></label></div>',
+      '<span style="display:none;">'+ (data.SaleDate !='' ? moment(data.SaleDate).format("YYYY/MM/DD") : data.SaleDate) +'</span>' + (data.SaleDate !='' ? moment(data.SaleDate).format("DD/MM/YYYY") : data.SaleDate),
+      data.ID || '',
+      data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate,
+      data.CustomerName || '',
+      totalAmountEx || 0.00,
+      totalTax || 0.00,
+      totalAmount || 0.00,
+      totalPaid || 0.00,
+      totalOutstanding || 0.00,
+      data.Comments || '',
+      data.SalesStatus || '',
+    ];
+    return dataList;
+  }
+
+  templateObject.getExData = function(data){
     let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmount)|| 0.00;
     let totalTax = utilityService.modifynegativeCurrencyFormat(data.fields.TotalTax) || 0.00;
     let totalAmount = utilityService.modifynegativeCurrencyFormat(data.fields.TotalAmountInc)|| 0.00;
@@ -28,7 +53,7 @@ Template.invoiceemail.onCreated(function () {
     
     let dataList = [
       '<div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBox" type="checkbox" id="formCheck-' + data.fields.ID + '"><label class="custom-control-label chkBox" for="formCheck-' + data.fields.ID + '"></label></div>',
-      moment(data.fields.SaleDate).format("DD/MM/YYYY") || data.fields.SaleDate,
+      '<span style="display:none;">'+ (data.SaleDate !='' ? moment(data.SaleDate).format("YYYY/MM/DD") : data.SaleDate) +'</span>' + (data.SaleDate !='' ? moment(data.SaleDate).format("DD/MM/YYYY") : data.SaleDate),
       data.fields.ID || '',
       moment(data.fields.DueDate).format("DD/MM/YYYY") || data.fields.DueDate,
       data.fields.CustomerName || '',
@@ -1020,211 +1045,211 @@ Template.invoiceemail.events({
     });
 
   },
-  'change #dateTo': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    setTimeout(function () {
-      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  // 'change #dateTo': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   setTimeout(function () {
+  //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-      let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-      let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+  //     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+  //     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-      //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-      var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-      //templateObject.dateAsAt.set(formatDate);
-      if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+  //     //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+  //     var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+  //     //templateObject.dateAsAt.set(formatDate);
+  //     if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-      } else {
-        templateObject.getAllFilterInvoiceEmailData(formatDateFrom, formatDateTo, false);
-      }
-    }, 500);
-  },
-  'change #dateFrom': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    setTimeout(function () {
-      var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-      var dateTo = new Date($("#dateTo").datepicker("getDate"));
+  //     } else {
+  //       templateObject.getAllFilterInvoiceEmailData(formatDateFrom, formatDateTo, false);
+  //     }
+  //   }, 500);
+  // },
+  // 'change #dateFrom': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   setTimeout(function () {
+  //     var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+  //     var dateTo = new Date($("#dateTo").datepicker("getDate"));
 
-      let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-      let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+  //     let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+  //     let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
 
-      //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-      var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-      //templateObject.dateAsAt.set(formatDate);
-      if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
+  //     //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
+  //     var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+  //     //templateObject.dateAsAt.set(formatDate);
+  //     if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
 
-      } else {
-        templateObject.getAllFilterInvoiceEmailData(formatDateFrom, formatDateTo, false);
-      }
-    }, 500);
-  },
-  'click #today': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    var currentBeginDate = new Date();
-    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-    let fromDateMonth = (currentBeginDate.getMonth() + 1);
-    let fromDateDay = currentBeginDate.getDate();
-    if ((currentBeginDate.getMonth() + 1) < 10) {
-      fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-    } else {
-      fromDateMonth = (currentBeginDate.getMonth() + 1);
-    }
+  //     } else {
+  //       templateObject.getAllFilterInvoiceEmailData(formatDateFrom, formatDateTo, false);
+  //     }
+  //   }, 500);
+  // },
+  // 'click #today': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   var currentBeginDate = new Date();
+  //   var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+  //   let fromDateMonth = (currentBeginDate.getMonth() + 1);
+  //   let fromDateDay = currentBeginDate.getDate();
+  //   if ((currentBeginDate.getMonth() + 1) < 10) {
+  //     fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+  //   } else {
+  //     fromDateMonth = (currentBeginDate.getMonth() + 1);
+  //   }
 
-    if (currentBeginDate.getDate() < 10) {
-      fromDateDay = "0" + currentBeginDate.getDate();
-    }
-    var toDateERPFrom = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
-    var toDateERPTo = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+  //   if (currentBeginDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentBeginDate.getDate();
+  //   }
+  //   var toDateERPFrom = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+  //   var toDateERPTo = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
 
-    var toDateDisplayFrom = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
-    var toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
+  //   var toDateDisplayFrom = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
+  //   var toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
 
-    $("#dateFrom").val(toDateDisplayFrom);
-    $("#dateTo").val(toDateDisplayTo);
-    templateObject.getAllFilterInvoiceEmailData(toDateERPFrom, toDateERPTo, false);
-  },
-  'click #lastweek': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    var currentBeginDate = new Date();
-    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-    let fromDateMonth = (currentBeginDate.getMonth() + 1);
-    let fromDateDay = currentBeginDate.getDate();
-    if ((currentBeginDate.getMonth() + 1) < 10) {
-      fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-    } else {
-      fromDateMonth = (currentBeginDate.getMonth() + 1);
-    }
+  //   $("#dateFrom").val(toDateDisplayFrom);
+  //   $("#dateTo").val(toDateDisplayTo);
+  //   templateObject.getAllFilterInvoiceEmailData(toDateERPFrom, toDateERPTo, false);
+  // },
+  // 'click #lastweek': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   var currentBeginDate = new Date();
+  //   var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+  //   let fromDateMonth = (currentBeginDate.getMonth() + 1);
+  //   let fromDateDay = currentBeginDate.getDate();
+  //   if ((currentBeginDate.getMonth() + 1) < 10) {
+  //     fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+  //   } else {
+  //     fromDateMonth = (currentBeginDate.getMonth() + 1);
+  //   }
 
-    if (currentBeginDate.getDate() < 10) {
-      fromDateDay = "0" + currentBeginDate.getDate();
-    }
-    var toDateERPFrom = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay - 7);
-    var toDateERPTo = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+  //   if (currentBeginDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentBeginDate.getDate();
+  //   }
+  //   var toDateERPFrom = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay - 7);
+  //   var toDateERPTo = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
 
-    var toDateDisplayFrom = (fromDateDay - 7) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
-    var toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
+  //   var toDateDisplayFrom = (fromDateDay - 7) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
+  //   var toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
 
-    $("#dateFrom").val(toDateDisplayFrom);
-    $("#dateTo").val(toDateDisplayTo);
-    templateObject.getAllFilterInvoiceEmailData(toDateERPFrom, toDateERPTo, false);
-  },
-  'click #lastMonth': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    var currentDate = new Date();
+  //   $("#dateFrom").val(toDateDisplayFrom);
+  //   $("#dateTo").val(toDateDisplayTo);
+  //   templateObject.getAllFilterInvoiceEmailData(toDateERPFrom, toDateERPTo, false);
+  // },
+  // 'click #lastMonth': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   var currentDate = new Date();
 
-    var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-    var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
+  //   var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
+  //   var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
 
-    var formatDateComponent = function (dateComponent) {
-      return (dateComponent < 10 ? '0' : '') + dateComponent;
-    };
+  //   var formatDateComponent = function (dateComponent) {
+  //     return (dateComponent < 10 ? '0' : '') + dateComponent;
+  //   };
 
-    var formatDate = function (date) {
-      return formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
-    };
+  //   var formatDate = function (date) {
+  //     return formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
+  //   };
 
-    var formatDateERP = function (date) {
-      return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
-    };
-
-
-    var fromDate = formatDate(prevMonthFirstDate);
-    var toDate = formatDate(prevMonthLastDate);
-
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(toDate);
-
-    var getLoadDate = formatDateERP(prevMonthLastDate);
-    let getDateFrom = formatDateERP(prevMonthFirstDate);
-    templateObject.getAllFilterInvoiceEmailData(getDateFrom, getLoadDate, false);
-  },
-  'click #lastQuarter': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-    function getQuarter(d) {
-      d = d || new Date();
-      var m = Math.floor(d.getMonth() / 3) + 2;
-      return m > 4 ? m - 4 : m;
-    }
-
-    var quarterAdjustment = (moment().month() % 3) + 1;
-    var lastQuarterEndDate = moment().subtract({
-      months: quarterAdjustment
-    }).endOf('month');
-    var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
-      months: 2
-    }).startOf('month');
-
-    var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-    var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+  //   var formatDateERP = function (date) {
+  //     return date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
+  //   };
 
 
-    $("#dateFrom").val(lastQuarterStartDateFormat);
-    $("#dateTo").val(lastQuarterEndDateFormat);
+  //   var fromDate = formatDate(prevMonthFirstDate);
+  //   var toDate = formatDate(prevMonthLastDate);
 
-    let fromDateMonth = getQuarter(currentDate);
-    var quarterMonth = getQuarter(currentDate);
-    let fromDateDay = currentDate.getDate();
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(toDate);
 
-    var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-    let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
-    templateObject.getAllFilterInvoiceEmailData(getDateFrom, getLoadDate, false);
-  },
-  'click #last12Months': function () {
-    let templateObject = Template.instance();
-    $('.fullScreenSpin').css('display', 'inline-block');
-    $('#dateFrom').attr('readonly', false);
-    $('#dateTo').attr('readonly', false);
-    var currentDate = new Date();
-    var begunDate = moment(currentDate).format("DD/MM/YYYY");
+  //   var getLoadDate = formatDateERP(prevMonthLastDate);
+  //   let getDateFrom = formatDateERP(prevMonthFirstDate);
+  //   templateObject.getAllFilterInvoiceEmailData(getDateFrom, getLoadDate, false);
+  // },
+  // 'click #lastQuarter': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-    let fromDateDay = currentDate.getDate();
-    if ((currentDate.getMonth() + 1) < 10) {
-      fromDateMonth = "0" + (currentDate.getMonth() + 1);
-    }
-    if (currentDate.getDate() < 10) {
-      fromDateDay = "0" + currentDate.getDate();
-    }
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-    $("#dateFrom").val(fromDate);
-    $("#dateTo").val(begunDate);
+  //   function getQuarter(d) {
+  //     d = d || new Date();
+  //     var m = Math.floor(d.getMonth() / 3) + 2;
+  //     return m > 4 ? m - 4 : m;
+  //   }
 
-    var currentDate2 = new Date();
-    if ((currentDate2.getMonth() + 1) < 10) {
-      fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
-    }
-    if (currentDate2.getDate() < 10) {
-      fromDateDay2 = "0" + currentDate2.getDate();
-    }
-    var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
-    let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + fromDateMonth2 + "-" + currentDate2.getDate();
-    templateObject.getAllFilterInvoiceEmailData(getDateFrom, getLoadDate, false);
+  //   var quarterAdjustment = (moment().month() % 3) + 1;
+  //   var lastQuarterEndDate = moment().subtract({
+  //     months: quarterAdjustment
+  //   }).endOf('month');
+  //   var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
+  //     months: 2
+  //   }).startOf('month');
 
-  },
+  //   var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
+  //   var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+
+
+  //   $("#dateFrom").val(lastQuarterStartDateFormat);
+  //   $("#dateTo").val(lastQuarterEndDateFormat);
+
+  //   let fromDateMonth = getQuarter(currentDate);
+  //   var quarterMonth = getQuarter(currentDate);
+  //   let fromDateDay = currentDate.getDate();
+
+  //   var getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
+  //   let getDateFrom = moment(lastQuarterStartDateFormat).format("YYYY-MM-DD");
+  //   templateObject.getAllFilterInvoiceEmailData(getDateFrom, getLoadDate, false);
+  // },
+  // 'click #last12Months': function () {
+  //   let templateObject = Template.instance();
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+  //   $('#dateFrom').attr('readonly', false);
+  //   $('#dateTo').attr('readonly', false);
+  //   var currentDate = new Date();
+  //   var begunDate = moment(currentDate).format("DD/MM/YYYY");
+
+  //   let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+  //   let fromDateDay = currentDate.getDate();
+  //   if ((currentDate.getMonth() + 1) < 10) {
+  //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+  //   }
+  //   if (currentDate.getDate() < 10) {
+  //     fromDateDay = "0" + currentDate.getDate();
+  //   }
+
+  //   var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+  //   $("#dateFrom").val(fromDate);
+  //   $("#dateTo").val(begunDate);
+
+  //   var currentDate2 = new Date();
+  //   if ((currentDate2.getMonth() + 1) < 10) {
+  //     fromDateMonth2 = "0" + Math.floor(currentDate2.getMonth() + 1);
+  //   }
+  //   if (currentDate2.getDate() < 10) {
+  //     fromDateDay2 = "0" + currentDate2.getDate();
+  //   }
+  //   var getLoadDate = moment(currentDate2).format("YYYY-MM-DD");
+  //   let getDateFrom = Math.floor(currentDate2.getFullYear() - 1) + "-" + fromDateMonth2 + "-" + currentDate2.getDate();
+  //   templateObject.getAllFilterInvoiceEmailData(getDateFrom, getLoadDate, false);
+
+  // },
   'click #ignoreDate': function () {
     let templateObject = Template.instance();
     $('.fullScreenSpin').css('display', 'inline-block');
@@ -1287,6 +1312,10 @@ Template.invoiceemail.helpers({
     return salesService.getAllInvoiceListNonBO
   },
 
+  searchAPI: function() {
+    return salesService.getNewInvoiceListByNameOrID
+  },
+
   apiParams: function () {
     return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
   },
@@ -1299,6 +1328,14 @@ Template.invoiceemail.helpers({
     let templateObject = Template.instance();
     return function (data) {
       let dataReturn = templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn = templateObject.getExData(data);
       return dataReturn
     }
   }
