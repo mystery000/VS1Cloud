@@ -342,6 +342,18 @@ import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
+
+import './vs1_templates/contact_card/contact_card.js';
+import './vs1_templates/vs1_tab/vs1_tab_address.html';
+import './vs1_templates/vs1_tab/vs1_tab_crm.html';
+import './vs1_templates/vs1_tab/vs1_tab_note.html';
+import './vs1_templates/vs1_tab/vs1_tab_invoicing.html';
+import './vs1_templates/vs1_tab/vs1_tab_attachments.html';
+import './vs1_templates/vs1_tab/vs1_tab_custom_fields.html';
+import './vs1_templates/vs1_tab/vs1_tab_tax.html';
+import './vs1_templates/template_buttons/export_refresh_import_print_display_button.js';
+
+
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -420,6 +432,9 @@ import './inventory/binNumberPopups/addBinNumberPop.js';
 import './inventory/binNumberPopups/binNumberListPop.js';
 import './settings/inventory-setting/inventorySettings.js';
 import './settings/UOM-Settings/adduompop.js';
+import './eft/transactionCodeModal/transactionCodeModal.js';
+import './eft/eftFilesCreated/eftFilesCreated.js';
+import './eft/eftBankRuleList/eftBankRuleList.js';
 /* Martin */
 
 /* AlexV */
@@ -523,6 +538,7 @@ import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
 import './payroll/clockonoff/employeeclockonoff.js';
 import './reports/buildcost/buildcostreport';
 import './reports/worksheet/worksheetreport.js';
+import './payroll/clockonoff/process_clock_list.js';
 /* Roverto */
 
 /* Kelvin More */
@@ -645,7 +661,7 @@ import './reports/exeincome/exeincome.js';
 import './reports/exeperformance/exeperformance.js';
 import './reports/exeposition/exeposition.js';
 import './reports/exeprofitability/exeprofitability.js';
-// import './reconciliation/newstatementrule.js';
+import './reconciliation/newstatementrule.js';
 import './vs1_templates/template_buttons/report_export_import_print_display_button.js';
 /* Scott */
 
@@ -654,7 +670,8 @@ import './inventory/binlocations/binlocations.js';
 /* Mainstar */
 
 /* Damien Begin */
-import './vs1_templates/transaction_type_modal/transaction_type_modal.js'
+import './vs1_templates/transaction_type_modal/transaction_type_modal.js';
+import './vs1_templates/transaction_temp/transaction_frm_journal.js';
 /* Damien End */
 
 //import { FlowRouter } from 'meteor/kadira:flow-router';

@@ -4,7 +4,6 @@ import { OrganisationService } from "../../js/organisation-service";
 import { SideBarService } from "../../js/sidebar-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
-import { bankNameList } from "../../lib/global/bank-names";
 
 import { Template } from 'meteor/templating';
 import './AddAccountModal.html';
@@ -32,8 +31,7 @@ Template.addAccountModal.onCreated(function () {
   templateObject.accountList = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
   templateObject.expenseCategories = new ReactiveVar([]);
-  templateObject.taxRates = new ReactiveVar([]);
-  templateObject.bankNames = new ReactiveVar([]);
+  templateObject.taxRates = new ReactiveVar([]);  
 });
 
 Template.addAccountModal.onRendered(function () {
@@ -43,8 +41,7 @@ Template.addAccountModal.onRendered(function () {
   let templateObject = Template.instance();
   const dataTableListTax = [];
   const tableHeaderListTax = [];
-  let categories = [];
-  templateObject.bankNames.set(bankNameList);
+  let categories = [];  
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
     getVS1Data("TAccountType")
@@ -272,18 +269,21 @@ Template.addAccountModal.onRendered(function () {
 
   $("#addNewAccountModal #edtSubAccount1").editableSelect()
   $("#addNewAccountModal #edtSubAccount1").editableSelect().on("click.editable-select", (e) => {
+    if (!$("#sltAccountType").val()) return swal("WARNING", "Please select Account Type first.", "warning")
     currentSubAccount = $("#addNewAccountModal #edtSubAccount1")
     editableService.clickAccount(e)
   })
 
   $("#addNewAccountModal #edtSubAccount2").editableSelect()
   $("#addNewAccountModal #edtSubAccount2").editableSelect().on("click.editable-select", (e) => {
+    if (!$("#edtSubAccount1").val()) return swal("WARNING", "Please select Sub Account 1 first.", "warning")
     currentSubAccount = $("#addNewAccountModal #edtSubAccount2")
     editableService.clickAccount(e)
   })
 
   $("#addNewAccountModal #edtSubAccount3").editableSelect()
   $("#addNewAccountModal #edtSubAccount3").editableSelect().on("click.editable-select", (e) => {
+    if (!$("#edtSubAccount2").val()) return swal("WARNING", "Please select Sub Account 2 first.", "warning")
     currentSubAccount = $("#addNewAccountModal #edtSubAccount3")
     editableService.clickAccount(e)
   })
@@ -1523,12 +1523,5 @@ Template.addAccountModal.helpers({
   },
   expenseCategories: () => {
     return Template.instance().expenseCategories.get();
-  },
-  bankNames: () => {
-    return Template.instance()
-      .bankNames.get()
-      .sort(function (a, b) {
-        return a.name > b.name ? 1 : -1;
-      });
   },
 });

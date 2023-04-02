@@ -19,6 +19,54 @@ Template.joblist.onCreated(function () {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.selectedFile = new ReactiveVar();
+
+    templateObject.getDataTableList = function(data) {
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.CreditBalance) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        var dataList = [
+            data.Company || '',
+            data.JobName || '',
+            data.Phone || '',
+            arBalance || 0.00,
+            creditBalance || 0.00,
+            balance || 0.00,
+            creditLimit || 0.00,
+            salesOrderBalance || 0.00,
+            data.Country || '',
+            data.Email || '',
+            data.AccountNo || '',
+            data.ClientNo || '',
+            data.JobTitle || '',
+            data.Notes || '',
+            data.ID || '',
+            data.Active ? "" : "In-Active",
+            //contactname: data.ContactName || ''
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 1, label: 'Job', class: 'colJob', active: true, display: true, width: "110" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 8,  label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+        { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "120" },
+        { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "120" },
+        { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "120" },
+        { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "120" },
+        { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
+        { index: 14, label: 'ID', class: 'colID', active: false, display: false, width: "10" },
+        { index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.joblist.onRendered(function () {
@@ -34,28 +82,28 @@ Template.joblist.onRendered(function () {
     if(FlowRouter.current().queryParams.success){
         $('.btnRefresh').addClass('btnRefreshAlert');
     }
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-                    // let columnindex = customcolumn[i].index + 1;
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
+    // Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblJoblist', function (error, result) {
+    //     if (error) {
+    //
+    //     } else {
+    //         if (result) {
+    //
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //                 // let columnindex = customcolumn[i].index + 1;
+    //                 $("th." + columnClass + "").html(columData);
+    //                 $("th." + columnClass + "").css('width', "" + columnWidth + "px");
+    //
+    //             }
+    //         }
+    //
+    //     }
+    // });
     templateObject.resetData = function (dataVal) {
         window.open('/joblist?page=last','_self');
     }
@@ -771,10 +819,10 @@ Template.joblist.onRendered(function () {
         });
     }
 
-    templateObject.getCustomers();
+    //templateObject.getCustomers();
 
     $('#tblJoblist tbody').on('click', 'tr', function () {
-        var listData = $(this).closest('tr').attr('id');
+        var listData = $(this).closest('tr').find('.coldID').text();
         if (listData) {
             FlowRouter.go('/customerscard?jobid=' + listData+"&transTab=job");
         }
@@ -789,182 +837,182 @@ Template.joblist.events({
     'click #btnNewCustomer': function (event) {
         FlowRouter.go('/customerlist?type=job');
     },
-    'click .chkDatatable': function (event) {
-        var columns = $('#tblJoblist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function (i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'keyup #tblJoblist_filter input': function (event) {
-          if($(event.target).val() != ''){
-            $(".btnRefreshJobs").addClass('btnSearchAlert');
-          }else{
-            $(".btnRefreshJobs").removeClass('btnSearchAlert');
-          }
-          if (event.keyCode == 13) {
-             $(".btnRefreshJobs").trigger("click");
-          }
-        },
-        'click .btnRefreshJobs':function(event){
-        $(".btnRefresh").trigger("click");
-    },
-    'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblJoblist' });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
-    'click .saveTable': function (event) {
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblJoblist' });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID, username: clientUsername, useremail: clientEmail,
-                            PrefGroup: 'salesform', PrefName: 'tblJoblist', published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID, username: clientUsername, useremail: clientEmail,
-                        PrefGroup: 'salesform', PrefName: 'tblJoblist', published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function (event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblJoblist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange': function (event) {
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
-
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblJoblist th');
-        $.each(datable, function (i, v) {
-
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings': function (event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblJoblist th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    // 'click .chkDatatable': function (event) {
+    //     var columns = $('#tblJoblist th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function (i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'keyup #tblJoblist_filter input': function (event) {
+    //       if($(event.target).val() != ''){
+    //         $(".btnRefreshJobs").addClass('btnSearchAlert');
+    //       }else{
+    //         $(".btnRefreshJobs").removeClass('btnSearchAlert');
+    //       }
+    //       if (event.keyCode == 13) {
+    //          $(".btnRefreshJobs").trigger("click");
+    //       }
+    //     },
+    //     'click .btnRefreshJobs':function(event){
+    //     $(".btnRefresh").trigger("click");
+    // },
+    // 'click .resetTable': function (event) {
+    //     var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
+    //     if (getcurrentCloudDetails) {
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblJoblist' });
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
+    //                     if (err) {
+    //
+    //                     } else {
+    //                         Meteor._reload.reload();
+    //                     }
+    //                 });
+    //
+    //             }
+    //         }
+    //     }
+    // },
+    // 'click .saveTable': function (event) {
+    //     let lineItems = [];
+    //     $('.columnSettings').each(function (index) {
+    //         var $tblrow = $(this);
+    //         var colTitle = $tblrow.find(".divcolumn").text() || '';
+    //         var colWidth = $tblrow.find(".custom-range").val() || 0;
+    //         var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+    //         var colHidden = false;
+    //         if ($tblrow.find(".custom-control-input").is(':checked')) {
+    //             colHidden = false;
+    //         } else {
+    //             colHidden = true;
+    //         }
+    //         let lineItemObj = {
+    //             index: index,
+    //             label: colTitle,
+    //             hidden: colHidden,
+    //             width: colWidth,
+    //             thclass: colthClass
+    //         }
+    //
+    //         lineItems.push(lineItemObj);
+    //     });
+    //
+    //     var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
+    //     if (getcurrentCloudDetails) {
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblJoblist' });
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.update({ _id: checkPrefDetails._id }, {
+    //                     $set: {
+    //                         userid: clientID, username: clientUsername, useremail: clientEmail,
+    //                         PrefGroup: 'salesform', PrefName: 'tblJoblist', published: true,
+    //                         customFields: lineItems,
+    //                         updatedAt: new Date()
+    //                     }
+    //                 }, function (err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
+    //                     }
+    //                 });
+    //
+    //             } else {
+    //                 CloudPreference.insert({
+    //                     userid: clientID, username: clientUsername, useremail: clientEmail,
+    //                     PrefGroup: 'salesform', PrefName: 'tblJoblist', published: true,
+    //                     customFields: lineItems,
+    //                     createdAt: new Date()
+    //                 }, function (err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
+    //
+    //                     }
+    //                 });
+    //             }
+    //         }
+    //     }
+    //     $('#myModal2').modal('toggle');
+    // },
+    // 'blur .divcolumn': function (event) {
+    //     let columData = $(event.target).text();
+    //
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+    //     var datable = $('#tblJoblist').DataTable();
+    //     var title = datable.column(columnDatanIndex).header();
+    //     $(title).html(columData);
+    //
+    // },
+    // 'change .rngRange': function (event) {
+    //     let range = $(event.target).val();
+    //     $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
+    //
+    //     let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     var datable = $('#tblJoblist th');
+    //     $.each(datable, function (i, v) {
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("." + replaceClass + "").css('width', range + 'px');
+    //
+    //         }
+    //     });
+    //
+    // },
+    // 'click .btnOpenSettings': function (event) {
+    //     let templateObject = Template.instance();
+    //     var columns = $('#tblJoblist th');
+    //
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function (i, v) {
+    //         if (v.hidden == false) {
+    //             columVisible = true;
+    //         }
+    //         if ((v.className.includes("hiddenColumn"))) {
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || 0,
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click .exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblJoblist_wrapper .dt-buttons .btntabletocsv').click();
@@ -1203,5 +1251,40 @@ Template.joblist.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblJoblist' });
-    }
+    },
+
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllJobssDataVS1;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllJobssDataVS1;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["limitCount", "limitFrom", "deleteFilter"];
+    },
 });

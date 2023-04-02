@@ -96,9 +96,9 @@ Template.clienttypesettings.onRendered(function () {
 });
 
 Template.clienttypesettings.events({
-  "click #btnNewInvoice": function (event) {
-    // FlowRouter.go('/invoicecard');
-  },
+  // "click #btnNewInvoice": function (event) {
+  //   // FlowRouter.go('/invoicecard');
+  // },
   "click #exportbtn": function () {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblClienttypeList_wrapper .dt-buttons .btntabletocsv").click();
@@ -283,40 +283,40 @@ Template.clienttypesettings.events({
       history.back(1);
     }, delayTimeAfterSound);
   },
-  "keydown #edtSiteCode, keyup #edtSiteCode": function (event) {
-    if (
-      $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 &&
-        (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)
-    ) {
-      // let it happen, don't do anything
-      return;
-    }
+  // "keydown #edtSiteCode, keyup #edtSiteCode": function (event) {
+  //   if (
+  //     $.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
+  //     // Allow: Ctrl+A, Command+A
+  //     (event.keyCode === 65 &&
+  //       (event.ctrlKey === true || event.metaKey === true)) ||
+  //     // Allow: home, end, left, right, down, up
+  //     (event.keyCode >= 35 && event.keyCode <= 40)
+  //   ) {
+  //     // let it happen, don't do anything
+  //     return;
+  //   }
 
-    if (event.shiftKey == true) {
-    }
+  //   if (event.shiftKey == true) {
+  //   }
 
-    if (
-      (event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 ||
-      event.keyCode == 9 ||
-      event.keyCode == 37 ||
-      event.keyCode == 39 ||
-      event.keyCode == 46 ||
-      event.keyCode == 190
-    ) {
-      event.preventDefault();
-    } else {
-      //event.preventDefault();
-    }
-  },
-  "blur #edtSiteCode": function (event) {
-    $(event.target).val($(event.target).val().toUpperCase());
-  },
+  //   if (
+  //     (event.keyCode >= 48 && event.keyCode <= 57) ||
+  //     (event.keyCode >= 96 && event.keyCode <= 105) ||
+  //     event.keyCode == 8 ||
+  //     event.keyCode == 9 ||
+  //     event.keyCode == 37 ||
+  //     event.keyCode == 39 ||
+  //     event.keyCode == 46 ||
+  //     event.keyCode == 190
+  //   ) {
+  //     event.preventDefault();
+  //   } else {
+  //     //event.preventDefault();
+  //   }
+  // },
+  // "blur #edtSiteCode": function (event) {
+  //   $(event.target).val($(event.target).val().toUpperCase());
+  // },
   "click .btnSaveRoom": function () {
     playSaveAudio();
     let taxRateService = new TaxRateService();

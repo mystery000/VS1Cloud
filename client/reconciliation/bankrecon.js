@@ -94,6 +94,10 @@ Template.bankrecon.onRendered(function() {
         }
     });
 
+    // Alex: add {
+    $('.field-before-currency').html(Currency);
+    // @}
+
     let templateObject = Template.instance();
     const reconService = new ReconService();
     const url = FlowRouter.current().path;
@@ -148,6 +152,14 @@ Template.bankrecon.onRendered(function() {
             $('.fullScreenSpin').css('display', 'none');
         });
     };
+
+    // Damien
+    // Set focus when open account list modal
+    $( "#bankAccountListModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblAccountListPop_filter .form-control-sm').get(0).focus();
+        }, 500);
+    });
 
     // API to pull Accounts END
     // BEGIN DATE CODE
@@ -1165,7 +1177,7 @@ Template.bankrecon.onRendered(function() {
                     $("#print_totalnotreconwithamount").html(utilityService.modifynegativeCurrencyFormat(notRecWithTotalAmount) || Currency + "0.00");
 
                     setTimeout(function() {
-                        $("#divtblSelectedWithdrawals").height(300);
+                        // $("#divtblSelectedWithdrawals").height(300);
                         $('.btnHold').prop("disabled", false);
                     }, 0);
                     $('#originalWithdrawalAmount').val(selectedTransAmountwith);
@@ -1574,7 +1586,7 @@ Template.bankrecon.onRendered(function() {
         $(".colAccountName").removeClass('boldtablealertsborder');
         let table = $(this);
         let accountname = table.find(".colAccountName").text();
-        let accountTypeId = table.find(".colID").text();
+        let accountTypeId = table.find(".colAccountId").text();
         $('#accountListModal').modal('toggle');
         $('#bankAccountName').val(accountname);
         $('#bankAccountID').val(accountTypeId);
@@ -1612,6 +1624,7 @@ Template.bankrecon.onRendered(function() {
         setTimeout(function() {
             $('.btnRefreshAccount').trigger('click');
             $('.fullScreenSpin').css('display', 'none');
+            $('#statementno').focus();
         }, 1000);
     });
 
@@ -1703,6 +1716,13 @@ Template.bankrecon.events({
     'change .reconchkboxdep': function(e) {
         const url = FlowRouter.current().path;
         const chkbiddep = event.target.id;
+        // Alex: add {
+        if ($('#'+chkbiddep).is(':checked')) {
+            $('#'+chkbiddep).parents('tr').addClass('checkRowSelected');
+        } else {
+            $('#'+chkbiddep).parents('tr').removeClass('checkRowSelected');
+        }
+        // @}
         const checkboxID = chkbiddep.split("_").pop();
         let selectedTransAmountdep = parseFloat($('#originalDepositAmount').val()) || 0;
         const templateObject = Template.instance();
@@ -1791,6 +1811,13 @@ Template.bankrecon.events({
         //$(".endingbalance").val('');
         const templateObject = Template.instance();
         const chkbidwith = event.target.id;
+        // Alex: add {
+        if ($('#'+chkbidwith).is(':checked')) {
+            $('#'+chkbidwith).parents('tr').addClass('checkRowSelected');
+        } else {
+            $('#'+chkbidwith).parents('tr').removeClass('checkRowSelected');
+        }
+        // @}
         const checkboxID = chkbidwith.split("_").pop();
         let selectedTransAmountwith = parseFloat($('#originalWithdrawalAmount').val()) || 0;
         const selectedoriginaltransactionswith = templateObject.originalTranswith.get() || [];
@@ -2138,195 +2165,207 @@ Template.bankrecon.events({
     //     $('.statementDate').val(event.target.value || 0);
     // },
     'click .reconbtn': function(e) {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        const templateObject = Template.instance();
-        let reconService = new ReconService();
-
-        let lineItemsDep = [];
-        let lineItemsDepObj = {};
-        $('#tblSelectedDeposits > tbody > tr').each(function() {
-            var depID = this.id;
-            if (depID) {
-                let depositLineID = $(this).attr('depositLineID') || 0;
-                let depclientname = $("#" + depID + "_name").text() || '';
-                let depdepositdate = $("#" + depID + "_date").text() || '';
-                let depnotes = $("#" + depID + "_desc").text() || '';
-                // let depamount = $("#" + depID + "_amount").text() || 0;
-                let depamount = $("#" + depID + "_value").text() || 0;
-                let depref = $("#" + depID + "_ref").text() || '';
-                let deppaymentid = $("#" + depID + "_payid").text() || '';
-                let depaccountname = $('#bankAccountName').val() || '';
-                // if ($("#" + depID + "_desc").text() == "Customer Payment") {
-                //     deppaymentid = depID;
-                // }
-
-                // if (FlowRouter.current().queryParams.id) {
-
-                // } else {
-                //     if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
-                //         deppaymentid = depID;
-                //     }
-
-                //     if ($("#" + depID + "_desc").text() == "Cheque") {
-                //         deppaymentid = depID;
-                //     }
-                // }
-
-                // else if($("#"+depID+"_desc").text() == "Journal Entry"){
-                //   deppaymentid = depID;
-                // }
-
-                let splitDepdepositdate = depdepositdate.split("/");
-                let depositYear = splitDepdepositdate[2];
-                let depositMonth = splitDepdepositdate[1];
-                let depositDay = splitDepdepositdate[0];
-
-                let formateDepDate = depositYear + "-" + depositMonth + "-" + depositDay;
-
-                lineItemsDepObj = {
-                    type: "TReconciliationDepositLines",
-                    fields: {
-                        AccountName: depaccountname || '',
-                        // Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
-                        Amount: parseFloat(depamount) || 0,
-                        BankStatementLineID: 0, //Hardcoded for now
-                        ClientName: depclientname || '',
-                        DepositDate: formateDepDate + " 00:00:00" || '',
-                        Deposited: true,
-                        DepositLineID: parseInt(deppaymentid) || 0,
-                        Notes: depnotes || '',
-                        Payee: depclientname || '',
-                        PaymentID: parseInt(depID) || 0,
-                        Reconciled: true,
-                        Reference: depref || ''
-                    }
-                };
-
-                lineItemsDep.push(lineItemsDepObj);
+        swal({
+            title: 'Confirm',
+            text: 'Do you want to print the report?',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No'
+        }).then((result) => {
+            if (result.value) {
+                $('.printConfirm').trigger('click');
             }
-        });
+            $('.fullScreenSpin').css('display', 'inline-block');
+            const templateObject = Template.instance();
+            let reconService = new ReconService();
 
-        let lineItemsWith = [];
-        let lineItemsWithObj = {};
-        $('#tblSelectedWithdrawals > tbody > tr').each(function() {
-            var withID = this.id;
-            if (withID) {
-                let depositLineIDWith = $(this).attr('depositLineID') || 0;
-                let withclientname = $("#" + withID + "_name").text() || '';
-                let withdepositdate = $("#" + withID + "_date").text() || '';
-                let withnotes = $("#" + withID + "_desc").text() || '';
-                // let withamount = $("#" + withID + "_amount").text() || 0;
-                let withamount = $("#" + withID + "_value").text() || 0;
-                let withref = $("#" + withID + "_ref").text() || '';
-                let withpaymentid = $("#" + withID + "_payid").text() || '';
-                // withpaymentid = withID;
-                let withaccountname = $('#bankAccountName').val() || '';
+            let lineItemsDep = [];
+            let lineItemsDepObj = {};
+            $('#tblSelectedDeposits > tbody > tr').each(function() {
+                var depID = this.id;
+                if (depID) {
+                    let depositLineID = $(this).attr('depositLineID') || 0;
+                    let depclientname = $("#" + depID + "_name").text() || '';
+                    let depdepositdate = $("#" + depID + "_date").text() || '';
+                    let depnotes = $("#" + depID + "_desc").text() || '';
+                    // let depamount = $("#" + depID + "_amount").text() || 0;
+                    let depamount = $("#" + depID + "_value").text() || 0;
+                    let depref = $("#" + depID + "_ref").text() || '';
+                    let deppaymentid = $("#" + depID + "_payid").text() || '';
+                    let depaccountname = $('#bankAccountName').val() || '';
+                    // if ($("#" + depID + "_desc").text() == "Customer Payment") {
+                    //     deppaymentid = depID;
+                    // }
 
-                let splitwithdepositdate = withdepositdate.split("/");
-                let withYear = splitwithdepositdate[2];
-                let withMonth = splitwithdepositdate[1];
-                let withDay = splitwithdepositdate[0];
+                    // if (FlowRouter.current().queryParams.id) {
 
-                let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
+                    // } else {
+                    //     if ($("#" + depID + "_desc").text() == "Cheque Deposit") {
+                    //         deppaymentid = depID;
+                    //     }
 
-                lineItemsWithObj = {
-                    type: "TReconciliationWithdrawalLines",
-                    fields: {
-                        AccountName: withaccountname || '',
-                        // Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
-                        Amount: parseFloat(withamount) || 0,
-                        BankStatementLineID: 0, //Hardcoded for now
-                        ClientName: withclientname || '',
-                        DepositDate: formatWithDate + " 00:00:00" || '',
-                        Deposited: true,
-                        DepositLineID: parseInt(withpaymentid) || 0,
-                        Notes: withnotes || '',
-                        Payee: withclientname || '',
-                        PaymentID: parseInt(withID) || 0,
-                        Reconciled: true,
-                        Reference: withref || ''
-                    }
-                };
-                lineItemsWith.push(lineItemsWithObj);
-            }
-        });
+                    //     if ($("#" + depID + "_desc").text() == "Cheque") {
+                    //         deppaymentid = depID;
+                    //     }
+                    // }
 
-        // Pulling initial variables BEGIN
-        var accountname = $('#bankAccountName').val() || '';
-        var deptname = "Default"; //Set to Default as it isn't used for recons
-        var employeename = localStorage.getItem('mySessionEmployee');
-        var deleted = false;
-        var finished = true;
-        var notes = $('#statementno').val(); //pending addition of notes field
-        var onhold = false;
-        var openbalance = utilityService.convertSubstringParseFloatR($('.openingbalance').val()) || 0;
-        var statementno = $('#statementno').val();
-        var recondateTime = new Date($("#dtSODate2").datepicker("getDate"));
-        let recondate = recondateTime.getFullYear() + "-" + (recondateTime.getMonth() + 1) + "-" + recondateTime.getDate();
-        let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
-        // Pulling initial variables END
-        let objDetails = '';
-        if (FlowRouter.current().queryParams.id) {
-            objDetails = {
-                type: "TReconciliation",
-                fields: {
-                    ID: parseInt(FlowRouter.current().queryParams.id) || 0,
-                    AccountName: accountname || '',
-                    CloseBalance: parseFloat(closebalance) || 0,
-                    Deleted: deleted,
-                    DepositLines: lineItemsDep || '',
-                    DeptName: deptname || '',
-                    EmployeeName: employeename || '',
-                    Finished: true,
-                    Notes: notes || '',
-                    OnHold: false,
-                    OpenBalance: parseFloat(openbalance) || 0,
-                    ReconciliationDate: moment(recondate).format('YYYY-MM-DD'),
-                    StatementNo: statementno || '0',
-                    WithdrawalLines: lineItemsWith || ''
+                    // else if($("#"+depID+"_desc").text() == "Journal Entry"){
+                    //   deppaymentid = depID;
+                    // }
 
+                    let splitDepdepositdate = depdepositdate.split("/");
+                    let depositYear = splitDepdepositdate[2];
+                    let depositMonth = splitDepdepositdate[1];
+                    let depositDay = splitDepdepositdate[0];
+
+                    let formateDepDate = depositYear + "-" + depositMonth + "-" + depositDay;
+
+                    lineItemsDepObj = {
+                        type: "TReconciliationDepositLines",
+                        fields: {
+                            AccountName: depaccountname || '',
+                            // Amount: utilityService.convertSubstringParseFloatR(depamount) || 0,
+                            Amount: parseFloat(depamount) || 0,
+                            BankStatementLineID: 0, //Hardcoded for now
+                            ClientName: depclientname || '',
+                            DepositDate: formateDepDate + " 00:00:00" || '',
+                            Deposited: true,
+                            DepositLineID: parseInt(deppaymentid) || 0,
+                            Notes: depnotes || '',
+                            Payee: depclientname || '',
+                            PaymentID: parseInt(depID) || 0,
+                            Reconciled: true,
+                            Reference: depref || ''
+                        }
+                    };
+
+                    lineItemsDep.push(lineItemsDepObj);
                 }
-            };
-
-        } else {
-            objDetails = {
-                type: "TReconciliation",
-                fields: {
-                    AccountName: accountname || '',
-                    CloseBalance: parseFloat(closebalance) || 0,
-                    Deleted: deleted,
-                    DepositLines: lineItemsDep || '',
-                    DeptName: deptname || '',
-                    EmployeeName: employeename || '',
-                    Finished: true,
-                    Notes: notes || '',
-                    OnHold: false,
-                    OpenBalance: parseFloat(openbalance) || 0,
-                    ReconciliationDate: moment(recondate).format('YYYY-MM-DD'),
-                    StatementNo: statementno || '0',
-                    WithdrawalLines: lineItemsWith || ''
-
-                }
-            };
-        }
-        // return false;
-        reconService.saveReconciliation(objDetails).then(function(data) {
-            FlowRouter.go('/reconciliationlist?success=true');
-            if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") == "false") {
-                localStorage.setItem("SelectedTransactionsDep", "");
-                localStorage.setItem("SelectedTransactionsWith", "");
-            }
-        }).catch(function(err) {
-            swal({
-                title: 'Oooops...',
-                text: err,
-                type: 'error',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((result) => {
-                if (result.value) {} else if (result.dismiss == 'cancel') {}
             });
-            $('.fullScreenSpin').css('display', 'none');
+
+            let lineItemsWith = [];
+            let lineItemsWithObj = {};
+            $('#tblSelectedWithdrawals > tbody > tr').each(function() {
+                var withID = this.id;
+                if (withID) {
+                    let depositLineIDWith = $(this).attr('depositLineID') || 0;
+                    let withclientname = $("#" + withID + "_name").text() || '';
+                    let withdepositdate = $("#" + withID + "_date").text() || '';
+                    let withnotes = $("#" + withID + "_desc").text() || '';
+                    // let withamount = $("#" + withID + "_amount").text() || 0;
+                    let withamount = $("#" + withID + "_value").text() || 0;
+                    let withref = $("#" + withID + "_ref").text() || '';
+                    let withpaymentid = $("#" + withID + "_payid").text() || '';
+                    // withpaymentid = withID;
+                    let withaccountname = $('#bankAccountName').val() || '';
+
+                    let splitwithdepositdate = withdepositdate.split("/");
+                    let withYear = splitwithdepositdate[2];
+                    let withMonth = splitwithdepositdate[1];
+                    let withDay = splitwithdepositdate[0];
+
+                    let formatWithDate = withYear + "-" + withMonth + "-" + withDay;
+
+                    lineItemsWithObj = {
+                        type: "TReconciliationWithdrawalLines",
+                        fields: {
+                            AccountName: withaccountname || '',
+                            // Amount: utilityService.convertSubstringParseFloatR(withamount) || 0,
+                            Amount: parseFloat(withamount) || 0,
+                            BankStatementLineID: 0, //Hardcoded for now
+                            ClientName: withclientname || '',
+                            DepositDate: formatWithDate + " 00:00:00" || '',
+                            Deposited: true,
+                            DepositLineID: parseInt(withpaymentid) || 0,
+                            Notes: withnotes || '',
+                            Payee: withclientname || '',
+                            PaymentID: parseInt(withID) || 0,
+                            Reconciled: true,
+                            Reference: withref || ''
+                        }
+                    };
+                    lineItemsWith.push(lineItemsWithObj);
+                }
+            });
+
+            // Pulling initial variables BEGIN
+            var accountname = $('#bankAccountName').val() || '';
+            var deptname = "Default"; //Set to Default as it isn't used for recons
+            var employeename = localStorage.getItem('mySessionEmployee');
+            var deleted = false;
+            var finished = true;
+            var notes = $('#statementno').val(); //pending addition of notes field
+            var onhold = false;
+            var openbalance = utilityService.convertSubstringParseFloatR($('.openingbalance').val()) || 0;
+            var statementno = $('#statementno').val();
+            var recondateTime = new Date($("#dtSODate2").datepicker("getDate"));
+            let recondate = recondateTime.getFullYear() + "-" + (recondateTime.getMonth() + 1) + "-" + recondateTime.getDate();
+            let closebalance = utilityService.convertSubstringParseFloatR($('.endingBalanceCalc').html()) || 0;
+            // Pulling initial variables END
+            let objDetails = '';
+            if (FlowRouter.current().queryParams.id) {
+                objDetails = {
+                    type: "TReconciliation",
+                    fields: {
+                        ID: parseInt(FlowRouter.current().queryParams.id) || 0,
+                        AccountName: accountname || '',
+                        CloseBalance: parseFloat(closebalance) || 0,
+                        Deleted: deleted,
+                        DepositLines: lineItemsDep || '',
+                        DeptName: deptname || '',
+                        EmployeeName: employeename || '',
+                        Finished: true,
+                        Notes: notes || '',
+                        OnHold: false,
+                        OpenBalance: parseFloat(openbalance) || 0,
+                        ReconciliationDate: moment(recondate).format('YYYY-MM-DD'),
+                        StatementNo: statementno || '0',
+                        WithdrawalLines: lineItemsWith || ''
+
+                    }
+                };
+
+            } else {
+                objDetails = {
+                    type: "TReconciliation",
+                    fields: {
+                        AccountName: accountname || '',
+                        CloseBalance: parseFloat(closebalance) || 0,
+                        Deleted: deleted,
+                        DepositLines: lineItemsDep || '',
+                        DeptName: deptname || '',
+                        EmployeeName: employeename || '',
+                        Finished: true,
+                        Notes: notes || '',
+                        OnHold: false,
+                        OpenBalance: parseFloat(openbalance) || 0,
+                        ReconciliationDate: moment(recondate).format('YYYY-MM-DD'),
+                        StatementNo: statementno || '0',
+                        WithdrawalLines: lineItemsWith || ''
+
+                    }
+                };
+            }
+            // return false;
+            reconService.saveReconciliation(objDetails).then(function(data) {
+                FlowRouter.go('/reconciliationlist?success=true');
+                if (localStorage.getItem("reconHoldState") != undefined && localStorage.getItem("reconHoldState") != null && localStorage.getItem("reconHoldState") == "false") {
+                    localStorage.setItem("SelectedTransactionsDep", "");
+                    localStorage.setItem("SelectedTransactionsWith", "");
+                }
+            }).catch(function(err) {
+                swal({
+                    title: 'Oooops...',
+                    text: err,
+                    type: 'error',
+                    showCancelButton: false,
+                    confirmButtonText: 'Try Again'
+                }).then((result) => {
+                    if (result.value) {} else if (result.dismiss == 'cancel') {}
+                });
+                $('.fullScreenSpin').css('display', 'none');
+            });
         });
     },
     'click .btnHold': function(e) {

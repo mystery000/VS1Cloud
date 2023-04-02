@@ -5287,20 +5287,12 @@ Template.payrolloverview.events({
         .then(function (dataReturnRes) {
           $("#updateID").val(dataReturnRes.fields.ID);
           sideBarService.getAllTimeSheetList().then(function (data) {
-            Bert.alert(
-              $("#employee_name").val() + " you are now Clocked On",
-              "now-success"
-            );
             addVS1Data("TTimeSheet", JSON.stringify(data));
             $("#employeeStatusField").removeClass("statusOnHold");
             $("#employeeStatusField").removeClass("statusClockedOff");
             $("#employeeStatusField")
               .addClass("statusClockedOn")
               .text("Clocked On");
-            Bert.alert(
-              $("#employee_name").val() + " you are now Clocked On",
-              "now-success"
-            );
             $("#startTime").prop("disabled", true);
             templateObject.timesheetrecords.set([]);
             templateObject.getAllTimeSheetDataClock();

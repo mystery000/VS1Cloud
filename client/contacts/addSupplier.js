@@ -399,9 +399,10 @@ Template.supplierscard.onCreated(function () {
       const rowCount = $('.results tbody tr').length;
       $('.counter').text(rowCount + 'items');
       setTab();
+      $('#edtActivePrimaryPassword').val('VS1Cloud@123')
       if (primaryAccountantName === lineItemObj.company) {
         $('#chkSameAsPrimary').prop('checked', true)
-        $('.active-password-wrapper').removeClass('d-none')
+        $('.active-password-wrapper').removeClass('invisible')
         $('.vs1-login-nav').removeClass('d-none')        
       }
       $('#primaryAccountantUsername').val(lineItemObj.email)
@@ -1758,7 +1759,7 @@ Template.supplierscard.events({
               .then(function () {
                   localStorage.setItem("VS1Accountant", company);
                   addVS1Data('TCompanyInfo', JSON.stringify(data));
-                  swal("Organisation details successfully updated!", "", "success")
+                  // swal("Organisation details successfully updated!", "", "success")
                   sideBarService.getAllSuppliersDataVS1(initialBaseDataLoad, 0).then(function (dataReload) {
                     addVS1Data('TSupplierVS1', JSON.stringify(dataReload)).then(function (datareturn) {
                       window.open('/supplierlist', '_self');
@@ -2702,7 +2703,7 @@ Template.supplierscard.events({
       if (primaryAccountantName !== $('#edtSupplierCompany').val()) {
         let result = await swal({
           title: 'Warning',
-          text: 'supplier name is already Your primary accountant, do you wish to switch?',
+          text: `${primaryAccountantName} is already Your primary accountant, do you wish to switch?`,
           type: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Yes',
@@ -2712,10 +2713,10 @@ Template.supplierscard.events({
           $("#chkSameAsPrimary").prop('checked', false)
         }
       }
-      $('.active-password-wrapper').removeClass('d-none')
+      $('.active-password-wrapper').removeClass('invisible')
       $('.vs1-login-nav').removeClass('d-none')
     } else {
-      $('.active-password-wrapper').addClass('d-none')
+      $('.active-password-wrapper').addClass('invisible')
       $('.vs1-login-nav').addClass('d-none')
     }
   },
