@@ -66,11 +66,11 @@ Template.departmentSettings.onRendered(function() {
     let deptprodlineItems = [];
 
 
-    function MakeNegative() {
-        $('td').each(function(){
-            if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
-        });
-    };
+    // function MakeNegative() {
+    //     $('td').each(function(){
+    //         if($(this).text().indexOf('-'+Currency) >= 0) $(this).addClass('text-danger')
+    //     });
+    // };
 
     $('#tblDepartmentList tbody').on("click", "tr", function () {
         $('#add-dept-title').text('Edit Department');
@@ -96,20 +96,20 @@ Template.departmentSettings.onRendered(function() {
 
 
 Template.departmentSettings.events({
-    'click #btnNewInvoice':function(event){
-        // FlowRouter.go('/invoicecard');
-    },
-    'click #exportbtn': function () {
-        $('.fullScreenSpin').css('display','inline-block');
-        jQuery('#tblDepartmentList_wrapper .dt-buttons .btntabletocsv').click();
-        $('.fullScreenSpin').css('display','none');
+    // 'click #btnNewInvoice':function(event){
+    //     // FlowRouter.go('/invoicecard');
+    // },
+    // 'click #exportbtn': function () {
+    //     $('.fullScreenSpin').css('display','inline-block');
+    //     jQuery('#tblDepartmentList_wrapper .dt-buttons .btntabletocsv').click();
+    //     $('.fullScreenSpin').css('display','none');
 
-    },
-    "click .printConfirm": function (event) {
-      $(".fullScreenSpin").css("display", "inline-block");
-      jQuery("#tblDepartmentList_wrapper .dt-buttons .btntabletopdf").click();
-      $(".fullScreenSpin").css("display", "none");
-    },
+    // },
+    // "click .printConfirm": function (event) {
+    //   $(".fullScreenSpin").css("display", "inline-block");
+    //   jQuery("#tblDepartmentList_wrapper .dt-buttons .btntabletopdf").click();
+    //   $(".fullScreenSpin").css("display", "none");
+    // },
     'click .btnRefresh': function () {
         $(".fullScreenSpin").css("display", "inline-block");
         sideBarService.getDepartment().then(function(dataReload) {

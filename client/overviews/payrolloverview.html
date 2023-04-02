@@ -490,6 +490,23 @@
                     <!-- <div class="table-responsive my-3">
                         {{> non_transactional_list tablename = "tblPayRuns"}}
                     </div> -->
+                    <div class="table-responsive my-3">
+                        {{>datatablelist
+                                tablename="tblPayRuns"
+                                apiName= apiFunction
+                                indexeddbname = 'TTimeSheet'
+                                tableheaderrecords = tableheaderrecords
+                                exportfilename = 'Time Sheet'
+                                istransaction = false
+                                apiParams= apiParams
+                                datahandler = datahandler
+                                service=service
+                                lowercaseDataName='ttimesheet'
+                                exIndexDBName = 'ttimesheet'
+                                exdatahandler = exDataHandler
+                                searchAPI = searchAPI
+                        }}
+                    </div>
                     <div class="table-responsive">
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">

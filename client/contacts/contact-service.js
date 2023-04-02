@@ -360,6 +360,24 @@ export class ContactService extends BaseService {
         //LastName='"+customerName+"' and
         return this.getList(this.ERPObjects.TJob, options);
     }
+    getAllJobList(limitCount, limitFrom, deleteFilter) {
+        let options = {
+            listType: "Detail",
+            Search: "Active = true",
+        };
+        //LastName='"+customerName+"' and
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TJobVS1List, options);
+    }
+    getAllJobListByName(customerName) {
+        let options = {
+            listType: "Detail",
+            Search: `Active = true and Company = "${customerName}"`,
+        };
+        //LastName='"+customerName+"' and
+        //if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TJobVS1List, options);
+    }
 
     getAllInvoiceListByEmployee(employeeName) {
         let options = {

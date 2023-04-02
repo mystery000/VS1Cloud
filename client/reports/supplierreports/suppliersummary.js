@@ -185,7 +185,6 @@ Template.suppliersummary.onRendered(() => {
       item.TotalTax = TotalTax;
       return item;
     });
-    console.log(useData);
     templateObject.records.set(useData);
 
 

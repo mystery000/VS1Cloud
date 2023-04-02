@@ -28,7 +28,7 @@ Template.transactionheader.helpers({
             return 'supplierList_modal'
         } else {
             return 'customerList_modal'
-        } 
+        }
     },
     getTemplate: function() {
         let templateObject = Template.instance();
@@ -61,6 +61,10 @@ Template.transactionheader.helpers({
         } else {
             return 'Customer List'
         }
+    },
+    getgridTableId: function() {
+      let templateObject = Template.instance();
+        return templateObject.data.gridTableId;
     }
 })
 

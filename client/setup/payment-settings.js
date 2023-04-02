@@ -6,6 +6,8 @@ import "../lib/global/indexdbstorage.js";
 import { OrganisationService } from "../js/organisation-service";
 import { TaxRateService } from "../settings/settings-service.js";
 import { SideBarService } from "../js/sidebar-service";
+import XLSX from "xlsx";
+import { UtilityService } from "../utility-service";
 
 const organisationService = new OrganisationService();
 const sideBarService = new SideBarService();
@@ -13,6 +15,9 @@ const taxRateService = new TaxRateService();
 
 Template.wizard_payment.onCreated(() => {
   const templateObject = Template.instance();
+  templateObject.datatablerecords = new ReactiveVar([]);
+  templateObject.tableheaderrecords = new ReactiveVar([]);
+  templateObject.displayfields = new ReactiveVar([]);
   templateObject.includeCreditCard = new ReactiveVar(false);
   templateObject.deptrecords = new ReactiveVar();
   templateObject.includeCreditCard = new ReactiveVar(false);
@@ -87,8 +92,37 @@ Template.wizard_payment.onCreated(() => {
       });
     }
   };
-})
+  templateObject.getDataTableList = function(data) {
+    let linestatus = '';
+    if (data.Active == true) {
+      linestatus = "";
+    } else if (data.Active == false) {
+      linestatus = "In-Active";
+    };
+    let tdIsCreditCard = '';
 
+    if (data.IsCreditCard == true) {
+      tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '" checked><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>';
+    } else {
+      tdIsCreditCard = '<div class="custom-control custom-switch chkBox text-center"><input class="custom-control-input chkBox" type="checkbox" id="iscreditcard-' + data.PayMethodID + '"><label class="custom-control-label chkBox" for="iscreditcard-' + data.PayMethodID + '"></label></div>';
+    };
+    var dataList = [
+      data.PayMethodID || "",
+      data.Name || "",
+      tdIsCreditCard,
+      linestatus,
+    ];
+    return dataList;
+  }
+
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
+    { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "150" },
+    { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "100" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
+})
 Template.wizard_payment.onRendered(() => {
   const templateObject = Template.instance();
   templateObject.loadStripe()
@@ -418,6 +452,159 @@ Template.wizard_payment.events({
       }
     }
   },
+  "click .templateDownload": function () {
+    let utilityService = new UtilityService();
+    let rows = [];
+    const filename = "SamplePaymentMethodSettings" + ".csv";
+    rows[0] = ["Payment Method Name", "Is Credit Card"];
+    rows[1] = ["ABC", "false"];
+    utilityService.exportToCsv(rows, filename, "csv");
+  },
+  "click .templateDownloadXLSX": function (e) {
+    e.preventDefault(); //stop the browser from following
+    window.location.href = "sample_imports/SamplePaymentMethodSettings.xlsx";
+  },
+  "click .btnUploadFile": function (event) {
+    $("#attachment-upload").val("");
+    $(".file-name").text("");
+    //$(".btnImport").removeAttr("disabled");
+    $("#attachment-upload").trigger("click");
+  },
+  "change #attachment-upload": function (e) {
+    let templateObj = Template.instance();
+    var filename = $("#attachment-upload")[0].files[0]["name"];
+    var fileExtension = filename.split(".").pop().toLowerCase();
+    var validExtensions = ["csv", "txt", "xlsx"];
+    var validCSVExtensions = ["csv", "txt"];
+
+    if (validExtensions.indexOf(fileExtension) == -1) {
+      swal(
+        "Invalid Format",
+        "formats allowed are :" + validExtensions.join(", "),
+        "error"
+      );
+      $(".file-name").text("");
+      $(".btnImport").Attr("disabled");
+    } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+      $(".file-name").text(filename);
+      let selectedFile = event.target.files[0];
+
+      templateObj.selectedFile.set(selectedFile);
+      if ($(".file-name").text() != "") {
+        $(".btnImport").removeAttr("disabled");
+      } else {
+        $(".btnImport").Attr("disabled");
+      }
+    } else if (fileExtension == "xlsx") {
+      $(".file-name").text(filename);
+      let selectedFile = event.target.files[0];
+      var oFile = selectedFile;
+      // Create A File Reader HTML5
+      var reader = new FileReader();
+
+      // Ready The Event For When A File Gets Selected
+      reader.onload = function (e) {
+        var data = e.target.result;
+        data = new Uint8Array(data);
+        var workbook = XLSX.read(data, { type: "array" });
+
+        var result = {};
+        workbook.SheetNames.forEach(function (sheetName) {
+          var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], {
+            header: 1,
+          });
+          var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+          templateObj.selectedFile.set(sCSV);
+
+          if (roa.length) result[sheetName] = roa;
+        });
+        // see the result, caution: it works after reader event is done.
+      };
+      reader.readAsArrayBuffer(oFile);
+
+      if ($(".file-name").text() != "") {
+        $(".btnImport").removeAttr("disabled");
+      } else {
+        $(".btnImport").Attr("disabled");
+      }
+    }
+  },
+  "click .btnImport": function () {
+    $(".fullScreenSpin").css("display", "inline-block");
+    let templateObject = Template.instance();
+    let objDetails;
+    let isCreditCard = false;
+    Papa.parse(templateObject.selectedFile.get(), {
+      complete: function (results) {
+        if (results.data.length > 0) {
+          if (
+            results.data[0][0] == "Payment Method Name" &&
+            results.data[0][1] == "Is Credit Card"
+          ) {
+            let dataLength = results.data.length * 500;
+            setTimeout(function () {
+              $(".importTemplateModal").hide();
+              $(".modal-backdrop").hide();
+              FlowRouter.go("/paymentmethodSettings?success=true");
+              $(".fullScreenSpin").css("display", "none");
+            }, parseInt(dataLength));
+            for (let i = 0; i < results.data.length - 1; i++) {
+              isCreditCard =
+                results.data[i + 1][1] !== undefined
+                  ? results.data[i + 1][1]
+                  : "";
+              objDetails = {
+                type: "TPaymentMethod",
+                fields: {
+                  Name: results.data[i + 1][0],
+                  IsCreditCard: isCreditCard || false,
+                  Active: true,
+                },
+              };
+              if (results.data[i + 1][1]) {
+                if (results.data[i + 1][1] !== "") {
+                  taxRateService
+                    .savePaymentMethod(objDetails)
+                    .then(function (data) {
+
+                    })
+                    .catch(function (err) {
+                      swal({
+                        title: "Oooops...",
+                        text: err,
+                        type: "error",
+                        showCancelButton: false,
+                        confirmButtonText: "Try Again",
+                      }).then((result) => {
+                        if (result.value) {
+                          FlowRouter.go("/paymentmethodSettings?success=true");
+                        } else if (result.dismiss === "cancel") {
+                          FlowRouter.go("/paymentmethodSettings?success=false");
+                        }
+                      });
+                    });
+                }
+              }
+            }
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+            swal(
+              "Invalid Data Mapping fields ",
+              "Please check that you are importing the correct file with the correct column headers.",
+              "error"
+            );
+          }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+          swal(
+            "Invalid Data Mapping fields ",
+            "Please check that you are importing the correct file with the correct column headers.",
+            "error"
+          );
+        }
+      },
+    });
+  },
 })
 
 Template.wizard_payment.helpers({
@@ -430,7 +617,7 @@ Template.wizard_payment.helpers({
   salesCloudPreferenceRecPaymentMethod: () => {
     return CloudPreference.findOne({
       userid: localStorage.getItem("mycloudLogonID"),
-      PrefName: "paymentmethodList",
+      PrefName: "tblPaymentMethodList",
     });
   },
   deptrecords: () => {
@@ -452,8 +639,59 @@ Template.wizard_payment.helpers({
   includeAccountID: () => {
     return Template.instance().includeAccountID.get();
   },
-  includeCreditCard: () => {
-    return Template.instance().includeCreditCard.get();
+  datatablerecords: () => {
+    return Template.instance()
+      .datatablerecords.get()
+      .sort(function (a, b) {
+        if (a.paymentmethodname == "NA") {
+          return 1;
+        } else if (b.paymentmethodname == "NA") {
+          return -1;
+        }
+        return a.paymentmethodname.toUpperCase() >
+          b.paymentmethodname.toUpperCase()
+          ? 1
+          : -1;
+      });
+  },
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getPaymentMethodDataList;
   },
 
+  searchAPI: function() {
+    return sideBarService.getPaymentMethodDataList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
+  // displayfields: () => {
+  //   return Template.instance().displayfields.get();
+  // },
 })

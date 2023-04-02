@@ -167,7 +167,22 @@
                 </div>
               </div>
               <div class="table-responsive">
-                {{>non_transactional_list tablename='tblSetupSupplierlist'}}
+<!--                {{>non_transactional_list tablename='tblSetupSupplierlist'}}-->
+                  {{>datatablelist
+                      tablename="tblSetupSupplierlist"
+                      apiName= apiFunction
+                      indexeddbname = 'TSupplierVS1List'
+                      tableheaderrecords = tableheaderrecords
+                      exportfilename = 'Setup Supplier List'
+                      istransaction = false
+                      apiParams= apiParams
+                      datahandler = datahandler
+                      service=service
+                      lowercaseDataName='tsuppliervs1list'
+                      exIndexDBName = 'tsuppliervs1list'
+                      exdatahandler = exDataHandler
+                      searchAPI = searchAPI
+                  }}
               </div>
             </div>
             <div class="row no-gutters">

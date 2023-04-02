@@ -65,6 +65,35 @@ Template.payrolloverview.onCreated(function () {
   templateObject.timeSheetList = new ReactiveVar([]);
   templateObject.employees = new ReactiveVar([]);
   templateObject.payPeriods = new ReactiveVar([]);
+
+  templateObject.getDataTableList = function (data) {
+    let ID = data.fields.ID || '';
+    let firstName = data.fields.EmployeeName.split(' ')[0] || '';
+    let lastName = data.fields.EmployeeName.split(' ')[1] || '';
+    let timeSheetDate = moment(data.fields.TimeSheetDate).format("D MMM YYYY") || '';
+    let msTimeStamp = moment(data.fields.MsTimeStamp).format('D MMM YYYY HH:mm');
+    let status = data.fields.Status || '';
+    var dataTimeSheetList = [
+      ID,
+      firstName,
+      lastName,
+      timeSheetDate,
+      msTimeStamp,
+      parseFloat(data.fields.Hours) || '',
+      status === ""?"Draft":status,
+    ];
+    return dataTimeSheetList;
+  }
+  let headerStructure = [
+    { index: 0, label: '#ID', class: 'colTimeSheetId', active: false, display: true, width: "10" },
+    { index: 1, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "120" },
+    { index: 2, label: 'Surname', class: 'colSurname', active: true, display: true, width: "120" },
+    { index: 3, label: 'Period', class: 'colPeriod', active: true, display: true, width: "110" },
+    { index: 4, label: 'Last edited', class: 'colLastEdited', active: true, display: true, width: "110" },
+    { index: 5, label: 'Hours', class: 'colHours', active: true, display: true, width: "110" },
+    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.payrolloverview.onRendered(function () {
@@ -5287,20 +5316,12 @@ Template.payrolloverview.events({
         .then(function (dataReturnRes) {
           $("#updateID").val(dataReturnRes.fields.ID);
           sideBarService.getAllTimeSheetList().then(function (data) {
-            Bert.alert(
-              $("#employee_name").val() + " you are now Clocked On",
-              "now-success"
-            );
             addVS1Data("TTimeSheet", JSON.stringify(data));
             $("#employeeStatusField").removeClass("statusOnHold");
             $("#employeeStatusField").removeClass("statusClockedOff");
             $("#employeeStatusField")
               .addClass("statusClockedOn")
               .text("Clocked On");
-            Bert.alert(
-              $("#employee_name").val() + " you are now Clocked On",
-              "now-success"
-            );
             $("#startTime").prop("disabled", true);
             templateObject.timesheetrecords.set([]);
             templateObject.getAllTimeSheetDataClock();
@@ -7001,6 +7022,45 @@ Template.payrolloverview.helpers({
   },
   payPeriods: () => {
     return Template.instance().payPeriods.get();
-  }
+  },
+
+  tableheaderrecords: () => {
+    return Template.instance().tableheaderrecords.get();
+  },
+  apiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllTimeSheetList;
+  },
+
+  searchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllTimeSheetList;
+  },
+
+  service: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  exDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  apiParams: function() {
+    return [];
+  },
 
 });

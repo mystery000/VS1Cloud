@@ -631,24 +631,25 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSupplierVS1, options);
   }
 
-  getAllJobssDataVS1(limitcount, limitfrom) {
+  getAllJobssDataVS1(limitcount, limitfrom, deleteFitler) {
     let options = "";
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
         orderby: '"PrintName asc"',
-        select: "[Active]=true",
+        Search: "Active=true",
       };
     } else {
       options = {
         orderby: '"PrintName asc"',
         ListType: "Detail",
-        select: "[Active]=true",
+        Search: 'Active = true',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TJobVS1, options);
+    if(deleteFitler) options.Search = "";
+    return this.getList(this.ERPObjects.TJobVS1List, options);
   }
 
   getAllExpenseCliamExDataVS1() {
@@ -1017,9 +1018,10 @@ export class SideBarService extends BaseService {
     options = {
       ListType: "Detail",
       orderby: '"PrintName asc"',
-      select: '[ClientName] f7like "' + dataSearchName + '"',
+      //select: '[ClientName] f7like "' + dataSearchName + '"',
+      Search: 'ClientName like "%' + dataSearchName + '%"',
     };
-    return this.getList(this.ERPObjects.TSupplierVS1, options);
+    return this.getList(this.ERPObjects.TSupplierVS1List, options);
   }
 
   getAllSuppliersDataVS1List(limitcount, limitfrom, deleteFilter) {
@@ -2379,9 +2381,8 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCorrespondence, options);
   }
 
-  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,isDeleted) {
+  getTJournalEntryListData(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,deleteFilter) {
     let options = "";
-    if(isDeleted == "" || isDeleted == false || isDeleted == null || isDeleted == undefined){
     if (ignoreDate == true) {
       options = {
         OrderBy: "TransactionDate desc",
@@ -2402,28 +2403,21 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    }else{
-      if (ignoreDate == true) {
-        options = {
-          OrderBy: "TransactionDate desc",
-          IgnoreDates: true,
-          IsDetailReport: true,
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
-        };
-      } else {
-        options = {
-          OrderBy: "TransactionDate desc",
-          IgnoreDates: false,
-          DateFrom: '"' + dateFrom + '"',
-          DateTo: '"' + dateTo + '"',
-          LimitCount: parseInt(limitcount),
-          LimitFrom: parseInt(limitfrom),
-        };
-      }
-    }
+    
+    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TJournalEntryList, options);
   }
+
+  searchTJournalEntryListData(dataSearchName) {
+    let options = "";
+    options = {
+      orderby: "TransactionDate desc",
+      IgnoreDates:true,
+      search: 'AccountName='+ dataSearchName+ ' OR ClassName="' + dataSearchName + '" OR GJID="' + dataSearchName + '" OR Memo="' + dataSearchName + '"',
+    };
+    return this.getList(this.ERPObjects.TJournalEntryList, options);
+  }
+
 
   getSalesListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom,isDeleted) {
     let options = "";
@@ -3120,8 +3114,8 @@ export class SideBarService extends BaseService {
   getOneTermsByTermName(keyword) {
     let options={
       ListType:'Detail',
-      select:"[Terms] f7like '"+keyword+"'",
-      Search: "Active = true",
+      //select:"[Terms] f7like '"+keyword+"'",
+      Search: "Active = true and Terms like '%" + keyword + "%'",
     }
     return this.getList(this.ERPObjects.TTermsVS1List, options);
   }

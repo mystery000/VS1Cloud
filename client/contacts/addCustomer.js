@@ -38,7 +38,7 @@ Template.customerscard.onCreated(function () {
     templateObject.customerrecords = new ReactiveVar([]);
     templateObject.recentTrasactions = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.tableheaderrecords = new ReactiveVar([]);
+
     templateObject.datatablerecordsjob = new ReactiveVar([]);
     templateObject.tableheaderrecordsjob = new ReactiveVar([]);
     templateObject.crmRecords = new ReactiveVar([]);
@@ -87,6 +87,11 @@ Template.customerscard.onCreated(function () {
     templateObject.checkedInvoices = new ReactiveVar();
     templateObject.checkedInvoices.set(true);
     templateObject.checkedSales = new ReactiveVar(false);
+
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.tableheaderrecords_CrmListWithDate = new ReactiveVar([]);
+    templateObject.tableheaderrecords_JobDetailsList = new ReactiveVar([]);
+    templateObject.tableheaderrecords_AppointmentsByCustomer = new ReactiveVar([]);
 
     templateObject.currentTab = new ReactiveVar("")
     let currentId = FlowRouter.current().queryParams;
@@ -1106,7 +1111,8 @@ Template.customerscard.onCreated(function () {
         // }
     }
 
-    templateObject.getDataTableList = function (data) {
+    //Datatablelist template using from here
+    templateObject.getDataTableList_CrmListWithDate = function (data) {
         let sort_date = data.MsTimeStamp == "" ? "1770-01-01" : data.MsTimeStamp;
         sort_date = new Date(sort_date);
         // if (sort_date >= fromDate && sort_date <= toDate) {
@@ -1142,18 +1148,116 @@ Template.customerscard.onCreated(function () {
         return dataList;
         //}
     }
-
-    let headerStructure = [
-        {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: ""},
+    let headerStructure_CrmListWithDate = [
+        {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: "10"},
         {index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100"},
         {index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100"},
         {index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150"},
         {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250"},
         {index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100"},
         {index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "100"},
-        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "60"},
+        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
     ];
-    templateObject.tableheaderrecords.set(headerStructure);
+    templateObject.tableheaderrecords_CrmListWithDate.set(headerStructure_CrmListWithDate);
+
+    templateObject.getDataTableList_JobDetailsList = function (data) {
+        var customerId = FlowRouter.current().queryParams.id;
+        if(customerId) {
+            if(data.ParentClientID != parseInt(customerId))
+                return [];
+        }
+        let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.CreditBalance) || 0.00;
+        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+        let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit) || 0.00;
+        let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SalesOrderBalance) || 0.00;
+
+        var dataList = [
+            data.ID || '',
+            data.Company || '',
+            data.Phone || '',
+            arBalance || 0.00,
+            creditBalance || 0.00,
+            balance || 0.00,
+            creditLimit || 0.00,
+            salesOrderBalance || 0.00,
+            data.Country || LoggedCountry,
+            data.Email || '',
+            data.AccountNo || '',
+            data.ClientNo || '',
+            data.JobTitle || '',
+            data.Notes || '',
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+    let headerStructure_JobDetailsList = [
+        { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true, width: "10" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "100" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "100" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "105" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
+        { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "70" },
+        { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "105" },
+        { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "90" },
+        { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "90" },
+        { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
+        { index: 14, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords_JobDetailsList.set(headerStructure_JobDetailsList);
+
+
+    templateObject.getDataTableList_AppointmentsByCustomer = function (data) {
+        var customerId = FlowRouter.current().queryParams.id;
+        let confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+        const appStatus = data.Active ? "" : "Deleted";
+        if (data.CUSTFLD13 == "Yes") {
+            if (data.CUSTFLD11 == "Yes") {
+                confirmedColumn = '<i class="fa fa-check text-success" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message confirmed"></i>';
+            } else if (data.CUSTFLD11 == "No") {
+                confirmedColumn = '<i class="fa fa-close text-danger" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message declined"></i>';
+            } else {
+                confirmedColumn = '<i class="fa fa-question text-warning" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="SMS Message no reply"></i>';
+            }
+        } else {
+            confirmedColumn = '<i class="fas fa-minus-circle text-info" style="font-size: 35px;" data-toggle="tooltip" data-placement="top" title="No SMS Message Sent"></i>';
+        }
+        let dataList = [
+            //'<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.AppointID + '" name="' + data.AppointID + '"> <label class="custom-control-label" for="f-' +data.AppointID + '"></label></div>' || '',
+            //data.CreationDate != '' ? moment(data.CreationDate).format("YYYY/MM/DD") : data.CreationDate,
+            data.AppointID || '',
+            //data.STARTTIME != '' ? moment(data.STARTTIME).format("DD/MM/YYYY") : data.STARTTIME,
+            data.ClientName || '',
+            data.EnteredByEmployeeName || '',
+            moment(data.STARTTIME).format('dddd') + ', ' + moment(data.STARTTIME).format('DD'),
+            moment(data.ENDTIME).format('dddd') + ', ' + moment(data.ENDTIME).format('DD'),
+            //moment(data.STARTTIME).format('h:mm a'),
+            //moment(data.ENDTIME).format('h:mm a'),
+            //data.Actual_Starttime || '',
+            //data.Actual_Endtime || '',
+            confirmedColumn,
+            data.Notes || '',
+            data.ProductDesc || '',
+            appStatus || '',
+        ]
+        return dataList;
+    }
+    let headerStructure_AppointmentsByCustomer = [
+        { index: 0, label: 'Appt ID', class: 'colID', active: true, display: true, width: "50" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "150" },
+        { index: 2, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
+        { index: 3, label: 'From', class: 'colFromDate', active: true, display: true, width: "80" },
+        { index: 4, label: 'To', class: 'colToDate', active: true, display: true, width: "80" },
+        { index: 5, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "80" },
+        { index: 6, label: 'Notes', class: 'colNotes', active: false, display: true, width: "300" },
+        { index: 7, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
+        { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+    ]
+    templateObject.tableheaderrecords_AppointmentsByCustomer.set(headerStructure_AppointmentsByCustomer);
 });
 
 Template.customerscard.onRendered(function () {
@@ -3847,22 +3951,25 @@ Template.customerscard.helpers({
         return tab;
     },
 
-    apiFunction: function () {
+    tableheaderrecords_CrmListWithDate: () => {
+        return Template.instance().tableheaderrecords_CrmListWithDate.get();
+    },
+    apiFunction_CrmListWithDate: function () {
         let crmService = new CRMService();
         return crmService.getAllTasksList;
     },
 
-    searchAPI: function () {
+    searchAPI_CrmListWithDate: function () {
         return crmService.getAllTasksByName;
     },
 
-    service: () => {
+    service_CrmListWithDate: () => {
         let crmService = new CRMService();
         return crmService;
 
     },
 
-    datahandler: function () {
+    datahandler_CrmListWithDate: function () {
         let templateObject = Template.instance();
         return function (data) {
             let dataReturn = templateObject.getDataTableList(data)
@@ -3870,16 +3977,94 @@ Template.customerscard.helpers({
         }
     },
 
-    exDataHandler: function () {
+    exDataHandler_CrmListWithDate: function () {
         let templateObject = Template.instance();
         return function (data) {
-            let dataReturn = templateObject.getDataTableList(data)
+            let dataReturn = templateObject.getDataTableList_CrmListWithDate(data)
             return dataReturn
         }
     },
 
-    apiParams: function () {
+    apiParams_CrmListWithDate: function () {
         return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+    },
+
+
+    tableheaderrecords_JobDetailsList: () => {
+        return Template.instance().tableheaderrecords_JobDetailsList.get();
+    },
+    apiFunction_JobDetailsList: function () {
+        let contactService = new ContactService();
+        return contactService.getAllJobList;
+    },
+
+    searchAPI_JobDetailsList: function () {
+        return contactService.getAllJobListByName;
+    },
+
+    service_JobDetailsList: () => {
+        let contactService = new ContactService();
+        return contactService;
+
+    },
+
+    datahandler_JobDetailsList: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_JobDetailsList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_JobDetailsList: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_JobDetailsList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_JobDetailsList: function () {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+
+    tableheaderrecords_AppointmentsByCustomer: () => {
+        return Template.instance().tableheaderrecords_AppointmentsByCustomer.get();
+    },
+    apiFunction_AppointmentsByCustomer: function () {
+        let sideBarService = new SideBarService();
+        return sideBarService.getTAppointmentListData;
+    },
+
+    searchAPI_AppointmentsByCustomer: function () {
+        return sideBarService.getTAppointmentListData;
+    },
+
+    service_AppointmentsByCustomer: () => {
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler_AppointmentsByCustomer: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_AppointmentsByCustomer(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_AppointmentsByCustomer: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_JobDetailsList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_AppointmentsByCustomer: function () {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 });
 

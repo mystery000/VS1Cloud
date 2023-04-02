@@ -224,7 +224,22 @@
                     </div>
                   </div>
                 </div>
-                {{> non_transactional_list tablename='tblEmployeelist'}}
+<!--                {{> non_transactional_list tablename='tblEmployeelist'}}-->
+                  {{>datatablelist
+                          tablename="tblEmployeelist"
+                          apiName= apiFunction
+                          indexeddbname = 'TEmployeeList'
+                          tableheaderrecords = tableheaderrecords
+                          exportfilename = 'Employee List'
+                          istransaction = false
+                          apiParams= apiParams
+                          datahandler = datahandler
+                          service=service
+                          lowercaseDataName='temployeelist'
+                          exIndexDBName = 'temployeelist'
+                          exdatahandler = exDataHandler
+                          searchAPI = searchAPI
+                  }}
               </div>
             </div>
             <div class="row no-gutters">
