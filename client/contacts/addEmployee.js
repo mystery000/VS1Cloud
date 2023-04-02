@@ -94,6 +94,7 @@ Template.employeescard.onCreated(function () {
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.tableLeaveRequestheaderrecords = new ReactiveVar([]);
+  templateObject.tablepayheaderrecords = new ReactiveVar([]);
   templateObject.isCloudUserPass = new ReactiveVar();
   templateObject.isCloudUserPass.set(false);
   templateObject.selectedproducts = new ReactiveVar([]);
@@ -145,6 +146,19 @@ Template.employeescard.onCreated(function () {
     return dataList;
   }
 
+  templateObject.getPayDataTableList = function(data) {
+    let dataList = [
+      data.fields.ID || "",
+      data.fields.PayrollCalendarName || "",
+      data.fields.PayrollCalendarPayPeriod || "",
+      moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
+      moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
+      data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
+    ];
+    // let dataList = [];
+    return dataList;
+  }
+
   let headerStructure = [
     { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
     { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
@@ -154,6 +168,18 @@ Template.employeescard.onCreated(function () {
     { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
 ];
 templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
+
+
+
+  let payHeaderStructure = [
+    { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "110" },
+    { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "110" },
+    { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "110" },
+    { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "80" },
+    { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.tablepayheaderrecords.set(payHeaderStructure);
 
 });
 
@@ -10392,6 +10418,9 @@ Template.employeescard.helpers({
   tableLeaveRequestheaderrecords: () => {
     return Template.instance().tableLeaveRequestheaderrecords.get();
   },
+  tablepayheaderrecords: () => {
+    return Template.instance().tablepayheaderrecords.get();
+  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
       userid: localStorage.getItem('mycloudLogonID'),
@@ -10494,10 +10523,40 @@ Template.employeescard.helpers({
         return dataReturn
     }
   },
+
+  payDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getPayDataTableList(data)
+        return dataReturn
+    }
+  },
+  payExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getPayDataTableList(data)
+        return dataReturn
+    }
+  },
   service: ()=>{
     let sideBarService = new SideBarService();
     return sideBarService;
   },
+
+  payApiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getCalender;
+  },
+
+  searchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getNewCalenderByNameOrPayPeriod;
+  },
+
+  payApiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
+
 });
 
 function openEditTaskModals(id, type) {

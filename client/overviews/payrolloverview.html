@@ -507,7 +507,7 @@
                                 searchAPI = searchAPI
                         }}
                     </div>
-                    <div class="table-responsive">
+                    <div class="table-responsive my-3">
                         <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
                                 <h4 style="font-weight: 600;">Pay Runs</h4>
@@ -515,7 +515,27 @@
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
                             </div>
                         </div>
-                        {{> non_transactional_list tablename = "tblDraftPayRun"}}
+                        <!-- {{> non_transactional_list tablename = "tblDraftPayRun"}} -->
+                        <style>
+                            div.dataTables_wrapper .JCLRFlex { 
+                                width: 100%!important;
+                            }
+                        </style>
+                        {{>datatablelist
+                            tablename="tblDraftPayRun"
+                            apiName= draftApiFunction
+                            indexeddbname = 'TPayRunHistory'
+                            tableheaderrecords = draftTableHeaderRecords
+                            exportfilename = 'Draft PayRun'
+                            istransaction = false
+                            apiParams= draftApiParams
+                            datahandler = draftDataHandler
+                            service=service
+                            lowercaseDataName='tpayrunhistory'
+                            exIndexDBName = 'tpayrunhistory'
+                            exdatahandler = draftExDataHandler
+                            searchAPI = draftSearchAPI
+                        }}
                     </div>
                     <hr class="mt-2" />
                     </div>
@@ -568,7 +588,27 @@
                                     </div> -->
                                 </div>
                             </div>
-                            {{> non_transactional_list tablename = "tblPayRunHistory" }}
+                            <!-- {{> non_transactional_list tablename = "tblPayRunHistory" }} -->
+                            <style>
+                                div.dataTables_wrapper .JCLRFlex { 
+                                    width: 100%!important;
+                                }
+                            </style>
+                            {{>datatablelist
+                                tablename="tblPayRunHistory"
+                                apiName= historyApiFunction
+                                indexeddbname = 'TPayHistory'
+                                tableheaderrecords = historyTableHeaderRecords
+                                exportfilename = 'PayRun History'
+                                istransaction = false
+                                apiParams= historyApiParams
+                                datahandler = historyDataHandler
+                                service=service
+                                lowercaseDataName='tpayhistory'
+                                exIndexDBName = 'tpayhistory'
+                                exdatahandler = historyExDataHandler
+                                searchAPI = historySearchAPI
+                            }}
                         </div>
                     </div>
                 </div>

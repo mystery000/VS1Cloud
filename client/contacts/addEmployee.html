@@ -4307,9 +4307,27 @@
               }
               #tblPayCalendars .colStatus{
                   width: 10%!important;
-              }              
+              }
+              div.dataTables_wrapper .JCLRFlex{
+                  width: 100%!important;
+              }
           </style>
-          {{> non_transactional_list tablename="tblPayCalendars"}}
+          <!-- {{> non_transactional_list tablename="tblPayCalendars"}} -->
+            {{> datatablelist
+              tablename="tblPayCalendars"
+              apiName=payApiFunction
+              indexeddbname='TPayrollCalendars'
+              tableheaderrecords=tablepayheaderrecords
+              exportfilename='Pay Calendars'
+              apiParams=payApiParams
+              istransaction = false
+              datahandler=payDataHandler
+              service=service
+              lowercaseDataName='tpayrollcalendars'
+              exIndexDBName='tpayrollcalendars'
+              exdatahandler=payExDataHandler
+              searchAPI=searchAPI
+          }}
         </div>
         <div class="modal-footer">
           <a data-dismiss="modal">

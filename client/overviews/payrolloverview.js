@@ -94,6 +94,67 @@ Template.payrolloverview.onCreated(function () {
     { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
+
+  templateObject.draftTableHeaderRecords = new ReactiveVar([]);
+  templateObject.getDraftDataTableList = function(data) {
+    var dataList = [
+      data.calendar.ID || "",
+      data.calendar.PayrollCalendarName || "",
+      data.calendar.PayrollCalendarPayPeriod || "",
+      moment(data.calendar.PayrollCalendarFirstPaymentDate).format("Do MMM YYYY") || "",
+      data.wages || "",
+      data.taxes || "",
+      data.superAnnuation || "",
+      data.calendar.netPay || "",
+    ];    
+    return dataList;
+  }
+  let draftHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colDraftPayRunID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Calendar', class: 'colPayRunCalendar', active: true, display: true, width: "110" },
+    { index: 2, label: 'Period', class: 'colPayRunPeriod', active: true, display: true, width: "110" },
+    { index: 3, label: 'Payment Date', class: 'colPayRunPaymentDate', active: true, display: true, width: "80" },
+    { index: 4, label: 'Wages', class: 'colPayRunWages', active: true, display: true, width: "110" },
+    { index: 5, label: 'Tax', class: 'colPayRunTax', active: true, display: true, width: "110" },
+    { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "110" },
+    { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "110" },
+  ];
+  templateObject.draftTableHeaderRecords.set(draftHeaderStructure);
+
+  templateObject.historyTableHeaderRecords = new ReactiveVar([]);
+  templateObject.getHistoryDataTableList = function(data) {
+    let ID = data.fields.ID || '';
+    let calendar = data.fields.Payperiod;
+    let period =data.fields.payDate != "" ? moment(data.fields.payDate).format("D MMM YYYY") : "";
+    let paymentDate =data.fields.DatePaid != "" ? moment(data.fields.DatePaid).format("D MMM YYYY") : "";
+    let wages =data.fields.Wages;
+    let tax = data.fields.Tax;
+    let supper = data.fields.Superannuation;
+    let netPay = data.fields.Net;
+    var dataList = [
+        ID,
+        calendar,
+        period,
+        paymentDate,
+        wages,
+        tax,
+        supper,
+        netPay
+    ];    
+    return dataList;
+  }
+  let historyHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colDraftPayRunID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Calendar', class: 'colPayRunCalendar', active: true, display: true, width: "110" },
+    { index: 2, label: 'Period', class: 'colPayRunPeriod', active: true, display: true, width: "110" },
+    { index: 3, label: 'Payment Date', class: 'colPayRunPaymentDate', active: true, display: true, width: "80" },
+    { index: 4, label: 'Wages', class: 'colPayRunWages', active: true, display: true, width: "110" },
+    { index: 5, label: 'Tax', class: 'colPayRunTax', active: true, display: true, width: "110" },
+    { index: 5, label: 'Super', class: 'colPayRunSuper', active: true, display: true, width: "110" },
+    { index: 6, label: 'Net Pay', class: 'colPayRunNetPay', active: true, display: true, width: "110" },
+  ];
+  templateObject.historyTableHeaderRecords.set(historyHeaderStructure);
+
 });
 
 Template.payrolloverview.onRendered(function () {
@@ -7061,6 +7122,72 @@ Template.payrolloverview.helpers({
 
   apiParams: function() {
     return [];
+  },
+
+  draftTableHeaderRecords: () => {
+    return Template.instance().draftTableHeaderRecords.get();
+  },
+  draftApiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllPayRunDataVS1;
+  },
+
+  draftSearchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllPayRunDataVS1;
+  },
+
+  draftDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDraftDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  draftExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getDraftDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  draftApiParams: function() {
+    return ['limitCount', 'limitFrom'];
+  },
+
+  historyTableHeaderRecords: () => {
+    return Template.instance().draftTableHeaderRecords.get();
+  },
+  historyApiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllPayHistoryDataVS1;
+  },
+
+  historySearchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getAllPayHistoryDataVS1;
+  },
+
+  historyDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getHistoryDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  historyExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getHistoryDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  historyApiParams: function() {
+    return ['limitCount', 'limitFrom'];
   },
 
 });
