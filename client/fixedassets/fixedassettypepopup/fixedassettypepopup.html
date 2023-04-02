@@ -8,7 +8,7 @@
         </div>
         <div class="modal-body" style="padding: 32px; padding-top: 0px;">
           <div>
-            <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; align-items: center;">
+            <!-- <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; align-items: center;">
               <div class="col float-left flex-grow-1 mb-1">
                 {{> vs1_button
                   color='primary'
@@ -30,7 +30,7 @@
               <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
                 {{> export_import_print_display_button Import="hiddenButton" tablename="tblFixedAssetType"}}
               </div>
-            </div>
+            </div> -->
             <div class="col-12">
               <div class="card mb-3">
                 <div class="card-body">
@@ -55,6 +55,9 @@
                       exdatahandler = exDataHandler
                       searchAPI = searchAPI
                       orderby = '[[ 1, "asc" ]]'
+                      showPlusButton = true
+                      showPlusButtonDataTarget = "createAssetType"
+                      showPlusButtonClass = "btnNewAssetType"
                   }}
                 </div>
               </div>

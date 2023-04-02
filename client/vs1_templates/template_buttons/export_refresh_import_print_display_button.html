@@ -1,0 +1,20 @@
+<template name="export_refresh_import_print_display_button">
+  <div class="row d-xl-flex flex-row justify-content-xl-center">
+    <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
+      <button class="btn btn-primary btnRefreshJobDetails" type="button" style="margin: 14px;"><i
+          class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+      {{#if isNewMaker}}
+      <button id="btnNewJob" name="btnNewJob" class="btn btn-primary" type="button" style="margin: 14px;" role="button"
+        data-toggle="modal" href="#{{modalname}}"><i class="icon ion-plus"
+          style="padding-right: 5px;"></i>{{newmaker}}</button>
+      {{/if}}
+    </div>
+    <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
+      {{> export_import_print_display_button
+        tablename=tablename
+        hideImport = true
+        displayHref='myModalJob'
+      }}
+    </div>
+  </div>
+</template>

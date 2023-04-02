@@ -4,7 +4,6 @@ import { OrganisationService } from "../../js/organisation-service";
 import { SideBarService } from "../../js/sidebar-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
-import { bankNameList } from "../../lib/global/bank-names";
 
 import { Template } from 'meteor/templating';
 import './AddAccountModal.html';
@@ -32,8 +31,7 @@ Template.addAccountModal.onCreated(function () {
   templateObject.accountList = new ReactiveVar([]);
   templateObject.accountTypes = new ReactiveVar([]);
   templateObject.expenseCategories = new ReactiveVar([]);
-  templateObject.taxRates = new ReactiveVar([]);
-  templateObject.bankNames = new ReactiveVar([]);
+  templateObject.taxRates = new ReactiveVar([]);  
 });
 
 Template.addAccountModal.onRendered(function () {
@@ -43,8 +41,7 @@ Template.addAccountModal.onRendered(function () {
   let templateObject = Template.instance();
   const dataTableListTax = [];
   const tableHeaderListTax = [];
-  let categories = [];
-  templateObject.bankNames.set(bankNameList);
+  let categories = [];  
   templateObject.loadAccountTypes = () => {
     let accountTypeList = [];
     getVS1Data("TAccountType")
@@ -1526,12 +1523,5 @@ Template.addAccountModal.helpers({
   },
   expenseCategories: () => {
     return Template.instance().expenseCategories.get();
-  },
-  bankNames: () => {
-    return Template.instance()
-      .bankNames.get()
-      .sort(function (a, b) {
-        return a.name > b.name ? 1 : -1;
-      });
   },
 });
