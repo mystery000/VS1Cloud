@@ -1,35 +1,40 @@
 <template name="reportcard">
-    {{# vs1_report_template tabledisplayname="Aged Payables" tablename="tblAgedPayables" dateAsAt=dateAsAt sheetname="Aged Payables Report Result"}}
+    {{# vs1_report_template tabledisplayname=tabledisplayname tablename=tablename dateAsAt=dateAsAt sheetname=sheetname reset_data=reset_data}}
         <div class="table-responsive">
         <table class="table table-sm" id="tableExport" name="tableExport">
             <thead>
                 <tr class="table-active">
-                {{#if agedpayablesth}}
-                {{#each c in agedpayablesth }}
-                {{# if c.display}}
-                <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
-                    class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
-                    style="text-align: left; width:{{c.width}}px">{{ c.label }}</th>
-                {{/if}}
-                {{/each}}
+                {{#if reset_data}}
+                    {{#each setting in reset_data}}
+                        <th data-class="{{setting.class}}" data-col-index="{{setting.index}}" data-col-active="{{setting.active}}" 
+                        class="th {{setting.class}} {{#if setting.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left; width:{{setting.width}}px">{{setting.label}}</th>
+                    {{/each}}
                 {{/if}}
                 </tr>
             </thead>
             <tbody>
-                {{#if transactiondatatablerecords}}
-                    {{#each items in transactiondatatablerecords}}
+
+                {{#if reportdata}}
+                    {{#each object in reportdata}}
                         <tr>
-                            {{#each item in items}}
-                                <td class="{{item.indent}}">
-                                    <span class={{item.className}}>{{item.string}}</span>
-                                </td>
+                            <td class="{{mainfieldClass}}">{{object.type}}</td>
+                            {{#each item in reset_data}}
+                                {{#unless equals item.label mainfieldname}}
+                                    <td class="{{item.class}}{{#if item.active}}{{else}} hiddenColumn{{/if}}"></td>
+                                {{/unless}}
                             {{/each}}
                         </tr>
+                        {{#each item in object.subArr}}
+                            <tr>
+                                {{#each setting in reset_data}}
+                                    {{#if setting.display}}
+                                                    <td class="{{setting.class}}{{#if setting.active}}{{else}} hiddenColumn{{/if}}">{{lookup item @index}}
+                                                    </td>
+                                    {{/if}}
+                                {{/each}}
+                            </tr>
+                        {{/each}}
                     {{/each}}
-                {{else}}
-                    <tr class="odd" style="text-align: center;">
-                        <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
-                    </tr>
                 {{/if}}
             </tbody>
         </table>
