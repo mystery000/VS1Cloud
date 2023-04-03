@@ -4456,6 +4456,14 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TLeavRequest, options);
   }
 
+  getOneLeaveRequestByName(dataSearchName) {
+    let options = {
+      ListType: "Detail",
+      select: '[Description]="'+dataSearchName+'"'
+    };
+    return this.getList(this.ERPObjects.TLeavRequest, options);
+  }
+
   getAssignLeaveType(limitcount, limitfrom) {
     let options = '';
     if(limitcount == 'All'){

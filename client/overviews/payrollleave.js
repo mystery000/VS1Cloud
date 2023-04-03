@@ -880,4 +880,8 @@ Template.payrollleave.helpers({
     let sideBarService = new SideBarService();
     return sideBarService;
   },
+  leaveSearchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getOneLeaveRequestByName;
+  },
 });

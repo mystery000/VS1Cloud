@@ -688,6 +688,50 @@ Template.supplierscard.onCreated(function () {
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 
+  templateObject.transactionTableheaderRecords = new ReactiveVar([]);
+  templateObject.getTransactionDataTableList = function(data) {
+    let arBalance = utilityService.modifynegativeCurrencyFormat(data.fields.ARBalance) || 0.00;
+    let creditBalance = utilityService.modifynegativeCurrencyFormat(data.fields.CreditBalance) || 0.00;
+    let balance = utilityService.modifynegativeCurrencyFormat(data.fields.Balance) || 0.00;
+    let creditLimit = utilityService.modifynegativeCurrencyFormat(data.fields.CreditLimit) || 0.00;
+    let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.fields.SalesOrderBalance) || 0.00;
+    const dataList = {
+        id: data.fields.Id || '',
+        company: data.fields.ClientName || '',
+        contactname: data.fields.ContactName || '',
+        phone: data.fields.Phone || '',
+        arbalance: arBalance || 0.00,
+        creditbalance: creditBalance || 0.00,
+        balance: balance || 0.00,
+        creditlimit: creditLimit || 0.00,
+        salesorderbalance: salesOrderBalance || 0.00,
+        email: data.fields.Email || '',
+        accountno: data.fields.AccountNo || '',
+        clientno: data.fields.ClientNo || '',
+        jobtitle: data.fields.JobTitle || '',
+        notes: data.fields.Notes || '',
+        country: data.fields.Country || LoggedCountry
+    };
+    return dataList;
+  }
+  let transactionHeaderStructure = [
+    { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true, width: "10" },
+    { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "110" },
+    { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+    { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+    { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+    { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+    { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+    { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+    { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+    { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "110" },
+    { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "110" },
+    { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "110" },
+    { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "110" },
+    { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "110" },
+  ];
+  templateObject.transactionTableheaderRecords.set(transactionHeaderStructure);
+
 });
 
 Template.supplierscard.onRendered(function () {
@@ -2864,6 +2908,44 @@ Template.supplierscard.helpers({
 
   apiParams: function() {
     return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+  },
+
+  transactionTableheaderRecords: () => {
+    return Template.instance().transactionTableheaderRecords.get();
+  },
+  transactionApiFunction:function() {
+    const contactService = new ContactService();
+    return contactService.getAllJobListByCustomer;
+  },
+
+  transactionSearchAPI: function() {
+    const contactService = new ContactService();
+    return contactService.getAllJobListByCustomer;
+  },
+
+  transactionDatahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getTransactionDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  transactionExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getTransactionDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  transactionApiParams: function() {
+    return ['customerName'];
+  },
+
+  transactionService: ()=>{
+    const contactService = new ContactService();
+    return contactService;
   },
 });
 

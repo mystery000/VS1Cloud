@@ -44,6 +44,34 @@ Template.leadscard.onCreated(function() {
     templateObject.all_projects = new ReactiveVar([]);
     templateObject.subTasks = new ReactiveVar([]);
     templateObject.taskrecords = new ReactiveVar([]);
+
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.getDataTableList = function(data) {
+        const dataList = {
+            id: data.fields.ID || 0,
+            priority: data.fields.priority || 0,
+            date: data.fields.MsTimeStamp !== '' ? moment(data.fields.MsTimeStamp).format("DD/MM/YYYY") : '',
+            taskName: data.fields.TaskName || '',
+            projectID: data.fields.ProjectID || '',
+            projectName: data.fields.ProjectName || '',
+            description: taskDescription,
+            labels: taskLabelArray,
+            category: 'Task',
+            completed: data.fields.Completed,
+            completedby: data.fields.due_date ? moment(data.fields.due_date).format("DD/MM/YYYY") : "",
+        };
+        return dataList;
+    }
+    let headerStructure = [
+        { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "10" },
+        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+        { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
+        { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
+        { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
+        { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
+        { index: 6, label: 'Status', class: 'colCompleteTask', active: true, display: true, width: "120" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.leadscard.onRendered(function() {
@@ -2647,7 +2675,44 @@ Template.leadscard.helpers({
         return isMobile;
     },
     setLeadStatus: (status) => status || 'Unqualified',
-    setLeadSource: (source) => source || 'Unknown'
+    setLeadSource: (source) => source || 'Unknown',
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        let crmService = new CRMService();
+        return crmService.getAllTasksByContactName;
+    },
+
+    searchAPI: function() {
+        let crmService = new CRMService();
+        return crmService.getAllTasksByContactName;
+    },
+
+    service: ()=>{
+        let crmService = new CRMService();
+        return crmService;
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['ContactName'];
+    },
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {

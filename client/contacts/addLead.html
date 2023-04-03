@@ -495,7 +495,22 @@
                                                                         width:12% !important;
                                                                     }
                                                                 </style>
-                                                                {{> non_transactional_list tablename="tblLeadCrmListWithDate"}}
+                                                                <!-- {{> non_transactional_list tablename="tblLeadCrmListWithDate"}} -->
+                                                                {{>datatablelist
+                                                                    tablename="tblLeadCrmListWithDate"
+                                                                    apiName= apiFunction
+                                                                    indexeddbname = 'TCRMTaskList'
+                                                                    tableheaderrecords = tableheaderrecords
+                                                                    exportfilename = 'Lead CRM List'
+                                                                    istransaction = true
+                                                                    apiParams= apiParams
+                                                                    datahandler = datahandler
+                                                                    service=service
+                                                                    lowercaseDataName='tcrmtasklist'
+                                                                    exIndexDBName = 'tcrmtasklist'
+                                                                    exdatahandler = exDataHandler
+                                                                    searchAPI = searchAPI
+                                                                }}
                                                             </div>
                                                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4" style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                                                                 <div class="row no-gutters flex-column" style="margin: 12px;">

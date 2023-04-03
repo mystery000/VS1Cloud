@@ -1413,6 +1413,21 @@
                             }
                           </style>
                           {{> non_transactional_list tablename="tblSupplierTransactionList"}}
+                          <!-- {{>datatablelist
+                            tablename="tblSupplierTransactionList"
+                            apiName= transactionApiFunction
+                            indexeddbname = 'TbillReport'
+                            tableheaderrecords = transactionTableheaderRecords
+                            exportfilename = 'Supplier Transaction List'
+                            istransaction = false
+                            apiParams= transactionApiParams
+                            datahandler = transactionDatahandler
+                            service = transactionService
+                            lowercaseDataName='tbillreport'
+                            exIndexDBName = 'tbillreport'
+                            exdatahandler = transactionExDataHandler
+                            searchAPI = transactionSearchAPI
+                          }} -->
                         </div>
                       </div>
                     </div>
