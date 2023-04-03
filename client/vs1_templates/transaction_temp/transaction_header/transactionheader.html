@@ -121,20 +121,20 @@
                             {{/if}}
                         </div>
                         {{/each}}
-                        <style>
-                            .transaction_header .currency-module {
-                                margin: 0
-                            }
-                        </style>
-                        <div class="d-flex align-items-center">
+<!--                        <style>-->
+<!--                            .transaction_header .currency-module {-->
+<!--                                margin: 0-->
+<!--                            }-->
+<!--                        </style>-->
+<!--                        <div class="d-flex align-items-center">-->
                             {{#if currency}}
-                                {{#if equals clientType 'Customer'}}
+                                {{#if equals Category 'purchase'}}
                                     {{> CurrencyWidget rate="sell" trans="true"}}
                                 {{else}}
                                     {{> CurrencyWidget rate="buy" row="true"}}
                                 {{/if}}
                             {{/if}}
-                        </div>
+<!--                        </div>-->
                         {{> custom_fields
                             containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
                             salesCloudPreferenceRec=salesCloudPreferenceRec
