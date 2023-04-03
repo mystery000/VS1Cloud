@@ -1492,9 +1492,6 @@ export class EditableService {
         if (e.pageX > offset.left + $earch.width() - 8) {
             $("#myModalDepartment").modal("toggle");
         }
-        // else {
-        //     $("#newDepartmentModal").modal("toggle");
-        // }
         else {
             if (deptDataName.replace(/\s/g, "") != "") {
                 $("#newDeptHeader").text("Edit Department");
@@ -1506,9 +1503,7 @@ export class EditableService {
                                 for (let i = 0; i < data.tdeptclass.length; i++) {
                                     if (data.tdeptclass[i].DeptClassName === deptDataName) {
                                         $("#edtDepartmentID").val(data.tdeptclass[i].Id);
-                                        $("#edtNewDeptName").val(
-                                            data.tdeptclass[i].DeptClassName
-                                        );
+                                        $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
                                         $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
                                         $("#edtDeptDesc").val(data.tdeptclass[i].Description);
                                     }
@@ -1526,8 +1521,8 @@ export class EditableService {
                                     $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
                                     $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
                                     $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+                                    break;
                                 }
-                                break;
                             }
                             $(".fullScreenSpin").css("display", "none");
                             $("#newDepartmentModal").modal("toggle");
@@ -1542,21 +1537,19 @@ export class EditableService {
                                     $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);
                                     $("#edtSiteCode").val(data.tdeptclass[i].SiteCode);
                                     $("#edtDeptDesc").val(data.tdeptclass[i].Description);
+                                    break;
                                 }
-                                break;
                             }
                             $(".fullScreenSpin").css("display", "none");
                             $("#newDepartmentModal").modal("toggle");
                         });
                     });
             } else {
-                $("#departmentModal").modal();
+                $("#myModalDepartment").modal();
                 setTimeout(function () {
                     $("#departmentList_filter .form-control-sm").focus();
                     $("#departmentList_filter .form-control-sm").val("");
                     $("#departmentList_filter .form-control-sm").trigger("input");
-                    var datatable = $("#departmentList").DataTable();
-                    datatable.draw();
                     $("#departmentList_filter .form-control-sm").trigger("input");
                 }, 500);
             }

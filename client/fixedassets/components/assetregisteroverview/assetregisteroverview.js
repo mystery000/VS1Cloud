@@ -15,6 +15,13 @@ Template.assetregisteroverview.onCreated(function () {
   templateObject.convertedStatus = new ReactiveVar();
 
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.AssetID || "",
       data.AssetCode || "",
@@ -33,15 +40,20 @@ Template.assetregisteroverview.onCreated(function () {
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
-      data.DepreciationStartDate
-        ? moment(data.DepreciationStartDate).format("DD/MM/YYYY")
-        : "",
-      data.Active || false,
+      data.DepreciationStartDate ? moment(data.DepreciationStartDate).format("DD/MM/YYYY") : "",
+      linestatus,
     ];
     return dataList;
   };
 
   templateObject.getExData = function (data) {
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.AssetID || "",
       data.AssetCode || "",
@@ -60,10 +72,8 @@ Template.assetregisteroverview.onCreated(function () {
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
-      data.DepreciationStartDate
-        ? moment(data.DepreciationStartDate).format("DD/MM/YYYY")
-        : "",
-      data.Active || false,
+      data.DepreciationStartDate ? moment(data.DepreciationStartDate).format("DD/MM/YYYY") : "",
+      linestatus,
     ];
     return dataList;
   };
@@ -74,7 +84,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 0,
       label: "ID",
       class: "AssetRegisterId",
-      active: true,
+      active: false,
       display: true,
       width: "60",
     },
@@ -220,7 +230,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "AssetStatus",
       active: true,
       display: true,
-      width: "100",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);

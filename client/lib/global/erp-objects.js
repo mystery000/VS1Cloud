@@ -143,6 +143,7 @@ const erpObject = {
     TStatementList: "TStatementList",
     TStatementForCustomer: "TStatementForCustomer",
     TJob: "TJob",
+    TJobVS1List: "TJobVS1List",
     TJobEx: "TJobEx",
     TERPCombinedContacts: "TERPCombinedContacts",
     TPaymentList: "TPaymentList",

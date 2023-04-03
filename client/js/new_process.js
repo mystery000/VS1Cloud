@@ -350,7 +350,7 @@ Template.new_process.events({
         }
         $('#accountListModal').modal('toggle');
     },
-    'click #expenseAccountListModal table tr': function(e){
+    'click #expenseAccountListModal table tbody tr': function(e){
         let templateObject = Template.instance();
         let columnDataValue = $(e.target).closest('tr').find('.colAccountName').text();
         switch(templateObject.selectedAccount.get()) {
@@ -366,7 +366,7 @@ Template.new_process.events({
         $('#expenseAccountListModal').modal('toggle');
     },
 
-    'click #assetAccountListModal table tr': function(e) {
+    'click #assetAccountListModal table tbody tr': function(e) {
         let columnDataValue = $(e.target).closest('tr').find('.colAccountName').text();
         $('#edtWastage').val(columnDataValue);
         $('#assetAccountListModal').modal('toggle');
