@@ -352,7 +352,12 @@ import './vs1_templates/vs1_tab/vs1_tab_attachments.html';
 import './vs1_templates/vs1_tab/vs1_tab_custom_fields.html';
 import './vs1_templates/vs1_tab/vs1_tab_tax.html';
 import './vs1_templates/template_buttons/export_refresh_import_print_display_button.js';
-
+import './vs1_templates/transaction_temp/transaction_footer/transactionfooter.js';
+import './vs1_templates/transaction_temp/transaction_template/transaction_card.js';
+import './invoice/frm_invoice.js';
+import './reports/reports.js';
+import './reports/reportcardtemp/reportcard.js';
+import './reports/agedpayables/newagedpayables.js';
 
 /* Jeyhun */
 
@@ -585,6 +590,7 @@ import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
 import './vs1_templates/title_list_pop/title_list_pop.js';
 import './expenseclaim/expenseclaims.html';
+import './packages/currency/editcurrencypop.js';
 /* Stefan */
 
 /* Arthlo */
