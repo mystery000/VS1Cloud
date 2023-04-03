@@ -1,8 +1,10 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import { ProductService } from "../product/product-service";
+import { UtilityService } from "../utility-service";
 import { Template } from 'meteor/templating';
 import './bom_list.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import XLSX from "xlsx";
 import { ManufacturingService } from "./manufacturing-service";
 
 // Template.bom_list.inheritsHooksFrom('non_transactional_list');
@@ -14,6 +16,7 @@ Template.bom_list.onCreated(function(){
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.setupFinished = new ReactiveVar()
     templateObject.bomProducts = new ReactiveVar([]);
+  templateObject.selectedFile = new ReactiveVar();
 
     templateObject.getDataTableList = function(data){
       let subs = data.Details != '' ?JSON.parse(data.Details)||[] : [];
@@ -23,7 +26,6 @@ Template.bom_list.onCreated(function(){
               if (j == 0) { rawName += subs[j].productName } else { rawName += ", " + subs[j].productName }
           }
       }
-
       var dataList = [
         data.ID || "1",
         data.Caption || "", //product name -- should be changed on TProcTree
@@ -33,26 +35,24 @@ Template.bom_list.onCreated(function(){
         // data.subs || [],
         rawName || '',
         data.Value == '' ? 'No Attachment' : JSON.parse(data.Value).length.toString() + " attachments",
-        data.ProcStepItemRef == 'vs1BOM'? 'Active': 'Deleted'
+        data.ProcStepItemRef == 'vs1BOM'? '': 'Deleted'
       ];
 
       return dataList;
     }
 
-
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true },
-    { index: 1, label: 'Product Name', class: 'colName', active: true, display: true },
-    { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true },
-    { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
-    { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
-    { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true },
-    { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true },
-    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true}
+    { index: 0, label: 'ID', class: 'colPayMethodID', active: false, display: true , width : "30"},
+    { index: 1, label: 'Product Name', class: 'colName', active: true, display: true , width : "200"},
+    { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true , width : "200"},
+    { index: 3, label: 'Process', class: 'colProcess', active: true, display: true , width : "100"},
+    { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true , width : "70"},
+    { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true , width : "70"},
+    { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true , width : "150"},
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true , width : "120"}
   ];
   templateObject.tableheaderrecords.set(headerStructure);
-      
-})
+});
 
 Template.bom_list.onRendered(function(){
   const templateObject  = Template.instance();
@@ -93,23 +93,28 @@ Template.bom_list.onRendered(function(){
   checkSetupFinished();
 })
 Template.bom_list.events({
-  'click #tblBOMList tbody tr': async function(event) {
+  "click #tblBOMList tbody tr": async function (event) {
+    // index = $(event.target).closest("tr").find(".colPayMethodID").html();
+    // console.log(index);
+    // if (index) {
+    //   FlowRouter.go("/bomsetupcard?id=" + index);
+    // }
     let templateObject = Template.instance();
     let productService = new ProductService();
-    let productName = $(event.target).closest('tr').find('td.colName').text();
+    let productName = $(event.target).closest("tr").find("td.colName").text();
     let bomProducts = templateObject.bomProducts.get();
-    let index = bomProducts.findIndex(product => {
+    let index = bomProducts.findIndex((product) => {
       return product.Caption == productName;
-    })
-    if(index > -1) {
-      FlowRouter.go('/bomsetupcard?id='+ bomProducts[index].ID)
-    }else {
-      productService.getOneBOMProductByName(productName).then(function(data){
-        if(data.tproctree.length > 0) {
-          let id = data.tproctree[0].ID;
-          FlowRouter.go('/bomsetupcard?id='+ id)
+    });
+    if (index > -1) {
+      FlowRouter.go("/bomsetupcard?id=" + bomProducts[index].Id);
+    } else {
+      productService.getOneBOMProductByName(productName).then(function (data) {
+        if (data.tproctree.length > 0) {
+          let id = data.tproctree[0].Id;
+          FlowRouter.go("/bomsetupcard?id=" + id);
         }
-      })
+      });
     }
   },
 
@@ -132,7 +137,6 @@ Template.bom_list.events({
     // setTimeout(()=>{
     //   window.open('/bomlist','_self');
     // }, 3000)
-
   },
 'click .templateDownload': function () {
     let utilityService = new UtilityService();
@@ -218,91 +222,128 @@ Template.bom_list.events({
 'click .btnImport' : function () {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    let contactService = new ContactService();
+    let productService = new ProductService();
     let objDetails;
     var saledateTime = new Date();
     //let empStartDate = new Date().format("YYYY-MM-DD");
     Papa.parse(templateObject.selectedFile.get(), {
-        complete: function(results) {
+      complete: function (results) {
+        if (results.data.length > 0) {
+          if (
+            results.data[0][0] == "Product Name" &&
+            results.data[0][1] == "Product Description" &&
+            results.data[0][2] == "Process Name" &&
+            results.data[0][3] == "Stock Count" &&
+            results.data[0][4] == "Sub products & raws" &&
+            results.data[0][5] == "Attachments"
+          ) {
+            let dataLength = results.data.length * 500;
+            setTimeout(function () {
+              // $('#importModal').modal('toggle');
+              //Meteor._reload.reload();
+              $(".fullScreenSpin").css("display", "none");
+              window.open("/bomlist?success=true", "_self");
+            }, parseInt(dataLength));
 
-            if(results.data.length > 0){
-                if( (results.data[0][0] == "Product Name")
-                   && (results.data[0][1] == "Product Description") && (results.data[0][2] == "Process Name")
-                   && (results.data[0][3] == "Stock Count") && (results.data[0][4] == "Sub products & raws")
-                   && (results.data[0][5] == "Attachments") ) {
+            for (let i = 0; i < results.data.length - 1; i++) {
+              let subs = [];
+              let subTitles = results.data[i + 1][4].split(",");
+              for (let j = 0; j < subTitles.length; j++) {
+                subs.push({
+                  productName: subTitles[j],
+                  process: "",
+                  qty: 1,
+                  attachments: [],
+                });
+              }
+              // objDetails = {
+              //   type: "TProcTree",
+              //   fields: {
+              //     productName: results.data[i + 1][0].trim(),
+              //     productDescription: results.data[i + 1][1].trim(),
+              //     process: results.data[i + 1][2],
+              //     processNote: "",
+              //     totalQtyInStock: results.data[i + 1][3],
+              //     subs: subs,
+              //     attachments: [],
 
-                    let dataLength = results.data.length * 500;
-                    setTimeout(function(){
-                        // $('#importModal').modal('toggle');
-                        //Meteor._reload.reload();
-                        window.open('/bomlist?success=true','_self');
-                    },parseInt(dataLength));
+              //     // BillStreet: results.data[i+1][6],
+              //     // BillStreet2: results.data[i+1][7],
+              //     // BillState: results.data[i+1][8],
+              //     // BillPostCode:results.data[i+1][9],
+              //     // Billcountry:results.data[i+1][10]
+              //   },
+              // };
+              objDetails = {
+                Caption: results.data[i + 1][0].trim(),
+                Description: results.data[i + 1][1].trim(),
+                CustomInputClass: "",
+                Info: results.data[i + 1][2],
+                ProcStepItemRef: "vs1BOM",
+                QtyVariation: 1,
+                TotalQtyOriginal: parseFloat(results.data[i + 1][3]),
+                Details: JSON.stringify(subs),
+                Value: "",
 
-                    for (let i = 0; i < results.data.length -1; i++) {
-                        let subs = [];  
-                      let subTitles = results.data[i+1][4].split(',');
-                        for(let j = 0; j < subTitles.length; j++) {
-                          subs.push({
-                            productName: subTitles[j],
-                            process: '',
-                            qty: 1,
-                            attachments: []
-                          })
-                        }
-                        objDetails = {
-                            type: "TProcTree",
-                            fields:
-                            {
-                                productName: results.data[i+1][0].trim(),
-                                productDescription: results.data[i+1][1].trim(),
-                                process: results.data[i+1][2],
-                                processNote: '',
-                                totalQtyInStock: results.data[i+1][3],
-                                subs: subs,
-                                attachments: []
-                                
+                // BillStreet: results.data[i+1][6],
+                // BillStreet2: results.data[i+1][7],
+                // BillState: results.data[i+1][8],
+                // BillPostCode:results.data[i+1][9],
+                // Billcountry:results.data[i+1][10]
+              };
+              if (results.data[i + 1][0]) {
+                if (results.data[i + 1][0] !== "") {
+                  // contactService.saveEmployee(objDetails).then(function (data) {
+                  //     ///$('.fullScreenSpin').css('display','none');
+                  //     //Meteor._reload.reload();
+                  // }).catch(function (err) {
+                  //     //$('.fullScreenSpin').css('display','none');
+                  //     swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => { if (result.value) { Meteor._reload.reload(); } else if (result.dismiss === 'cancel') {}});
+                  // });
+                  productService.saveBOMProduct({type: "TProcTree",fields: objDetails,})
+                    .then(function () {
+                      productService
+                        .getAllBOMProducts(initialDataLoad, 0)
+                        .then(function (dataReturn) {
+                          addVS1Data("TProcTree",JSON.stringify(dataReturn)).then(function () {});
+                          //FlowRouter.go("/bomlist?success=true");
+                        });
+                    });
 
-                                // BillStreet: results.data[i+1][6],
-                                // BillStreet2: results.data[i+1][7],
-                                // BillState: results.data[i+1][8],
-                                // BillPostCode:results.data[i+1][9],
-                                // Billcountry:results.data[i+1][10]
-                            }
-                        };
-                        if(results.data[i+1][0]){
-                            if(results.data[i+1][0] !== "") {
-                                // contactService.saveEmployee(objDetails).then(function (data) {
-                                //     ///$('.fullScreenSpin').css('display','none');
-                                //     //Meteor._reload.reload();
-                                // }).catch(function (err) {
-                                //     //$('.fullScreenSpin').css('display','none');
-                                //     swal({ title: 'Oooops...', text: err, type: 'error', showCancelButton: false, confirmButtonText: 'Try Again' }).then((result) => { if (result.value) { Meteor._reload.reload(); } else if (result.dismiss === 'cancel') {}});
-                                // });
-                                $('.fullScreenSpin').css('display','none');
-                                let bomProducts = localStorage.getItem('TProcTree')?JSON.parse(localStorage.getItem('TProcTree')): [];
-                                let index = bomProducts.findIndex(product => {
-                                  return product.productName == results.data[i+1][0];
-                                })
-                                if(index == -1) {
-                                  bomProducts.push(objDetails)
-                                } else {
-                                  bomProducts.splice(index, 1, objDetails)
-                                } 
-                                localStorage.setItem('TProcTree', bomProducts);
-                                Meteor._reload.reload();
-                            }
-                        }
-                    }
-                }else{
-                    $('.fullScreenSpin').css('display','none');
-                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                  // let bomProducts = localStorage.getItem("TProcTree")
+                  //   ? JSON.parse(localStorage.getItem("TProcTree"))
+                  //   : [];
+                  // let index = bomProducts.findIndex((product) => {
+                  //   return product.productName == results.data[i + 1][0];
+                  // });
+                  // if (index == -1) {
+                  //   bomProducts.push(objDetails);
+                  // } else {
+                  //   bomProducts.splice(index, 1, objDetails);
+                  // }
+                  // localStorage.setItem("TProcTree", bomProducts);
+                  // Meteor._reload.reload();
+                  // window.open("/bomlist?success=true", "_self");
                 }
-            }else{
-                $('.fullScreenSpin').css('display','none');
-                swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+              }
             }
-
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+            swal(
+              "Invalid Data Mapping fields ",
+              "Please check that you are importing the correct file with the correct column headers.",
+              "error"
+            );
+          }
+        } else {
+          $(".fullScreenSpin").css("display", "none");
+          swal(
+            "Invalid Data Mapping fields ",
+            "Please check that you are importing the correct file with the correct column headers.",
+            "error"
+          );
         }
+      },
     });
 }
   
@@ -346,8 +387,8 @@ Template.bom_list.helpers({
     }
   },
 
-  apiParams: ()=>{
-    return ['limitCount', 'limitFrom']
+  apiParams: () => {
+    return ["limitCount", "limitFrom","deleteFilter"];
   },
 
   searchAPI: function() {

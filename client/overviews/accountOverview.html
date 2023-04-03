@@ -144,7 +144,7 @@
                   class="col d-xl-flex justify-content-xl-end align-items-xl-start"
                   style="padding: 0px !important">
                     {{> spreadsheet_link templateName="Accounts List Report Result"}}
-                    {{> export_import_print_display_button Import="hiddenButton"  tablename="tblAccountOverview"}}
+                    {{> export_import_print_display_button   tablename="tblAccountOverview"}}
                 </div>
                 <div>
 
@@ -227,8 +227,41 @@
             </div>
         </div>
         <div class="card-body p-0 rounded">
-            {{> non_transactional_list tablename="tblAccountOverview"}}
-            <div class="table-responsive d-none">
+            <!-- {{> non_transactional_list tablename="tblAccountOverview"}} -->
+            {{>datatablelist 
+                tablename="tblAccountOverview"
+                apiName= apiFunction
+                service = service
+                indexeddbname = 'TAccountVS1List'
+                datahandler = datahandler
+                tableheaderrecords = tableheaderrecords
+                exportfilename = 'Account List'
+                istransaction = false
+                apiParams=apiParams
+                lowercaseDataName='taccountvs1list'
+                exIndexDBName = 'taccountvs1listex'
+                exdatahandler = exDataHandler
+                searchAPI = searchAPI
+                order = '[[ 1, "asc" ]]'
+            }}
+
+            {{>datatablelist 
+                tablename="tblAccountTreeOverview"
+                apiName= apiFunction
+                service = service
+                indexeddbname = 'TAccountVS1List'
+                datahandler = datahandler
+                tableheaderrecords = tableheaderrecords
+                exportfilename = 'Account List'
+                istransaction = false
+                apiParams=apiParams
+                lowercaseDataName='taccountvs1list'
+                exIndexDBName = 'taccountvs1listex'
+                exdatahandler = exDataHandler
+                searchAPI = searchAPI
+                order = '[[ 1, "asc" ]]'
+            }}
+            <!-- <div class="table-responsive d-none">
                 <table id="tblAccountTreeOverview" class="dataTable table table-bordered tblAccountTreeOverview">
                     <thead>
                         <tr class="dnd-moved">
@@ -244,7 +277,7 @@
                     <tbody>
                     </tbody>
                 </table>
-            </div>
+            </div> -->
         </div>
         <style>
             .isNotBankAccount {
@@ -387,7 +420,7 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
     </div>
-
+    {{> import_template}}
     <script>
         modalDraggable();
     </script>
