@@ -3415,9 +3415,10 @@ export class SideBarService extends BaseService {
   getCurrencies() {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true",
+      //select: "[Active]=true",
+      Search: "Active=true",
     };
-    return this.getList(this.ERPObjects.TCurrency, options);
+    return this.getList(this.ERPObjects.TCurrencyList, options);
   }
 
   getCurrencyDataList(limitcount, limitfrom, deleteFilter) {

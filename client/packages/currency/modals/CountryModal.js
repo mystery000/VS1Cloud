@@ -104,12 +104,16 @@ Template.CountryModal.events({
 
     // let countryName = $(e.currentTarget).attr("value");
     const countryName = $(e.currentTarget).find("td").text();
-    
+
     $(e.currentTarget).parents(".modal").modal("hide");
     
     $("#sedtCountry").val(countryName);
     $("#sedtCountry").attr("value", countryName);
     $("#sedtCountry").trigger("change");
+
+    $("#editCountry").val(countryName);
+    $("#editCountry").attr("value", countryName);
+    //$("#editCountry").trigger("change");
   },
 });
 
