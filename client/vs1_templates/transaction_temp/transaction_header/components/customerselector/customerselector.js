@@ -40,7 +40,7 @@ Template.customerselector.onRendered(function() {
                     data.ttaxcodevs1[i].Description || "-",
                     taxRate || 0,
                   ];
-    
+
                   let taxcoderecordObj = {
                     codename: data.ttaxcodevs1[i].CodeName || " ",
                     coderate: taxRate || " ",
@@ -63,7 +63,7 @@ Template.customerselector.onRendered(function() {
                   useData[i].Description || "-",
                   taxRate || 0,
                 ];
-    
+
                 let taxcoderecordObj = {
                   codename: useData[i].CodeName || " ",
                   coderate: taxRate || " ",
@@ -94,7 +94,7 @@ Template.customerselector.onRendered(function() {
     };
     templateObject.getAllTaxCodes();
 
-   
+
 
     templateObject.getSubTaxCodes = function () {
         let subTaxTableList = [];
@@ -147,20 +147,15 @@ Template.customerselector.onRendered(function() {
 
 
     templateObject.setCustomerInfo = function(selectedTaxCodeName) {
-       
         let taxcodeList = templateObject.taxraterecords.get();
-        let $tblrows = $("#"+templateObject.data.gridTableId+" tbody tr");
+        let $tblrows = $("#"+templateObject.data.lineTableId+" tbody tr");
         let $printrows = $("."+templateObject.data.printTableId+" tbody tr");
         let selectedCustomer = $("#edtCustomerName").val();
-       
+
         let taxRate = "";
-          getCustDetails = customers.filter((customer) => {
-            return customer.customername == selectedCustomer;
-          });
           taxRate = taxcodeList.filter((taxrate) => {
             return taxrate.codename == selectedTaxCodeName;
           });
-    
           if (taxRate.length > 0) {
             let rate = taxRate[0].coderate;
             let code = selectedTaxCodeName || "E";
@@ -168,7 +163,7 @@ Template.customerselector.onRendered(function() {
               code = "E";
             }
             let taxcodeList = templateObject.taxraterecords.get();
-    
+
             let subGrandTotal = 0;
             let taxGrandTotal = 0;
             let subDiscountTotal = 0; // New Discount
@@ -305,7 +300,7 @@ Template.customerselector.onRendered(function() {
                 document.getElementById("subtotal_totalPrint").innerHTML =
                   $("#subtotal_total").text();
               }
-    
+
               if (!isNaN(taxTotal)) {
                 taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
                 document.getElementById("totalTax_totalPrint").innerHTML =
@@ -390,11 +385,11 @@ Template.customerselector.onRendered(function() {
       });
     }
 
-    templateObject. setSupplierInfo = function(){
-        
+    templateObject.setSupplierInfo = function(){
+
         let utilityService = new UtilityService();
         let taxcodeList = templateObject.taxraterecords.get();
-        let $tblrows = $("#"+templateObject.data.gridTableId+" tbody tr");
+        let $tblrows = $("#"+templateObject.data.lineTableId+" tbody tr");
 
         let lineAmount = 0;
         let subGrandTotal = 0;
@@ -510,7 +505,7 @@ Template.customerselector.onRendered(function() {
     if(FlowRouter.current().queryParams.supplierid) {
         getSupplierData(FlowRouter.current().queryParams.supplierid)
     }
-    
+
     // $(document).on('click')
     $(document).on('click', '#tblCustomerlist tbody tr', function(event) {
         let value = $(event.target).closest('tr').find('.colCompany').text();
@@ -521,7 +516,7 @@ Template.customerselector.onRendered(function() {
         let state = $(event.target).closest('tr').find('.colState')?.text()
         let postCode = $(event.target).closest('tr').find('.colZipCode')?.text()
         let country = $(event.target).closest('tr').find('.colCountry')?.text()
-        address = value + '\n' + street+"\n"+ city + ' '+ state+' ' + postCode + '\n' + country 
+        address = value + '\n' + street+"\n"+ city + ' '+ state+' ' + postCode + '\n' + country
         if(billingAddressField && billingAddressField.length > 0) {
             $(billingAddressField).val(address)
         }
@@ -549,7 +544,7 @@ Template.customerselector.onRendered(function() {
         $("#customerDiscount").text(customerDiscount + "%");
         $("#edtCustomerUseType").val(customerType);
         $("#edtCustomerUseDiscount").val(customerDiscount);
-    
+
         $("#pdfCustomerAddress").html(address);
         $(".pdfCustomerAddress").text(address);
         $("#txaShipingInfo").val(address);
@@ -565,8 +560,8 @@ Template.customerselector.onRendered(function() {
         let state = $(event.target).closest('tr').find('.colState')?.text()
         let postCode = $(event.target).closest('tr').find('.colZipCode')?.text()
         let country = $(event.target).closest('tr').find('.colCountry')?.text()
-        address = value + '\n' + street+"\n"+ city + ' '+ state+' ' + postCode + '\n' + country 
-      
+        address = value + '\n' + street+"\n"+ city + ' '+ state+' ' + postCode + '\n' + country
+
         let clientEmailInput = 'edtSupplierEmail';
         let colTerms = 'colSupplierTermName'
         let email = $(event.target).closest('tr').find('.colEmail').text();
@@ -590,7 +585,7 @@ Template.customerselector.onRendered(function() {
         $("#customerDiscount").text(supplierDiscount + "%");
         $("#edtCustomerUseType").val(supplierType);
         $("#edtCustomerUseDiscount").val(supplierDiscount);
-    
+
         $("#pdfCustomerAddress").html(address);
         $(".pdfCustomerAddress").text(address);
         $("#txabillingAddress").val(address);
@@ -602,11 +597,11 @@ Template.customerselector.onRendered(function() {
 Template.customerselector.events( {
     'click #tblCustomerlist tbody tr': function(event) {
         let templateObject = Template.instance();
-        
+
     },
 
     'click #tblSupplierList tbody tr': function(event) {
         let templateObject = Template.instance();
-        
+
     }
 })
