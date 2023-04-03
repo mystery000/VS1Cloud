@@ -997,7 +997,7 @@ Template.editcurrencypop.events({
     let currencyId = $("#selectDeleteLineID").val();
 
     let objDetails = {
-      type: "TCurrencyList",
+      type: "TCurrency",
       fields: {
         Id: currencyId,
         Active: false,
@@ -1059,7 +1059,7 @@ Template.editcurrencypop.events({
     }
   },
 
-  "click .editcurrencypop .btnSaveCurrency": function () {
+  "click .editcurrencypop .btnSaveEditCurrency": function () {
     playSaveAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
@@ -1092,7 +1092,7 @@ Template.editcurrencypop.events({
 
     if (currencyid == "") {
       objDetails = {
-        type: "TCurrencyList",
+        type: "TCurrency",
         fields: {
           Active: true,
           //Country: country,
@@ -1106,7 +1106,7 @@ Template.editcurrencypop.events({
       };
     } else {
       objDetails = {
-        type: "TCurrencyList",
+        type: "TCurrency",
         fields: {
           ID: parseInt(currencyid),
           Active: true,
