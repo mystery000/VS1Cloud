@@ -70,12 +70,10 @@ Template.allCardsLists.onRendered(function () {
                     $(`[card-key='${card.fields.CardKey}']`).attr("card-active", card.fields.Active);
                     if (card.fields.Active == false) {
                         $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
-                        $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye');
-                        $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye-slash');
+                        $(`[card-key='${card.fields.CardKey}']`).find('.cardShowOption').prop('checked', false);                        
                     } else {
                         $(`[card-key='${card.fields.CardKey}']`).removeClass("hideelement");
-                        $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
-                        $(`[card-key='${card.fields.CardKey}']`).find('.cardShowBtn .far').addClass('fa-eye');
+                        $(`[card-key='${card.fields.CardKey}']`).find('.cardShowOption').prop('checked', true);
                     }
                 });
                 let $chartWrappper = $(".connectedCardSortable");
@@ -88,16 +86,13 @@ Template.allCardsLists.onRendered(function () {
             } else {
                 // Set default cards list
                 $('.card-visibility').each(function () {
-                    $(this).find('.cardShowBtn .far').removeClass('fa-eye');
+                    $(this).find('.cardShowOption').prop('checked', true);
                     let position = $(this).data('default-position');
-                    $(this).attr('position', position);
-                    $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
+                    $(this).attr('position', position);                    
                     $(this).attr("card-active", false);
                 })
                 $(`[chartgroup='${_chartGroup}']`).attr("card-active", true);
-                $(`[chartgroup='${_chartGroup}']`).removeClass('hideelement');
-                $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
-                $(`[chartgroup='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
+                $(`[chartgroup='${_chartGroup}']`).removeClass('hideelement');               
             }
         }, 0);
     };
@@ -114,10 +109,14 @@ Template.allCardsLists.onRendered(function () {
                 scroll: false,
                 placeholder: "portlet-placeholder ui-corner-all",
                 tolerance: 'pointer',
+                start: (event, ui) => {
+                    ui.placeholder.height(ui.item.height())
+                    ui.placeholder.width(ui.item.width())
+                },
                 stop: async (event, ui) => {
                     if ($(ui.item[0]).hasClass("dimmedChart") == false) {
                         // Here we save card list
-                        templateObject.saveCards();
+                        // templateObject.saveCards();
                     }
                 },
             }).disableSelection();
@@ -168,8 +167,7 @@ Template.allCardsLists.onRendered(function () {
                     body: JSON.stringify(cardJSON),
                 });
 
-                if (ApiResponse.ok == true) {
-                    const jsonResponse = await ApiResponse.json();
+                if (ApiResponse.ok == true) {                    
                     await templateObject.saveCardsLocalDB();
                 }
             } catch (error) {
@@ -239,24 +237,28 @@ Template.allCardsLists.events({
             window.location.href = 'overduesupplierawaiting';
         }
     },
-    "click .cardSettingBtn": async function (e) {
+    "click .cardSettingBtn": async function (e) {        
         e.preventDefault();
-        $(".card-visibility").removeClass('hideelement');
-        $(".card-visibility").addClass('dimmedChart');
-        $(".card-visibility").find(".cardSettingBtn").addClass("hideelement");
-        $(".card-visibility").find(".cardShowBtn").removeClass("hideelement");
-        $(".actionButtonCardsTop").removeClass("hideelement");
+        // if ($('.cardSettingBtn').find('i').hasClass('fa-save')) {
+        //     $('.cardSettingBtn').find('i').removeClass('fa-save')
+        //     $('.cardSettingBtn').find('i').addClass('fa-cog');            
+        //     $(".card-visibility").find(".cardEditOptions").addClass("hideelement");            
+        //     $('.card-visibility').removeClass('dimmedChart');                        
+        // } else {
+            // $('.cardSettingBtn').find('i').removeClass('fa-cog')
+            // $('.cardSettingBtn').find('i').addClass('fa-save');            
+            $(".cardSettingBtn").addClass("hideelement");
+            $(".card-visibility").removeClass('hideelement');
+            $(".card-visibility").addClass('dimmedChart');                    
+            $(".cardEditOptions").removeClass("hideelement");
+            // $(".actionButtonCardsTop").removeClass("hideelement");
+        // }
     },
-    "click .cardShowBtn": function (e) {
+    "change .cardShowOption": function (e) {
         e.preventDefault();
-        let templateObject = Template.instance();
-        if ($(e.target).find('.far').hasClass('fa-eye')) {
-            $(e.target).find('.far').removeClass('fa-eye')
-            $(e.target).find('.far').addClass('fa-eye-slash')
+        if ($(e.target).prop(checked)) {            
             $(e.target).parents('.card-visibility').attr('card-active', false)
         } else {
-            $(e.target).find('.far').removeClass('fa-eye-slash')
-            $(e.target).find('.far').addClass('fa-eye')
             $(e.target).parents('.card-visibility').attr('card-active', true)
         }
     },
@@ -266,9 +268,9 @@ Template.allCardsLists.events({
         setTimeout(async function () {
             await templateObject.saveCards();
             $('.card-visibility').removeClass('dimmedChart');
-            $(".card-visibility").find(".cardSettingBtn").removeClass("hideelement");
-            $(".card-visibility").find(".cardShowBtn").addClass("hideelement");
-            $('.actionButtonCardsTop').addClass('hideelement');
+            $(".cardSettingBtn").removeClass("hideelement");
+            $(".cardEditOptions").addClass("hideelement");
+            // $('.actionButtonCardsTop').addClass('hideelement');
             $(".card-visibility").addClass('hideelement');
             let cards = $(".card-visibility");
             $.each(cards, function (i, card) {
@@ -305,14 +307,15 @@ Template.allCardsLists.events({
 
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
-                $('.cardShowBtn').addClass('hideelement');
-                $('.actionButtonCardsTop').addClass('hideelement');
-                $('.editCardBtn').find('i').removeClass('fa-save')
-                $('.editCardBtn').find('i').addClass('fa-cog');
+                // $('.cardShowBtn').addClass('hideelement');
+                // $('.actionButtonCardsTop').addClass('hideelement');
+                // $('.cardSettingBtn').find('i').removeClass('fa-save')
+                // $('.cardSettingBtn').find('i').addClass('fa-cog');
                 await templateObject.saveCardsLocalDB();
                 await templateObject.setCardPositions();
-                $('.card-visibility').removeClass('dimmedChart');
-                $('.cardShowBtn').removeClass('hideelement');
+                $('.card-visibility').removeClass('dimmedChart');                
+                $(".cardEditOptions").addClass("hideelement");
+                $(".cardSettingBtn").removeClass("hideelement");
                 $(".fullScreenSpin").css("display", "none");
             }
         } catch (error) {
@@ -321,20 +324,20 @@ Template.allCardsLists.events({
 
     },
     "click .cancelCards": async function (e) {
-        playCancelAudio();
+        // playCancelAudio();
         e.preventDefault();
         let templateObject = Template.instance();
         setTimeout(async function () {
-            $(".fullScreenSpin").css("display", "block");
-            $('.cardShowBtn').addClass('hideelement');
-            $('.actionButtonCardsTop').addClass('hideelement');
-            $('.editCardBtn').find('i').removeClass('fa-save')
-            $('.editCardBtn').find('i').addClass('fa-cog');
+            $(".fullScreenSpin").css("display", "block");            
+            // $('.actionButtonCardsTop').addClass('hideelement');
+            // $('.cardSettingBtn').find('i').removeClass('fa-save')
+            // $('.cardSettingBtn').find('i').addClass('fa-cog');
             await templateObject.setCardPositions();
             $('.card-visibility').removeClass('dimmedChart');
-            $('.cardShowBtn').removeClass('hideelement');
+            $(".cardEditOptions").addClass("hideelement");
+            $(".cardSettingBtn").removeClass("hideelement");            
             $(".fullScreenSpin").css("display", "none");
-        }, delayTimeAfterSound);
+        });
     }
 });
 
