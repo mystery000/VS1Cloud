@@ -1,15 +1,24 @@
-
 <template name="export_import_print_display_button">
   <style media="screen">
     .hiddenButton {
-        display: none;
+      display: none;
     }
   </style>
-  <button class="btn btnNav btn-primary export float-right vs1ButtonMargin exportbtn {{Export}}" type="button" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
+  <button class="btn btnNav btn-primary export float-right vs1ButtonMargin exportbtn {{Export}}" type="button"
+    id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
   {{#if isEmail}}
-  <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="emailinvoice" name="emailinvoice"><i class="fas fa-envelope" style="padding-right: 5px;"></i>Email</button>
+  <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="emailinvoice"
+    name="emailinvoice"><i class="fas fa-envelope" style="padding-right: 5px;"></i>Email</button>
   {{/if}}
-  <button class="btn btn-primary vs1ButtonMargin btnImportModal {{Import}}" role="button" data-toggle="modal" href="#"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-  <button class="btn btnNav btn-primary printConfirm float-right vs1ButtonMargin {{Print}}" type="button"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-  <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin {{DisplaySettings}}" role="button" data-toggle="modal" href="#{{displayHref}}" ><i class="icon ion-android-more-horizontal"></i></a>
+  {{#unless equals hideImport true}}
+  <button class="btn btn-primary vs1ButtonMargin btnImportModal {{Import}}" role="button" data-toggle="modal"
+    href="#"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
+  {{/unless}}
+  <button class="btn btnNav btn-primary printConfirm float-right vs1ButtonMargin {{Print}}" type="button"><i
+      class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
+
+  <button class="btn btnNav btn-primary btnOpenSettings float-right vs1LastButtonMargin {{DisplaySettings}}" type="button" href="#{{displayHref}}"><i class="icon ion-android-more-horizontal"></i></button>
+
+  <!-- <a class="btn btnOpenSettings btnNavMore float-right vs1LastButtonMargin {{DisplaySettings}} mr-1" role="button"
+    data-toggle="modal" href="#{{displayHref}}"><i class="icon ion-android-more-horizontal"></i></a> -->
 </template>

@@ -1187,10 +1187,10 @@ authenticatedRoutes.route('/creditcard', {
 });
 
 authenticatedRoutes.route('/agedpayables', {
-    name: 'agedpayables',
+    name: 'newagedpayables',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'agedpayables'
+            yield: 'newagedpayables'
         });
     }
 });

@@ -302,11 +302,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
                 { index: 2, label: 'BSB', class: 'colBsb', active: true, display: true, width: "100" },
                 { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
-                { index: 4, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "100" },
-                { index: 5, label: 'Lodgement References', class: 'colLodgement', active: true, display: true, width: "100" },
+                { index: 4, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "200" },
+                { index: 5, label: 'Lodgement References', class: 'colLodgement', active: true, display: true, width: "200" },
                 { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
                 { index: 7, label: 'From BSB', class: 'colFromBsb', active: true, display: true, width: "100" },
-                { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "100" },
+                { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "200" },
             ];
         } else if (currenttablename == "tblTimeSheet") {
             reset_data = [
@@ -2218,6 +2218,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
+                // searching: true,
                 "fnInitComplete": function(oSettings) {                    
                     $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                     if (data?.Params?.Search?.replace(/\s/g, "") == "") {
@@ -2777,7 +2778,18 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     $('#eftaccountid').on('change', function(event) {
         if (currenttablename == "tblEftExportCheckbox") templateObject.getEftExportData()
         tableResize()
-    })
+    });
+
+
+    $('#' + currenttablename)
+
+        // Damien
+    // Set focus when open account list modal
+    setTimeout(function() {
+        $('#' + currenttablename).on('shown.bs.modal', function(){
+            $('#' + currenttablename+'_filter .form-control-sm').get(0).focus();
+        });
+    }, 500);
 });
 
 Template.internal_transaction_list_with_switchbox.events({

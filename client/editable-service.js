@@ -1516,7 +1516,6 @@ export class EditableService {
                         } else {
                             let data = JSON.parse(dataObject[0].data);
                             for (let i = 0; i < data.tdeptclass.length; i++) {
-                                console.log(data.tdeptclass[i].DeptClassName);
                                 if (data.tdeptclass[i].DeptClassName === deptDataName) {
                                     $("#edtDepartmentID").val(data.tdeptclass[i].Id);
                                     $("#edtNewDeptName").val(data.tdeptclass[i].DeptClassName);

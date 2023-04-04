@@ -79,6 +79,7 @@ openDb = function (dbName) {
       });
       db.createObjectStore("TAppUser", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TJobVS1", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TJobVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TStockAdjustEntry", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TsalesOrderNonBackOrder", {
         keyPath: "EmployeeEmail",
@@ -585,6 +586,7 @@ openDb = function (dbName) {
       db.createObjectStore("CloudAppointmentStartStopAccessLevel", { keyPath: "EmployeeEmail" });
       db.createObjectStore("CloudAppointmentAllocationLaunch", { keyPath: "EmployeeEmail" });
       db.createObjectStore("CloudAppointmentCreateAppointment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TFavoriteReport", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });

@@ -18,9 +18,8 @@ Template.currencydropdown.onRendered(function () {
   let taxRateService = new TaxRateService();
   let templateObject = Template.instance();
   const currencyData = [];
-  templateObject.getCurrencies = function () {
-    getVS1Data("TCurrency")
-      .then(function (dataObject) {
+  templateObject.getCurrencies = async function () {
+    await getVS1Data("TCurrencyList").then(function (dataObject) {
         if (dataObject.length == 0) {
           taxRateService.getCurrencies().then(function (data) {
             for (let i in data.tcurrency) {
@@ -32,8 +31,8 @@ Template.currencydropdown.onRendered(function () {
               };
 
               currencyData.push(currencyObj);
-              templateObject.currencyData.set(currencyData);
             }
+            templateObject.currencyData.set(currencyData);
           });
         } else {
           let data = JSON.parse(dataObject[0].data);
@@ -46,9 +45,9 @@ Template.currencydropdown.onRendered(function () {
               currencyCode: data.tcurrency[i].fields.Code || "",
             };
 
-            currencyData.push(currencyObj);
-            templateObject.currencyData.set(currencyData);
+            currencyData.push(currencyObj)
           }
+          templateObject.currencyData.set(currencyData);
         }
       })
       .catch(function (err) {
@@ -62,8 +61,8 @@ Template.currencydropdown.onRendered(function () {
             };
 
             currencyData.push(currencyObj);
-            templateObject.currencyData.set(currencyData);
           }
+          templateObject.currencyData.set(currencyData);
         });
       });
     if (FlowRouter.current().queryParams.id) {
@@ -92,6 +91,10 @@ Template.currencydropdown.helpers({
   currency: () => {
     return CountryAbbr;
   },
-  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled()
-
+  isCurrencyEnable: () => FxGlobalFunctions.isCurrencyEnabled(),
+  checkLabel : () => {
+    if(FlowRouter.current().path.includes("customerscard")) return 'Foreign Currency';
+    else if(FlowRouter.current().path.includes("supplierscard")) return 'Foreign Currency';
+    return 'Currency';
+  }
 });

@@ -1,0 +1,22 @@
+<template name="vs1_tab_custom_fields">
+  <div class="tab-pane border rounded-0" role="tabpanel" id="{{id}}"
+    style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+    <div class="row no-gutters" style="margin: 14px;">
+      <div class="col d-xl-flex align-items-xl-center">
+        {{#each item in customfields}}
+        <div class="form-group flex-grow-1 {{item.divClass}}" style="margin: 4px;padding-right:4px;">
+          <label class="lblCustomField{{item.order}}">
+            {{#if contactCloudPreferenceRec}}
+            {{contactCloudPreferenceRec.customFields.[item.index].label}}
+            {{else}}
+            Custom Field {{item.order}}
+            {{/if}}
+          </label>
+          <input type="text" class="form-control" id="edtCustomField1" name="edtCustomField1"
+            value="{{record.custfield1}}">
+        </div>
+        {{/each}}
+      </div>
+    </div>
+  </div>
+</template>
