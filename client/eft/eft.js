@@ -16,7 +16,7 @@ Template.eft_export.onCreated(function () {
     templateObject.transactionDescriptions = new ReactiveVar([]);
     templateObject.eftRowId = new ReactiveVar(null);
     templateObject.tabadescriptiverecordList = new ReactiveVar([]);
-    templateObject.tabadetailrecordList = new ReactiveVar([]);
+    templateObject.tabadetailrecordList = new ReactiveVar([]);    
 });
 
 Template.eft_export.onRendered(function () {
@@ -24,31 +24,27 @@ Template.eft_export.onRendered(function () {
     // tempcode
     templateObject.eftRowId.set(Random.id());
 
-    $(() => utilityService.waitForElm("#accountListModal tbody td").then(() => {
-        setTimeout(() => {
-            let currentDate = moment(new Date()).format('DD/MM/YYYY');
-            $('.eftProcessingDate').datepicker({
-                showOn: 'button',
-                buttonText: 'Show Date',
-                buttonImageOnly: true,
-                buttonImage: '/img/imgCal2.png',
-                constrainInput: false,
-                dateFormat: 'yy/mm/dd',
-                showOtherMonths: true,
-                selectOtherMonths: true,
-                changeMonth: true,
-                changeYear: true,
-                yearRange: '-90:+10',
-                onSelect: function (dateText, inst) {
-                    // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
-                },
-            });
-            $(".eftProcessingDate").val(currentDate);
-            $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))
-            $('#accountListModal').modal('show');
+    $(() => {
+        let currentDate = moment(new Date()).format('DD/MM/YYYY');
+        $('.eftProcessingDate').datepicker({
+            showOn: 'button',
+            buttonText: 'Show Date',
+            buttonImageOnly: true,
+            buttonImage: '/img/imgCal2.png',
+            constrainInput: false,
+            dateFormat: 'yy/mm/dd',
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true,
+            yearRange: '-90:+10',
+            onSelect: function (dateText, inst) {
+                // $(".lblAddTaskSchedule").html(moment(dateText).format("YYYY-MM-DD"));
+            },
         });
-    }))
-    
+        $(".eftProcessingDate").val(currentDate);
+        $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))                
+    })
 
     templateObject.loadTabaDescriptiveRecord = () => {
         let descriptiveList = [];
@@ -126,6 +122,12 @@ Template.eft_export.onRendered(function () {
                     $('#sltTransactionDescription').val(descriptiveList[0].TransactionDescription);
                 }
                 $('.fullScreenSpin').css('display', 'none');
+
+                /* Damien */
+                // For Focus into search field
+                setTimeout(function() {
+                    $("#tblEftExportCheckbox_filter .form-control-sm").get(0).focus();
+                }, 500);
             });
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -314,6 +316,8 @@ Template.eft_export.onRendered(function () {
         selectLineId = $(this).closest('tr').attr('id')
         $('#accountListModal').modal('show');
     })
+
+    setTimeout(() => $('#accountListModal').modal(), 3000)
 });
 
 Template.eft_export.events({

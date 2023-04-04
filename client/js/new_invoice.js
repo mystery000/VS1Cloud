@@ -99,7 +99,7 @@ Template.new_invoice.onCreated(function () {
   templateObject.headerbuttons = new ReactiveVar();
 
   function formatDate (date) {
-    return moment(date).format('DD/MM/YYYY'); 
+    return moment(date).format('DD/MM/YYYY');
   }
   let transactionheaderfields = [
       {label: "Sales Date", type:"date", readonly: false, value: formatDate(new Date())},
@@ -1112,7 +1112,7 @@ Template.new_invoice.onCreated(function () {
   //     });
   // }
 
-  
+
 
 
   function loadTemplateBody1(object_invoce) {
@@ -3695,12 +3695,12 @@ Template.new_invoice.onRendered(function () {
     // $("#sltDept").editableSelect();
     // $("#sltStatus").editableSelect();
 
-    $(document).on("click", "#tblUOMList tbody tr", function (e) {
-      let table = $(this);
-      let uomName = table.find(".colUOMName").text();
-      $("input.lineUOM").val(uomName);
-      $("#UOMListModal").modal("toggle");
-    });
+    // $(document).on("click", "#tblUOMList tbody tr", function (e) {
+    //   let table = $(this);
+    //   let uomName = table.find(".colUOMName").text();
+    //   $("input.lineUOM").val(uomName);
+    //   $("#UOMListModal").modal("toggle");
+    // });
 
 
   // $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
@@ -11205,7 +11205,7 @@ Template.new_invoice.events({
                               Batch: "false",
                             },
                           };
-  
+
                           productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
@@ -11243,7 +11243,7 @@ Template.new_invoice.events({
                               Batch: "true",
                             },
                           };
-  
+
                           productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)

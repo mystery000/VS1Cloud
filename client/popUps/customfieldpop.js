@@ -1206,7 +1206,7 @@ Template.customfieldpop.onRendered(() => {
   };
 
 
-  templateObject.setSupplierExData = function (currentID) {
+  templateObject.setSupplierExData = function (data) {
 
       $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
       $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
@@ -1259,7 +1259,7 @@ Template.customfieldpop.onRendered(() => {
     }
   };
 
-  templateObject.setEmployeeExData = function (currentID) {
+  templateObject.setEmployeeExData = function (data) {
       $('#edtSaleCustField1').val(data.fields.CustFld1);
       $('#edtSaleCustField2').val(data.fields.CustFld2);
       $('#edtSaleCustField3').val(data.fields.CustFld3);
@@ -2141,7 +2141,9 @@ Template.customfieldpop.events({
     var url = FlowRouter.current().path;
     let fieldData = [];
     let checkChckBox = false;
-    $(".customfieldcommon").each(function () {
+    let parent = $(event.target).closest('.modal-dialog');
+    let fields= $(parent).find('.customfieldcommon');
+    $(fields).each(function () {
       if (
         $(this).closest(".custom-switch").find("[type=checkbox]").is(":checked")
       ) {
@@ -2163,6 +2165,7 @@ Template.customfieldpop.events({
     $(".fullScreenSpin").css("display", "inline-block");
     if (
       url.includes("/invoicecard") ||
+      url.includes("/invoicetemp") ||
       url.includes("/salesordercard") ||
       url.includes("/quotecard") ||
       url.includes("/refundcard")

@@ -244,7 +244,7 @@
 
           {{else}}
             <div class="col-12 col-md-6 col-lg-6 col-xl-3" >
-              {{> customer_selector
+              <!-- {{> customer_selector
                 label=getUserLabel
                 id=getCustomerID
                 list_template_name=getTemplate
@@ -254,6 +254,22 @@
                 colNameForValue='colCompany'
                 modal_title=getModalTitle
                 modalId = getModalId
+              }} -->
+              {{> customerselector
+                label=clientType
+                id=getCustomerID
+                value=data.CustomerID
+                data = data.ClientName
+                email = data.ClientEmail
+                modalId=modal_id
+                list_template_name=getTemplate
+                target_modal_id=getTargetModalID
+                target_template_id=getTargetTemplate
+                is_editable=true
+                colNameForValue='colCompany'
+                modal_title=getModalTitle
+                lineTableId=getgridTableId
+                printTableId=printTableId
               }}
             </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -328,22 +344,52 @@
               {{/if}}
               {{#if showTerms}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-                {{> default_select
+                <!-- {{> default_select
                   label="Terms"
                   id="sltTerms"
                   classes="sltTerms"
                   type="search"
                   name="sltTerms"
+                }} -->
+
+                {{>vs1___dropdown
+                  type='search'
+                  id='sltTerms'
+                  name='sltTerms'
+                  modalId= 'termsList_modal'
+                  list_template_name='termlistpop'
+                  innerModal=true
+                  modal_title="Terms List"
+                  label = 'Terms'
+                  colNameForValue = 'colName'
+                  target_modal_id= 'newTerms_modal'
+                  target_template_id='newtermspop'
+                  is_editable=true
                 }}
+
               </div>
               {{/if}}
               {{#if showStatus}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-                {{> default_select
+                <!-- {{> default_select
                   label="Status"
                   type="search"
                   id="sltStatus"
                   name="sltStatus"
+                }} -->
+                {{>vs1___dropdown
+                  type='search'
+                  id='sltStatus'
+                  name='sltStatus'
+                  modalId= 'statusPop_modal'
+                  list_template_name='statuspop'
+                  innerModal=true
+                  modal_title="Status List"
+                  label = 'Status'
+                  colNameForValue = 'colStatusName'
+                  target_modal_id= 'newStatusPop_modal'
+                  target_template_id='newstatuspop'
+                  is_editable=true
                 }}
               </div>
               {{/if}}
@@ -351,21 +397,46 @@
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
                 {{> default_input
                   label="Reference"
-                  classes=""
+                  classes="divClass"
                   type="text"
                   id="edtRef"
                   name="edtRef"
                   defaultValue=data.reference
                 }}
+
+
+                <!-- {{> default_input
+                  label="POStatus"
+                  id="sltPOStatus"
+                  name="sltPOStatus"
+                  readonly=true
+                  defaultValue=data.poStatus
+                }} -->
+
               </div>
               {{/if}}
               {{#if showDepartment}}
               <div class="col-12 col-md-6 col-lg-4 col-xl-2">
-                {{> default_select
+                <!-- {{> default_select
                   label="Department"
                   id="sltDept"
                   name="sltDept"
                   type="search"
+                }} -->
+
+                {{>vs1___dropdown
+                  type='search'
+                  id='sltDept'
+                  name='sltDept'
+                  modalId= 'department_modal'
+                  list_template_name='departmentpop'
+                  innerModal=true
+                  modal_title="Department List"
+                  label = 'Department'
+                  colNameForValue = 'colDeptName'
+                  target_modal_id= 'newDepartment_modal'
+                  target_template_id='newdepartmentpop'
+                  is_editable=true
                 }}
               </div>
               {{/if}}
@@ -376,7 +447,8 @@
                 {{#if equals cardType 'Sales Order'}}
                 {{> CurrencyWidget rate="sell" trans="true"}}
                 {{else}}
-                {{> CurrencyWidget rate="buy" row="true"}}
+                {{> CurrencyWidget rate="buy" trans="true"}}
+                <!-- {{> CurrencyWidget rate="buy" row="true"}} -->
                 {{/if}}
                 {{/if}}
               {{/if}}

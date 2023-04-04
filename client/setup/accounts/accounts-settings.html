@@ -197,7 +197,7 @@
                         }
                       }
                     </style>
-                    <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step5">
+                    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="importModal_step5">
                       <div class="modal-dialog" role="document">
                         <div class="modal-content">
                           <div class="modal-header">
@@ -285,22 +285,17 @@
                           </div>
                         </div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
-                <div class="col-sm-6 text-right pl-0">
-                  <button id="exportbtn" class="btn btn-primary btnNav vs1ButtonMargin" type="button"><i
-                    class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                  <button class="btn btnNav btn-primary vs1ButtonMargin" role="button" data-toggle="modal" href="#importModal_step5">
-                    <i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                  <button class="btn btn-primary printConfirm btnNav vs1ButtonMargin" type="button"><i
-                    class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                  <button class="btn btn-success confirmBtn" type="button" style="margin: 6px 6px 0;"
+                <div class="col-sm-6 text-right pl-0 d-xl-flex justify-content-xl-end align-items-xl-start text-right">
+                  {{> export_import_print_display_button DisplaySettings="hiddenButton" tablename="tblAccountOverview"}}
+                  <button class="btn btn-success confirmBtn float-right" type="button" style="margin: 14px 0 0 15px"
                     data-step-id="6">Confirm</button>
                 </div>
               </div>
               <div class="table-responsive">
-                <style>
+                <!-- <style>
                   th {
                     background-color: #ededed;
                   }
@@ -340,8 +335,24 @@
                   .isNotCreditAccount {
                     display: none !important;
                   }
-                </style>
-                {{> non_transactional_list tablename='tblAccountOverview'}}
+                </style> -->
+                <!-- {{> non_transactional_list tablename='tblAccountOverview'}} -->
+                {{>datatablelist
+                  tablename="tblAccountOverview"
+                  apiName= apiFunction
+                  indexeddbname = 'TAccountVS1List'
+                  tableheaderrecords = tableheaderrecords
+                  exportfilename = 'Account List'
+                  istransaction = false
+                  apiParams= apiParams
+                  datahandler = datahandler
+                  service=service
+                  lowercaseDataName='taccountvs1list'
+                  exIndexDBName = 'taccountvs1list'
+                  exdatahandler = exDataHandler
+                  searchAPI = searchAPI
+                  typefilter=typefilter
+          }}
               </div>
             </div>
             <div class="row no-gutters">
@@ -357,4 +368,8 @@
       </div>
     </div>
   </div>
+  {{> import_template ImportformName="Setup Account Settings"}}
+  <script>
+    modalDraggable();
+</script>
 </template>

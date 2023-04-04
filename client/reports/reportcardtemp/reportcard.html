@@ -1,0 +1,43 @@
+<template name="reportcard">
+    {{# vs1_report_template tabledisplayname=tabledisplayname tablename=tablename dateAsAt=dateAsAt sheetname=sheetname reset_data=reset_data}}
+        <div class="table-responsive">
+        <table class="table table-sm" id="tableExport" name="tableExport">
+            <thead>
+                <tr class="table-active">
+                {{#if reset_data}}
+                    {{#each setting in reset_data}}
+                        <th data-class="{{setting.class}}" data-col-index="{{setting.index}}" data-col-active="{{setting.active}}" 
+                        class="th {{setting.class}} {{#if setting.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left; width:{{setting.width}}px">{{setting.label}}</th>
+                    {{/each}}
+                {{/if}}
+                </tr>
+            </thead>
+            <tbody>
+
+                {{#if reportdata}}
+                    {{#each object in reportdata}}
+                        <tr>
+                            <td class="{{mainfieldClass}}">{{object.type}}</td>
+                            {{#each item in reset_data}}
+                                {{#unless equals item.label mainfieldname}}
+                                    <td class="{{item.class}}{{#if item.active}}{{else}} hiddenColumn{{/if}}"></td>
+                                {{/unless}}
+                            {{/each}}
+                        </tr>
+                        {{#each item in object.subArr}}
+                            <tr>
+                                {{#each setting in reset_data}}
+                                    {{#if setting.display}}
+                                                    <td class="{{setting.class}}{{#if setting.active}}{{else}} hiddenColumn{{/if}}">{{lookup item @index}}
+                                                    </td>
+                                    {{/if}}
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    {{/each}}
+                {{/if}}
+            </tbody>
+        </table>
+        </div>
+    {{/vs1_report_template}}
+</template>

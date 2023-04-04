@@ -49,10 +49,10 @@ Template.reconciliation.onRendered(function() {
       const accountnamerecords = [];
     templateObject.getAccountNames = function(){
       accountService.getAccountName().then(function(data){
-        for(let i in data.taccount){
+        for(let i in data.taccountvs1){
 
           let accountnamerecordObj = {
-            accountname: data.taccount[i].AccountName || ' '
+            accountname: data.taccountvs1[i].AccountName || ' '
           };
           accountnamerecords.push(accountnamerecordObj);
           templateObject.accountnamerecords.set(accountnamerecords);

@@ -1607,9 +1607,9 @@ Template.inventorylist.events({
       //$('.lblPriceEx').css('width','10%');
     }
   },
-  "click td.OnBO": function (event) {
-    var listData = $(event.target).closest("tr").find(".colProductID").text();
-    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+  "click td.colOnBO": function (event) {
+    var listData = $(event.target).closest('tr').attr('id');
+    var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - On Back Order");
 
@@ -1621,9 +1621,9 @@ Template.inventorylist.events({
       });
     }
   },
-  "click td.InStock": function (event) {
-    var listData = $(event.target).closest("tr").find(".colProductID").text();
-    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+  "click td.colInStock": function (event) {
+    var listData = $(event.target).closest('tr').attr('id');
+    var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - In Stock");
       let templateObject = Template.instance();
@@ -1634,9 +1634,9 @@ Template.inventorylist.events({
       });
     }
   },
-  "click td.Available": function (event) {
-    var listData = $(event.target).closest("tr").find(".colProductID").text();
-    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+  "click td.colAvailable": function (event) {
+    var listData = $(event.target).closest('tr').attr('id');
+    var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - Available");
       let templateObject = Template.instance();
@@ -1648,9 +1648,9 @@ Template.inventorylist.events({
     }
   },
 
-  "click td.OnSO": function (event) {
-    var listData = $(event.target).closest("tr").find(".colProductID").text();
-    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+  "click td.colOnSO": function (event) {
+    var listData = $(event.target).closest('tr').attr('id');
+    var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - On Sales Order");
       let templateObject = Template.instance();
@@ -1662,9 +1662,9 @@ Template.inventorylist.events({
     }
   },
 
-  "click td.OnOrder": function (event) {
-    var listData = $(event.target).closest("tr").find(".colProductID").text();
-    var listProductName = $(event.target).closest("tr").find(".ProductName").text();
+  "click td.colOnOrder": function (event) {
+    var listData = $(event.target).closest('tr').attr('id');
+    var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - On Order");
 
@@ -1678,8 +1678,8 @@ Template.inventorylist.events({
     }
   },
 
-  "click td.ProductName, click td.SalesDescription, ": function (event) {
-    var listData = $(event.target).closest("tr").find(".colProductID").text();
+  "click td.colProductName, click td.colSalesDescription, ": function (event) {
+    var listData = $(event.target).closest('tr').attr('id');
     if (listData) {
       FlowRouter.go("/productview?id=" + listData);
     }

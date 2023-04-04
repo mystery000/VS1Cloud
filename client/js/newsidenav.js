@@ -158,6 +158,7 @@ Template.newsidenav.onCreated(function () {
       localStorage.setItem('TPreferenceMenuID', 0);
     }
   });
+
   $(document).ready(function () {
     var erpGet = erpDb();
     var LoggedDB = erpGet.ERPDatabase;

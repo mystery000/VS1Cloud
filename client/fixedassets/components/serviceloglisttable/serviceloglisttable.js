@@ -19,9 +19,9 @@ Template.serviceloglisttable.onCreated(function () {
       data.AssetCode || "",
       data.AssetName || "",
       data.ServiceType || "",
-      data.ServiceDate || "",
+      moment(data.ServiceDate).format("DD/MM/YYYY") || "",
       data.ServiceProvider || "",
-      data.NextServiceDate || "",
+      moment(data.NextServiceDate).format("DD/MM/YYYY") || "",
       data.Done ? "Completed" : "Pending",
     ];
     return dataList;
@@ -45,9 +45,9 @@ Template.serviceloglisttable.onCreated(function () {
     // { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
     {
       index: 0,
-      label: "#ID",
+      label: "ID",
       class: "LogId",
-      active: true,
+      active: false,
       display: true,
       width: "150",
     },
@@ -105,7 +105,7 @@ Template.serviceloglisttable.onCreated(function () {
       class: "ServiceStatus",
       active: true,
       display: true,
-      width: "150",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
