@@ -108,8 +108,7 @@ Template.mobileapp.onRendered(async function() {
 
 
     templateObject.inputStatus.set("enterJobNumber");  // enterProcess, enterEmployee,  
-
-      
+    
 
 
 
@@ -218,6 +217,8 @@ Template.mobileapp.events({
 
                     $(".mobile-left-workorder-list").css('display', 'block');
                     let workOrderData = JSON.parse(dataObject[0].data);
+
+                    console.log(workOrderData);
                     
                     if(!isMobile) {
 

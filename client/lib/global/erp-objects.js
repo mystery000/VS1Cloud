@@ -317,6 +317,10 @@ const erpObject = {
     TABADescriptiveRecord: "TABADescriptiveRecord",
     TProjectTasksList: "TProjectTasksList",
     TVS1Workorder: "TVS1Workorder",
+    
+    TVS1ProcessClockList: "TVS1ProcessClockList",
+    TVS1ClockOnReport: "TVS1ClockOnReport",
+
     TCostTypes: "TCostTypes",
     TProductBatches: "TProductBatches",
     TStockMovement:"TStockMovement",

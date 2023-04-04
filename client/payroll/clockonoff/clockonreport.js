@@ -4,16 +4,19 @@ import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from '../../js/sidebar-service';
 import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
-import "./process_clock_list.html";
+import "./clockonreport.html";
 import { cloneDeep, template } from 'lodash';
 
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-Template.process_clock_template.onCreated(function() {
+Template.clockonreport_template.onCreated(function() {
     const templateObject = Template.instance();
 
     templateObject.workOrderRecords = new ReactiveVar([]);
+    templateObject.employeeList = new ReactiveVar([]);
+    templateObject.timesheetList = new ReactiveVar([]);
+
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
@@ -22,23 +25,19 @@ Template.process_clock_template.onCreated(function() {
     templateObject.getDataTableList = function(data) {               
         
         var dataList = [
-            '<input type = "checkbox" />', 
             data.EmpId || '',
             data.EmpName || '',
             data.Date || '',
             data.WorkorderID || '',
             data.Process || '',
-            data.Product || '',
-            data.ClockedTime || 0,
-            data.Note || '',
-            data.Status || '',            
+            data.Product || '',   
 
         ];
         return dataList;
     }
 });
 
-Template.process_clock_template.onRendered(function() {
+Template.clockonreport_template.onRendered(function() {
 
     $('.fullScreenSpin').css('display', 'inline-block');
     
@@ -48,21 +47,38 @@ Template.process_clock_template.onRendered(function() {
     let canClockOnClockOff = localStorage.getItem('CloudClockOnOff') || false;
  
     let headerStructure = [
-        { index: 0, label: '', class: 'colCheckbox', active: true, display: true, width: "50" },
-        { index: 1, label: 'EmployeeID', class: 'colEmpID', active: true, display: true, width: "110" },
-        { index: 2, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "110" },
-        { index: 3, label: 'Date', class: 'colDate', active: true, display: true, width: "110" },
-        { index: 4, label: 'Workorder Number', class: 'colWorkorder', active: true, display: true, width: "110" },
-        { index: 5, label: 'Process', class: 'colProcess', active: true, display: true, width: "110" },
-        { index: 6, label: 'Product', class: 'colProduct', active: true, display: true, width: "110" },
-        { index: 7, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "110" },
-        { index: 8, label: 'Note', class: 'colNote', active: true, display: true, width: "120" },
-        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+        { index: 0, label: '', class: 'colID', active: true, display: true, width: "50" },
+        { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "" },
+        { index: 2, label: 'Total Clocked Hours', class: 'colTotalHour', active: true, display: true, width: "" },
+        { index: 3, label: 'Total Process Clocked Hours', class: 'colTotalProcess', active: true, display: true, width: "" },
+        { index: 4, label: 'Variance in Hours', class: 'colVariance', active: true, display: true, width: "" },
+        { index: 5, label: 'Variance in Percentage', class: 'colPercent', active: true, display: true, width: "" },
         
     ];
 
     templateObject.tableheaderrecords.set(headerStructure);
+ 
+    // getVS1Data('TEmployee').then(function(dataObject) {
+    //     let empdata = JSON.parse(dataObject[0].data);
+    //     templateObject.employeeList.set(empdata);
+    //     console.log(empdata);   
+    // }) 
 
+    // getVS1Data('TVS1Workorder').then(function(dataObject) {
+    //     let workorder = JSON.parse(dataObject[0].data);
+    //     templateObject.workOrderList.set(workorder);
+    //     console.log(workorder);   
+    // }) 
+
+
+    // getVS1Data('TTimeSheet').then(function(dataObject) {
+    //     let timesheet = JSON.parse(dataObject[0].data);
+    //     templateObject.
+    //     console.log(timesheet);   
+    // }) 
+
+    
+    
     templateObject.getProcessClockedList = function () {
         getVS1Data('TVS1Workorder').then(async function (dataObject) {
             if (dataObject.length == 0) {
@@ -226,43 +242,10 @@ Template.process_clock_template.onRendered(function() {
     let temp =  templateObject.getAllWorkorders();
     templateObject.workOrderRecords.set(temp);
 
-    
-    if (launchClockOnOff == true && canClockOnClockOff == true) {
-        setTimeout(function() {
-            $("#btnClockOnOff").trigger("click");
-        }, 500);
-    }
- 
+    console.log(templateObject.workOrderRecords.get());  
+  
 
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblProcessClockList', function(error, result) {
-        if (error) {} else {
-            if (result) {
-
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
-
-    function MakeNegative() {
-        $('td').each(function() {
-            if ($(this).text().indexOf('-' + Currency) >= 0)
-                $(this).addClass('text-danger')
-        });
-    }; 
-
-
+   
     templateObject.timeToDecimal = function(time) {
         var hoursMinutes = time.split(/[.:]/);
         var hours = parseInt(hoursMinutes[0], 10);
@@ -282,11 +265,11 @@ Template.process_clock_template.onRendered(function() {
         let time = hours + ":" + minutes;
         return time;
     }
-      
+     
 
 });
 
-Template.process_clock_template.events({
+Template.clockonreport_template.events({
    
     'click .exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -493,147 +476,17 @@ Template.process_clock_template.events({
         } else {
             $(".chkBox").prop("checked", false);
         }
-    },
+    },      
 
     
-     
-    'click #btnGroupClockOnOff': function(event) {
-        $('#groupclockonoff').modal('show');
-    },
 
-    
-    'click .btnGroupClockSave': async function(event) {
-
-        $('.fullScreenSpin').css('display', 'inline-block');
-
-        templateObject = Template.instance();
-        let contactService = new ContactService();
-       
-        let type = "Clockon";
-        if ($('#break').is(":checked")) {
-            type = $('#break').val();
-        } else if ($('#lunch').is(":checked")) {
-            type = $('#lunch').val();
-        } else if ($('#clockonswitch').is(":checked")) {
-            type = $('#clockonswitch').val();
-        } else if ($('#clockoffswitch').is(":checked")) {
-            type = $('#clockoffswitch').val();
-        }else {
-            swal({
-                title: 'Please Select Option',
-                text: 'Please select Clockon, Break, Lunch or ClockOff Option',
-                type: 'info',
-                showCancelButton: false,
-                confirmButtonText: 'Try Again'
-            }).then((results) => {
-                if (results.value) {} else if (results.dismiss === 'cancel') {}
-            });
-            $('.fullScreenSpin').css('display', 'none');
-            return false;
-        }
-
-        let groups = [];
-
-        $("#tblProcessClockList tr").each(function() {
-            
-            // If the checkbox is checked, add its value to the corresponding group
-            if ($(this).find("input[type='checkbox']").is(":checked")) {
-                var empName = $(this).closest("tr").find("td:eq(2)").text();
-                var empId = $(this).closest("tr").find("td:eq(1)").text();
-                var workorderId = $(this).closest("tr").find("td:eq(4)").text();
-                var processName = $(this).closest("tr").find("td:eq(5)").text();
-                
-               // var clockedTime = $(this).closest("tr").find("td:eq(8)").text();
-                var pauseTime ;
-                if(type == "Lunch") {
-                    pauseTime = -45/60;
-                } else if(type == "Break" ) {
-                    pauseTime = -15/40 ;
-                } else {
-                    pauseTime = 0;
-                }
-               var temp = {EmpId:empId,  EmpName: empName,workorderId:workorderId, processName:processName, PauseTime: pauseTime} ;
-                groups.push(temp);
-            }
-        });
-
-        console.log(groups);  
-
-        let workorders = await Template.instance().workOrderRecords.get();
-        
-        for(let i=0 ; i < groups.length; i++) {
-            let workorderindex = workorders.findIndex(order => {
-                return order.fields.ID == groups[i].workorderId;
-            });
-            let processName = groups[i].processName;
-            let pauseTime = groups[i].PauseTime;
-
-            if(workorderindex > -1) {
-                currentworkorder = workorders[workorderindex];
-                let tempworkorder = cloneDeep(currentworkorder);
-
-                let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
-                let bomDetailData = JSON.parse(bomStructureData.Details);
-                
-                console.log(bomDetailData);
-
-                for (let j = 0; j < bomDetailData.length; j++) {
-                    if(bomDetailData[j].process == processName) {
-                        bomDetailData[j].ClockedTime += pauseTime;  
-                    }
-                    
-                }
-
-                bomStructureData.Details = JSON.stringify(bomDetailData);
-                tempworkorder.fields = {...tempworkorder.fields, BOMStructure: JSON.stringify(bomStructureData) };
-                workorders.splice(workorderindex, 1, tempworkorder);
-
-            }
-        }
-
-        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
-
-            $('.fullScreenSpin').css('display', 'none')
-            swal('The Group Clock On/Off is saved', '', 'success');
-            $('#groupclockonoff').modal('toggle');
-        })
-
-
-           
-
-    },
-
-    'change #clockonswitch': function(event) {
-        $('#break').prop('checked', false);
-        $('#lunch').prop('checked', false);
-        $('#clockoffswitch').prop('checked', false);
-    },
-
-    'change #clockoffswitch': function(event) {
-        $('#break').prop('checked', false);
-        $('#lunch').prop('checked', false);
-        $('#clockonswitch').prop('checked', false);
-    },
-    
-    'change #lunch': function(event) {
-        $('#break').prop('checked', false);
-        $('#clockoffswitch').prop('checked', false);
-        $('#clockonswitch').prop('checked', false);
-    },
-
-    'change #break': function(event) {
-        $('#lunch').prop('checked', false);
-        $('#clockoffswitch').prop('checked', false);
-        $('#clockonswitch').prop('checked', false);
-
-    }, 
 
 
 
 });
 
 
-Template.process_clock_template.helpers({
+Template.clockonreport_template.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.company == 'NA') {

@@ -3018,6 +3018,15 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+
+  'click #sidenavClockonReport': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/clockonreport');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
+
   'click #sidenavtimeclock': function (event) {
     // if (FlowRouter.current().path == "/payrolloverview") {
     //   $("#btnClockOnOff").trigger("click");
