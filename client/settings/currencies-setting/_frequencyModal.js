@@ -137,7 +137,7 @@ Template._frequencyModal.onRendered(function () {
       type: fxUpdateObject == undefined
         ? null
         : fxUpdateObject.type,
-      base64XeCredentials: await FxApi.getEmployeeFxCurrencyCredentials()
+      //base64XeCredentials: await FxApi.getEmployeeFxCurrencyCredentials()
     });
 
     let _formFequencyModal = new FormFrequencyModel({});
@@ -405,7 +405,7 @@ Template._frequencyModal.onRendered(function () {
 
   templateObject.loadDefault = async () => {
     let defaultForm = await templateObject._loadDefault();
-    if (!defaultForm.tcurrencyfrequencysettings.length) {
+    if (!Object.keys(defaultForm).length) {
       document.querySelector("#frequencyDaily").click(); // this is the default
       return;
     }
