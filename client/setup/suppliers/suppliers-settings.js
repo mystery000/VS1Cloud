@@ -51,7 +51,7 @@ Template.wizard_suppliers.onCreated(() => {
             salesOrderBalance || 0.00,
             data.Suburb || '',
             data.Country || '',
-            linestatus,
+            data.Notes || '',
             
         ];
         return dataList;
@@ -68,9 +68,7 @@ Template.wizard_suppliers.onCreated(() => {
         { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
         { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
         { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-        { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "120" },
-        
-        
+        { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "100" },
        
         
     ];
