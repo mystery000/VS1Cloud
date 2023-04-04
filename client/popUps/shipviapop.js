@@ -47,7 +47,7 @@ Template.shipviapop.onCreated(function() {
     }
 
     let headerStructure  = [
-        { index: 0, label: '#ID', class: 'colID', active: false, display: false, width: "10" },
+        { index: 0, label: 'ID', class: 'colID', active: false, display: false, width: "10" },
         { index: 1, label: 'Shipping Method', class: 'colShipName', active: true, display: true, width: "500" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
@@ -63,33 +63,33 @@ Template.shipviapop.onRendered(function() {
     const deptrecords = [];
     let deptprodlineItems = [];
     const viarecords = [];
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblShipViaPopList', function(error, result) {
-        if (error) {
+    // Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblShipViaPopList', function(error, result) {
+    //     if (error) {
 
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
+    //     } else {
+    //         if (result) {
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
 
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
+    //                 $("th." + columnClass + "").html(columData);
+    //                 $("th." + columnClass + "").css('width', "" + columnWidth + "px");
 
-                }
-            }
+    //             }
+    //         }
 
-        }
-    });
+    //     }
+    // });
 
-    function MakeNegative() {
-        $('td').each(function() {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-        });
-    };
+    // function MakeNegative() {
+    //     $('td').each(function() {
+    //         if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
+    //     });
+    // };
 
     // templateObject.getShpVias = function() {
     //     getVS1Data('TShippingMethod').then(function(dataObject) {
@@ -926,7 +926,7 @@ Template.shipviapop.helpers({
     },
 
     apiParams:()=>{
-        return ['limitCount', 'limitFrom']
+        return ['limitCount', 'limitFrom', 'deleteFilter']
     },
     datahandler: function () {
         let templateObject = Template.instance();
