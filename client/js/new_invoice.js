@@ -3695,12 +3695,12 @@ Template.new_invoice.onRendered(function () {
     // $("#sltDept").editableSelect();
     // $("#sltStatus").editableSelect();
 
-    $(document).on("click", "#tblUOMList tbody tr", function (e) {
-      let table = $(this);
-      let uomName = table.find(".colUOMName").text();
-      $("input.lineUOM").val(uomName);
-      $("#UOMListModal").modal("toggle");
-    });
+    // $(document).on("click", "#tblUOMList tbody tr", function (e) {
+    //   let table = $(this);
+    //   let uomName = table.find(".colUOMName").text();
+    //   $("input.lineUOM").val(uomName);
+    //   $("#UOMListModal").modal("toggle");
+    // });
 
 
   // $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
