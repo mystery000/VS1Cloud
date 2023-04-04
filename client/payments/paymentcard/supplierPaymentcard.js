@@ -8082,7 +8082,6 @@ Template.supplierpaymentcard.helpers({
   },
 
   convertToForeignAmount: (amount) => {
-      console.log(convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol()));
     return convertToForeignAmount(amount, $('#exchange_rate').val(), getCurrentCurrencySymbol());
   },
 

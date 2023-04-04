@@ -100,11 +100,7 @@ Template.supplierlistpop.onRendered(function () {
     const dataTableList = [];
     const tableHeaderList = [];
 
-    $( "#supplierList_modal, #supplierListModal" ).on('shown.bs.modal', function(){
-        setTimeout(function() {
-            $('#tblSupplierlist_filter .form-control-sm').get(0).focus()
-        }, 500);
-    });
+
 
     // templateObject.resetData = function (dataVal) {
     //     location.reload();
