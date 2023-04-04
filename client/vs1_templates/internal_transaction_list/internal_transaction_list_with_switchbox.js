@@ -400,11 +400,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     //Products Data
     templateObject.getProductsData = async function(deleteFilter = false) { //GET Data here from Web API or IndexDB
         var customerpage = 0;
-        getVS1Data('TProductVS1').then(function(dataObject) {
+        getVS1Data('TProductQtyList').then(function(dataObject) {
 
             if (dataObject.length == 0) {
-                sideBarService.getNewProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                    await addVS1Data('TProductVS1', JSON.stringify(data));
+                sideBarService.getProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                    await addVS1Data('TProductQtyList', JSON.stringify(data));
                     templateObject.displayProductsData(data); //Call this function to display data on the table
                 }).catch(function(err) {
 
@@ -414,8 +414,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 templateObject.displayProductsData(data); //Call this function to display data on the table
             }
         }).catch(function(err) {
-            sideBarService.getNewProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
-                await addVS1Data('TProductVS1', JSON.stringify(data));
+            sideBarService.getProductListVS1(initialBaseDataLoad, 0, deleteFilter).then(async function(data) {
+                await addVS1Data('TProductQtyList', JSON.stringify(data));
                 templateObject.displayProductsData(data); //Call this function to display data on the table
             }).catch(function(err) {
 
@@ -437,30 +437,30 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
             deleteFilter = false;
         };
         for (let i = 0; i < data.tproductqtylist.length; i++) {
-            if (data.tproductvs1[i].Active == true) {
+            if (data.tproductqtylist[i].Active == true) {
                 linestatus = "";
-            } else if (data.tproductvs1[i].Active == false) {
+            } else if (data.tproductqtylist[i].Active == false) {
                 linestatus = "In-Active";
             };
             chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="productCheck-' + data.tproductqtylist[i].PARTSID +
-                '"><label class="custom-control-label chkBox pointer" for="productCheck-' + data.tproductvs1[i].ID +
+                '"><label class="custom-control-label chkBox pointer" for="productCheck-' + data.tproductqtylist[i].PARTSID +
                 '"></label></div>'; //switchbox
 
             costprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductqtylist[i].BuyQty1Cost * 100) / 100); //Cost Price
+                Math.floor(data.tproductqtylist[i].CostExA * 100) / 100); //Cost Price
             sellprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductqtylist[i].SellQty1Price * 100) / 100); //Sell Price
+                Math.floor(data.tproductqtylist[i].PriceExA * 100) / 100); //Sell Price
 
             var dataList = [
                 chkBox,
-                data.tproductqtylist[i].ID || "",
+                data.tproductqtylist[i].PARTSID || "",
                 data.tproductqtylist[i].ProductName || "",
                 data.tproductqtylist[i].SalesDescription || "",
                 data.tproductqtylist[i].BARCODE || "",
                 costprice,
                 sellprice,
-                data.tproductqtylist[i].TotalQtyInStock,
-                data.tproductqtylist[i].TaxCodePurchase || "",
+                data.tproductqtylist[i].InstockQty,
+                data.tproductqtylist[i].PurchaseTaxcode || "",
                 data.tproductqtylist[i].PRODUCTCODE || "",
                 data.tproductqtylist[i].Ex_Works || null,
                 linestatus,
