@@ -59,7 +59,7 @@ Template.currenciessettings.onCreated(function () {
     { index: 0, label: 'ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
     { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
     { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
-    { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100", align:"right" },
+    { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100", align:"right" },
     { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
     { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
     { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
@@ -902,8 +902,25 @@ Template.currenciessettings.events({
     const currency = $(e.currentTarget).find(".colCurrencyID").text();
 
     // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
-    window.location.href = `/fx-currency-history?currency=${currency}`;
+    //window.location.href = `/fx-currency-history?currency=${currency}`;
     // Meteor._reload.reload();
+    let currencyid = $(e.currentTarget).find('.colCurrencyID').text();
+    let country = $(e.currentTarget).find('.colCountry').text();
+    let currencyCode = $(e.currentTarget).find('.colCode').text();
+    let currencySymbol = $(e.currentTarget).find('.colSymbol').text();
+    let currencyName = $(e.currentTarget).find('.colCurrency').text();
+    let description = $(e.currentTarget).find('.colDescription').text();
+    let buyRate = $(e.currentTarget).find('.colBuyRate').text();
+    let sellRate = $(e.currentTarget).find('.colSellRate').text();
+    $("#editCurrencyID").val(currencyid);
+    $("#editCountry").val(country);
+    $("#editCurrencyCode").val(currencyCode);
+    $("#editCurrencySymbol").val(currencySymbol);
+    $("#editCurrencyName").val(currencyName);
+    $("#editCurrencyDesc").val(description);
+    $("#editBuyRate").val(buyRate);
+    $("#editSellRate").val(sellRate);
+    $('#editCurrencyModal').modal('toggle');
   },
   "click .btnFxupdate": function (event) {
     $("#frequencyModal").modal("toggle");

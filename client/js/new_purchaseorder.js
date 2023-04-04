@@ -30,6 +30,8 @@ import { Template } from 'meteor/templating';
 import '../purchase/frm_purchaseorder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
+let taxRateService = new TaxRateService();
+
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let fixedAssetService = new FixedAssetService();
@@ -96,9 +98,11 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.headerfields = new ReactiveVar([]);
     templateObject.headerbuttons = new ReactiveVar([]);
 
+    templateObject.currencyData = new ReactiveVar([]);
+
     function formatDate (date) {
-        
-        return moment(date).format('DD/MM/YYYY'); 
+
+        return moment(date).format('DD/MM/YYYY');
     }
 
     let transactionheaderfields = [
@@ -828,8 +832,55 @@ Template.purchaseordercard.onCreated(() => {
         await templateObject.addAttachment(objDetails);
     }
 });
-Template.purchaseordercard.onRendered(() => {
+Template.purchaseordercard.onRendered(async () => {
     let templateObject = Template.instance();
+    templateObject.getCurrencies = async function () {
+        let currencyData = [];
+        let dataObject = await getVS1Data("TCurrencyList");
+        if (dataObject.length == 0) {
+            taxRateService.getCurrencies().then(function (data) {
+                for (let i in data.tcurrencylist) {
+                    let currencyObj = {
+                        id: data.tcurrencylist[i].Id || "",
+                        currency: data.tcurrencylist[i].Currency || "",
+                        currencySellRate: data.tcurrencylist[i].SellRate || "",
+                        currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                        currencyCode: data.tcurrencylist[i].Code || "",
+                    };
+
+                    currencyData.push(currencyObj);
+                }
+                templateObject.currencyData.set(currencyData);
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tcurrencylist;
+            for (let i in useData) {
+                let currencyObj = {
+                    id: data.tcurrencylist[i].Id || "",
+                    currency: data.tcurrencylist[i].Currency || "",
+                    currencySellRate: data.tcurrencylist[i].SellRate || "",
+                    currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                    currencyCode: data.tcurrencylist[i].Code || "",
+                };
+
+                currencyData.push(currencyObj)
+            }
+            templateObject.currencyData.set(currencyData);
+        }
+    }
+    templateObject.getCurrencies();
+
+    templateObject.getCurrencyRate = (currency, type) => {
+        let currencyData = templateObject.currencyData.get();
+        for(let i = 0; i <currencyData.length; i++) {
+            if(currencyData[i].currencyCode == currency) {
+                if (type == 0) return currencyData[i].currencySellRate;
+                else return currencyData[i].currencyBuyRate;
+            }
+        };
+    };
+
     $('#edtFrequencyDetail').css('display', 'none');
     $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
         showOn: 'button',
@@ -1048,7 +1099,7 @@ Template.purchaseordercard.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
+        let fx = $('.sltCurrency').val();
         var comment = $('#txaComment').val();
         var parking_instruction = $('#txapickmemo').val();
         var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
@@ -1370,7 +1421,7 @@ Template.purchaseordercard.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
+        let fx = $('.sltCurrency').val();
         var comment = $('#txaComment').val();
         var parking_instruction = $('#txapickmemo').val();
         var subtotal_tax = $('#subtotal_tax').html() || '$'+ 0;
@@ -2654,13 +2705,14 @@ Template.purchaseordercard.onRendered(() => {
                             let getDepartmentVal = data.fields.Lines[0].fields.LineClassName || defaultDept;
                             $('#edtSupplierName').val(data.fields.SupplierName);
                             templateObject.CleintName.set(data.fields.SupplierName);
-                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                            //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0));
                             $('#sltTerms').val(data.fields.TermsName);
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
-                            FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                            FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                             templateObject.attachmentCount.set(0);
                             if (data.fields.Attachments) {
@@ -2811,10 +2863,10 @@ Template.purchaseordercard.onRendered(() => {
                                                 TaxTotal: TaxTotalGbp || 0,
                                                 TaxRate: TaxRateGbp || 0,
                                                 pqaseriallotdata: useData[d].fields.Lines[i].fields.PQA || '',
-                                                fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
-                                                costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
-                                                fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
-                                                costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                                fixedAssetID: useData[d].fields.Lines[i].CustomField1 || 0,
+                                                costTypeID: useData[d].fields.Lines[i].CustomField2 || 0,
+                                                fixedAssetName: useData[d].fields.Lines[i].CustomField3 || '',
+                                                costTypeName: useData[d].fields.Lines[i].CustomField4 || '',
                                             };
 
                                             lineItemsTable.push(dataListTable);
@@ -2842,10 +2894,10 @@ Template.purchaseordercard.onRendered(() => {
                                             curTotalAmt: currencyAmountGbp || currencySymbol + '0',
                                             TaxTotal: TaxTotalGbp || 0,
                                             TaxRate: TaxRateGbp || 0,
-                                            fixedAssetID: data.fields.Lines[i].fields.CustomField1 || 0,
-                                            costTypeID: data.fields.Lines[i].fields.CustomField2 || 0,
-                                            fixedAssetName: data.fields.Lines[i].fields.CustomField3 || '',
-                                            costTypeName: data.fields.Lines[i].fields.CustomField4 || '',
+                                            fixedAssetID: useData[d].fields.Lines[i].CustomField1 || 0,
+                                            costTypeID: useData[d].fields.Lines[i].CustomField2 || 0,
+                                            fixedAssetName: useData[d].fields.Lines[i].CustomField3 || '',
+                                            costTypeName: useData[d].fields.Lines[i].CustomField4 || '',
                                         };
                                         lineItems.push(lineItemObj);
                                     }
@@ -2906,14 +2958,16 @@ Template.purchaseordercard.onRendered(() => {
 
                                 $('#edtSupplierName').val(useData[d].fields.SupplierName);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
-                                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                                $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                                let currencyRate = templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 0)
+                                $('#exchange_rate').val(currencyRate);
                                 $('#sltTerms').val(useData[d].fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
 
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 $('#shipvia').val(useData[d].fields.Shipping);
-                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                                FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (useData[d].fields.Attachments) {
@@ -3175,13 +3229,14 @@ Template.purchaseordercard.onRendered(() => {
 
                                 $('#edtSupplierName').val(data.fields.SupplierName);
                                 templateObject.CleintName.set(data.fields.SupplierName);
-                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                                $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                                //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0));
                                 $('#sltTerms').val(data.fields.TermsName);
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
-                                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                                FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
                                 if (data.fields.Attachments) {
@@ -3439,13 +3494,14 @@ Template.purchaseordercard.onRendered(() => {
 
                         $('#edtSupplierName').val(data.fields.SupplierName);
                         templateObject.CleintName.set(data.fields.SupplierName);
-                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                        $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                        //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0));
                         $('#sltTerms').val(data.fields.TermsName);
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
-                        FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                        FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
                         if (data.fields.Attachments) {
@@ -3657,13 +3713,14 @@ Template.purchaseordercard.onRendered(() => {
 
                 $('#edtSupplierName').val(data.fields.SupplierName);
                 templateObject.CleintName.set(data.fields.SupplierName);
-                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0));
                 $('#sltTerms').val(data.fields.TermsName);
                 $('#sltDept').val(getDepartmentVal);
                 $('#sltStatus').val(data.fields.OrderStatus);
                 $('#shipvia').val(data.fields.Shipping);
-                FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+                FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
                 templateObject.attachmentCount.set(0);
                 if (data.fields.Attachments) {
@@ -3981,7 +4038,7 @@ Template.purchaseordercard.onRendered(() => {
     let table;
     $(document).ready(function() {
         $('#edtSupplierName').editableSelect();
-        $('#sltCurrency').editableSelect();
+        $('.sltCurrency').editableSelect();
         $('#sltTerms').editableSelect();
         $('#sltDept').editableSelect();
         $('#sltStatus').editableSelect();
@@ -4069,7 +4126,7 @@ Template.purchaseordercard.onRendered(() => {
     // });
 
     // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
-    //     $('#sltCurrency').val($(this).find(".colCode").text());
+    //     $('.sltCurrency').val($(this).find(".colCode").text());
     //     $('#currencyModal').modal('toggle');
 
     //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
@@ -6358,7 +6415,7 @@ Template.purchaseordercard.onRendered(() => {
         mediaQuery(x);
         x.addListener(mediaQuery)
     }, 10);
-    FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+    FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 });
 
 Template.purchaseordercard.onRendered(function() {
@@ -10145,7 +10202,7 @@ Template.purchaseordercard.events({
                             var source = document.getElementById('html-2-pdfwrapper');
                             doc.html(source, {
                                 callback: function(pdf) {
-                                    resolve(doc.output('blob'));    
+                                    resolve(doc.output('blob'));
                                 }
                             });
                         });
