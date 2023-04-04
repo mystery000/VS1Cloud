@@ -94,7 +94,6 @@ Template.wizard_terms.onCreated(() => {
       data.EarlyPaymentDays || 0.00,
       data.ProgressPaymentType || "",
       data.ProgressPaymentDuration || 0.00,
-      data.ProgressPaymentInstallments || 0.00,
       moment(data.ProgressPaymentfirstPayonSaleDate).format("DD/MM/YYYY") || 0.00,
     ];
     return dataList;
@@ -106,7 +105,7 @@ Template.wizard_terms.onCreated(() => {
     { index: 2, label: 'Terms Amount', class: 'colTermsAmount', active: true, display: true, width: "120" },
     { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
     { index: 4, label: 'EOM Plus', class: 'colIsEOMPlus', active: true, display: true, width: "80" },
-    { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
+    { index: 5, label: 'Description', class: 'colDescription', active: true, display: true, width: "300" },
     { index: 6, label: 'Customer Default', class: 'colCustomerDef', active: true, display: true, width: "155" },
     { index: 7, label: 'Supplier Default', class: 'colSupplierDef', active: true, display: true, width: "155" },
     { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
