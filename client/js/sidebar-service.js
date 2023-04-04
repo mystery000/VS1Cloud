@@ -1851,7 +1851,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
-  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom,contactID) {
+  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter, contactID) {
     let options = "";
     if(contactID != '' && contactID != undefined){
       options = {
@@ -1865,6 +1865,7 @@ export class SideBarService extends BaseService {
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
         ClientID:contactID,
+        Search: "Deleted != true",
       };
     }else{
     if (ignoreDate == true) {
@@ -1878,6 +1879,7 @@ export class SideBarService extends BaseService {
         OrderBy: "PurchaseOrderID desc",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
+        Search: "Deleted != true",
       };
     } else {
       options = {
@@ -1892,9 +1894,11 @@ export class SideBarService extends BaseService {
         DateTo: '"' + dateTo + '"',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
+        Search: "Deleted != true",
       };
     }
    }
+   if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TbillReport, options);
   }
 
