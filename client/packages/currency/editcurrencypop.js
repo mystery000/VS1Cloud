@@ -21,7 +21,7 @@ Template.editcurrencypop.onCreated(function () {
 });
 
 Template.editcurrencypop.onRendered(function () {
-  LoadingOverlay.show();
+  //LoadingOverlay.show();
   let templateObject = Template.instance();
   let taxRateService = new TaxRateService();
   const dataTableList = [];
@@ -82,9 +82,9 @@ Template.editcurrencypop.onRendered(function () {
           $('#editcurrencypop').modal('show');
           //Make btnDelete "Make Active or In-Active"
           if(status == "In-Active"){
-              $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+              $('#view-in-active').html("<button class='btn btn-success btnActivateEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
           }else{
-              $('#view-in-active').html("<button class='btn btn-danger btnDeleteCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+              $('#view-in-active').html("<button class='btn btn-danger btnDeleteEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
           }
         }
       }
@@ -218,7 +218,7 @@ Template.editcurrencypop.onRendered(function () {
               //             }, 100);
               //         },
               //         "fnInitComplete": function() {
-              //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
+              //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#editCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
               //         },
               //
               //     }).on('page', function() {
@@ -272,7 +272,7 @@ Template.editcurrencypop.onRendered(function () {
             .catch(function (err) {
               // Bert.alert('<strong>' + err + '</strong>!', 'danger');
               $(".fullScreenSpin").css("display", "none");
-              // Meteor._reload.reload();
+              // window.location.reload();
             });
         } else {
           let data = JSON.parse(dataObject[0].data);
@@ -361,7 +361,7 @@ Template.editcurrencypop.onRendered(function () {
             //         }, 100);
             //     },
             //     "fnInitComplete": function() {
-            //         $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
+            //         $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#editCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
             //     },
             //
             // }).on('page', function() {
@@ -536,7 +536,7 @@ Template.editcurrencypop.onRendered(function () {
             //             }, 100);
             //         },
             //         "fnInitComplete": function() {
-            //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#newCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
+            //             $("<button class='btn btn-primary btnAddNewCurrency' data-dismiss='modal' data-toggle='modal' data-target='#editCurrencyModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblCurrencyList_filter");
             //         },
             //
             //     }).on('page', function() {
@@ -590,7 +590,7 @@ Template.editcurrencypop.onRendered(function () {
           .catch(function (err) {
             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
             $(".fullScreenSpin").css("display", "none");
-            // Meteor._reload.reload();
+            // window.location.reload();
           });
       });
   };
@@ -798,7 +798,7 @@ Template.editcurrencypop.events({
             function (err, idTag) {
               if (err) {
               } else {
-                Meteor._reload.reload();
+                window.location.reload();
               }
             }
           );
@@ -990,11 +990,12 @@ Template.editcurrencypop.events({
     $("#newTaxRate").css("display", "none");
     }, delayTimeAfterSound);
   },
-  "click .btnDeleteCurrency": function () {
+  "click .btnDeleteEditCurrency": function () {
     playDeleteAudio();
     let taxRateService = new TaxRateService();
     setTimeout(function(){
-    let currencyId = $("#selectDeleteLineID").val();
+    //let currencyId = $("#selectDeleteLineID").val();
+    let currencyId = $("#editCurrencyID").val();
 
     let objDetails = {
       type: "TCurrency",
@@ -1012,14 +1013,14 @@ Template.editcurrencypop.events({
           .then(function (dataReload) {
             addVS1Data("TCurrencyList", JSON.stringify(dataReload))
               .then(function (datareturn) {
-                Meteor._reload.reload();
+                window.location.reload();
               })
               .catch(function (err) {
-                Meteor._reload.reload();
+                window.location.reload();
               });
           })
           .catch(function (err) {
-            Meteor._reload.reload();
+            window.location.reload();
           });
       })
       .catch(function (err) {
@@ -1031,7 +1032,7 @@ Template.editcurrencypop.events({
           confirmButtonText: "Try Again",
         }).then((result) => {
           if (result.value) {
-            Meteor._reload.reload();
+            window.location.reload();
           } else if (result.dismiss === "cancel") {
           }
         });
@@ -1053,9 +1054,9 @@ Template.editcurrencypop.events({
     $("#edtSellRate").val(1);
     //Make btnDelete "Make Active or In-Active"
     if(status == "In-Active"){
-        $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+        $('#view-in-active').html("<button class='btn btn-success btnActivateEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
     }else{
-        $('#view-in-active').html("<button class='btn btn-danger btnDeleteCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+        $('#view-in-active').html("<button class='btn btn-danger btnDeleteEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
     }
   },
 
@@ -1075,9 +1076,9 @@ Template.editcurrencypop.events({
     var currencySellRate = $("#editSellRate").val() || 0;
     //Make btnDelete "Make Active or In-Active"
     if(status == "In-Active"){
-        $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
+        $('#view-in-active').html("<button class='btn btn-success btnActivateEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
     }else{
-        $('#view-in-active').html("<button class='btn btn-danger btnDeleteCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
+        $('#view-in-active').html("<button class='btn btn-danger btnDeleteEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>");
     }
 
     let objDetails = "";
@@ -1130,16 +1131,16 @@ Template.editcurrencypop.events({
             $("#sltCurrency").val(currencyCode);
             addVS1Data("TCurrencyList", JSON.stringify(dataReload))
               .then(function (datareturn) {
-                $("#newCurrencyModal").modal("toggle");
+                $("#editCurrencyModal").modal("toggle");
                 $(".fullScreenSpin").css("display", "none");
               })
               .catch(function (err) {
-                $("#newCurrencyModal").modal("toggle");
+                $("#editCurrencyModal").modal("toggle");
                 $(".fullScreenSpin").css("display", "none");
               });
           })
           .catch(function (err) {
-            $("#newCurrencyModal").modal("toggle");
+            $("#editCurrencyModal").modal("toggle");
             $(".fullScreenSpin").css("display", "none");
           });
       })

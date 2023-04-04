@@ -904,7 +904,7 @@ Template.currenciessettings.events({
     // FlowRouter.go(`/fx-currency-history?currency=${currency}`);
     //window.location.href = `/fx-currency-history?currency=${currency}`;
     // Meteor._reload.reload();
-    let currencyid = $(e.currentTarget).find('.colCurrencyID').text();
+    let currencyid = $(e.currentTarget).attr('id') || "";
     let country = $(e.currentTarget).find('.colCountry').text();
     let currencyCode = $(e.currentTarget).find('.colCode').text();
     let currencySymbol = $(e.currentTarget).find('.colSymbol').text();
@@ -1171,20 +1171,20 @@ Template.currenciessettings.events({
             type: "TCurrency",
             fields: {
                 Id: currencyId,
-                Code: code,
-                Currency: currency,
-                CurrencySymbol: symbol,
-                BuyRate: buyrate,
-                SellRate: sellrate,
-                Country: country,
-                CurrencyDesc: description,
+                // Code: code,
+                // Currency: currency,
+                // CurrencySymbol: symbol,
+                // BuyRate: buyrate,
+                // SellRate: sellrate,
+                // Country: country,
+                // CurrencyDesc: description,
                 Active: false
       }
     };
 
     taxRateService.saveCurrency(objDetails).then(function (objDetails) {
       sideBarService.getCurrencies().then(function (dataReload) {
-          addVS1Data('TCurrency', JSON.stringify(dataReload)).then(function(datareturn) {
+          addVS1Data('TCurrencyList', JSON.stringify(dataReload)).then(function(datareturn) {
             sideBarService.getCurrencyDataList(initialBaseDataLoad, 0, false).then(async function(dataCurrencyList) {
                 await addVS1Data('TCurrencyList', JSON.stringify(dataCurrencyList)).then(function(datareturn) {
                     window.location.reload();
