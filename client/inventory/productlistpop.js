@@ -914,64 +914,42 @@ Template.productlistpop.events({
               var dataList = "";
               if (currentLoc == "/purchaseordercard") {
                 dataList = [
-                  data.tproductvs1[i].fields.ProductName || "-",
-                  data.tproductvs1[i].fields.SalesDescription || "",
-                  data.tproductvs1[i].fields.BARCODE || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                      100
-                  ),
-                  utilityService.modifynegativeCurrencyFormat(
-                    Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                      100
-                  ),
-                  data.tproductvs1[i].fields.TotalQtyInStock,
-                  data.tproductvs1[i].fields.TaxCodePurchase || "",
-                  data.tproductvs1[i].fields.ID || "",
-                  JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                    null,
-                ];
-              } else {
-                dataList = [
-                  data.tproductvs1[i].fields.ProductName || "-",
-                  data.tproductvs1[i].fields.SalesDescription || "",
-                  data.tproductvs1[i].fields.BARCODE || "",
-                  utilityService.modifynegativeCurrencyFormat(
-                    Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) /
-                      100
-                  ),
-                  utilityService.modifynegativeCurrencyFormat(
-                    Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                      100
-                  ),
-                  data.tproductvs1[i].fields.TotalQtyInStock,
-                  data.tproductvs1[i].fields.TaxCodeSales || "",
-                  data.tproductvs1[i].fields.ID || "",
-                  JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                    null,
-                ];
-              }
 
-              if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
-                for (
-                  let e = 0;
-                  e < data.tproductvs1[i].fields.ExtraSellPrice.length;
-                  e++
-                ) {
-                  let lineExtaSellObj = {
-                    clienttype:
-                      data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                        .ClientTypeName || "",
-                    productname:
-                      data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                        .ProductName || data.tproductvs1[i].fields.ProductName,
-                    price:
-                      utilityService.modifynegativeCurrencyFormat(
-                        data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                          .Price1
-                      ) || 0,
-                  };
-                  lineExtaSellItems.push(lineExtaSellObj);
+                    data.tproductvs1[i].fields.ProductName || '-',
+                    data.tproductvs1[i].fields.SalesDescription || '',
+                    data.tproductvs1[i].fields.BARCODE || '',
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                    data.tproductvs1[i].fields.TotalQtyInStock,
+                    data.tproductvs1[i].fields.TaxCodePurchase || '',
+                    data.tproductvs1[i].fields.ID || '',
+                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+
+                ];
+               }else{
+                 dataList = [
+
+                     data.tproductvs1[i].fields.ProductName || '-',
+                     data.tproductvs1[i].fields.SalesDescription || '',
+                     data.tproductvs1[i].fields.BARCODE || '',
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                     data.tproductvs1[i].fields.TotalQtyInStock,
+                     data.tproductvs1[i].fields.TaxCodeSales || '',
+                     data.tproductvs1[i].fields.ID || '',
+                     JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+                 ];
+               }
+
+            if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
+                    let lineExtaSellObj = {
+                        clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ClientTypeName || '',
+                        productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ProductName || data.tproductvs1[i].fields.ProductName,
+                        price: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1) || 0
+                    };
+                    lineExtaSellItems.push(lineExtaSellObj);
+
                 }
               }
               if (currentLoc == "/stockadjustmentcard") {
@@ -1015,74 +993,55 @@ Template.productlistpop.events({
         });
     } else {
       sideBarService
-        .getNewProductListVS1(initialBaseDataLoad, 0)
-        .then(function (data) {
-          addVS1Data("TProductVS1", JSON.stringify(data));
+    sideBarService.getNewProductListVS1(initialBaseDataLoad,0).then(function (data) {
+      addVS1Data('TProductVS1',JSON.stringify(data));
           let records = [];
           let inventoryData = [];
           for (let i = 0; i < data.tproductvs1.length; i++) {
             var dataList = "";
 
-            if (currentLoc == "/purchaseordercard") {
-              dataList = [
-                data.tproductvs1[i].fields.ProductName || "-",
-                data.tproductvs1[i].fields.SalesDescription || "",
-                data.tproductvs1[i].fields.BARCODE || "",
-                utilityService.modifynegativeCurrencyFormat(
-                  Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-                ),
-                utilityService.modifynegativeCurrencyFormat(
-                  Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                    100
-                ),
-                data.tproductvs1[i].fields.TotalQtyInStock,
-                data.tproductvs1[i].fields.TaxCodePurchase || "",
-                data.tproductvs1[i].fields.ID || "",
-                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                  null,
-              ];
-            } else {
-              dataList = [
-                data.tproductvs1[i].fields.ProductName || "-",
-                data.tproductvs1[i].fields.SalesDescription || "",
-                data.tproductvs1[i].fields.BARCODE || "",
-                utilityService.modifynegativeCurrencyFormat(
-                  Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100
-                ),
-                utilityService.modifynegativeCurrencyFormat(
-                  Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) /
-                    100
-                ),
-                data.tproductvs1[i].fields.TotalQtyInStock,
-                data.tproductvs1[i].fields.TaxCodeSales || "",
-                data.tproductvs1[i].fields.ID || "",
-                JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice) ||
-                  null,
-              ];
-            }
-            if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
-              for (
-                let e = 0;
-                e < data.tproductvs1[i].fields.ExtraSellPrice.length;
-                e++
-              ) {
-                let lineExtaSellObj = {
-                  clienttype:
-                    data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                      .ClientTypeName || "",
-                  productname:
-                    data.tproductvs1[i].fields.ExtraSellPrice[e].fields
-                      .ProductName || data.tproductvs1[i].fields.ProductName,
-                  price:
-                    utilityService.modifynegativeCurrencyFormat(
-                      data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1
-                    ) || 0,
-                };
-                lineExtaSellItems.push(lineExtaSellObj);
+              if (currentLoc == "/purchaseordercard"){
+                dataList = [
+
+                    data.tproductvs1[i].fields.ProductName || '-',
+                    data.tproductvs1[i].fields.SalesDescription || '',
+                    data.tproductvs1[i].fields.BARCODE || '',
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                    utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                    data.tproductvs1[i].fields.TotalQtyInStock,
+                    data.tproductvs1[i].fields.TaxCodePurchase || '',
+                    data.tproductvs1[i].fields.ID || '',
+                    JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+
+                ];
+               }else{
+                 dataList = [
+
+                     data.tproductvs1[i].fields.ProductName || '-',
+                     data.tproductvs1[i].fields.SalesDescription || '',
+                     data.tproductvs1[i].fields.BARCODE || '',
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
+                     utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
+                     data.tproductvs1[i].fields.TotalQtyInStock,
+                     data.tproductvs1[i].fields.TaxCodeSales || '',
+                     data.tproductvs1[i].fields.ID || '',
+                     JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
+
+                 ];
+               }
+              if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
+                  for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
+                      let lineExtaSellObj = {
+                          clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ClientTypeName || '',
+                          productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ProductName || data.tproductvs1[i].fields.ProductName,
+                          price: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1) || 0
+                      };
+                      lineExtaSellItems.push(lineExtaSellObj);
+
+                  }
               }
-            }
-            if (currentLoc == "/stockadjustmentcard") {
-              if (data.tproductvs1[i].fields.ProductType == "INV") {
+              if (currentLoc == "/stockadjustmentcard"){
+                if (data.tproductvs1[i].fields.ProductType == "INV") {
                 splashArrayProductList.push(dataList);
               }
             } else {

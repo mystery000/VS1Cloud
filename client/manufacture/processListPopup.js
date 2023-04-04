@@ -13,6 +13,13 @@ Template.processlistpopup.onCreated(function (e) {
   templateObject.tableheaderrecords = new ReactiveVar([]);
 
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.fields.Active == true){
+      linestatus = "";
+    }
+    else if(data.fields.Active == false){
+      linestatus = "In-Active";
+    }
     let dataList = [
       data.fields.ID || "",
       data.fields.KeyValue || "",
@@ -26,6 +33,7 @@ Template.processlistpopup.onCreated(function (e) {
       data.fields.OExpense || "",
       Currency + data.fields.TotalHourlyCost || 0,
       data.fields.Wastage || "",
+      linestatus
     ];
     // let dataList = [];
     return dataList;
@@ -127,6 +135,14 @@ Template.processlistpopup.onCreated(function (e) {
       active: true,
       display: true,
       width: "200",
+    },
+    {
+      index: 11,
+      label: "Status",
+      class: "colStatus",
+      active: true,
+      display: true,
+      width: "120",
     },
   ];
 

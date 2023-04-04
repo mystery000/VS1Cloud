@@ -6,6 +6,8 @@ import "../../../lib/global/indexdbstorage.js";
 import { Template } from "meteor/templating";
 import "./fixedassetlistpop.html";
 
+import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+
 let fixedAssetService = new FixedAssetService();
 
 Template.fixedassetlistpop.onCreated(function () {
@@ -18,6 +20,13 @@ Template.fixedassetlistpop.onCreated(function () {
   templateObject.convertedStatus = new ReactiveVar();
 
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.AssetID || "",
       data.AssetCode || "",
@@ -39,7 +48,7 @@ Template.fixedassetlistpop.onCreated(function () {
       data.DepreciationStartDate
         ? moment(data.DepreciationStartDate).format("DD/MM/YYYY")
         : "",
-      data.Active || false,
+      linestatus
     ];
     return dataList;
   };
@@ -66,7 +75,7 @@ Template.fixedassetlistpop.onCreated(function () {
       data.DepreciationStartDate
         ? moment(data.DepreciationStartDate).format("DD/MM/YYYY")
         : "",
-      data.Active || false,
+      linestatus
     ];
     return dataList;
   };
@@ -223,7 +232,7 @@ Template.fixedassetlistpop.onCreated(function () {
       class: "colAssetStatus",
       active: true,
       display: true,
-      width: "100",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
@@ -242,18 +251,25 @@ Template.fixedassetlistpop.events({
     fixedAssetService
       .getTFixedAssetsList()
       .then(function (data) {
-        addVS1Data("TFixedAssets", JSON.stringify(data))
+        addVS1Data("TFixedAssetsList", JSON.stringify(data))
           .then(function (datareturn) {
-            Meteor._reload.reload();
+            window.location.reload();
+            // Meteor._reload.reload();
           })
           .catch(function (err) {
-            Meteor._reload.reload();
+            // Meteor._reload.reload();
+            window.location.reload();
           });
       })
       .catch(function (err) {
-        Meteor._reload.reload();
+        // Meteor._reload.reload();
+        window.location.reload();
       });
   },
+  "click .btnNewFixedAsset" : function(){
+    $('div#fixedassetlistpopModal').modal('toggle');
+    FlowRouter.go("/fixedassetcard");
+  }
 });
 
 Template.fixedassetlistpop.helpers({
@@ -293,7 +309,7 @@ Template.fixedassetlistpop.helpers({
   },
 
   apiParams: function () {
-    return ["ID"];
+    return ["limitCount", "limitFrom", "deleteFilter"];
   },
 
   service: () => {

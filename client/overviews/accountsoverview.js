@@ -81,51 +81,6 @@ Template.accountsoverview.onCreated(function () {
     return dataList;
   };
 
-  //   templateObject.getTreeDataTableList = function (data) {
-  //     if (!isNaN(data.Balance)) {
-  //       accBalance =
-  //         utilityService.modifynegativeCurrencyFormat(data.Balance) ||
-  //         Currency + "0.00";
-  //     } else {
-  //       accBalance = Currency + "0.00";
-  //     }
-  //     if (data.ReceiptCategory && data.ReceiptCategory != "") {
-  //       usedCategories.push(data.fields);
-  //     }
-  //     let linestatus = "";
-  //     if (data.Active == true) {
-  //       linestatus = "";
-  //     } else if (data.Active == false) {
-  //       linestatus = "In-Active";
-  //     }
-  //     var dataList = {
-  //       id: data.AccountID || "",
-  //       name: data.AccountName || "",
-  //       description: data.Description || "",
-  //       number: data.AccountNumber || "",
-  //       type: data.AccountType || "",
-  //       balance: accBalance || "",
-  //       originbalance: data.Balance || 0,
-  //       taxcode: data.TaxCode || "",
-  //       bankname: data.BankName || "",
-  //       bankaccountname: data.BankAccountName || "",
-  //       bsb: data.BSB || "",
-  //       bankaccountnumber: data.BankAccountNumber || "",
-  //       carnumber: data.CarNumber || "",
-  //       expirydate: data.ExpiryDate || "",
-  //       cvc: data.CVC || "",
-  //       extra: data.Extra || "",
-  //       banknumber: data.BankNumber || "",
-  //       isheader: data.IsHeader || false,
-  //       allowexpenseclaim: data.AllowExpenseClaim || false,
-  //       receiptcategory: data.ReceiptCategory || "",
-  //       linestatus: linestatus,
-  //       level1: data.Level1 || "",
-  //       level2: data.Level2 || "",
-  //       level3: data.Level3 || "",
-  //     };
-  //   };
-
   let headerStructure = [
     {
       index: 0,
@@ -542,7 +497,8 @@ Template.accountsoverview.onRendered(function() {
                     if(typeFilter == 'all') {
                         await addVS1Data('TAccountVS1List', JSON.stringify(data));
                     }
-                    templateObject.displayAccountsOverviewListData(data);
+                    // templateObject.displayAccountsOverviewListData(data);
+                    templateObject.displayAccountsOverviewTreeData(data);
                 }).catch(function(err) {
 
                 });
@@ -550,10 +506,12 @@ Template.accountsoverview.onRendered(function() {
                 let data = JSON.parse(dataObject[0].data);
                 if(typeFilter != 'all') {
                     sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0, deleteFilter, typeFilter).then(async function(data) {
-                        templateObject.displayAccountsOverviewListData(data);
+                        // templateObject.displayAccountsOverviewListData(data);
+                        templateObject.displayAccountsOverviewTreeData(data);
                     })
                 }else {
-                    templateObject.displayAccountsOverviewListData(data);
+                    // templateObject.displayAccountsOverviewListData(data);
+                    templateObject.displayAccountsOverviewTreeData(data);
                 }
             }
         }).catch(function(err) {
@@ -561,7 +519,8 @@ Template.accountsoverview.onRendered(function() {
                 if(typeFilter == 'all') {
                     await addVS1Data('TAccountVS1List', JSON.stringify(data));
                 }
-                templateObject.displayAccountsOverviewListData(data);
+                // templateObject.displayAccountsOverviewListData(data);
+                templateObject.displayAccountsOverviewTreeData(data);
             }).catch(function(err) {
 
             });
@@ -2041,7 +2000,7 @@ Template.accountsoverview.onRendered(function() {
         }, 200);
     }
 
-    // templateObject.getAccountsOverviewData();
+    templateObject.getAccountsOverviewData();
     $("#tblAccountOverview tbody").on(
         "click",
         "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber",
@@ -2168,8 +2127,8 @@ Template.accountsoverview.onRendered(function() {
         FlowRouter.go("/balancetransactionlist?accountName=" + accountName + "&isTabItem=" + false);
         //window.open('/balancetransactionlist?accountName=' + accountName+ '&isTabItem='+false,'_self');
     });
-    $('#tblAccountOverview').closest('.table-responsive').removeClass('d-none')
-    $('#tblAccountTreeOverview').closest('.table-responsive').addClass('d-none')
+    // $('#tblAccountOverview').closest('.table-responsive').removeClass('d-none')
+    // $('#tblAccountTreeOverview').closest('.table-responsive').addClass('d-none')
     checkSetupFinished();
     tableResize();
 });
@@ -2235,18 +2194,18 @@ Template.accountsoverview.events({
                 addVS1Data("TAccountVS1", JSON.stringify(data)).then(function(datareturn) {
                   sideBarService.getAllTAccountVS1List(initialBaseDataLoad, 0,false).then(function(dataAccount) {
                           addVS1Data("TAccountVS1List", JSON.stringify(dataAccount)).then(function(datareturn) {
-                                  //window.open("/accountsoverview", "_self");
+                                  window.open("/accountsoverview", "_self");
                               }).catch(function(err) {
-                                  //window.open("/accountsoverview", "_self");
+                                  window.open("/accountsoverview", "_self");
                               });
                       }).catch(function(err) {
-                          //window.open("/accountsoverview", "_self");
+                          window.open("/accountsoverview", "_self");
                       });
                     }).catch(function(err) {
-                        //window.open("/accountsoverview", "_self");
+                        window.open("/accountsoverview", "_self");
                     });
             }).catch(function(err) {
-                //window.open("/accountsoverview", "_self");
+                window.open("/accountsoverview", "_self");
             });
     },
     "click .btnBatchUpdate": function() {

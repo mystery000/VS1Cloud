@@ -1327,17 +1327,17 @@ Template.productlist.onRendered(function() {
   templateObject.getAccountNames = function(){
     productService.getAccountName().then(function(data){
         // let productData = templateObject.records.get();
-      for(let i in data.taccount){
+      for(let i in data.taccountvs1){
 
         let accountnamerecordObj = {
-          accountname: data.taccount[i].AccountName || ' '
+          accountname: data.taccountvs1[i].AccountName || ' '
         };
 
-        if((data.taccount[i].AccountTypeName == "COGS")){
+        if((data.taccountvs1[i].AccountTypeName == "COGS")){
             coggsaccountrecords.push(accountnamerecordObj);
           templateObject.coggsaccountrecords.set(coggsaccountrecords);
         }
-        if((data.taccount[i].AccountTypeName == "INC")){
+        if((data.taccountvs1[i].AccountTypeName == "INC")){
           salesaccountrecords.push(accountnamerecordObj);
           templateObject.salesaccountrecords.set(salesaccountrecords);
         }
@@ -1363,220 +1363,183 @@ Template.productlist.onRendered(function() {
 
       })
   };
-  // templateObject.getAccountNames();
-  // templateObject.getAllTaxCodes();
-  // exportInventoryToPdf = function () {
-  //   productService
-  //     .getProductPrintList()
-  //     .then(function (data) {
-  //       let records = [];
-  //       let inventoryData = [];
-  //       for (let i = 0; i < data.tproductvs1.length; i++) {
-  //         var recentTranObject = {
-  //           productId: data.tproductvs1[i].fields.ID,
-  //           productName: data.tproductvs1[i].fields.ProductName,
-  //           productDescription: data.tproductvs1[i].fields.SalesDescription,
-  //           purchasesPrice:
-  //             utilityService.modifynegativeCurrencyFormat(
-  //               data.tproductvs1[i].fields.BuyQty1CostInc
-  //             ) || 0,
-  //           purchaseAccount: data.tproductvs1[i].fields.AssetAccount,
-  //           costOfGoodsSoldAccount: data.tproductvs1[i].fields.CogsAccount,
-  //           unitOfMeasure: data.tproductvs1[i].fields.UOMPurchases || " ",
-  //           salesDescription: data.tproductvs1[i].fields.SalesDescription,
-  //           itemName: data.tproductvs1[i].fields.ProductName,
-  //           salesPrice:
-  //             utilityService.modifynegativeCurrencyFormat(
-  //               data.tproductvs1[i].fields.SellQty1PriceInc
-  //             ) || 0,
-  //           salesAccount: data.tproductvs1[i].fields.IncomeAccount,
-  //           taxCodeSales: data.tproductvs1[i].fields.TaxCodeSales,
-  //         };
-  //         inventoryData.push(recentTranObject);
+// templateObject.getAccountNames();
+// templateObject.getAllTaxCodes();
+  exportInventoryToPdf = function(){
 
-  //         $(".fullScreenSpin").css("display", "none");
-  //       }
+  productService.getProductPrintList().then(function (data) {
+      let records = [];
+      let inventoryData = [];
+      for (let i = 0; i < data.tproductvs1.length; i++) {
+          var recentTranObject = {
+                      productId: data.tproductvs1[i].fields.ID,
+                      productName: data.tproductvs1[i].fields.ProductName,
+                      productDescription: data.tproductvs1[i].fields.SalesDescription,
+                      purchasesPrice:  utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.BuyQty1CostInc) || 0,
+                      purchaseAccount: data.tproductvs1[i].fields.AssetAccount,
+                      costOfGoodsSoldAccount: data.tproductvs1[i].fields.CogsAccount,
+                      unitOfMeasure: data.tproductvs1[i].fields.UOMPurchases || ' ',
+                      salesDescription: data.tproductvs1[i].fields.SalesDescription,
+                      itemName: data.tproductvs1[i].fields.ProductName,
+                      salesPrice:utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.SellQty1PriceInc) || 0,
+                      salesAccount: data.tproductvs1[i].fields.IncomeAccount,
+                      taxCodeSales: data.tproductvs1[i].fields.TaxCodeSales,
+                  };
+                  inventoryData.push(recentTranObject);
 
-  //       if (inventoryData) {
-  //         let doc = new jsPDF("landscape", "mm", "a3");
-  //         // let listId= tempObj2.productListID.get();
-  //         let inventoryDataList = inventoryData;
-  //         const totalPagesExp = "{total_pages_count_string}";
-  //         let xAxis = 15;
-  //         let yAxis = 70;
-  //         let tableTitle = [
-  //           "Item Code",
-  //           "Item Name",
-  //           "Purchases\n" + "Description",
-  //           "Purchases\n" + "Price",
-  //           "Purchases\n" + "Account",
-  //           "Cost of\n" + "Goods Sold\n" + "Account",
-  //           "Inventory\n" + "Asset\n" + "Account",
-  //           "Unit of\n" + "measure",
-  //           "Sales\n" + "Description",
-  //           "Sales Price",
-  //           "Sales\n" + "Account",
-  //           "Tax\n" + "Code(S)",
-  //         ];
-  //         doc.setFontSize(18);
-  //         doc.setTextColor(0, 123, 169);
-  //         // doc.setFontStyle('Roboto Mono');
-  //         doc.text(loggedCompany, 180, 40);
-  //         doc.text("As at " + moment().format("DD MMM YYYY"), 183, 50);
-  //         let totalPage = inventoryDataList.length;
-  //         let pageData = 0;
-  //         let printData = 8;
 
-  //         if (totalPage % 5 != 0) {
-  //           totalPage = totalPage / 5 + 1;
-  //           totalPage = totalPage.toString().split(".")[0];
-  //         } else {
-  //           totalPage = totalPage / 5;
-  //         }
+          $('.fullScreenSpin').css('display','none');
+      }
 
-  //         for (let k = 1; k <= totalPage; k++) {
-  //           //HEADER
-  //           doc.setFontSize(22);
-  //           doc.setTextColor(30);
-  //           // doc.setFontStyle('Roboto Mono');
-  //           doc.text("Inventory", 16, 20);
-  //           doc.setDrawColor(0, 123, 169);
-  //           doc.setLineWidth(1);
-  //           doc.line(15, 25, 408, 25);
-  //           //TABLE HEAD
-  //           doc.setFontSize(12);
-  //           doc.setFontStyle("bold");
-  //           doc.setTextColor(0, 0, 0);
-  //           for (let m = 0; m < 12; m++) {
-  //             doc.text(tableTitle[m], xAxis, yAxis);
-  //             xAxis += 32;
-  //           }
-  //           doc.setDrawColor(179, 179, 179);
-  //           doc.setLineWidth(0.1);
-  //           doc.line(12, yAxis + 13, 390, yAxis + 13);
-  //           xAxis = 18;
-  //           yAxis += 20;
-  //           doc.setFontStyle("normal");
-  //           for (let i = pageData; i < printData; i++) {
-  //             let changeY = yAxis;
-  //             let itemY = yAxis;
-  //             const itmNme = inventoryDataList[i].itemName.split(" ");
-  //             for (let j = 0; j < itmNme.length; j++) {
-  //               doc.text("" + itmNme[j], xAxis, itemY);
-  //               doc.text("" + itmNme[j], xAxis + 32, itemY);
-  //               itemY += 5;
-  //             }
-  //             const prodescription =
-  //               inventoryDataList[i].productDescription.split(" ");
-  //             for (let j = 0; j < prodescription.length; j++) {
-  //               doc.text("" + prodescription[j], xAxis + 64, changeY);
-  //               changeY += 5;
-  //             }
-  //             doc.text(
-  //               "" + inventoryDataList[i].purchasesPrice,
-  //               xAxis + 96,
-  //               yAxis
-  //             );
-  //             doc.text(
-  //               "" + inventoryDataList[i].purchaseAccount,
-  //               xAxis + 128,
-  //               yAxis
-  //             );
-  //             doc.text(
-  //               "" + inventoryDataList[i].costOfGoodsSoldAccount,
-  //               xAxis + 160,
-  //               yAxis
-  //             );
-  //             doc.text(
-  //               "" + inventoryDataList[i].purchaseAccount,
-  //               xAxis + 192,
-  //               yAxis
-  //             );
-  //             doc.text(
-  //               "" + inventoryDataList[i].unitOfMeasure,
-  //               xAxis + 224,
-  //               yAxis
-  //             );
-  //             changeY = yAxis;
-  //             const saledescription =
-  //               inventoryDataList[i].salesDescription.split(" ");
-  //             for (let j = 0; j < saledescription.length; j++) {
-  //               doc.text("" + saledescription[j], xAxis + 256, changeY);
-  //               changeY += 5;
-  //             }
-  //             doc.text(
-  //               "" + inventoryDataList[i].salesPrice,
-  //               xAxis + 288,
-  //               yAxis
-  //             );
-  //             doc.text(
-  //               "" + inventoryDataList[i].purchaseAccount,
-  //               xAxis + 320,
-  //               yAxis
-  //             );
-  //             doc.text(
-  //               "" + inventoryDataList[i].taxCodeSales,
-  //               xAxis + 352,
-  //               yAxis
-  //             );
-  //             if (itmNme > changeY) {
-  //               yAxis = itmNme + 4;
-  //             } else {
-  //               yAxis = changeY + 4;
-  //             }
+      if(inventoryData){
+    let doc = new jsPDF('landscape','mm','a3');
+    // let listId= tempObj2.productListID.get();
+    let inventoryDataList= inventoryData;
+    const totalPagesExp = "{total_pages_count_string}";
+    let xAxis=15;
+    let yAxis=70;
+    let tableTitle=['Item Code',
+        'Item Name',
+        'Purchases\n'+'Description',
+        'Purchases\n'+'Price',
+        'Purchases\n'+'Account',
+        'Cost of\n'+'Goods Sold\n'+'Account',
+        'Inventory\n'+'Asset\n'+'Account',
+        'Unit of\n'+'measure',
+        'Sales\n' +'Description',
+        'Sales Price',
+        'Sales\n'+'Account',
+        'Tax\n'+'Code(S)'
+    ];
+    doc.setFontSize(18);
+    doc.setTextColor(0, 123, 169);
+    // doc.setFontStyle('Roboto Mono');
+    doc.text(loggedCompany, 180, 40);
+    doc.text("As at " + moment().format('DD MMM YYYY'),183, 50);
+    let totalPage= inventoryDataList.length;
+    let pageData=0;
+    let printData=8;
 
-  //             yAxis += 5;
-  //           }
-  //           let str =
-  //             "Inventory | " +
-  //             loggedCompany +
-  //             " | " +
-  //             moment().format("DD MMM YYYY");
+          if(totalPage%5!=0){
+            totalPage=(totalPage/5)+1;
+            totalPage= totalPage.toString().split(".")[0];
+        }
+        else{
+            totalPage=totalPage/5;
+        }
 
-  //           let str1 = "Page " + k + " of " + totalPage;
-  //           doc.setDrawColor(0, 123, 169);
-  //           doc.setLineWidth(1);
-  //           doc.line(15, 280, 408, 280);
-  //           doc.setFontSize(10);
-  //           doc.text(str, 16, 285);
-  //           doc.text(str1, 390, 285);
+         for(let k=1;k<=totalPage;k++) {
+             //HEADER
+            doc.setFontSize(22);
+            doc.setTextColor(30);
+            // doc.setFontStyle('Roboto Mono');
+            doc.text("Inventory", 16, 20);
+            doc.setDrawColor(0, 123, 169);
+            doc.setLineWidth(1);
+            doc.line(15, 25, 408, 25);
+            //TABLE HEAD
+            doc.setFontSize(12);
+            doc.setFontStyle('bold');
+            doc.setTextColor(0, 0, 0);
+             for(let m=0;m<12;m++){
+                 doc.text(tableTitle[m], xAxis,yAxis);
+                 xAxis+=32;
+             }
+             doc.setDrawColor(179, 179, 179);
+             doc.setLineWidth(0.1);
+             doc.line(12, yAxis+13, 390, yAxis+13);
+             xAxis=18;
+             yAxis+=20;
+             doc.setFontStyle('normal');
+             for (let i= pageData; i< printData; i++) {
+                 let changeY = yAxis;
+                 let itemY=yAxis;
+                 const itmNme = inventoryDataList[i].itemName.split(" ");
+                 for (let j = 0; j < itmNme.length; j++) {
+                     doc.text('' + itmNme[j], xAxis, itemY);
+                     doc.text('' + itmNme[j], xAxis+32, itemY);
+                     itemY += 5;
+                 }
+                const prodescription = inventoryDataList[i].productDescription.split(" ");
+                for (let j = 0; j < prodescription.length; j++) {
+                    doc.text('' + prodescription[j], xAxis + 64, changeY);
+                    changeY += 5;
+                }
+                doc.text('' +inventoryDataList[i].purchasesPrice, xAxis + 96, yAxis);
+                doc.text('' +inventoryDataList[i].purchaseAccount, xAxis + 128, yAxis);
+                doc.text('' + inventoryDataList[i].costOfGoodsSoldAccount, xAxis + 160, yAxis);
+                doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 192, yAxis);
+                doc.text('' + inventoryDataList[i].unitOfMeasure, xAxis + 224, yAxis);
+                changeY = yAxis;
+                const saledescription = inventoryDataList[i].salesDescription.split(" ");
+                for (let j = 0; j < saledescription.length; j++) {
+                    doc.text('' + saledescription[j], xAxis + 256, changeY);
+                    changeY += 5;
+                }
+                doc.text('' + inventoryDataList[i].salesPrice, xAxis + 288, yAxis);
+                doc.text('' + inventoryDataList[i].purchaseAccount, xAxis + 320, yAxis);
+                doc.text('' + inventoryDataList[i].taxCodeSales, xAxis + 352, yAxis);
+                if(itmNme>changeY){
+                    yAxis = itmNme + 4;
+                }
+                else{
+                    yAxis = changeY + 4;
+                }
 
-  //           if (k < totalPage) {
-  //             doc.addPage();
-  //           }
-  //           yAxis = 50;
-  //           let difference = inventoryDataList.length - printData;
-  //           pageData = pageData + 5;
-  //           if (difference < 5) {
-  //             printData = printData + difference;
-  //           } else {
-  //             printData = printData + 5;
-  //           }
-  //         }
+                yAxis += 5;
+            }
+             let str = 'Inventory | ' + loggedCompany + ' | ' + moment().format('DD MMM YYYY');
 
-  //         if (inventoryDataList.length != 0) {
-  //           doc.save(loggedCompany + "-inventory.pdf");
-  //         }
-  //       }
-  //       //localStorage.setItem('VS1ProductPrintList', JSON.stringify(inventoryData));
-  //     })
-  //     .catch(function (err) {
-  //       // Bert.alert('<strong>' + err + '</strong> - Error Printing Product!', 'danger');
-  //       swal({
-  //         title: "Error Printing Product!",
-  //         text: err,
-  //         type: "error",
-  //         showCancelButton: false,
-  //         confirmButtonText: "Try Again",
-  //       }).then((result) => {
-  //         if (result.value) {
-  //           // Meteor._reload.reload();
-  //         } else if (result.dismiss === "cancel") {
-  //         }
-  //       });
-  //       $(".fullScreenSpin").css("display", "none");
-  //     });
-  // };
+                     let str1 = "Page "+k+" of "+totalPage;
+                     doc.setDrawColor(0, 123, 169);
+                     doc.setLineWidth(1);
+                     doc.line(15, 280, 408, 280);
+                     doc.setFontSize(10);
+                     doc.text(str,16, 285);
+                     doc.text(str1,390, 285);
+
+            if(k<totalPage){
+                doc.addPage();
+            }
+             yAxis=50;
+         let difference = inventoryDataList.length-printData;
+         pageData = pageData+5;
+         if(difference<5){
+             printData = printData+difference;
+         }
+         else{
+             printData = printData+5;
+         }
+        }
+
+        if(inventoryDataList.length!=0) {
+            doc.save(loggedCompany + '-inventory.pdf');
+        }
+      }
+     //localStorage.setItem('VS1ProductPrintList', JSON.stringify(inventoryData));
+
+    }).catch(function (err) {
+        // Bert.alert('<strong>' + err + '</strong> - Error Printing Product!', 'danger');
+        swal({
+        title: 'Error Printing Product!',
+        text: err,
+        type: 'error',
+        showCancelButton: false,
+        confirmButtonText: 'Try Again'
+        }).then((result) => {
+        if (result.value) {
+         // Meteor._reload.reload();
+        } else if (result.dismiss === 'cancel') {
+
+        }
+        });
+        $('.fullScreenSpin').css('display','none');
+    });
+
+
+
+
+};
 });
 
 Template.productlist.helpers({
@@ -2016,142 +1979,114 @@ Template.productlist.events({
       });
   });
   },
-  // "click #exportinv_pdf": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   exportInventoryToPdf();
-  // },
-  // "click #exportinv_csv": async function () {
-  //   $(".fullScreenSpin").css("display", "inline-block");
-  //   jQuery("#tblInventory_wrapper .dt-buttons .btntabletocsv").click();
-  //   $(".fullScreenSpin").css("display", "none");
-  // $('.fullScreenSpin').css('display','inline-block');
-  //   let productService = new ProductService();
-  //   let utilityService = new UtilityService();
-  //   const filename = 'Inventorylist_' + moment().format() + '.csv';
-  //   let rows = [];
-  //   productService.getNewProductList().then(function (data) {
-  //
-  //       rows[0] = ['ProductName', 'Sales Description', 'Department', 'Cost Price', 'Sales Price' , 'Quantity' , 'Barcode'];
-  //       data.tproductvs1.forEach(function (e, i) {
-  //
-  //         let costprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) / 100) || 0;
-  //         let saleprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100) || 0;
-  //           rows.push([ data.tproductvs1[i].fields.ProductName, data.tproductvs1[i].fields.SalesDescription, '', costprice, saleprice, data.tproductvs1[i].fields.TotalStockQty, data.tproductvs1[i].fields.BARCODE]);
-  //       });
-  //       utilityService.exportToCsv(rows, filename, 'csv');
-  //       $('.fullScreenSpin').css('display','none');
-  //   });
-  // },
-  // "click #btnSave": async function () {
-  //   playSaveAudio();
-  //   let productService = new ProductService();
-  //   setTimeout(function () {
-  //     let productCode = $("#edtproductvs1code").val();
-  //     let productName = $("#edtproductvs1name").val();
-  //     if (productName == "") {
-  //       // Bert.alert('<strong>Please provide product Name !</strong>', 'danger');
-  //       swal("Please provide the product name !", "", "warning");
-  //       e.preventDefault();
-  //       return false;
-  //     }
+      'click #exportinv_pdf': async function () {
+      $('.fullScreenSpin').css('display','inline-block');
+      exportInventoryToPdf();
+      },
+      'click #exportinv_csv': async function () {
+        $('.fullScreenSpin').css('display','inline-block');
+        jQuery('#tblInventory_wrapper .dt-buttons .btntabletocsv').click();
+         $('.fullScreenSpin').css('display','none');
+        // $('.fullScreenSpin').css('display','inline-block');
+        //   let productService = new ProductService();
+        //   let utilityService = new UtilityService();
+        //   const filename = 'Inventorylist_' + moment().format() + '.csv';
+        //   let rows = [];
+        //   productService.getNewProductList().then(function (data) {
+        //
+        //       rows[0] = ['ProductName', 'Sales Description', 'Department', 'Cost Price', 'Sales Price' , 'Quantity' , 'Barcode'];
+        //       data.tproductvs1.forEach(function (e, i) {
+        //
+        //         let costprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1CostInc * 100) / 100) || 0;
+        //         let saleprice = utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100) || 0;
+        //           rows.push([ data.tproductvs1[i].fields.ProductName, data.tproductvs1[i].fields.SalesDescription, '', costprice, saleprice, data.tproductvs1[i].fields.TotalStockQty, data.tproductvs1[i].fields.BARCODE]);
+        //       });
+        //       utilityService.exportToCsv(rows, filename, 'csv');
+        //       $('.fullScreenSpin').css('display','none');
+        //   });
 
-  //     let TaxCodePurchase = $("#slttaxcodepurchase").val();
-  //     let TaxCodeSales = $("#slttaxcodesales").val();
-  //     if (TaxCodePurchase == "" || TaxCodeSales == "") {
-  //       // Bert.alert('<strong>Please fill Tax rate !</strong>', 'danger');
-  //       swal("Please fill Tax rate !", "", "warning");
-  //       e.preventDefault();
-  //       return false;
-  //     }
+      },
+      'click #btnSave': async function () {
+        playSaveAudio();
+        let productService = new ProductService();
+        setTimeout(function(){
 
-  //     var objDetails = {
-  //       type: "TProduct",
-  //       fields: {
-  //         Active: true,
-  //         ProductType: "INV",
-  //         PRODUCTCODE: productCode,
-  //         ProductPrintName: productName,
-  //         ProductName: productName,
-  //         PurchaseDescription: $("#txapurchasedescription").val(),
-  //         SalesDescription: $("#txasalesdescription").val(),
-  //         // AssetAccount:($("#sltcogsaccount").val()).includes(" - ") ? ($("#sltcogsaccount").val()).split(' - ')[1] : $("#inventoryAssetAccount").val(),
-  //         CogsAccount: $("#edtassetaccount").val(),
-  //         IncomeAccount: $("#sltcogsaccount").val(),
-  //         BuyQty1: 1,
-  //         BuyQty1Cost:
-  //           Number(
-  //             $("#edtbuyqty1cost")
-  //               .val()
-  //               .replace(/[^0-9.-]+/g, "")
-  //           ) || 0,
-  //         BuyQty2: 1,
-  //         BuyQty2Cost:
-  //           Number(
-  //             $("#edtbuyqty1cost")
-  //               .val()
-  //               .replace(/[^0-9.-]+/g, "")
-  //           ) || 0,
-  //         BuyQty3: 1,
-  //         BuyQty3Cost:
-  //           Number(
-  //             $("#edtbuyqty1cost")
-  //               .val()
-  //               .replace(/[^0-9.-]+/g, "")
-  //           ) || 0,
-  //         SellQty1: 1,
-  //         SellQty1Price:
-  //           Number(
-  //             $("#edtsellqty1price")
-  //               .val()
-  //               .replace(/[^0-9.-]+/g, "")
-  //           ) || 0,
-  //         SellQty2: 1,
-  //         SellQty2Price:
-  //           Number(
-  //             $("#edtsellqty1price")
-  //               .val()
-  //               .replace(/[^0-9.-]+/g, "")
-  //           ) || 0,
-  //         SellQty3: 1,
-  //         SellQty3Price:
-  //           Number(
-  //             $("#edtsellqty1price")
-  //               .val()
-  //               .replace(/[^0-9.-]+/g, "")
-  //           ) || 0,
-  //         TaxCodePurchase: $("#slttaxcodepurchase").val(),
-  //         TaxCodeSales: $("#slttaxcodesales").val(),
-  //         UOMPurchases: defaultUOM,
-  //         UOMSales: defaultUOM,
-  //         TotalQtyInStock: $("#edttotalqtyinstock").val(),
-  //         TotalQtyOnOrder: $("#edttotalqtyonorder").val(),
-  //         /*Barcode:$("#NProdBar").val(),*/
-  //       },
-  //     };
+        let productCode = $("#edtproductvs1code").val();
+        let productName = $("#edtproductvs1name").val();
+          if(productName == ''){
+             // Bert.alert('<strong>Please provide product Name !</strong>', 'danger');
+             swal('Please provide the product name !', '', 'warning');
+             e.preventDefault();
+             return false;
+          }
 
-  //     productService
-  //       .saveProduct(objDetails)
-  //       .then(function (objDetails) {
-  //         FlowRouter.go("/productlist");
-  //       })
-  //       .catch(function (err) {
-  //         swal({
-  //           title: "Oooops...",
-  //           text: err,
-  //           type: "error",
-  //           showCancelButton: false,
-  //           confirmButtonText: "Try Again",
-  //         }).then((result) => {
-  //           if (result.value) {
-  //             Meteor._reload.reload();
-  //           } else if (result.dismiss === "cancel") {
-  //           }
-  //         });
-  //         //$('.loginSpinner').css('display','none');
-  //         $(".fullScreenSpin").css("display", "none");
-  //       });
-  //   }, delayTimeAfterSound);
-  // },
+      let  TaxCodePurchase = $("#slttaxcodepurchase").val();
+      let  TaxCodeSales    = $("#slttaxcodesales").val();
+      if(TaxCodePurchase == '' || TaxCodeSales == '' ){
+          // Bert.alert('<strong>Please fill Tax rate !</strong>', 'danger');
+          swal('Please fill Tax rate !', '', 'warning');
+          e.preventDefault();
+          return false;
+      }
+
+
+        var objDetails = {
+            type:"TProduct",
+            fields:
+            {
+            Active:true,
+            ProductType:"INV",
+            PRODUCTCODE:productCode,
+            ProductPrintName:productName,
+            ProductName:productName,
+            PurchaseDescription:$("#txapurchasedescription").val(),
+            SalesDescription:$("#txasalesdescription").val(),
+            // AssetAccount:($("#sltcogsaccount").val()).includes(" - ") ? ($("#sltcogsaccount").val()).split(' - ')[1] : $("#inventoryAssetAccount").val(),
+            CogsAccount:$("#edtassetaccount").val(),
+            IncomeAccount:$("#sltcogsaccount").val(),
+            BuyQty1:1,
+            BuyQty1Cost:Number($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g,"")) || 0,
+            BuyQty2:1,
+            BuyQty2Cost:Number($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g,"")) || 0,
+            BuyQty3:1,
+            BuyQty3Cost:Number($("#edtbuyqty1cost").val().replace(/[^0-9.-]+/g,"")) || 0 ,
+            SellQty1:1,
+            SellQty1Price:Number($("#edtsellqty1price").val().replace(/[^0-9.-]+/g,"")) || 0,
+            SellQty2:1,
+            SellQty2Price:Number($("#edtsellqty1price").val().replace(/[^0-9.-]+/g,"")) || 0,
+            SellQty3:1,
+            SellQty3Price:Number($("#edtsellqty1price").val().replace(/[^0-9.-]+/g,"")) || 0,
+            TaxCodePurchase:$("#slttaxcodepurchase").val(),
+            TaxCodeSales:$("#slttaxcodesales").val(),
+            UOMPurchases:defaultUOM,
+            UOMSales:defaultUOM,
+            TotalQtyInStock:$("#edttotalqtyinstock").val(),
+            TotalQtyOnOrder:$("#edttotalqtyonorder").val()
+            /*Barcode:$("#NProdBar").val(),*/
+          }
+            };
+
+          productService.saveProduct(objDetails).then(function (objDetails) {
+            FlowRouter.go('/productlist');
+          }).catch(function (err) {
+            swal({
+            title: 'Oooops...',
+            text: err,
+            type: 'error',
+            showCancelButton: false,
+            confirmButtonText: 'Try Again'
+            }).then((result) => {
+            if (result.value) {
+             Meteor._reload.reload();
+            } else if (result.dismiss === 'cancel') {
+
+            }
+            });
+              //$('.loginSpinner').css('display','none');
+              $('.fullScreenSpin').css('display','none');
+          });
+        }, delayTimeAfterSound);
+      },
   "click .chkDepartment": function (event) {
     let templateObject = Template.instance();
     let dataValue = $(event.target).val();
@@ -2307,58 +2242,38 @@ Template.productlist.events({
       'click .btnNewProduct':function () {
         FlowRouter.go('/productview');
       },
-  // "click .printConfirm": function (event) {
-  //   playPrintAudio();
-  //   setTimeout(function () {
-  //     $(".fullScreenSpin").css("display", "inline-block");
-  //     jQuery("#tblInventory_wrapper .dt-buttons .btntabletopdf").click();
-  //     $(".fullScreenSpin").css("display", "none");
-  //   }, delayTimeAfterSound);
-  // },
-  "click .btnStockAdjustment": function (event) {
-    FlowRouter.go("/stockadjustmentoverview");
-  },
-  "click .templateDownload": function () {
-    let utilityService = new UtilityService();
-    let rows = [];
-    const filename = "SampleProduct" + ".csv";
-    rows[0] = [
-      "Product Name",
-      "Sales Description",
-      "Sale Price",
-      "Sales Account",
-      "Tax Code",
-      "Barcode",
-      "Purchase Description",
-      "COGGS Account",
-      "Purchase Tax Code",
-      "Cost",
-    ];
-    rows[1] = [
-      "TSL - Black",
-      "T-Shirt Large Black",
-      "600",
-      "Sales",
-      "NT",
-      "",
-      "T-Shirt Large Black",
-      "Cost of Goods Sold",
-      "NT",
-      "700",
-    ];
-    utilityService.exportToCsv(rows, filename, "csv");
-  },
-  "click .btnUploadFile": function (event) {
-    $("#attachment-upload").val("");
-    $(".file-name").text("");
-    //$(".btnImport").removeAttr("disabled");
-    $("#attachment-upload").trigger("click");
-  },
-  "click .templateDownloadXLSX": function (e) {
-    e.preventDefault(); //stop the browser from following
-    window.location.href = "sample_imports/SampleProduct.xlsx";
-  },
-  "change #attachment-upload": function (e) {
+'click .printConfirm' : function(event){
+  playPrintAudio();
+  setTimeout(function(){
+$('.fullScreenSpin').css('display','inline-block');
+jQuery('#tblInventory_wrapper .dt-buttons .btntabletopdf').click();
+$('.fullScreenSpin').css('display','none');
+}, delayTimeAfterSound);
+},
+'click .btnStockAdjustment' : function(event){
+  FlowRouter.go('/stockadjustmentoverview');
+},
+'click .templateDownload': function () {
+let utilityService = new UtilityService();
+let rows =[];
+const filename = 'SampleProduct'+'.csv';
+rows[0]= ['Product Name','Sales Description','Sale Price', 'Sales Account', 'Tax Code','Barcode', 'Purchase Description', 'COGGS Account', 'Purchase Tax Code', 'Cost'];
+rows[1]= ['TSL - Black','T-Shirt Large Black', '600', 'Sales','NT', '','T-Shirt Large Black', 'Cost of Goods Sold', 'NT', '700'];
+utilityService.exportToCsv(rows, filename, 'csv');
+},
+'click .btnUploadFile':function(event){
+$('#attachment-upload').val('');
+$('.file-name').text('');
+//$(".btnImport").removeAttr("disabled");
+$('#attachment-upload').trigger('click');
+
+},
+'click .templateDownloadXLSX': function (e) {
+
+  e.preventDefault();  //stop the browser from following
+  window.location.href = 'sample_imports/SampleProduct.xlsx';
+},
+'change #attachment-upload': function (e) {
     let templateObj = Template.instance();
     var filename = $('#attachment-upload')[0].files[0]['name'];
     var fileExtension = filename.split('.').pop().toLowerCase();
