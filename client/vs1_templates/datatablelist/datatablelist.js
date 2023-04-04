@@ -527,7 +527,7 @@ Template.datatablelist.onRendered(async function () {
                     }
                 ],
 
-                "autoWidth": false, // might need this
+                // "autoWidth": false, // might need this
                 // fixedColumns: true,
                 select: true,
                 destroy: true,
@@ -536,11 +536,14 @@ Template.datatablelist.onRendered(async function () {
                 "bLengthChange": isShowSelect,
                 lengthMenu: [[initialDatatableLoad, -1],[initialDatatableLoad, "All"]],
                 info: true,
-                responsive: true,
+                responsive: false,
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 //"autoWidth": false,
                 action: function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
+                },
+                "fnCreatedRow": function( nRow, aData, iDataIndex ) {
+                    $(nRow).attr('id', templateObject.data.attRowID ? templateObject.data.attRowID:aData[0]);
                 },
                 "fnDrawCallback": function (oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
@@ -780,9 +783,8 @@ Template.datatablelist.onRendered(async function () {
 
         }*/
 
-        function getColDef() {
-            let items = templateObject.data.tableheaderrecords;
-          
+        async function getColDef() {
+            let items =await templateObject.displayfields.get();
             if (items.length > 0) {
                 for (let i = 0; i < items.length; i++) {
                     let item = {
@@ -790,8 +792,8 @@ Template.datatablelist.onRendered(async function () {
                         visible: items[i].active,
                         className: items[i].class,
                         // className: items[i].class,
-                        title: items[i].label,
-                        width: items[i].width
+                        title: items[i].custfieldlabel,
+                        width: items[i].width,
                     };
                     colDef.push(item);
                 }

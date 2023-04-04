@@ -405,7 +405,7 @@ Template._frequencyModal.onRendered(function () {
 
   templateObject.loadDefault = async () => {
     let defaultForm = await templateObject._loadDefault();
-    if (!defaultForm) {
+    if (!defaultForm.tcurrencyfrequencysettings.length) {
       document.querySelector("#frequencyDaily").click(); // this is the default
       return;
     }
@@ -475,9 +475,11 @@ Template._frequencyModal.onRendered(function () {
     }
   };
 
-  $(document).on("shown.bs.modal",  "#frequencyModal", (e, ui) => {
+  $("#frequencyModal").on("shown.bs.modal", () => {
+    //$("#frequencyDaily").trigger("click");
+    //$("#frequencyDaily").click();
     templateObject.loadDefault();
-  })  
+  });
 });
 
 Template._frequencyModal.events({
