@@ -58,23 +58,6 @@
 
                                                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start" style="padding: 0px !important;">
                                                     {{> export_import_print_display_button tablename="tblTermsList"}}
-                                                    {{>datatablelist
-                                                        tablename="tblTermsList"
-                                                        apiName= apiFunction
-                                                        indexeddbname = 'TTermsVS1List'
-                                                        tableheaderrecords = tableheaderrecords
-                                                        exportfilename = 'Term List'
-                                                        istransaction = false
-                                                        apiParams= apiParams
-                                                        datahandler = datahandler
-                                                        service=service
-                                                        lowercaseDataName='ttermvs1list'
-                                                        exportfilename='Term List'
-                                                        exIndexDBName = 'TTermsVS1List'
-                                                        exdatahandler = exDataHandler
-                                                        searchAPI = searchAPI
-                                                        orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
-                                                    }}
                                                 </div>
                                             </div>
                                         </div>

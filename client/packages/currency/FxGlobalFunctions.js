@@ -46,7 +46,7 @@ export default class FxGlobalFunctions {
   }
 
   static async loadDefaultCurrency(defaultCurrencyCode = "AUD", fromLocal = true) {
-    let data = await CachedHttp.get(erpObject.TCurrency, async () => {
+    let data = await CachedHttp.get(erpObject.TCurrencyList, async () => {
       return await new TaxRateService().getCurrencies();
     }, {
       usIndexDb: true,
@@ -57,10 +57,10 @@ export default class FxGlobalFunctions {
       }
     });
 
-    let currencies = data.response.tcurrency;
-    if (currencies[0].fields) {
-      currencies = currencies.map(c => c.fields);
-    }
+    let currencies = data.response.tcurrencylist;
+    // if (currencies[0].fields) {
+    //   currencies = currencies.map(c => c.fields);
+    // }
 
     return currencies.find(currency => currency.Code == defaultCurrencyCode);
   }
