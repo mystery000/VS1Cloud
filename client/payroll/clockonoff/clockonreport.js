@@ -6,22 +6,21 @@ import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
 import "./clockonreport.html";
 import { cloneDeep, template } from 'lodash';
+import { ManufacturingService } from "../../manufacture/manufacturing-service";
 
 
+let manufacturingService = new ManufacturingService();
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 Template.clockonreport_template.onCreated(function() {
-    const templateObject = Template.instance();
 
+    const templateObject = Template.instance();
     templateObject.workOrderRecords = new ReactiveVar([]);
     templateObject.employeeList = new ReactiveVar([]);
     templateObject.timesheetList = new ReactiveVar([]);
-
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.selectedFile = new ReactiveVar();
-
     templateObject.getDataTableList = function(data) {               
         
         var dataList = [
@@ -40,12 +39,12 @@ Template.clockonreport_template.onCreated(function() {
 Template.clockonreport_template.onRendered(function() {
 
     $('.fullScreenSpin').css('display', 'inline-block');
-    
+ 
     let templateObject = Template.instance();
-     
+   
     let launchClockOnOff = localStorage.getItem('CloudTimesheetLaunch') || false;
     let canClockOnClockOff = localStorage.getItem('CloudClockOnOff') || false;
- 
+
     let headerStructure = [
         { index: 0, label: '', class: 'colID', active: true, display: true, width: "50" },
         { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "" },
@@ -57,26 +56,51 @@ Template.clockonreport_template.onRendered(function() {
     ];
 
     templateObject.tableheaderrecords.set(headerStructure);
- 
-    // getVS1Data('TEmployee').then(function(dataObject) {
-    //     let empdata = JSON.parse(dataObject[0].data);
-    //     templateObject.employeeList.set(empdata);
-    //     console.log(empdata);   
-    // }) 
 
-    // getVS1Data('TVS1Workorder').then(function(dataObject) {
-    //     let workorder = JSON.parse(dataObject[0].data);
-    //     templateObject.workOrderList.set(workorder);
-    //     console.log(workorder);   
-    // }) 
+    let from_date;
+    let to_date;
+    
+    templateObject.makeIndexedDBdata = function (from_date , to_date){
+
+        getVS1Data('TEmployee').then(function(empdataObject) {
+            let empdata = JSON.parse(empdataObject[0].data).temployee;
+            getVS1Data('TVS1Workorder').then(function(workorderDataObject) {
+                let workorder = JSON.parse(workorderDataObject[0].data);
+                getVS1Data('TTimeSheet').then(function(timesheetdataObject) {
+                    let timesheet = JSON.parse(timesheetdataObject[0].data);
+
+                    console.log(empdata);
+                    console.log(workorder);
+                    console.log(timesheet);
+                    
+                })
+
+                                   
+            }) 
+
+            console.log(empdata);   
+        })
+
+    }
+    getVS1Data('TEmployee').then(function(dataObject) {
+        let empdata = JSON.parse(dataObject[0].data);
+        templateObject.employeeList.set(empdata);
+        console.log(empdata);   
+    }) 
+
+    getVS1Data('TVS1Workorder').then(function(dataObject) {
+        let workorder = JSON.parse(dataObject[0].data);
+        templateObject.workOrderRecords.set(workorder);
+        console.log(workorder);   
+    }) 
 
 
-    // getVS1Data('TTimeSheet').then(function(dataObject) {
-    //     let timesheet = JSON.parse(dataObject[0].data);
-    //     templateObject.
-    //     console.log(timesheet);   
-    // }) 
-
+    getVS1Data('TTimeSheet').then(function(dataObject) {
+        let timesheet = JSON.parse(dataObject[0].data);
+        templateObject.timesheetList.set(timesheet);
+        console.log(timesheet);   
+    }) 
+     
     
     
     templateObject.getProcessClockedList = function () {
@@ -242,10 +266,7 @@ Template.clockonreport_template.onRendered(function() {
     let temp =  templateObject.getAllWorkorders();
     templateObject.workOrderRecords.set(temp);
 
-    console.log(templateObject.workOrderRecords.get());  
-  
-
-   
+ 
     templateObject.timeToDecimal = function(time) {
         var hoursMinutes = time.split(/[.:]/);
         var hours = parseInt(hoursMinutes[0], 10);

@@ -6,10 +6,14 @@ import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
 import "./process_clock_list.html";
 import { cloneDeep, template } from 'lodash';
+import { ManufacturingService } from "../../manufacture/manufacturing-service";
+
 
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+let manufacturingService = new ManufacturingService();
+
 Template.process_clock_template.onCreated(function() {
     const templateObject = Template.instance();
 
