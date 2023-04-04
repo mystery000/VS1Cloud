@@ -148,19 +148,34 @@
                     class="btn btn-primary downloadHelpFile alerts-border" style="margin: 12px 0">Download Help
                     File</a>
                 </div>
-                <div class="col-sm-6 float-left text-right flex-grow-1 pl-0">
-                  <button id="exportbtn" class="btn btn-primary btnNav vs1ButtonMargin" type="button"><i
-                    class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                  <button class="btn btn-primary btnNav vs1ButtonMargin" role="button" data-toggle="modal" href="#importModal">
-                    <i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                  <button class="btn btn-primary printConfirm btnNav vs1ButtonMargin" type="button"><i
-                      class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                <div class="col-sm-6 float-left text-right flex-grow-1 pl-0 d-xl-flex justify-content-xl-end align-items-xl-start">
+                  {{> export_import_print_display_button DisplaySettings="hiddenButton" tablename="tblInventoryOverview"}}
                   <button class="btn btn-success float-right confirmBtn" type="button"
-                    style="margin: 12px; margin-right: 0;" data-step-id="10">Confirm</button>
+                    style="margin: 14px 0 0 15px; margin-right: 0" data-step-id="10">Confirm</button>
                 </div>
               </div>
+              <style>
+                td.colAvailable, td.colOnSO, td.colOnBO, td.colInStock, td.colOnOrder, td.colCostPrice, td.colCostPriceInc, td.colSalePrice, td.colSalePriceInc{
+                    text-align: right !important;
+                }
+            </style>
               <div class="table-responsive">
-                {{>non_transactional_list tablename="tblInventoryOverview"}}
+                {{>datatablelist
+                  tablename="tblInventoryOverview"
+                  apiName= apiFunction
+                  indexeddbname = 'TProductQtyList'
+                  tableheaderrecords = tableheaderrecords
+                  exportfilename = 'Product QTY List'
+                  istransaction = false
+                  apiParams= apiParams
+                  datahandler = datahandler
+                  service=service
+                  lowercaseDataName='tproductqtylist'
+                  exIndexDBName = 'tproductqtylist'
+                  exdatahandler = exDataHandler
+                  searchAPI = searchAPI
+                }}
+                <!-- {{>non_transactional_list tablename="tblInventoryOverview"}} -->
               </div>
             </div>
             <div class="row no-gutters">
@@ -179,7 +194,7 @@
   <div class="modal fade" role="dialog" tabindex="-1" id="addProductModal">
     {{> newproductpop}}
   </div>
-  <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -267,5 +282,9 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
+  {{> import_template ImportformName="Setup Inventory Settings"}}
+    <script>
+        modalDraggable();
+    </script>
 </template>

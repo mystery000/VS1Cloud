@@ -1556,6 +1556,14 @@ Template.basreturn.onRendered(function() {
         $("#prt_credits8cost").html("$" + total_amounts.toFixed(2));
     };
 
+    // Damien
+    // Set focus when open account list modal
+    $( "#departmentModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#departmentList_filter .form-control-sm').get(0).focus();
+        }, 500);
+    });
+
     $('#sltDepartment').editableSelect();
     $('#departOptionTile').text("BAS Options");
     $('#sltDepartment').val("All");

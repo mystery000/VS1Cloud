@@ -234,7 +234,7 @@ FlowRouter.triggers.exit([
         "employeescard", "leadscard", "supplierscard", "journalentrycard", "fixedassetcard", "bom_setup",
         "servicelogcard", "new_process", "stockadjustmentcard", "paymentcard", "supplierpaymentcard",
         "purchaseordercard", "billcard", "creditcard", "allreports", "new_quote", "new_salesorder",
-        "new_invoice", "refundcard","appointments"
+        "new_invoice", "refundcard","appointments","dashboardsalesmanager","dashboardsales"
     ]});
 
 authenticatedRoutes.route('/accounttransactions', {
@@ -339,6 +339,15 @@ authenticatedRoutes.route('/salesordercard', {
     }
 });
 
+authenticatedRoutes.route('/invoicetemp', {
+    name: 'invoice_temp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'invoice_temp'
+        });
+    }
+});
+
 authenticatedRoutes.route('/invoicecard', {
     name: 'new_invoice',
     action() {
@@ -347,6 +356,7 @@ authenticatedRoutes.route('/invoicecard', {
         });
     }
 });
+
 
 authenticatedRoutes.route('/refundcard', {
     name: 'refundcard',
@@ -1187,10 +1197,10 @@ authenticatedRoutes.route('/creditcard', {
 });
 
 authenticatedRoutes.route('/agedpayables', {
-    name: 'agedpayables',
+    name: 'newagedpayables',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'agedpayables'
+            yield: 'newagedpayables'
         });
     }
 });
@@ -1486,6 +1496,16 @@ authenticatedRoutes.route('/clockOnOff', {
         });
     }
 });
+
+authenticatedRoutes.route('/process_clock_list', {
+    name: 'process_clock_template',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'process_clock_template'
+        });
+    }
+});
+
 
 authenticatedRoutes.route('/squareapi', {
     name: 'squareapi',
@@ -2313,6 +2333,24 @@ authenticatedRoutes.route('/eft', {
           yield: 'eft_export'
       })
   }
+})
+
+authenticatedRoutes.route('/eftfilescreated', {
+    name: 'eftFilesCreated',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'eftFilesCreated'
+        })
+    }
+})
+
+authenticatedRoutes.route('/eftbankrulelist', {
+    name: 'eftBankRuleList',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'eftBankRuleList'
+        })
+    }
 })
 
 authenticatedRoutes.route('/workordercard', {

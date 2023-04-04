@@ -512,15 +512,11 @@ Template.newLeaveRequestModal.onRendered(() => {
 
 Template.newLeaveRequestModal.events({
     'click #btnSaveLeaveRequest': async function(event) {
-        
         playSaveAudio();
-
         let templateObject = Template.instance();
-        
         setTimeout(async function() {
-
             let currentId     = $("#edtEmpID").val();
-            let employeeID    = (!isNaN(currentId.id)) ? currentId.id : 0;
+            let employeeID    = (!isNaN(currentId) && parseInt(currentId) !== 0) ? currentId : localStorage.getItem("mySessionEmployeeLoggedID")? localStorage.getItem("mySessionEmployeeLoggedID"):0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
             let Leave         = $('#edtLeaveTypeofRequest').val();
@@ -558,10 +554,8 @@ Template.newLeaveRequestModal.events({
                 return false;
             } else {
                 $('.fullScreenSpin').css('display', 'block');
-
                 let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
                 let dbEndDate   = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
-
                 let leaveRequestSettings = new LeaveRequest({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
@@ -658,7 +652,8 @@ Template.newLeaveRequestModal.events({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
                             ID: parseInt(deleteID),
-                            Status: 'Deleted'
+                            Status: 'Deleted',
+                            Active:false,
                         }),
                     })
 

@@ -15,8 +15,8 @@ Template.bankNameModal.onCreated(function () {
 
   templateObject.getDataTableList = function(data) {
     let dataList = [
-        data[0],
-        data[1]
+        data.BankCode || "",
+        data.BankName || ""
     ];
     return dataList;
   }
@@ -33,7 +33,7 @@ Template.bankNameModal.onRendered(function () {
       var eftTable = $(this).closest("tr");
       let eftBankName = eftTable.find('.colBankName').text();
       let eftDescription = eftTable.find('.colDescription').text();
-      $('#eftOptionsModal').modal('toggle');
+      // $('#eftOptionsModal').modal('toggle');
       $('#eftBankName').val(eftBankName);
       $('#eftDescription').val(eftDescription);
   });

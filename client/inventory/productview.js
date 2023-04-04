@@ -322,7 +322,7 @@ Template.productview.onRendered(function () {
         $("#UOMListModal").modal("toggle");
       });
 
-      $(document).on("click", "#departmentList tbody tr", function (e) {
+      $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
         let table = $(this);
         let deptName = table.find(".colDeptName").text();
         templateObject.bindept.set(deptName);
@@ -1294,7 +1294,7 @@ Template.productview.onRendered(function () {
                   let isBOMProduct = false;
                   let bomProducts = templateObject.bomProducts.get();
                   let bomIndex = bomProducts.findIndex((product) => {
-                    return data.fields.ProductName == product.fields.Caption;
+                    return data.fields.ProductName == product?.fields?.Caption;
                   });
 
                   if (bomIndex > -1) {
@@ -1456,6 +1456,7 @@ Template.productview.onRendered(function () {
                   templateObject.isShowBOMModal.set(true);
                 })
                 .catch(function (err) {
+                  console.log(err);
                   $(".fullScreenSpin").css("display", "none");
                 });
             }

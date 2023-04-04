@@ -171,7 +171,7 @@ Template.binlocationslist.onRendered(function () {
 
     $("#sltDepartmentList").editableSelect();
     $("#sltDepartmentList").editableSelect().on("click.editable-select", editableService.clickDepartment);
-    $(document).on("click", "#departmentList tbody tr", function (e) {
+    $(document).on("click", "#tblDepartmentCheckbox tbody tr", function (e) {
       let table = $(this);
       let deptName = table.find(".colDeptName").text();
       templateObject.bindept.set(deptName);
@@ -1287,6 +1287,7 @@ Template.binlocationslist.events({
         });
 
       }).catch(function (err) {
+        swal('Error', err, 'error');
         $('.fullScreenSpin').css('display','none');
       });
     }, delayTimeAfterSound);
@@ -1349,7 +1350,7 @@ Template.binlocationslist.events({
 
       }).catch(function (err) {
         $('.fullScreenSpin').css('display','none');
-        swal('Error', 'Error occured!', 'error');
+        swal('Error', err, 'error');
       });
     }, delayTimeAfterSound);
   },
@@ -1383,7 +1384,6 @@ Template.binlocationslist.events({
       productService.saveBin(data).then(function (data) {
         $('.fullScreenSpin').css('display','none');
         swal('Success', 'Saved Successfully!', 'success').then(function(){
-
           getVS1Data('TProductBin').then(function (dataObject) {
             let data = JSON.parse(dataObject[0].data);
             if(data.tproductbin.length > 0) {
@@ -1394,7 +1394,7 @@ Template.binlocationslist.events({
               }
               data.tproductbin.push(dataArray);
               clearData('TProductBin').then(function(){
-                addVS1Data('TProductBin', JSON.stringify(data)).then(function(){
+                addVS1Data('TProductBin', JSON.stringify(data)).then(function(){alert();
                   window.open('/binlocationslist', '_self');
                 })
               })
@@ -1403,6 +1403,7 @@ Template.binlocationslist.events({
           });
         })
       }).catch(function (err) {
+        swal('Error', err, 'error');
         $('.fullScreenSpin').css('display','none');
       });
     }, delayTimeAfterSound);
