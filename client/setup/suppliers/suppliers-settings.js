@@ -51,8 +51,9 @@ Template.wizard_suppliers.onCreated(() => {
             salesOrderBalance || 0.00,
             data.Suburb || '',
             data.Country || '',
-            linestatus,
             data.Notes || '',
+            linestatus,
+            
             
         ];
         return dataList;
@@ -63,14 +64,15 @@ Template.wizard_suppliers.onCreated(() => {
         { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
         { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
         { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
-        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "50" },
         { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
         { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
         { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
         { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "100" },
         { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
-        { index: 10, label: "Status", class: "colStatus", active: true, display: true, width: "120" },
-        { index: 11, label: 'Comments', class: 'colNotes', active: true, display: true, width: "100" },
+        { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "200" },
+        { index: 11, label: "Status", class: "colStatus", active: true, display: true, width: "120" },
+        
        
         
     ];
