@@ -83,9 +83,10 @@ Template.employeelistpop.onCreated(function () {
 });
 
 Template.employeelistpop.onRendered(function (){
-    $( "#employeeListPOPModal_filter" ).on('shown.bs.modal', function(){
+    $( "#employeeListPOPModal, #employeeListModal" ).on('shown.bs.modal', function(){
         setTimeout(function() {
-            $('#tblEmployeelistpop_filter .form-control-sm').get(0).focus()
+            $('#tblEmployeelist_filter .form-control-sm').get(0).focus();
+            $('#tblEmployeelistpop_filter .form-control-sm').get(0).focus();
         }, 500);
     });
     //$('.fullScreenSpin').css('display','inline-block');

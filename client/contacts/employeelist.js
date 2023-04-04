@@ -65,7 +65,7 @@ Template.employeelist.onCreated(function () {
         {index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "80"},
         {index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120"},
         {index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120"},
-        {index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: "110"},
+        {index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: "300"},
         {index: 11, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "110"},
         {index: 12, label: 'State', class: 'colState', active: false, display: true, width: "110"},
         {index: 13, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80"},
