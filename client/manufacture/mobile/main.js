@@ -105,13 +105,7 @@ Template.mobileapp.onRendered(async function() {
     }
     let temp = await templateObject.getAllWorkorders()
     templateObject.workOrderRecords.set(temp);
-
-
     templateObject.inputStatus.set("enterJobNumber");  // enterProcess, enterEmployee,  
-    
-
-
-
 });
 
 Template.mobileapp.events({
@@ -217,9 +211,7 @@ Template.mobileapp.events({
 
                     $(".mobile-left-workorder-list").css('display', 'block');
                     let workOrderData = JSON.parse(dataObject[0].data);
-
-                    console.log(workOrderData);
-                    
+                   
                     if(!isMobile) {
 
                         let table = $("#tblWorkOrderList").DataTable({
