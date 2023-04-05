@@ -3650,7 +3650,7 @@ Template.creditcard.onRendered(() => {
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
-  $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+  $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
     $(".colAccountName").removeClass("boldtablealertsborder");
     let selectLineID = $("#selectLineID").val();
     let taxcodeList = templateObject.taxraterecords.get();
