@@ -3,9 +3,9 @@
         .portlet-placeholder {
             border: 1px dotted black;
             margin: 0 1em 1em 0;
-            height: 100px;
-            width: 100px;
-        }
+            /* height: 100px;
+            width: 100px; */
+        } 
 
         .ui-sortable .card.hovered {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.50) !important;
@@ -144,16 +144,21 @@
         .dimmedChart .fa-eye-slash {
             color: #e74a3b;
         }
+
+        .draggable-panel {
+            /* padding-right: 0.75rem;
+            padding-left: 0.75rem; */
+        }    
     </style>
     <div class="row no-gutters justify-content-end">
-        <button class="btn btn-success float-right hideelement" id="btnDone" type="button" style="margin:0 8px 16px;">
+        <button class="btn btn-success float-right" id="btnDone" type="button" style="margin:0 8px 16px;">
             <i class="fa fa-save" style="margin-right: 5px;"></i>Save Changes
         </button>
-        <button class="btn btn-warning float-right hideelement resetchartbtn" id="resetcharts" type="button"
+        <button class="btn btn-warning float-right resetchartbtn" id="resetcharts" type="button"
             style="margin:0 8px 16px;">
             <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Charts
         </button>
-        <button class="btn btn-secondary float-right hideelement" id="btnCancel" type="button"
+        <button class="btn btn-secondary float-right" id="btnCancel" type="button"
             style="margin:0 8px 16px;">
             <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
         </button>

@@ -122,6 +122,7 @@
        <!-- Header -->
        {{> transaction_header
         cardType="Invoice"
+        clientType='Customer'
         data=invoicerecord
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
@@ -144,6 +145,8 @@
         showCopyTransaction=true
         showCopyToInvoice=false
         showCopyToOrder=false
+        gridTableId='tblInvoiceLine'
+        templateName=templateName
       }}
       <!-- End Header -->
       <div>
@@ -871,7 +874,7 @@
     </div>
     <!-- END PDF -->
     {{/if}}
-    {{> all_transaction_modals customerRecord=customerRecord}}
+    <!-- {{> all_transaction_modals customerRecord=customerRecord}} -->
   </div>
 
   <!-- Start Help Video Modal -->

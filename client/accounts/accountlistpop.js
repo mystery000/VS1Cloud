@@ -130,11 +130,7 @@ Template.accountlistpop.onCreated(() => {
 });
 Template.accountlistpop.onRendered(function() {
 
-    $( "#accountListModal" ).on('shown.bs.modal', function(){
-        setTimeout(function() {
-            $('#tblAccountListPop_filter .form-control-sm').get(0).focus()
-        }, 500);
-    });
+
 //     let templateObject = Template.instance();
 //     let sideBarService = new SideBarService();
 //     let utilityService = new UtilityService();
