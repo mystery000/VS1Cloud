@@ -29,6 +29,7 @@ Template.alltaskdatatable.onCreated(function () {
     templateObject.todayRecordsArray = new ReactiveVar([]);
     templateObject.upcomingRecordsArray = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+
     templateObject.overdueRecords = new ReactiveVar([]);
     templateObject.selected_id = new ReactiveVar(0);
     templateObject.task_id = new ReactiveVar(0);
@@ -60,7 +61,14 @@ Template.alltaskdatatable.onCreated(function () {
     // labels tab
     templateObject.allLeads = new ReactiveVar([]);
 
-    templateObject.getDataTableList = function (data) {
+
+    templateObject.tableheaderrecords_AllTask = new ReactiveVar([]);
+    templateObject.tableheaderrecords_TodayTask = new ReactiveVar([]);
+    templateObject.tableheaderrecords_UpcomingTask = new ReactiveVar([]);
+    templateObject.tableheaderrecords_NewProjects = new ReactiveVar([]);
+
+
+    templateObject.getDataTableList_AllTask = function (data) {
         let td0, td1, td11, td4, td5;
         let projectName = "";
         let labelsForExcel = "";
@@ -164,17 +172,277 @@ Template.alltaskdatatable.onCreated(function () {
         return dataList;
     }
 
-    let headerStructure = [
+    let headerStructure_AllTask = [
         {index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "70"},
-        {index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "100"},
+        {index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "200"},
         {index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "150"},
         {index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "200"},
-        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "150"},
+        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
         {index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "150"},
         {index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "100"},
-        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "60"},
+        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
     ]
-    templateObject.tableheaderrecords.set(headerStructure);
+    templateObject.tableheaderrecords_AllTask.set(headerStructure_AllTask);
+
+
+    templateObject.getDataTableList_TodayTask = function (data) {
+        let today = moment().format("YYYY-MM-DD");
+        if(data.due_date.substring(0, 10) != today)
+            return [];
+
+        let td0, td1, td11, td4, td5;
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+
+        if (data.Completed) {
+            completed = "checked";
+            chk_complete = "chk_uncomplete";
+        } else {
+            completed = "";
+            chk_complete = "chk_complete";
+        }
+        td0 = `
+                <div class="custom-control custom-checkbox chkBox pointer no-modal "
+                style="width:15px;margin-right: -6px;">
+                <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+                    id="formCheck-${data.ID}" ${completed}>
+                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.ID}"
+                    for="formCheck-${data.ID}"></label>
+                </div>`;
+
+
+        if (data.due_date == "" || data.due_date == null) {
+            td1 = "";
+            td11 = "";
+        } else {
+            td11 = moment(data.due_date).format("MM/DD/YYYY");
+            td1 = `<label style="display:none;">${data.due_date}</label>` + td11;
+
+            let tdue_date = moment(data.due_date).format("YYYY-MM-DD");
+            if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                color_num = 3; // Red
+            } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                color_num = 2; // Orange
+            } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                color_num = 0; // Green
+            }
+
+            td0 = `
+                    <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+                    style="width:15px;margin-right: -6px;${completed_style}">
+                    <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+                        id="formCheck-${data.ID}" ${completed}>
+                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.ID}"
+                        for="formCheck-${data.ID}"></label>
+                    </div>`;
+        }
+
+        if (data.TaskLabel) {
+            if (data.TaskLabel.fields) {
+                td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${data.TaskLabel.ID}"><i class="fas fa-tag"
+                        style="margin-right: 5px; color:${data.TaskLabel.Color}" data-id="${data.TaskLabel.ID}"></i>${data.TaskLabel.TaskLabelName}</a></span>`;
+                labelsForExcel = data.TaskLabel.TaskLabelName;
+            } else {
+                data.TaskLabel.forEach((lbl) => {
+                    td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.ID}"><i class="fas fa-tag"
+                            style="margin-right: 5px; color:${lbl.Color}" data-id="${lbl.ID}"></i>${lbl.TaskLabelName}</a></span>`;
+                    labelsForExcel += lbl.TaskLabelName + " ";
+                });
+            }
+        } else {
+            td4 = "";
+        }
+
+        projectName = data.ProjectName;
+        if (data.ProjectName == "" || data.ProjectName == "Default") {
+            projectName = "";
+        }
+
+        let all_projects = templateObject.all_projects.get();
+        let projectColor = 'transparent';
+        if (data.ProjectID != 0) {
+            let projects = all_projects.filter(project => project.ID == data.ProjectID);
+            if (projects.length && projects[0].ProjectColour) {
+                projectColor = projects[0].ProjectColour;
+            }
+        }
+
+        let dataList = [
+            `<i class="fas fa-flag task_modal_priority_${data.priority}" data-id="${data.ID}" aria-haspopup="true" aria-expanded="false"></i>`,
+            data.ContactName,
+            td1,
+            data.TaskName,
+            data.TaskDescription.length < 80 ? data.TaskDescription : data.TaskDescription.substring(0, 79) + "...",
+            "",
+            data.ProjectID,
+            data.Active ? "" : "In-Active",
+            // data.ID,
+            // color_num,
+            // labelsForExcel,
+            //data.Completed,
+            //projectColor
+        ];
+        return dataList;
+    }
+    let headerStructure_TodayTask = [
+        {index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "70"},
+        {index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "200"},
+        {index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "150"},
+        {index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "200"},
+        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
+        {index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "150"},
+        {index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "100"},
+        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
+    ]
+    templateObject.tableheaderrecords_TodayTask.set(headerStructure_TodayTask);
+
+
+    templateObject.getDataTableList_UpcomingTask = function (data) {
+        let today = moment().format("YYYY-MM-DD");
+        if(data.due_date.substring(0, 10) <= today)
+            return [];
+
+        let td0, td1, td11, td4, td5;
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+
+        if (data.Completed) {
+            completed = "checked";
+            chk_complete = "chk_uncomplete";
+        } else {
+            completed = "";
+            chk_complete = "chk_complete";
+        }
+        td0 = `
+                <div class="custom-control custom-checkbox chkBox pointer no-modal "
+                style="width:15px;margin-right: -6px;">
+                <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+                    id="formCheck-${data.ID}" ${completed}>
+                <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.ID}"
+                    for="formCheck-${data.ID}"></label>
+                </div>`;
+
+
+        if (data.due_date == "" || data.due_date == null) {
+            td1 = "";
+            td11 = "";
+        } else {
+            td11 = moment(data.due_date).format("MM/DD/YYYY");
+            td1 = `<label style="display:none;">${data.due_date}</label>` + td11;
+
+            let tdue_date = moment(data.due_date).format("YYYY-MM-DD");
+            if (tdue_date <= moment().format("YYYY-MM-DD")) {
+                color_num = 3; // Red
+            } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+                color_num = 2; // Orange
+            } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+                color_num = 0; // Green
+            }
+
+            td0 = `
+                    <div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+                    style="width:15px;margin-right: -6px;${completed_style}">
+                    <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+                        id="formCheck-${data.ID}" ${completed}>
+                    <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.ID}"
+                        for="formCheck-${data.ID}"></label>
+                    </div>`;
+        }
+
+        if (data.TaskLabel) {
+            if (data.TaskLabel.fields) {
+                td4 = `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${data.TaskLabel.ID}"><i class="fas fa-tag"
+                        style="margin-right: 5px; color:${data.TaskLabel.Color}" data-id="${data.TaskLabel.ID}"></i>${data.TaskLabel.TaskLabelName}</a></span>`;
+                labelsForExcel = data.TaskLabel.TaskLabelName;
+            } else {
+                data.TaskLabel.forEach((lbl) => {
+                    td4 += `<span class="taskTag"><a class="taganchor filterByLabel" href="" data-id="${lbl.ID}"><i class="fas fa-tag"
+                            style="margin-right: 5px; color:${lbl.Color}" data-id="${lbl.ID}"></i>${lbl.TaskLabelName}</a></span>`;
+                    labelsForExcel += lbl.TaskLabelName + " ";
+                });
+            }
+        } else {
+            td4 = "";
+        }
+
+        projectName = data.ProjectName;
+        if (data.ProjectName == "" || data.ProjectName == "Default") {
+            projectName = "";
+        }
+
+        let all_projects = templateObject.all_projects.get();
+        let projectColor = 'transparent';
+        if (data.ProjectID != 0) {
+            let projects = all_projects.filter(project => project.ID == data.ProjectID);
+            if (projects.length && projects[0].ProjectColour) {
+                projectColor = projects[0].ProjectColour;
+            }
+        }
+
+        let dataList = [
+            `<i class="fas fa-flag task_modal_priority_${data.priority}" data-id="${data.ID}" aria-haspopup="true" aria-expanded="false"></i>`,
+            data.ContactName,
+            td1,
+            data.TaskName,
+            data.TaskDescription.length < 80 ? data.TaskDescription : data.TaskDescription.substring(0, 79) + "...",
+            "",
+            data.ProjectID,
+            data.Active ? "" : "In-Active",
+            // data.ID,
+            // color_num,
+            // labelsForExcel,
+            //data.Completed,
+            //projectColor
+        ];
+        return dataList;
+    }
+    let headerStructure_UpcomingTask = [
+        {index: 0, label: 'Priority', class: 'colPriority', active: true, display: true, width: "70"},
+        {index: 1, label: 'Contact', class: 'colContact', active: true, display: true, width: "200"},
+        {index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "150"},
+        {index: 3, label: 'Task', class: 'colTaskName', active: true, display: true, width: "200"},
+        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
+        {index: 5, label: 'Labels', class: 'colTaskLabels', active: true, display: true, width: "150"},
+        {index: 6, label: 'Project', class: 'colTaskProjects', active: true, display: true, width: "100"},
+        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
+    ]
+    templateObject.tableheaderrecords_UpcomingTask.set(headerStructure_UpcomingTask);
+
+
+    templateObject.getDataTableList_NewProjects = function (data) {
+        let dataList = [
+            moment(data.due_date).format("MM/DD/YYYY"),
+            data.TaskName,
+            data.TaskDescription.length < 80 ? data.TaskDescription : data.TaskDescription.substring(0, 79) + "...",
+            data.TaskName,
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+    let headerStructure_NewProjects = [
+        {index: 0, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "150"},
+        {index: 1, label: 'Project Name', class: 'colProjectName', active: true, display: true, width: "200"},
+        {index: 2, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "300"},
+        {index: 3, label: 'Project Tasks', class: 'colProjectTasks', active: true, display: true, width: "200"},
+        {index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
+    ]
+    templateObject.tableheaderrecords_NewProjects.set(headerStructure_NewProjects);
 
 })
 ;
@@ -3826,13 +4094,9 @@ Template.alltaskdatatable.helpers({
     allRecords: () => {
         return Template.instance().allRecords.get();
     },
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
-    },
     overdueRecords: () => {
         return Template.instance().overdueRecords.get();
     },
-
     todayRecords: () => {
         return Template.instance().todayRecords.get();
     },
@@ -3909,35 +4173,155 @@ Template.alltaskdatatable.helpers({
         return Template.instance().favorite_projects.get();
     },
 
-    apiFunction: function () {
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+
+
+    tableheaderrecords_AllTask: () => {
+        return Template.instance().tableheaderrecords_AllTask.get();
+    },
+
+    apiFunction_AllTask: function () {
         return crmService.getAllTasksList;
     },
 
-    searchAPI: function () {
+    searchAPI_AllTask: function () {
         return crmService.getAllTasksByName;
     },
 
-    service: () => {
+    service_AllTask: () => {
         return crmService;
     },
 
-    datahandler: function () {
+    datahandler_AllTask: function () {
         let templateObject = Template.instance();
         return function (data) {
-            let dataReturn = templateObject.getDataTableList(data)
+            let dataReturn = templateObject.getDataTableList_AllTask(data)
             return dataReturn
         }
     },
 
-    exDataHandler: function () {
+    exDataHandler_AllTask: function () {
         let templateObject = Template.instance();
         return function (data) {
-            let dataReturn = templateObject.getDataTableList(data)
+            let dataReturn = templateObject.getDataTableList_AllTask(data)
             return dataReturn
         }
     },
 
-    apiParams: function () {
+    apiParams_AllTask: function () {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+    },
+
+
+    tableheaderrecords_TodayTask: () => {
+        return Template.instance().tableheaderrecords_TodayTask.get();
+    },
+
+    apiFunction_TodayTask: function () {
+        return crmService.getAllTasksList;
+    },
+
+    searchAPI_TodayTask: function () {
+        return crmService.getAllTasksByName;
+    },
+
+    service_TodayTask: () => {
+        return crmService;
+    },
+
+    datahandler_TodayTask: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_TodayTask(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_TodayTask: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_TodayTask(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_TodayTask: function () {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+    },
+
+
+    tableheaderrecords_UpcomingTask: () => {
+        return Template.instance().tableheaderrecords_UpcomingTask.get();
+    },
+
+    apiFunction_UpcomingTask: function () {
+        return crmService.getAllTasksList;
+    },
+
+    searchAPI_UpcomingTask: function () {
+        return crmService.getAllTasksByName;
+    },
+
+    service_UpcomingTask: () => {
+        return crmService;
+    },
+
+    datahandler_UpcomingTask: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_UpcomingTask(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_UpcomingTask: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_UpcomingTask(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_UpcomingTask: function () {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+    },
+
+
+    tableheaderrecords_NewProjects: () => {
+        return Template.instance().tableheaderrecords_NewProjects.get();
+    },
+
+    apiFunction_NewProjects: function () {
+        return crmService.getAllTasksList;
+    },
+
+    searchAPI_NewProjects: function () {
+        return crmService.getAllTasksByName;
+    },
+
+    service_NewProjects: () => {
+        return crmService;
+    },
+
+    datahandler_NewProjects: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_NewProjects(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_NewProjects: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_NewProjects(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_NewProjects: function () {
         return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
     },
 
