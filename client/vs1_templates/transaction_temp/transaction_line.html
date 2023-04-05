@@ -396,9 +396,29 @@
                     {{#each item in recordLineItems}}
                     <tr class="dnd-moved" id={{item.lineID}}>
                         <td contenteditable="false"
-                            class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
+                            class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
                                 class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"
-                                itemid="{{item.itemID}}"></td>
+                                itemid="{{item.itemID}}"> -->
+                                
+                                {{>vs1___dropdown
+                                    data=item.item
+                                    type='search'
+                                    id='lineProductName'
+                                    name='lineProductName'
+                                    modalId='productListModal'
+                                    list_template_name='productlistpop'
+                                    modal_title='Product List'
+                                    innerModal=true
+                                    label = ''
+                                    colNameForValue ='productName'
+                                    target_modal_id='newProductModal'
+                                    target_template_id='newproductpop'
+                                    custid=item.lineID
+                                    is_editable=true
+                                    noBorder=true
+                                }}
+                        </td>
                         {{#if item.serialnumbers}}
                         <td contenteditable="true"
                             class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" data-pqa="(Serial Number: {{item.serialnumbers}})">
@@ -413,9 +433,26 @@
                             {{item.description}}</td>
                         {{/if}}
                         <td contenteditable="false"
-                            class="colAccountName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
+                            class="colAccountName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
                                 class="es-input highlightSelect lineAccountName" type="search"
-                                value="{{item.accountname}}"></td>
+                                value="{{item.accountname}}"> -->
+                                {{>vs1___dropdown
+                                    data=item.item
+                                    type='search'
+                                    id='lineAccountName'
+                                    name=name
+                                    modalId= 'accountListModal'
+                                    list_template_name='accountlistpop'
+                                    modal_title='Account List'
+                                    innerModal=true
+                                    colNameForValue = 'colAccountName'
+                                    target_modal_id='edtAccountModal'
+                                    target_template_id='addaccountpop'
+                                    is_editable=true
+                                    noBorder=true
+                                }}
+                            </td>
                         <td contenteditable="true"
                             class="lineMemo colMemo {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.memo}}
@@ -437,10 +474,32 @@
                                 readonly></td>
 
                         <td contenteditable="false"
-                            class="lineUOM colUnits pointer {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
-                            style="text-align: right!important;cursor: pointer;"><input
+                            class="colUnits pointer {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                            style="text-align: right!important;cursor: pointer;">
+                            <!-- <input
                                 class="es-input highlightSelect colUnits lineUOM" type="search"
-                                value="{{item.UnitOfMeasure}}"></td>
+                                value="{{item.UnitOfMeasure}}"> -->
+
+                                {{> vs1___dropdown
+                                    data=item.UnitOfMeasure
+                                    type='search'
+                                    id='edtUOMID'
+                                    name=name
+                                    modalId='UOMListModal'
+                                    list_template_name='uomlistpop'
+                                    modal_title='UOM List'
+                                    innerModal=true
+                                    colNameForValue='colUOMName'
+                                    target_modal_id='newUOMModal'
+                                    target_template_id='adduompop'
+                                    is_editable=true
+                                    noBorder=true
+                                    custid=item.lineID
+                                }}
+
+                        
+
+                        </td>
 
                         {{#if item.serialnumbers}}
                         <td class="th colSerialNo {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
@@ -465,8 +524,24 @@
                                 style="margin-left: 40px; font-size: 22px;"></i></td>
                         <td contenteditable="false"
                             class="colCustomerJob {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
-                            <input class="es-input highlightSelect lineCustomerJob" type="search"
-                                value="{{item.customerJob}}">
+                            
+                            <!-- <input class="es-input highlightSelect lineCustomerJob" type="search"
+                                value="{{item.customerJob}}"> -->
+                                {{> vs1___dropdown
+                                    data='item.customerJob'
+                                    type='search'
+                                    id='lineCustomerJob'
+                                    name='lineCustomerJob'
+                                    modalId= 'customerListModal'
+                                    list_template_name='customerlistpop'
+                                    modal_title='Customer List'
+                                    innerModal=true
+                                    colNameForValue = 'colCompany'
+                                    target_modal_id='editCustomerModal'
+                                    target_template_id='addcustomerpop'
+                                    is_editable=true
+                                    noBorder=true
+                                }}
                         </td>
                         <td
                             class="colUnitPrice colUnitPriceEx {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">
@@ -509,8 +584,25 @@
                             class="lineTaxRate colTaxRate pointer {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;">{{item.taxRate}}</td>
                         <td contenteditable="false"
-                            class="colTaxCode {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+                            class="colTaxCode {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
+                                class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"> -->
+                                {{> vs1___dropdown
+                                    data=item.taxCode
+                                    type='search'
+                                    id='lineTaxCode'
+                                    name='lineTaxCode'
+                                    modalId= 'taxRateListModal'
+                                    list_template_name='taxratelistpop'
+                                    modal_title='Customer List'
+                                    innerModal=true
+                                    colNameForValue = 'colName'
+                                    target_modal_id='newTaxRateModal'
+                                    target_template_id='newtaxratepop'
+                                    is_editable=true
+                                    noBorder=true
+                                    custid=item.lineID
+                                }}
                         </td>
 
                         <td contenteditable="false"
