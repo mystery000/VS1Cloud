@@ -115,8 +115,9 @@
 
     {{#if invoicerecord}}
     <form>
-      <!-- {{> transaction_header
+      {{> transaction_header
         cardType="Invoice"
+        clientType='Customer'
         data=invoicerecord
         uploadedFile=uploadedFile
         isCurrencyEnable=isCurrencyEnable
@@ -139,9 +140,11 @@
         showCopyTransaction=true
         showCopyToInvoice=false
         showCopyToOrder=false
-      }} -->
+        gridTableId='tblInvoiceLine'
+        templateName=templateName
+      }}
 
-      {{>transactionheader
+      <!-- {{>transactionheader
         includeClient=true
         includeAddress=true
         Category='invoice'
@@ -156,7 +159,7 @@
         data=invoicerecord
         gridTableId='tblInvoiceLine'
         printTableId='invoice_print'
-       }}
+       }} -->
 
 
 
@@ -167,10 +170,11 @@
           isForeignEnabled=isForeignEnabled
           canShowBackOrder=true
           canShowUOM=true
-          includeBOnShippedQty=true
+          includeBOnShippedQty=includeBOnShippedQty
           isBatchSerialNoTracking=isBatchSerialNoTracking
           getDefaultCurrency=getDefaultCurrency
           }}
+
         <!-- {{> deletepop itemName1="Refund" itemName2="refund" itemName3="Refund" button1="btnDeleteRefund" button2="btnDeleteFollowingRefunds"}} -->
       </div>
 

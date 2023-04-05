@@ -61,7 +61,7 @@ Template.customerlist.onCreated(function(){
     }
 
     let headerStructure = [
-        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "10" },
+        { index: 0, label: 'ID', class:'colCustomerID', active: false, display: true, width: "10" },
         { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "200" },
         { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "60" },
         { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "110" },
@@ -387,7 +387,8 @@ Template.customerlist.onRendered(function() {
     //templateObject.getCustomerList();
 
     $('#tblCustomerlist tbody').on( 'click', 'tr', function () {
-        var listData = $(this).closest('tr').find('.colCustomerID').text();
+        //var listData = $(this).closest('tr').find('.colCustomerID').text();
+        var listData = $(this).closest('tr').attr("id");
         var transactiontype = $(this).closest('tr').find('.colJob').text();
         if(listData){
             if(transactiontype != ""){
