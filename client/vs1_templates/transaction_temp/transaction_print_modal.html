@@ -36,12 +36,13 @@
               >
                 <div class="custom-control custom-switch ml-1">
                   <input
-                    class="custom-control-input chkGlobalSettings chooseTemplateBtn"
-                    name="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
-                    id="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
-                    data-id="{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
-                    type="checkbox"
-                    style="cursor: pointer;"
+                      class="custom-control-input chkGlobalSettings chooseTemplateBtn"
+                      name="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                      id="print_{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                      data-id="{{getTemplateKey TransactionType printTypeTemplate.templateName}}"
+                      checked={{ equals @index 0}}
+                      type="checkbox"
+                      style="cursor: pointer;"
                   />
                   <label
                     class="custom-control-label"
@@ -233,6 +234,7 @@
                           name="{{getTemplateTitle TransactionType printTypeTemplate.templateName}}"
                           id="{{getTemplateKey TransactionType printTypeTemplate.templateName}}_{{template.fields.Template}}"
                           value="{{template.fields.Template}}"
+                          checked={{template.fields.Active}}
                           style="cursor: pointer;"
                         />
                         <label

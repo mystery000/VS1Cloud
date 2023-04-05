@@ -5820,6 +5820,9 @@ Template.templatesettings.events({
   "click .btnTopGlobalSave": function () {
     playSaveAudio();
     setTimeout(function () {
+      // Alex: add for print options {
+      $('.top-panel').css('display', 'none');
+      // @}
       $(".fullScreenSpin").css("display", "inline-block");
       var bill = $('input[name="Bills"]:checked').val();
       var credits = $('input[name="Credits"]:checked').val();
@@ -10475,9 +10478,11 @@ Template.templatesettings.events({
     templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
   },
 
+  // Alex: add for print options {
   'click .chkGlobalSettings, keyup .template-name-input, change input': function (event) {
     $('.top-panel').css('display', 'inline-block');
   },
+  // @}
 });
 Template.registerHelper("equals", function (a, b) {
   return a === b;

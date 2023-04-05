@@ -202,6 +202,9 @@ Template.transaction_print_modal.onCreated(async function () {
               SettingName: template.name,
               Template: item,
               Description: `Template ${item}`,
+              // Alex: add for print options {
+              Active: item == "1" ? true : false,
+              // @}
             },
             type: "TTemplateSettings",
           }));
@@ -224,6 +227,9 @@ Template.transaction_print_modal.onCreated(async function () {
                 SettingName: item.fields.SettingName,
                 Template: item.fields.Template,
                 Description: item.fields.Description === "" ? `Template ${item.fields.Template}` : item.fields.Description,
+                // Alex: add for print options {
+                Active: item.fields.Active,
+                // @}
               },
               type: "TTemplateSettings",
             }))
@@ -235,6 +241,9 @@ Template.transaction_print_modal.onCreated(async function () {
                 SettingName: template.name,
                 Template: item,
                 Description: `Template ${item}`,
+                // Alex: add for print options {
+                Active: item == "1" ? true : false,
+                // @}
               },
               type: "TTemplateSettings",
             }));
