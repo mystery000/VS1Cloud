@@ -352,7 +352,8 @@ Template.employeelist.onRendered(function () {
       */
 
     $('#tblEmployeelist tbody').on('click', 'tr', function () {
-        const listData = $(this).closest('tr').find(".colEmployeeNo").text();
+        //const listData = $(this).closest('tr').find(".colEmployeeNo").text();
+        const listData = $(this).closest('tr').attr("id");
         if (listData) {
             let params = ''
             var queryParams = FlowRouter.current().queryParams;
