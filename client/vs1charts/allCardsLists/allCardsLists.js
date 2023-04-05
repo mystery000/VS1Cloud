@@ -251,7 +251,7 @@ Template.allCardsLists.events({
             $(".card-visibility").removeClass('hideelement');
             $(".card-visibility").addClass('dimmedChart');                    
             $(".cardEditOptions").removeClass("hideelement");
-            // $(".actionButtonCardsTop").removeClass("hideelement");
+            $(".actionButtonCardsTop").removeClass("hideelement");
         // }
     },
     "change .cardShowOption": function (e) {
@@ -270,7 +270,7 @@ Template.allCardsLists.events({
             $('.card-visibility').removeClass('dimmedChart');
             $(".cardSettingBtn").removeClass("hideelement");
             $(".cardEditOptions").addClass("hideelement");
-            // $('.actionButtonCardsTop').addClass('hideelement');
+            $('.actionButtonCardsTop').addClass('hideelement');
             $(".card-visibility").addClass('hideelement');
             let cards = $(".card-visibility");
             $.each(cards, function (i, card) {
@@ -308,7 +308,7 @@ Template.allCardsLists.events({
             if (ApiResponse.ok == true) {
                 const jsonResponse = await ApiResponse.json();
                 // $('.cardShowBtn').addClass('hideelement');
-                // $('.actionButtonCardsTop').addClass('hideelement');
+                $('.actionButtonCardsTop').addClass('hideelement');
                 // $('.cardSettingBtn').find('i').removeClass('fa-save')
                 // $('.cardSettingBtn').find('i').addClass('fa-cog');
                 await templateObject.saveCardsLocalDB();
@@ -329,7 +329,7 @@ Template.allCardsLists.events({
         let templateObject = Template.instance();
         setTimeout(async function () {
             $(".fullScreenSpin").css("display", "block");            
-            // $('.actionButtonCardsTop').addClass('hideelement');
+            $('.actionButtonCardsTop').addClass('hideelement');
             // $('.cardSettingBtn').find('i').removeClass('fa-save')
             // $('.cardSettingBtn').find('i').addClass('fa-cog');
             await templateObject.setCardPositions();

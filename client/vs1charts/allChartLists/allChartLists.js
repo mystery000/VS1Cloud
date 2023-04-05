@@ -118,12 +118,12 @@ var _chartGroup = "";
 var _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
     () => {
-        // $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
+        $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
 
-        // $("#btnDone").addClass("showelement");
-        // $("#btnDone").removeClass("hideelement");
-        // $("#btnCancel").addClass("showelement");
-        // $("#btnCancel").removeClass("hideelement");
+        $("#btnDone").addClass("showelement");
+        $("#btnDone").removeClass("hideelement");
+        $("#btnCancel").addClass("showelement");
+        $("#btnCancel").removeClass("hideelement");
         $("#editcharts").addClass("hideelement");
         $("#editcharts").removeClass("showelement");
         $(".btnchartdropdown").addClass("hideelement");
@@ -141,11 +141,11 @@ const chartsEditor = new ChartsEditor(
         $(".on-editor-change-mode").addClass("showelement");
     },
     () => {
-        // $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
-        // $("#btnDone").addClass("hideelement");
-        // $("#btnDone").removeClass("showelement");
-        // $("#btnCancel").addClass("hideelement");
-        // $("#btnCancel").removeClass("showelement");
+        $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
+        $("#btnDone").addClass("hideelement");
+        $("#btnDone").removeClass("showelement");
+        $("#btnCancel").addClass("hideelement");
+        $("#btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
@@ -733,7 +733,7 @@ Template.allChartLists.events({
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "inline-block");
             // await saveCharts();
-            // await chartsEditor.disable();
+            await chartsEditor.disable();
             // await templateObject.hideChartElements();
             // templateObject.checkChartToDisplay();
             // if( $(ui.item[0]).hasClass("editCharts") == false ){
