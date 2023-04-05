@@ -66,7 +66,6 @@ Template.payrollproductlistpop.onCreated(() => {
     templateObject.tableheaderrecords = new ReactiveVar([]);
 
     templateObject.getDataTableList = function(data) {
-      console.log('data ~~~~~~~~~~~~~~~~1', data);
         let dataList = [
             '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.fields.ID+'"></label></div>',
             data.ProductName || '-',  
