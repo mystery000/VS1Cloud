@@ -67,7 +67,7 @@ Template.payrollproductlistpop.onCreated(() => {
 
     templateObject.getDataTableList = function(data) {
         let dataList = [
-            '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.fields.ID+'"></label></div>',
+            '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.ID+'"></label></div>',
             data.ProductName || '-',  
             data.SalesDescription || '',
             data.BARCODE || '',
@@ -77,7 +77,8 @@ Template.payrollproductlistpop.onCreated(() => {
             data.TaxCodeSales || '',
             data.ID || '',
             JSON.stringify(data.ExtraSellPrice)||null,
-            utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1PriceInc * 100) / 100)
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1PriceInc * 100) / 100),
+            data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
@@ -94,6 +95,7 @@ Template.payrollproductlistpop.onCreated(() => {
         { index: 8, label: "Product ID", class: "colProductPODID", active: false, display: true, width: "100" },
         { index: 9, label: "Extra Sell Price", class: "colExtraSellPrice", active: false, display: true, width: "100" },
         { index: 10, label: "Sale Price Inc", class: "colSalePriceInc", active: false, display: true, width: "100" },
+        { index: 11, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
