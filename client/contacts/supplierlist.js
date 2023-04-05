@@ -40,6 +40,7 @@ Template.supplierlist.onCreated(function() {
         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
 
         var dataList = [
+            data.ClientID || '',
             data.Company || '',
             data.Phone || '',
             arBalance || 0.00,
@@ -50,7 +51,6 @@ Template.supplierlist.onCreated(function() {
             data.Suburb || '',
             data.Country || '',
             data.Notes || '',
-            data.ClientID || '',
             data.Active ? "" : "In-Active",
             // data.Email || '',
             // data.AccountNo || '',
@@ -66,17 +66,17 @@ Template.supplierlist.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-        { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
-        { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
-        { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
-        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
-        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
-        { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "110" },
-        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
-        { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "300" },
-        { index: 10, label: '#ID', class: 'colID', active: false, display: false, width: "10" },
+        { index: 0, label: 'ID', class: 'colID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "110" },
+        { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+        { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "300" },
         { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
@@ -97,7 +97,7 @@ Template.supplierlist.onRendered(function() {
     }
 
     $('#tblSupplierlist tbody').on( 'click', 'tr', function () {
-        const listData = $(this).closest('tr').find('.colID').text();
+        const listData = $(this).closest('tr').attr("id");
         if(listData){
           let params = ''
           var queryParams = FlowRouter.current().queryParams;
