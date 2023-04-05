@@ -3590,7 +3590,7 @@ Template.new_salesorder.onRendered(function () {
   });
 
   /* On clik Inventory Line */
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
+  $(document).on("click", ".tblInventory tbody tr", async function (e) {
     $(".colProductName").removeClass('boldtablealertsborder');
     let selectLineID = $('#selectLineID').val();
     let taxcodeList = await templateObject.taxraterecords.get();
@@ -4013,7 +4013,7 @@ Template.new_salesorder.onRendered(function () {
                     }
                     setTimeout(function () {
                       LoadingOverlay.hide();
-                      $('#newTermsModal').modal('show');
+                      //$('#newTermsModal').modal('show');
                     }, 200);
                   });
                 } else {
@@ -4049,7 +4049,7 @@ Template.new_salesorder.onRendered(function () {
                   }
                   setTimeout(function () {
                     LoadingOverlay.hide();
-                    $('#newTermsModal').modal('show');
+                    //$('#newTermsModal').modal('show');
                   }, 200);
                 }
               }).catch(function (err) {
@@ -4085,7 +4085,7 @@ Template.new_salesorder.onRendered(function () {
                   }
                   setTimeout(function () {
                     LoadingOverlay.hide();
-                    $('#newTermsModal').modal('show');
+                    //$('#newTermsModal').modal('show');
                   }, 200);
                 });
               });
@@ -4495,7 +4495,7 @@ Template.new_salesorder.onRendered(function () {
               }
               templateObject.customerRecord.set(customerRecord);
               setTimeout(function () {
-                $('#addCustomerModal').modal('show');
+                //$('#addCustomerModal').modal('show');
               }, 200);
             }).catch(function (err) {
               LoadingOverlay.hide();
@@ -4620,9 +4620,9 @@ Template.new_salesorder.onRendered(function () {
                   discount: 0
                 }
                 templateObject.customerRecord.set(customerRecord);
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }
             }
             if (!added) {
@@ -4711,9 +4711,9 @@ Template.new_salesorder.onRendered(function () {
                   $('#chkSameAsSupplier').removeAttr("checked");
                 }
 
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }).catch(function (err) {
                 LoadingOverlay.hide();
               });
@@ -4804,9 +4804,9 @@ Template.new_salesorder.onRendered(function () {
               $('#chkSameAsSupplier').removeAttr("checked");
             }
 
-            setTimeout(function () {
-              $('#addCustomerModal').modal('show');
-            }, 200);
+            // setTimeout(function () {
+            //   $('#addCustomerModal').modal('show');
+            // }, 200);
           }).catch(function (err) {
 
             LoadingOverlay.hide();
@@ -4971,9 +4971,9 @@ Template.new_salesorder.onRendered(function () {
                 discount: 0
               }
               templateObject.customerRecord.set(customerRecord);
-              setTimeout(function () {
-                $('#addCustomerModal').modal('show');
-              }, 200);
+              // setTimeout(function () {
+              //   $('#addCustomerModal').modal('show');
+              // }, 200);
             }).catch(function (err) {
               LoadingOverlay.hide();
             });
@@ -5097,9 +5097,9 @@ Template.new_salesorder.onRendered(function () {
                   discount: 0
                 }
                 templateObject.customerRecord.set(customerRecord);
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }
             }
             if (!added) {
@@ -5188,9 +5188,9 @@ Template.new_salesorder.onRendered(function () {
                   $('#chkSameAsSupplier').removeAttr("checked");
                 }
 
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }).catch(function (err) {
                 LoadingOverlay.hide();
               });
@@ -5281,9 +5281,9 @@ Template.new_salesorder.onRendered(function () {
               $('#chkSameAsSupplier').removeAttr("checked");
             }
 
-            setTimeout(function () {
-              $('#addCustomerModal').modal('show');
-            }, 200);
+            // setTimeout(function () {
+            //   $('#addCustomerModal').modal('show');
+            // }, 200);
           }).catch(function (err) {
 
             LoadingOverlay.hide();
@@ -6755,9 +6755,9 @@ Template.new_salesorder.events({
                 $('#slttaxcodepurchase').val(taxcodepurchase);
                 $('#edtbuyqty1cost').val(buyqty1cost);
 
-                setTimeout(function () {
-                  $('#newProductModal').modal('show');
-                }, 500);
+                // setTimeout(function () {
+                //   $('#newProductModal').modal('show');
+                // }, 500);
               }).catch(function (err) {
 
                 LoadingOverlay.hide();
@@ -6793,9 +6793,9 @@ Template.new_salesorder.events({
                   $('#slttaxcodepurchase').val(taxcodepurchase);
                   $('#edtbuyqty1cost').val(buyqty1cost);
 
-                  setTimeout(function () {
-                    $('#newProductModal').modal('show');
-                  }, 500);
+                  // setTimeout(function () {
+                  //   $('#newProductModal').modal('show');
+                  // }, 500);
                 }
               }
               if (!added) {
@@ -6823,9 +6823,9 @@ Template.new_salesorder.events({
                   $('#sltcogsaccount').val(cogsaccount);
                   $('#slttaxcodepurchase').val(taxcodepurchase);
                   $('#edtbuyqty1cost').val(buyqty1cost);
-                  setTimeout(function () {
-                    $('#newProductModal').modal('show');
-                  }, 500);
+                  // setTimeout(function () {
+                  //   $('#newProductModal').modal('show');
+                  // }, 500);
                 }).catch(function (err) {
                   LoadingOverlay.hide();
                 });
@@ -6856,9 +6856,9 @@ Template.new_salesorder.events({
               $('#sltcogsaccount').val(cogsaccount);
               $('#slttaxcodepurchase').val(taxcodepurchase);
               $('#edtbuyqty1cost').val(buyqty1cost);
-              setTimeout(function () {
-                $('#newProductModal').modal('show');
-              }, 500);
+              // setTimeout(function () {
+              //   $('#newProductModal').modal('show');
+              // }, 500);
             }).catch(function (err) {
               LoadingOverlay.hide();
             });

@@ -3388,7 +3388,7 @@ Template.billcard.onRendered(() => {
             LoadingOverlay.hide();
         }, 1000);
     });
-    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+    $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
