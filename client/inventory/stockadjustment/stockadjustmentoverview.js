@@ -29,8 +29,8 @@ Template.stockadjustmentoverview.onCreated(function () {
       "",
       "",
       data.fields.Notes || "",
-      data.fields.IsProcessed == true ? "Processed" : "On-Hold",
       data.fields.IsStockTake,
+      data.fields.IsProcessed == true ? "Processed" : "On-Hold",      
     ];
     return dataList;
   };
@@ -50,8 +50,8 @@ Template.stockadjustmentoverview.onCreated(function () {
       "",
       "",
       data.fields.Notes || "",
-      data.fields.IsProcessed == true ? "Processed" : "On-Hold",
       data.fields.IsStockTake,
+      data.fields.IsProcessed == true ? "Processed" : "On-Hold",      
     ];
     return dataList;
   };
@@ -68,27 +68,27 @@ Template.stockadjustmentoverview.onCreated(function () {
     },
     {
       index: 1,
-      label: "id",
+      label: "Employee",
+      class: "colEmployee",
+      active: true,
+      display: true,
+      width: "200",
+    },
+    {
+      index: 2,
+      label: "Sort Date",
       class: "colSortDate",
       active: false,
       display: true,
       width: "74",
     },
     {
-      index: 2,
+      index: 3,
       label: "Creation Date",
       class: "colCreationDate",
       active: true,
       display: true,
       width: "300",
-    },
-    {
-      index: 3,
-      label: "Account Name",
-      class: "colAccountName",
-      active: true,
-      display: true,
-      width: "200",
     },
     {
       index: 4,
@@ -100,6 +100,22 @@ Template.stockadjustmentoverview.onCreated(function () {
     },
     {
       index: 5,
+      label: "Account Name",
+      class: "colAccountName",
+      active: true,
+      display: true,
+      width: "200",
+    },
+    {
+      index: 6,
+      label: "Total Cost",
+      class: "colTotalCost",
+      active: true,
+      display: true,
+      width: "80",
+    },
+    {
+      index: 7,
       label: "Custom Field 1",
       class: "colSaleCustField1",
       active: false,
@@ -107,29 +123,14 @@ Template.stockadjustmentoverview.onCreated(function () {
       width: "100",
     },
     {
-      index: 6,
+      index: 8,
       label: "Custom Field 2",
       class: "colSaleCustField2",
       active: false,
       display: true,
       width: "100",
     },
-    {
-      index: 7,
-      label: "Employee",
-      class: "colEmployee",
-      active: true,
-      display: true,
-      width: "200",
-    },
-    {
-      index: 8,
-      label: "Total Cost",
-      class: "colTotalCost",
-      active: true,
-      display: true,
-      width: "80",
-    },
+    
     {
       index: 9,
       label: "Comments",
@@ -140,6 +141,14 @@ Template.stockadjustmentoverview.onCreated(function () {
     },
     {
       index: 10,
+      label: "Stock",
+      class: "colStock",
+      active: false,
+      display: true,
+      width: "120",
+    },
+    {
+      index: 11,
       label: "Status",
       class: "colStatus",
       active: true,
