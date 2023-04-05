@@ -130,7 +130,20 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        <style>
+                                            #tblPaymentMethodList {
+                                                width: 100% !important;
+                                            }
+                                            #tblPaymentMethodList .colName {
+                                                width: 60% !important;
+                                            }
+                                            #tblPaymentMethodList .colIsCreditCard {
+                                                width: 20% !important;
+                                            }
+                                            #tblPaymentMethodList .colStatus {
+                                                width: 20% !important;
+                                            }
+                                        </style>
 <!--                                        {{> non_transactional_list tablename="tblPaymentMethodList"}}-->
                                         {{>datatablelist
                                                 tablename="tblPaymentMethodList"
