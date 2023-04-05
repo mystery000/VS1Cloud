@@ -320,6 +320,8 @@ const erpObject = {
     
     TVS1ProcessClockList: "TVS1ProcessClockList",
     TVS1ClockOnReport: "TVS1ClockOnReport",
+    TVS1EmployeeClockStatus: "TVS1EmployeeClockStatus",
+
 
     TCostTypes: "TCostTypes",
     TProductBatches: "TProductBatches",

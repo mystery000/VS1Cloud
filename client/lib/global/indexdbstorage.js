@@ -465,6 +465,8 @@ openDb = function (dbName) {
       
       db.createObjectStore("TVS1ProcessClockList", {keyPath: "EmployeeEmail" }); //Danila add
       db.createObjectStore("TVS1ClockOnReport", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1EmployeeClockStatus", {keyPath: "EmployeeEmail" });
+
 
       db.createObjectStore("TVS1DashboardStatus", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1DashboardOptions", {keyPath: "EmployeeEmail" });

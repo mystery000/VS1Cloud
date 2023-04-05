@@ -3026,6 +3026,14 @@ Template.newsidenav.events({
     templateObject.getSetSideNavFocus();
   },
 
+  'click #sidenavEmployeeClockedStatus': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/employeeclockstatus');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
+
 
   'click #sidenavtimeclock': function (event) {
     // if (FlowRouter.current().path == "/payrolloverview") {

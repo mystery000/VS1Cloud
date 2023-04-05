@@ -1515,6 +1515,15 @@ authenticatedRoutes.route('/clockonreport', {
     }
 });
 
+authenticatedRoutes.route('/employeeclockstatus', {
+    name: 'employee_clock_status_template',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'employee_clock_status_template'
+        });
+    }
+});
+
 
 authenticatedRoutes.route('/squareapi', {
     name: 'squareapi',

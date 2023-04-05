@@ -4497,6 +4497,34 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TAssignLeaveType, options);
   }
 
+  getAllClockOnReport(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
+    let options = "";
+
+    if (ignoreDate == true) {
+      options = {
+        IgnoreDates: true,
+        OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    } else {
+      options = {
+        IgnoreDates: false,
+        OrderBy: "PurchaseOrderID desc",
+        Search: "Deleted != true",
+        DateFrom: '"' + dateFrom + '"',
+        DateTo: '"' + dateTo + '"',
+        LimitCount: parseInt(limitcount),
+        LimitFrom: parseInt(limitfrom),
+      };
+    }
+    if(deleteFilter) options.Search = "";
+    return this.getList(this.ERPObjects.TVS1ClockOnReport, options);
+  } 
+
+
+
   saveNewCustomFields(erpGet, tableName, employeeId, columns)
   {
     try {

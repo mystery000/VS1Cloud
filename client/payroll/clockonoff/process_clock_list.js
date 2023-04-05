@@ -561,7 +561,6 @@ Template.process_clock_template.events({
             }
         });
 
-        console.log(groups);  
 
         let workorders = await Template.instance().workOrderRecords.get();
         
@@ -579,7 +578,6 @@ Template.process_clock_template.events({
                 let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
                 let bomDetailData = JSON.parse(bomStructureData.Details);
                 
-                console.log(bomDetailData);
 
                 for (let j = 0; j < bomDetailData.length; j++) {
                     if(bomDetailData[j].process == processName) {

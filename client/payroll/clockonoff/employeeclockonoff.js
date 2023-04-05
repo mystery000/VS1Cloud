@@ -76,8 +76,11 @@ Template.clockOnOff.onRendered(function () {
   $("#clockonoffModal").modal("show");
   
   $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
-    let employeeName = $(this).find(".colEmployeeName").text() || '';
-    let employeeID = $(this).find(".colEmployeeNo").text() || '';
+  //  let employeeName = $(this).find(".colEmployeeName").text() || '';
+  //  let employeeID = $(this).find(".colEmployeeNo").text() || '';
+  
+    let employeeName = $(this).find(".colFirstName").text() || '';
+    let employeeID = $(this).find(".colEmployeeName").text() || '';
     $('#employee_name').val(employeeName);
     $('#employee_id').val(employeeID);
     $('#barcodeScanInput').prop("disabled", true);

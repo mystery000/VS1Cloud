@@ -85,7 +85,7 @@ export class ManufacturingService extends BaseService {
                   "PausedTimes": "[]",
                   "StoppedTime": "",
                   "EmployeeId"  : "",
-                  "EmployeeName" : "",
+                  "EmployeeName" : "Dene Mills",
               }
           },
           {
@@ -112,7 +112,7 @@ export class ManufacturingService extends BaseService {
                   "PausedTimes": "[]",
                   "StoppedTime": "",
                   "EmployeeId"  : "",
-                  "EmployeeName" : ""
+                  "EmployeeName" : "Dene Mills"
               }
           }
         ];

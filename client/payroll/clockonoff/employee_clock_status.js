@@ -4,7 +4,7 @@ import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from '../../js/sidebar-service';
 import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
-import "./clockonreport.html";
+import "./employee_clock_status.html";
 import { cloneDeep, template } from 'lodash';
 import { ManufacturingService } from "../../manufacture/manufacturing-service";
 
@@ -12,7 +12,7 @@ import { ManufacturingService } from "../../manufacture/manufacturing-service";
 let manufacturingService = new ManufacturingService();
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
-Template.clockonreport_template.onCreated(function() {
+Template.employee_clock_status_template.onCreated(function() {
 
     const templateObject = Template.instance();
     templateObject.workOrderRecords = new ReactiveVar([]);
@@ -39,33 +39,35 @@ Template.clockonreport_template.onCreated(function() {
             data.EmployeeName || '',
             data.TotalClockedTime.toFixed(2) || 0,
             data.ProcessClockedTime.toFixed(2) || 0,
-            (parseFloat(data.TotalClockedTime) - parseFloat(data.ProcessClockedTime)).toFixed(2) || 0,
+            data.EmployeeName,
             percent_variance.toFixed(2) + "%",
+            data.EmployeeId
         ];
 
         return dataList;
     }
-});
 
-Template.clockonreport_template.onRendered(function() {
-
-    $('.fullScreenSpin').css('display', 'inline-block');
- 
-    let templateObject = Template.instance();
-   
     let headerStructure = [
         { index: 0, label: 'EmpID', class: 'colEmpID', active: true, display: true, width: "50" },
         { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "" },
-        { index: 2, label: 'Total Clocked Hours', class: 'colTotalHour', active: true, display: true, width: "" },
-        { index: 3, label: 'Total Process Clocked Hours', class: 'colTotalProcess', active: true, display: true, width: "" },
-        { index: 4, label: 'Variance in Hours', class: 'colVariance', active: true, display: true, width: "" },
-        { index: 5, label: 'Variance in Percentage', class: 'colPercent', active: true, display: true, width: "" },
+        { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
+        { index: 3, label: 'WorkorderNumber', class: 'colTotalProcess', active: true, display: true, width: "" },
+        { index: 4, label: 'Clocked On/Off', class: 'colVariance', active: true, display: true, width: "" },
+        { index: 5, label: 'Process Clocked On/Off', class: 'colPercent', active: true, display: true, width: "" },
+        { index: 6, label: 'On a Break/Lunch', class: 'colPercent', active: true, display: true, width: "" },
         
     ];
 
     templateObject.tableheaderrecords.set(headerStructure);
+});
+
+Template.employee_clock_status_template.onRendered(function() {
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+ 
+    let templateObject = Template.instance();   
     
-    templateObject.makeIndexedDBdata = function (from_date , to_date){
+    templateObject.makeIndexedDBdata = function (){
 
         getVS1Data('TEmployee').then(function(empdataObject) {
             let empdata = JSON.parse(empdataObject[0].data).temployee;
@@ -78,7 +80,7 @@ Template.clockonreport_template.onRendered(function() {
                     let employee_data = empdata;
                     let timesheet_data = timesheet.ttimesheet;
                     let workorder_data = workorder.tvs1workorder;
-        
+       
 
                     for(let i = 0; i < employee_data.length ; i++) {
                         let employee_name = employee_data[i].fields.EmployeeName;
@@ -96,9 +98,14 @@ Template.clockonreport_template.onRendered(function() {
                             
                            
                            if(workorder_data[k].fields.EmployeeName == employee_name ) {
-                             let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
-                             let bomDetailData = JSON.parse(bomData.Details);
 
+                             let order_date = workorder_data[k].fields.OrderDate;
+                             let order_number = workorder_data[k].fields.ID;
+                             let clocked_on = workorder_data[k].fields.status;
+                            
+                              let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
+                             let bomDetailData = JSON.parse(bomData.Details);
+                             
                          
 
                              for(let l=0; l < bomDetailData.length; l++ ) {
@@ -119,12 +126,12 @@ Template.clockonreport_template.onRendered(function() {
 
                     }
 
+                    console.log(clockon_report_data);
+
                     addVS1Data('TVS1ClockOnReport', JSON.stringify({tvs1clockonreport: clockon_report_data})).then(function(datareturn){
                     }).catch(function(err){
                         
-                    });
-
-                    
+                    });                    
                     
                 })
 
@@ -135,7 +142,7 @@ Template.clockonreport_template.onRendered(function() {
 
     }
     
-    templateObject.makeIndexedDBdata("","");       
+    templateObject.makeIndexedDBdata();       
        
     //get all work orders
     templateObject.getAllWorkorders = async function() {
@@ -176,7 +183,7 @@ Template.clockonreport_template.onRendered(function() {
 
 });
 
-Template.clockonreport_template.events({
+Template.employee_clock_status_template.events({
    
     'click .exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -392,7 +399,7 @@ Template.clockonreport_template.events({
 });
 
 
-Template.clockonreport_template.helpers({
+Template.employee_clock_status_template.helpers({
     datatablerecords: () => {
         return Template.instance().datatablerecords.get().sort(function (a, b) {
             if (a.company == 'NA') {
