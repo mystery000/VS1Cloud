@@ -367,7 +367,7 @@ export class SideBarService extends BaseService {
     if (deleteFilter) options.Search = ""
     return this.getList(this.ERPObjects.TProductQtyList, options);
   }
-  
+
   getHolidayData(limitcount, limitfrom, deleteFilter = false) {
     let options = "";
     if (deleteFilter == true) {
