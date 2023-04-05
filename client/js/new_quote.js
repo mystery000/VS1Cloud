@@ -4281,7 +4281,7 @@ Template.new_quote.onRendered(() => {
 
   });
 
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
+  $(document).on("click", ".tblInventory tbody tr", async function (e) {
     $(".colProductName").removeClass('boldtablealertsborder');
     let selectLineID = $('#selectLineID').val();
     let taxcodeList = await templateObject.taxraterecords.get();
@@ -5012,9 +5012,9 @@ Template.new_quote.onRendered(() => {
       discount: 0
     }
     templateObject.customerRecord.set(customerRecord);
-    setTimeout(function () {
-      $('#addCustomerModal').modal('show');
-    }, 200);
+    // setTimeout(function () {
+    //   $('#addCustomerModal').modal('show');
+    // }, 200);
   }
   function setInitCustomer() {
     $('#customerListModal').modal('show');
@@ -6603,7 +6603,7 @@ Template.new_quote.events({
                 $('#edtbuyqty1cost').val(buyqty1cost);
 
                 setTimeout(function () {
-                  $('#newProductModal').modal('show');
+                  //$('#newProductModal').modal('show');
                 }, 500);
               }).catch(function (err) {
 
@@ -6642,7 +6642,7 @@ Template.new_quote.events({
                   $('#edtbuyqty1cost').val(buyqty1cost);
 
                   setTimeout(function () {
-                    $('#newProductModal').modal('show');
+                  //  $('#newProductModal').modal('show');
                   }, 500);
                 }
               }
@@ -6672,9 +6672,9 @@ Template.new_quote.events({
                   $('#slttaxcodepurchase').val(taxcodepurchase);
                   $('#edtbuyqty1cost').val(buyqty1cost);
 
-                  setTimeout(function () {
-                    $('#newProductModal').modal('show');
-                  }, 500);
+                  // setTimeout(function () {
+                  //   $('#newProductModal').modal('show');
+                  // }, 500);
                 }).catch(function (err) {
 
                   LoadingOverlay.hide();
@@ -6708,9 +6708,9 @@ Template.new_quote.events({
               $('#slttaxcodepurchase').val(taxcodepurchase);
               $('#edtbuyqty1cost').val(buyqty1cost);
 
-              setTimeout(function () {
-                $('#newProductModal').modal('show');
-              }, 500);
+              // setTimeout(function () {
+              //   $('#newProductModal').modal('show');
+              // }, 500);
             }).catch(function (err) {
 
               LoadingOverlay.hide();
@@ -11422,7 +11422,7 @@ Template.new_quote.events({
                             Batch: "false",
                           },
                         };
-  
+
                         productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
@@ -11460,7 +11460,7 @@ Template.new_quote.events({
                             Batch: "true",
                           },
                         };
-  
+
                         productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)

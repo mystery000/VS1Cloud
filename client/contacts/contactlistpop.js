@@ -95,6 +95,7 @@ Template.contactlistpop.onCreated(function () {
 
 
         var dataList = [
+            data.ID || '',
             '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.ID + '-' + clienttype + '"></label></div>',
             data.name || '-',
             clienttype || '',
@@ -109,29 +110,28 @@ Template.contactlistpop.onCreated(function () {
             data.CUSTFLD1 || '',
             data.CUSTFLD2 || '',
             data.street || '',
-            data.ID || '',
             data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
 
     let headerStructure = [
-        {index: 0, label: '', class: 'chkBox', active: true, display: true, width: "15"},
-        {index: 1, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200"},
-        {index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "130"},
-        {index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
-        {index: 4, label: '#Mobile', class: 'colMobile', active: false, display: true, width: "60"},
-        {index: 5, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "80"},
-        {index: 6, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "80"},
-        {index: 7, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
-        {index: 8, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "80"},
-        {index: 9, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "80"},
-        {index: 10, label: 'Email', class: 'colEmail', active: true, display: true, width: "80"},
-        {index: 11, label: '#Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "80"},
-        {index: 12, label: '#Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "80"},
-        {index: 13, label: 'Address', class: 'colAddress', active: true, display: true, width: "80"},
-        {index: 14, label: '#ID', class: 'colID', active: false, display: true, width: "50"},
-        {index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "60"},
+        {index: 0, label: 'ID', class: 'colID', active: false, display: true, width: "10"},
+        {index: 1, label: '', class: 'chkBox', active: true, display: true, width: "15"},
+        {index: 2, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200"},
+        {index: 3, label: 'Type', class: 'colType', active: true, display: true, width: "130"},
+        {index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110"},
+        {index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "110"},
+        {index: 6, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110"},
+        {index: 7, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110"},
+        {index: 8, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+        {index: 9, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110"},
+        {index: 10,label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110"},
+        {index: 11, label: 'Email', class: 'colEmail', active: true, display: true, width: "80"},
+        {index: 12, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "80"},
+        {index: 13, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "80"},
+        {index: 14, label: 'Address', class: 'colAddress', active: true, display: true, width: "110"},
+        {index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -148,6 +148,12 @@ Template.contactlistpop.onRendered(function () {
     const lineCustomerItems = [];
     const dataTableList = [];
     const tableHeaderList = [];
+
+    $( "#customerListCrmModal, #customerListModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblContactlist_filter .form-control-sm').get(0).focus()
+        }, 500);
+    });
 
     // Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblContactlist', function (error, result) {
     //     if (error) {
@@ -1398,30 +1404,6 @@ Template.contactlistpop.events({
         }, 1000);
     },
 
-    "click .btnViewDeleted": async function (e) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        e.stopImmediatePropagation();
-        const templateObject = Template.instance();
-        $('.btnViewDeleted').css('display', 'none');
-        $('.btnHideDeleted').css('display', 'inline-block');
-        await clearData('TERPCombinedContactsVS1');
-        templateObject.getContacts(true);
-        $(".fullScreenSpin").css("display", "none");
-
-    },
-
-    "click .btnHideDeleted": async function (e) {
-        $(".fullScreenSpin").css("display", "inline-block");
-        e.stopImmediatePropagation();
-        let templateObject = Template.instance();
-
-        $('.btnHideDeleted').css('display', 'none');
-        $('.btnViewDeleted').css('display', 'inline-block');
-
-        await clearData('TERPCombinedContactsVS1');
-        templateObject.getContacts(false);
-        $(".fullScreenSpin").css("display", "none");
-    },
     'click .btnRefreshContact': function (event) {
         $(".btnRefreshContact").removeClass("btnSearchAlert");
         let templateObject = Template.instance();
@@ -1663,191 +1645,7 @@ Template.contactlistpop.events({
             $(".btnRefreshContact").trigger("click");
         }
     },
-    'click .chkDatatable': function (event) {
-        var columns = $('#tblContactlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
-        $.each(columns, function (i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function (event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblContactlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function (err, idTag) {
-                        if (err) {
-
-                        } else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
-    'click .saveTable': function (event) {
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblContactlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblContactlist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblContactlist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function (event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('.tblContactlist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange': function (event) {
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
-
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblContactlist th');
-        $.each(datable, function (i, v) {
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings': function (event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblContactlist th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
     'click .exportbtn': function () {
         //$('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblContactlist_wrapper .dt-buttons .btntabletocsv').click();

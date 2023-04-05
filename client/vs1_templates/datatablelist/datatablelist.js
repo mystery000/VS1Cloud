@@ -805,7 +805,7 @@ Template.datatablelist.onRendered(async function () {
                     getColDef();
                 }, 1000);
             }
-         
+
         }
         getColDef();
 
@@ -862,7 +862,7 @@ Template.datatablelist.events({
         // Get the column API object
         let dataColumnIndex = $(event.target).attr('data-column');
         var column = table.column(dataColumnIndex);
- 
+
         // Toggle the visibility
         column.visible(!column.visible());
         // if ($(event.target).is(':checked')) {
@@ -1521,9 +1521,11 @@ Template.datatablelist.events({
     'click .saveTable': async function (event) {
         let lineItems = [];
         let sideBarService = new SideBarService();
+        let templateObject = Template.instance();
+        let tableName = templateObject.data.tablename;
         $(".fullScreenSpin").css("display", "inline-block");
 
-        $(".displaySettings").each(function (index) {
+        $('#'+tableName+'_Modal .displaySettings').each(function (index) {
             var $tblrow = $(this);
             var fieldID = $tblrow.attr("custid") || 0;
             var colTitle = $tblrow.find(".divcolumn").text() || "";
@@ -1540,6 +1542,7 @@ Template.datatablelist.events({
                 label: colTitle,
                 active: colHidden,
                 width: parseFloat(colWidth),
+                sWidthOrig: parseFloat(colWidth),
                 class: colthClass,
                 display: true
             };
@@ -1547,7 +1550,7 @@ Template.datatablelist.events({
             lineItems.push(lineItemObj);
         });
 
-        let templateObject = Template.instance();
+
         let reset_data = templateObject.reset_data.get();
         reset_data = reset_data.filter(redata => redata.display == false);
         lineItems.push(...reset_data);
@@ -1555,7 +1558,7 @@ Template.datatablelist.events({
 
         try {
             let erpGet = erpDb();
-            let tableName = templateObject.data.tablename;
+
             let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID')) || 0;
             let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
             if (added) {
