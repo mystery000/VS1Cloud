@@ -1294,7 +1294,7 @@ Template.productview.onRendered(function () {
                   let isBOMProduct = false;
                   let bomProducts = templateObject.bomProducts.get();
                   let bomIndex = bomProducts.findIndex((product) => {
-                    return data.fields.ProductName == product.fields.Caption;
+                    return data.fields.ProductName == product?.fields?.Caption;
                   });
 
                   if (bomIndex > -1) {

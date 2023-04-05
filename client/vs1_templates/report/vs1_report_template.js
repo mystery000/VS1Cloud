@@ -441,7 +441,6 @@ Template.vs1_report_template.onRendered(function () {
           // { index: 165, label: 'Total Sale Tax', class: 'colAccountName', active: false, display: true, width: "100" },
         ]
         break;
-      case "tblAgedPayables":
       case "tblAgedPayablesSummary":
         reset_data = [
           { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
@@ -906,6 +905,10 @@ Template.vs1_report_template.onRendered(function () {
         break;
       default:
         break;
+    }
+    
+    if(currenttablename == 'tblAgedPayables') {
+      reset_data = templateObject.data.reset_data;
     }
     templateObject.reset_data.set(reset_data);
   }

@@ -86,6 +86,7 @@ Template.new_quote.onCreated(() => {
   templateObject.hasFollow = new ReactiveVar(false);
 
   templateObject.customerRecord = new ReactiveVar();
+  templateObject.currencyData = new ReactiveVar();
 
   // Methods
 
@@ -676,10 +677,58 @@ Template.new_quote.onCreated(() => {
     stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + objDetails.ID + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
     await templateObject.addAttachment(objDetails, stringQuery);
   }
+
+  templateObject.getCurrencies = async function () {
+    let currencyData = [];
+    let dataObject = await getVS1Data("TCurrencyList");
+    if (dataObject.length == 0) {
+      taxRateService.getCurrencies().then(function (data) {
+        for (let i in data.tcurrencylist) {
+          let currencyObj = {
+            id: data.tcurrencylist[i].Id || "",
+            currency: data.tcurrencylist[i].Currency || "",
+            currencySellRate: data.tcurrencylist[i].SellRate || "",
+            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+            currencyCode: data.tcurrencylist[i].Code || "",
+          };
+
+          currencyData.push(currencyObj);
+        }
+        templateObject.currencyData.set(currencyData);
+      });
+    } else {
+      let data = JSON.parse(dataObject[0].data);
+      let useData = data.tcurrencylist;
+      for (let i in useData) {
+        let currencyObj = {
+          id: data.tcurrencylist[i].Id || "",
+          currency: data.tcurrencylist[i].Currency || "",
+          currencySellRate: data.tcurrencylist[i].SellRate || "",
+          currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+          currencyCode: data.tcurrencylist[i].Code || "",
+        };
+
+        currencyData.push(currencyObj)
+      }
+      templateObject.currencyData.set(currencyData);
+    }
+  }
+
+  templateObject.getCurrencyRate = (currency, type) => {
+    let currencyData = templateObject.currencyData.get();
+    for(let i = 0; i <currencyData.length; i++) {
+      if(currencyData[i].currencyCode == currency) {
+        if (type == 0) return currencyData[i].currencySellRate;
+        else return currencyData[i].currencyBuyRate;
+      }
+    };
+  };
 });
 
 Template.new_quote.onRendered(() => {
   let templateObject = Template.instance();
+  templateObject.getCurrencies();
+
   templateObject.hasFollowings();
   $('#edtFrequencyDetail').css('display', 'none');
   $("#date-input,#edtWeeklyStartDate,#edtWeeklyFinishDate,#dtDueDate,#customdateone,#edtMonthlyStartDate,#edtMonthlyFinishDate,#edtDailyStartDate,#edtDailyFinishDate,#edtOneTimeOnlyDate").datepicker({
@@ -2299,7 +2348,8 @@ Template.new_quote.onRendered(() => {
               $('#edtCustomerName').val(data.fields.CustomerName);
               templateObject.CleintName.set(data.fields.CustomerName);
               $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-              $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
               $('#sltStatus').val(data.fields.SalesStatus);
 
               // tempcode
@@ -2685,7 +2735,8 @@ Template.new_quote.onRendered(() => {
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                 templateObject.CleintName.set(useData[d].fields.CustomerName);
                 $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                $('#exchange_rate').val(templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 1));
                 $('#sltStatus').val(useData[d].fields.SalesStatus);
 
                 // tempcode
@@ -3000,7 +3051,8 @@ Template.new_quote.onRendered(() => {
                 $('#edtCustomerName').val(data.fields.CustomerName);
                 templateObject.CleintName.set(data.fields.CustomerName);
                 $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
                 $('#sltStatus').val(data.fields.SalesStatus);
 
                 // tempcode
@@ -3323,7 +3375,8 @@ Template.new_quote.onRendered(() => {
             $('#edtCustomerName').val(data.fields.CustomerName);
             templateObject.CleintName.set(data.fields.CustomerName);
             $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+            //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
             $('#sltStatus').val(data.fields.SalesStatus);
 
             // tempcode
@@ -4021,7 +4074,8 @@ Template.new_quote.onRendered(() => {
     $('#edtCustomerName').val(data.fields.CustomerName);
     templateObject.CleintName.set(data.fields.CustomerName);
     $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-    $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+    //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+    $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
     $('#sltStatus').val(data.fields.SalesStatus);
     // tempcode
     // setTimeout(function () {
@@ -4227,7 +4281,7 @@ Template.new_quote.onRendered(() => {
 
   });
 
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
+  $(document).on("click", ".tblInventory tbody tr", async function (e) {
     $(".colProductName").removeClass('boldtablealertsborder');
     let selectLineID = $('#selectLineID').val();
     let taxcodeList = await templateObject.taxraterecords.get();
@@ -4958,9 +5012,9 @@ Template.new_quote.onRendered(() => {
       discount: 0
     }
     templateObject.customerRecord.set(customerRecord);
-    setTimeout(function () {
-      $('#addCustomerModal').modal('show');
-    }, 200);
+    // setTimeout(function () {
+    //   $('#addCustomerModal').modal('show');
+    // }, 200);
   }
   function setInitCustomer() {
     $('#customerListModal').modal('show');
@@ -6549,7 +6603,7 @@ Template.new_quote.events({
                 $('#edtbuyqty1cost').val(buyqty1cost);
 
                 setTimeout(function () {
-                  $('#newProductModal').modal('show');
+                  //$('#newProductModal').modal('show');
                 }, 500);
               }).catch(function (err) {
 
@@ -6588,7 +6642,7 @@ Template.new_quote.events({
                   $('#edtbuyqty1cost').val(buyqty1cost);
 
                   setTimeout(function () {
-                    $('#newProductModal').modal('show');
+                  //  $('#newProductModal').modal('show');
                   }, 500);
                 }
               }
@@ -6618,9 +6672,9 @@ Template.new_quote.events({
                   $('#slttaxcodepurchase').val(taxcodepurchase);
                   $('#edtbuyqty1cost').val(buyqty1cost);
 
-                  setTimeout(function () {
-                    $('#newProductModal').modal('show');
-                  }, 500);
+                  // setTimeout(function () {
+                  //   $('#newProductModal').modal('show');
+                  // }, 500);
                 }).catch(function (err) {
 
                   LoadingOverlay.hide();
@@ -6654,9 +6708,9 @@ Template.new_quote.events({
               $('#slttaxcodepurchase').val(taxcodepurchase);
               $('#edtbuyqty1cost').val(buyqty1cost);
 
-              setTimeout(function () {
-                $('#newProductModal').modal('show');
-              }, 500);
+              // setTimeout(function () {
+              //   $('#newProductModal').modal('show');
+              // }, 500);
             }).catch(function (err) {
 
               LoadingOverlay.hide();
@@ -11368,7 +11422,7 @@ Template.new_quote.events({
                             Batch: "false",
                           },
                         };
-  
+
                         productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)
@@ -11406,7 +11460,7 @@ Template.new_quote.events({
                             Batch: "true",
                           },
                         };
-  
+
                         productService.saveProductVS1(objDetails)
                           .then(async function (objDetails) {
                             sideBarService.getProductListVS1("All", 0)

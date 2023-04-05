@@ -447,9 +447,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 '"></label></div>'; //switchbox
 
             costprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductqtylist[i].BuyQTY1 * 100) / 100); //Cost Price
+                Math.floor(data.tproductqtylist[i].CostExA * 100) / 100); //Cost Price
             sellprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductqtylist[i].SellQTY1 * 100) / 100); //Sell Price
+                Math.floor(data.tproductqtylist[i].PriceExA * 100) / 100); //Sell Price
 
             var dataList = [
                 chkBox,
@@ -2126,19 +2126,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let fullAccountTypeName = "";
         let accBalance = "";
         let deleteFilter = false;
-        
+
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
             let chkBoxId = "f-" + lineData.ID || lineData.Id;
             let chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
-            let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);            
+            let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);
             var dataList = [
                 chkBox,
                 lineData.ID || lineData.Id || "",
                 `<input
                     class="form-control pointer sltEftTblAccountName es-input bg-white highlightSelect"
                     value="${lineData.AccountName || ""}"                    
-                />`,                 
+                />`,
                 lineData.BSB || "___-___",
                 lineData.CreditDebitAccountNumber || "",
                 `<input
@@ -2217,16 +2217,16 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                         MakeNegative();
                     }, 100);
                 },
-                // language: { search: "", searchPlaceholder: "Search List..." },
-                searching: false,
-                "fnInitComplete": function(oSettings) {                    
-                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
-                    // if (data?.Params?.Search?.replace(/\s/g, "") == "") {
-                    //     $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    // } else {
-                    //     $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
-                    // }
-                    // $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
+                language: { search: "", searchPlaceholder: "Search List..." },
+                // searching: true,
+                "fnInitComplete": function(oSettings) {
+                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    if (data?.Params?.Search?.replace(/\s/g, "") == "") {
+                        $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    } else {
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View In-Active</button>").insertAfter('#' + currenttablename + '_filter');
+                    }
+                    $("<button class='btn btn-primary btnRefreshList' type='button' id='btnRefreshList' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     checkBoxClickByName();
                     $("th div.colChkBoxAll").css("margin-left", "18px")
                 },

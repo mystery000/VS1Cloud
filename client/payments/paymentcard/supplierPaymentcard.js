@@ -9,7 +9,7 @@ import { Random } from "meteor/random";
 import "jquery-editable-select";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
-import { getCurrentCurrencySymbol } from "../../popUps/currnecypopup";
+import {getCurrentCurrencySymbol, setCurrentCurrencySymbol} from "../../popUps/currnecypopup";
 import LoadingOverlay from "../../LoadingOverlay";
 import { TaxRateService } from "../../settings/settings-service";
 import FxGlobalFunctions from "../../packages/currency/FxGlobalFunctions";
@@ -3587,6 +3587,9 @@ $(document).ready(function () {
                 $("#eftNumberUser").val(data.fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
                 $('#sltBankAccountName').val(data.fields.AccountName);
+                $('#edtForeignAmount').val(utilityService.modifynegativeCurrencyFormat(data.fields.ForeignCurrencyAmount));
+                $('#edtVariation').val(utilityService.modifynegativeCurrencyFormat(data.fields.ForeignVariationAmount));
+                $('#edtApplied').val(utilityService.modifynegativeCurrencyFormat(data.fields.ForeignApplied));
 
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
@@ -3834,6 +3837,9 @@ $(document).ready(function () {
                 $("#eftUserName").val(useData[d].fields.CompanyName);
                 $("#eftNumberUser").val(useData[d].fields.ID);
                 $("#eftProcessingDate").val(record.paymentDate);
+                  $('#edtForeignAmount').val(utilityService.modifynegativeCurrencyFormat(useData[d].fields.ForeignCurrencyAmount));
+                  $('#edtVariation').val(utilityService.modifynegativeCurrencyFormat(useData[d].fields.ForeignVariationAmount));
+                  $('#edtApplied').val(utilityService.modifynegativeCurrencyFormat(useData[d].fields.ForeignApplied));
 
                 $("#edtSupplierName").attr("readonly", true);
                 $("#edtSupplierName").css("background-color", "#eaecf4");
@@ -7945,7 +7951,11 @@ Template.supplierpaymentcard.helpers({
     return Template.instance().outstandingExpenses.get();
   },
   isForeignEnabled: () => {
-    return Template.instance().isForeignEnabled.get();
+      //return 1;
+      let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicenceModule') ? true : false;
+      // return isFxCurrencyLicence;
+      return isFxCurrencyLicence;
+    //return Template.instance().isForeignEnabled.get();
   },
   getTemplateList: function () {
     return template_list;
@@ -8098,6 +8108,36 @@ Template.supplierpaymentcard.events({
   // 'click #sltDepartment': function(event) {
   //     $('#departmentModal').modal('toggle');
   // },
+    "click #tblCurrencyPopList tbody tr": e => {
+        const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
+
+        const currencySymbol = $(e.currentTarget).find(".colSymbol").text() || "N/A";
+        setCurrentCurrencySymbol(currencySymbol);
+        const currencyCode = $(e.currentTarget).find(".colCode").text();
+        const currencyRate = rateType == "buy"
+            ? $(e.currentTarget).find(".colBuyRate").text()
+            : $(e.currentTarget).find(".colSellRate").text();
+
+        $("#sltCurrency").attr("currency-symbol", currencySymbol);
+        $("#sltCurrency").val(currencyCode);
+        $("#sltCurrency").trigger("change");
+        $("#exchange_rate").val(currencyRate);
+        $("#exchange_rate").trigger("change");
+        $("#currencyModal").modal("hide");
+
+        $("#tblCurrencyPopList_filter .form-control-sm").val("");
+
+        setTimeout(function () {
+            $(".btnRefreshCurrency").trigger("click");
+            LoadingOverlay.hide();
+        }, 1000)
+
+        let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
+        let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
+
+        $(".linePaymentamount.convert-to").text(dstamount);
+        onExchangeRateChange(e);
+    },
   'click .payNow': async function () {
     let templateObject = Template.instance();
     let stripe_id = templateObject.accountID.get() || '';
@@ -8403,7 +8443,7 @@ Template.supplierpaymentcard.events({
       $("#templateselection").modal("hide");
     }
   },
-  "change #sltCurrency": (en, ui) => {
+  "change .sltCurrency": (en, ui) => {
     if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
 
@@ -8418,27 +8458,13 @@ Template.supplierpaymentcard.events({
 
     }
   },
-  "change #exchange_rate": (e) => {
-    // const exchangeRate = $("#exchange_rate").val();
-    // const paymentAmount = $("#edtPaymentAmount").val().includes("$")
-    //   ? $("#edtPaymentAmount").val().substring(1)
-    //   : $("#edtPaymentAmount").val();
-    // const foreignAmount = exchangeRate * paymentAmount;
-
-    // $("#edtForeignAmount").val("$" + foreignAmount);
-
+  "change .edtForeignAmount": (e) => {
     // calulateApplied();
     setTimeout(() => {
       calculateApplied();
     }, 300);
   },
-  "change #edtForeignAmount": (e) => {
-    // calulateApplied();
-    setTimeout(() => {
-      calculateApplied();
-    }, 300);
-  },
-  "change #edtVariation": (e) => {
+  "change .edtVariation": (e) => {
     // calulateApplied();
     setTimeout(() => {
       calculateApplied();
@@ -13038,16 +13064,19 @@ Template.supplierpaymentcard.events({
     }
   },
   "keyup #exchange_rate": (e) => {
-    onExchangeRateChange(e);
-  },
-  "change #exchange_rate": (e) => {
       let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
       let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
 
       $(".linePaymentamount.convert-to").text(dstamount);
     onExchangeRateChange(e);
   },
-  "change #edtForeignAmount": (e) => {
+  // "change .exchange-rate-js": (e) => {
+  //   //onExchangeRateChange(e);
+  //     setTimeout(() => {
+  //         calculateApplied();
+  //     }, 300);
+  // },
+  "change .edtForeignAmount": (e) => {
     setTimeout(() => {
       calculateApplied();
     }, 300);
@@ -13057,7 +13086,7 @@ Template.supplierpaymentcard.events({
       calculateApplied();
     }, 300);
   },
-  "change #edtVariation": (e) => {
+  "change .edtVariation": (e) => {
     setTimeout(() => {
       calculateApplied();
     }, 300);
@@ -13067,7 +13096,7 @@ Template.supplierpaymentcard.events({
       calculateApplied();
     }, 300);
   },
-  "change #edtApplied": (e) => {
+  "change .edtApplied": (e) => {
     const currency = getCurrentCurrencySymbol();
     $('.appliedAmount').text(currency + $(e.currentTarget).val());
   },
@@ -13105,7 +13134,7 @@ Template.supplierpaymentcard.events({
 
   },
 
-  // "change #tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
+  // "change .tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
   //  setTimeout(() => {
   //   const calculatedAppliedAmount = onForeignTableInputChange();
   //   const currency = $('#sltCurrency').attr("currency-symbol");

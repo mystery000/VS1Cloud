@@ -31,22 +31,40 @@
 
     {{#if creditrecord}}
     <form>
-      {{> transaction_header cardType="Credit" data=creditrecord
-      uploadedFile=uploadedFile isCurrencyEnable=isCurrencyEnable
-      custfields=custfields
-      showTransactionButtons=false
-      salesCloudPreferenceRec=purchaseCloudPreferenceRec showCustomer=true
-      showBilingAddress=true showSalesDate=true showPONumber=false
-      showInvoiceNumber=true showVia=true showTerms=true showStatus=true
-      showReference=true showDepartment=true showCustomFields=true
-      showShippingInfo=true showPayment=true showCopyTransaction=true
-      showCopyToInvoice=false showCopyToOrder=false }}
+      {{> transaction_header
+        cardType="Credit"
+        clientType='Supplier'
+        data=creditrecord
+        uploadedFile=uploadedFile
+        isCurrencyEnable=isCurrencyEnable
+        custfields=custfields
+        showTransactionButtons=false
+        salesCloudPreferenceRec=purchaseCloudPreferenceRec
+        showCustomer=true
+        showBilingAddress=true
+        showSalesDate=true
+        showPONumber=false
+        showInvoiceNumber=true
+        showVia=true
+        showTerms=true
+        showStatus=true
+        showReference=true
+        showDepartment=true
+        showCustomFields=true
+        showShippingInfo=true
+        showPayment=true
+        showCopyTransaction=true
+        showCopyToInvoice=false
+        showCopyToOrder=false
+        gridTableId='tblCreditLine'
+        templateName=templateName
+    }}
       <div>
         {{> transaction_line tablename="tblCreditLine"
         recordLineItems=creditrecord.LineItems isForeignEnabled=isForeignEnabled
         canShowBackOrder=false canShowUOM=false includeBOnShippedQty=false
         isBatchSerialNoTracking=isBatchSerialNoTracking
-        getDefaultCurrency=getDefaultCurrency }} 
+        getDefaultCurrency=getDefaultCurrency }}
         <!-- {{> deletepop
         itemName1="Credit" itemName2="credit" itemName3="Credit"
         button1="btnDeleteCredit" button2="btnDeleteFollowingCredits"}} -->
@@ -196,7 +214,7 @@
             </div>
           </div>
         </div>
-       
+
         <div class="modal fade" role="dialog" tabindex="-1" id="confirmprint">
           <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
@@ -1609,7 +1627,7 @@
       </div>
     </div>
     <!-- End Modal -->
-    {{> all_transaction_modals supplierRecord=supplierRecord}}
+    <!-- {{> all_transaction_modals supplierRecord=supplierRecord}} -->
   </div>
 
   <!-- Start Help Video Modal -->
