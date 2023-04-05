@@ -277,7 +277,7 @@
                                 <div>
                                     <ul class="nav nav-tabs nav-fill">
                                         <li class="nav-item" style="cursor: pointer;"><a class="nav-link leadTab active" role="tab" data-toggle="tab" data-target="#tab-lead">Lead Details</a></li>
-                                        
+
                                     </ul>
                                     <div class="tab-content">
                                         <style>
@@ -323,14 +323,32 @@
                                                 <div class="col-6 col-md-2" style="padding: 0px 4px;">
                                                     <div class="form-group">
                                                         <label for="leadStatus">Status</label>
-                                                        <select type="search" class="form-control" id="leadStatus" name="leadStatus"  style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">
-                                                        </select>
+
+<!--                                                        <select type="search" class="form-control" id="leadStatus" name="leadStatus"  style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{setLeadStatus record.status}}">-->
+<!--                                                        </select>-->
+
+                                                        {{>vs1___dropdown
+                                                                data=record.status
+                                                                type='search'
+                                                                id='leadStatus'
+                                                                name='leadStatus'
+                                                                modalId= 'statusPopModal'
+                                                                list_template_name='statuspop'
+                                                                modal_title='Status'
+                                                                innerModal=true
+                                                                label = ''
+                                                                colNameForValue = 'statusName'
+                                                                target_modal_id='newStatusPopModal'
+                                                                target_template_id='newstatuspop'
+                                                                is_editable=true
+                                                                noBorder=false
+                                                        }}
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-2" style="padding: 0px 4px;">
                                                     <div class="form-group">
                                                         {{> contact_title target="editLeadTitle" value=record.title}}
-                                                    </div> 
+                                                    </div>
                                                 </div>
                                                 <div class="col-6 col-md-4" style="padding: 0px 8px;">
                                                     <div class="form-group"><label class="text-nowrap">First Name</label><input type="text" class="form-control" id="edtFirstName" name="edtFirstName" value="{{record.firstname}}">
@@ -860,7 +878,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -1043,7 +1061,7 @@
     {{> taskDetailModal}}
     {{> frmappointmentpop}}
     {{> newTaskModal}}
-    
+
 
     <div class="modal fade customerListCrmModal" role="dialog" tabindex="-1" id="customerListCrmModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
