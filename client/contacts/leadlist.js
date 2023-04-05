@@ -103,7 +103,8 @@ Template.leadlist.onRendered(function() {
     }
 
     $('#tblLeadlist tbody').on( 'click', 'tr', function () {
-        const listData = $(this).closest('tr').find('.colLeadId').text();
+        //const listData = $(this).closest('tr').find('.colLeadId').text();
+        let listData = $(this).closest('tr').attr('id');
         if(listData){
             FlowRouter.go('/leadscard?id=' + listData);
         }
