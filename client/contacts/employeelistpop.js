@@ -89,6 +89,7 @@ Template.employeelistpop.onRendered(function (){
             $('#tblEmployeelistpop_filter .form-control-sm').get(0).focus();
         }, 500);
     });
+
     //$('.fullScreenSpin').css('display','inline-block');
     // let templateObject = Template.instance();
     // let contactService = new ContactService();

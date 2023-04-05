@@ -27,7 +27,7 @@ Template.transaction_line.onRendered(function() {
     let canShowBackOrder = templateObject.data.canShowBackOrder.toString() === "true";
     let allowedExRateTables = ['tblPurchaseOrderLine', 'tblInvoiceLine'];
     let isFixedAssets = localStorage.getItem('CloudFixedAssetsModule');
-    templateObject.init_reset_data = function() {
+    templateObject.init_reset_data = async function() {
         let reset_data = [
             { index: 0,  label: "Product Name",       class: "ProductName",   width: "300",       active: true,   display: true },
             { index: 1,  label: "Description",        class: "Description",   width: "",          active: true,   display: true },
@@ -96,7 +96,8 @@ Template.transaction_line.onRendered(function() {
         //Fixed Asset
         findItem = reset_data.find(item => item.class === "FixedAsset"); if(findItem != undefined) findItem.display = findItem.active = isFixedAssets;
 
-        templateObject.reset_data.set(reset_data);
+        await templateObject.reset_data.set(reset_data);
+        templateObject.initCustomFieldDisplaySettings("", currenttranstablename);
     }
     templateObject.init_reset_data();
     templateObject.initCustomFieldDisplaySettings = function(data, listType) {
@@ -408,6 +409,34 @@ Template.transaction_line.events({
                 swal("Something went wrong!", "", "error");
             }
         }, delayTimeAfterSound);
+    },
+    'change .chkLineGrid': async function (event) {
+        event.preventDefault();
+        // event.stopImmediatePropagation();
+        event.stopImmediatePropagation();
+        let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
+        if ($(event.target).is(':checked')) {
+            $('.col' + columnDataValue).addClass('showColumn');
+            $('.col' + columnDataValue).removeClass('hiddenColumn');
+        } else {
+            $('.col' + columnDataValue).addClass('hiddenColumn');
+            $('.col' + columnDataValue).removeClass('showColumn');
+        }
+
+        let range = $(event.target).closest("div").next().find(".custom-range").val();
+        await $('.' + columnDataValue).css('width', range);
+        // $('.dataTable').resizable();
+
+        // setTimeout(() => {
+        //     window.dispatchEvent(new Event('resize'));
+        // }, 500);
+    },
+
+    'change .custom-range': async function (event) {
+        let range = $(event.target).val() || 100;
+        let colClassName = $(event.target).attr("valueclass");
+        await $('.' + colClassName).css('width', range);
+        // $('.dataTable').resizable();
     }
 });
 Template.transaction_line.helpers({

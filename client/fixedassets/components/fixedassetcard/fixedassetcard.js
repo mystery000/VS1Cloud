@@ -185,7 +185,6 @@ Template.fixedassetcard.onRendered(function () {
       }
     }).catch(function (err) {
       // fixedAssetService.getTFixedAssetsList().then(function (data) {
-      //   console.log('TFixedAssets InoDDb');
       //   addVS1Data('TFixedAssetsList', JSON.stringify(data));
       //   findFixedAssetByID(data, currentAsset);
       // }).catch(function (err) {
@@ -194,7 +193,7 @@ Template.fixedassetcard.onRendered(function () {
     });
   }
 
-  function findFixedAssetByID(data, assetID) { 
+  function findFixedAssetByID(data, assetID) {
     const assetData = data.tfixedassetslist.filter((asset) => asset.AssetID == assetID);
     if (assetData.length > 0) {
       const assetInfo = assetData[0];

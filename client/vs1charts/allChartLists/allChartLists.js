@@ -118,12 +118,12 @@ var _chartGroup = "";
 var _tabGroup = 0;
 const chartsEditor = new ChartsEditor(
     () => {
-        $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
+        // $("#resetcharts").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
 
-        $("#btnDone").addClass("showelement");
-        $("#btnDone").removeClass("hideelement");
-        $("#btnCancel").addClass("showelement");
-        $("#btnCancel").removeClass("hideelement");
+        // $("#btnDone").addClass("showelement");
+        // $("#btnDone").removeClass("hideelement");
+        // $("#btnCancel").addClass("showelement");
+        // $("#btnCancel").removeClass("hideelement");
         $("#editcharts").addClass("hideelement");
         $("#editcharts").removeClass("showelement");
         $(".btnchartdropdown").addClass("hideelement");
@@ -141,11 +141,11 @@ const chartsEditor = new ChartsEditor(
         $(".on-editor-change-mode").addClass("showelement");
     },
     () => {
-        $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
-        $("#btnDone").addClass("hideelement");
-        $("#btnDone").removeClass("showelement");
-        $("#btnCancel").addClass("hideelement");
-        $("#btnCancel").removeClass("showelement");
+        // $("#resetcharts").addClass("hideelement").removeClass("showelement"); // this will hide it back
+        // $("#btnDone").addClass("hideelement");
+        // $("#btnDone").removeClass("showelement");
+        // $("#btnCancel").addClass("hideelement");
+        // $("#btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
@@ -190,9 +190,8 @@ async function saveCharts() {
             new Tvs1ChartDashboardPreference({
                 type: "Tvs1dashboardpreferences",
                 fields: new Tvs1ChartDashboardPreferenceField({
-                    Active: $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
-                        $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true" ?
-                        false : true,
+                    Active: $(chart).find(".chartShowOption").prop("checked") ?
+                        true : false,
                     ChartID: parseInt($(chart).attr("chart-id")),
                     ID: parseInt($(chart).attr("pref-id")),
                     EmployeeID: employeeId,
@@ -545,13 +544,7 @@ Template.allChartLists.onRendered(function() {
                     );
                     if (chart.fields.ChartGroup == _chartGroup && chart.fields.Active == true) {
                         defaultChartList.push(chart.fields._chartSlug);
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
-                            "<i class='far fa-eye'></i>"
-                        );
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "false"
-                        );
+                        $(`[key='${chart.fields._chartSlug}'] .chartShowOption`).prop("checked", true);
                         $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
                         if (chart.fields._chartSlug == 'accounts__profit_and_loss') {
                             $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
@@ -568,13 +561,7 @@ Template.allChartLists.onRendered(function() {
                             $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
                         }
                     } else {
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
-                            "<i class='far fa-eye-slash'></i>"
-                        );
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "true"
-                        );
+                        $(`[key='${chart.fields._chartSlug}'] .chartShowOption`).prop("checked", false);                        
                     }
                     // $(`[key='${chart.fields._chartSlug}']`).attr(
                     //   "pref-id",
@@ -663,15 +650,8 @@ Template.allChartLists.onRendered(function() {
 
 Template.allChartLists.events({
 
-    "click .on-editor-change-mode": (e) => {
-        // this will toggle the visibility of the widget
-        if ($(e.currentTarget).attr("is-hidden") == "true") {
-            $(e.currentTarget).attr("is-hidden", "false");
-            $(e.currentTarget).html("<i class='far fa-eye'></i>");
-        } else {
-            $(e.currentTarget).attr("is-hidden", "true");
-            $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
-        }
+    "change .chartShowOption": (e) => {
+        // this will toggle the visibility of the widget        
     },
     "mouseover .card-header": (e) => {
         $(e.currentTarget).parent(".card").addClass("hovered");
@@ -694,10 +674,10 @@ Template.allChartLists.events({
         $(".fullScreenSpin").css("display", "block");
         chartsEditor.disable();
         const templateObject = Template.instance();
-        $("#btnDone").addClass("hideelement");
-        $("#btnDone").removeClass("showelement");
-        $("#btnCancel").addClass("hideelement");
-        $("#btnCancel").removeClass("showelement");
+        // $("#btnDone").addClass("hideelement");
+        // $("#btnDone").removeClass("showelement");
+        // $("#btnCancel").addClass("hideelement");
+        // $("#btnCancel").removeClass("showelement");
         $("#editcharts").addClass("showelement");
         $("#editcharts").removeClass("hideelement");
         $(".btnchartdropdown").removeClass("hideelement");
@@ -752,13 +732,19 @@ Template.allChartLists.events({
         let templateObject = Template.instance();
         setTimeout(async function() {
             $(".fullScreenSpin").css("display", "inline-block");
-            await saveCharts();
-            await chartsEditor.disable();
-            await templateObject.hideChartElements();
-            templateObject.checkChartToDisplay();
+            // await saveCharts();
+            // await chartsEditor.disable();
+            // await templateObject.hideChartElements();
+            // templateObject.checkChartToDisplay();
+            // if( $(ui.item[0]).hasClass("editCharts") == false ){
+              await ChartHandler.buildPositions();
+              await ChartHandler.saveCharts();
+              await ChartHandler.saveChartsInLocalDB();              
+              templateObject.checkChartToDisplay();
+            // } 
 
             $(".fullScreenSpin").css("display", "none");
-            Meteor._reload.reload();
+            // Meteor._reload.reload();
         }, delayTimeAfterSound);
     },
 });
