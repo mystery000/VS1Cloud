@@ -302,11 +302,11 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
                 { index: 2, label: 'BSB', class: 'colBsb', active: true, display: true, width: "100" },
                 { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "100" },
-                { index: 4, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "100" },
-                { index: 5, label: 'Lodgement References', class: 'colLodgement', active: true, display: true, width: "100" },
+                { index: 4, label: 'Transaction Code', class: 'colTransactionCode', active: true, display: true, width: "200" },
+                { index: 5, label: 'Lodgement References', class: 'colLodgement', active: true, display: true, width: "200" },
                 { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "100" },
                 { index: 7, label: 'From BSB', class: 'colFromBsb', active: true, display: true, width: "100" },
-                { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "100" },
+                { index: 8, label: 'From Account No', class: 'colFromAccountNo', active: true, display: true, width: "200" },
             ];
         } else if (currenttablename == "tblTimeSheet") {
             reset_data = [
@@ -447,9 +447,9 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 '"></label></div>'; //switchbox
 
             costprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductqtylist[i].BuyQTY1 * 100) / 100); //Cost Price
+                Math.floor(data.tproductqtylist[i].CostExA * 100) / 100); //Cost Price
             sellprice = utilityService.modifynegativeCurrencyFormat(
-                Math.floor(data.tproductqtylist[i].SellQTY1 * 100) / 100); //Sell Price
+                Math.floor(data.tproductqtylist[i].PriceExA * 100) / 100); //Sell Price
 
             var dataList = [
                 chkBox,
@@ -2126,19 +2126,19 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let fullAccountTypeName = "";
         let accBalance = "";
         let deleteFilter = false;
-        
+
         for (let i = 0; i < data.length; i++) {
             let lineData = data[i];
             let chkBoxId = "f-" + lineData.ID || lineData.Id;
             let chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="' + chkBoxId + '" checked="true"><label class="custom-control-label chkBox pointer" for="' + chkBoxId + '"></label></div>'; //switchbox
-            let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);            
+            let amount = utilityService.modifynegativeCurrencyFormat(Math.floor(lineData.Amount * 100) / 100);
             var dataList = [
                 chkBox,
                 lineData.ID || lineData.Id || "",
                 `<input
                     class="form-control pointer sltEftTblAccountName es-input bg-white highlightSelect"
                     value="${lineData.AccountName || ""}"                    
-                />`,                 
+                />`,
                 lineData.BSB || "___-___",
                 lineData.CreditDebitAccountNumber || "",
                 `<input
@@ -2218,7 +2218,8 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                     }, 100);
                 },
                 language: { search: "", searchPlaceholder: "Search List..." },
-                "fnInitComplete": function(oSettings) {                    
+                // searching: true,
+                "fnInitComplete": function(oSettings) {
                     $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                     if (data?.Params?.Search?.replace(/\s/g, "") == "") {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
@@ -2777,7 +2778,18 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
     $('#eftaccountid').on('change', function(event) {
         if (currenttablename == "tblEftExportCheckbox") templateObject.getEftExportData()
         tableResize()
-    })
+    });
+
+
+    $('#' + currenttablename)
+
+        // Damien
+    // Set focus when open account list modal
+    setTimeout(function() {
+        $('#' + currenttablename).on('shown.bs.modal', function(){
+            $('#' + currenttablename+'_filter .form-control-sm').get(0).focus();
+        });
+    }, 500);
 });
 
 Template.internal_transaction_list_with_switchbox.events({

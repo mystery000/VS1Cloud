@@ -55,6 +55,7 @@ Template.inventorassetaccountspop.onCreated(function (e) {
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.getDataTableList = function(data) {
         let accBalance;
+        let usedCategories = [];
         if (!isNaN(data.Balance)) {
             accBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.0;
         } else {
@@ -195,11 +196,7 @@ Template.inventorassetaccountspop.onCreated(function (e) {
 })
 
 Template.inventorassetaccountspop.onRendered(function () {
-    $( "#assetAccountListModal" ).on('shown.bs.modal', function(){
-        setTimeout(function() {
-            $('#tblInventoryAccountList_filter .form-control-sm').get(0).focus()
-        }, 500);
-    });
+
     // let tempObj = Template.instance();
     // let sideBarService = new SideBarService();
     // let utilityService = new UtilityService();

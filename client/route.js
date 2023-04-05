@@ -339,6 +339,15 @@ authenticatedRoutes.route('/salesordercard', {
     }
 });
 
+authenticatedRoutes.route('/invoicetemp', {
+    name: 'invoice_temp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'invoice_temp'
+        });
+    }
+});
+
 authenticatedRoutes.route('/invoicecard', {
     name: 'new_invoice',
     action() {
@@ -347,6 +356,7 @@ authenticatedRoutes.route('/invoicecard', {
         });
     }
 });
+
 
 authenticatedRoutes.route('/refundcard', {
     name: 'refundcard',
@@ -1187,10 +1197,10 @@ authenticatedRoutes.route('/creditcard', {
 });
 
 authenticatedRoutes.route('/agedpayables', {
-    name: 'agedpayables',
+    name: 'newagedpayables',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'agedpayables'
+            yield: 'newagedpayables'
         });
     }
 });

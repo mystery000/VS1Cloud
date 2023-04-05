@@ -14,12 +14,12 @@ Template.export_import_print_display_button.events({
         let currenttablename = templateObject.data.tablename||"";
         let getTableName = currenttablename||'';
         if(currenttablename != ''){
-        $(`#${getTableName} thead tr th`).each(function (index) {
-          var $tblrow = $(this);
-          var colWidth = $tblrow.width() || 0;
-          var colthClass = $tblrow.attr('data-class') || "";
-          $('.rngRange' + colthClass).val(colWidth);
-        });
+        // $(`#${getTableName} thead tr th`).each(function (index) {
+        //   var $tblrow = $(this);
+        //   var colWidth = $tblrow.width() || 0;
+        //   var colthClass = $tblrow.attr('data-class') || "";
+        //   $('.rngRange' + colthClass).val(colWidth);
+        // });
        $('.'+getTableName+'_Modal').modal('toggle');
       }
     },

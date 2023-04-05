@@ -57,38 +57,40 @@ Template.global_customerlist.onCreated(function(){
             data.TaxCodeName || 'E',
             data.ClientNo || '',
             data.JobTitle || '',
-            data.Notes || ''
+            data.Notes || '',
+            data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "40" },
-        { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "60" },
+        { index: 0, label: '#ID', class:'colCustomerID', active: false, display: true, width: "10" },
+        { index: 1, label: "Company", class: "colCompany", active: true, display: true, width: "110" },
         { index: 2, label: "Job", class: "colJob", active: true, display: true, width: "60" },
-        { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "60" },
-        { index: 4, label: "Mobile", class: "colMobile", active: false, display: true, width: "60" },
-        { index: 5, label: "AR Balance", class: "colARBalance", active: true, display: true, width: "60" },
-        { index: 6, label: "Credit Balance", class: "colCreditBalance", active: true, display: true, width: "60" },
-        { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "60" },
-        { index: 8, label: "Credit Limit", class: "colCreditLimit", active: true, display: true, width: "60" },
-        { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "60" },
-        { index: 10, label: "Street Address", class: "colStreetAddress", active: false, display: true, width: "60" },
-        { index: 11, label: "City/Suburb", class: "colSuburb", active: true, display: true, width: "60" },
-        { index: 12, label: "State", class: "colState", active: false, display: true, width: "60" },
+        { index: 3, label: "Phone", class: "colPhone", active: true, display: true, width: "110" },
+        { index: 4, label: "Mobile", class: "colMobile", active: false, display: true, width: "110" },
+        { index: 5, label: "AR Balance", class: "colARBalance", active: true, display: true, width: "110" },
+        { index: 6, label: "Credit Balance", class: "colCreditBalance", active: true, display: true, width: "110" },
+        { index: 7, label: "Balance", class: "colBalance", active: true, display: true, width: "110" },
+        { index: 8, label: "Credit Limit", class: "colCreditLimit", active: true, display: true, width: "110" },
+        { index: 9, label: "Order Balance", class: "colSalesOrderBalance", active: true, display: true, width: "110" },
+        { index: 10, label: "Street Address", class: "colStreetAddress", active: false, display: true, width: "110" },
+        { index: 11, label: "City/Suburb", class: "colSuburb", active: true, display: true, width: "110" },
+        { index: 12, label: "State", class: "colState", active: false, display: true, width: "110" },
         { index: 13, label: "Zip Code", class: "colZipCode", active: false, display: true, width: "60" },
-        { index: 14, label: "Country", class: "colCountry", active: true, display: true, width: "60" },
+        { index: 14, label: "Country", class: "colCountry", active: true, display: true, width: "110" },
         { index: 15, label: "Email", class: "colEmail", active: false, display: true, width: "60" },
-        { index: 16, label: "Account No", class: "colAccountNo", active: false, display: true, width: "60" },
-        { index: 17, label: "Customer Type", class: "colCustomerType", active: false, display: true, width: "60" },
-        { index: 18, label: "Discount", class: "colCustomerDiscount", active: false, display: true, width: "60" },
-        { index: 19, label: "Term Name", class: "colCustomerTermName", active: false, display: true, width: "60" },
-        { index: 20, label: "First Name", class: "colCustomerFirstName", active: false, display: true, width: "60" },
-        { index: 21, label: "Last Name", class: "colCustomerLastName", active: false, display: true, width: "60" },
+        { index: 16, label: "Account No", class: "colAccountNo", active: false, display: true, width: "90" },
+        { index: 17, label: "Customer Type", class: "colCustomerType", active: false, display: true, width: "110" },
+        { index: 18, label: "Discount", class: "colCustomerDiscount", active: false, display: true, width: "110" },
+        { index: 19, label: "Term Name", class: "colCustomerTermName", active: false, display: true, width: "200" },
+        { index: 20, label: "First Name", class: "colCustomerFirstName", active: false, display: true, width: "100" },
+        { index: 21, label: "Last Name", class: "colCustomerLastName", active: false, display: true, width: "100" },
         { index: 22, label: "Tax Code", class: "colCustomerTaxCode", active: false, display: true, width: "60" },
-        { index: 23, label: "Custom Field 1", class: "colClientNo", active: false, display: true, width: "60" },
-        { index: 24, label: "Custom Field 2", class: "colJobTitle", active: false, display: true, width: "60" },
-        { index: 25, label: "Notes", class: "colNotes", active: true, display: true, width: "60" },
+        { index: 23, label: "Custom Field 1", class: "colClientNo", active: false, display: true, width: "100" },
+        { index: 24, label: "Custom Field 2", class: "colJobTitle", active: false, display: true, width: "100" },
+        { index: 25, label: "Notes", class: "colNotes", active: true, display: true, width: "300" },
+        { index: 26, label: "Status", class: "colStatus", active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -724,87 +726,6 @@ Template.global_customerlist.onRendered(function() {
 
 
 Template.global_customerlist.events({
-  'click .resetTable' : function(event){
-    let templateObject = Template.instance();
-    let reset_data = templateObject.reset_data.get();
-      //reset_data[9].display = false;
-      reset_data = reset_data.filter(redata => redata.display);
-
-    $(".custdisplaySettings").each(function (index) {
-      let $tblrow = $(this);
-      $tblrow.find(".divcolumn").text(reset_data[index].label);
-      $tblrow.find(".custom-control-input").prop("checked", reset_data[index].active);
-
-      let title = $("#tblCustomerlist").find("th").eq(index);
-        $(title).html(reset_data[index].label);
-
-      if (reset_data[index].active) {
-        $('.col' + reset_data[index].class).addClass('showColumn');
-        $('.col' + reset_data[index].class).removeClass('hiddenColumn');
-      } else {
-        $('.col' + reset_data[index].class).addClass('hiddenColumn');
-        $('.col' + reset_data[index].class).removeClass('showColumn');
-      }
-      $(".rngRange" + reset_data[index].class).val(reset_data[index].width);
-      $(".col" + reset_data[index].class).css('width', reset_data[index].width);
-    });
-  },
-  "click .saveTable": async function(event) {
-    let lineItems = [];
-    $(".fullScreenSpin").css("display", "inline-block");
-
-    $(".custdisplaySettings").each(function (index) {
-      var $tblrow = $(this);
-      var fieldID = $tblrow.attr("custid") || 0;
-      var colTitle = $tblrow.find(".divcolumn").text() || "";
-      var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-      var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = true;
-      } else {
-        colHidden = false;
-      }
-      let lineItemObj = {
-        index: parseInt(fieldID),
-        label: colTitle,
-        active: colHidden,
-        width: parseInt(colWidth),
-        class: colthClass,
-        display: true
-      };
-
-      lineItems.push(lineItemObj);
-    });
-
-    let templateObject = Template.instance();
-    let reset_data = templateObject.reset_data.get();
-    reset_data = reset_data.filter(redata => redata.display == false);
-    lineItems.push(...reset_data);
-    lineItems.sort((a,b) => a.index - b.index);
-      let erpGet = erpDb();
-      let tableName = "tblCustomerlist";
-      let employeeId = parseInt(localStorage.getItem('mySessionEmployeeLoggedID'))||0;
-      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
-      $(".fullScreenSpin").css("display", "none");
-      if(added){
-        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem('mySessionEmployeeLoggedID')),'').then(function (dataCustomize) {
-            addVS1Data('VS1_Customize', JSON.stringify(dataCustomize));
-        });
-        swal({
-          title: 'SUCCESS',
-          text: "Display settings is updated!",
-          type: 'success',
-          showCancelButton: false,
-          confirmButtonText: 'OK'
-        }).then((result) => {
-            if (result.value) {
-                $('#myModal2').modal('hide');
-            }
-        });
-      }
-
-    }
 });
 
 Template.global_customerlist.helpers({

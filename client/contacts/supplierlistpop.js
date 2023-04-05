@@ -46,6 +46,7 @@ Template.supplierlistpop.onCreated(function () {
         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
 
         var dataList = [
+            data.ClientID || '',
             data.Company || '',
             data.Phone || '',
             arBalance || 0.00,
@@ -56,7 +57,6 @@ Template.supplierlistpop.onCreated(function () {
             data.Suburb || '',
             data.Country || '',
             data.Notes || '',
-            data.ClientID || '',
             data.Active ? "" : "In-Active",
             // data.Email || '',
             // data.AccountNo || '',
@@ -72,18 +72,18 @@ Template.supplierlistpop.onCreated(function () {
     }
 
     let headerStructure = [
-        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-        { index: 1, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-        { index: 2, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
-        { index: 3, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "90" },
-        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-        { index: 7, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "120" },
-        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-        { index: 9, label: 'Comments', class: 'colNotes', active: true, display: true, width: "60" },
-        { index: 10, label: '#ID', class: 'colID', active: false, display: false, width: "20" },
-        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+        { index: 0, label: 'ID', class: 'colID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 8, label: 'City/Suburb', class: 'colSuburb', active: true, display: true, width: "110" },
+        { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+        { index: 10, label: 'Comments', class: 'colNotes', active: true, display: true, width: "300" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -99,6 +99,8 @@ Template.supplierlistpop.onRendered(function () {
     const lineSupplierItems = [];
     const dataTableList = [];
     const tableHeaderList = [];
+
+
 
     // templateObject.resetData = function (dataVal) {
     //     location.reload();
@@ -1616,191 +1618,6 @@ Template.supplierlistpop.events({
          $(".btnRefreshSupplier").trigger("click");
       }
     },
-    // 'click .chkDatatable': function (event) {
-    //     var columns = $('#tblSupplierlist th');
-    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-    //
-    //     $.each(columns, function (i, v) {
-    //         let className = v.classList;
-    //         let replaceClass = className[1];
-    //
-    //         if (v.innerText == columnDataValue) {
-    //             if ($(event.target).is(':checked')) {
-    //                 $("." + replaceClass + "").css('display', 'table-cell');
-    //                 $("." + replaceClass + "").css('padding', '.75rem');
-    //                 $("." + replaceClass + "").css('vertical-align', 'top');
-    //             } else {
-    //                 $("." + replaceClass + "").css('display', 'none');
-    //             }
-    //         }
-    //     });
-    // },
-    // 'click .resetTable': function (event) {
-    //     var getcurrentCloudDetails = CloudUser.findOne({
-    //         _id: localStorage.getItem('mycloudLogonID'),
-    //         clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-    //     });
-    //     if (getcurrentCloudDetails) {
-    //         if (getcurrentCloudDetails._id.length > 0) {
-    //             var clientID = getcurrentCloudDetails._id;
-    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
-    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
-    //             var checkPrefDetails = CloudPreference.findOne({
-    //                 userid: clientID,
-    //                 PrefName: 'tblSupplierlist'
-    //             });
-    //             if (checkPrefDetails) {
-    //                 CloudPreference.remove({
-    //                     _id: checkPrefDetails._id
-    //                 }, function (err, idTag) {
-    //                     if (err) {
-    //
-    //                     } else {
-    //                         Meteor._reload.reload();
-    //                     }
-    //                 });
-    //
-    //             }
-    //         }
-    //     }
-    // },
-    'click .saveTable': function (event) {
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblSupplierlist'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblSupplierlist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblSupplierlist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function (err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function (event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblSupplierlist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange': function (event) {
-        let range = $(event.target).val();
-        $(event.target).closest("div.divColWidth").find(".spWidth").html(range + 'px');
-
-        let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblSupplierlist th');
-        $.each(datable, function (i, v) {
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings': function (event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblSupplierlist th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function (i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
     'click .exportbtn': function () {
         //$('.fullScreenSpin').css('display','inline-block');
         jQuery('#tblSupplierlist_wrapper .dt-buttons .btntabletocsv').click();
@@ -2035,10 +1852,10 @@ Template.supplierlistpop.helpers({
     apiFunction:function() {
         let sideBarService = new SideBarService();
         return sideBarService.getAllSuppliersDataVS1List;
-    },
+     },
 
     searchAPI: function() {
-        return sideBarService.getAllSuppliersDataVS1;
+        return sideBarService.getAllSuppliersDataVS1ByName;
     },
 
     service: ()=>{

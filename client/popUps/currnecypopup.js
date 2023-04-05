@@ -64,7 +64,7 @@ Template.currencypop.onCreated(function () {
     { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
     { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
     { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
-    { index: 3, label: 'Symbol', class: 'colCurrencySymbol', active: true, display: true, width: "100" },
+    { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100" },
     { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
     { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
     { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
@@ -824,7 +824,7 @@ Template.currencypop.events({
         var currencyid = listData || "";
         var country = $(event.target).closest("tr").find(".colCountry").text() || "";
         var currencyCode = $(event.target).closest("tr").find(".colCode").text() || "";
-        var currencySymbol = $(event.target).closest("tr").find(".colSymbol").text() || "";
+        var currencySymbol = $(event.target).closest("tr").find(".colCurrencySymbol").text() || "";
         var currencyName = $(event.target).closest("tr").find(".colCurrency").text() || "";
         var currencyDesc = $(event.target).closest("tr").find(".colDescription").text() || "";
         var currencyBuyRate = $(event.target).closest("tr").find(".colBuyRate").text() || 0;
