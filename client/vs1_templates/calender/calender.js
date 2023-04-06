@@ -5178,7 +5178,8 @@ Template.calender.onRendered(function() {
 
     $(document).on("click", "#tblEmployeelist tbody tr", function(e) {
         let employeeName = $(this).find(".colEmployeeName").text() || '';
-        let employeeID = $(this).find(".colID").text() || '';
+        //let employeeID = $(this).find(".colID").text() || '';
+        let employeeID = $(this).attr("id") || '';
         templateObject.empID.set(employeeID);
         let draggedEmployeeID = templateObject.empID.get();
         let calendarData = templateObject.employeeOptions.get();

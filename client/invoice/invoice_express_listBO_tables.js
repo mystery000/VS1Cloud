@@ -23,42 +23,69 @@ Template.invoicelistBO.onCreated(function(){
     templateObject.custfields = new ReactiveVar([]);
     templateObject.displayfields = new ReactiveVar([]);
     templateObject.reset_data = new ReactiveVar([]);
+
+    templateObject.getDataTableList = function(data){
+        let salestatus = data.QuoteStatus || '';
+        let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.TotalAmount) || 0.00;
+        let totalAmount = utilityService.modifynegativeCurrencyFormat(data.TotalAmountInc) || 0.00;
+        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+
+        if(data.Deleted == true){
+            salestatus = "Deleted";
+        }else if(data.CustomerName == ''){
+            salestatus = "Deleted";
+        };
+        
+        let dataList = [
+            moment(data.SaleDate).format("DD/MM/YYYY") || data.SaleDate,
+            data.SaleID || '',
+            moment(data.DueDate).format("DD/MM/YYYY") || data.DueDate,
+            data.CustomerName || '',
+            data.ProductName || '',
+            data.Product_Description || '',
+            moment(data.ETADate).format("DD/MM/YYYY") || data.ETADate,
+            data.CustomerJob || '',
+            data.BackOrder || 0,
+            totalAmountEx || 0.00,
+            0.00 || 0.00,
+            totalAmount || 0.00,
+            totalOutstanding || 0.00,
+            data.UOM || '',
+            data.SaleTerms || '',
+            data.ReportTo || '',
+            data.PickMemo || '',
+            salestatus || '',
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: "Sale Date", class: "colSaleDate", active: true, display: true, width: "100" },
+        { index: 1, label: "Sales No.", class: "colSalesNo", active: true, display: true, width: "100" },
+        { index: 2, label: "Due Date", class: "colDueDate", active: true, display: true, width: "100" },
+        { index: 3, label: "Customer", class: "colCustomer", active: true, display: true, width: "250" },
+        { index: 4, label: "Product Name", class: "colProductName", active: true, display: true, width: "250" },
+        { index: 5, label: "Sale Desc", class: "colSaleDesc", active: true, display: true, width: "300" },
+        { index: 6, label: "ETA Date", class: "colETADate", active: true, display: true, width: "100" },
+        { index: 7, label: "Customer Job", class: "colCustomerJob text-right", active: true, display: true, width: "100" },
+        { index: 8, label: "Qty", class: "colQty text-right", active: true, display: true, width: "100" },
+        { index: 9, label: "Amount (Ex)", class: "colAmountEx text-right", active: false, display: true, width: "100" },
+        { index: 10, label: "Tax", class: "colTax text-right", active: false, display: true, width: "100" },
+        { index: 11, label: "Amount (Inc)", class: "colAmountInc text-right", active: false, display: true, width: "100" },
+        { index: 12, label: "Outstanding", class: "colOutstanding text-right", active: false, display: true, width: "100" },
+        { index: 13, label: "UOM", class: "UOM", active: false, display: true, width: "100" },
+        { index: 14, label: "Terms", class: "Terms", active: false, display: true, width: "100" },
+        { index: 15, label: "Rep", class: "Rep", active: false, display: true, width: "100" },
+        { index: 16, label: "Comments", class: "colComments", active: true, display: true, width: "200" },
+        { index: 17, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.invoicelistBO.onRendered(function() {
     $('.fullScreenSpin').css('display','inline-block');
     let templateObject = Template.instance();
-    // set initial table rest_data
-    function init_reset_data() {
-        let reset_data = [
-        { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "0" },
-        { index: 1, label: "Sale Date", class: "SaleDate", active: true, display: true, width: "" },
-        { index: 2, label: "Sales No.", class: "SalesNo", active: true, display: true, width: "" },
-        { index: 3, label: "Due Date", class: "DueDate", active: true, display: true, width: "" },
-        { index: 4, label: "Customer", class: "Customer", active: true, display: true, width: "" },
-        { index: 5, label: "Product Name", class: "ProductName", active: true, display: true, width: "" },
-        { index: 6, label: "Sale Desc", class: "SaleDesc", active: true, display: true, width: "" },
-        { index: 7, label: "ETA Date", class: "ETADate", active: true, display: true, width: "" },
-        { index: 8, label: "Customer Job", class: "CustomerJob", active: true, display: true, width: "" },
-        { index: 9, label: "Qty", class: "Qty", active: true, display: true, width: "" },
-        { index: 10, label: "Amount (Ex)", class: "AmountEx", active: false, display: false, width: "" },
-        { index: 11, label: "Tax", class: "Tax", active: false, display: false, width: "" },
-        { index: 12, label: "Amount (Inc)", class: "AmountInc", active: false, display: false, width: "" },
-        { index: 13, label: "Outstanding", class: "Outstanding", active: false, display: false, width: "" },
-        { index: 14, label: "Status", class: "Status", active: true, display: true, width: "" },
-        { index: 15, label: "UOM", class: "UOM", active: false, display: false, width: "" },
-        { index: 16, label: "Terms", class: "Terms", active: false, display: false, width: "" },
-        { index: 17, label: "Rep", class: "Rep", active: false, display: false, width: "" },
-        { index: 18, label: "Comments", class: "Comments", active: true, display: true, width: "" },
-        ];
-
-        let templateObject = Template.instance();
-        templateObject.reset_data.set(reset_data);
-    }
-    init_reset_data();
-    // set initial table rest_data
-
-
+    
   // custom field displaysettings
    templateObject.initCustomFieldDisplaySettings = function(data, listType) {
     let templateObject = Template.instance();
@@ -249,1011 +276,1011 @@ Template.invoicelistBO.onRendered(function() {
         })
       }
 
-    templateObject.getAllSalesOrderData = function () {
-
-      var currentBeginDate = new Date();
-      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-      let fromDateMonth = (currentBeginDate.getMonth() + 1);
-      let fromDateDay = currentBeginDate.getDate();
-      if ((currentBeginDate.getMonth() + 1) < 10) {
-          fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-      } else {
-          fromDateMonth = (currentBeginDate.getMonth() + 1);
-      }
-
-      if (currentBeginDate.getDate() < 10) {
-          fromDateDay = "0" + currentBeginDate.getDate();
-      }
-      var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
-      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-
-        getVS1Data('TSalesBackOrderReport').then(function (dataObject) {
-            if(dataObject.length == 0){
-                sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
-                  addVS1Data('TSalesBackOrderReport',JSON.stringify(data));
-                    let lineItems = [];
-                    let lineItemObj = {};
-
-                    if (data.Params.IgnoreDates == true) {
-                        $('#dateFrom').attr('readonly', true);
-                        $('#dateTo').attr('readonly', true);
-
-                    } else {
-                      $('#dateFrom').attr('readonly', false);
-                      $('#dateTo').attr('readonly', false);
-                        $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-                        $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-                    }
-                    for(let i=0; i<data.tinvoicelist.length; i++){
-                      let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
-                      let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
-                      // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                      let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
-                      let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
-                      let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
-                      let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
-                      let salestatus = data.tinvoicelist[i].QuoteStatus || '';
-                      if(data.tinvoicelist[i].Deleted == true){
-                        salestatus = "Deleted";
-                      }else if(data.tinvoicelist[i].CustomerName == ''){
-                        salestatus = "Deleted";
-                      };
-                        var dataList = {
-                            id: data.tinvoicelist[i].SaleID || '',
-                            employee:data.tinvoicelist[i].EmployeeName || '',
-                            sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
-                            saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
-                            duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
-                            customername: data.tinvoicelist[i].CustomerName || '',
-
-                            productname: data.tinvoicelist[i].ProductName || '',
-                            saledesc: data.tinvoicelist[i].Product_Description || '',
-                            etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
-                            etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
-                            customerjob: data.tinvoicelist[i].CustomerJob || '',
-                            qtybackorder: data.tinvoicelist[i].BackOrder || 0,
-                            originalqty: data.tinvoicelist[i].BackOrder || 0,
-                            prodcost: productCost,
-
-                            totalamountex: totalAmountEx || 0.00,
-                            totaltax: 0.00 || 0.00,
-                            totalamount: totalAmount || 0.00,
-                            totalpaid: totalPaid || 0.00,
-                            totaloustanding: totalOutstanding || 0.00,
-                            department: data.tinvoicelist[i].class || '',
-                            custfield1: data.tinvoicelist[i].UOM || '',
-                            custfield2: data.tinvoicelist[i].SaleTerms || '',
-                            comments: data.tinvoicelist[i].PickMemo || '',
-                            qtybackorder: data.tinvoicelist[i].BackOrder || '',
-                            product: data.tinvoicelist[i].ProductName || '',
-                            salestatus: salestatus || '',
-                            // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
-
-                        };
-
-                        //if(data.tinvoicelist[i].IsBackOrder == true){
-                        dataTableList.push(dataList);
-                        //}
-                        //}
-                    }
-
-                    templateObject.datatablerecords.set(dataTableList);
-
-                    if(templateObject.datatablerecords.get()){
-
-                        Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
-                            if(error){
-
-                            }else{
-                                if(result){
-                                    for (let i = 0; i < result.customFields.length; i++) {
-                                        let customcolumn = result.customFields;
-                                        let columData = customcolumn[i].label;
-                                        let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                        let hiddenColumn = customcolumn[i].hidden;
-                                        let columnClass = columHeaderUpdate.split('.')[1];
-                                        let columnWidth = customcolumn[i].width;
-                                        let columnindex = customcolumn[i].index + 1;
-
-                                        if(hiddenColumn == true){
-
-                                            $("."+columnClass+"").addClass('hiddenColumn');
-                                            $("."+columnClass+"").removeClass('showColumn');
-                                        }else if(hiddenColumn == false){
-                                            $("."+columnClass+"").removeClass('hiddenColumn');
-                                            $("."+columnClass+"").addClass('showColumn');
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        });
-
-
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                    }
-
-                    $('.fullScreenSpin').css('display','none');
-                    setTimeout(function () {
-                        $('#tblInvoicelistBO').DataTable({
-                            columnDefs: [
-                                {type: 'date', targets: 0}
-                            ],
-                            "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                            buttons: [
-                                {
-                                    extend: 'excelHtml5',
-                                    text: '',
-                                    download: 'open',
-                                    className: "btntabletocsv hiddenColumn",
-                                    filename: "Invoice List Back Order"+ moment().format(),
-                                    orientation:'portrait',
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        format: {
-                                            body: function ( data, row, column ) {
-                                                if(data.includes("</span>")){
-                                                    var res = data.split("</span>");
-                                                    data = res[1];
-                                                }
-
-                                                return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-
-                                            }
-                                        }
-                                    }
-                                },{
-                                    extend: 'print',
-                                    download: 'open',
-                                    className: "btntabletopdf hiddenColumn",
-                                    text: '',
-                                    title: 'Invoice List',
-                                    filename: "Invoice List Back Order"+ moment().format(),
-                                    exportOptions: {
-                                        columns: ':visible',
-                                        stripHtml: false
-                                    }
-                                }],
-                            select: true,
-                            destroy: true,
-                            colReorder: true,
-                            // bStateSave: true,
-                            // rowId: 0,
-                            pageLength: initialDatatableLoad,
-                            "bLengthChange": false,
-                            info: true,
-                            responsive: true,
-                            "order": [[ 0, "desc" ],[ 2, "desc" ]],
-                            action: function () {
-                                $('#tblInvoicelistBO').DataTable().ajax.reload();
-                            },
-                            "fnDrawCallback": function (oSettings) {
-                              let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                              $('.paginate_button.page-item').removeClass('disabled');
-                              $('#tblInvoicelistBO_ellipsis').addClass('disabled');
-
-                              if(oSettings._iDisplayLength == -1){
-                                if(oSettings.fnRecordsDisplay() > 150){
-                                  $('.paginate_button.page-item.previous').addClass('disabled');
-                                  $('.paginate_button.page-item.next').addClass('disabled');
-                                }
-                              }else{
-
-                              }
-                              if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
-                                  $('.paginate_button.page-item.next').addClass('disabled');
-                              }
-
-                              $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                               .on('click', function(){
-                                 $('.fullScreenSpin').css('display','inline-block');
-                                 let dataLenght = oSettings._iDisplayLength;
-                                 var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                                 var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                                 let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                                 let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                                 if(data.Params.IgnoreDates == true){
-                                 sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                   getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
-                                     if(dataObjectold.length == 0){
-
-                                     }else{
-                                       let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                       var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
-                                       let objCombineData = {
-                                         tsalesbackorderreport:thirdaryData
-                                       }
-
-
-                                         addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                           templateObject.resetData(objCombineData);
-                                         $('.fullScreenSpin').css('display','none');
-                                         }).catch(function (err) {
-                                         $('.fullScreenSpin').css('display','none');
-                                         });
-
-                                     }
-                                    }).catch(function (err) {
-
-                                    });
-
-                                 }).catch(function(err) {
-                                   $('.fullScreenSpin').css('display','none');
-                                 });
-                               }else{
-                                 sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                                   getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
-                                     if(dataObjectold.length == 0){
-
-                                     }else{
-                                       let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                       var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
-                                       let objCombineData = {
-                                         tsalesbackorderreport:thirdaryData
-                                       }
-
-
-                                         addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                           templateObject.resetData(objCombineData);
-                                         $('.fullScreenSpin').css('display','none');
-                                         }).catch(function (err) {
-                                         $('.fullScreenSpin').css('display','none');
-                                         });
-
-                                     }
-                                    }).catch(function (err) {
-
-                                    });
-
-                                 }).catch(function(err) {
-                                   $('.fullScreenSpin').css('display','none');
-                                 });
-                               }
-                               });
-                                setTimeout(function () {
-                                    MakeNegative();
-                                }, 100);
-                            },
-                            language: { search: "",searchPlaceholder: "Search List..." },
-                            "fnInitComplete": function () {
-                              this.fnPageChange('last');
-                              if(data.Params.Search.replace(/\s/g, "") == ""){
-                                $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
-                              }else{
-                                $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
-                              };
-                                 $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
-                                 $('.myvarFilterForm').appendTo(".colDateFilter");
-                             },
-                             "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                               let countTableData = data.Params.Count || 0; //get count from API data
-
-                                 return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                             }
-
-                        }).on('page', function () {
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                            let draftRecord = templateObject.datatablerecords.get();
-                            templateObject.datatablerecords.set(draftRecord);
-                        }).on('column-reorder', function () {
-
-                        });
-
-                        // $('#tblInvoicelistBO').DataTable().column( 0 ).visible( true );
-                        $('.fullScreenSpin').css('display','none');
-                    }, 0);
-
-                    var columns = $('#tblInvoicelistBO th');
-                    let sTible = "";
-                    let sWidth = "";
-                    let sIndex = "";
-                    let sVisible = "";
-                    let columVisible = false;
-                    let sClass = "";
-                    $.each(columns, function(i,v) {
-                        if(v.hidden == false){
-                            columVisible =  true;
-                        }
-                        if((v.className.includes("hiddenColumn"))){
-                            columVisible = false;
-                        }
-                        sWidth = v.style.width.replace('px', "");
-
-                        let datatablerecordObj = {
-                            sTitle: v.innerText || '',
-                            sWidth: sWidth || '',
-                            sIndex: v.cellIndex || 0,
-                            sVisible: columVisible || false,
-                            sClass: v.className || ''
-                        };
-                        tableHeaderList.push(datatablerecordObj);
-                    });
-                    templateObject.tableheaderrecords.set(tableHeaderList);
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                    $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
-                        var listData = $(this).closest('tr').attr('id');
-                        var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-                        if(listData){
-                          if(checkDeleted == "Deleted"){
-                            swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                          }else{
-                            FlowRouter.go('/invoicecard?id=' + listData);
-                          }
-                        }
-
-                    });
-
-                }).catch(function (err) {
-                    // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                    $('.fullScreenSpin').css('display','none');
-                    // Meteor._reload.reload();
-                });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tinvoicelist;
-                let lineItems = [];
-                let lineItemObj = {};
-                if (data.Params.IgnoreDates == true) {
-                    $('#dateFrom').attr('readonly', true);
-                    $('#dateTo').attr('readonly', true);
-
-                } else {
-                  $('#dateFrom').attr('readonly', false);
-                  $('#dateTo').attr('readonly', false);
-                    $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-                    $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-                }
-                for(let i=0; i<data.tinvoicelist.length; i++){
-                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
-                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
-                  // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                  let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
-                  let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
-                  let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
-                  let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
-                  let salestatus = data.tinvoicelist[i].QuoteStatus || '';
-                  if(data.tinvoicelist[i].Deleted == true){
-                    salestatus = "Deleted";
-                  }else if(data.tinvoicelist[i].CustomerName == ''){
-                    salestatus = "Deleted";
-                  };
-                    var dataList = {
-                        id: data.tinvoicelist[i].SaleID || '',
-                        employee:data.tinvoicelist[i].EmployeeName || '',
-                        sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
-                        saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
-                        duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
-                        customername: data.tinvoicelist[i].CustomerName || '',
-
-                        productname: data.tinvoicelist[i].ProductName || '',
-                        saledesc: data.tinvoicelist[i].Product_Description || '',
-                        etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
-                        etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
-                        customerjob: data.tinvoicelist[i].CustomerJob || '',
-                        qtybackorder: data.tinvoicelist[i].BackOrder || 0,
-                        originalqty: data.tinvoicelist[i].BackOrder || 0,
-                        prodcost: productCost,
-
-                        totalamountex: totalAmountEx || 0.00,
-                        totaltax: 0.00 || 0.00,
-                        totalamount: totalAmount || 0.00,
-                        totalpaid: totalPaid || 0.00,
-                        totaloustanding: totalOutstanding || 0.00,
-                        department: data.tinvoicelist[i].class || '',
-                        custfield1: data.tinvoicelist[i].UOM || '',
-                        custfield2: data.tinvoicelist[i].SaleTerms || '',
-                        comments: data.tinvoicelist[i].PickMemo || '',
-                        qtybackorder: data.tinvoicelist[i].BackOrder || '',
-                        product: data.tinvoicelist[i].ProductName || '',
-                        salestatus: salestatus || '',
-                        // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
-
-                    };
-
-                    //if(data.tinvoicelist[i].IsBackOrder == true){
-                    dataTableList.push(dataList);
-                    //}
-                    //}
-                }
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if(templateObject.datatablerecords.get()){
-
-                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display','none');
-                setTimeout(function () {
-                    $('#tblInvoicelistBO').DataTable({
-                        columnDefs: [
-                            {type: 'date', targets: 0}
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [
-                            {
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Invoice List Back Order"+ moment().format(),
-                                orientation:'portrait',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    format: {
-                                        body: function ( data, row, column ) {
-                                            if(data.includes("</span>")){
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
-
-                                            return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-
-                                        }
-                                    }
-                                }
-                            },{
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Invoice List',
-                                filename: "Invoice List Back Order"+ moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
-                        action: function () {
-                            $('#tblInvoicelistBO').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblInvoicelistBO_ellipsis').addClass('disabled');
-
-                          if(oSettings._iDisplayLength == -1){
-                            if(oSettings.fnRecordsDisplay() > 150){
-                              $('.paginate_button.page-item.previous').addClass('disabled');
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                          }else{
-
-                          }
-                          if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                           .on('click', function(){
-                             $('.fullScreenSpin').css('display','inline-block');
-                             let dataLenght = oSettings._iDisplayLength;
-                             var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                             var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                             let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                             let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                             if(data.Params.IgnoreDates == true){
-                             sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                               getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
-                                 if(dataObjectold.length == 0){
-
-                                 }else{
-                                   let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                   var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
-                                   let objCombineData = {
-                                     tsalesbackorderreport:thirdaryData
-                                   }
-
-
-                                     addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
-                                     }).catch(function (err) {
-                                     $('.fullScreenSpin').css('display','none');
-                                     });
-
-                                 }
-                                }).catch(function (err) {
-
-                                });
-
-                             }).catch(function(err) {
-                               $('.fullScreenSpin').css('display','none');
-                             });
-                           }else{
-                             sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                               getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
-                                 if(dataObjectold.length == 0){
-
-                                 }else{
-                                   let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                   var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
-                                   let objCombineData = {
-                                     tsalesbackorderreport:thirdaryData
-                                   }
-
-
-                                     addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
-                                     }).catch(function (err) {
-                                     $('.fullScreenSpin').css('display','none');
-                                     });
-
-                                 }
-                                }).catch(function (err) {
-
-                                });
-
-                             }).catch(function(err) {
-                               $('.fullScreenSpin').css('display','none');
-                             });
-                           }
-                           });
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                          this.fnPageChange('last');
-                          if(data.Params.Search.replace(/\s/g, "") == ""){
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
-                          }else{
-                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
-                          };
-                             $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
-                             $('.myvarFilterForm').appendTo(".colDateFilter");
-                         },
-                         "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                           let countTableData = data.Params.Count || 0; //get count from API data
-
-                             return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                         }
-
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {
-
-                    });
-
-                    // $('#tblInvoicelistBO').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display','none');
-                }, 0);
-
-                var columns = $('#tblInvoicelistBO th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i,v) {
-                    if(v.hidden == false){
-                        columVisible =  true;
-                    }
-                    if((v.className.includes("hiddenColumn"))){
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || 0,
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-                    if(listData){
-                      if(checkDeleted == "Deleted"){
-                        swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                      }else{
-                       window.open('/invoicecard?id=' + listData+'&type=bo','_self');
-                      }
-                    }
-
-                });
-
-            }
-        }).catch(function (err) {
-              sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
-                addVS1Data('TSalesBackOrderReport',JSON.stringify(data));
-                let lineItems = [];
-                let lineItemObj = {};
-
-                if (data.Params.IgnoreDates == true) {
-                    $('#dateFrom').attr('readonly', true);
-                    $('#dateTo').attr('readonly', true);
-                } else {
-                  $('#dateFrom').attr('readonly', false);
-                  $('#dateTo').attr('readonly', false);
-                    $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
-                    $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
-                }
-                for(let i=0; i<data.tinvoicelist.length; i++){
-                  let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
-                  let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
-                  // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-                  let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
-                  let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
-                  let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
-                  let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
-                  let salestatus = data.tinvoicelist[i].QuoteStatus || '';
-                  if(data.tinvoicelist[i].Deleted == true){
-                    salestatus = "Deleted";
-                  }else if(data.tinvoicelist[i].CustomerName == ''){
-                    salestatus = "Deleted";
-                  };
-                    var dataList = {
-                        id: data.tinvoicelist[i].SaleID || '',
-                        employee:data.tinvoicelist[i].EmployeeName || '',
-                        sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
-                        saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
-                        duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
-                        customername: data.tinvoicelist[i].CustomerName || '',
-
-                        productname: data.tinvoicelist[i].ProductName || '',
-                        saledesc: data.tinvoicelist[i].Product_Description || '',
-                        etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
-                        etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
-                        customerjob: data.tinvoicelist[i].CustomerJob || '',
-                        qtybackorder: data.tinvoicelist[i].BackOrder || 0,
-                        originalqty: data.tinvoicelist[i].BackOrder || 0,
-                        prodcost: productCost,
-
-                        totalamountex: totalAmountEx || 0.00,
-                        totaltax: 0.00 || 0.00,
-                        totalamount: totalAmount || 0.00,
-                        totalpaid: totalPaid || 0.00,
-                        totaloustanding: totalOutstanding || 0.00,
-                        department: data.tinvoicelist[i].class || '',
-                        custfield1: data.tinvoicelist[i].UOM || '',
-                        custfield2: data.tinvoicelist[i].SaleTerms || '',
-                        comments: data.tinvoicelist[i].PickMemo || '',
-                        qtybackorder: data.tinvoicelist[i].BackOrder || '',
-                        product: data.tinvoicelist[i].ProductName || '',
-                        salestatus: salestatus || '',
-                        // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
-
-                    };
-
-                    //if(data.tinvoicelist[i].IsBackOrder == true){
-                    dataTableList.push(dataList);
-                    //}
-                    //}
-                }
-
-                templateObject.datatablerecords.set(dataTableList);
-
-                if(templateObject.datatablerecords.get()){
-
-                    Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
-                        if(error){
-
-                        }else{
-                            if(result){
-                                for (let i = 0; i < result.customFields.length; i++) {
-                                    let customcolumn = result.customFields;
-                                    let columData = customcolumn[i].label;
-                                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                                    let hiddenColumn = customcolumn[i].hidden;
-                                    let columnClass = columHeaderUpdate.split('.')[1];
-                                    let columnWidth = customcolumn[i].width;
-                                    let columnindex = customcolumn[i].index + 1;
-
-                                    if(hiddenColumn == true){
-
-                                        $("."+columnClass+"").addClass('hiddenColumn');
-                                        $("."+columnClass+"").removeClass('showColumn');
-                                    }else if(hiddenColumn == false){
-                                        $("."+columnClass+"").removeClass('hiddenColumn');
-                                        $("."+columnClass+"").addClass('showColumn');
-                                    }
-
-                                }
-                            }
-
-                        }
-                    });
-
-
-                    setTimeout(function () {
-                        MakeNegative();
-                    }, 100);
-                }
-
-                $('.fullScreenSpin').css('display','none');
-                setTimeout(function () {
-                    $('#tblInvoicelistBO').DataTable({
-                        columnDefs: [
-                            {type: 'date', targets: 0}
-                        ],
-                        "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-                        buttons: [
-                            {
-                                extend: 'excelHtml5',
-                                text: '',
-                                download: 'open',
-                                className: "btntabletocsv hiddenColumn",
-                                filename: "Invoice List Back Order"+ moment().format(),
-                                orientation:'portrait',
-                                exportOptions: {
-                                    columns: ':visible',
-                                    format: {
-                                        body: function ( data, row, column ) {
-                                            if(data.includes("</span>")){
-                                                var res = data.split("</span>");
-                                                data = res[1];
-                                            }
-
-                                            return column === 1 ? data.replace(/<.*?>/ig, ""): data;
-
-                                        }
-                                    }
-                                }
-                            },{
-                                extend: 'print',
-                                download: 'open',
-                                className: "btntabletopdf hiddenColumn",
-                                text: '',
-                                title: 'Invoice List',
-                                filename: "Invoice List Back Order"+ moment().format(),
-                                exportOptions: {
-                                    columns: ':visible',
-                                    stripHtml: false
-                                }
-                            }],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        // bStateSave: true,
-                        // rowId: 0,
-                        pageLength: initialDatatableLoad,
-                        "bLengthChange": false,
-                        info: true,
-                        responsive: true,
-                        "order": [[ 0, "desc" ],[ 2, "desc" ]],
-                        action: function () {
-                            $('#tblInvoicelistBO').DataTable().ajax.reload();
-                        },
-                        "fnDrawCallback": function (oSettings) {
-                          let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblInvoicelistBO_ellipsis').addClass('disabled');
-
-                          if(oSettings._iDisplayLength == -1){
-                            if(oSettings.fnRecordsDisplay() > 150){
-                              $('.paginate_button.page-item.previous').addClass('disabled');
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-                          }else{
-
-                          }
-                          if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                           .on('click', function(){
-                             $('.fullScreenSpin').css('display','inline-block');
-                             let dataLenght = oSettings._iDisplayLength;
-                             var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                             var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-                             let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-                             let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-                             if(data.Params.IgnoreDates == true){
-                             sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                               getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
-                                 if(dataObjectold.length == 0){
-
-                                 }else{
-                                   let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                   var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
-                                   let objCombineData = {
-                                     tsalesbackorderreport:thirdaryData
-                                   }
-
-
-                                     addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
-                                     }).catch(function (err) {
-                                     $('.fullScreenSpin').css('display','none');
-                                     });
-
-                                 }
-                                }).catch(function (err) {
-
-                                });
-
-                             }).catch(function(err) {
-                               $('.fullScreenSpin').css('display','none');
-                             });
-                           }else{
-                             sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
-                               getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
-                                 if(dataObjectold.length == 0){
-
-                                 }else{
-                                   let dataOld = JSON.parse(dataObjectold[0].data);
-
-                                   var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
-                                   let objCombineData = {
-                                     tsalesbackorderreport:thirdaryData
-                                   }
-
-
-                                     addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
-                                       templateObject.resetData(objCombineData);
-                                     $('.fullScreenSpin').css('display','none');
-                                     }).catch(function (err) {
-                                     $('.fullScreenSpin').css('display','none');
-                                     });
-
-                                 }
-                                }).catch(function (err) {
-
-                                });
-
-                             }).catch(function(err) {
-                               $('.fullScreenSpin').css('display','none');
-                             });
-                           }
-                           });
-                            setTimeout(function () {
-                                MakeNegative();
-                            }, 100);
-                        },
-                        language: { search: "",searchPlaceholder: "Search List..." },
-                        "fnInitComplete": function () {
-                          this.fnPageChange('last');
-                          if(data.Params.Search.replace(/\s/g, "") == ""){
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
-                          }else{
-                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
-                          };
-                             $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
-                             $('.myvarFilterForm').appendTo(".colDateFilter");
-                         },
-                         "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-                           let countTableData = data.Params.Count || 0; //get count from API data
-
-                             return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
-                         }
-
-                    }).on('page', function () {
-                        setTimeout(function () {
-                            MakeNegative();
-                        }, 100);
-                        let draftRecord = templateObject.datatablerecords.get();
-                        templateObject.datatablerecords.set(draftRecord);
-                    }).on('column-reorder', function () {
-
-                    });
-
-                    // $('#tblInvoicelistBO').DataTable().column( 0 ).visible( true );
-                    $('.fullScreenSpin').css('display','none');
-                }, 0);
-
-                var columns = $('#tblInvoicelistBO th');
-                let sTible = "";
-                let sWidth = "";
-                let sIndex = "";
-                let sVisible = "";
-                let columVisible = false;
-                let sClass = "";
-                $.each(columns, function(i,v) {
-                    if(v.hidden == false){
-                        columVisible =  true;
-                    }
-                    if((v.className.includes("hiddenColumn"))){
-                        columVisible = false;
-                    }
-                    sWidth = v.style.width.replace('px', "");
-
-                    let datatablerecordObj = {
-                        sTitle: v.innerText || '',
-                        sWidth: sWidth || '',
-                        sIndex: v.cellIndex || 0,
-                        sVisible: columVisible || false,
-                        sClass: v.className || ''
-                    };
-                    tableHeaderList.push(datatablerecordObj);
-                });
-                templateObject.tableheaderrecords.set(tableHeaderList);
-                $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
-                    var listData = $(this).closest('tr').attr('id');
-                    var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
-                    if(listData){
-                      if(checkDeleted == "Deleted"){
-                        swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
-                      }else{
-                        FlowRouter.go('/invoicecard?id=' + listData);
-                      }
-                    }
-
-                });
-
-            }).catch(function (err) {
-                // Bert.alert('<strong>' + err + '</strong>!', 'danger');
-                $('.fullScreenSpin').css('display','none');
-                // Meteor._reload.reload();
-            });
-        });
-
-    }
+    // templateObject.getAllSalesOrderData = function () {
+
+    //   var currentBeginDate = new Date();
+    //   var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+    //   let fromDateMonth = (currentBeginDate.getMonth() + 1);
+    //   let fromDateDay = currentBeginDate.getDate();
+    //   if ((currentBeginDate.getMonth() + 1) < 10) {
+    //       fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
+    //   } else {
+    //       fromDateMonth = (currentBeginDate.getMonth() + 1);
+    //   }
+
+    //   if (currentBeginDate.getDate() < 10) {
+    //       fromDateDay = "0" + currentBeginDate.getDate();
+    //   }
+    //   var toDate = currentBeginDate.getFullYear() + "-" + (fromDateMonth) + "-" + (fromDateDay);
+    //   let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
+
+    //     getVS1Data('TSalesBackOrderReport').then(function (dataObject) {
+    //         if(dataObject.length == 0){
+    //             sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+    //               addVS1Data('TSalesBackOrderReport',JSON.stringify(data));
+    //                 let lineItems = [];
+    //                 let lineItemObj = {};
+
+    //                 if (data.Params.IgnoreDates == true) {
+    //                     $('#dateFrom').attr('readonly', true);
+    //                     $('#dateTo').attr('readonly', true);
+
+    //                 } else {
+    //                   $('#dateFrom').attr('readonly', false);
+    //                   $('#dateTo').attr('readonly', false);
+    //                     $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+    //                     $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+    //                 }
+    //                 for(let i=0; i<data.tinvoicelist.length; i++){
+    //                   let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
+    //                   let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
+    //                   // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+    //                   let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
+    //                   let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
+    //                   let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
+    //                   let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
+    //                   let salestatus = data.tinvoicelist[i].QuoteStatus || '';
+    //                   if(data.tinvoicelist[i].Deleted == true){
+    //                     salestatus = "Deleted";
+    //                   }else if(data.tinvoicelist[i].CustomerName == ''){
+    //                     salestatus = "Deleted";
+    //                   };
+    //                     var dataList = {
+    //                         id: data.tinvoicelist[i].SaleID || '',
+    //                         employee:data.tinvoicelist[i].EmployeeName || '',
+    //                         sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
+    //                         saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
+    //                         duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
+    //                         customername: data.tinvoicelist[i].CustomerName || '',
+
+    //                         productname: data.tinvoicelist[i].ProductName || '',
+    //                         saledesc: data.tinvoicelist[i].Product_Description || '',
+    //                         etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
+    //                         etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
+    //                         customerjob: data.tinvoicelist[i].CustomerJob || '',
+    //                         qtybackorder: data.tinvoicelist[i].BackOrder || 0,
+    //                         originalqty: data.tinvoicelist[i].BackOrder || 0,
+    //                         prodcost: productCost,
+
+    //                         totalamountex: totalAmountEx || 0.00,
+    //                         totaltax: 0.00 || 0.00,
+    //                         totalamount: totalAmount || 0.00,
+    //                         totalpaid: totalPaid || 0.00,
+    //                         totaloustanding: totalOutstanding || 0.00,
+    //                         department: data.tinvoicelist[i].class || '',
+    //                         custfield1: data.tinvoicelist[i].UOM || '',
+    //                         custfield2: data.tinvoicelist[i].SaleTerms || '',
+    //                         comments: data.tinvoicelist[i].PickMemo || '',
+    //                         qtybackorder: data.tinvoicelist[i].BackOrder || '',
+    //                         product: data.tinvoicelist[i].ProductName || '',
+    //                         salestatus: salestatus || '',
+    //                         // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
+
+    //                     };
+
+    //                     //if(data.tinvoicelist[i].IsBackOrder == true){
+    //                     dataTableList.push(dataList);
+    //                     //}
+    //                     //}
+    //                 }
+
+    //                 templateObject.datatablerecords.set(dataTableList);
+
+    //                 if(templateObject.datatablerecords.get()){
+
+    //                     Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+    //                         if(error){
+
+    //                         }else{
+    //                             if(result){
+    //                                 for (let i = 0; i < result.customFields.length; i++) {
+    //                                     let customcolumn = result.customFields;
+    //                                     let columData = customcolumn[i].label;
+    //                                     let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                     let hiddenColumn = customcolumn[i].hidden;
+    //                                     let columnClass = columHeaderUpdate.split('.')[1];
+    //                                     let columnWidth = customcolumn[i].width;
+    //                                     let columnindex = customcolumn[i].index + 1;
+
+    //                                     if(hiddenColumn == true){
+
+    //                                         $("."+columnClass+"").addClass('hiddenColumn');
+    //                                         $("."+columnClass+"").removeClass('showColumn');
+    //                                     }else if(hiddenColumn == false){
+    //                                         $("."+columnClass+"").removeClass('hiddenColumn');
+    //                                         $("."+columnClass+"").addClass('showColumn');
+    //                                     }
+
+    //                                 }
+    //                             }
+
+    //                         }
+    //                     });
+
+
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                 }
+
+    //                 $('.fullScreenSpin').css('display','none');
+    //                 setTimeout(function () {
+    //                     $('#tblInvoicelistBO').DataTable({
+    //                         columnDefs: [
+    //                             {type: 'date', targets: 0}
+    //                         ],
+    //                         "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                         buttons: [
+    //                             {
+    //                                 extend: 'excelHtml5',
+    //                                 text: '',
+    //                                 download: 'open',
+    //                                 className: "btntabletocsv hiddenColumn",
+    //                                 filename: "Invoice List Back Order"+ moment().format(),
+    //                                 orientation:'portrait',
+    //                                 exportOptions: {
+    //                                     columns: ':visible',
+    //                                     format: {
+    //                                         body: function ( data, row, column ) {
+    //                                             if(data.includes("</span>")){
+    //                                                 var res = data.split("</span>");
+    //                                                 data = res[1];
+    //                                             }
+
+    //                                             return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+    //                                         }
+    //                                     }
+    //                                 }
+    //                             },{
+    //                                 extend: 'print',
+    //                                 download: 'open',
+    //                                 className: "btntabletopdf hiddenColumn",
+    //                                 text: '',
+    //                                 title: 'Invoice List',
+    //                                 filename: "Invoice List Back Order"+ moment().format(),
+    //                                 exportOptions: {
+    //                                     columns: ':visible',
+    //                                     stripHtml: false
+    //                                 }
+    //                             }],
+    //                         select: true,
+    //                         destroy: true,
+    //                         colReorder: true,
+    //                         // bStateSave: true,
+    //                         // rowId: 0,
+    //                         pageLength: initialDatatableLoad,
+    //                         "bLengthChange": false,
+    //                         info: true,
+    //                         responsive: true,
+    //                         "order": [[ 0, "desc" ],[ 2, "desc" ]],
+    //                         action: function () {
+    //                             $('#tblInvoicelistBO').DataTable().ajax.reload();
+    //                         },
+    //                         "fnDrawCallback": function (oSettings) {
+    //                           let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //                           $('.paginate_button.page-item').removeClass('disabled');
+    //                           $('#tblInvoicelistBO_ellipsis').addClass('disabled');
+
+    //                           if(oSettings._iDisplayLength == -1){
+    //                             if(oSettings.fnRecordsDisplay() > 150){
+    //                               $('.paginate_button.page-item.previous').addClass('disabled');
+    //                               $('.paginate_button.page-item.next').addClass('disabled');
+    //                             }
+    //                           }else{
+
+    //                           }
+    //                           if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+    //                               $('.paginate_button.page-item.next').addClass('disabled');
+    //                           }
+
+    //                           $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                            .on('click', function(){
+    //                              $('.fullScreenSpin').css('display','inline-block');
+    //                              let dataLenght = oSettings._iDisplayLength;
+    //                              var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //                              var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    //                              let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //                              let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //                              if(data.Params.IgnoreDates == true){
+    //                              sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+    //                                getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
+    //                                  if(dataObjectold.length == 0){
+
+    //                                  }else{
+    //                                    let dataOld = JSON.parse(dataObjectold[0].data);
+
+    //                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
+    //                                    let objCombineData = {
+    //                                      tsalesbackorderreport:thirdaryData
+    //                                    }
+
+
+    //                                      addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                                        templateObject.resetData(objCombineData);
+    //                                      $('.fullScreenSpin').css('display','none');
+    //                                      }).catch(function (err) {
+    //                                      $('.fullScreenSpin').css('display','none');
+    //                                      });
+
+    //                                  }
+    //                                 }).catch(function (err) {
+
+    //                                 });
+
+    //                              }).catch(function(err) {
+    //                                $('.fullScreenSpin').css('display','none');
+    //                              });
+    //                            }else{
+    //                              sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+    //                                getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
+    //                                  if(dataObjectold.length == 0){
+
+    //                                  }else{
+    //                                    let dataOld = JSON.parse(dataObjectold[0].data);
+
+    //                                    var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
+    //                                    let objCombineData = {
+    //                                      tsalesbackorderreport:thirdaryData
+    //                                    }
+
+
+    //                                      addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                                        templateObject.resetData(objCombineData);
+    //                                      $('.fullScreenSpin').css('display','none');
+    //                                      }).catch(function (err) {
+    //                                      $('.fullScreenSpin').css('display','none');
+    //                                      });
+
+    //                                  }
+    //                                 }).catch(function (err) {
+
+    //                                 });
+
+    //                              }).catch(function(err) {
+    //                                $('.fullScreenSpin').css('display','none');
+    //                              });
+    //                            }
+    //                            });
+    //                             setTimeout(function () {
+    //                                 MakeNegative();
+    //                             }, 100);
+    //                         },
+    //                         language: { search: "",searchPlaceholder: "Search List..." },
+    //                         "fnInitComplete": function () {
+    //                           this.fnPageChange('last');
+    //                           if(data.Params.Search.replace(/\s/g, "") == ""){
+    //                             $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                           }else{
+    //                             $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                           };
+    //                              $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                              $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                          },
+    //                          "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                            let countTableData = data.Params.Count || 0; //get count from API data
+
+    //                              return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+    //                          }
+
+    //                     }).on('page', function () {
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                         let draftRecord = templateObject.datatablerecords.get();
+    //                         templateObject.datatablerecords.set(draftRecord);
+    //                     }).on('column-reorder', function () {
+
+    //                     });
+
+    //                     // $('#tblInvoicelistBO').DataTable().column( 0 ).visible( true );
+    //                     $('.fullScreenSpin').css('display','none');
+    //                 }, 0);
+
+    //                 var columns = $('#tblInvoicelistBO th');
+    //                 let sTible = "";
+    //                 let sWidth = "";
+    //                 let sIndex = "";
+    //                 let sVisible = "";
+    //                 let columVisible = false;
+    //                 let sClass = "";
+    //                 $.each(columns, function(i,v) {
+    //                     if(v.hidden == false){
+    //                         columVisible =  true;
+    //                     }
+    //                     if((v.className.includes("hiddenColumn"))){
+    //                         columVisible = false;
+    //                     }
+    //                     sWidth = v.style.width.replace('px', "");
+
+    //                     let datatablerecordObj = {
+    //                         sTitle: v.innerText || '',
+    //                         sWidth: sWidth || '',
+    //                         sIndex: v.cellIndex || 0,
+    //                         sVisible: columVisible || false,
+    //                         sClass: v.className || ''
+    //                     };
+    //                     tableHeaderList.push(datatablerecordObj);
+    //                 });
+    //                 templateObject.tableheaderrecords.set(tableHeaderList);
+    //                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //                 $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
+    //                     var listData = $(this).closest('tr').attr('id');
+    //                     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+    //                     if(listData){
+    //                       if(checkDeleted == "Deleted"){
+    //                         swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+    //                       }else{
+    //                         FlowRouter.go('/invoicecard?id=' + listData);
+    //                       }
+    //                     }
+
+    //                 });
+
+    //             }).catch(function (err) {
+    //                 // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //                 $('.fullScreenSpin').css('display','none');
+    //                 // Meteor._reload.reload();
+    //             });
+    //         }else{
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.tinvoicelist;
+    //             let lineItems = [];
+    //             let lineItemObj = {};
+    //             if (data.Params.IgnoreDates == true) {
+    //                 $('#dateFrom').attr('readonly', true);
+    //                 $('#dateTo').attr('readonly', true);
+
+    //             } else {
+    //               $('#dateFrom').attr('readonly', false);
+    //               $('#dateTo').attr('readonly', false);
+    //                 $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+    //                 $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+    //             }
+    //             for(let i=0; i<data.tinvoicelist.length; i++){
+    //               let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
+    //               let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
+    //               // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+    //               let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
+    //               let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
+    //               let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
+    //               let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
+    //               let salestatus = data.tinvoicelist[i].QuoteStatus || '';
+    //               if(data.tinvoicelist[i].Deleted == true){
+    //                 salestatus = "Deleted";
+    //               }else if(data.tinvoicelist[i].CustomerName == ''){
+    //                 salestatus = "Deleted";
+    //               };
+    //                 var dataList = {
+    //                     id: data.tinvoicelist[i].SaleID || '',
+    //                     employee:data.tinvoicelist[i].EmployeeName || '',
+    //                     sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
+    //                     saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
+    //                     duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
+    //                     customername: data.tinvoicelist[i].CustomerName || '',
+
+    //                     productname: data.tinvoicelist[i].ProductName || '',
+    //                     saledesc: data.tinvoicelist[i].Product_Description || '',
+    //                     etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
+    //                     etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
+    //                     customerjob: data.tinvoicelist[i].CustomerJob || '',
+    //                     qtybackorder: data.tinvoicelist[i].BackOrder || 0,
+    //                     originalqty: data.tinvoicelist[i].BackOrder || 0,
+    //                     prodcost: productCost,
+
+    //                     totalamountex: totalAmountEx || 0.00,
+    //                     totaltax: 0.00 || 0.00,
+    //                     totalamount: totalAmount || 0.00,
+    //                     totalpaid: totalPaid || 0.00,
+    //                     totaloustanding: totalOutstanding || 0.00,
+    //                     department: data.tinvoicelist[i].class || '',
+    //                     custfield1: data.tinvoicelist[i].UOM || '',
+    //                     custfield2: data.tinvoicelist[i].SaleTerms || '',
+    //                     comments: data.tinvoicelist[i].PickMemo || '',
+    //                     qtybackorder: data.tinvoicelist[i].BackOrder || '',
+    //                     product: data.tinvoicelist[i].ProductName || '',
+    //                     salestatus: salestatus || '',
+    //                     // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
+
+    //                 };
+
+    //                 //if(data.tinvoicelist[i].IsBackOrder == true){
+    //                 dataTableList.push(dataList);
+    //                 //}
+    //                 //}
+    //             }
+
+    //             templateObject.datatablerecords.set(dataTableList);
+
+    //             if(templateObject.datatablerecords.get()){
+
+    //                 Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+    //                     if(error){
+
+    //                     }else{
+    //                         if(result){
+    //                             for (let i = 0; i < result.customFields.length; i++) {
+    //                                 let customcolumn = result.customFields;
+    //                                 let columData = customcolumn[i].label;
+    //                                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                 let hiddenColumn = customcolumn[i].hidden;
+    //                                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                                 let columnWidth = customcolumn[i].width;
+    //                                 let columnindex = customcolumn[i].index + 1;
+
+    //                                 if(hiddenColumn == true){
+
+    //                                     $("."+columnClass+"").addClass('hiddenColumn');
+    //                                     $("."+columnClass+"").removeClass('showColumn');
+    //                                 }else if(hiddenColumn == false){
+    //                                     $("."+columnClass+"").removeClass('hiddenColumn');
+    //                                     $("."+columnClass+"").addClass('showColumn');
+    //                                 }
+
+    //                             }
+    //                         }
+
+    //                     }
+    //                 });
+
+
+    //                 setTimeout(function () {
+    //                     MakeNegative();
+    //                 }, 100);
+    //             }
+
+    //             $('.fullScreenSpin').css('display','none');
+    //             setTimeout(function () {
+    //                 $('#tblInvoicelistBO').DataTable({
+    //                     columnDefs: [
+    //                         {type: 'date', targets: 0}
+    //                     ],
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     buttons: [
+    //                         {
+    //                             extend: 'excelHtml5',
+    //                             text: '',
+    //                             download: 'open',
+    //                             className: "btntabletocsv hiddenColumn",
+    //                             filename: "Invoice List Back Order"+ moment().format(),
+    //                             orientation:'portrait',
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 format: {
+    //                                     body: function ( data, row, column ) {
+    //                                         if(data.includes("</span>")){
+    //                                             var res = data.split("</span>");
+    //                                             data = res[1];
+    //                                         }
+
+    //                                         return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+    //                                     }
+    //                                 }
+    //                             }
+    //                         },{
+    //                             extend: 'print',
+    //                             download: 'open',
+    //                             className: "btntabletopdf hiddenColumn",
+    //                             text: '',
+    //                             title: 'Invoice List',
+    //                             filename: "Invoice List Back Order"+ moment().format(),
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 stripHtml: false
+    //                             }
+    //                         }],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     // bStateSave: true,
+    //                     // rowId: 0,
+    //                     pageLength: initialDatatableLoad,
+    //                     "bLengthChange": false,
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [[ 0, "desc" ],[ 2, "desc" ]],
+    //                     action: function () {
+    //                         $('#tblInvoicelistBO').DataTable().ajax.reload();
+    //                     },
+    //                     "fnDrawCallback": function (oSettings) {
+    //                       let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //                       $('.paginate_button.page-item').removeClass('disabled');
+    //                       $('#tblInvoicelistBO_ellipsis').addClass('disabled');
+
+    //                       if(oSettings._iDisplayLength == -1){
+    //                         if(oSettings.fnRecordsDisplay() > 150){
+    //                           $('.paginate_button.page-item.previous').addClass('disabled');
+    //                           $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
+    //                       }else{
+
+    //                       }
+    //                       if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+    //                           $('.paginate_button.page-item.next').addClass('disabled');
+    //                       }
+
+    //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                        .on('click', function(){
+    //                          $('.fullScreenSpin').css('display','inline-block');
+    //                          let dataLenght = oSettings._iDisplayLength;
+    //                          var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //                          var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    //                          let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //                          let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //                          if(data.Params.IgnoreDates == true){
+    //                          sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+    //                            getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
+    //                              if(dataObjectold.length == 0){
+
+    //                              }else{
+    //                                let dataOld = JSON.parse(dataObjectold[0].data);
+
+    //                                var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
+    //                                let objCombineData = {
+    //                                  tsalesbackorderreport:thirdaryData
+    //                                }
+
+
+    //                                  addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                                    templateObject.resetData(objCombineData);
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  }).catch(function (err) {
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  });
+
+    //                              }
+    //                             }).catch(function (err) {
+
+    //                             });
+
+    //                          }).catch(function(err) {
+    //                            $('.fullScreenSpin').css('display','none');
+    //                          });
+    //                        }else{
+    //                          sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+    //                            getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
+    //                              if(dataObjectold.length == 0){
+
+    //                              }else{
+    //                                let dataOld = JSON.parse(dataObjectold[0].data);
+
+    //                                var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
+    //                                let objCombineData = {
+    //                                  tsalesbackorderreport:thirdaryData
+    //                                }
+
+
+    //                                  addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                                    templateObject.resetData(objCombineData);
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  }).catch(function (err) {
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  });
+
+    //                              }
+    //                             }).catch(function (err) {
+
+    //                             });
+
+    //                          }).catch(function(err) {
+    //                            $('.fullScreenSpin').css('display','none');
+    //                          });
+    //                        }
+    //                        });
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                     },
+    //                     language: { search: "",searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function () {
+    //                       this.fnPageChange('last');
+    //                       if(data.Params.Search.replace(/\s/g, "") == ""){
+    //                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                       }else{
+    //                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                       };
+    //                          $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                          $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                      },
+    //                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                        let countTableData = data.Params.Count || 0; //get count from API data
+
+    //                          return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+    //                      }
+
+    //                 }).on('page', function () {
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                     let draftRecord = templateObject.datatablerecords.get();
+    //                     templateObject.datatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function () {
+
+    //                 });
+
+    //                 // $('#tblInvoicelistBO').DataTable().column( 0 ).visible( true );
+    //                 $('.fullScreenSpin').css('display','none');
+    //             }, 0);
+
+    //             var columns = $('#tblInvoicelistBO th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let sClass = "";
+    //             $.each(columns, function(i,v) {
+    //                 if(v.hidden == false){
+    //                     columVisible =  true;
+    //                 }
+    //                 if((v.className.includes("hiddenColumn"))){
+    //                     columVisible = false;
+    //                 }
+    //                 sWidth = v.style.width.replace('px', "");
+
+    //                 let datatablerecordObj = {
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '',
+    //                     sIndex: v.cellIndex || 0,
+    //                     sVisible: columVisible || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //             $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
+    //                 var listData = $(this).closest('tr').attr('id');
+    //                 var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+    //                 if(listData){
+    //                   if(checkDeleted == "Deleted"){
+    //                     swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+    //                   }else{
+    //                    window.open('/invoicecard?id=' + listData+'&type=bo','_self');
+    //                   }
+    //                 }
+
+    //             });
+
+    //         }
+    //     }).catch(function (err) {
+    //           sideBarService.getAllTSalesBackOrderReportData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function (data) {
+    //             addVS1Data('TSalesBackOrderReport',JSON.stringify(data));
+    //             let lineItems = [];
+    //             let lineItemObj = {};
+
+    //             if (data.Params.IgnoreDates == true) {
+    //                 $('#dateFrom').attr('readonly', true);
+    //                 $('#dateTo').attr('readonly', true);
+    //             } else {
+    //               $('#dateFrom').attr('readonly', false);
+    //               $('#dateTo').attr('readonly', false);
+    //                 $("#dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+    //                 $("#dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+    //             }
+    //             for(let i=0; i<data.tinvoicelist.length; i++){
+    //               let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmount) || 0.00;
+    //               let totalTax = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalTax) || 0.00;
+    //               // Currency+''+data.tinvoiceex[i].fields.TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
+    //               let totalAmount = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].TotalAmountInc) || 0.00;
+    //               let totalPaid = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Payment) || 0.00;
+    //               let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].Balance) || 0.00;
+    //               let productCost = utilityService.modifynegativeCurrencyFormat(data.tinvoicelist[i].LineCost)|| 0.00;
+    //               let salestatus = data.tinvoicelist[i].QuoteStatus || '';
+    //               if(data.tinvoicelist[i].Deleted == true){
+    //                 salestatus = "Deleted";
+    //               }else if(data.tinvoicelist[i].CustomerName == ''){
+    //                 salestatus = "Deleted";
+    //               };
+    //                 var dataList = {
+    //                     id: data.tinvoicelist[i].SaleID || '',
+    //                     employee:data.tinvoicelist[i].EmployeeName || '',
+    //                     sortdate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("YYYY/MM/DD"): data.tinvoicelist[i].SaleDate,
+    //                     saledate: data.tinvoicelist[i].SaleDate !=''? moment(data.tinvoicelist[i].SaleDate).format("DD/MM/YYYY"): data.tinvoicelist[i].SaleDate,
+    //                     duedate: data.tinvoicelist[i].DueDate !=''? moment(data.tinvoicelist[i].DueDate).format("DD/MM/YYYY"): data.tinvoicelist[i].DueDate,
+    //                     customername: data.tinvoicelist[i].CustomerName || '',
+
+    //                     productname: data.tinvoicelist[i].ProductName || '',
+    //                     saledesc: data.tinvoicelist[i].Product_Description || '',
+    //                     etasortdate:data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("YYYY/MM/DD"): data.tinvoicelist[i].ETADate,
+    //                     etadate: data.tinvoicelist[i].ETADate !=''? moment(data.tinvoicelist[i].ETADate).format("DD/MM/YYYY"): data.tinvoicelist[i].ETADate,
+    //                     customerjob: data.tinvoicelist[i].CustomerJob || '',
+    //                     qtybackorder: data.tinvoicelist[i].BackOrder || 0,
+    //                     originalqty: data.tinvoicelist[i].BackOrder || 0,
+    //                     prodcost: productCost,
+
+    //                     totalamountex: totalAmountEx || 0.00,
+    //                     totaltax: 0.00 || 0.00,
+    //                     totalamount: totalAmount || 0.00,
+    //                     totalpaid: totalPaid || 0.00,
+    //                     totaloustanding: totalOutstanding || 0.00,
+    //                     department: data.tinvoicelist[i].class || '',
+    //                     custfield1: data.tinvoicelist[i].UOM || '',
+    //                     custfield2: data.tinvoicelist[i].SaleTerms || '',
+    //                     comments: data.tinvoicelist[i].PickMemo || '',
+    //                     qtybackorder: data.tinvoicelist[i].BackOrder || '',
+    //                     product: data.tinvoicelist[i].ProductName || '',
+    //                     salestatus: salestatus || '',
+    //                     // shipdate:data.tinvoicelist[i].ShipDate !=''? moment(data.tinvoicelist[i].ShipDate).format("DD/MM/YYYY"): data.tinvoicelist[i].ShipDate,
+
+    //                 };
+
+    //                 //if(data.tinvoicelist[i].IsBackOrder == true){
+    //                 dataTableList.push(dataList);
+    //                 //}
+    //                 //}
+    //             }
+
+    //             templateObject.datatablerecords.set(dataTableList);
+
+    //             if(templateObject.datatablerecords.get()){
+
+    //                 Meteor.call('readPrefMethod',localStorage.getItem('mycloudLogonID'),'tblInvoicelistBO', function(error, result){
+    //                     if(error){
+
+    //                     }else{
+    //                         if(result){
+    //                             for (let i = 0; i < result.customFields.length; i++) {
+    //                                 let customcolumn = result.customFields;
+    //                                 let columData = customcolumn[i].label;
+    //                                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                                 let hiddenColumn = customcolumn[i].hidden;
+    //                                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                                 let columnWidth = customcolumn[i].width;
+    //                                 let columnindex = customcolumn[i].index + 1;
+
+    //                                 if(hiddenColumn == true){
+
+    //                                     $("."+columnClass+"").addClass('hiddenColumn');
+    //                                     $("."+columnClass+"").removeClass('showColumn');
+    //                                 }else if(hiddenColumn == false){
+    //                                     $("."+columnClass+"").removeClass('hiddenColumn');
+    //                                     $("."+columnClass+"").addClass('showColumn');
+    //                                 }
+
+    //                             }
+    //                         }
+
+    //                     }
+    //                 });
+
+
+    //                 setTimeout(function () {
+    //                     MakeNegative();
+    //                 }, 100);
+    //             }
+
+    //             $('.fullScreenSpin').css('display','none');
+    //             setTimeout(function () {
+    //                 $('#tblInvoicelistBO').DataTable({
+    //                     columnDefs: [
+    //                         {type: 'date', targets: 0}
+    //                     ],
+    //                     "sDom": "<'row'><'row'<'col-sm-12 col-lg-6'f><'col-sm-12 col-lg-6 colDateFilter'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+    //                     buttons: [
+    //                         {
+    //                             extend: 'excelHtml5',
+    //                             text: '',
+    //                             download: 'open',
+    //                             className: "btntabletocsv hiddenColumn",
+    //                             filename: "Invoice List Back Order"+ moment().format(),
+    //                             orientation:'portrait',
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 format: {
+    //                                     body: function ( data, row, column ) {
+    //                                         if(data.includes("</span>")){
+    //                                             var res = data.split("</span>");
+    //                                             data = res[1];
+    //                                         }
+
+    //                                         return column === 1 ? data.replace(/<.*?>/ig, ""): data;
+
+    //                                     }
+    //                                 }
+    //                             }
+    //                         },{
+    //                             extend: 'print',
+    //                             download: 'open',
+    //                             className: "btntabletopdf hiddenColumn",
+    //                             text: '',
+    //                             title: 'Invoice List',
+    //                             filename: "Invoice List Back Order"+ moment().format(),
+    //                             exportOptions: {
+    //                                 columns: ':visible',
+    //                                 stripHtml: false
+    //                             }
+    //                         }],
+    //                     select: true,
+    //                     destroy: true,
+    //                     colReorder: true,
+    //                     // bStateSave: true,
+    //                     // rowId: 0,
+    //                     pageLength: initialDatatableLoad,
+    //                     "bLengthChange": false,
+    //                     info: true,
+    //                     responsive: true,
+    //                     "order": [[ 0, "desc" ],[ 2, "desc" ]],
+    //                     action: function () {
+    //                         $('#tblInvoicelistBO').DataTable().ajax.reload();
+    //                     },
+    //                     "fnDrawCallback": function (oSettings) {
+    //                       let checkurlIgnoreDate = FlowRouter.current().queryParams.ignoredate;
+    //                       $('.paginate_button.page-item').removeClass('disabled');
+    //                       $('#tblInvoicelistBO_ellipsis').addClass('disabled');
+
+    //                       if(oSettings._iDisplayLength == -1){
+    //                         if(oSettings.fnRecordsDisplay() > 150){
+    //                           $('.paginate_button.page-item.previous').addClass('disabled');
+    //                           $('.paginate_button.page-item.next').addClass('disabled');
+    //                         }
+    //                       }else{
+
+    //                       }
+    //                       if(oSettings.fnRecordsDisplay() < initialDatatableLoad){
+    //                           $('.paginate_button.page-item.next').addClass('disabled');
+    //                       }
+
+    //                       $('.paginate_button.next:not(.disabled)', this.api().table().container())
+    //                        .on('click', function(){
+    //                          $('.fullScreenSpin').css('display','inline-block');
+    //                          let dataLenght = oSettings._iDisplayLength;
+    //                          var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+    //                          var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+    //                          let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+    //                          let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+    //                          if(data.Params.IgnoreDates == true){
+    //                          sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, true, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+    //                            getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
+    //                              if(dataObjectold.length == 0){
+
+    //                              }else{
+    //                                let dataOld = JSON.parse(dataObjectold[0].data);
+
+    //                                var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
+    //                                let objCombineData = {
+    //                                  tsalesbackorderreport:thirdaryData
+    //                                }
+
+
+    //                                  addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                                    templateObject.resetData(objCombineData);
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  }).catch(function (err) {
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  });
+
+    //                              }
+    //                             }).catch(function (err) {
+
+    //                             });
+
+    //                          }).catch(function(err) {
+    //                            $('.fullScreenSpin').css('display','none');
+    //                          });
+    //                        }else{
+    //                          sideBarService.getAllTSalesBackOrderReportData(formatDateFrom, formatDateTo, false, initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function(dataObjectnew) {
+    //                            getVS1Data('TSalesBackOrderReport').then(function (dataObjectold) {
+    //                              if(dataObjectold.length == 0){
+
+    //                              }else{
+    //                                let dataOld = JSON.parse(dataObjectold[0].data);
+
+    //                                var thirdaryData = $.merge($.merge([], dataObjectnew.tsalesbackorderreport), dataOld.tsalesbackorderreport);
+    //                                let objCombineData = {
+    //                                  tsalesbackorderreport:thirdaryData
+    //                                }
+
+
+    //                                  addVS1Data('TSalesBackOrderReport',JSON.stringify(objCombineData)).then(function (datareturn) {
+    //                                    templateObject.resetData(objCombineData);
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  }).catch(function (err) {
+    //                                  $('.fullScreenSpin').css('display','none');
+    //                                  });
+
+    //                              }
+    //                             }).catch(function (err) {
+
+    //                             });
+
+    //                          }).catch(function(err) {
+    //                            $('.fullScreenSpin').css('display','none');
+    //                          });
+    //                        }
+    //                        });
+    //                         setTimeout(function () {
+    //                             MakeNegative();
+    //                         }, 100);
+    //                     },
+    //                     language: { search: "",searchPlaceholder: "Search List..." },
+    //                     "fnInitComplete": function () {
+    //                       this.fnPageChange('last');
+    //                       if(data.Params.Search.replace(/\s/g, "") == ""){
+    //                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                       }else{
+    //                         $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Deleted</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                       };
+    //                          $("<button class='btn btn-primary btnRefreshInvoiceListBO' type='button' id='btnRefreshInvoiceListBO' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInvoicelistBO_filter");
+    //                          $('.myvarFilterForm').appendTo(".colDateFilter");
+    //                      },
+    //                      "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+    //                        let countTableData = data.Params.Count || 0; //get count from API data
+
+    //                          return 'Showing '+ iStart + " to " + iEnd + " of " + countTableData;
+    //                      }
+
+    //                 }).on('page', function () {
+    //                     setTimeout(function () {
+    //                         MakeNegative();
+    //                     }, 100);
+    //                     let draftRecord = templateObject.datatablerecords.get();
+    //                     templateObject.datatablerecords.set(draftRecord);
+    //                 }).on('column-reorder', function () {
+
+    //                 });
+
+    //                 // $('#tblInvoicelistBO').DataTable().column( 0 ).visible( true );
+    //                 $('.fullScreenSpin').css('display','none');
+    //             }, 0);
+
+    //             var columns = $('#tblInvoicelistBO th');
+    //             let sTible = "";
+    //             let sWidth = "";
+    //             let sIndex = "";
+    //             let sVisible = "";
+    //             let columVisible = false;
+    //             let sClass = "";
+    //             $.each(columns, function(i,v) {
+    //                 if(v.hidden == false){
+    //                     columVisible =  true;
+    //                 }
+    //                 if((v.className.includes("hiddenColumn"))){
+    //                     columVisible = false;
+    //                 }
+    //                 sWidth = v.style.width.replace('px', "");
+
+    //                 let datatablerecordObj = {
+    //                     sTitle: v.innerText || '',
+    //                     sWidth: sWidth || '',
+    //                     sIndex: v.cellIndex || 0,
+    //                     sVisible: columVisible || false,
+    //                     sClass: v.className || ''
+    //                 };
+    //                 tableHeaderList.push(datatablerecordObj);
+    //             });
+    //             templateObject.tableheaderrecords.set(tableHeaderList);
+    //             $('div.dataTables_filter input').addClass('form-control form-control-sm');
+    //             $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
+    //                 var listData = $(this).closest('tr').attr('id');
+    //                 var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
+    //                 if(listData){
+    //                   if(checkDeleted == "Deleted"){
+    //                     swal('You Cannot View This Transaction', 'Because It Has Been Deleted', 'info');
+    //                   }else{
+    //                     FlowRouter.go('/invoicecard?id=' + listData);
+    //                   }
+    //                 }
+
+    //             });
+
+    //         }).catch(function (err) {
+    //             // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+    //             $('.fullScreenSpin').css('display','none');
+    //             // Meteor._reload.reload();
+    //         });
+    //     });
+
+    // }
 
 
 
     $('#tblInvoicelistBO tbody').on( 'click', 'tr', function () {
-        var listData = $(this).closest('tr').attr('id');
+        var listData = $(this).closest('tr').find('.colSalesNo').text() || '';
         var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
         if(listData){
           if(checkDeleted == "Deleted"){
@@ -1291,7 +1318,6 @@ Template.invoicelistBO.onRendered(function() {
             $("#dateTo").val(urlParametersDateTo != '' ? moment(urlParametersDateTo).format("DD/MM/YYYY") : urlParametersDateTo);
         }
     }
-    tableResize();
 
     templateObject.initPage = async () => {
         LoadingOverlay.show();
@@ -1897,5 +1923,21 @@ Template.invoicelistBO.helpers({
     // custom fields displaysettings
     displayfields: () => {
         return Template.instance().displayfields.get();
+    },
+    apiFunction: function() {
+        return sideBarService.getAllTSalesBackOrderReportData;
+    },
+    apiParams: function() {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+    },
+    service: ()=>{
+        return sideBarService;
+    },
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
     },
 });

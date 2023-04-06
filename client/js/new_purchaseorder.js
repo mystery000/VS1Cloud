@@ -99,7 +99,10 @@ Template.purchaseordercard.onCreated(() => {
     templateObject.headerbuttons = new ReactiveVar([]);
 
     templateObject.currencyData = new ReactiveVar([]);
-
+    let isBOnShippedQty = localStorage.getItem('CloudPurchaseQtyOnly')||false;
+    if (JSON.parse(isBOnShippedQty)) {
+        templateObject.includeBOnShippedQty.set(false);
+    }
     function formatDate (date) {
 
         return moment(date).format('DD/MM/YYYY');
@@ -4156,7 +4159,7 @@ Template.purchaseordercard.onRendered(async () => {
     //     }, 1000);
     // });
 
-    $(document).on("click", "#tblInventory tbody tr", function(e) {
+    $(document).on("click", ".tblInventory tbody tr", function(e) {
         $(".colProductName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -7868,9 +7871,9 @@ Template.purchaseordercard.events({
                                 $('#slttaxcodepurchase').val(taxcodepurchase);
                                 $('#edtbuyqty1cost').val(buyqty1cost);
 
-                                setTimeout(function() {
-                                    $('#newProductModal').modal('show');
-                                }, 500);
+                                // setTimeout(function() {
+                                //     $('#newProductModal').modal('show');
+                                // }, 500);
                             }).catch(function (err) {
 
                                 $('.fullScreenSpin').css('display','none');
@@ -7919,9 +7922,9 @@ Template.purchaseordercard.events({
                                     $('#slttaxcodepurchase').val(taxcodepurchase);
                                     $('#edtbuyqty1cost').val(buyqty1cost);
 
-                                    setTimeout(function() {
-                                        $('#newProductModal').modal('show');
-                                    }, 500);
+                                    // setTimeout(function() {
+                                    //     $('#newProductModal').modal('show');
+                                    // }, 500);
                                 }
                             }
                             if(!added) {
@@ -7961,9 +7964,9 @@ Template.purchaseordercard.events({
                                     $('#slttaxcodepurchase').val(taxcodepurchase);
                                     $('#edtbuyqty1cost').val(buyqty1cost);
 
-                                    setTimeout(function() {
-                                        $('#newProductModal').modal('show');
-                                    }, 500);
+                                    // setTimeout(function() {
+                                    //     $('#newProductModal').modal('show');
+                                    // }, 500);
                                 }).catch(function (err) {
 
                                     $('.fullScreenSpin').css('display','none');
@@ -8008,9 +8011,9 @@ Template.purchaseordercard.events({
                             $('#slttaxcodepurchase').val(taxcodepurchase);
                             $('#edtbuyqty1cost').val(buyqty1cost);
 
-                            setTimeout(function() {
-                                $('#newProductModal').modal('show');
-                            }, 500);
+                            // setTimeout(function() {
+                            //     $('#newProductModal').modal('show');
+                            // }, 500);
                         }).catch(function (err) {
 
                             $('.fullScreenSpin').css('display','none');
@@ -8402,9 +8405,9 @@ Template.purchaseordercard.events({
                                 $('#chkSameAsSupplier').removeAttr("checked");
                             }
 
-                            setTimeout(function () {
-                                $('#addCustomerModal').modal('show');
-                            }, 200);
+                            // setTimeout(function () {
+                            //     $('#addCustomerModal').modal('show');
+                            // }, 200);
                         }).catch(function (err) {
                             $('.fullScreenSpin').css('display', 'none');
                         });
@@ -8500,9 +8503,9 @@ Template.purchaseordercard.events({
                                     $('#chkSameAsSupplier').removeAttr("checked");
                                 }
 
-                                setTimeout(function () {
-                                    $('#addCustomerModal').modal('show');
-                                }, 200);
+                                // setTimeout(function () {
+                                //     $('#addCustomerModal').modal('show');
+                                // }, 200);
 
                             }
                         }
@@ -8593,9 +8596,9 @@ Template.purchaseordercard.events({
                                     $('#chkSameAsSupplier').removeAttr("checked");
                                 }
 
-                                setTimeout(function () {
-                                    $('#addCustomerModal').modal('show');
-                                }, 200);
+                                // setTimeout(function () {
+                                //     $('#addCustomerModal').modal('show');
+                                // }, 200);
                             }).catch(function (err) {
                                 $('.fullScreenSpin').css('display', 'none');
                             });
@@ -8687,9 +8690,9 @@ Template.purchaseordercard.events({
                             $('#chkSameAsSupplier').removeAttr("checked");
                         }
 
-                        setTimeout(function () {
-                            $('#addCustomerModal').modal('show');
-                        }, 200);
+                        // setTimeout(function () {
+                        //     $('#addCustomerModal').modal('show');
+                        // }, 200);
                     }).catch(function (err) {
                         $('.fullScreenSpin').css('display', 'none');
                     });

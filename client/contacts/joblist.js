@@ -22,11 +22,12 @@ Template.joblist.onCreated(function () {
 
     templateObject.getDataTableList = function(data) {
         let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
-        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.CreditBalance) || 0.00;
+        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
         let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
         let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit) || 0.00;
         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
         var dataList = [
+            data.ParentClientID || '',
             data.Company || '',
             data.JobName || '',
             data.Phone || '',
@@ -41,7 +42,6 @@ Template.joblist.onCreated(function () {
             data.ClientNo || '',
             data.JobTitle || '',
             data.Notes || '',
-            data.ID || '',
             data.Active ? "" : "In-Active",
             //contactname: data.ContactName || ''
         ];
@@ -49,21 +49,21 @@ Template.joblist.onCreated(function () {
     }
 
     let headerStructure = [
-        { index: 0, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-        { index: 1, label: 'Job', class: 'colJob', active: true, display: true, width: "110" },
-        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
-        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
-        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
-        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
-        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
-        { index: 8,  label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
-        { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "120" },
-        { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "120" },
-        { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "120" },
-        { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "120" },
-        { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
-        { index: 14, label: 'ID', class: 'colID', active: false, display: false, width: "10" },
+        { index: 0, label: 'ID', class: 'colID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 2, label: 'Job', class: 'colJob', active: true, display: true, width: "110" },
+        { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+        { index: 4, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 7, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+        { index: 8, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 9, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+        { index: 10, label: 'Email', class: 'colEmail', active: false, display: true, width: "120" },
+        { index: 11, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "120" },
+        { index: 12, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "120" },
+        { index: 13, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "120" },
+        { index: 14, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
         { index: 15, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
@@ -823,6 +823,7 @@ Template.joblist.onRendered(function () {
 
     $('#tblJoblist tbody').on('click', 'tr', function () {
         var listData = $(this).closest('tr').find('.coldID').text();
+        if(!listData) listData = $(this).closest('tr').attr('id');
         if (listData) {
             FlowRouter.go('/customerscard?jobid=' + listData+"&transTab=job");
         }
