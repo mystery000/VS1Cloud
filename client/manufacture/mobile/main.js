@@ -10,6 +10,7 @@ import { cloneDeep, template } from 'lodash';
 
 
 const contactService = new ContactService();
+const manufacturingService = new ManufacturingService();
 
 
 var html5QrcodeScannerProdModal = null;
@@ -109,6 +110,15 @@ Template.mobileapp.onRendered(async function() {
 });
 
 Template.mobileapp.events({
+    
+    // Press Enter keyboard
+    'keydown': function(e, instance) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            $('#mobileBtnEnter').click();            
+        }
+    },
+
     // table tr click
     'click #tblWorkOrderList tbody tr' : function(e, instance) {
         let SaleID = $(e.target).closest('tr').find('td.sorting_1').text();
@@ -669,7 +679,7 @@ Template.mobileapp.events({
         $("#btnClockOut").removeAttr('disabled');
         $("#btnStartBreak").removeAttr('disabled');
         $("#btnStartJob").removeAttr('disabled');
-        $(".mobile-header-status-text").text("Select Employee");
+        $(".mobile-header-status-text").text("Clock In");
     },
 
     'click #btnClockIn_phone': function(e, instance) {
@@ -692,7 +702,7 @@ Template.mobileapp.events({
         $("#btnClockOut_phone").removeAttr('disabled');
         $("#btnStartBreak_phone").removeAttr('disabled');
         $("#btnStartJob_phone").removeAttr('disabled');
-        $(".mobile-header-status-text").text("Select Employee");
+        $(".mobile-header-status-text").text("Clock In");
     },
 
     'click #btnClockOut': function (e, instance) {
@@ -860,7 +870,8 @@ Template.mobileapp.events({
     },
 
     'click #mobileBtnEnter': function(e, instance) {  // Click enter button
-
+        
+        let templateObject = Template.instance();
         let inputValue  = $(".mobile-main-input").val();
         let isClockin = Template.instance().isClockin.get();
         
@@ -875,33 +886,71 @@ Template.mobileapp.events({
 
         if (inputStatus == "enterJobNumber") {
 
-            let temp_id = 0;
+            
             let templateObject = Template.instance();
 
             getVS1Data('TVS1Workorder').then(function (dataObject) {
-            
-                let workOrderData = JSON.parse(dataObject[0].data);
-             
-                for(var i = 0; i < workOrderData.tvs1workorder.length; i ++) {
-                    if (workOrderData.tvs1workorder[i].fields.ID == inputValue) {
-                        temp_id = inputValue;
+                let checkWorkorder = false ;
+
+                if(dataObject.length == 0) {
+                    let workOrderData = manufacturingService.getWorkOrderList();
+
+                    for(var i = 0; i < workOrderData.length; i ++) {
+                        if (workOrderData[i].fields.ID == inputValue) {
+                            checkWorkorder = true
+                        }
                     }
+
+                    if (!checkWorkorder) {
+                        $('.mobile-header-status-text').text('The Workorder Number is not correct. Please type correct workorder number');
+                        $(".mobile-main-input").val("");
+                    }
+
+                    else {
+
+                        $('.mobile-header-status-text').text('Please set Job Process');
+                        templateObject.jobNumber.set(inputValue);
+
+                        $(".mobile-main-input").val("");
+                        templateObject.inputStatus.set("enterProcess");                           
+            
+                    }                  
+                    
+                    
+                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderData})).then(function(datareturn){
+                        
+                    }).catch(function(err){
+                    });
+
+                } else {
+                    
+                    let workOrderData = JSON.parse(dataObject[0].data).tvs1workorder;
+
+                    for(var i = 0; i < workOrderData.length; i ++) {
+                        if (workOrderData[i].fields.ID == inputValue) {
+                            checkWorkorder = true
+                        }
+                    }
+
+                    if (!checkWorkorder) {
+                        $('.mobile-header-status-text').text('The Workorder Number is not correct. Please type correct workorder number');
+                        $(".mobile-main-input").val("");
+                    }
+
+                    else {
+
+                        $('.mobile-header-status-text').text('Please set Job Process');
+                        templateObject.jobNumber.set(inputValue);
+
+                        $(".mobile-main-input").val("");
+                        templateObject.inputStatus.set("enterProcess");                           
+            
+                    }
+
                 }
 
-                if (temp_id == 0 ) {
-                    $('.mobile-header-status-text').text('Job Number is not correct.');
-                    $(".mobile-main-input").val("");
-                }
-
-                else {
-
-                    $('.mobile-header-status-text').text('Please set Job Process');
-                    templateObject.jobNumber.set(inputValue);
-
-                    $(".mobile-main-input").val("");
-                    templateObject.inputStatus.set("enterProcess");                           
-        
-                }
+                            
+                
                 
             });           
                      
@@ -909,18 +958,119 @@ Template.mobileapp.events({
 
         }
 
-        if (inputStatus == "enterProcess") {
-            $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Click Clock in');
+        if (inputStatus == "enterProcess") {     
+           
+            getVS1Data('TProcessStep').then(function (dataObject) {
+               
+                let checkProcessData = false;
+               
+                if(dataObject.length == 0) {
+
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {                    
+                                                
+
+                        let processData = data.tprocessstep; 
+                        for(var i = 0; i < processData.length; i ++) {
+                            if (processData[i].fields.Description == inputValue) {
+                                
+                                checkProcessData = true;                            
+                                
+                            }
+                        }
+    
+                        if(checkProcessData) {
+    
+                            $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Select Employee');
+                            $(".mobile-main-input").val("");
+                            // $("#btnClockIn").removeAttr('disabled');
+                            // $("#btnClockIn").css('background', '#00AE00');
+                
+                            // $("#btnClockIn_phone").removeAttr('disabled');
+                            // $("#btnClockIn_phone").css('background', '#00AE00');
+                
+                            templateObject.jobProcess.set(inputValue);
+                            templateObject.inputStatus.set("enterEmployee");
+    
+                        }else {
+                            $('.mobile-header-status-text').text('The process name is not correct. Please type correct process');
+                            $(".mobile-main-input").val("");
+    
+                        }
+
+                    })
+
+
+                } else {
+                    
+                    let processData = JSON.parse(dataObject[0].data).tprocessstep;
+
+                    for(var i = 0; i < processData.length; i ++) {
+                        if (processData[i].fields.Description == inputValue) {
+                            
+                            checkProcessData = true;                            
+                            
+                        }
+                    }
+
+                    if(checkProcessData) {
+
+                        $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Select Employee');
+                        $(".mobile-main-input").val("");
+                        // $("#btnClockIn").removeAttr('disabled');
+                        // $("#btnClockIn").css('background', '#00AE00');
             
-            $(".mobile-main-input").val("");
-            $("#btnClockIn").removeAttr('disabled');
-            $("#btnClockIn").css('background', '#00AE00');
+                        // $("#btnClockIn_phone").removeAttr('disabled');
+                        // $("#btnClockIn_phone").css('background', '#00AE00');
+            
+                        templateObject.jobProcess.set(inputValue);
+                        templateObject.inputStatus.set("enterEmployee");
 
-            $("#btnClockIn_phone").removeAttr('disabled');
-            $("#btnClockIn_phone").css('background', '#00AE00');
+                    }else {
+                        $('.mobile-header-status-text').text('The process name is not correct. Please type correct process');
+                        $(".mobile-main-input").val("");
 
-            Template.instance().jobProcess.set(inputValue);
-            Template.instance().inputStatus.set("enterEmployee");
+                    }
+
+                    
+                }
+
+
+            }).catch(function(error) {
+
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
+                        let processData = data.tprocessstep; 
+
+                        for(var i = 0; i < processData.length; i ++) {
+                            if (processData[i].fields.Description == inputValue) {
+                                
+                                checkProcessData = true;                            
+                                
+                            }
+                        }
+    
+                        if(checkProcessData) {
+    
+                            $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Select Employee');
+                            $(".mobile-main-input").val("");
+                            // $("#btnClockIn").removeAttr('disabled');
+                            // $("#btnClockIn").css('background', '#00AE00');
+                
+                            // $("#btnClockIn_phone").removeAttr('disabled');
+                            // $("#btnClockIn_phone").css('background', '#00AE00');
+                
+                            templateObject.jobProcess.set(inputValue);
+                            templateObject.inputStatus.set("enterEmployee");
+    
+                        }else {
+                            $('.mobile-header-status-text').text('The process name is not correct. Please type correct process');
+                            $(".mobile-main-input").val("");
+    
+                        }                                      
+
+
+                        
+                    })
+            })         
             
 
         }
@@ -928,9 +1078,7 @@ Template.mobileapp.events({
         if(inputStatus == "enterEmployee") {
 
             let empId = $('.mobile-main-input').val();
-            let temp_id;
-            let templateObject = Template.instance();
-            
+            let checkEmpId = false;
             
             
             getVS1Data('TEmployee').then(function (dataObject) {
@@ -939,11 +1087,11 @@ Template.mobileapp.events({
                              
                 for(var i = 0; i < employData.temployee.length; i ++) {
                     if (employData.temployee[i].fields.ID == empId) {
-                        temp_id = empId;
+                        checkEmpId = true;
                     }
                 }
 
-                if (temp_id == 0 ) {
+                if (!checkEmpId) {
                     $('.mobile-header-status-text').text('Employee Number is not correct. Please select correct Number');
                     $(".mobile-main-input").val("");
                 }
@@ -952,13 +1100,17 @@ Template.mobileapp.events({
 
                     $('.mobile-header-status-text').text('Clock Starting');
                     $(".mobile-main-input").val("");
+                    
+                    $("#btnClockIn").removeAttr('disabled');
+                    $("#btnClockIn").css('background', '#00AE00');
+        
+                    $("#btnClockIn_phone").removeAttr('disabled');
+                    $("#btnClockIn_phone").css('background', '#00AE00');
+
                     templateObject.inputStatus.set("Clockin");
 
-                    $('.mobile-header-status-text').text('Successfully Set Employee Number');
-
-          
-                 
-        
+                    $('.mobile-header-status-text').text('Successfully Set Employee Number');         
+                        
                 }
                 
             }); 

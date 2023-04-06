@@ -70,14 +70,26 @@ Template.clockonreport_template.onRendered(function() {
         getVS1Data('TEmployee').then(function(empdataObject) {
             let empdata = JSON.parse(empdataObject[0].data).temployee;
             getVS1Data('TVS1Workorder').then(function(workorderDataObject) {
-                let workorder = JSON.parse(workorderDataObject[0].data);
+                let workorder;
+                if(workorderDataObject.length == 0) {
+                    workorder = manufacturingService.getWorkOrderList();
+
+                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorder})).then(function(datareturn){
+                        
+                    }).catch(function(err){
+                    });
+
+                }else {
+                    workorder = JSON.parse(workorderDataObject[0].data).tvs1workorder;
+                }
+
                 getVS1Data('TTimeSheet').then(function(timesheetdataObject) {
                     let timesheet = JSON.parse(timesheetdataObject[0].data);
                     let clockon_report_data = [];
                     let clockon_temp ;
                     let employee_data = empdata;
                     let timesheet_data = timesheet.ttimesheet;
-                    let workorder_data = workorder.tvs1workorder;
+                    let workorder_data = workorder;
         
 
                     for(let i = 0; i < employee_data.length ; i++) {
@@ -93,7 +105,7 @@ Template.clockonreport_template.onRendered(function() {
                         }
                         
                         for(let k = 0; k < workorder_data.length ; k++) {
-                            
+                          
                            
                            if(workorder_data[k].fields.EmployeeName == employee_name ) {
                              let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);

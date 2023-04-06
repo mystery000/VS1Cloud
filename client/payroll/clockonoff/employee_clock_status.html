@@ -61,17 +61,17 @@
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
 
                     {{>datatablelist
-                            tablename="tblClockOnReport"
+                            tablename="tblEmployeeClockStatus"
                             apiName= apiFunction
-                            indexeddbname = 'TVS1ClockOnReport'
+                            indexeddbname = 'TVS1EmployeeClockStatus'
                             tableheaderrecords = tableheaderrecords
-                            exportfilename = 'Process Clocked OnOff List'
-                            istransaction = true
+                            exportfilename = 'Employee Clock Status'
+                            istransaction = false
                             apiParams= apiParams
                             datahandler = datahandler
                             service=service
-                            lowercaseDataName='tvs1clockonreport'
-                            exIndexDBName = 'tvs1clockonreport'
+                            lowercaseDataName='tvs1employeeclockstatus'
+                            exIndexDBName = 'tvs1employeeclockstatus'
                             exdatahandler = exDataHandler
                             searchAPI = searchAPI
                             orderby = '[[ 0, "asc" ]]'

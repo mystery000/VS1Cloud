@@ -37,11 +37,11 @@ Template.employee_clock_status_template.onCreated(function() {
         var dataList = [
             data.EmployeeId || '',
             data.EmployeeName || '',
-            data.TotalClockedTime.toFixed(2) || 0,
-            data.ProcessClockedTime.toFixed(2) || 0,
-            data.EmployeeName,
-            percent_variance.toFixed(2) + "%",
-            data.EmployeeId
+            data.OrderDate || '',
+            data.WorkorderNumber || '',
+            data.ClockedOn || '',
+            '',
+            '',
         ];
 
         return dataList;
@@ -72,15 +72,31 @@ Template.employee_clock_status_template.onRendered(function() {
         getVS1Data('TEmployee').then(function(empdataObject) {
             let empdata = JSON.parse(empdataObject[0].data).temployee;
             getVS1Data('TVS1Workorder').then(function(workorderDataObject) {
-                let workorder = JSON.parse(workorderDataObject[0].data);
+                let workorder;
+                if(workorderDataObject.length == 0) {
+                    workorder = manufacturingService.getWorkOrderList();
+                    
+                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorder})).then(function(datareturn){
+                        
+                    }).catch(function(err){
+                    });
+
+                }else {
+                    workorder = JSON.parse(workorderDataObject[0].data).tvs1workorder;
+
+                }
+
                 getVS1Data('TTimeSheet').then(function(timesheetdataObject) {
                     let timesheet = JSON.parse(timesheetdataObject[0].data);
                     let clockon_report_data = [];
                     let clockon_temp ;
                     let employee_data = empdata;
                     let timesheet_data = timesheet.ttimesheet;
-                    let workorder_data = workorder.tvs1workorder;
-       
+                    let workorder_data = workorder;
+
+                    console.log(timesheet);
+                    console.log(workorder_data);
+        
 
                     for(let i = 0; i < employee_data.length ; i++) {
                         let employee_name = employee_data[i].fields.EmployeeName;
@@ -97,38 +113,40 @@ Template.employee_clock_status_template.onRendered(function() {
                         for(let k = 0; k < workorder_data.length ; k++) {
                             
                            
-                           if(workorder_data[k].fields.EmployeeName == employee_name ) {
+                            if(workorder_data[k].fields.EmployeeName == employee_name ) {
 
-                             let order_date = workorder_data[k].fields.OrderDate;
-                             let order_number = workorder_data[k].fields.ID;
-                             let clocked_on = workorder_data[k].fields.status;
+                                let order_date = workorder_data[k].fields.OrderDate;
+                                let order_number = workorder_data[k].fields.ID;
+                                let clocked_on = workorder_data[k].fields.status;
                             
-                              let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
-                             let bomDetailData = JSON.parse(bomData.Details);
-                             
+                             //  let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
+                            //  let bomDetailData = JSON.parse(bomData.Details);                            
                          
 
-                             for(let l=0; l < bomDetailData.length; l++ ) {
-                                process_clocked_time = process_clocked_time + bomDetailData[l].ClockedTime;
+                            //  for(let l=0; l < bomDetailData.length; l++ ) {
+                            //     process_clocked_time = process_clocked_time + bomDetailData[l].ClockedTime;
                                 
-                             }
+                            //  }
+
+                                clockon_temp = { EmployeeId : employee_id,
+                                                EmployeeName: employee_name , 
+                                                OrderDate: order_date,
+                                                WorkorderNumber: order_number,
+                                                ClockedOn : clocked_on
+                                                };
+                                                
+                                clockon_report_data.push(clockon_temp);
 
                             }
                         }
 
-                        clockon_temp = {EmployeeId : employee_id,
-                                        EmployeeName: employee_name , 
-                                        TotalClockedTime: total_clocked_time,
-                                        ProcessClockedTime: process_clocked_time
-                                        };
-                        clockon_report_data.push(clockon_temp);
-
+                        
 
                     }
 
                     console.log(clockon_report_data);
 
-                    addVS1Data('TVS1ClockOnReport', JSON.stringify({tvs1clockonreport: clockon_report_data})).then(function(datareturn){
+                    addVS1Data('TVS1EmployeeClockStatus', JSON.stringify({tvs1employeeclockstatus: clockon_report_data})).then(function(datareturn){
                     }).catch(function(err){
                         
                     });                    
@@ -187,19 +205,19 @@ Template.employee_clock_status_template.events({
    
     'click .exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblClockOnReport_wrapper .dt-buttons .btntabletocsv').click();
+        jQuery('#tblEmployeeClockStatus_wrapper .dt-buttons .btntabletocsv').click();
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .exportbtnExcel': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblClockOnReport_wrapper .dt-buttons .btntabletoexcel').click();
+        jQuery('#tblEmployeeClockStatus_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display', 'none');
     },
     'click .printConfirm': function (event) {
         playPrintAudio();
         setTimeout(function(){
         $('.fullScreenSpin').css('display', 'inline-block');
-        jQuery('#tblClockOnReport_wrapper .dt-buttons .btntabletopdf').click();
+        jQuery('#tblEmployeeClockStatus_wrapper .dt-buttons .btntabletopdf').click();
         $('.fullScreenSpin').css('display', 'none');
     }, delayTimeAfterSound);
     },
@@ -383,13 +401,7 @@ Template.employee_clock_status_template.events({
             }
         });
     },
-    'click #check-all': function(event) {
-        if ($(event.target).is(':checked')) {
-            $(".chkBox").prop("checked", true);
-        } else {
-            $(".chkBox").prop("checked", false);
-        }
-    },      
+      
 
     
 
@@ -424,7 +436,7 @@ Template.employee_clock_status_template.helpers({
     },
 
     searchAPI: function() {
-        return sideBarService.getAllJobssDataVS1;
+        return sideBarService.getAllClockOnReport;
     },
 
     service: ()=>{
