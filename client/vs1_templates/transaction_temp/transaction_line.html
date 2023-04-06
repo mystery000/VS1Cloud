@@ -455,6 +455,7 @@
                                     colNameForValue='colAccountName'
                                     target_modal_id='edtAccountModal'
                                     target_template_id='addaccountpop'
+                                    custid=item.lineID
                                     is_editable=true
                                     noBorder=true
                                 }}
@@ -527,9 +528,9 @@
                                     colNameForValue='colUOMName'
                                     target_modal_id='newUOMModal'
                                     target_template_id='adduompop'
+                                    custid=item.lineID
                                     is_editable=true
                                     noBorder=true
-                                    custid=item.lineID
                                 }}
                         </td>
                         {{/if}}
@@ -574,6 +575,7 @@
                                     colNameForValue ='colCompany'
                                     target_modal_id='editCustomerModal'
                                     target_template_id='addcustomerpop'
+                                    custid=item.lineID
                                     is_editable=true
                                     noBorder=true
                                 }}
@@ -646,7 +648,7 @@
                                     data=item.taxCode
                                     type='search'
                                     id='lineTaxCode'
-                                    name='lineTaxCode'
+                                    name=name
                                     modalId='taxRateListModal'
                                     list_template_name='taxratelistpop'
                                     modal_title='Customer List'
@@ -654,9 +656,9 @@
                                     colNameForValue='colName'
                                     target_modal_id='newTaxRateModal'
                                     target_template_id='newtaxratepop'
+                                    custid=item.lineID
                                     is_editable=true
                                     noBorder=true
-                                    custid=item.lineID
                                 }}
                         </td>
                         {{/if}}
