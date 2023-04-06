@@ -464,7 +464,7 @@
                                 }
                               </style>
 <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
-                                <!-- {{>datatablelist
+                                {{>datatablelist
                                         tablename="tblCustomerCrmListWithDate"
                                         apiName= apiFunction_CrmListWithDate
                                         indexeddbname = 'TCRMTaskList'
@@ -478,7 +478,7 @@
                                         exIndexDBName = 'tprojecttaskslist'
                                         exdatahandler = exDataHandler_CrmListWithDate
                                         searchAPI = searchAPI_CrmListWithDate
-                                }} -->
+                                }}
                             </div>
                             <div class="tab-pane border rounded-0 tab-Job4" role="tabpanel" id="tab-Job4"
                               style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
@@ -2797,7 +2797,7 @@
                       <div class="card-body rounded" style="padding: 0;">
                         <!-- End -->
                         {{#if checkedAppointments}}
-                          {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}}
+                          <!-- {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}} -->
                             {{>datatablelist
                                     tablename="tblAppointmentsByCustomer"
                                     apiName= apiFunction_AppointmentsByCustomer
@@ -2817,6 +2817,21 @@
                         {{#if checkedSales}}
                         <div class="mt-4">
                           {{> non_transactional_list tablename="tblSalesListByCustomer" customerName=record.company}}
+                          <!-- {{>datatablelist
+                            tablename="tblSalesListByCustomer"
+                            apiName= apiFunction
+                            indexeddbname = 'TSupplierVS1List'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Setup Supplier List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tsuppliervs1list'
+                            exIndexDBName = 'tsuppliervs1list'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                        }} -->
                         </div>
                         {{/if}}
                       </div>

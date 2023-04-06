@@ -588,7 +588,22 @@
                                   width: 12% !important;
                                 }
                               </style>
-                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}
+                              <!-- {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}} -->
+                              {{>datatablelist
+                                tablename="tblCustomerCrmListWithDate"
+                                apiName= customerApiFunction
+                                indexeddbname = 'TCRMTaskList'
+                                tableheaderrecords = customerTableHeaderRecords
+                                exportfilename = 'Customer CRM List With Date'
+                                istransaction = true
+                                apiParams= customerApiParams
+                                datahandler = customerDataHandler
+                                service = customerService
+                                lowercaseDataName='tprojecttaskslist' 
+                                exIndexDBName = 'tprojecttaskslist'
+                                exdatahandler = customerExDataHandler
+                                searchAPI = customerSearchAPI
+                              }}
                             </div>
                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4"
                               style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important; overflow: auto; ">
@@ -4106,7 +4121,22 @@
                             }
 
                           </style>
-                          {{> non_transactional_list tablename="tblEmployeeTransactionList"}}
+                          <!-- {{> non_transactional_list tablename="tblEmployeeTransactionList"}} -->
+                          {{>datatablelist
+                            tablename="tblEmployeeTransactionList"
+                            apiName= transactionApiFunction
+                            indexeddbname = 'TInvoiceEx'
+                            tableheaderrecords = transactionTableHeaderRecords
+                            exportfilename = 'Employee Transaction List'
+                            istransaction = false
+                            apiParams= transactionApiParams
+                            datahandler = transactionDataHandler
+                            service = transactionService
+                            lowercaseDataName='tinvoice'
+                            exIndexDBName = 'tinvoice'
+                            exdatahandler = transactionExDataHandler
+                            searchAPI = transactionSearchAPI
+                        }}
                         </div>
                       </div>
                     </div>
@@ -4365,7 +4395,22 @@
                   width: 10%!important;
               }              
           </style>
-          {{> non_transactional_list tablename="tblHolidays"}}
+          <!-- {{> non_transactional_list tablename="tblHolidays"}} -->
+          {{>datatablelist
+            tablename="tblHolidays"
+            apiName= holidayApiFunction
+            indexeddbname = 'TPayrollHolidays'
+            tableheaderrecords = holidayTableHeaderRecords
+            exportfilename = 'Holidays'
+            istransaction = false
+            apiParams= holidayApiParams
+            datahandler = holidayDataHandler
+            service = holidayService
+            lowercaseDataName='tpayrullholidays' 
+            exIndexDBName = 'tpayrullholidays'
+            exdatahandler = holidayExDataHandler
+            searchAPI = holidaySearchAPI
+          }}
         </div>
         <div class="modal-footer">
           <a data-dismiss="modal">

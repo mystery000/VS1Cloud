@@ -1865,7 +1865,7 @@ export class SideBarService extends BaseService {
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
         ClientID:contactID,
-        Search: "Deleted != true",
+        Search: "Deleted = false",
       };
     }else{
     if (ignoreDate == true) {
@@ -1879,7 +1879,7 @@ export class SideBarService extends BaseService {
         OrderBy: "PurchaseOrderID desc",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
-        Search: "Deleted != true",
+        Search: "Deleted = false",
       };
     } else {
       options = {
@@ -1894,7 +1894,7 @@ export class SideBarService extends BaseService {
         DateTo: '"' + dateTo + '"',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
-        Search: "Deleted != true",
+        Search: "Deleted = false",
       };
     }
    }
@@ -4155,7 +4155,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TEmployeeFormAccessDetail, options);
   }
 
-  getAllPayRunDataVS1(limitcount, limitfrom) {
+  getAllPayRunDataVS1(limitcount, limitfrom, deleteFitler) {
     let options = "";
     if (limitcount == "All") {
       options = {
@@ -4169,7 +4169,8 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
-    return this.getList(this.ERPObjects.TPayRun, options);
+    //if(deleteFitler) options.Search = "Active"
+    return this.getList(this.ERPObjects.TPayRunList, options);
   }
 
   getAllPayHistoryDataVS1(limitcount, limitfrom) {

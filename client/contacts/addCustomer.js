@@ -1,4 +1,4 @@
-// @ts-nocheck
+f// @ts-nocheck
 import {ContactService} from "./contact-service";
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";
@@ -1258,6 +1258,27 @@ Template.customerscard.onCreated(function () {
         { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ]
     templateObject.tableheaderrecords_AppointmentsByCustomer.set(headerStructure_AppointmentsByCustomer);
+
+    templateObject.salesTableHeaderRecords = new ReactiveVar([]);
+    templateObject.getSalesDataTableList = function(data) {
+  
+      return dataList;
+    }
+    let salesHeaderStructure = [
+        { index: 0, label: 'Sort Date', class:'SortDate', active: false, display: false, width: "80" },
+        { index: 1, label: 'Sale Date', class:'SaleDate', active: true, display: true, width: "80" },
+        { index: 2, label: 'Sales No.', class:'SalesNo', active: true, display: true, width: "110" },
+        { index: 3, label: 'Type', class:'Type', active: true, display: true, width: "110" },
+        { index: 4, label: 'Amount (Ex)', class:'AmountEx', active: true, display: true, width: "110" },
+        { index: 5, label: 'Tax', class:'Tax', active: true, display: true, width: "110" },
+        { index: 6, label: 'Amount (Inc)', class:'Amount', active: true, display: true, width: "110" },
+        { index: 7, label: 'Paid', class:'Paid', active: true, display: true, width: "110" },
+        { index: 8, label: 'Balance Outstanding', class:'BalanceOutstanding', active: true, display: true, width: "110" },
+        { index: 9, label: 'Status', class:'Status', active: true, display: true, width: "120" },
+        { index: 10, label: 'Employee', class:'Employee', active: true, display: true, width: "110" },
+        { index: 11, label: 'Comments', class: 'Comments', active: true, display: true, width: "300" },
+    ];
+    templateObject.salesTableHeaderRecords.set(salesHeaderStructure);
 });
 
 Template.customerscard.onRendered(function () {
@@ -4065,6 +4086,45 @@ Template.customerscard.helpers({
     },
 
     apiParams_AppointmentsByCustomer: function () {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    salesTableHeaderRecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    salesApiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllSuppliersDataVS1List;
+    },
+
+    salesSearchAPI: function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getOneSupplierDataExByName;
+    },
+
+    salesService: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    salesDataHandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getSalesDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    salesExDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getSalesDataTableList(data)
+            return dataReturn
+        }
+    },
+    
+    salesApiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 });
