@@ -184,12 +184,10 @@ Template.fixedassetcard.onRendered(function () {
         findFixedAssetByID(workData, currentAssetID);
       }
     }).catch(function (err) {
-      // fixedAssetService.getTFixedAssetsList().then(function (data) {
-      //   addVS1Data('TFixedAssetsList', JSON.stringify(data));
-      //   findFixedAssetByID(data, currentAsset);
-      // }).catch(function (err) {
-      //   $(".fullScreenSpin").css("display", "none");
-      // });
+      fixedAssetService.getTFixedAssetsList(25, 1).then(function (data) {
+        addVS1Data('TFixedAssetsList', JSON.stringify(data))
+        findFixedAssetByID(data, currentAssetID);
+      });
     });
   }
 
@@ -296,19 +294,23 @@ Template.fixedassetcard.onRendered(function () {
     $("#edtDepreciationType").val(accountName);
 
     templateObject.edtCostAssetAccount.set(assetInfo.FixedAssetCostAccountID);
-    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetCostAccountID)['accountName'];
+    let searchAccount = allAccountsData.find((account) => account.id == assetInfo.FixedAssetCostAccountID);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#edtCostAssetAccount").val(accountName);
 
     templateObject.editBankAccount.set(assetInfo.CUSTFLD6); // FixedAssetBankAccountID
-    accountName = allAccountsData.find((account) => account.id == assetInfo.CUSTFLD6)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.CUSTFLD6);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#editBankAccount").val(accountName);
 
     templateObject.edtDepreciationAssetAccount.set(assetInfo.FixedAssetDepreciationAccountID); //FixedAssetDepreciationExpenseAccountID
-    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAccountID)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAccountID);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#edtDepreciationAssetAccount").val(accountName);
 
     templateObject.edtDepreciationExpenseAccount.set(assetInfo.FixedAssetDepreciationAssetAccountID);
-    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#edtDepreciationExpenseAccount").val(accountName);
 
     // -----------------Depreciation Information-----------------
@@ -317,19 +319,23 @@ Template.fixedassetcard.onRendered(function () {
     $("#edtDepreciationType2").val(accountName);
 
     templateObject.edtCostAssetAccount2.set(assetInfo.FixedAssetCostAccountID2);
-    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetCostAccountID2)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.FixedAssetCostAccountID2);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#edtCostAssetAccount2").val(accountName);
 
     templateObject.editBankAccount2.set(assetInfo.CUSTFLD8); // FixedAssetBankAccountID
-    accountName = allAccountsData.find((account) => account.id == assetInfo.CUSTFLD8)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.CUSTFLD8);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#editBankAccount2").val(accountName);
 
     templateObject.edtDepreciationAssetAccount2.set(assetInfo.FixedAssetDepreciationAccountID2); //FixedAssetDepreciationExpenseAccountID
-    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAccountID2)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAccountID2);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#edtDepreciationAssetAccount2").val(accountName);
 
     templateObject.edtDepreciationExpenseAccount2.set(assetInfo.FixedAssetDepreciationAssetAccountID2);
-    accountName = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID2)['accountName'];
+    searchAccount = allAccountsData.find((account) => account.id == assetInfo.FixedAssetDepreciationAssetAccountID2);
+    accountName = searchAccount ? searchAccount['accountName'] : '';
     $("#edtDepreciationExpenseAccount2").val(accountName);
 
     $('select#edtSalvageType').val(assetInfo.SalvageType);
@@ -341,7 +347,7 @@ Template.fixedassetcard.onRendered(function () {
     $('input#edtInsuranceByName').val(assetInfo.CUSTFLD7);
     templateObject.edtInsuranceById.set(assetInfo.InsuredBy);
 
-    let planList = assetInfo.fixedassetsdepreciationdetails, depPlanList = [];
+    let planList = assetInfo.fixedassetsdepreciationdetails ? assetInfo.fixedassetsdepreciationdetails : [], depPlanList = [];
     for (let i = 0; i < planList.length; i++) {
       const info = planList[i].fields;
       const plan = {
@@ -354,7 +360,7 @@ Template.fixedassetcard.onRendered(function () {
     }
     templateObject.deprecitationPlans.set(depPlanList);
 
-    planList = assetInfo.fixedassetsdepreciationdetails;
+    planList = assetInfo.fixedassetsdepreciationdetails ? assetInfo.fixedassetsdepreciationdetails : [];
     depPlanList = [];
 
     for (i = 0; i < planList.length; i++) {
