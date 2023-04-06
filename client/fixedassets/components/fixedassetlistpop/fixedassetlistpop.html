@@ -39,34 +39,49 @@
       }
     }
   </style>
-  <div class="row no-gutters" style="padding: 0px 32px;">
-    <div class="col-12">
-      <div class="card mb-3">
-        <div class="card-body">
-          <style>
-            td.colAmountEx, td.colTax, td.colAmount{
-                  text-align: right !important;
-              }
-          </style>
-          {{>datatablelist
-            tableclass="tblFixedAssetList"
-            tablename="tblFixedAssetList"
-            apiName= apiFunction
-            indexeddbname = 'TFixedAssets'
-            tableheaderrecords = tableheaderrecords
-            exportfilename = 'Fixed Assets List'
-            istransaction = false
-            apiParams= apiParams
-            datahandler = datahandler
-            service=service
-            lowercaseDataName='tfixedassetslist'
-            exportfilename='Fixed Assets List'
-            exIndexDBName = 'tfixedassetsex'
-            exdatahandler = exDataHandler
-            searchAPI = searchAPI
-            orderby = '[[ 0, "asc" ]]'
-        }}
+  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+    <div class="modal-content">
+        <div class="modal-header">
+          <h4>Fixed Asset List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         </div>
+        <div class="modal-body">
+          <div class="row no-gutters" style="padding: 0px 32px;">
+            <div class="col-12">
+              <div class="card mb-3">
+                <div class="card-body">
+                  <style>
+                    td.colAmountEx, td.colTax, td.colAmount{
+                          text-align: right !important;
+                      }
+                  </style>
+                  {{>datatablelist
+                    tablename="tblFixedAssetList"
+                    apiName= apiFunction
+                    indexeddbname = 'TFixedAssetsList'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Fixed Assets List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tfixedassetslist'
+                    exportfilename='Fixed Assets List'
+                    exIndexDBName = 'tfixedassetslistex'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+                    orderby = '[[ 0, "asc" ]]'
+                    showPlusButton = true
+                    showPlusButtonDataTarget = "newFixedAssetModal"
+                    showPlusButtonClass = "btnNewFixedAsset"
+                }}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <!-- <button class="btn btn-success btnSaveProducts"  id="btnSaveProducts" type="button">Save</button> -->
+            <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+          </div>
       </div>
     </div>
   </div>
