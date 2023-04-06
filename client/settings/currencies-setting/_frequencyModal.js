@@ -405,7 +405,7 @@ Template._frequencyModal.onRendered(function () {
 
   templateObject.loadDefault = async () => {
     let defaultForm = await templateObject._loadDefault();
-    if (!Object.keys(defaultForm).length) {
+    if (!Object.keys(defaultForm).length || !defaultForm.tcurrencyfrequencysettings.length) {
       document.querySelector("#frequencyDaily").click(); // this is the default
       return;
     }
