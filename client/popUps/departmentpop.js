@@ -31,8 +31,7 @@ Template.departmentpop.onCreated(function(){
             linestatus = "In-Active";
         };
         var dataList = [
-            // data.Id || "",
-            // data.ClassID || "",
+            data.Id || "",
             data.ClassName || "",
             data.Description || "",
             data.ClassGroup || "",
@@ -45,14 +44,14 @@ Template.departmentpop.onCreated(function(){
         
     }
     let headerStructure = [
-        // { index: 0, label: '#ID', class: 'colDeptID', active: true, display: true, width: "10" },
-        { index: 0, label: 'Department Name', class: 'colDeptName', active: true, display: true, width: "200" },
-        { index: 1, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
-        { index: 2, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
-        { index: 3, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
-        { index: 4, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
-        { index: 5, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
-        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 0, label: 'ID', class: 'colDeptID', active: false, display: false, width: "10" },
+        { index: 1, label: 'Department Name', class: 'colDeptName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
+        { index: 3, label: 'Header Department', class: 'colHeaderDept', active: false, display: true, width: "250" },
+        { index: 4, label: 'Full Department Name', class: 'colFullDeptName', active: false, display: true, width: "250" },
+        { index: 5, label: 'Department Tree', class: 'colDeptTree', active: false, display: true, width: "250" },
+        { index: 6, label: 'Site Code', class: 'colSiteCode', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
