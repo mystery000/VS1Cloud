@@ -83,6 +83,12 @@ Template.employeelistpop.onCreated(function () {
 });
 
 Template.employeelistpop.onRendered(function (){
+    $( "#employeeListPOPModal, #employeeListModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblEmployeelist_filter .form-control-sm').get(0).focus();
+            $('#tblEmployeelistpop_filter .form-control-sm').get(0).focus();
+        }, 500);
+    });
 
     //$('.fullScreenSpin').css('display','inline-block');
     // let templateObject = Template.instance();
