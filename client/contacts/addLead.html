@@ -337,7 +337,7 @@
                                                                 modal_title='Status'
                                                                 innerModal=true
                                                                 label = ''
-                                                                colNameForValue = 'statusName'
+                                                                colNameForValue = 'colStatusName'
                                                                 target_modal_id='newStatusPopModal'
                                                                 target_template_id='newstatuspop'
                                                                 is_editable=true
@@ -347,7 +347,23 @@
                                                 </div>
                                                 <div class="col-6 col-md-2" style="padding: 0px 4px;">
                                                     <div class="form-group">
-                                                        {{> contact_title target="editLeadTitle" value=record.title}}
+<!--                                                        {{> contact_title target="editLeadTitle" value=record.title}}-->
+
+                                                        <label for="leadTitle">Title</label>
+                                                        {{>vs1___dropdown
+                                                                data=record.title
+                                                                type='search'
+                                                                id='editLeadTitle'
+                                                                name='editLeadTitle'
+                                                                modalId= 'titlePopModal'
+                                                                list_template_name='title_list_pop'
+                                                                modal_title='Title'
+                                                                innerModal=true
+                                                                label = ''
+                                                                colNameForValue = 'colTitleName'
+                                                                is_editable=true
+                                                                noBorder=false
+                                                        }}
                                                     </div>
                                                 </div>
                                                 <div class="col-6 col-md-4" style="padding: 0px 8px;">
@@ -544,17 +560,23 @@
                                                                                                 value="{{record.spostalcode}}"></div>
                                                                                     </div>
                                                                                     <div class="col-6" style="padding: 0px;">
-                                                                                        <div class="form-group" style="margin: 4px;padding-left:4px;"><label>Country</label>
-                                                                                            <select class="form-control" id="sedtCountry" name="sedtCountry" style=" cursor: pointer;">
-                                                                                                <option value="{{record.scountry}}" selected="">{{record.scountry}}</option>
-                                                                                                {{#each item in countryList}}
-                                                                                                    {{#if equals item record.scountry }}
-                                                                                                        <option value="{{record.scountry}}" selected="">{{record.scountry}}</option>
-                                                                                                    {{else}}
-                                                                                                        <option value="{{item}}">{{item}}</option>
-                                                                                                    {{/if}}
-                                                                                                {{/each}}
-                                                                                            </select>
+                                                                                        <div class="form-group" style="margin: 4px;padding-left:4px;">
+                                                                                            <label>Country</label>
+
+                                                                                            {{>vs1___dropdown
+                                                                                                    data=record.scountry
+                                                                                                    type='search'
+                                                                                                    id='leadCountry'
+                                                                                                    name='leadCountry'
+                                                                                                    modalId= 'countryPopModal'
+                                                                                                    list_template_name='CountryModal'
+                                                                                                    modal_title='Country'
+                                                                                                    innerModal=true
+                                                                                                    label = ''
+                                                                                                    colNameForValue = 'colCountry'
+                                                                                                    is_editable=true
+                                                                                                    noBorder=false
+                                                                                            }}
                                                                                         </div>
                                                                                     </div>
                                                                                 </div>
@@ -930,9 +952,6 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" role="dialog" tabindex="-1" id="statusPopModal">
-                {{> statuspop}}
-            </div>
             <div class="modal fade" role="dialog" tabindex="-1" id="sourcePopModal">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
                     <div class="modal-content">
@@ -1006,9 +1025,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal fade" role="dialog" tabindex="-1" id="newStatusPopModal">
-                {{> newstatuspop}}
-            </div>
+
             <div class="modal fade" role="dialog" tabindex="-1" id="employeeListPOPModal">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document" style="max-width: 90vw;">
                     <div class="modal-content customerListContent">

@@ -1549,11 +1549,6 @@ Template.customerscard.onRendered(function () {
     //     }
     // });
 
-    $(document).on("click", "#termsList tbody tr", function (e) {
-        let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
-        $('#' + selectedTermsDropdownID + '').val($(this).find(".colName").text());
-        $('#termsListModal').modal('hide');
-    });
     $(document).on("click", "#paymentmethodList tbody tr", function (e) {
         let selectedDropdownID = $('#selectPaymentMethodLineID').val() || 'sltPreferredPayment';
         $('#' + selectedDropdownID + '').val($(this).find(".colName").text());
@@ -1563,11 +1558,6 @@ Template.customerscard.onRendered(function () {
         let selectedClientTypeDropdownID = $('#selectLineID').val() || 'sltCustomerType';
         $('#' + selectedClientTypeDropdownID + '').val($(this).find(".colTypeName").text());
         $('#clienttypeListModal').modal('toggle');
-    });
-    $(document).on("click", "#tblTaxRate tbody tr", function (e) {
-        let selectedTaxRateDropdownID = $('#selectLineID').val() || 'sltTaxCode';
-        $('#' + selectedTaxRateDropdownID + '').val($(this).find(".taxName").text());
-        $('#taxRateListModal').modal('toggle');
     });
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
         playSaveAudio();
@@ -1882,11 +1872,6 @@ Template.customerscard.onRendered(function () {
         if ($('#employeeListCRMModal').hasClass('show') == false) {
             $('#employeeListCRMModal').modal('show');
         }
-    })
-
-    $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editCustomerTitle').val($(this).find(".colTypeName").text());
-        $('#customerTitlePopModal').modal('toggle');
     });
 
     $(document).on("click", "#tblCustomerCrmListWithDate tbody .dnd-moved .colDate, #tblCustomerCrmListWithDate tbody .dnd-moved .colType", function (e) {

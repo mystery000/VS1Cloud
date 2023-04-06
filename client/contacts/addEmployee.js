@@ -2106,13 +2106,13 @@ Template.employeescard.onRendered(function () {
         const dashboardoptions = e.target.value || '';
         const dashboardDefaultoptions = $("#edtDashboardOptions").attr("defaultlogin") || 'Accounts';
         if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-          $('#edtDashboardOptions').modal('toggle');
+          // $('#edtDashboardOptions').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
             // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
-            $('#dashboardOptionListModal').modal('toggle');
+            // $('#dashboardOptionListModal').modal('toggle');
           } else {
-            $('#dashboardOptionListModal').modal('toggle');
+            // $('#dashboardOptionListModal').modal('toggle');
 
             setTimeout(function () {
               $('#tblDashboardOptions_filter .form-control-sm').focus();
@@ -2145,10 +2145,10 @@ Template.employeescard.onRendered(function () {
       $('#edtResidencyStatus').editableSelect('add', 'Australian Resident');
       $('#edtResidencyStatus').editableSelect('add', 'Foreign Resident');
       $('#edtResidencyStatus').editableSelect('add', 'Working Holiday Maker');
-      
+
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
-      
+
       $('#edtPayrollCalendar').editableSelect()
         .on('click.editable-select', async function (e, li) {
           let $search = $(this);
@@ -2191,7 +2191,7 @@ Template.employeescard.onRendered(function () {
       let isDefaultLogin = $("input[name=optradioDL]:checked").val() || "Accounts";
       $('#edtDashboardOptions').val(optionName);
       $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
-      $('#dashboardOptionListModal').modal('toggle');
+      // $('#dashboardOptionListModal').modal('toggle');
     });
 
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
@@ -2201,7 +2201,7 @@ Template.employeescard.onRendered(function () {
         localStorage.setItem("isFormUpdated", true);
       }
       $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
-      $('#employeeTitlePopModal').modal('toggle');
+      // $('#employeeTitlePopModal').modal('toggle');
     });
     $(document).on("click", "#tblPayCalendars tbody tr", function (e) {
       $('#edtPayrollCalendar').val($(this).find(".colPayCalendarName").text());
@@ -2221,7 +2221,7 @@ Template.employeescard.onRendered(function () {
         $(".paste-expenses").attr('account-id', id);
         $(".paste-expenses").removeClass('paste-expenses')
         $("#accountListModal").modal("toggle");
-    });    
+    });
   });
 
   $(document).on('click', '#editEmployeeTitle', function (e, li) {
@@ -2229,11 +2229,11 @@ Template.employeescard.onRendered(function () {
     e.stopPropagation();
     const $earch = $(this);
     const offset = $earch.offset();
-    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-      $('#employeeTitlePopModal').modal('toggle');
-    } else {
-      $('#employeeTitlePopModal').modal();
-    }
+    // if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //   $('#employeeTitlePopModal').modal('toggle');
+    // } else {
+    //   $('#employeeTitlePopModal').modal();
+    // }
   });
 
   let prefObject = "";
@@ -2845,7 +2845,7 @@ Template.employeescard.onRendered(function () {
             let $search = $(this);
             let offset = $search.offset();
             if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-              $('#earningRateSettingsModal').modal('show');            
+              $('#earningRateSettingsModal').modal('show');
             } else {
               $('#earningRateSettingsModal').modal('show');
             }
@@ -2853,7 +2853,7 @@ Template.employeescard.onRendered(function () {
           $('#ptEarningRate'+earningLines[i].ID).val(earningLines[i].EarningRate);
       }
     }, 1000);
-    
+
     templateObject.setEarningLineDropDown();
 
   };
@@ -10105,7 +10105,7 @@ Template.employeescard.events({
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
   },
-  
+
   "click #tblEarnings tbody tr": (e, ui) => {
     const tr = $(e.currentTarget);
     const id = parseInt(tr.find('.colEarningsID').text());

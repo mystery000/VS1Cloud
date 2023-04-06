@@ -384,7 +384,22 @@
                           </div>
                           <div class="col-12 col-md-3" style="padding: 0px;">
                             <div class="form-group" style="margin: 4px; padding-left:4px;">
-                              {{> dashboard_options target="edtDashboardOptions" value=record.loginDefault}}
+                                <label>Dashboard Options</label>
+
+                                {{>vs1___dropdown
+                                        data=record.loginDefault
+                                        type='search'
+                                        id='employeeDashboard'
+                                        name='employeeDashboard'
+                                        modalId= 'dashboardOptionsPopModal'
+                                        list_template_name='dashboardoptionspopup'
+                                        modal_title='Dashboard Options'
+                                        innerModal=true
+                                        label = ''
+                                        colNameForValue = 'colOptionsName'
+                                        is_editable=true
+                                        noBorder=false
+                                }}
                             </div>
                           </div>
                           <div class="col-12 col-md-2" style="padding: 0px;">
@@ -400,7 +415,22 @@
                         <div class="row">
                           <div class="col-6 col-md-1" style="padding: 0px;">
                             <div class="form-group" style="margin: 4px;padding-right :4px;">
-                              {{> contact_title target="editEmployeeTitle" value=record.title}}
+                                <label>Title</label>
+
+                                {{>vs1___dropdown
+                                        data=record.title
+                                        type='search'
+                                        id='leadTitle'
+                                        name='leadTitle'
+                                        modalId= 'titlePopModal'
+                                        list_template_name='title_list_pop'
+                                        modal_title='Title'
+                                        innerModal=true
+                                        label = ''
+                                        colNameForValue = 'colTitleName'
+                                        is_editable=true
+                                        noBorder=false
+                                }}
                             </div>
                           </div>
                           <div class="col-6 col-md-3" style="padding: 0px;">
@@ -626,17 +656,20 @@
                                     <div class="col-6" style="padding: 0px;">
                                       <div class="form-group" style="margin: 4px;padding-left:4px;">
                                         <label>Country</label>
-                                        <select class="form-control" id="edtCountry" name="edtCountry"
-                                          style=" cursor: pointer;">
-                                          <option value="{{record.country}}" selected="">{{record.country}}</option>
-                                          {{#each item in countryList}}
-                                          {{#if equals item record.country }}
-                                          <option value="{{record.country}}" selected="">{{record.country}}</option>
-                                          {{else}}
-                                          <option value="{{item}}">{{item}}</option>
-                                          {{/if}}
-                                          {{/each}}
-                                        </select>
+                                          {{>vs1___dropdown
+                                                  data=record.scountry
+                                                  type='search'
+                                                  id='edtCountry'
+                                                  name='edtCountry'
+                                                  modalId= 'countryPopModal'
+                                                  list_template_name='CountryModal'
+                                                  modal_title='Country'
+                                                  innerModal=true
+                                                  label = ''
+                                                  colNameForValue = 'colCountry'
+                                                  is_editable=true
+                                                  noBorder=false
+                                          }}
                                       </div>
                                     </div>
                                   </div>
@@ -1250,11 +1283,21 @@
                                       <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Default
                                           Product /
                                           Service</label>
-                                        <select type="search" class="form-control" id="product-list" name="product-list"
-                                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        </select>
-                                        <input type="hidden" class="form-control" id="product-listID"
-                                          name="product-listID">
+
+                                          {{>vs1___dropdown
+                                                  data=''
+                                                  type='search'
+                                                  id='product-list'
+                                                  name='product-list'
+                                                  modalId= 'productServicePopModal'
+                                                  list_template_name='employeeproductlistpop'
+                                                  modal_title='Default Product / Service'
+                                                  innerModal=true
+                                                  label = ''
+                                                  colNameForValue = 'productName'
+                                                  is_editable=true
+                                                  noBorder=false
+                                          }}
                                       </div>
                                     </div>
                                   </div>
@@ -1622,12 +1665,12 @@
                               <div class="row mb-1">
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
-                                      label="Payroll Calendar" 
-                                      classes="edtPayrollCalendar" 
-                                      id="edtPayrollCalendar" 
-                                      name="edtPayrollCalendar" 
-                                      defaultValue="" 
+                                    {{> default_input
+                                      label="Payroll Calendar"
+                                      classes="edtPayrollCalendar"
+                                      id="edtPayrollCalendar"
+                                      name="edtPayrollCalendar"
+                                      defaultValue=""
                                       type="search"
                                     }}
                                     <!-- <label>Payroll Calendar</label>
@@ -1646,24 +1689,24 @@
                                       <option value="L">Labour hire</option>
                                       <option value="S">Superannuation income stream</option>
                                     </select> -->
-                                    {{> default_input 
+                                    {{> default_input
                                       label="Employee Group"
                                       classes=""
-                                      id="edtEmploymentGroup" 
+                                      id="edtEmploymentGroup"
                                       name="edtEmploymentGroup"
-                                      defaultValue="" 
+                                      defaultValue=""
                                       type="search"
                                     }}
                                   </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
-                                      label="Holiday Group" 
-                                      classes="edtHolidays" 
-                                      id="edtHolidays" 
-                                      name="edtHolidays" 
-                                      defaultValue="" 
+                                    {{> default_input
+                                      label="Holiday Group"
+                                      classes="edtHolidays"
+                                      id="edtHolidays"
+                                      name="edtHolidays"
+                                      defaultValue=""
                                       type="search"
                                     }}
                                     <!-- <label>Holiday Group</label>
@@ -1673,12 +1716,12 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
+                                    {{> default_input
                                       label="Ordinary Earnings Rate"
                                       classes=""
-                                      id="edtEarningRate" 
+                                      id="edtEarningRate"
                                       name="edtEarningRate"
-                                      defaultValue="" 
+                                      defaultValue=""
                                       type="search"
                                     }}
                                   </div>
@@ -1702,25 +1745,25 @@
                               </style>
                               <div class="row">
                                 <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                  {{> toggle_button 
+                                  {{> toggle_button
                                     className="chkGlobalSettings"
-                                    id="employee_includeHolidaysInPayslips_toggle" 
+                                    id="employee_includeHolidaysInPayslips_toggle"
                                     width="131px"
-                                    for="employee_includeHolidaysInPayslips_toggle" 
+                                    for="employee_includeHolidaysInPayslips_toggle"
                                     displayName="Include holidays in Payslips"
                                   }}
                                 </div>
                                 <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                  {{> toggle_button 
+                                  {{> toggle_button
                                     className="chkGlobalSettings"
-                                    id="employee_authorisedToApproveLeave_toggle" 
+                                    id="employee_authorisedToApproveLeave_toggle"
                                     width="131px"
-                                    for="employee_authorisedToApproveLeave_toggle" 
+                                    for="employee_authorisedToApproveLeave_toggle"
                                     displayName="Authorised to Approve Leave"
                                   }}
                                 </div>
                                 <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                  {{> toggle_button 
+                                  {{> toggle_button
                                     className="chkGlobalSettings"
                                     id="employee_authorisedToApproveTimesheets_toggle"
                                     width="131px"
@@ -1774,12 +1817,12 @@
                                         </div>
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Description" 
-                                              classes="edtLeaveDescription" 
-                                              id="edtLeaveDescription" 
-                                              name="edtLeaveDescription" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Description"
+                                              classes="edtLeaveDescription"
+                                              id="edtLeaveDescription"
+                                              name="edtLeaveDescription"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                           </div>
@@ -1810,12 +1853,12 @@
                                         </div>
                                         <div class="col-8">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Pay Period" 
-                                              classes="edtLeavePayPeriod" 
-                                              id="edtLeavePayPeriod" 
-                                              name="edtLeavePayPeriod" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Pay Period"
+                                              classes="edtLeavePayPeriod"
+                                              id="edtLeavePayPeriod"
+                                              name="edtLeavePayPeriod"
+                                              defaultValue=""
                                               type="text"
                                               placeholder="How often will you pay your employees?"
                                             }}
@@ -1823,12 +1866,12 @@
                                         </div>
                                         <div class="col-4">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Hours" 
-                                              classes="edtLeaveHours" 
-                                              id="edtLeaveHours" 
-                                              name="edtLeaveHours" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Hours"
+                                              classes="edtLeaveHours"
+                                              id="edtLeaveHours"
+                                              name="edtLeaveHours"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                           </div>
@@ -1839,12 +1882,12 @@
                                       <div class="col-4 pl-0">
                                         <div class="dropdown float-left">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Status" 
-                                              classes="edtLeavePayStatus" 
-                                              id="edtLeavePayStatus" 
-                                              name="edtLeavePayStatus" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Status"
+                                              classes="edtLeavePayStatus"
+                                              id="edtLeavePayStatus"
+                                              name="edtLeavePayStatus"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                           </div>
@@ -1935,36 +1978,36 @@
                               <div class="row mb-1">
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
+                                    {{> default_input
                                       label="Employment Basis"
                                       classes=""
-                                      id="edtEmploymentBasis" 
+                                      id="edtEmploymentBasis"
                                       name="edtEmploymentBasis"
-                                      defaultValue="" 
+                                      defaultValue=""
                                       type="search"
                                     }}
                                   </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
+                                    {{> default_input
                                       label="Residency Status"
                                       classes=""
-                                      id="edtResidencyStatus" 
+                                      id="edtResidencyStatus"
                                       name="edtResidencyStatus"
-                                      defaultValue="" 
+                                      defaultValue=""
                                       type="search"
                                     }}
                                   </div>
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                    {{> default_input 
-                                      label="Pay Period" 
-                                      classes="paste-selected-pay-period-js" 
-                                      id="edtPayPeriod" 
-                                      name="edtPayPeriod" 
-                                      defaultValue="" 
+                                    {{> default_input
+                                      label="Pay Period"
+                                      classes="paste-selected-pay-period-js"
+                                      id="edtPayPeriod"
+                                      name="edtPayPeriod"
+                                      defaultValue=""
                                       type="search"
                                     }}
                                     <!-- <label>Pay Period</label>
@@ -2308,12 +2351,12 @@
                                       <form class="row" id="assignLeaveTypeForm">
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Leave" 
-                                              classes="leaveTypeSelect" 
-                                              id="leaveTypeSelect" 
-                                              name="leaveTypeSelect" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Leave"
+                                              classes="leaveTypeSelect"
+                                              id="leaveTypeSelect"
+                                              name="leaveTypeSelect"
+                                              defaultValue=""
                                               type="search"
                                             }}
                                             <input type="hidden" name="assignteavetypeID" id="assignteavetypeID" value="0">
@@ -2321,24 +2364,24 @@
                                         </div>
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Leave Calculation Method" 
-                                              classes="customEditableSelect" 
-                                              id="leaveCalcMethodSelect" 
-                                              name="leaveCalcMethodSelect" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Leave Calculation Method"
+                                              classes="customEditableSelect"
+                                              id="leaveCalcMethodSelect"
+                                              name="leaveCalcMethodSelect"
+                                              defaultValue=""
                                               type="search"
-                                            }}                                            
+                                            }}
                                           </div>
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Hours accrued annually" 
-                                              classes="hoursAccruedAnnually" 
-                                              id="hoursAccruedAnnually" 
-                                              name="hoursAccruedAnnually" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Hours accrued annually"
+                                              classes="hoursAccruedAnnually"
+                                              id="hoursAccruedAnnually"
+                                              name="hoursAccruedAnnually"
+                                              defaultValue=""
                                               type="number"
                                             }}
                                             <!-- <label>Hours accrued annually</label>
@@ -2348,12 +2391,12 @@
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Hours of leave accrued annually by a full-time employee" 
-                                              classes="" 
-                                              id="hoursAccruedAnnuallyFullTimeEmp" 
-                                              name="hoursAccruedAnnually" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Hours of leave accrued annually by a full-time employee"
+                                              classes=""
+                                              id="hoursAccruedAnnuallyFullTimeEmp"
+                                              name="hoursAccruedAnnually"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                             <!-- <label>Hours of leave accrued annually by a full-time employee</label>
@@ -2363,12 +2406,12 @@
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Hours a full-time employee works in a Fortnightly pay period" 
-                                              classes="" 
-                                              id="hoursFullTimeEmpFortnightlyPay" 
-                                              name="hoursFullTimeEmpFortnightlyPay" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Hours a full-time employee works in a Fortnightly pay period"
+                                              classes=""
+                                              id="hoursFullTimeEmpFortnightlyPay"
+                                              name="hoursFullTimeEmpFortnightlyPay"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                             <!-- <label>Hours a full-time employee works in a Fortnightly pay period</label>
@@ -2379,12 +2422,12 @@
 
                                         <div class="col-6 handleLeaveTypeOption manuallyRecordedRate hideelement">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Hours" 
-                                              classes="hoursLeave" 
-                                              id="hoursLeave" 
-                                              name="hoursLeave" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Hours"
+                                              classes="hoursLeave"
+                                              id="hoursLeave"
+                                              name="hoursLeave"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                             <!-- <label>Hours</label>
@@ -2393,12 +2436,12 @@
                                         </div>
                                         <div class="col-6">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Opening Balance" 
-                                              classes="openingBalance" 
-                                              id="openingBalance" 
-                                              name="openingBalance" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Opening Balance"
+                                              classes="openingBalance"
+                                              id="openingBalance"
+                                              name="openingBalance"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                             <!-- <label>Opening Balance</label>
@@ -2415,12 +2458,12 @@
                                               <option value="Not Paid Out">Not Paid Out </option>
                                               <option value="Paid Out">Paid Out</option>
                                             </select> -->
-                                            {{> default_input 
+                                            {{> default_input
                                               label="On termination unused balance is:"
-                                              classes="customEditableSelect" 
-                                              id="onTerminationUnusedBalance" 
-                                              name="onTerminationUnusedBalance" 
-                                              defaultValue="" 
+                                              classes="customEditableSelect"
+                                              id="onTerminationUnusedBalance"
+                                              name="onTerminationUnusedBalance"
+                                              defaultValue=""
                                               type="search"
                                             }}
                                           </div>
@@ -2433,7 +2476,7 @@
                                           <div class="custom-control custom-switch hideelement superannuationGuaranteeCont" style="margin:8px">
                                             <input class="custom-control-input" type="checkbox" id="superannuationGuarantee" name="superannuationGuarantee">
                                             <label class="custom-control-label" for="superannuationGuarantee">Includes Superannuation Guarantee Contribution</label>
-                                          </div>                                          
+                                          </div>
                                         </div>
                                       </form>
                                     </div>
@@ -2621,7 +2664,7 @@
                                   </div>
                                   <!-- <div class="col-6 col-md-3">
                                                                           <div class="form-group" style="margin: 4px;">
-                                                                              <label>Bank Name</label> 
+                                                                              <label>Bank Name</label>
                                                                               <select type="search" class="form-control pointer" id="edtBankName" name="edtBankName" value="{{record.bankName}}">
                                                                               </select>
                                                                           </div>
@@ -2701,12 +2744,12 @@
                                       <form class="row" id="paySlipForm">
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Period" 
-                                              classes="period" 
-                                              id="period" 
-                                              name="period" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Period"
+                                              classes="period"
+                                              id="period"
+                                              name="period"
+                                              defaultValue=""
                                               type="search"
                                             }}
                                             <!-- <label>Period</label>
@@ -2729,12 +2772,12 @@
                                         </div>
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input 
-                                              label="Total Pay" 
-                                              classes="edtPriceFormatting" 
-                                              id="totalPay" 
-                                              name="totalPay" 
-                                              defaultValue="" 
+                                            {{> default_input
+                                              label="Total Pay"
+                                              classes="edtPriceFormatting"
+                                              id="totalPay"
+                                              name="totalPay"
+                                              defaultValue=""
                                               type="text"
                                             }}
                                             <!-- <label>Total Pay</label>
@@ -3375,12 +3418,12 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Reiumbursement Type" 
-                                                        classes="reimbursementDropDown" 
-                                                        id="reimbursementTypeSelect" 
-                                                        name="reimbursementTypeSelect" 
-                                                        defaultValue="" 
+                                                      {{> default_input
+                                                        label="Reiumbursement Type"
+                                                        classes="reimbursementDropDown"
+                                                        id="reimbursementTypeSelect"
+                                                        name="reimbursementTypeSelect"
+                                                        defaultValue=""
                                                         type="search"
                                                       }}
                                                       <input type="hidden" id="reimbursementTypeSelectID" value="0">
@@ -3395,14 +3438,14 @@
                                                   </div>
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Control of Expense Account" 
-                                                        classes="edtExpenseAccountDropDown" 
-                                                        id="controlExpenseAccount" 
-                                                        name="controlExpenseAccount" 
-                                                        defaultValue="" 
+                                                      {{> default_input
+                                                        label="Control of Expense Account"
+                                                        classes="edtExpenseAccountDropDown"
+                                                        id="controlExpenseAccount"
+                                                        name="controlExpenseAccount"
+                                                        defaultValue=""
                                                         type="search"
-                                                      }}                                                      
+                                                      }}
                                                     </div>
                                                   </div>
                                                 </div>
@@ -3486,12 +3529,12 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Earnings Name" 
-                                                        classes="earningLineDropDown" 
-                                                        id="obEarningsRate" 
-                                                        name="obEarningsRate" 
-                                                        defaultValue="" 
+                                                      {{> default_input
+                                                        label="Earnings Name"
+                                                        classes="earningLineDropDown"
+                                                        id="obEarningsRate"
+                                                        name="obEarningsRate"
+                                                        defaultValue=""
                                                         type="search"
                                                       }}
                                                       <input type="hidden" id="obEarningsRateID" value="0">
@@ -3576,12 +3619,12 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Deduction Type" 
-                                                        classes="deductionLineDropDown" 
-                                                        id="obDeductionType" 
-                                                        name="obDeductionType" 
-                                                        defaultValue="" 
+                                                      {{> default_input
+                                                        label="Deduction Type"
+                                                        classes="deductionLineDropDown"
+                                                        id="obDeductionType"
+                                                        name="obDeductionType"
+                                                        defaultValue=""
                                                         type="search"
                                                       }}
                                                       <input type="hidden" id="obDeductionTypeID" value="0">
@@ -3669,12 +3712,12 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Superannuation Fund" 
-                                                        classes="superannuationDropDown" 
-                                                        id="obSuperannuationFund" 
-                                                        name="obSuperannuationFund" 
-                                                        defaultValue="" 
+                                                      {{> default_input
+                                                        label="Superannuation Fund"
+                                                        classes="superannuationDropDown"
+                                                        id="obSuperannuationFund"
+                                                        name="obSuperannuationFund"
+                                                        defaultValue=""
                                                         type="search"
                                                       }}
                                                       <input type="hidden" id="obSuperannuationFundID" value="0">
@@ -3767,12 +3810,12 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input 
-                                                        label="Reimbursement Type" 
-                                                        classes="reimbursementDropDown" 
-                                                        id="obReimbursementType" 
-                                                        name="obReimbursementType" 
-                                                        defaultValue="" 
+                                                      {{> default_input
+                                                        label="Reimbursement Type"
+                                                        classes="reimbursementDropDown"
+                                                        id="obReimbursementType"
+                                                        name="obReimbursementType"
+                                                        defaultValue=""
                                                         type="search"
                                                       }}
                                                       <input type="hidden" id="obReimbursementTypeID" value="0">
@@ -4195,7 +4238,7 @@
             <label for="FileName" class="browseBtn"></label>
             <label for="exampleFormControlFile1" class="Choose_file">No file selected</label>
             <input type="file" name="fileInput" id="fileInput" style="display:none;" accept="image/*">
-            
+
             <div id="row1">
               <div id="column1"></div><button class="btn btn-primary btnUploadFilePicture" type="button"
                 style="margin: 12px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
@@ -4307,7 +4350,7 @@
               }
               #tblPayCalendars .colStatus{
                   width: 10%!important;
-              }              
+              }
           </style>
           {{> non_transactional_list tablename="tblPayCalendars"}}
         </div>
@@ -4345,7 +4388,7 @@
               }
               #tblHolidays .colStatus{
                   width: 10%!important;
-              }              
+              }
           </style>
           {{> non_transactional_list tablename="tblHolidays"}}
         </div>
@@ -4390,24 +4433,24 @@
             <select type="search" class="form-control" id="edtLeaveTypeofRequest"
               name="edtLeaveTypeofRequest" style="cursor: pointer;">
             </select> -->
-            {{> default_input 
-              label="Type of Request" 
-              classes="" 
-              id="edtLeaveTypeofRequest" 
-              name="edtLeaveTypeofRequest" 
-              defaultValue="" 
+            {{> default_input
+              label="Type of Request"
+              classes=""
+              id="edtLeaveTypeofRequest"
+              name="edtLeaveTypeofRequest"
+              defaultValue=""
               type="search"
             }}
           </div>
         </div>
         <div class="col-12">
           <div class="form-group">
-            {{> default_input 
-              label="Description" 
-              classes="edtLeaveDescription" 
-              id="edtLeaveDescription" 
-              name="edtLeaveDescription" 
-              defaultValue="" 
+            {{> default_input
+              label="Description"
+              classes="edtLeaveDescription"
+              id="edtLeaveDescription"
+              name="edtLeaveDescription"
+              defaultValue=""
               type="text"
             }}
             <!-- <label>Description</label>
@@ -4441,12 +4484,12 @@
         </div>
         <div class="col-8">
           <div class="form-group">
-            {{> default_input 
-              label="Pay Period" 
-              classes="edtLeavePayPeriod" 
-              id="edtLeavePayPeriod" 
-              name="edtLeavePayPeriod" 
-              defaultValue="" 
+            {{> default_input
+              label="Pay Period"
+              classes="edtLeavePayPeriod"
+              id="edtLeavePayPeriod"
+              name="edtLeavePayPeriod"
+              defaultValue=""
               type="search"
               placeholder="How often will you pay your employees?"
             }}
@@ -4458,12 +4501,12 @@
         </div>
         <div class="col-4">
           <div class="form-group">
-            {{> default_input 
-              label="Hours" 
-              classes="edtLeaveHours" 
-              id="edtLeaveHours" 
-              name="edtLeaveHours" 
-              defaultValue="" 
+            {{> default_input
+              label="Hours"
+              classes="edtLeaveHours"
+              id="edtLeaveHours"
+              name="edtLeaveHours"
+              defaultValue=""
               type="text"
             }}
             <!-- <label>Hours</label>
@@ -4477,12 +4520,12 @@
       <div class="col-4 pl-0">
         <div class="dropdown float-left">
           <div class="form-group">
-            {{> default_input 
-              label="Status" 
-              classes="edtLeavePayStatus" 
-              id="edtLeavePayStatus" 
-              name="edtLeavePayStatus" 
-              defaultValue="" 
+            {{> default_input
+              label="Status"
+              classes="edtLeavePayStatus"
+              id="edtLeavePayStatus"
+              name="edtLeavePayStatus"
+              defaultValue=""
               type="search"
             }}
             <!-- <label>Status</label>
