@@ -39,16 +39,24 @@ Template.shipviapop.onCreated(function() {
     // templateObject.includePurchaseDefault.set(false);
 
     templateObject.getDataTableList = function(data){
+        let linestatus = '';
+            if (data.Active == true) {
+                linestatus = "";
+            } else if (data.Active == false) {
+                linestatus = "In-Active";
+            };
             var dataList = [
                 data.Id || "",
                 data.ShippingMethod || "",
+                linestatus,
             ];
         return dataList;
     }
 
     let headerStructure  = [
         { index: 0, label: 'ID', class: 'colID', active: false, display: false, width: "10" },
-        { index: 1, label: 'Shipping Method', class: 'colShipName', active: true, display: true, width: "500" },
+        { index: 1, label: 'Shipping Method', class: 'colShipName', active: true, display: true, width: "300" },
+        { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 
