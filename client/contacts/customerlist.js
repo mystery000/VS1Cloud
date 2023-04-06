@@ -387,7 +387,8 @@ Template.customerlist.onRendered(function() {
     //templateObject.getCustomerList();
 
     $('#tblCustomerlist tbody').on( 'click', 'tr', function () {
-        var listData = $(this).closest('tr').find('.colCustomerID').text();
+        //var listData = $(this).closest('tr').find('.colCustomerID').text();
+        var listData = $(this).closest('tr').attr("id");
         var transactiontype = $(this).closest('tr').find('.colJob').text();
         if(listData){
             if(transactiontype != ""){
