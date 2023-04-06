@@ -497,12 +497,12 @@
                           <div class="col-6 col-md-2" style="padding: 0px;">
                             <div class="form-group flex-grow-1" style="margin: 4px;padding-left:4px;">
                               <label>Date of Birth</label>
-                              <div class="input-group date">
-                                <input type="text" class="form-control" id="dtDOB" name="dtDOB" value="{{record.dob}}">
-                                <div class="input-group-addon">
-                                  <span class="glyphicon glyphicon-th"></span>
-                                </div>
-                              </div>
+
+                                {{>single_date_picker
+                                        id="dtDOB"
+                                        name="dtDOB"
+                                        defaultValue=record.dob
+                                }}
                             </div>
                           </div>
                           <div class="col-6 col-md-2" style="padding: 0px;">
