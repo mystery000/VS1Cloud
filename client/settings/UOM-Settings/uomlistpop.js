@@ -170,6 +170,7 @@ Template.uomlistpop.helpers({
   },
   tablename: () => {
     let templateObject = Template.instance();
-    return 'tblUOMList'+templateObject.data.custid;
+    let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+    return 'tblUOMList'+selCustID;
   },
 });
