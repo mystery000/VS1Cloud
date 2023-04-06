@@ -136,41 +136,41 @@ Template.newbankrule.onCreated(function () {
 Template.newbankrule.onRendered(function () {
   const templateObject = Template.instance();  
   templateObject.bankRuleData.set([]);
-  $("#bankAccountName").editableSelect();
-  $("#bankAccountName")
-    .editableSelect()
-    .on("click.editable-select", function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      var bankName = e.target.value || "";
-
-      if (e.pageX > offset.left + $earch.width() - 8) {
-        $("#bankNameModal").modal("show");
-        $(".fullScreenSpin").css("display", "none");
-
-      } else {
-        if (bankName.replace(/\s/g, "") != "") {
-          $("#bankNameModal").modal("show");
-        } else {
-          $("#bankNameModal").modal("show");
-        }
-      }
-    });
-    $(document).on("click", "#tblBankName tbody tr", function (e) {
-      var table = $(this);
-      let BankName = table.find(".colBankName").text();
-      let BankDescription = table.find(".colDescription").text();
-      let BankID = $('#tblBankName tr').index(this);
-      templateObject.bankDescription.set(BankDescription);
-      $('#bankNameModal').modal('hide');
-      $('#bankAccountName').val(BankName);
-      $('#bankAccountID').val(BankID);
-    });
+  // $("#bankAccountName").editableSelect();
+  // $("#bankAccountName")
+  //   .editableSelect()
+  //   .on("click.editable-select", function (e, li) {
+  //     var $earch = $(this);
+  //     var offset = $earch.offset();
+  //     var bankName = e.target.value || "";
+  //
+  //     if (e.pageX > offset.left + $earch.width() - 8) {
+  //       $("#bankNameModal").modal("show");
+  //       $(".fullScreenSpin").css("display", "none");
+  //
+  //     } else {
+  //       if (bankName.replace(/\s/g, "") != "") {
+  //         $("#bankNameModal").modal("show");
+  //       } else {
+  //         $("#bankNameModal").modal("show");
+  //       }
+  //     }
+  //   });
+  //   $(document).on("click", "#tblBankName tbody tr", function (e) {
+  //     var table = $(this);
+  //     let BankName = table.find(".colBankName").text();
+  //     let BankDescription = table.find(".colDescription").text();
+  //     let BankID = $('#tblBankName tr').index(this);
+  //     templateObject.bankDescription.set(BankDescription);
+  //     $('#bankNameModal').modal('hide');
+  //     // $('#bankAccountName').val(BankName);
+  //     $('#bankAccountID').val(BankID);
+  //   });
 
   if (FlowRouter.current().queryParams.bankaccountname) {
     let accountname = FlowRouter.current().queryParams.bankaccountname;
     let accountId = FlowRouter.current().queryParams.bankaccountid;
-    $("#bankAccountName").val(accountname);
+    // $("#bankAccountName").val(accountname);
     $("#bankAccountID").val(accountId);
     getVS1Data("VS1_BankRule")
       .then(function (dataObject) {

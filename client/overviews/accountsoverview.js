@@ -2001,6 +2001,9 @@ Template.accountsoverview.events({
         $("#edtAccountName").val("");
         $("#edtAccountName").attr("readonly", false);
         $("#edtAccountNo").val("");
+        $("#edtSubAccount1").val("");
+        $("#edtSubAccount2").val("");
+        $("#edtSubAccount3").val("");
         $("#sltTaxCode").val("NT" || "");
         $("#txaAccountDescription").val("");
         $("#edtBankAccountName").val("");

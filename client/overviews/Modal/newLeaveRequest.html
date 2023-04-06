@@ -24,8 +24,23 @@
                                 <input type="hidden" id="edtLeaveTypeofRequestID" value="0">
                                 <!-- <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
                                 </select>  -->
-                                <input type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;" />
-                                
+<!--                                <input type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;" />-->
+                                {{> vs1___dropdown
+                                        type='search'
+                                        id='edtLeaveTypeofRequest'
+                                        name='edtLeaveTypeofRequest'
+                                        modalId= 'newLeaveRequestModal'
+                                        list_template_name='assignLeaveTypePop'
+                                        innerModal=true
+                                        modal_title='Assign Leave Title'
+                                        label = ''
+                                        colNameForValue = ''
+                                        target_modal_id= ''
+                                        target_template_id=''
+                                        is_editable=true
+                                        noBorder=false
+                                }}
+
                             </div>
                         </div>
                         <div class="col-12">

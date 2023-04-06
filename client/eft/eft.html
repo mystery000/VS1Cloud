@@ -32,13 +32,28 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label>Bank Name</label>
-                            <select
-                                type="search"
-                                class="form-control pointer"
-                                id="sltBankName"
-                                name="sltBankName"
-                                style="background-color: rgb(255, 255, 255); cursor: pointer"
-                            ></select>
+<!--                            <select-->
+<!--                                type="search"-->
+<!--                                class="form-control pointer"-->
+<!--                                id="sltBankName"-->
+<!--                                name="sltBankName"-->
+<!--                                style="background-color: rgb(255, 255, 255); cursor: pointer"-->
+<!--                            ></select>-->
+                            {{> vs1___dropdown
+                                    type='search'
+                                    id='sltBankName1'
+                                    name='sltBankName1'
+                                    modalId= 'bankAccountNameModal'
+                                    list_template_name='bankNameModal'
+                                    innerModal=true
+                                    modal_title='Bank Account Name'
+                                    label = ''
+                                    colNameForValue = 'colBankName'
+                                    target_modal_id= 'bankAccountNameModal1'
+                                    target_template_id='bankNameModal'
+                                    is_editable=true
+                                    noBorder=false
+                            }}
                         </div>
                     </div>
                     <div class="col-4"

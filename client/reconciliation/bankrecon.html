@@ -228,8 +228,23 @@
                                             {{/each}}
                                         </select> -->
 
-                                        <select type="search" class="form-control" id="bankAccountName" name="bankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                        </select>
+<!--                                        <select type="search" class="form-control" id="bankAccountName" name="bankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">-->
+<!--                                        </select>-->
+                                        {{> vs1___dropdown
+                                                type='search'
+                                                id='bankAccountName'
+                                                name='bankAccountName'
+                                                modalId= 'bankAccountNameModal'
+                                                list_template_name='accountlistpop'
+                                                innerModal=true
+                                                modal_title='Account List'
+                                                label = ''
+                                                colNameForValue = 'colAccountName'
+                                                target_modal_id= 'addAccountModal'
+                                                target_template_id='addaccountpop'
+                                                is_editable=true
+                                                noBorder=false
+                                        }}
                                         <input type="hidden" style="width: 100%; display:none;" id="bankAccountID" name="bankAccountID" readonly>
                                     </div>
                                 </div>

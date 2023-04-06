@@ -1484,7 +1484,7 @@ Template.bankrecon.onRendered(function() {
         const offset = $each.offset();
         const accountDataName = e.target.value || '';
         if (e.pageX > offset.left + $each.width() - 8) { // X button 16px wide?
-            openBankAccountListModal();
+            // openBankAccountListModal();
         } else {
             if (accountDataName.replace(/\s/g, '') != '') {
                 getVS1Data('TAccountVS1').then(function(dataObject) {
@@ -1508,7 +1508,7 @@ Template.bankrecon.onRendered(function() {
                 });
                 $('#bankAccountListModal').modal('toggle');
             } else {
-                setTimeout(() => openBankAccountListModal())
+                // setTimeout(() => openBankAccountListModal())
 
             }
         }
