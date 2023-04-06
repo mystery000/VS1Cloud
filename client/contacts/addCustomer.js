@@ -1,4 +1,4 @@
-f// @ts-nocheck
+// @ts-nocheck
 import {ContactService} from "./contact-service";
 import {ReactiveVar} from 'meteor/reactive-var';
 import {UtilityService} from "../utility-service";

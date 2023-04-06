@@ -1206,7 +1206,7 @@ Template.customfieldpop.onRendered(() => {
   };
 
 
-  templateObject.setSupplierExData = function (currentID) {
+  templateObject.setSupplierExData = function (data) {
 
       $('#edtSaleCustField1').val(data.fields.CUSTFLD1);
       $('#edtSaleCustField2').val(data.fields.CUSTFLD2);
@@ -1259,7 +1259,7 @@ Template.customfieldpop.onRendered(() => {
     }
   };
 
-  templateObject.setEmployeeExData = function (currentID) {
+  templateObject.setEmployeeExData = function (data) {
       $('#edtSaleCustField1').val(data.fields.CustFld1);
       $('#edtSaleCustField2').val(data.fields.CustFld2);
       $('#edtSaleCustField3').val(data.fields.CustFld3);

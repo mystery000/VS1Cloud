@@ -153,13 +153,7 @@ Template.bankrecon.onRendered(function() {
         });
     };
 
-    // Damien
-    // Set focus when open account list modal
-    $( "#bankAccountListModal" ).on('shown.bs.modal', function(){
-        setTimeout(function() {
-            $('#tblAccountListPop_filter .form-control-sm').get(0).focus();
-        }, 500);
-    });
+
 
     // API to pull Accounts END
     // BEGIN DATE CODE

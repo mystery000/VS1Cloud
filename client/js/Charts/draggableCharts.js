@@ -1,7 +1,7 @@
 import ChartHandler from "./ChartHandler";
 
 export default class draggableCharts {
-  static disable(timeOut = 200) {
+  static disable(timeOut = 500) {
     setTimeout(() => {
       $(".connectedSortable")
         .sortable({
@@ -13,7 +13,7 @@ export default class draggableCharts {
     }, timeOut);
   }
 
-  static enable(timeOut = 200) {
+  static enable(timeOut = 500) {
     setTimeout(() => {
       $(".connectedSortable")
         .sortable({
@@ -22,14 +22,18 @@ export default class draggableCharts {
           scroll: false,
           placeholder: "portlet-placeholder ui-corner-all",
           tolerance: 'pointer',
+          start: (event, ui) => {
+            ui.placeholder.height(ui.item.height())
+            ui.placeholder.width(ui.item.width())            
+          },
           stop: async (event, ui) => {
-            $(".fullScreenSpin").css("display", "block");
-            if( $(ui.item[0]).hasClass("editCharts") == false ){
-              await ChartHandler.buildPositions();
-              await ChartHandler.saveCharts();
-              await ChartHandler.saveChartsInLocalDB();              
-            } 
-            $(".fullScreenSpin").css("display", "none");
+            // $(".fullScreenSpin").css("display", "block");
+            // if( $(ui.item[0]).hasClass("editCharts") == false ){
+            //   await ChartHandler.buildPositions();
+              // await ChartHandler.saveCharts();
+            //   await ChartHandler.saveChartsInLocalDB();              
+            // } 
+            // $(".fullScreenSpin").css("display", "none");
           },
         })
         .disableSelection();

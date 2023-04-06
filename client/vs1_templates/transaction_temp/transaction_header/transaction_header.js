@@ -1,16 +1,16 @@
 import { Template } from 'meteor/templating';
-import "./modals/index.js"
-import "./components/index.js"
+import "./modals/index.js";
+import "./components/index.js";
 
-import "./transaction_cheque_header.html"
-import "./transaction_deposit_header.html"
-import "./transaction_journal_header.html"
-import "./transaction_payment_header.html"
-import "./transaction_shippingdocket_header.html"
-import "./transaction_stocktransfer_header.html"
-import "./transaction_stockadjustment_header.html"
-import "./transaction_header.html"
-
+import "./transaction_cheque_header.html";
+import "./transaction_deposit_header.html";
+import "./transaction_journal_header.html";
+import "./transaction_payment_header.html";
+import "./transaction_shippingdocket_header.html";
+import "./transaction_stocktransfer_header.html";
+import "./transaction_stockadjustment_header.html";
+import "./transaction_header.html";
+import "./components/customer_selector.html";
 Template.transaction_header.onCreated(function() {
 
 })
@@ -39,7 +39,15 @@ Template.transaction_header.helpers({
         return "Customer"
     }
   },
-  getCustomerID: () => {
+  getCustomerID:function(){
+    let templateObject = Template.instance();
+    if (templateObject.data.clientType == 'Supplier') {
+        return 'edtSupplierName'
+    } else {
+        return 'edtCustomerName'
+    }
+},
+  getContactType: () => {
     const cardType = Template.instance().data.cardType.toLowerCase();
     switch(cardType) {
       case 'bill':
@@ -49,6 +57,14 @@ Template.transaction_header.helpers({
       default:
         return "edtCustomerName"
     }
+  },
+  modal_id: function() {
+      let templateObject = Template.instance();
+      if (templateObject.data.clientType == 'Supplier') {
+          return 'supplierList_modal'
+      } else {
+          return 'customerList_modal'
+      }
   },
   getDateInputLabel: () => {
     const cardType = Template.instance().data.cardType;
@@ -86,9 +102,9 @@ Template.transaction_header.helpers({
       case 'bill':
       case "po" :
       case "credit":
-        return 'edtSupplierModal';
+        return 'edtSupplier_modal';
       default:
-        return 'edtCustomerModal'
+        return 'edtCustomer_modal'
     }
   },
 
@@ -114,6 +130,10 @@ Template.transaction_header.helpers({
       default: 'supplierListModal'
         return 'customerListModal'
     }
+  },
+  getgridTableId: function() {
+    let templateObject = Template.instance();
+      return templateObject.data.gridTableId;
   }
   
 })
