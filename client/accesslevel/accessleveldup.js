@@ -3283,7 +3283,8 @@ Template.accessleveldup.onRendered(function(){
 
     $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
         let employeeName = $(this).find(".colEmployeeName").text() || '';
-        let employeeID = $(this).find(".colID").text() || '';
+        //let employeeID = $(this).find(".colID").text() || '';
+        let employeeID = $(this).closest("tr").attr("id") || '';
         $('#sltEmployeeName').val(employeeName);
         let enableCopy = $('copyEmployeeSetting').attr('checked');
         if(enableCopy){
