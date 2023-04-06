@@ -88,6 +88,7 @@ Template.vs1___dropdown.onRendered(async function(){
                     if(templateObject.data.is_editable == true) {
                         
                         let params = templateObject.edtParam.get();
+                        console.log(params);
                         if(!params.name || params.name == '' ) {
                             params.name = value;
                         }
@@ -142,12 +143,14 @@ Template.vs1___dropdown.events({
         
         // $('#'+id).val(value)
         let target = templateObject.targetEle.get();
-        $(target).val(value)
-        $(modal).modal('hide');    
+        $(target).val(value);
+        console.log(value);
+        console.log(target);
+        $(modal).modal('hide');
         // $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
         // setTimeout(function() {
         //     $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .btnRefreshTable').trigger('click')
-            
+
         // }, 100)
         
     },

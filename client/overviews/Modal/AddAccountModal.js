@@ -260,12 +260,12 @@ Template.addAccountModal.onRendered(function () {
           }
         });
 
-        $(document).on("click", "#tblTaxRate tbody tr", (e) => {
-          var table = $(e.currentTarget);
-          let lineTaxCode = table.find(".taxName").text();
-          currentElement.$(".sltTaxCode").val(lineTaxCode);
-          $("#taxRateListModal").modal("toggle");
-        });
+        // $(document).on("click", "#tblTaxRate tbody tr", (e) => {
+        //   var table = $(e.currentTarget);
+        //   let lineTaxCode = table.find(".taxName").text();
+        //   currentElement.$(".sltTaxCode").val(lineTaxCode);
+        //   $("#taxRateListModal").modal("toggle");
+        // });
 
   $("#addNewAccountModal #edtSubAccount1").editableSelect()
   $("#addNewAccountModal #edtSubAccount1").editableSelect().on("click.editable-select", (e) => {
@@ -300,12 +300,12 @@ Template.addAccountModal.onRendered(function () {
     //editableService.clickAccount(e)
   })
 
-  $(document).on("click", "#accountListModal #tblAccountListPop tbody tr", (e) => {
-    var table = $(e.currentTarget);
-    let accountName = table.find(".colAccountName").text();
-    currentSubAccount.val(accountName);
-    $("#accountListModal").modal("toggle");
-  });
+  // $(document).on("click", "#accountListModal #tblAccountListPop tbody tr", (e) => {
+  //   var table = $(e.currentTarget);
+  //   let accountName = table.find(".colAccountName").text();
+  //   currentSubAccount.val(accountName);
+  //   $("#accountListModal").modal("toggle");
+  // });
 
 
   templateObject.getTaxRates = function () {
@@ -328,7 +328,6 @@ Template.addAccountModal.onRendered(function () {
                 };
 
                 dataTableListTax.push(dataList);
-                //}
               }
 
               templateObject.taxRates.set(dataTableListTax);

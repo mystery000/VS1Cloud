@@ -1321,7 +1321,7 @@ Template.accountsoverview.onRendered(function() {
     };
 
     setTimeout(function() {
-        templateObject.getAllTaxCodes();
+        //templateObject.getAllTaxCodes();
     }, 500);
 
     function makeNegativeGlobal() {

@@ -184,8 +184,8 @@
 <!--                    <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}">-->
                     {{> vs1___dropdown
                             type='search'
-                            id='item.id'
-                            name='item.id'
+                            id=item.id
+                            name=item.id
                             modalId= 'accountListModal1'
                             list_template_name='accountlistpop'
                             innerModal=true
@@ -195,14 +195,31 @@
                             target_modal_id= 'addAccountModal'
                             target_template_id='addaccountpop'
                             is_editable=true
-                            noBorder=false
+                            noBorder=true
                     }}
                 </td>
                 <!-- <td contenteditable="true" class="lineAccountNo colAccountNo">{{item.accountno}}</td> -->
                 <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
 
                 <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
-                <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+                <td contenteditable="false" class="colTaxCode">
+<!--                    <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">-->
+                    {{> vs1___dropdown
+                            type='search'
+                            id=item.id
+                            name=item.id
+                            modalId= 'taxratelistModal'
+                            list_template_name='taxratelistpop'
+                            innerModal=true
+                            modal_title='Tax Code List'
+                            label = ''
+                            colNameForValue = 'colAccountName'
+                            target_modal_id= 'taxratelistModal'
+                            target_template_id='taxratelistpop'
+                            is_editable=true
+                            noBorder=true
+                    }}
+                </td>
 
 
                 <td class="BcolCreditExCheck-{{item.lineID}}" style="text-align: right!important;">
@@ -246,6 +263,8 @@
                                 innerModal=true
                                 modal_title='Department List'
                                 colNameForValue = 'colDeptName'
+                                target_modal_id= 'addAccountModal'
+                                target_template_id='addaccountpop'
                                 is_editable=true
                                 noBorder=true
                         }}
@@ -256,8 +275,8 @@
 
                     {{> vs1___dropdown
                             type='search'
-                            id='lineCustomerJob'
-                            name='lineCustomerJob'
+                            id=item.lineID
+                            name=item.lineID
                             modalId= 'customerModal'
                             list_template_name='customerlistpop'
                             innerModal=true
