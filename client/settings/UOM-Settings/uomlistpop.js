@@ -126,7 +126,7 @@ Template.uomlistpop.onRendered(function() {
 });
 
 Template.uomlistpop.events({
- 
+
 });
 
 Template.uomlistpop.helpers({
@@ -168,5 +168,8 @@ Template.uomlistpop.helpers({
   apiParams: function() {
     return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
+  tablename: () => {
+    let templateObject = Template.instance();
+    return 'tblUOMList'+templateObject.data.custid;
+  },
 });
-
