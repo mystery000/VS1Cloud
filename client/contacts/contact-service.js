@@ -687,4 +687,14 @@ export class ContactService extends BaseService {
         }
         return mobileResult;
     }
+
+    getAllLeavRequest(limitcount, limitfrom, deleteFilter) {
+        let options = {
+            Search:"Active=true",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TLeavRequest, options);
+    }
 }
