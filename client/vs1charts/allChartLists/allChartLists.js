@@ -260,8 +260,7 @@ Template.allChartLists.onRendered(function() {
         if ($('.fc-dayGridMonth-button').length > 0) {
             $('.fc-dayGridMonth-button').trigger('click');
         }
-        $(".card").addClass("dimmedChart");
-        $(".py-2").removeClass("dimmedChart");
+        $(".charts .card").addClass("dimmedChart");        
     };
     templateObject.checkChartToDisplay = async() => {
         let defaultChartList = [];
