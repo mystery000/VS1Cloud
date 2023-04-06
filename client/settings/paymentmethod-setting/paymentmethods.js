@@ -51,10 +51,10 @@ Template.paymentmethodSettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
+    { index: 0, label: 'ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
     { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "150" },
     { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "100" },
-    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -221,7 +221,6 @@ Template.paymentmethodSettings.onRendered(function () {
 
   $("#tblPaymentMethodList tbody").on("click", "tr", function (e) {
     var listData = $(e.target).closest("tr").find('td.colPayMethodID').text();
-    console.log("-------->",listData)
     var isCreditcard = false;
     if (listData) {
       $("#add-paymentmethod-title").text("Edit Payment Method");
@@ -427,9 +426,7 @@ Template.paymentmethodSettings.events({
       $(".fullScreenSpin").css("display", "inline-block");
 
       let paymentMethodID = $("#edtPaymentMethodID").val();
-      console.log("----->",paymentMethodID);
       let paymentName = $("#edtPaymentMethodName").val();
-      console.log("++++++++",paymentName);
       let isCreditCard = false;
 
       if ($("#isformcreditcard").is(":checked")) {
