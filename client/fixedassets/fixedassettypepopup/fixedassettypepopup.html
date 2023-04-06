@@ -22,7 +22,7 @@
                   color='primary'
                   classes='btnNewAssetType'
                   type='button'
-                  id="btnNewAssetType" 
+                  id="btnNewAssetType"
                   iconName='plus'
                   title='New Asset Type'
                 }}
@@ -40,6 +40,7 @@
                       }
                   </style>
                   {{>datatablelist
+                      tableclass="tblFixedAssetType"
                       tablename="tblFixedAssetType"
                       apiName= apiFunction
                       indexeddbname = 'TFixedAssetType'

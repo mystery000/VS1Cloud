@@ -2082,7 +2082,9 @@ Template.employeelistpop.helpers({
         return localStorage.getItem('mySession') || '';
     },
     tablename: () => {
-        return Template.instance().tablename.get();
+        let templateObject = Template.instance();
+        let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+        return 'tblEmployeelist'+selCustID;
     },
 
     apiFunction:function() {
@@ -2119,4 +2121,9 @@ Template.employeelistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
+    tablename: () => {
+    let templateObject = Template.instance();
+    let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+  	return 'tblEmployeelist'+selCustID;
+  	}
 });
