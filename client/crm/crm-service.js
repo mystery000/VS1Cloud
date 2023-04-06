@@ -37,12 +37,12 @@ export class CRMService extends BaseService {
             ListType: "Detail",
             Search: "pt.Active=true"
         };
-        if (ContactName) {
-            options = {
-                ListType: "Detail",
-                Search: "pt.Active=true and ContactName='" + ContactName + "'"
-            };
-        }
+        // if (ContactName) {
+        //     options = {
+        //         ListType: "Detail",
+        //         Search: "pt.Active=true and ContactName='" + ContactName + "'"
+        //     };
+        // }
         return this.getList(this.ERPObjects.TProjectTasksList, options);
     }
 

@@ -1113,40 +1113,17 @@ Template.customerscard.onCreated(function () {
 
     //Datatablelist template using from here
     templateObject.getDataTableList_CrmListWithDate = function (data) {
-        let sort_date = data.fields.MsTimeStamp == "" ? "1770-01-01" : data.fields.MsTimeStamp;
-        sort_date = new Date(sort_date);
-        // if (sort_date >= fromDate && sort_date <= toDate) {
-        let taskLabel = data.fields.TaskLabel;
-        let taskLabelArray = [];
-        // if (taskLabel !== null) {
-        //   if (taskLabel.length === undefined || taskLabel.length === 0) {
-        //     taskLabelArray.push(taskLabel.fields);
-        //   } else {
-        //     for (let j = 0; j < taskLabel.length; j++) {
-        //       taskLabelArray.push(taskLabel[j].fields);
-        //     }
-        //   }
-        // }
-        let taskDescription = data.fields.TaskDescription || '';
-        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-
-        const dataList = [
-            data.fields.ID || 0,
-            data.fields.MsTimeStamp !== '' ? moment(data.fields.MsTimeStamp).format("DD/MM/YYYY") : '',
-            'Task',
-            data.fields.TaskName || '',
-            taskDescription,
-            data.fields.due_date ? moment(data.fields.due_date).format("DD/MM/YYYY") : "",
-            // priority: data.fields.priority || 0,
-            // projectID: data.fields.ProjectID || '',
-            // projectName: data.fields.ProjectName || '',
-            // labels: taskLabelArray,
-            data.fields.Completed ? "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.fields.ID + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit' checked='checked'><label class='custom-control-label' for='chkCompleted_" + data.fields.ID + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>" :
-                "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.fields.ID + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit'><label class='custom-control-label' for='chkCompleted_" + data.fields.ID + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>",
-            data.fields.Active ? "" : "In-Active",
+        var dataList = [
+            data.id || "",
+            data.date || "",
+            data.category || "",
+            data.taskName || "",
+            data.description || "",
+            data.completedby || "",
+            data.completed ? "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.id + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit' checked='checked'><label class='custom-control-label' for='chkCompleted_" + data.id + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>" :
+            "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.id + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit'><label class='custom-control-label' for='chkCompleted_" + data.id + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>"
         ];
         return dataList;
-        //}
     }
     let headerStructure_CrmListWithDate = [
         {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: "10"},
