@@ -3236,7 +3236,6 @@ Template.new_invoice.onRendered(function () {
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
   let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly")||false;
-  console.log(isBOnShippedQty);
   if(JSON.parse(isBOnShippedQty)) {
     templateObject.includeBOnShippedQty.set(false);
   }
@@ -4824,6 +4823,18 @@ Template.new_invoice.onRendered(function () {
       $(".fullScreenSpin").css("display", "none");
     });
 
+
+    $(document).on("click", ".tblUOMList tbody tr", async function (e) {
+
+       var selectLineID = $(this).closest('.vs1_dropdown_modal').attr('selectedid');
+      var table = $(this);
+      if (selectLineID) {
+        let lineUOMName = table.find(".colUOMName").text();
+        $("#" + selectLineID + " .edtUOMID").val(lineUOMName);
+      };
+      $(".fullScreenSpin").css("display", "none");
+    });
+
 });
 
 Template.new_invoice.helpers({
@@ -6183,13 +6194,10 @@ Template.new_invoice.events({
     let utilityService = new UtilityService();
     let $tblrows = $("#tblInvoiceLine tbody tr");
     let isBOnShippedQty = templateObject.includeBOnShippedQty.get();
-    console.log(isBOnShippedQty);
     var targetID = $(event.target).closest("tr").attr("id");
     if (isBOnShippedQty == true) {
       let qtyOrdered = $("#" + targetID + " .lineOrdered").val();
-      console.log(qtyOrdered);
       let qtyShipped = $("#" + targetID + " .lineQty").val();
-      console.log(qtyShipped);
       let boValue = "";
 
       if (qtyOrdered == "" || isNaN(qtyOrdered)) {

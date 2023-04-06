@@ -55,7 +55,7 @@ export default class TableHandler {
         let tableClassName = $(e.currentTarget.className)?$(e.currentTarget)[0].className:'';
         if(tableClassName.includes("transactionLines")){
             //this.saveTableColumns(tableName);
-        }if (tableClassName.includes("dtTemplate")){
+        }else if (tableClassName.includes("dtTemplate")){
           this.saveTableColumnsDatatableList(tableName);
         }else{
           if ((tableName != "tblBasReturnList")) {
