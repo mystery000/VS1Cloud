@@ -86,7 +86,8 @@
             </div>
             <div class="col d-flex my-auto justify-content-end" style="margin-right: 4px;">
                 {{> spreadsheet_link templateName="Bin Location List Report Result"}}
-                {{> export_import_print_display_button Export="exportinv_csv" Import="btnImport" Print="btnPrint" DisplaySettings="btnOpenReportSettings"}}
+                {{> export_import_print_display_button tablename="tblBinLocations"}}
+                {{> import_template importformName="Bin Location"}}
                 <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
@@ -183,7 +184,23 @@
                             opacity: 1;
                         }
                     </style>
-                    {{>non_transactional_list tablename="tblBinLocations"}}
+                    <!-- {{>non_transactional_list tablename="tblBinLocations"}} -->
+                    {{>datatablelist
+                        tablename="tblBinLocations"
+                        apiName= apiFunction
+                        indexeddbname = 'TProductBin'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Bin Location List'
+                        istransaction = false
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tproductbin'
+                        exIndexDBName = 'tproductbinex'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                        orderby = '[[ 1, "asc" ]]'
+                    }}
                 </div>
             </div>
         </div>

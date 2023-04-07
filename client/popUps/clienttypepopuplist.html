@@ -41,7 +41,8 @@
                         </div>
                         <!-- {{> non_transactional_list tablename="tblClienttypeList"}}               -->
                         {{>datatablelist
-                            tablename="tblClienttypeList"
+                            tableclass="tblClienttypeList"
+                            tablename=tablename
                             apiName= apiFunction
                             indexeddbname = 'TClientTypeList'
                             tableheaderrecords = tableheaderrecords
