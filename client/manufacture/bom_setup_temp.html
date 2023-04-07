@@ -30,7 +30,7 @@
                     width: 13%;
                     text-align: left;
                 }
-                
+
                 .productRow .colDuration {
                     width: 5.5%;
                     text-align: left;
@@ -60,13 +60,42 @@
             <div class="product-content">
                 <div class="d-flex productRow">
                     <div class="colProduct form-group d-flex">
-                        <select class="edtMainProductName form-control" id="edtMainProductName"  style="width: 60%" ></select>
+                        {{>vs1___dropdown
+                                data=item.item
+                                type='search'
+                                id='edtMainProductName'
+                                name='edtMainProductName'
+                                modalId= 'productListModal'
+                                list_template_name='productlistpop'
+                                modal_title='Product List'
+                                innerModal=true
+                                label = ''
+                                colNameForValue = 'productName'
+                                target_modal_id='newProductModal'
+                                target_template_id='newproductpop'
+                                custid=item.lineID
+                                is_editable=true
+                                noBorder=false
+                        }}
                     </div>
                     <div class="colQty form-group">
                         <input type="text" class="edtQuantity form-control w-100" value="1" disabled/>
                     </div>
                     <div class="colProcess form-group">
-                        <select type="search" id="edtProcess" class="edtProcessName form-control w-100" name="edtProcess" value="Assembly"></select>
+                        {{> vs1___dropdown
+                                data='Assembly'
+                                type='search'
+                                id='edtProcess'
+                                name='edtProcess'
+                                modalId= 'edtProcessListPopModal'
+                                list_template_name='processlistpopup'
+                                modal_title='Process'
+                                innerModal=true
+                                label = ''
+                                colNameForValue = 'colName'
+                                is_editable=true
+                                noBorder=false
+                        }}
                     </div>
                     <div class="colDuration">
                         <input type="text" class="edtDuration form-control w-100" name="edtDuration" value="1"/>
@@ -75,7 +104,7 @@
                         <input type="text" class="edtProcessNote form-control w-100"/>
                     </div>
                     <div class="colAttachment">
-                        
+
                         <a class="btn btn-primary btnAddAttachment no-print" role="button"  data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" name="btn_Attachment">
                             {{#if attachmentCount}}
                                 <span id="attachment-count">{{attachmentCount}}</span>
@@ -106,14 +135,8 @@
             </div>
         </form>
     </div>
-    <div class="modal fade productListModal" id="productListModal">
-        {{> productlistpop}}
-    </div>
-    <div class="modal fade processListModal" id="processListModal">
-        {{> processlistpopup}}
-    </div>
     <div class="modal fade newProcessModal" id="newProcessModal">
         {{> new_processpop}}
     </div>
- 
+
 </template>

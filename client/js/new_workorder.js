@@ -167,15 +167,15 @@ Template.new_workorder.onRendered(async function(){
             // if(workorder.fields.StoppedTime && new Date(workorder.fields.StoppedTime).getTime() < new Date().getTime()) {
             //     templateObject.isCompleted = true;
             // }
-           
+
 
             let isCompleted = false
-            
+
             if(workorder.fields.IsCompleted == true) {
                 isCompleted = true;
-               
+
                 templateObject.isCompleted.set(true);
-                
+
             }
 
             templateObject.salesOrderId.set(workorder.fields.SaleID)
@@ -261,7 +261,7 @@ Template.new_workorder.onRendered(async function(){
                                     accountService.getOneSalesOrderdataEx(templateObject.salesOrderId.get()).then(function(data){
                                         resolve(data)
                                     }).catch (function(e){
-                                    }) 
+                                    })
                                 }
                             }
                         }).catch(
@@ -333,7 +333,7 @@ Template.new_workorder.onRendered(async function(){
                 // }, 15000)
 
             }else {
-                
+
                 let customerData = await templateObject.getCustomerData();
                 let orderAddress = customerData.Companyname + '\n' + customerData.Street+" "+customerData.Street2 + '\n'+ customerData.State+'\n' + customerData.Postcode + ' ' + customerData.Country
                 let record = {
@@ -525,10 +525,10 @@ Template.new_workorder.onRendered(async function(){
     }
 
     if(templateObject.isCompleted.get()) {
-     
-        $("#workorder-detail :input").prop("disabled", true);  
 
-        
+        $("#workorder-detail :input").prop("disabled", true);
+
+
     }
 
 })
@@ -1000,8 +1000,8 @@ Template.new_workorder.events({
                 async function saveMainOrders() {
                     let record = templateObject.workorderrecord.get();
                     let totalWorkOrders = await templateObject.getAllWorkorders();
-                    
-                   
+
+
                     let savedworkorders = totalWorkOrders.filter(order => {
                         return order.fields.SaleID == templateObject.salesOrderId.get();
                     })
@@ -1062,7 +1062,7 @@ Template.new_workorder.events({
                     }else {
                         workorders = [...workorders, {type:'TVS1Workorder', fields:objDetail}];
                     }
-                    
+
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){})
                     // localStorage.setItem('TWorkorders', JSON.stringify(workorders));
                 }
@@ -1099,37 +1099,6 @@ Template.new_workorder.events({
 
             }, delayTimeAfterSound);
         }
-    },
-
-    'click #tblWorkOrderLine tbody tr td.colProductName': function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        let templateObject = Template.instance();
-        templateObject.showBOMModal.set(false)
-        let productName = $(event.target).closest('tr').find('input.lineProductName').val()
-        let tempBOMs = templateObject.bomProducts.get();
-        templateObject.targetProductField.set($(event.target))
-        $('#bomProductListModal').modal('toggle')
-    },
-
-    'click #bomProductListModal tbody tr': function(event) {
-        event.preventDefault()
-        event.stopPropagation();
-        let templateObject = Template.instance();
-        let productName = $(event.target).closest('tr').find('.colName').text()
-        let description = $(event.target).closest('tr').find('.colDescription').text()
-        let field = templateObject.targetProductField.get();
-        $(field).val(productName)
-        let descriptionField = $(field).closest('tr').find('.colDescription');
-        $(descriptionField).text(description) 
-        let record = templateObject.workorderrecord.get();
-        let tempRecord = cloneDeep(record)
-        tempRecord.productname = productName;
-        tempRecord.productDescription = description;
-        templateObject.workorderrecord.set(tempRecord)
-        $('#bomProductListModal').modal('toggle');
-
-
     },
     'change .edtQuantity' : function(event) {
         let value = $(event.target).val();
@@ -1383,7 +1352,7 @@ Template.new_workorder.events({
                                 templateObject.bomStructure.set(data.tproctree[0])
                                 resolve()
                             }
-                        })  
+                        })
                     }
                 }
             })
@@ -1394,7 +1363,7 @@ Template.new_workorder.events({
                         resolve()
                     }
                 })
-            })  
+            })
         }
         await getBOMStructure();
         templateObject.workorderrecord.set(record)
@@ -1413,7 +1382,7 @@ Template.new_workorder.events({
         let templateObject = Template.instance();
         setTimeout(async function(){
             let customerName = $('#edtCustomerName').val()
-            
+
             let record = cloneDeep(templateObject.workorderrecord.get());
             let customerData = await templateObject.getCustomerData(customerName);
             record.customer= customerName,
