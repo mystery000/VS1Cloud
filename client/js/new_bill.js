@@ -119,7 +119,7 @@ Template.billcard.onRendered(() => {
             taxRateService.getCurrencies().then(function (data) {
                 for (let i in data.tcurrencylist) {
                     let currencyObj = {
-                        id: data.tcurrencylist[i].Id || "",
+                        id: data.tcurrencylist[i].CurrencyID || "",
                         currency: data.tcurrencylist[i].Currency || "",
                         currencySellRate: data.tcurrencylist[i].SellRate || "",
                         currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
@@ -135,7 +135,7 @@ Template.billcard.onRendered(() => {
             let useData = data.tcurrencylist;
             for (let i in useData) {
                 let currencyObj = {
-                    id: data.tcurrencylist[i].Id || "",
+                    id: data.tcurrencylist[i].CurrencyID || "",
                     currency: data.tcurrencylist[i].Currency || "",
                     currencySellRate: data.tcurrencylist[i].SellRate || "",
                     currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
@@ -148,16 +148,16 @@ Template.billcard.onRendered(() => {
         }
     }
     templateObject.getCurrencies();
-
     templateObject.getCurrencyRate = (currency, type) => {
         let currencyData = templateObject.currencyData.get();
         for(let i = 0; i <currencyData.length; i++) {
-            if(currencyData[i].currencyCode == currency) {
+            if(currencyData[i].currencyCode == currency || currencyData[i].currency == currency) {
                 if (type == 0) return currencyData[i].currencySellRate;
                 else return currencyData[i].currencyBuyRate;
             }
         };
     };
+
 
     templateObject.setSupplierInfo = () => {
         if (!FlowRouter.current().queryParams.supplierid) {

@@ -19,52 +19,42 @@ Template.currencydropdown.onRendered(function () {
   let templateObject = Template.instance();
   const currencyData = [];
   templateObject.getCurrencies = async function () {
-    await getVS1Data("TCurrencyList").then(function (dataObject) {
-        if (dataObject.length == 0) {
-          taxRateService.getCurrencies().then(function (data) {
-            for (let i in data.tcurrency) {
-              let currencyObj = {
-                id: data.tcurrency[i].Id || "",
-                currency: data.tcurrency[i].Currency || "",
-                currencySellRate: data.tcurrency[i].SellRate || "",
-                currencyCode: data.tcurrency[i].Code || "",
-              };
-
-              currencyData.push(currencyObj);
-            }
-            templateObject.currencyData.set(currencyData);
-          });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tcurrency;
-          for (let i in useData) {
-            let currencyObj = {
-              id: data.tcurrency[i].fields.ID || "",
-              currency: data.tcurrency[i].fields.Currency || "",
-              currencySellRate: data.tcurrency[i].fields.SellRate || "",
-              currencyCode: data.tcurrency[i].fields.Code || "",
-            };
-
-            currencyData.push(currencyObj)
-          }
-          templateObject.currencyData.set(currencyData);
-        }
-      })
-      .catch(function (err) {
+    templateObject.getCurrencies = async function () {
+      let currencyData = [];
+      let dataObject = await getVS1Data("TCurrencyList");
+      if (dataObject.length == 0) {
         taxRateService.getCurrencies().then(function (data) {
-          for (let i in data.tcurrency) {
+          for (let i in data.tcurrencylist) {
             let currencyObj = {
-              id: data.tcurrency[i].Id || "",
-              currency: data.tcurrency[i].Currency || "",
-              currencySellRate: data.tcurrency[i].SellRate || "",
-              currencyCode: data.tcurrency[i].Code || "",
+              id: data.tcurrencylist[i].CurrencyID || "",
+              currency: data.tcurrencylist[i].Currency || "",
+              currencySellRate: data.tcurrencylist[i].SellRate || "",
+              currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+              currencyCode: data.tcurrencylist[i].Code || "",
             };
 
             currencyData.push(currencyObj);
           }
           templateObject.currencyData.set(currencyData);
         });
-      });
+      } else {
+        let data = JSON.parse(dataObject[0].data);
+        let useData = data.tcurrencylist;
+        for (let i in useData) {
+          let currencyObj = {
+            id: data.tcurrencylist[i].CurrencyID || "",
+            currency: data.tcurrencylist[i].Currency || "",
+            currencySellRate: data.tcurrencylist[i].SellRate || "",
+            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+            currencyCode: data.tcurrencylist[i].Code || "",
+          };
+
+          currencyData.push(currencyObj)
+        }
+        templateObject.currencyData.set(currencyData);
+      }
+    }
+
     if (FlowRouter.current().queryParams.id) {
     } else {
       setTimeout(function () {
