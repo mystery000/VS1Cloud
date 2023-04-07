@@ -42,18 +42,7 @@
             color: #e74a3b;
         }
     </style>
-    <div class="container-New">
-        <div class="text-right actionButtonCardsTop hideelement">
-            <button class="btn btn-success saveCards" id="saveCards" type="button" style="margin:0 8px 16px;">
-                <i class="fas fa-save" style="margin-right: 5px;"></i>Save Cards
-            </button>
-            <button class="btn btn-warning resetCards" id="resetcards" type="button" style="margin:0 8px 16px;">
-                <i class="fas fa-rotate-right" style="margin-right: 5px;"></i>Reset Cards
-            </button>
-            <button class="btn btn-secondary cancelCards" id="cancelCards" type="button" style="margin:0 8px 16px;">
-                <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
-            </button>
-        </div>
+    <div class="container-New">        
         <div class="row connectedCardSortable" data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}">
             {{#if equals type "dashboardSales"}}
             {{> dashboardSalesCards }}
