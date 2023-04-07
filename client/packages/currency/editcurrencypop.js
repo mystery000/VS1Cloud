@@ -911,6 +911,7 @@ Template.editcurrencypop.events({
               .then(function (datareturn) {
                 $("#editCurrencyModal").modal("toggle");
                 $(".fullScreenSpin").css("display", "none");
+                $(".btnRefresh").click();
               })
               .catch(function (err) {
                 $("#editCurrencyModal").modal("toggle");

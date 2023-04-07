@@ -55,6 +55,8 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.accountID = new ReactiveVar();
   templateObject.stripe_fee_method = new ReactiveVar();
   templateObject.hasFollow = new ReactiveVar(false);
+
+  templateObject.currencyData = new ReactiveVar();
 });
 
 
@@ -75,6 +77,54 @@ export const _getTmpAppliedAmount = () => {
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
   const templateObject = Template.instance();
+
+    templateObject.getCurrencies = async function () {
+        let currencyData = [];
+        let dataObject = await getVS1Data("TCurrencyList");
+        if (dataObject.length == 0) {
+            taxRateService.getCurrencies().then(function (data) {
+                for (let i in data.tcurrencylist) {
+                    let currencyObj = {
+                        id: data.tcurrencylist[i].Id || "",
+                        currency: data.tcurrencylist[i].Currency || "",
+                        currencySellRate: data.tcurrencylist[i].SellRate || "",
+                        currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                        currencyCode: data.tcurrencylist[i].Code || "",
+                    };
+
+                    currencyData.push(currencyObj);
+                }
+                templateObject.currencyData.set(currencyData);
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tcurrencylist;
+            for (let i in useData) {
+                let currencyObj = {
+                    id: data.tcurrencylist[i].Id || "",
+                    currency: data.tcurrencylist[i].Currency || "",
+                    currencySellRate: data.tcurrencylist[i].SellRate || "",
+                    currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                    currencyCode: data.tcurrencylist[i].Code || "",
+                };
+
+                currencyData.push(currencyObj)
+            }
+            templateObject.currencyData.set(currencyData);
+        }
+    }
+    templateObject.getCurrencies();
+
+    templateObject.getCurrencyRate = (currency, type) => {
+        let currencyData = templateObject.currencyData.get();
+        for(let i = 0; i <currencyData.length; i++) {
+            if(currencyData[i].currencyCode == currency) {
+                if (type == 0) return currencyData[i].currencySellRate;
+                else return currencyData[i].currencyBuyRate;
+            }
+        };
+    };
+
   templateObject.hasFollowings = async function() {
     var currentDate = new Date();
     let paymentService = new PaymentsService();
@@ -267,7 +317,8 @@ Template.supplierpaymentcard.onRendered(() => {
       let supplierPaymentData = await getVS1Data('TSupplierPayment');
       if( supplierPaymentData.length > 0 ){
 
-        var getsale_id = url.split("?billid=");
+        //var getsale_id = url.split("?billid=");
+        var getsale_id = url.split("?id=");
         var currentSalesID = getsale_id[getsale_id.length - 1];
         let paymentID = parseInt(currentSalesID);
         let useData = JSON.parse( supplierPaymentData[0].data );
@@ -292,12 +343,18 @@ Template.supplierpaymentcard.onRendered(() => {
           });
           if( suppPayment.length > 0 ){
             $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
-            $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
+            let latest_rate = templateObject.getCurrencyRate(suppPayment[0].fields.ForeignExchangeCode, 0);
+            $('#exchange_rate').val(latest_rate);
           }
         }
       }
 
       FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+      let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
+      let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
+
+      $(".linePaymentamount.convert-to").text(dstamount);
+      onExchangeRateChange();
 
   }
 
@@ -8473,7 +8530,7 @@ Template.supplierpaymentcard.events({
   "click .btnSave": (e, ui) => {
   playSaveAudio();
   let templateObject = Template.instance();
-
+    e.preventDefault();
 
   let paymentService = new PaymentsService();
   setTimeout(function(){
@@ -13149,17 +13206,16 @@ Template.supplierpaymentcard.events({
 });
 
 
-export function onExchangeRateChange(e) {
+export function onExchangeRateChange(e = null) {
  const templateObject = Template.instance();
   const mainValue = parseFloat($('#edtPaymentAmount').val().replace(/[^0-9.-]+/g, "")) ;
   const rate = parseFloat($("#exchange_rate").val());
   const currency = getCurrentCurrencySymbol();
 
-  // if(e.type =='keyup' || e.type == 'change') {
-  //   $(e.currentTarget).attr('hand-edited', true);
-  // } else {
-  //   $(e.currentTarget).attr('hand-edited', false);
-  // }
+  if(e)
+    if(e.type =='keyup' || e.type == 'change') {
+        $(e.currentTarget).attr('hand-edited', true);
+    }
 
   let foreignAmount = (rate * mainValue).toFixed(2);
   let appliedAmount = (rate * mainValue).toFixed(2);
