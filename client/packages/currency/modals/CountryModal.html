@@ -48,8 +48,9 @@
                                 width: 5%;
                             }
                         </style>
-                       
+
                         {{>datatablelist
+                            tableclass="tblCountryPopList"
                             tablename="tblCountryPopList"
                             apiName= apiFunction
                             indexeddbname = 'TCountries'
@@ -65,7 +66,7 @@
                             searchAPI = searchAPI
                             showPlusButton = true
                         }}
-                    
+
                     </div>
                 </div>
             </div>

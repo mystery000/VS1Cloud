@@ -708,6 +708,10 @@ Template.accountlistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter', 'typeFilter', 'useReceiptClaim'];
     },
+    tablename: () => {
+        let templateObject = Template.instance();
+        return 'tblAccountListPop'+templateObject.data.custid;
+      },
 });
 
 Template.accountlistpop.events({

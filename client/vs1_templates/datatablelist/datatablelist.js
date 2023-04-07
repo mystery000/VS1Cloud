@@ -1542,6 +1542,7 @@ Template.datatablelist.events({
                 label: colTitle,
                 active: colHidden,
                 width: parseFloat(colWidth),
+                sWidth: parseFloat(colWidth),
                 sWidthOrig: parseFloat(colWidth),
                 class: colthClass,
                 display: true
