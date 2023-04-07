@@ -3331,15 +3331,41 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Expense Account</label>
-                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
-                                                        id="expenseSuperannuationAccount">
+
+                                                        {{> vs1___dropdown
+                                                                type='search'
+                                                                id='expenseSuperannuationAccount'
+                                                                name='expenseSuperannuationAccount'
+                                                                modalId= 'expenseSuperannuationAccountListModal'
+                                                                list_template_name='accountlistpop'
+                                                                innerModal=true
+                                                                modal_title='Account List'
+                                                                label = ''
+                                                                colNameForValue = 'colAccountName'
+                                                                target_modal_id= 'addAccountModal'
+                                                                target_template_id='addaccountpop'
+                                                                is_editable=true
+                                                        }}
                                                     </div>
                                                   </div>
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Liability Account</label>
-                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
-                                                        id="liabilityAccount">
+
+                                                        {{> vs1___dropdown
+                                                                type='search'
+                                                                id='liabilityAccount'
+                                                                name='liabilityAccount'
+                                                                modalId= 'liabilityAccountListModal'
+                                                                list_template_name='accountlistpop'
+                                                                innerModal=true
+                                                                modal_title='Account List'
+                                                                label = ''
+                                                                colNameForValue = 'colAccountName'
+                                                                target_modal_id= 'addAccountModal'
+                                                                target_template_id='addaccountpop'
+                                                                is_editable=true
+                                                        }}
                                                     </div>
                                                   </div>
                                                   <div class="col-12 col-md-6">
