@@ -25,6 +25,13 @@ Template.employeeproductlistpop.onCreated(() => {
   templateObject.convertedStatus = new ReactiveVar();
 
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.fields.Active == true){
+      linestatus = "";
+    }
+    else if(data.fields.Active == false){
+      linestatus = "In-Active";
+    }
     let dataList = [
       '<div  class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' +
         data.fields.ID +
@@ -36,25 +43,27 @@ Template.employeeproductlistpop.onCreated(() => {
       data.fields.ProductName || "-",
       data.fields.SalesDescription || "",
       data.fields.BARCODE || "",
-      utilityService.modifynegativeCurrencyFormat(
-        Math.floor(data.fields.BuyQty1Cost * 100) / 100
-      ),
-      utilityService.modifynegativeCurrencyFormat(
-        Math.floor(data.fields.SellQty1Price * 100) / 100
-      ),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.BuyQty1Cost * 100) / 100),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
       data.fields.TotalQtyInStock,
       data.fields.TaxCodeSales || "",
       data.fields.ID || "",
       JSON.stringify(data.fields.ExtraSellPrice) || null,
-      utilityService.modifynegativeCurrencyFormat(
-        Math.floor(data.fields.SellQty1PriceInc * 100) / 100
-      ),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100),
+      linestatus,
     ];
     return dataList;
   };
 
   templateObject.getExData = function (data) {
-    var dataList = [
+    let linestatus = '';
+    if(data.fields.Active == true){
+      linestatus = "";
+    }
+    else if(data.fields.Active == false){
+      linestatus = "In-Active";
+    }
+    let dataList = [
       '<div  class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' +
         data.fields.ID +
         '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
@@ -65,19 +74,14 @@ Template.employeeproductlistpop.onCreated(() => {
       data.fields.ProductName || "-",
       data.fields.SalesDescription || "",
       data.fields.BARCODE || "",
-      utilityService.modifynegativeCurrencyFormat(
-        Math.floor(data.fields.BuyQty1Cost * 100) / 100
-      ),
-      utilityService.modifynegativeCurrencyFormat(
-        Math.floor(data.fields.SellQty1Price * 100) / 100
-      ),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.BuyQty1Cost * 100) / 100),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
       data.fields.TotalQtyInStock,
       data.fields.TaxCodeSales || "",
       data.fields.ID || "",
       JSON.stringify(data.fields.ExtraSellPrice) || null,
-      utilityService.modifynegativeCurrencyFormat(
-        Math.floor(data.fields.SellQty1PriceInc * 100) / 100
-      ),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100),
+      linestatus,
     ];
     return dataList;
   };
@@ -87,14 +91,14 @@ Template.employeeproductlistpop.onCreated(() => {
     {
       index: 0,
       label: "  ",
-      class: "chkBox pointer",
+      class: "colchkBox pointer",
       active: true,
       display: true,
       widht: "50",
     },
     {
       index: 1,
-      class: "productName",
+      class: "colproductName",
       label: "Product Name",
       active: true,
       display: true,
@@ -102,7 +106,7 @@ Template.employeeproductlistpop.onCreated(() => {
     },
     {
       index: 2,
-      class: "productDesc",
+      class: "colproductDesc",
       label: "Product Description",
       active: true,
       display: true,
@@ -118,7 +122,7 @@ Template.employeeproductlistpop.onCreated(() => {
     },
     {
       index: 4,
-      class: "costPrice text-right",
+      class: "colcostPrice text-right",
       label: "Cost Price",
       active: true,
       display: true,
@@ -126,7 +130,7 @@ Template.employeeproductlistpop.onCreated(() => {
     },
     {
       index: 5,
-      class: "salePrice text-right",
+      class: "colsalePrice text-right",
       label: "Sale Price",
       active: true,
       display: true,
@@ -134,7 +138,7 @@ Template.employeeproductlistpop.onCreated(() => {
     },
     {
       index: 6,
-      class: "prdqty text-right",
+      class: "colprdqty text-right",
       label: "Quantity",
       active: true,
       display: true,
@@ -142,7 +146,7 @@ Template.employeeproductlistpop.onCreated(() => {
     },
     {
       index: 7,
-      class: "taxrate",
+      class: "coltaxrate",
       label: "Tax Rate",
       active: true,
       display: true,
@@ -150,27 +154,35 @@ Template.employeeproductlistpop.onCreated(() => {
     },
     {
       index: 8,
-      class: "colProuctPOPID hiddenColumn",
+      class: "colProuctPOPID",
       label: "Prouct ID",
-      active: true,
+      active: false,
       display: true,
       widht: "100",
     },
     {
       index: 9,
-      class: "colExtraSellPrice hiddenColumn",
+      class: "colExtraSellPrice",
       label: "Prouct ID",
-      active: true,
+      active: false,
       display: true,
       widht: "100",
     },
     {
       index: 10,
-      class: "salePriceInc hiddenColumn",
+      class: "colsalePriceInc",
       label: "Sale Price Inc",
-      active: true,
+      active: false,
       display: true,
       widht: "100",
+    },
+    {
+      index: 11,
+      class: "colStatus",
+      label: "Status",
+      active: true,
+      display: true,
+      widht: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
