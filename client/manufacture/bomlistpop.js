@@ -33,23 +33,23 @@ Template.bomlistpop.onCreated(function(){
         // data.subs || [],
         rawName || '',
         data.Value == '' ? 'No Attachment' : JSON.parse(data.Value).length.toString() + " attachments",
-        data.ProcStepItemRef == 'vs1BOM'? 'Active': 'Deleted'
+        data.ProcStepItemRef == 'vs1BOM'? '': 'Deleted'
       ];
 
       return dataList;
     }
 
 
-  let headerStructure = [
-    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true },
-    { index: 1, label: 'Product Name', class: 'colName', active: true, display: true },
-    { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true },
-    { index: 3, label: 'Process', class: 'colProcess', active: true, display: true },
-    { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true },
-    { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true },
-    { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true },
-    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true}
-  ];
+    let headerStructure = [
+      { index: 0, label: 'ID', class: 'colPayMethodID', active: false, display: true , width : "30"},
+      { index: 1, label: 'Product Name', class: 'colName', active: true, display: true , width : "200"},
+      { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true , width : "200"},
+      { index: 3, label: 'Process', class: 'colProcess', active: true, display: true , width : "100"},
+      { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true , width : "70"},
+      { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true , width : "70"},
+      { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true , width : "150"},
+      { index: 7, label: 'Status', class: 'colStatus', active: true, display: true , width : "120"}
+    ];
   templateObject.tableheaderrecords.set(headerStructure);
       
 })
@@ -284,6 +284,9 @@ Template.bomlistpop.events({
 
         }
     });
+},
+'click .btnNewBOMModal' : function () {
+  $('div#BOMSetupModal').modal('show');
 }
   
 })
@@ -327,7 +330,7 @@ Template.bomlistpop.helpers({
   },
 
   apiParams: ()=>{
-    return ['limitCount', 'limitFrom']
+    return ['limitCount', 'limitFrom','deleteFilter']
   },
 
   searchAPI: function() {

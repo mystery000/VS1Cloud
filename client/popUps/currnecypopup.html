@@ -11,6 +11,7 @@
         <input type="hidden" style="width: 100%; display:none;" id="selectCurrencyLineID" name="selectCurrencyLineID" readonly="readonly">
         <div class="card-body p-1 rounded">
             {{>datatablelist
+                    tableclass="tblCurrencyPopList"
                     tablename="tblCurrencyPopList"
                     apiName= apiFunction
                     indexeddbname = 'TCurrencyList'
