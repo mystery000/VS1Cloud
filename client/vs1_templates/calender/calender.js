@@ -1817,12 +1817,14 @@ Template.calender.onRendered(function() {
                         });
 
                         if (getLeaveInfo.length > 0) {
+                            console.log('getLeaveInfo[0]:',getLeaveInfo[0])
                             $('#removeLeaveRequestBtn').show();
                             $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
                             $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
                             $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
                             $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
                             $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                            $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
                             $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
                             $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
                             $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
@@ -1831,6 +1833,8 @@ Template.calender.onRendered(function() {
                             setTimeout(function() {
                                 $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
                             }, 200);
+                            $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
+                            $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
                             $('#newLeaveRequestModal').modal('show');
                         }
 
@@ -11303,6 +11307,8 @@ Template.calender.events({
     },
     "click #btnCreateLeaveRequest": function(event){
         $("#appointmentLeaveConfirmModal").modal("hide");
+        let currentEmployeeName = localStorage.getItem("mySessionEmployee") || "";
+        $('#edtEmployeeName').val(currentEmployeeName)
 		$('#newLeaveRequestModal').modal('show');
     },
 });

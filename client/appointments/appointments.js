@@ -3427,10 +3427,21 @@ Template.appointments.events({
         // });
         setTimeout(function() {
             $("#edtEmpID").val(empID);
+            let employeerecords = templateObject.employeerecords.get();
+            let currentEmployeeName = "";
+            if(employeerecords && employeerecords.length !== 0){
+                let currentEmployee = employeerecords.filter((item) => item.id == empID);
+                if(currentEmployee && currentEmployee.length !== 0){
+                    currentEmployeeName = currentEmployee[0].employeeName
+                }
+            }
+            $('#edtEmployeeName').val(currentEmployeeName)
             $('#removeLeaveRequestBtn').hide();
             $('#newLeaveRequestModal').modal('show');
+            $('#newLeaveRequestLabel.new-leave-title').removeClass('hide');
+            $('#newLeaveRequestLabel.edit-leave-title').addClass('hide');
             $('#newLeaveRequestModal').on('hidden.bs.modal', function() {
-                window.open("/appointments", "_self");
+                // window.open("/appointments", "_self");
             });
         }, 500);
     },
