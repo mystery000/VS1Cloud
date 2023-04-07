@@ -1506,7 +1506,10 @@
                         </div>
                       </div>
                       <!-- Set Payroll Templates -->
-                      {{> reimbursementSettings}}
+                        {{> earningRateSettings}}
+                        {{> deductionSettings}}
+                        {{> superannuationSettings }}
+                        {{> reimbursementSettings}}
                       <!-- END Payroll Templates -->
                       <div class="col-12 col-md-3" style="padding: 8px; margin: 0px;">
                         <div class="card shadow">
@@ -3173,8 +3176,21 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Control Account</label>
-                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
-                                                        id="controlAccountDeduction">
+
+                                                        {{> vs1___dropdown
+                                                                type='search'
+                                                                id='controlAccountDeduction'
+                                                                name='controlAccountDeduction'
+                                                                modalId= 'controlAccountDeductionListModal'
+                                                                list_template_name='accountlistpop'
+                                                                innerModal=true
+                                                                modal_title='Account List'
+                                                                label = ''
+                                                                colNameForValue = 'colAccountName'
+                                                                target_modal_id= 'addAccountModal'
+                                                                target_template_id='addaccountpop'
+                                                                is_editable=true
+                                                        }}
                                                     </div>
                                                   </div>
                                                 </div>
