@@ -256,7 +256,7 @@ Template.allCardsLists.events({
     },
     "change .cardShowOption": function (e) {
         e.preventDefault();
-        if ($(e.target).prop(checked)) {            
+        if ($(e.target).prop("checked")) {            
             $(e.target).parents('.card-visibility').attr('card-active', false)
         } else {
             $(e.target).parents('.card-visibility').attr('card-active', true)
