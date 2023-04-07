@@ -155,7 +155,7 @@
                   }
                 </style>
   
-                <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
+                <!-- <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
                   <thead>
                     <tr class="dnd-moved">
                       <th class="th colCalenderID hiddenColumn">ID</th>
@@ -187,7 +187,22 @@
                     {{/if}}
                   </tbody>
   
-                </table>
+                </table> -->
+                {{>datatablelist
+                  tablename="tblPayCalendars"
+                  apiName= apiFunction
+                  indexeddbname = 'TPayrollCalendars'
+                  tableheaderrecords = tableheaderrecords
+                  exportfilename = 'Pay Calendars'
+                  istransaction = false
+                  apiParams= apiParams
+                  datahandler = datahandler
+                  service=service
+                  lowercaseDataName='tpayrollcalendars'
+                  exIndexDBName = 'tpayrollcalendars'
+                  exdatahandler = exDataHandler
+                  searchAPI = searchAPI
+                }}
               </div>
             </div>
   

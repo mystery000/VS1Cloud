@@ -2101,7 +2101,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TSalesList, options);
   }
 
-  getAllOverDueAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom) {
+  getAllOverDueAwaitingCustomerPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deletefilter) {
     let options = "";
     if (ignoreDate == true) {
       options = {
@@ -2129,7 +2129,6 @@ export class SideBarService extends BaseService {
         IsDetailReport: false,
         Paid: false,
         Unpaid: true,
-        // Search: "Balance != 0",
         OrderBy: "SaleID desc",
         Search: 'dueDate < "' + dateTo + '" and Balance != 0',
         DateFrom: '"' + dateFrom + '"',
@@ -2138,6 +2137,7 @@ export class SideBarService extends BaseService {
         LimitFrom: parseInt(limitfrom),
       };
     }
+    if(deletefilter) options.Search = "";
     return this.getList(this.ERPObjects.TSalesList, options);
   }
 

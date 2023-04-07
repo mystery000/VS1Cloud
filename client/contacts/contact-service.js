@@ -400,7 +400,7 @@ export class ContactService extends BaseService {
             IgnoreDates: true,
             IncludePOs: true,
             IncludeBills: true,
-            select: "SupplierName='" + supplierName + "' and [Deleted]=false",
+            //select: "SupplierName='" + supplierName + "' and [Deleted]=false",
         };
         return this.getList(this.ERPObjects.TbillReport, options);
 
@@ -409,6 +409,17 @@ export class ContactService extends BaseService {
         //   select: "SupplierName='"+supplierName+"' and [Deleted]=false",
         // };
         // return this.getList(this.ERPObjects.tbillreport, options);
+    }
+
+    getAllTransList(limitcount, limitfrom, deleteFilter) {
+        let options = {
+            // Search:"pt.Deleted=false",
+            IgnoreDates: true,
+            IncludePOs: true,
+            IncludeBills: true,
+        };
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TbillReport, options);
     }
 
     getDetailAccountTransactions() {
