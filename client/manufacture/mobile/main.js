@@ -920,6 +920,7 @@ Template.mobileapp.events({
                     addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderData})).then(function(datareturn){
                         
                     }).catch(function(err){
+
                     });
 
                 } else {
@@ -1187,16 +1188,62 @@ Template.mobileapp.events({
 
 
             let change_to = bomStructureData.TotalChangeQty;
+            let total_qty_original = bomStructureData.TotalQtyOriginal;
+            let wastage_qty_temp; 
+         
 
-            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
+            if(isNaN(total_qty_original) || total_qty_original == "") {
+                total_qty_original = 0;
+            } else {
+                total_qty_original = parseFloat(total_qty_original).toFixed(2);
+            } 
+
+            if(isNaN(change_to) || change_to == "") {
+                change_to = total_qty_original;
+            }else {
+                change_to = parseFloat(change_to).toFixed(2);
+            }
+
+         
+
+            wastage_qty_temp = change_to - total_qty_original;
+
+            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : total_qty_original, changeTo: change_to, wastage: wastage_qty_temp };
+
+
 
             BomDataList.push(tempBomData);
 
             let bomDetailData = JSON.parse(bomStructureData.Details);
+            let change_to_detail;
+            let total_qty_detail;
+            let wastage_qty_detail;
 
 
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].changed_qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].changed_qty) };
+               
+                total_qty_detail = bomDetailData[i].qty;
+                change_to_detail = bomDetailData[i].changed_qty;
+
+                
+                if(isNaN(total_qty_detail) || total_qty_detail == "") {
+                    total_qty_detail = 0;
+                } else {
+                    total_qty_detail = parseFloat(total_qty_detail).toFixed(2);
+                }
+
+                    
+                if(isNaN(change_to_detail) || change_to_detail == "") {
+                    change_to_detail = total_qty_detail;
+                }else {
+                    change_to_detail = parseFloat(change_to_detail).toFixed(2);
+                }
+                   
+
+                wastage_qty_detail = change_to_detail - total_qty_detail;               
+
+
+                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total: total_qty_detail, changeTo: change_to_detail , wastage: wastage_qty_detail };
                 BomDataList.push(tempBomData);  
             }
 
@@ -1243,7 +1290,16 @@ Template.mobileapp.events({
                 
                 var total_qty = parseFloat($(this).parent().find("td:eq(2)").text());
                 var change_to_qty = parseFloat($(this).parent().find("td:eq(3)").text());
-                var wastage_qty = total_qty - change_to_qty;
+                var wastage_qty = 0;
+
+                               
+                if(isNaN(change_to_qty)){
+                    wastage_qty = 0;
+                }else {
+                    wastage_qty = change_to_qty - total_qty;
+                }
+
+                
                 $(this).parent().find("td:eq(4)").text(wastage_qty);
                            
             } );
