@@ -295,44 +295,26 @@ Template.appointments.onRendered(function() {
         let dd = moment(document.getElementById("currentDate").value).format("DD");
         if (dayOfWeek == moment().format("dddd") && dayInDigit == dd) {
             $(document).on("DOMNodeInserted", function() {
-                $("#allocationTable")
-                    .find("tbody tr td." + dayOfWeek.toLowerCase() + "")
-                    .addClass("currentDay");
+                $("#allocationTable").find("tbody tr td." + dayOfWeek.toLowerCase() + "").addClass("currentDay");
             });
         } else {
-            $(
-                "#allocationTable tbody tr td." + dayOfWeek.toLocaleLowerCase()
-            ).removeClass("currentDay");
-            $("#allocationTabletbody tr td." + dayOfWeek.toLocaleLowerCase()).css(
-                "background-color",
-                "#fff"
-            );
+            $("#allocationTable tbody tr td." + dayOfWeek.toLocaleLowerCase()).removeClass("currentDay");
+            $("#allocationTabletbody tr td." + dayOfWeek.toLocaleLowerCase()).css("background-color","#fff");
         }
         setTimeout(function() {
-            if (
-                $("#showSaturday").is(":checked") &&
-                $("#showSunday").is(":checked")
-            ) {
+            if ($("#showSaturday").is(":checked") && $("#showSunday").is(":checked")) {
                 $(".draggable").addClass("cardWeeekend");
                 $(".draggable").removeClass("cardHiddenWeekend");
                 $(".draggable").removeClass("cardHiddenSundayOrSaturday");
             }
 
-            if (
-                $("#showSaturday").prop("checked") == false &&
-                $("#showSunday").prop("checked") == false
-            ) {
+            if ($("#showSaturday").prop("checked") == false && $("#showSunday").prop("checked") == false) {
                 $(".draggable").removeClass("cardWeeekend");
                 $(".draggable").addClass("cardHiddenWeekend");
                 $(".draggable").removeClass("cardHiddenSundayOrSaturday");
             }
 
-            if (
-                ($("#showSaturday").prop("checked") == false &&
-                    $("#showSunday").prop("checked") == true) ||
-                ($("#showSaturday").prop("checked") == true &&
-                    $("#showSunday").prop("checked") == false)
-            ) {
+            if (($("#showSaturday").prop("checked") == false && $("#showSunday").prop("checked") == true) || ($("#showSaturday").prop("checked") == true && $("#showSunday").prop("checked") == false)) {
                 $(".draggable").removeClass("cardWeeekend");
                 $(".draggable").removeClass("cardHiddenWeekend");
                 $(".draggable").addClass("cardHiddenSundayOrSaturday");
@@ -342,12 +324,7 @@ Template.appointments.onRendered(function() {
 
     templateObject.dateFormat = function(date) {
         var dateParts = date.split("/");
-        var dateObject =
-            dateParts[2] +
-            "/" +
-            ("0" + (dateParts[1] - 1)).toString().slice(-2) +
-            "/" +
-            dateParts[0];
+        var dateObject = dateParts[2] + "/" + ("0" + (dateParts[1] - 1)).toString().slice(-2) + "/" + dateParts[0];
         return dateObject;
     };
 
@@ -396,14 +373,9 @@ Template.appointments.onRendered(function() {
     templateObject.saveLeaveRequestLocalDB = async function() {
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeavRequest
-        );
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
 
-        employeePayrolEndpoint.url.searchParams.append(
-            "ListType",
-            "'Detail'"
-        );
+        employeePayrolEndpoint.url.searchParams.append("ListType","'Detail'");
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
         if (employeePayrolEndpointResponse.ok == true) {
@@ -439,9 +411,7 @@ Template.appointments.onRendered(function() {
                     let lineItems = [];
 
                     for (let i = 0; i < data.temployee.length; i++) {
-                        let randomColor = Math.floor(Math.random() * 16777215).toString(
-                            16
-                        );
+                        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
                         if (randomColor.length < 6) {
                             randomColor = randomColor + "6";

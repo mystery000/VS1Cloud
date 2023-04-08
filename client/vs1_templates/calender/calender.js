@@ -3860,14 +3860,12 @@ Template.calender.onRendered(function() {
         $('#edtCustomeField3').val(popCustomercustfield3);
         $('#edtCustomeField4').val(popCustomercustfield4);
         $('#sltTaxCode').val(popCustomerTaxCode);
-
         if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
             (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.BillPostcode) &&
             (data.fields.Country == data.fields.Billcountry)) {
             $('#chkSameAsShipping2').attr("checked", "checked");
         }
         if (data.fields.IsSupplier == true) {
-            // $('#isformcontractor')
             $('#chkSameAsSupplier').attr("checked", "checked");
         } else {
             $('#chkSameAsSupplier').removeAttr("checked");
@@ -3878,7 +3876,7 @@ Template.calender.onRendered(function() {
             firstname:popCustomerFirstName,
             middlename: popCustomerMiddleName,
             lastname:popCustomerLastName,
-            company:data.tcustomervs1[i].fields.Companyname || '',
+            company:data.fields.Companyname || '',
             email: popCustomerEmail,
             title: popCustomerTitle,
             tfn: popCustomertfn,
@@ -3954,16 +3952,25 @@ Template.calender.onRendered(function() {
                             });
                         } else {
                             let data = JSON.parse(dataObject[0].data);
-                            setOneCustomerData(data.tcustomervs1)
+                            var added = false;
+                            for (let i = 0; i < data.tcustomervs1.length; i++) {
+                                if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
+                                    added = true;
+                                    setOneCustomerData(data.tcustomervs1[i])
+                                }
+                            }
+                            if (!added) {
+                                $(".fullScreenSpin").css("display", "inline-block");
+                                sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
+                                    setOneCustomerData(data.tcustomer[0])
+                                })
+                                .catch(function(err) {
+                                    $(".fullScreenSpin").css("display", "none");
+                                });
+                            }
                         }
                     })
                     .catch(function(err) {
-                        sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-                            setOneCustomerData(data.tcustomer[0])
-                        })
-                        .catch(function(err) {
-                            $(".fullScreenSpin").css("display", "none");
-                        });
                     });
 				} else {
 					if (FlowRouter.current().queryParams.leadid) {
