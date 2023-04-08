@@ -497,7 +497,6 @@ Template.calender.onRendered(function() {
 
         for (let i = 0; i < data.temployee.length; i++) {
             let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
             if (randomColor.length < 6) {
                 randomColor = randomColor + "6";
             }
@@ -554,6 +553,7 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.getEmployeesList = async function() {
+        console.log('getEmployeesList')
         let leaveArr = [];
         let data = []
         let dataObject = await getVS1Data('TLeavRequest')
@@ -606,6 +606,7 @@ Template.calender.onRendered(function() {
         }).catch(function(err) {});
     });
     function setGlobalSettings(data) {
+        console.log('setGlobalSettings:',data)
         templateObject.getAllAppointmentListData();
         let appEndTimeDataToLoad = "19:00";
         globalSet.defaultProduct = "";
@@ -675,25 +676,15 @@ Template.calender.onRendered(function() {
             hideSun = "hidesunday";
         }
         if (globalSet.chargeTime) {
-            $("#chargeTime").prepend(
-                "<option>" + globalSet.chargeTime + " Hour</option>"
-            );
+            $("#chargeTime").prepend("<option>" + globalSet.chargeTime + " Hour</option>");
         }
 
         if (globalSet.showApptDurationin) {
-            $("#showTimeIn").prepend(
-                "<option selected>" +
-                globalSet.showApptDurationin +
-                " Hour</option>"
-            );
+            $("#showTimeIn").prepend("<option selected>" + globalSet.showApptDurationin + " Hour</option>");
         }
 
         if (globalSet.DefaultApptDuration) {
-            $("#defaultTime").prepend(
-                "<option selected>" +
-                globalSet.DefaultApptDuration +
-                " Hour</option>"
-            );
+            $("#defaultTime").prepend("<option selected>" + globalSet.DefaultApptDuration + " Hour</option>");
         }
 
         if (globalSet.apptStartTime) {
@@ -714,13 +705,7 @@ Template.calender.onRendered(function() {
                             if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
                                 globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue;
                             }
-                            $("#productlist").prepend(
-                                '<option value="' +
-                                globalSet.id +
-                                '">' +
-                                globalSet.defaultProduct +
-                                '</option>'
-                            );
+                            $("#productlist").prepend('<option value="' + globalSet.id + '">' + globalSet.defaultProduct + '</option>');
                             $("#productlist")[0].options[0].selected = true;
                         }
                         templateObject.globalSettings.set(globalSet);
@@ -731,13 +716,7 @@ Template.calender.onRendered(function() {
                         if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
                             globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue;
                         }
-                        $("#productlist").prepend(
-                            '<option value="' + 
-                            globalSet.id + 
-                            '">' + 
-                            globalSet.defaultProduct + 
-                            '</option>'
-                        );
+                        $("#productlist").prepend('<option value="' + globalSet.id + '">' + globalSet.defaultProduct + '</option>');
                         $("#productlist")[0].options[0].selected = true;
                     }
                     templateObject.globalSettings.set(globalSet);
@@ -749,13 +728,7 @@ Template.calender.onRendered(function() {
                         if (data.terppreferenceextra[p].Prefname == "DefaultServiceProduct") {
                             globalSet.defaultProduct = data.terppreferenceextra[p].fieldValue;
                         }
-                        $("#productlist").prepend(
-                            '<option value="' + 
-                            globalSet.id + 
-                            '">' + 
-                            globalSet.defaultProduct + 
-                            '</option>'
-                        );
+                        $("#productlist").prepend('<option value="' + globalSet.id + '">' + globalSet.defaultProduct + '</option>');
                         $("#productlist")[0].options[0].selected = true;
                     }
                     templateObject.globalSettings.set(globalSet);
@@ -785,7 +758,6 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.fetchAppointments = function() {
-
         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
             addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
                 refreshPage();
@@ -884,13 +856,11 @@ Template.calender.onRendered(function() {
                 newappointment: {
                     text: "New Appointment",
                     click: function() {
-                        // FlowRouter.go("/appointmentlist");
                     },
                 },
                 appointments: {
                     text: "Appointment List",
                     click: function() {
-                        //window.open('/appointmentlist', '_self');
                         FlowRouter.go("/appointmentlist");
                     },
                 },
@@ -939,65 +909,37 @@ Template.calender.onRendered(function() {
                 let dateStartForEndTime = new Date(info.start);
                 let dateEnd = new Date(info.end);
                 let startDate = ("0" + dateStart.getDate()).toString().slice(-2) + "/" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "/" + dateStart.getFullYear();
-                let endDate =
-                    ("0" + dateEnd.getDate()).toString().slice(-2) +
-                    "/" +
-                    ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) +
-                    "/" +
-                    dateEnd.getFullYear();
-                dateStartForEndTime.setHours(
-                    dateStartForEndTime.getHours() + calendarSet.DefaultApptDuration ||
-                    "02:00"
-                );
-                let startTime =
-                    ("0" + dateStart.getHours()).toString().slice(-2) +
-                    ":" +
-                    ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime =
-                    ("0" + dateEnd.getHours()).toString().slice(-2) +
-                    ":" +
-                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endDate = ("0" + dateEnd.getDate()).toString().slice(-2) + "/" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "/" + dateEnd.getFullYear();
+                dateStartForEndTime.setHours(dateStartForEndTime.getHours() + calendarSet.DefaultApptDuration || "02:00");
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("dtSODate").value = startDate;
                 document.getElementById("dtSODate2").value = endDate;
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = dateStartForEndTime;
-                document.getElementById("employee_name").value =
-                    localStorage.getItem("mySessionEmployee");
+                document.getElementById("employee_name").value = localStorage.getItem("mySessionEmployee");
                 if (calendarSet.DefaultApptDuration) {
-                    let hoursFormattedStartTime =
-                        templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
-                    document.getElementById("txtBookedHoursSpent").value =
-                        hoursFormattedStartTime;
+                    let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
+                    document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                 } else {
                     let hours = templateObject.diff_hours(dateStart, dateStartForEndTime);
                     let hoursFormattedStartTime = templateObject.timeFormat(hours) || "";
-                    document.getElementById("txtBookedHoursSpent").value =
-                        hoursFormattedStartTime;
+                    document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                 }
                 templateObject.attachmentCount.set("");
                 templateObject.uploadedFiles.set("");
                 templateObject.uploadedFile.set("");
                 if (FlowRouter.current().queryParams.leadid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.leadid,
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.leadid,templateObject);
                 } else if (FlowRouter.current().queryParams.customerid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.customerid,
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.customerid,templateObject);
                 } else if (FlowRouter.current().queryParams.supplierid) {
-                    openAppointModalDirectly(
-                        FlowRouter.current().queryParams.supplierid,
-                        templateObject
-                    );
+                    openAppointModalDirectly(FlowRouter.current().queryParams.supplierid,templateObject);
                 } else {
                     $("#customerListModal").modal();
                 }
             },
             eventClick: function(info) {
-
                 $("#frmAppointment")[0].reset();
                 $("#btnHold").prop("disabled", false);
                 $("#btnStartAppointment").prop("disabled", false);
@@ -1050,29 +992,20 @@ Template.calender.onRendered(function() {
                     }
                     templateObject.getAllProductData();
                     if (result[0].aStartTime != "" && result[0].aEndTime != "") {
-                        var startTime = moment(
-                            result[0].aStartDate + " " + result[0].aStartTime
-                        );
+                        var startTime = moment(result[0].aStartDate + " " + result[0].aStartTime);
                         var endTime = moment(result[0].aEndDate + " " + result[0].aEndTime);
-                        var duration = moment.duration(
-                            moment(endTime).diff(moment(startTime))
-                        );
+                        var duration = moment.duration(moment(endTime).diff(moment(startTime)));
                         hours = duration.asHours();
                     }
 
                     let hoursFormatted = templateObject.timeFormat(hours) || "";
-                    let hoursFormattedStartTime =
-                        templateObject.timeFormat(result[0].totalHours) || "";
-                    document.getElementById("aStartDate").value =
-                        result[0].aStartDate || "";
+                    let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
+                    document.getElementById("aStartDate").value = result[0].aStartDate || "";
                     document.getElementById("updateID").value = result[0].id || 0;
                     document.getElementById("appID").value = result[0].id;
                     document.getElementById("customer").value = result[0].accountname;
                     document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value =
-                        result[0].mobile.replace("+", "") ||
-                        result[0].phone.replace("+", "") ||
-                        "";
+                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
                     document.getElementById("state").value = result[0].state || "";
                     document.getElementById("address").value = result[0].street || "";
                     if (localStorage.getItem("CloudAppointmentNotes") == true) {
@@ -1082,34 +1015,23 @@ Template.calender.onRendered(function() {
                     document.getElementById("suburb").value = result[0].suburb || "";
                     document.getElementById("zip").value = result[0].zip || "";
                     document.getElementById("country").value = result[0].country || "";
-
-                    document.getElementById("product-list").value =
-                        result[0].product || "";
-                    document.getElementById("product-list-1").value =
-                        result[0].product || "";
+                    document.getElementById("product-list").value = result[0].product || "";
+                    document.getElementById("product-list-1").value = result[0].product || "";
                     // if (result[0].product.replace(/\s/g, '') != "") {
                     //     $('#product-list').prepend('<option value="' + result[0].product + '" selected>' + result[0].product + '</option>');
                     //
                     // } else {
                     //     $('#product-list').prop('selectedIndex', -1);
                     // }
-                    document.getElementById("employee_name").value =
-                        result[0].employeename;
-                    document.getElementById("dtSODate").value = moment(
-                        result[0].startDate.split(" ")[0]
-                    ).format("DD/MM/YYYY");
-                    document.getElementById("dtSODate2").value = moment(
-                        result[0].endDate.split(" ")[0]
-                    ).format("DD/MM/YYYY");
+                    document.getElementById("employee_name").value = result[0].employeename;
+                    document.getElementById("dtSODate").value = moment(result[0].startDate.split(" ")[0]).format("DD/MM/YYYY");
+                    document.getElementById("dtSODate2").value = moment(result[0].endDate.split(" ")[0]).format("DD/MM/YYYY");
                     document.getElementById("startTime").value = result[0].startTime;
                     document.getElementById("endTime").value = result[0].endTime;
-                    document.getElementById("txtBookedHoursSpent").value =
-                        hoursFormattedStartTime;
-                    document.getElementById("tActualStartTime").value =
-                        result[0].aStartTime;
+                    document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+                    document.getElementById("tActualStartTime").value = result[0].aStartTime;
                     document.getElementById("tActualEndTime").value = result[0].aEndTime;
-                    document.getElementById("txtActualHoursSpent").value =
-                        hoursFormatted || "";
+                    document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
                     templateObject.attachmentCount.set(0);
                     if (result[0].attachments) {
                         if (result.length) {
@@ -1455,7 +1377,6 @@ Template.calender.onRendered(function() {
                 }
             }
         }, 500);
-
     };
 
     templateObject.renderNormalCalendar = function() {
@@ -1805,12 +1726,10 @@ Template.calender.onRendered(function() {
                     // this.$body.addClass('modal-open');
                 } else {
                     let splitId = id.split(":");
-
                     // FlowRouter.go("/employeescard?id=" + splitId[1]);
                     setTimeout(function() {
                         // $('.payrollTab').tab('show');
                         // $('a[href="#leave"]').tab('show');
-
                         // $('#removeLeaveRequestBtn').show();
                         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                         var getLeaveInfo = leaveemployeerecords.filter((leave) => {
@@ -1837,7 +1756,6 @@ Template.calender.onRendered(function() {
                             $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
                             $('#newLeaveRequestModal').modal('show');
                         }
-
                         $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
                             // window.open("/appointments", "_self");
                         });
@@ -2156,7 +2074,6 @@ Template.calender.onRendered(function() {
                     var empid = event.event._def.publicId.split(':')[1];
                     if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
                         $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-
                         title.style.color = "#dddddd";
                     }
                 }
@@ -2224,7 +2141,6 @@ Template.calender.onRendered(function() {
                             }
                         });
                         $(".fullScreenSpin").css("display", "none");
-
                         // appointmentService.saveAppointment(objectData).then(function(data) {
                         //     appointmentData[index].startDate = startDate + " " + startTime;
                         //     appointmentData[index].endDate = endDate + " " + endTime;
@@ -2607,7 +2523,6 @@ Template.calender.onRendered(function() {
                 drawProductTable(data);
             }
         })
-        
     };
 
     templateObject.getAllProductData = function() {
@@ -2806,7 +2721,6 @@ Template.calender.onRendered(function() {
                 setInitCalendarData();
             });
         });
-
     };
 
     function setAppointmentData(data) {
@@ -2914,14 +2828,6 @@ Template.calender.onRendered(function() {
             dataList = {
                 id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
                 title: leaveEmpName,
-                // "<br>" +
-                // street +
-                // "<br>" +
-                // surbub +
-                // "<br>" +
-                // state +
-                // " " +
-                // zip,
                 start: leaveemployeerecords[i].StartDate || "",
                 end: leaveemployeerecords[i].EndDate || "",
                 description: leaveemployeerecords[i].Description || "",
@@ -4337,30 +4243,28 @@ Template.calender.onRendered(function() {
         }, 500);
     });
 
-    
-
-    function initCustomerModal() {
-        if (FlowRouter.current().queryParams.leadid) {
-            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-        } else if (FlowRouter.current().queryParams.customerid) {
-            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
-        } else if (FlowRouter.current().queryParams.supplierid) {
-            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-        } else {
-            $("#customerListModal").modal();
-        }
-        setTimeout(function() {
-            $('#tblCustomerlist_filter .form-control-sm').focus();
-            $('#tblCustomerlist_filter .form-control-sm').val("");
-            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-            const datatable = $('#tblCustomerlist').DataTable();
-            //datatable.clear();
-            //datatable.rows.add(splashArrayCustomerList);
-            datatable.draw();
-            $('#tblCustomerlist_filter .form-control-sm').trigger("input");
-            //$('#tblCustomerlist').dataTable().fnFilter(" ").draw(false);
-        }, 500);
-    }
+    // function initCustomerModal() {
+    //     if (FlowRouter.current().queryParams.leadid) {
+    //         openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+    //     } else if (FlowRouter.current().queryParams.customerid) {
+    //         openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+    //     } else if (FlowRouter.current().queryParams.supplierid) {
+    //         openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+    //     } else {
+    //         $("#customerListModal").modal();
+    //     }
+    //     setTimeout(function() {
+    //         $('#tblCustomerlist_filter .form-control-sm').focus();
+    //         $('#tblCustomerlist_filter .form-control-sm').val("");
+    //         $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+    //         const datatable = $('#tblCustomerlist').DataTable();
+    //         //datatable.clear();
+    //         //datatable.rows.add(splashArrayCustomerList);
+    //         datatable.draw();
+    //         $('#tblCustomerlist_filter .form-control-sm').trigger("input");
+    //         //$('#tblCustomerlist').dataTable().fnFilter(" ").draw(false);
+    //     }, 500);
+    // }
 
     $('#product-list').editableSelect().on('click.editable-select', function(event, li) {
         const $each = $(this);
@@ -4577,60 +4481,39 @@ Template.calender.onRendered(function() {
             //$("#btnHold").prop("disabled", true);
         }
         if (overridesettings[0]?.override == "false") {
-            document.getElementById("product-list").value =
-                calendarSet.defaultProduct || "";
-            document.getElementById("product-list-1").value =
-                calendarSet.defaultProduct || "";
+            document.getElementById("product-list").value = calendarSet.defaultProduct || "";
+            document.getElementById("product-list-1").value = calendarSet.defaultProduct || "";
         } else if (overridesettings[0]?.override == "true") {
             if (empData.length > 0) {
-                document.getElementById("product-list").value =
-                    empData[empData.length - 1].DefaultServiceProduct || "";
-                document.getElementById("product-list-1").value =
-                    empData[empData.length - 1].DefaultServiceProduct || "";
+                document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
+                document.getElementById("product-list-1").value = empData[empData.length - 1].DefaultServiceProduct || "";
             } else {
-                document.getElementById("product-list").value =
-                    calendarSet.defaultProduct || "";
-                document.getElementById("product-list-1").value =
-                    calendarSet.defaultProduct || "";
+                document.getElementById("product-list").value = calendarSet.defaultProduct || "";
+                document.getElementById("product-list-1").value = calendarSet.defaultProduct || "";
             }
         } else {
             if (templateObject.empDuration.get() != "") {
-                var endTime = moment(startTime, "HH:mm")
-                    .add(parseInt(templateObject.empDuration.get()), "hours")
-                    .format("HH:mm");
+                var endTime = moment(startTime, "HH:mm").add(parseInt(templateObject.empDuration.get()), "hours").format("HH:mm");
                 document.getElementById("endTime").value = endTime;
-                let hoursFormattedStartTime =
-                    templateObject.timeFormat(templateObject.empDuration.get()) || "";
-                document.getElementById("txtBookedHoursSpent").value =
-                    hoursFormattedStartTime;
+                let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || "";
+                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
             } else {
-                var appointmentHours = moment(
-                    event.dateStr.substr(event.dateStr.length - 5),
-                    "HH:mm"
-                ).format("HH:mm");
-                var endTime = moment(startTime, "HH:mm")
-                    .add(appointmentHours.substr(0, 2), "hours")
-                    .format("HH:mm");
+                var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5),"HH:mm").format("HH:mm");
+                var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
                 document.getElementById("endTime").value = endTime;
                 var hoursSpent = moment(appointmentHours, "hours").format("HH");
-                let hoursFormattedStartTime =
-                    templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
-                document.getElementById("txtBookedHoursSpent").value =
-                    hoursFormattedStartTime;
+                let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
+                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
             }
 
             if (empData.length > 0) {
-                document.getElementById("product-list").value =
-                    empData[empData.length - 1].DefaultServiceProduct || "";
-                document.getElementById("product-list-1").value =
-                    empData[empData.length - 1].DefaultServiceProduct || "";
+                document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
+                document.getElementById("product-list-1").value = empData[empData.length - 1].DefaultServiceProduct || "";
                 // $('#product-list').prepend('<option value=' + empData[0].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
                 // $("#product-list")[0].options[0].selected = true;
             } else {
-                document.getElementById("product-list").value =
-                    calendarSet.defaultProduct || "";
-                document.getElementById("product-list-1").value =
-                    calendarSet.defaultProduct || "";
+                document.getElementById("product-list").value = calendarSet.defaultProduct || "";
+                document.getElementById("product-list-1").value = calendarSet.defaultProduct || "";
                 // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
                 // $("#product-list")[0].options[0].selected = true;
             }
@@ -4837,7 +4720,6 @@ Template.calender.onRendered(function() {
     document.addEventListener("dragstart", function(event) {
         // store a ref. on the dragged elem
         dragged = event.target;
-
         event.target.style.opacity = .5;
     }, false);
 
@@ -4867,6 +4749,7 @@ Template.calender.onRendered(function() {
     }, false);
 
     document.addEventListener("drop", function(event) {
+        console.log('OK')
         let appointmentService = new AppointmentService();
         event.preventDefault();
         draggedTd = $(event.target).closest('td');
@@ -4932,435 +4815,446 @@ Template.calender.onRendered(function() {
                     TrainerName: employeeName || "",
                 }
             };
-            appointmentService.saveAppointment(objectData).then(function(data) {
-                let calendarSet = templateObject.calendarOptions.get();
-                appointmentList[index].employeename = employeeName;
-                let eventIndex = updateCalendarData.map(function(e) {
-                    return e.id;
-                }).indexOf(id);
-                updateCalendarData[eventIndex].start = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
-                updateCalendarData[eventIndex].end = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
-                appointmentData[index].startDate = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
-                appointmentData[index].endDate = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
-                templateObject.appointmentrecords.get(appointmentData);
-                const calendarEl = document.getElementById("calendar");
-                const currentDate = new Date();
-                const begunDate = moment(currentDate).format("YYYY-MM-DD");
-                //if(eventData.length > 0){
-                const calendar = new Calendar(calendarEl, {
-                    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrapPlugin],
-                    themeSystem: "bootstrap",
-                    initialView: "dayGridMonth",
-                    hiddenDays: hideDays, // hide Sunday and Saturday
-                    // customButtons: {
-                    //     appointments: {
-                    //         text: "Appointment List",
-                    //         click: function() {
-                    //             //window.open("/appointmentlist", '_self');
-                    //             FlowRouter.go("/appointmentlist");
-                    //         }
-                    //     },
-                    //     ...refreshButton
-                    // },
-                    customButtons: {
-                        newappointment: {
-                            text: "New Appointment",
-                            click: function() {
-                                // FlowRouter.go("/appointmentlist");
-                            },
-                        },
-                        appointments: {
-                            text: "Appointment List",
-                            click: function() {
-                                //window.open("/appointmentlist", '_self');
-                                FlowRouter.go("/appointmentlist");
-                            }
-                        },
-                        allocation: {
-                            text: "Allocations",
-                            click: function() {
-                                $("#allocationModal").modal('show');
-                            },
-                        },
-                        ...refreshButton,
-                        ...settingsModalButton,
-                    },
-                    headerToolbar: {
-                        left: "prev,next today newappointment appointments allocation refresh",
-                        center: "",
-                        right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
-                    },
-                    // headerToolbar: {
-                    //     left: 'prev,next appointments refresh',
-                    //     center: 'title',
-                    //     right: ""
-                    // },
-                    slotMinTime: slotMin,
-                    slotMaxTime: slotMax,
-                    initialDate: begunDate,
-                    navLinks: true, // can click day/week names to navigate views
-                    selectable: true,
-                    selectMirror: true,
-                    dayHeaderFormat: function(date) {
-                        if (LoggedCountry == "United States") {
-                            return moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD");
-                        } else {
-                            return moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM");
-                        }
-                    },
-                    select: function(info) {
-                        $("#frmAppointment")[0].reset();
-                        $(".paused").hide();
-                        templateObject.getAllProductData();
-                        let dateStart = new Date(info.start);
-                        let dateStartForEndTime = new Date(info.start);
-                        let dateEnd = new Date(info.end);
-                        let startDate = ("0" + dateStart.getDate()).toString().slice(-2) + "/" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "/" + dateStart.getFullYear();
-                        let endDate = ("0" + dateEnd.getDate()).toString().slice(-2) + "/" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "/" + dateEnd.getFullYear();
-                        dateStartForEndTime.setHours(dateStartForEndTime.getHours() + calendarSet.DefaultApptDuration || "02:00");
-                        let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                        let endTime = ("0" + dateStartForEndTime.getHours()).toString().slice(-2) + ":" + ("0" + dateStartForEndTime.getMinutes()).toString().slice(-2);
-                        document.getElementById("dtSODate").value = startDate;
-                        document.getElementById("dtSODate2").value = endDate;
-                        document.getElementById("startTime").value = startTime;
-                        document.getElementById("endTime").value = endTime;
-                        document.getElementById("employee_name").value = localStorage.getItem("mySessionEmployee");
-                        if (calendarSet.DefaultApptDuration) {
-                            let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
-                            document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime
-                        } else {
-                            let hours = templateObject.diff_hours(dateStart, dateStartForEndTime);
-                            let hoursFormattedStartTime = templateObject.timeFormat(hours) || "";
-                            document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                        }
-                        templateObject.attachmentCount.set("");
-                        templateObject.uploadedFiles.set("");
-                        templateObject.uploadedFile.set("");
-                        if (FlowRouter.current().queryParams.leadid) {
-                            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-                        } else if (FlowRouter.current().queryParams.customerid) {
-                            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
-                        } else if (FlowRouter.current().queryParams.supplierid) {
-                            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-                        } else {
-                            // $("#customerListModal").modal();
-                            $("#appointmentLeaveConfirmModal").modal("toggle");
-                            // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
-                            // calendar.gotoDate(info.start);
-                            // $(".fc-timeGridDay-button").trigger("click");
-                        }
-                    },
-                    eventClick: function(info) {
-                        document.getElementById("frmAppointment").reset();
-                        $("#btnHold").prop("disabled", false);
-                        $("#btnStartAppointment").prop("disabled", false);
-                        $("#btnStopAppointment").prop("disabled", false);
-                        $("#startTime").prop("disabled", false);
-                        $("#endTime").prop("disabled", false);
-                        $("#tActualStartTime").prop("disabled", false);
-                        $("#tActualEndTime").prop("disabled", false);
-                        $("#txtActualHoursSpent").prop("disabled", false);
-                        var hours = "0";
-                        var id = info.event.id;
-                        var appointmentData = appointmentList;
+            templateObject.updateEvents(objectData)
+            let calendarSet = templateObject.calendarOptions.get();
+            appointmentList[index].employeename = employeeName;
+            let eventIndex = updateCalendarData.map(function(e) {
+                return e.id;
+            }).indexOf(id);
+            updateCalendarData[eventIndex].start = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
+            updateCalendarData[eventIndex].end = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
+            appointmentData[index].startDate = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
+            appointmentData[index].endDate = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
+            templateObject.appointmentrecords.get(appointmentData);
+            console.log('eventData:',eventData)
+            // appointmentService.saveAppointment(objectData).then(function(data) {
+            //     let calendarSet = templateObject.calendarOptions.get();
+            //     appointmentList[index].employeename = employeeName;
+            //     let eventIndex = updateCalendarData.map(function(e) {
+            //         return e.id;
+            //     }).indexOf(id);
+            //     updateCalendarData[eventIndex].start = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
+            //     updateCalendarData[eventIndex].end = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
+            //     appointmentData[index].startDate = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
+            //     appointmentData[index].endDate = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
+            //     templateObject.appointmentrecords.get(appointmentData);
+            //     const calendarEl = document.getElementById("calendar");
+            //     const currentDate = new Date();
+            //     const begunDate = moment(currentDate).format("YYYY-MM-DD");
+            //     //if(eventData.length > 0){
+            //     const calendar = new Calendar(calendarEl, {
+            //         plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrapPlugin],
+            //         themeSystem: "bootstrap",
+            //         initialView: "dayGridMonth",
+            //         hiddenDays: hideDays, // hide Sunday and Saturday
+            //         // customButtons: {
+            //         //     appointments: {
+            //         //         text: "Appointment List",
+            //         //         click: function() {
+            //         //             //window.open("/appointmentlist", '_self');
+            //         //             FlowRouter.go("/appointmentlist");
+            //         //         }
+            //         //     },
+            //         //     ...refreshButton
+            //         // },
+            //         customButtons: {
+            //             newappointment: {
+            //                 text: "New Appointment",
+            //                 click: function() {
+            //                     // FlowRouter.go("/appointmentlist");
+            //                 },
+            //             },
+            //             appointments: {
+            //                 text: "Appointment List",
+            //                 click: function() {
+            //                     //window.open("/appointmentlist", '_self');
+            //                     FlowRouter.go("/appointmentlist");
+            //                 }
+            //             },
+            //             allocation: {
+            //                 text: "Allocations",
+            //                 click: function() {
+            //                     $("#allocationModal").modal('show');
+            //                 },
+            //             },
+            //             ...refreshButton,
+            //             ...settingsModalButton,
+            //         },
+            //         headerToolbar: {
+            //             left: "prev,next today newappointment appointments allocation refresh",
+            //             center: "",
+            //             right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
+            //         },
+            //         // headerToolbar: {
+            //         //     left: 'prev,next appointments refresh',
+            //         //     center: 'title',
+            //         //     right: ""
+            //         // },
+            //         slotMinTime: slotMin,
+            //         slotMaxTime: slotMax,
+            //         initialDate: begunDate,
+            //         navLinks: true, // can click day/week names to navigate views
+            //         selectable: true,
+            //         selectMirror: true,
+            //         dayHeaderFormat: function(date) {
+            //             if (LoggedCountry == "United States") {
+            //                 return moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD");
+            //             } else {
+            //                 return moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM");
+            //             }
+            //         },
+            //         select: function(info) {
+            //             $("#frmAppointment")[0].reset();
+            //             $(".paused").hide();
+            //             templateObject.getAllProductData();
+            //             let dateStart = new Date(info.start);
+            //             let dateStartForEndTime = new Date(info.start);
+            //             let dateEnd = new Date(info.end);
+            //             let startDate = ("0" + dateStart.getDate()).toString().slice(-2) + "/" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "/" + dateStart.getFullYear();
+            //             let endDate = ("0" + dateEnd.getDate()).toString().slice(-2) + "/" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "/" + dateEnd.getFullYear();
+            //             dateStartForEndTime.setHours(dateStartForEndTime.getHours() + calendarSet.DefaultApptDuration || "02:00");
+            //             let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+            //             let endTime = ("0" + dateStartForEndTime.getHours()).toString().slice(-2) + ":" + ("0" + dateStartForEndTime.getMinutes()).toString().slice(-2);
+            //             document.getElementById("dtSODate").value = startDate;
+            //             document.getElementById("dtSODate2").value = endDate;
+            //             document.getElementById("startTime").value = startTime;
+            //             document.getElementById("endTime").value = endTime;
+            //             document.getElementById("employee_name").value = localStorage.getItem("mySessionEmployee");
+            //             if (calendarSet.DefaultApptDuration) {
+            //                 let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
+            //                 document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime
+            //             } else {
+            //                 let hours = templateObject.diff_hours(dateStart, dateStartForEndTime);
+            //                 let hoursFormattedStartTime = templateObject.timeFormat(hours) || "";
+            //                 document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //             }
+            //             templateObject.attachmentCount.set("");
+            //             templateObject.uploadedFiles.set("");
+            //             templateObject.uploadedFile.set("");
+            //             if (FlowRouter.current().queryParams.leadid) {
+            //                 openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+            //             } else if (FlowRouter.current().queryParams.customerid) {
+            //                 openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+            //             } else if (FlowRouter.current().queryParams.supplierid) {
+            //                 openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+            //             } else {
+            //                 // $("#customerListModal").modal();
+            //                 $("#appointmentLeaveConfirmModal").modal("toggle");
+            //                 // $("#appointmentDate").val(moment(info.start).format("DD/MM/YYYY"));
+            //                 // calendar.gotoDate(info.start);
+            //                 // $(".fc-timeGridDay-button").trigger("click");
+            //             }
+            //         },
+            //         eventClick: function(info) {
+            //             document.getElementById("frmAppointment").reset();
+            //             $("#btnHold").prop("disabled", false);
+            //             $("#btnStartAppointment").prop("disabled", false);
+            //             $("#btnStopAppointment").prop("disabled", false);
+            //             $("#startTime").prop("disabled", false);
+            //             $("#endTime").prop("disabled", false);
+            //             $("#tActualStartTime").prop("disabled", false);
+            //             $("#tActualEndTime").prop("disabled", false);
+            //             $("#txtActualHoursSpent").prop("disabled", false);
+            //             var hours = "0";
+            //             var id = info.event.id;
+            //             var appointmentData = appointmentList;
 
-                        var result = appointmentData.filter(apmt => {
-                            return apmt.id == id
-                        });
-                        if (result.length > 0) {
-                            templateObject.getAllProductData();
-                            if (result[0].aStartTime != "" && result[0].aEndTime != "") {
-                                var startTime = moment(result[0].aStartDate + " " + result[0].aStartTime);
-                                var endTime = moment(result[0].aEndDate + " " + result[0].aEndTime);
-                                var duration = moment.duration(moment(endTime).diff(moment(startTime)));
-                                hours = duration.asHours();
-                            }
+            //             var result = appointmentData.filter(apmt => {
+            //                 return apmt.id == id
+            //             });
+            //             if (result.length > 0) {
+            //                 templateObject.getAllProductData();
+            //                 if (result[0].aStartTime != "" && result[0].aEndTime != "") {
+            //                     var startTime = moment(result[0].aStartDate + " " + result[0].aStartTime);
+            //                     var endTime = moment(result[0].aEndDate + " " + result[0].aEndTime);
+            //                     var duration = moment.duration(moment(endTime).diff(moment(startTime)));
+            //                     hours = duration.asHours();
+            //                 }
 
-                            let hoursFormatted = templateObject.timeFormat(hours) || "";
-                            let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
+            //                 let hoursFormatted = templateObject.timeFormat(hours) || "";
+            //                 let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
 
-                            if (result[0].isPaused == "Paused") {
-                                $(".paused").show();
-                                $("#btnHold").prop("disabled", true);
-                            } else {
-                                $(".paused").hide();
-                                $("#btnHold").prop("disabled", false);
-                            }
+            //                 if (result[0].isPaused == "Paused") {
+            //                     $(".paused").show();
+            //                     $("#btnHold").prop("disabled", true);
+            //                 } else {
+            //                     $(".paused").hide();
+            //                     $("#btnHold").prop("disabled", false);
+            //                 }
 
-                            if (startAndStopAppointmentOnly == true) {
-                                //$("#btnHold").prop("disabled", true);
-                            }
-                            if (result[0].aEndTime != "") {
-                                $("#btnHold").prop("disabled", true);
-                                $("#btnStartAppointment").prop("disabled", true);
-                                $("#btnStopAppointment").prop("disabled", true);
-                                $("#startTime").prop("disabled", true);
-                                $("#endTime").prop("disabled", true);
-                                $("#tActualStartTime").prop("disabled", true);
-                                $("#tActualEndTime").prop("disabled", true);
-                                $("#txtActualHoursSpent").prop("disabled", true);
-                            }
-                            document.getElementById("aStartDate").value = result[0].aStartDate || "";
-                            document.getElementById("updateID").value = result[0].id || 0;
-                            document.getElementById("appID").value = result[0].id;
-                            document.getElementById("customer").value = result[0].accountname;
-                            document.getElementById("phone").value = result[0].phone;
-                            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
-                            document.getElementById("state").value = result[0].state;
-                            document.getElementById("address").value = result[0].street;
-                            if (localStorage.getItem("CloudAppointmentNotes") == true) {
-                                document.getElementById("txtNotes").value = result[0].notes;
-                            }
-                            document.getElementById("suburb").value = result[0].suburb;
-                            document.getElementById("zip").value = result[0].zip;
-                            document.getElementById("country").value = result[0].country;
-                            //$('#product-list').prepend('<option value="' + result[0].product + '">' + result[0].product + '</option>');
-                            document.getElementById("product-list").value = result[0].product || "";
-                            document.getElementById("employee_name").value = result[0].employeename;
-                            document.getElementById("dtSODate").value = result[0].startDate.split(" ")[0];
-                            document.getElementById("dtSODate2").value = result[0].endDate.split(" ")[0];
-                            document.getElementById("startTime").value = result[0].startTime;
-                            document.getElementById("endTime").value = result[0].endTime;
-                            document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            document.getElementById("tActualStartTime").value = result[0].aStartTime;
-                            document.getElementById("tActualEndTime").value = result[0].aEndTime;
-                            document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
+            //                 if (startAndStopAppointmentOnly == true) {
+            //                     //$("#btnHold").prop("disabled", true);
+            //                 }
+            //                 if (result[0].aEndTime != "") {
+            //                     $("#btnHold").prop("disabled", true);
+            //                     $("#btnStartAppointment").prop("disabled", true);
+            //                     $("#btnStopAppointment").prop("disabled", true);
+            //                     $("#startTime").prop("disabled", true);
+            //                     $("#endTime").prop("disabled", true);
+            //                     $("#tActualStartTime").prop("disabled", true);
+            //                     $("#tActualEndTime").prop("disabled", true);
+            //                     $("#txtActualHoursSpent").prop("disabled", true);
+            //                 }
+            //                 document.getElementById("aStartDate").value = result[0].aStartDate || "";
+            //                 document.getElementById("updateID").value = result[0].id || 0;
+            //                 document.getElementById("appID").value = result[0].id;
+            //                 document.getElementById("customer").value = result[0].accountname;
+            //                 document.getElementById("phone").value = result[0].phone;
+            //                 document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
+            //                 document.getElementById("state").value = result[0].state;
+            //                 document.getElementById("address").value = result[0].street;
+            //                 if (localStorage.getItem("CloudAppointmentNotes") == true) {
+            //                     document.getElementById("txtNotes").value = result[0].notes;
+            //                 }
+            //                 document.getElementById("suburb").value = result[0].suburb;
+            //                 document.getElementById("zip").value = result[0].zip;
+            //                 document.getElementById("country").value = result[0].country;
+            //                 //$('#product-list').prepend('<option value="' + result[0].product + '">' + result[0].product + '</option>');
+            //                 document.getElementById("product-list").value = result[0].product || "";
+            //                 document.getElementById("employee_name").value = result[0].employeename;
+            //                 document.getElementById("dtSODate").value = result[0].startDate.split(" ")[0];
+            //                 document.getElementById("dtSODate2").value = result[0].endDate.split(" ")[0];
+            //                 document.getElementById("startTime").value = result[0].startTime;
+            //                 document.getElementById("endTime").value = result[0].endTime;
+            //                 document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 document.getElementById("tActualStartTime").value = result[0].aStartTime;
+            //                 document.getElementById("tActualEndTime").value = result[0].aEndTime;
+            //                 document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
 
-                            if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none")) $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
-                            if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none")) $("#smsConfirmedFlag i.fa-close").addClass("d-none");
-                            if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none")) $("#smsConfirmedFlag i.fa-question").addClass("d-none");
-                            if (!$("#smsConfirmedFlag i.fa-minus-circle").hasClass("d-none")) $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
-                            if (result[0].custFld13 === "Yes") {
-                                if (result[0].custFld11 === "Yes") {
-                                    $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
-                                } else {
-                                    if (result[0].custFld11 === "No") {
-                                        $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
-                                    } else {
-                                        $("#smsConfirmedFlag i.fa-question").removeClass("d-none");
-                                    }
-                                }
-                            } else {
-                                $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
-                            }
+            //                 if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none")) $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
+            //                 if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none")) $("#smsConfirmedFlag i.fa-close").addClass("d-none");
+            //                 if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none")) $("#smsConfirmedFlag i.fa-question").addClass("d-none");
+            //                 if (!$("#smsConfirmedFlag i.fa-minus-circle").hasClass("d-none")) $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
+            //                 if (result[0].custFld13 === "Yes") {
+            //                     if (result[0].custFld11 === "Yes") {
+            //                         $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
+            //                     } else {
+            //                         if (result[0].custFld11 === "No") {
+            //                             $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
+            //                         } else {
+            //                             $("#smsConfirmedFlag i.fa-question").removeClass("d-none");
+            //                         }
+            //                     }
+            //                 } else {
+            //                     $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
+            //                 }
 
-                            templateObject.attachmentCount.set(0);
-                            if (result[0].attachments) {
-                                if (result.length) {
-                                    templateObject.attachmentCount.set(result[0].attachments.length);
-                                    templateObject.uploadedFiles.set(result[0].attachments);
-                                }
-                            }
-                            $("#event-modal").modal();
-                            // this.$body.addClass('modal-open');
-                        }
-                    },
-                    editable: true,
-                    droppable: true, // this allows things to be dropped onto the calendar
-                    dayMaxEvents: true, // allow "more" link when too many events
-                    //Triggers modal once event is moved to another date within the calendar.
-                    eventDrop: function(info) {
-                        const pattern = /leave/;
-                        if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
-                            let appointmentData = templateObject.appointmentrecords.get();
-                            let resourceData = templateObject.resourceAllocation.get();
-                            let eventDropID = info.event._def.publicId || "0";
-                            let dateStart = new Date(info.event.start);
-                            let dateEnd = new Date(info.event.end);
-                            let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                            let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                            let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                            let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                            let index = appointmentData.map(function(e) {
-                                return e.id;
-                            }).indexOf(parseInt(eventDropID));
-                            let resourceIndex = resourceData.map(function(e) {
-                                return e.employeeName;
-                            }).indexOf(appointmentData[index].employeename);
-                            if (result.length > 0) {
-                                let objectData = {
-                                    type: "TAppointmentEx",
-                                    fields: {
-                                        Id: parseInt(eventDropID) || 0,
-                                        StartTime: startDate + " " + startTime + ":00" || "",
-                                        EndTime: endDate + " " + endTime + ":00" || "",
-                                    }
-                                };
-                                let nameid = appointmentData[index].employeename.replace(" ", "-");
-                                $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace(" ", "-"));
-                                let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' + resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                                    '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                                    '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname + '</p>' + "" +
-                                    '</div>' + "" +
-                                    '</div>';
-                                let day = moment(startDate).format("dddd").toLowerCase();
-                                appointmentService.saveAppointment(objectData).then(function(data) {
-                                    appointmentData[index].startDate = startDate + " " + startTime;
-                                    appointmentData[index].endDate = endDate + " " + endTime;
-                                    templateObject.appointmentrecords.set(appointmentData);
+            //                 templateObject.attachmentCount.set(0);
+            //                 if (result[0].attachments) {
+            //                     if (result.length) {
+            //                         templateObject.attachmentCount.set(result[0].attachments.length);
+            //                         templateObject.uploadedFiles.set(result[0].attachments);
+            //                     }
+            //                 }
+            //                 $("#event-modal").modal();
+            //                 // this.$body.addClass('modal-open');
+            //             }
+            //         },
+            //         editable: true,
+            //         droppable: true, // this allows things to be dropped onto the calendar
+            //         dayMaxEvents: true, // allow "more" link when too many events
+            //         //Triggers modal once event is moved to another date within the calendar.
+            //         eventDrop: function(info) {
+            //             const pattern = /leave/;
+            //             if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
+            //                 let appointmentData = templateObject.appointmentrecords.get();
+            //                 let resourceData = templateObject.resourceAllocation.get();
+            //                 let eventDropID = info.event._def.publicId || "0";
+            //                 let dateStart = new Date(info.event.start);
+            //                 let dateEnd = new Date(info.event.end);
+            //                 let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
+            //                 let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
+            //                 let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+            //                 let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+            //                 let index = appointmentData.map(function(e) {
+            //                     return e.id;
+            //                 }).indexOf(parseInt(eventDropID));
+            //                 let resourceIndex = resourceData.map(function(e) {
+            //                     return e.employeeName;
+            //                 }).indexOf(appointmentData[index].employeename);
+            //                 if (result.length > 0) {
+            //                     let objectData = {
+            //                         type: "TAppointmentEx",
+            //                         fields: {
+            //                             Id: parseInt(eventDropID) || 0,
+            //                             StartTime: startDate + " " + startTime + ":00" || "",
+            //                             EndTime: endDate + " " + endTime + ":00" || "",
+            //                         }
+            //                     };
+            //                     let nameid = appointmentData[index].employeename.replace(" ", "-");
+            //                     $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace(" ", "-"));
+            //                     let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' + resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+            //                         '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
+            //                         '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname + '</p>' + "" +
+            //                         '</div>' + "" +
+            //                         '</div>';
+            //                     let day = moment(startDate).format("dddd").toLowerCase();
+            //                     appointmentService.saveAppointment(objectData).then(function(data) {
+            //                         appointmentData[index].startDate = startDate + " " + startTime;
+            //                         appointmentData[index].endDate = endDate + " " + endTime;
+            //                         templateObject.appointmentrecords.set(appointmentData);
 
-                                    $("#" + nameid + " ." + day + " .droppable").append(job);
-                                    $("#" + eventDropID).remove();
-                                    $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
-                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                        addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                            window.open("/appointments", '_self');
-                                        }).catch(function(err) {});
-                                    }).catch(function(err) {
-                                        window.open("/appointments", '_self');
-                                    });
-                                }).catch(function(err) {
-                                    window.open("/appointments", '_self');
-                                });
-                            }
-                        }
+            //                         $("#" + nameid + " ." + day + " .droppable").append(job);
+            //                         $("#" + eventDropID).remove();
+            //                         $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
+            //                         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
+            //                             addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
+            //                                 window.open("/appointments", '_self');
+            //                             }).catch(function(err) {});
+            //                         }).catch(function(err) {
+            //                             window.open("/appointments", '_self');
+            //                         });
+            //                     }).catch(function(err) {
+            //                         window.open("/appointments", '_self');
+            //                     });
+            //                 }
+            //             }
 
-                    },
-                    //Triggers modal once external object is dropped to calender.
-                    drop: function(event) {
-                        let draggedEmployeeID = templateObject.empID.get();
-                        let calendarData = templateObject.employeeOptions.get();
-                        let calendarSet = templateObject.globalSettings.get();
-                        let employees = templateObject.employeerecords.get();
-                        let overridesettings = employees.filter(employeeData => {
-                            return employeeData.id == parseInt(draggedEmployeeID)
-                        });
+            //         },
+            //         //Triggers modal once external object is dropped to calender.
+            //         drop: function(event) {
+            //             let draggedEmployeeID = templateObject.empID.get();
+            //             let calendarData = templateObject.employeeOptions.get();
+            //             let calendarSet = templateObject.globalSettings.get();
+            //             let employees = templateObject.employeerecords.get();
+            //             let overridesettings = employees.filter(employeeData => {
+            //                 return employeeData.id == parseInt(draggedEmployeeID)
+            //             });
 
-                        let empData = calendarData.filter(calendarOpt => {
-                            return calendarOpt.EmployeeID == parseInt(draggedEmployeeID)
-                        });
-                        document.getElementById("frmAppointment").reset();
-                        $(".paused").hide();
-                        $("#btnHold").prop("disabled", false);
-                        $("#btnStartAppointment").prop("disabled", false);
-                        $("#btnStopAppointment").prop("disabled", false);
-                        $("#startTime").prop("disabled", false);
-                        $("#endTime").prop("disabled", false);
-                        $("#tActualStartTime").prop("disabled", false);
-                        $("#tActualEndTime").prop("disabled", false);
-                        $("#txtActualHoursSpent").prop("disabled", false);
-                        if (startAndStopAppointmentOnly == true) {
-                            //$("#btnHold").prop("disabled", true);
-                        }
-                        document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, "");
-                        var start = event.dateStr != "" ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
-                        document.getElementById("dtSODate").value = start;
-                        document.getElementById("dtSODate2").value = start;
-                        var startTime = moment(event.dateStr).format("HH:mm");
-                        document.getElementById("startTime").value = startTime;
-                        if (overridesettings[0].override == "false") {
-                            if (calendarSet.DefaultApptDuration) {
-                                var endTime = moment(startTime, "HH:mm").add(parseInt(calendarSet.DefaultApptDuration), "hours").format("HH:mm");
-                                document.getElementById("endTime").value = endTime;
-                                let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
-                                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            } else {
-                                var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), "HH:mm").format("HH:mm");
-                                var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
-                                document.getElementById("endTime").value = endTime;
-                                var hoursSpent = moment(appointmentHours, "hours").format('HH');
-                                let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
-                                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            }
-                            document.getElementById("product-list").value = calendarSet.defaultProduct || "";
-                            // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
-                            // $("#product-list")[0].options[0].selected = true;
-                        } else if (overridesettings[0].override == "true") {
-                            if (templateObject.empDuration.get() != "") {
-                                var endTime = moment(startTime, "HH:mm").add(parseInt(templateObject.empDuration.get()), "hours").format("HH:mm");
-                                document.getElementById("endTime").value = endTime;
-                                let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || "";
-                                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            } else {
-                                var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), "HH:mm").format("HH:mm");
-                                var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
-                                document.getElementById("endTime").value = endTime;
-                                var hoursSpent = moment(appointmentHours, "hours").format('HH');
-                                let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
-                                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            }
-                            if (empData.length > 0) {
-                                document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
-                                // $('#product-list').prepend('<option value=' + empData[empData.length - 1].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
-                                // $("#product-list")[0].options[0].selected = true;
-                            } else {
-                                document.getElementById("product-list").value = calendarSet.defaultProduct || "";
-                                // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
-                                // $("#product-list")[0].options[0].selected = true;
-                            }
-                        } else {
-                            if (templateObject.empDuration.get() != "") {
-                                var endTime = moment(startTime, "HH:mm").add(parseInt(templateObject.empDuration.get()), "hours").format("HH:mm");
-                                document.getElementById("endTime").value = endTime;
-                                let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || "";
-                                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            } else {
-                                var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), "HH:mm").format("HH:mm");
-                                var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
-                                document.getElementById("endTime").value = endTime;
-                                var hoursSpent = moment(appointmentHours, "hours").format('HH');
-                                let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
-                                document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                            }
+            //             let empData = calendarData.filter(calendarOpt => {
+            //                 return calendarOpt.EmployeeID == parseInt(draggedEmployeeID)
+            //             });
+            //             document.getElementById("frmAppointment").reset();
+            //             $(".paused").hide();
+            //             $("#btnHold").prop("disabled", false);
+            //             $("#btnStartAppointment").prop("disabled", false);
+            //             $("#btnStopAppointment").prop("disabled", false);
+            //             $("#startTime").prop("disabled", false);
+            //             $("#endTime").prop("disabled", false);
+            //             $("#tActualStartTime").prop("disabled", false);
+            //             $("#tActualEndTime").prop("disabled", false);
+            //             $("#txtActualHoursSpent").prop("disabled", false);
+            //             if (startAndStopAppointmentOnly == true) {
+            //                 //$("#btnHold").prop("disabled", true);
+            //             }
+            //             document.getElementById("employee_name").value = event.draggedEl.innerText.replace(/[0-9]/g, "");
+            //             var start = event.dateStr != "" ? moment(event.dateStr).format("DD/MM/YYYY") : event.dateStr;
+            //             document.getElementById("dtSODate").value = start;
+            //             document.getElementById("dtSODate2").value = start;
+            //             var startTime = moment(event.dateStr).format("HH:mm");
+            //             document.getElementById("startTime").value = startTime;
+            //             if (overridesettings[0].override == "false") {
+            //                 if (calendarSet.DefaultApptDuration) {
+            //                     var endTime = moment(startTime, "HH:mm").add(parseInt(calendarSet.DefaultApptDuration), "hours").format("HH:mm");
+            //                     document.getElementById("endTime").value = endTime;
+            //                     let hoursFormattedStartTime = templateObject.timeFormat(calendarSet.DefaultApptDuration) || "";
+            //                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 } else {
+            //                     var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), "HH:mm").format("HH:mm");
+            //                     var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
+            //                     document.getElementById("endTime").value = endTime;
+            //                     var hoursSpent = moment(appointmentHours, "hours").format('HH');
+            //                     let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
+            //                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 }
+            //                 document.getElementById("product-list").value = calendarSet.defaultProduct || "";
+            //                 // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
+            //                 // $("#product-list")[0].options[0].selected = true;
+            //             } else if (overridesettings[0].override == "true") {
+            //                 if (templateObject.empDuration.get() != "") {
+            //                     var endTime = moment(startTime, "HH:mm").add(parseInt(templateObject.empDuration.get()), "hours").format("HH:mm");
+            //                     document.getElementById("endTime").value = endTime;
+            //                     let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || "";
+            //                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 } else {
+            //                     var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), "HH:mm").format("HH:mm");
+            //                     var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
+            //                     document.getElementById("endTime").value = endTime;
+            //                     var hoursSpent = moment(appointmentHours, "hours").format('HH');
+            //                     let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
+            //                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 }
+            //                 if (empData.length > 0) {
+            //                     document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
+            //                     // $('#product-list').prepend('<option value=' + empData[empData.length - 1].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
+            //                     // $("#product-list")[0].options[0].selected = true;
+            //                 } else {
+            //                     document.getElementById("product-list").value = calendarSet.defaultProduct || "";
+            //                     // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
+            //                     // $("#product-list")[0].options[0].selected = true;
+            //                 }
+            //             } else {
+            //                 if (templateObject.empDuration.get() != "") {
+            //                     var endTime = moment(startTime, "HH:mm").add(parseInt(templateObject.empDuration.get()), "hours").format("HH:mm");
+            //                     document.getElementById("endTime").value = endTime;
+            //                     let hoursFormattedStartTime = templateObject.timeFormat(templateObject.empDuration.get()) || "";
+            //                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 } else {
+            //                     var appointmentHours = moment(event.dateStr.substr(event.dateStr.length - 5), "HH:mm").format("HH:mm");
+            //                     var endTime = moment(startTime, "HH:mm").add(appointmentHours.substr(0, 2), "hours").format("HH:mm");
+            //                     document.getElementById("endTime").value = endTime;
+            //                     var hoursSpent = moment(appointmentHours, "hours").format('HH');
+            //                     let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
+            //                     document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            //                 }
 
-                            if (empData.length > 0) {
-                                document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
-                                // $('#product-list').prepend('<option value=' + empData[0].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
-                                // $("#product-list")[0].options[0].selected = true;
-                            } else {
-                                document.getElementById("product-list").value = calendarSet.defaultProduct || "";
-                                // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
-                                // $("#product-list")[0].options[0].selected = true;
-                            }
+            //                 if (empData.length > 0) {
+            //                     document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
+            //                     // $('#product-list').prepend('<option value=' + empData[0].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
+            //                     // $("#product-list")[0].options[0].selected = true;
+            //                 } else {
+            //                     document.getElementById("product-list").value = calendarSet.defaultProduct || "";
+            //                     // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
+            //                     // $("#product-list")[0].options[0].selected = true;
+            //                 }
 
-                        }
+            //             }
 
-                        var endTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
-                        var startTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
-                        if (FlowRouter.current().queryParams.leadid) {
-                            openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
-                        } else if (FlowRouter.current().queryParams.customerid) {
-                            openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
-                        } else if (FlowRouter.current().queryParams.supplierid) {
-                            openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
-                        } else {
-                            $("#customerListModal").modal();
-                        }
-                    },
-                    events: eventData,
-                    eventDidMount: function(event) {},
-                    eventContent: function(event) {
-                        let title = document.createElement('p');
-                        if (event.event.title) {
-                            title.setAttribute("data-toggle", "tooltip");
-                            title.setAttribute("title", event.timeText + " " + event.event.title);
-                            title.innerHTML = event.timeText + " " + event.event.title;
-                            title.style.backgroundColor = event.backgroundColor;
-                            title.style.color = "#ffffff";
-                            title.style.overflow = "hidden";
-                            setTimeout(function() {
-                                $('[data-toggle="tooltip"]').tooltip({ html: true });
-                            }, 500);
-                        } else {
-                            title.innerHTML = event.timeText + " " + event.event.title;
-                        }
+            //             var endTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
+            //             var startTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
+            //             if (FlowRouter.current().queryParams.leadid) {
+            //                 openAppointModalDirectly(FlowRouter.current().queryParams.leadid, templateObject);
+            //             } else if (FlowRouter.current().queryParams.customerid) {
+            //                 openAppointModalDirectly(FlowRouter.current().queryParams.customerid, templateObject);
+            //             } else if (FlowRouter.current().queryParams.supplierid) {
+            //                 openAppointModalDirectly(FlowRouter.current().queryParams.supplierid, templateObject);
+            //             } else {
+            //                 $("#customerListModal").modal();
+            //             }
+            //         },
+            //         events: eventData,
+            //         eventDidMount: function(event) {},
+            //         eventContent: function(event) {
+            //             let title = document.createElement('p');
+            //             if (event.event.title) {
+            //                 title.setAttribute("data-toggle", "tooltip");
+            //                 title.setAttribute("title", event.timeText + " " + event.event.title);
+            //                 title.innerHTML = event.timeText + " " + event.event.title;
+            //                 title.style.backgroundColor = event.backgroundColor;
+            //                 title.style.color = "#ffffff";
+            //                 title.style.overflow = "hidden";
+            //                 setTimeout(function() {
+            //                     $('[data-toggle="tooltip"]').tooltip({ html: true });
+            //                 }, 500);
+            //             } else {
+            //                 title.innerHTML = event.timeText + " " + event.event.title;
+            //             }
 
-                        let arrayOfDomNodes = [title];
-                        return {
-                            domNodes: arrayOfDomNodes
-                        }
-                    }
+            //             let arrayOfDomNodes = [title];
+            //             return {
+            //                 domNodes: arrayOfDomNodes
+            //             }
+            //         }
 
-                });
-                calendar.render();
-                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
-                    addVS1Data("TAppointment", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
-                }).catch(function(err) {});
-            }).catch(function(err) {
-                $('.fullScreenSpin').css('display', 'none');
-            });
+            //     });
+            //     calendar.render();
+            //     sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+            //         addVS1Data("TAppointment", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
+            //     }).catch(function(err) {});
+            // }).catch(function(err) {
+            //     $('.fullScreenSpin').css('display', 'none');
+            // });
         } else {}
-
     }, false);
 
     $(document).on("click", "#check-all", function() {
@@ -5718,7 +5612,6 @@ Template.calender.onRendered(function() {
         } else {
             Session.setPersistent('CloudAppointmentSeeOwnAppointmentsOnly__', true);
         }
-
         // FlowRouter.go('/dashboardsalesmanager', '_self');
         // Meteor._reload.reload();
     });
@@ -5791,9 +5684,7 @@ Template.calender.events({
                     oPost.setRequestHeader("Content-type", "application/json");
                     // let objDataSave = '"JsonIn"' + ":" + JSON.stringify(selectClient);
                     oPost.send(myString);
-
                     oPost.onreadystatechange = function() {
-
                         if (oPost.readyState == 4 && oPost.status == 200) {
                             var myArrResponse = JSON.parse(oPost.responseText);
                             if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
@@ -5819,7 +5710,6 @@ Template.calender.events({
                                     if (result.value) {} else if (result.dismiss === 'cancel') {}
                                 });
                             }
-
                         } else if (oPost.readyState == 4 && oPost.status == 403) {
                             $('.fullScreenSpin').css('display', 'none');
                             swal({
@@ -5837,7 +5727,6 @@ Template.calender.events({
                             var segError = ErrorResponse.split(":");
 
                             if ((segError[1]) == ' "Unable to lock object') {
-
                                 swal({
                                     title: 'Oops...',
                                     text: oPost.getResponseHeader('errormessage'),
@@ -5872,7 +5761,6 @@ Template.calender.events({
                                 if (result.value) {} else if (result.dismiss === 'cancel') {}
                             });
                         }
-
                     }
                 } else {
                     swal({
@@ -5884,7 +5772,6 @@ Template.calender.events({
                     }).then((result) => {
                         if (result.value) {} else if (result.dismiss === 'cancel') {}
                     });
-
                 }
             }
         })
@@ -6212,7 +6099,6 @@ Template.calender.events({
                 $('#finalDate').val(newDate);
             }
         }
-
     },
     'change #period': function() {
         let templateObject = Template.instance();
@@ -6374,7 +6260,6 @@ Template.calender.events({
             }
             templateObject.repeatDays.set(daysObj);
         }
-
     },
     'click #btnSaveRepeat': function() {
         playSaveAudio();
@@ -6383,7 +6268,6 @@ Template.calender.events({
         let appointmentService = new AppointmentService();
         setTimeout(function() {
             $('.fullScreenSpin').css('display', 'inline-block');
-
             let days = [];
             let week_day = "";
             let frequency = parseInt($('#frequency').val()) || 1;
@@ -6459,7 +6343,6 @@ Template.calender.events({
                             Repeat_holiday: 0,
                             Repeat_Weekday: parseInt(days[x].toString()),
                             Repeat_MonthOffset: 0
-
                         }
                     };
                     var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
@@ -6474,7 +6357,6 @@ Template.calender.events({
                     oPost.send(myString);
 
                     oPost.onreadystatechange = function() {
-
                         if (oPost.readyState == 4 && oPost.status == 200) {
                             var myArrResponse = JSON.parse(oPost.responseText);
                             if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
@@ -6520,7 +6402,6 @@ Template.calender.events({
                             var segError = ErrorResponse.split(":");
 
                             if ((segError[1]) == ' "Unable to lock object') {
-
                                 swal({
                                     title: 'Oops...',
                                     text: oPost.getResponseHeader('errormessage'),
@@ -6542,7 +6423,6 @@ Template.calender.events({
                                     if (result.value) {} else if (result.dismiss === 'cancel') {}
                                 });
                             }
-
                         } else if (oPost.readyState == "") {
                             $('.fullScreenSpin').css('display', 'none');
                             swal({
@@ -6555,7 +6435,6 @@ Template.calender.events({
                                 if (result.value) {} else if (result.dismiss === 'cancel') {}
                             });
                         }
-
                     }
                 }
             } else {
@@ -6579,7 +6458,6 @@ Template.calender.events({
                         Repeat_holiday: 0,
                         Repeat_Weekday: 0,
                         Repeat_MonthOffset: 0
-
                     }
                 };
                 var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
@@ -6593,9 +6471,7 @@ Template.calender.events({
                 oPost.setRequestHeader("Content-type", "application/json");
                 // let objDataSave = '"JsonIn"' + ":" + JSON.stringify(selectClient);
                 oPost.send(myString);
-
                 oPost.onreadystatechange = function() {
-
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
@@ -6621,7 +6497,6 @@ Template.calender.events({
                                 if (result.value) {} else if (result.dismiss === 'cancel') {}
                             });
                         }
-
                     } else if (oPost.readyState == 4 && oPost.status == 403) {
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
@@ -6639,7 +6514,6 @@ Template.calender.events({
                         var segError = ErrorResponse.split(":");
 
                         if ((segError[1]) == ' "Unable to lock object') {
-
                             swal({
                                 title: 'Oops...',
                                 text: oPost.getResponseHeader('errormessage'),
@@ -6661,7 +6535,6 @@ Template.calender.events({
                                 if (result.value) {} else if (result.dismiss === 'cancel') {}
                             });
                         }
-
                     } else if (oPost.readyState == "") {
                         $('.fullScreenSpin').css('display', 'none');
                         swal({
@@ -6674,7 +6547,6 @@ Template.calender.events({
                             if (result.value) {} else if (result.dismiss === 'cancel') {}
                         });
                     }
-
                 }
             }
         }, delayTimeAfterSound);
@@ -6707,7 +6579,6 @@ Template.calender.events({
             oPost.setRequestHeader("Content-type", "application/json");
             // let objDataSave = '"JsonIn"' + ":" + JSON.stringify(selectClient);
             oPost.send(JSON.stringify(JsonIn));
-
             oPost.onreadystatechange = function() {
                 if (oPost.readyState == 4 && oPost.status == 200) {
                     $('.fullScreenSpin').css('display', 'none');
@@ -6726,9 +6597,7 @@ Template.calender.events({
                         }).catch(function(err) {
                             $('.fullScreenSpin').css('display', 'none');
                         });
-
                         templateObject.getAllAppointmentDataOnConvert();
-
                     } else {
                         $('.modal-backdrop').css('display', 'none');
                         $('.fullScreenSpin').css('display', 'none');
@@ -6742,7 +6611,6 @@ Template.calender.events({
                             if (result.value) {} else if (result.dismiss === 'cancel') {}
                         });
                     }
-
                 } else if (oPost.readyState == 4 && oPost.status == 403) {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -6758,9 +6626,7 @@ Template.calender.events({
                     $('.fullScreenSpin').css('display', 'none');
                     var ErrorResponse = oPost.getResponseHeader('errormessage');
                     var segError = ErrorResponse.split(":");
-
                     if ((segError[1]) == ' "Unable to lock object') {
-
                         swal({
                             title: 'Oops...',
                             text: oPost.getResponseHeader('errormessage'),
@@ -6782,7 +6648,6 @@ Template.calender.events({
                             if (result.value) {} else if (result.dismiss === 'cancel') {}
                         });
                     }
-
                 } else if (oPost.readyState == "") {
                     $('.fullScreenSpin').css('display', 'none');
                     swal({
@@ -6795,10 +6660,8 @@ Template.calender.events({
                         if (result.value) {} else if (result.dismiss === 'cancel') {}
                     });
                 }
-
             }
         }
-
     },
     'click .btnAppointmentList': function(event) {
         $('.modal-backdrop').css('display', 'none');
@@ -6890,10 +6753,8 @@ Template.calender.events({
                 //     }
                 //     i = weeksOfThisMonth[index - 1].dates.length;
                 // } else {
-
                 dayPrev.push(moment(weekendStart).add(i, 'days').format("YYYY-MM-DD"));
                 //}
-
             }
             let currentDay = moment().format('YYYY-MM-DD');
             templateObject.resourceDates.set(dayPrev);
@@ -6912,7 +6773,6 @@ Template.calender.events({
                                 let found = resourceChat.some(emp => emp.employeeName == changeAppointmentView[a].employeename);
                                 if (!found) {
                                     let resourceColor = templateObject.employeerecords.get();
-
                                     var result = resourceColor.filter(apmtColor => {
                                         return apmtColor.employeeName == changeAppointmentView[a].employeename
                                     });
@@ -7094,7 +6954,6 @@ Template.calender.events({
             // let saturdayStatus = "";
             // let sundayStatus = "";
             for (let r = 0; r < resourceChat.length; r++) {
-
                 sundayRowData = [];
                 mondayRowData = [];
                 tuesdayRowData = [];
@@ -7103,9 +6962,7 @@ Template.calender.events({
                 fridayRowData = [];
                 saturdayRowData = [];
                 for (let j = 0; j < resourceJob.length; j++) {
-
                     if (resourceJob[j].day == 'Sunday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
                         sundayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
                             '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
                             '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
@@ -7114,7 +6971,6 @@ Template.calender.events({
                         sundayRowData.push(sundayRow);
                     }
                     if (resourceJob[j].day == 'Monday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
                         mondayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
                             '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
                             '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
@@ -7125,7 +6981,6 @@ Template.calender.events({
                     }
 
                     if (resourceJob[j].day == 'Tuesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
                         tuesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
                             '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
                             '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
@@ -7136,7 +6991,6 @@ Template.calender.events({
                     }
 
                     if (resourceJob[j].day == 'Wednesday' && resourceJob[j].employeeName == resourceChat[r].employeeName) {
-
                         wednesdayRow = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + resourceJob[j].id + '" style="margin:4px 0px; background-color: ' + resourceChat[r].color + '; border-radius: 5px; cursor: pointer;">' + "" +
                             '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
                             '<p class="text-nowrap text-truncate" style="margin: 0px;">' + resourceJob[j].job + '</p>' + "" +
@@ -7204,7 +7058,6 @@ Template.calender.events({
                     saturdayStatus + "" +
                     '</tr>';
                 tableRowData.push(tableRow);
-
             }
             $('#here_table table').append(tableRowData);
 
@@ -7243,7 +7096,6 @@ Template.calender.events({
             let resourceDate = $('thead tr th.' + day.toLowerCase()).attr("id");
             await changeColumnColor(resourceDate);
         }
-
     },
     'click #next': function() {
         let templateObject = Template.instance();
@@ -7370,7 +7222,6 @@ Template.calender.events({
                             resourceJob.push(jobs)
                         }
                     }
-
                 } else {
                     if (date >= startWeek && date <= endWeek) {
                         if (JSON.parse(seeOwnAppointments) == true) {
@@ -7637,11 +7488,9 @@ Template.calender.events({
             }
 
             // $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(dayNext[1]).format('DD') + ' - ' + moment(dayNext[5]).format('DD') + ', ' + moment().format('YYYY'));
-
             let day = moment().format("dddd");
             let resourceDate = $('thead tr th.' + day.toLowerCase()).attr("id");
             changeColumnColor(resourceDate);
-
         }
     },
     
@@ -7788,9 +7637,7 @@ Template.calender.events({
                                                         }
                                                     } else {
                                                         //$("#tActualStartTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
-                                                        $("#btnCloseStartAppointmentModal").trigger(
-                                                            "click"
-                                                        );
+                                                        $("#btnCloseStartAppointmentModal").trigger("click");
                                                         //$('#frmAppointment').trigger('submit');
                                                         swal({
                                                             title: "Job Started",
@@ -8258,13 +8105,11 @@ Template.calender.events({
                     });
                     $("#tActualStartTime").val(moment().startOf("hour").format("HH") + ":" + moment().startOf("minute").format("mm"));
                     $("#btnCloseStartAppointmentModal").trigger("click");
-                    // $("#frmAppointment").trigger("submit");
                     $("#btnAppointmentSubmit").click();
                 }
             } else {
                 $("#tActualStartTime").val(moment().startOf("hour").format("HH") + ":" + moment().startOf("minute").format("mm"));
                 $("#btnCloseStartAppointmentModal").trigger("click");
-                // $("#frmAppointment").trigger("submit");
                 $("#btnAppointmentSubmit").click();
             }
         }
@@ -8581,11 +8426,9 @@ Template.calender.events({
             $("#event-modal").modal("hide");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
-                // $("#frmAppointment").trigger("submit");
                 $("#btnAppointmentSubmit").click();
             } else {
                 $("#btnAppointmentSubmit").click();
-                // $("#frmAppointment").trigger("submit");
             }
         }, delayTimeAfterSound);
     },
@@ -8659,10 +8502,8 @@ Template.calender.events({
                 });
                 if (emailCustomer || emailUser) {
                     await sendAppointmentEmail();
-                    // $("#frmAppointment").trigger("submit");
                     $("#btnAppointmentSubmit").click();
                 } else {
-                    // $("#frmAppointment").trigger("submit");
                     $("#btnAppointmentSubmit").click();
                 }
             }
@@ -8670,10 +8511,8 @@ Template.calender.events({
 			$("#event-modal").modal("hide");
             if (emailCustomer || emailUser) {
                 await sendAppointmentEmail();
-                // $("#frmAppointment").trigger("submit");
                 $("#btnAppointmentSubmit").click();
             } else {
-                // $("#frmAppointment").trigger("submit");
                 $("#btnAppointmentSubmit").click();
             }
         }
@@ -8755,12 +8594,10 @@ Template.calender.events({
                                     confirmButtonText: 'Ok'
                                 });
                                 $('#btnCloseStopAppointmentModal').trigger('click');
-                                // $("#btnAppointmentSubmit").click();
                                 $("#btnAppointmentSubmit").click();
                             }
                         } else {
                             $('#btnCloseStopAppointmentModal').trigger('click');
-                            // $("#btnAppointmentSubmit").click();
                             $("#btnAppointmentSubmit").click();
                         }
                     } else if (result.dismiss === 'cancel') {
@@ -9310,7 +9147,6 @@ Template.calender.events({
                             });
 
                         }).catch(function(err) {
-
                             swal({
                                 title: 'Oops...',
                                 text: err,
@@ -9451,7 +9287,6 @@ Template.calender.events({
                 confirmButtonText: 'Ok'
             })
         }
-
     },
     "submit form#frmAppointment": async function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
@@ -10483,7 +10318,6 @@ Template.calender.events({
             $('.counter').text(rowCount + ' items');
             //}, 500);
         }
-
     },
     'click #sidebarToggleAppointments': function(event) {
         var newnav = document.getElementById("colEmployeeList");
@@ -10496,7 +10330,6 @@ Template.calender.events({
         }
     },
     'click #chkmyAppointments': function(event) {
-
     },
     'click .btn-auto-save': function(event) {
         let templateObject = Template.instance();
@@ -10586,12 +10419,10 @@ Template.calender.events({
                     confirmButtonText: "Ok",
                 });
                 $("#btnCloseStopAppointmentModal").trigger("click");
-                // $("#frmAppointment").trigger("submit");
                 $("#btnAppointmentSubmit").click();
             }
         } else {
             $("#btnCloseStopAppointmentModal").trigger("click");
-            // $("#frmAppointment").trigger("submit");
             $("#btnAppointmentSubmit").click();
         }
     },
@@ -10609,26 +10440,22 @@ Template.calender.events({
 
 Template.calender.helpers({
     employeerecords: () => {
-        return Template.instance().employeerecords.get()
-            .sort(function(a, b) {
-                if (a.employeeName == 'NA') {
-                    return 1;
-                } else if (b.employeeName == 'NA') {
-                    return -1;
-                }
-                return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
-            }).sort(function(a, b) {
-                // return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase());
-                if (a.priority == "" || a.priority == "0") {
-                    return 1;
-                } else if (b.priority == "" || b.priority == "0") {
-                    return -1;
-                }
-
-                return (parseInt(a.priority) > parseInt(b.priority)) ? 1 : -1;
-
-            });
-
+        return Template.instance().employeerecords.get().sort(function(a, b) {
+            if (a.employeeName == 'NA') {
+                return 1;
+            } else if (b.employeeName == 'NA') {
+                return -1;
+            }
+            return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase()) ? 1 : -1;
+        }).sort(function(a, b) {
+            // return (a.employeeName.toUpperCase() > b.employeeName.toUpperCase());
+            if (a.priority == "" || a.priority == "0") {
+                return 1;
+            } else if (b.priority == "" || b.priority == "0") {
+                return -1;
+            }
+            return (parseInt(a.priority) > parseInt(b.priority)) ? 1 : -1;
+        });
     },
     calendarOptions: () => {
         return Template.instance().calendarOptions.get();
