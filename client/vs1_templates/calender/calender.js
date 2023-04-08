@@ -3789,6 +3789,124 @@ Template.calender.onRendered(function() {
     function populateEmployDetails(employeeName) {
         document.getElementById("employee_name").value = employeeName;
     }
+
+    function setOneCustomerData(data) {
+        $('.fullScreenSpin').css('display', 'none');
+        let lineItems = [];
+        $('#add-customer-title').text('Edit Customer');
+        let popCustomerID = data.fields.ID || "";
+        let popCustomerName = data.fields.ClientName || "";
+        let popCustomerEmail = data.fields.Email || "";
+        let popCustomerTitle = data.fields.Title || "";
+        let popCustomerFirstName = data.fields.FirstName || "";
+        let popCustomerMiddleName = data.fields.CUSTFLD10 || "";
+        let popCustomerLastName = data.fields.LastName || "";
+        let popCustomertfn = "" || "";
+        let popCustomerPhone = data.fields.Phone || "";
+        let popCustomerMobile = data.fields.Mobile || "";
+        let popCustomerFaxnumber = data.fields.Faxnumber || "";
+        let popCustomerSkypeName = data.fields.SkypeName || "";
+        let popCustomerURL = data.fields.URL || "";
+        let popCustomerStreet = data.fields.Street || "";
+        let popCustomerStreet2 = data.fields.Street2 || "";
+        let popCustomerState = data.fields.State || "";
+        let popCustomerPostcode = data.fields.Postcode || "";
+        let popCustomerCountry = data.fields.Country || LoggedCountry;
+        let popCustomerbillingaddress = data.fields.BillStreet || "";
+        let popCustomerbcity = data.fields.BillStreet2 || "";
+        let popCustomerbstate = data.fields.BillState || "";
+        let popCustomerbpostalcode = data.fields.BillPostcode || "";
+        let popCustomerbcountry = data.fields.Billcountry || LoggedCountry;
+        let popCustomercustfield1 = data.fields.CUSTFLD1 || "";
+        let popCustomercustfield2 = data.fields.CUSTFLD2 || "";
+        let popCustomercustfield3 = data.fields.CUSTFLD3 || "";
+        let popCustomercustfield4 = data.fields.CUSTFLD4 || "";
+        let popCustomernotes = data.fields.Notes || "";
+        let popCustomerpreferedpayment = data.fields.PaymentMethodName || "";
+        let popCustomerterms = data.fields.TermsName || "";
+        let popCustomerdeliverymethod = data.fields.ShippingMethodName || "";
+        let popCustomeraccountnumber = data.fields.ClientNo || "";
+        let popCustomerisContractor = data.fields.Contractor || false;
+        let popCustomerissupplier = data.fields.IsSupplier || false;
+        let popCustomeriscustomer = data.fields.IsCustomer || false;
+        let popCustomerTaxCode = data.fields.TaxCodeName || "";
+        let popCustomerDiscount = data.fields.Discount || 0;
+        let popCustomerType = data.fields.ClientTypeName || "";
+        //$('#edtCustomerCompany').attr('readonly', true);
+        $('#edtCustomerCompany').val(popCustomerName);
+        $('#edtCustomerPOPID').val(popCustomerID);
+        $('#edtCustomerPOPEmail').val(popCustomerEmail);
+        $('#edtTitle').val(popCustomerTitle);
+        $('#edtFirstName').val(popCustomerFirstName);
+        $('#edtMiddleName').val(popCustomerMiddleName);
+        $('#edtLastName').val(popCustomerLastName);
+        $('#edtCustomerPhone').val(popCustomerPhone);
+        $('#edtCustomerMobile').val(popCustomerMobile);
+        $('#edtCustomerFax').val(popCustomerFaxnumber);
+        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
+        $('#edtCustomerWebsite').val(popCustomerURL);
+        $('#edtCustomerShippingAddress').val(popCustomerStreet);
+        $('#edtCustomerShippingCity').val(popCustomerStreet2);
+        $('#edtCustomerShippingState').val(popCustomerState);
+        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
+        $('#sedtCountry').val(popCustomerCountry);
+        $('#txaNotes').val(popCustomernotes);
+        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
+        $('#sltTermsPOP').val(popCustomerterms);
+        $('#sltCustomerType').val(popCustomerType);
+        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
+        $('#edtCustomeField1').val(popCustomercustfield1);
+        $('#edtCustomeField2').val(popCustomercustfield2);
+        $('#edtCustomeField3').val(popCustomercustfield3);
+        $('#edtCustomeField4').val(popCustomercustfield4);
+        $('#sltTaxCode').val(popCustomerTaxCode);
+
+        if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
+            (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.BillPostcode) &&
+            (data.fields.Country == data.fields.Billcountry)) {
+            $('#chkSameAsShipping2').attr("checked", "checked");
+        }
+        if (data.fields.IsSupplier == true) {
+            // $('#isformcontractor')
+            $('#chkSameAsSupplier').attr("checked", "checked");
+        } else {
+            $('#chkSameAsSupplier').removeAttr("checked");
+        }
+        let customerRecord = {
+            id:popCustomerID,
+            phone:popCustomerPhone,
+            firstname:popCustomerFirstName,
+            middlename: popCustomerMiddleName,
+            lastname:popCustomerLastName,
+            company:data.tcustomervs1[i].fields.Companyname || '',
+            email: popCustomerEmail,
+            title: popCustomerTitle,
+            tfn: popCustomertfn,
+            mobile: popCustomerMobile,
+            fax: popCustomerFaxnumber,
+            shippingaddress: popCustomerStreet,
+            scity: popCustomerStreet2,
+            sstate: popCustomerCountry,
+            terms: '',
+            spostalcode: popCustomerPostcode,
+            scountry: popCustomerState,
+            billingaddress: popCustomerbillingaddress,
+            bcity: popCustomerbcity,
+            bstate: popCustomerbstate,
+            bpostalcode: popCustomerbpostalcode,
+            bcountry: popCustomerCountry,
+            custFld1: popCustomercustfield1,
+            custFld2: popCustomercustfield2,
+            jobbcountry: '',
+            jobscountry: '',
+            discount:0
+        }
+        templateObject.customerRecord.set(customerRecord);
+        setTimeout(function() {
+            $('#addCustomerModal').modal("show");
+        }, 200);
+    }
+
     $(document).ready(function() {
         $("#customer").editableSelect();
         $("#product-list").editableSelect();
@@ -3826,560 +3944,34 @@ Template.calender.onRendered(function() {
 					//FlowRouter.go('/customerscard?name=' + e.target.value);
 					$("#edtCustomerPOPID").val("");
 					getVS1Data("TCustomerVS1").then(function(dataObject) {
-							if (dataObject.length == 0) {
-								$(".fullScreenSpin").css("display", "inline-block");
-								sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-										$(".fullScreenSpin").css("display", "none");
-										let lineItems = [];
-										$("#add-customer-title").text("Edit Customer");
-										let popCustomerID = data.tcustomer[0].fields.ID || "";
-										let popCustomerName = data.tcustomer[0].fields.ClientName || "";
-										let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-										let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-										let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
-										let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
-										let popCustomerLastName = data.tcustomer[0].fields.LastName || "";
-										let popCustomertfn = "" || "";
-										let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-										let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-										let popCustomerFaxnumber = data.tcustomer[0].fields.Faxnumber || "";
-										let popCustomerSkypeName = data.tcustomer[0].fields.SkypeName || "";
-										let popCustomerURL = data.tcustomer[0].fields.URL || "";
-										let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-										let popCustomerStreet2 = data.tcustomer[0].fields.Street2 || "";
-										let popCustomerState = data.tcustomer[0].fields.State || "";
-										let popCustomerPostcode = data.tcustomer[0].fields.Postcode || "";
-										let popCustomerCountry = data.tcustomer[0].fields.Country || LoggedCountry;
-										let popCustomerbillingaddress = data.tcustomer[0].fields.BillStreet || "";
-										let popCustomerbcity = data.tcustomer[0].fields.BillStreet2 || "";
-										let popCustomerbstate = data.tcustomer[0].fields.BillState || "";
-										let popCustomerbpostalcode = data.tcustomer[0].fields.BillPostcode || "";
-										let popCustomerbcountry = data.tcustomer[0].fields.Billcountry || LoggedCountry;
-										let popCustomercustfield1 = data.tcustomer[0].fields.CUSTFLD1 || "";
-										let popCustomercustfield2 = data.tcustomer[0].fields.CUSTFLD2 || "";
-										let popCustomercustfield3 = data.tcustomer[0].fields.CUSTFLD3 || "";
-										let popCustomercustfield4 = data.tcustomer[0].fields.CUSTFLD4 || "";
-										let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-										let popCustomerpreferedpayment = data.tcustomer[0].fields.PaymentMethodName || "";
-										let popCustomerterms = data.tcustomer[0].fields.TermsName || "";
-										let popCustomerdeliverymethod = data.tcustomer[0].fields.ShippingMethodName || "";
-										let popCustomeraccountnumber = data.tcustomer[0].fields.ClientNo || "";
-										let popCustomerisContractor = data.tcustomer[0].fields.Contractor || false;
-										let popCustomerissupplier = data.tcustomer[0].fields.IsSupplier || false;
-										let popCustomeriscustomer = data.tcustomer[0].fields.IsCustomer || false;
-										let popCustomerTaxCode = data.tcustomer[0].fields.TaxCodeName || "";
-										let popCustomerDiscount = data.tcustomer[0].fields.Discount || 0;
-										let popCustomerType = data.tcustomer[0].fields.ClientTypeName || "";
-										//$('#edtCustomerCompany').attr('readonly', true);
-										$("#edtCustomerCompany").val(popCustomerName);
-										$("#edtCustomerPOPID").val(popCustomerID);
-										$("#edtCustomerPOPEmail").val(popCustomerEmail);
-										$("#edtTitle").val(popCustomerTitle);
-										$("#edtFirstName").val(popCustomerFirstName);
-										$("#edtMiddleName").val(popCustomerMiddleName);
-										$("#edtLastName").val(popCustomerLastName);
-										$("#edtCustomerPhone").val(popCustomerPhone);
-										$("#edtCustomerMobile").val(popCustomerMobile);
-										$("#edtCustomerFax").val(popCustomerFaxnumber);
-										$("#edtCustomerSkypeID").val(popCustomerSkypeName);
-										$("#edtCustomerWebsite").val(popCustomerURL);
-										$("#edtCustomerShippingAddress").val(popCustomerStreet);
-										$("#edtCustomerShippingCity").val(popCustomerStreet2);
-										$("#edtCustomerShippingState").val(popCustomerState);
-										$("#edtCustomerShippingZIP").val(popCustomerPostcode);
-										$("#sedtCountry").val(popCustomerCountry);
-										$("#txaNotes").val(popCustomernotes);
-										$("#sltPreferedPayment").val(popCustomerpreferedpayment);
-										$("#sltTermsPOP").val(popCustomerterms);
-										$("#sltCustomerType").val(popCustomerType);
-										$("#edtCustomerCardDiscount").val(popCustomerDiscount);
-										$("#edtCustomeField1").val(popCustomercustfield1);
-										$("#edtCustomeField2").val(popCustomercustfield2);
-										$("#edtCustomeField3").val(popCustomercustfield3);
-										$("#edtCustomeField4").val(popCustomercustfield4);
-
-										$("#sltTaxCode").val(popCustomerTaxCode);
-
-										if (
-											data.tcustomer[0].fields.Street ==
-											data.tcustomer[0].fields.BillStreet &&
-											data.tcustomer[0].fields.Street2 ==
-											data.tcustomer[0].fields.BillStreet2 &&
-											data.tcustomer[0].fields.State ==
-											data.tcustomer[0].fields.BillState &&
-											data.tcustomer[0].fields.Postcode ==
-											data.tcustomer[0].fields.BillPostcode &&
-											data.tcustomer[0].fields.Country ==
-											data.tcustomer[0].fields.Billcountry
-										) {
-											$("#chkSameAsShipping2").attr("checked", "checked");
-										}
-
-										if (data.tcustomer[0].fields.IsSupplier == true) {
-											// $('#isformcontractor')
-											$("#chkSameAsSupplier").attr("checked", "checked");
-										} else {
-											$("#chkSameAsSupplier").removeAttr("checked");
-										}
-
-                                        let customerRecord = {
-                                            id:popCustomerID,
-                                            phone:popCustomerPhone,
-                                            firstname:popCustomerFirstName,
-                                            middlename: popCustomerMiddleName,
-                                            lastname:popCustomerLastName,
-                                            company:data.tcustomer[0].fields.Companyname || '',
-                                            email: popCustomerEmail,
-                                            title: popCustomerTitle,
-                                            tfn: popCustomertfn,
-                                            mobile: popCustomerMobile,
-                                            fax: popCustomerFaxnumber,
-                                            shippingaddress: popCustomerStreet,
-                                            scity: popCustomerStreet2,
-                                            sstate: popCustomerCountry,
-                                            terms: '',
-                                            spostalcode: popCustomerPostcode,
-                                            scountry: popCustomerState,
-                                            billingaddress: popCustomerbillingaddress,
-                                            bcity: popCustomerbcity,
-                                            bstate: popCustomerbstate,
-                                            bpostalcode: popCustomerbpostalcode,
-                                            bcountry: popCustomerCountry,
-                                            custFld1: popCustomercustfield1,
-                                            custFld2: popCustomercustfield2,
-                                            jobbcountry: '',
-                                            jobscountry: '',
-                                            discount:0
-                                        }
-                                        templateObject.customerRecord.set(customerRecord);
-										setTimeout(function() {
-											$("#addCustomerModal").modal("show");
-										}, 200);
-									})
-									.catch(function(err) {
-										$(".fullScreenSpin").css("display", "none");
-									});
-							} else {
-								let data = JSON.parse(dataObject[0].data);
-								let useData = data.tcustomervs1;
-
-								var added = false;
-								for (let i = 0; i < data.tcustomervs1.length; i++) {
-									if (data.tcustomervs1[i].fields.ClientName === customerDataName) {
-										let lineItems = [];
-										added = true;
-										$(".fullScreenSpin").css("display", "none");
-										$("#add-customer-title").text("Edit Customer");
-										let popCustomerID = data.tcustomervs1[i].fields.ID || "";
-										let popCustomerName = data.tcustomervs1[i].fields.ClientName || "";
-										let popCustomerEmail = data.tcustomervs1[i].fields.Email || "";
-										let popCustomerTitle = data.tcustomervs1[i].fields.Title || "";
-										let popCustomerFirstName = data.tcustomervs1[i].fields.FirstName || "";
-										let popCustomerMiddleName = data.tcustomervs1[i].fields.CUSTFLD10 || "";
-										let popCustomerLastName = data.tcustomervs1[i].fields.LastName || "";
-										let popCustomertfn = "" || "";
-										let popCustomerPhone = data.tcustomervs1[i].fields.Phone || "";
-										let popCustomerMobile = data.tcustomervs1[i].fields.Mobile || "";
-										let popCustomerFaxnumber = data.tcustomervs1[i].fields.Faxnumber || "";
-										let popCustomerSkypeName = data.tcustomervs1[i].fields.SkypeName || "";
-										let popCustomerURL = data.tcustomervs1[i].fields.URL || "";
-										let popCustomerStreet = data.tcustomervs1[i].fields.Street || "";
-										let popCustomerStreet2 = data.tcustomervs1[i].fields.Street2 || "";
-										let popCustomerState = data.tcustomervs1[i].fields.State || "";
-										let popCustomerPostcode = data.tcustomervs1[i].fields.Postcode || "";
-										let popCustomerCountry = data.tcustomervs1[i].fields.Country || LoggedCountry;
-										let popCustomerbillingaddress = data.tcustomervs1[i].fields.BillStreet || "";
-										let popCustomerbcity = data.tcustomervs1[i].fields.BillStreet2 || "";
-										let popCustomerbstate = data.tcustomervs1[i].fields.BillState || "";
-										let popCustomerbpostalcode = data.tcustomervs1[i].fields.BillPostcode || "";
-										let popCustomerbcountry = data.tcustomervs1[i].fields.Billcountry || LoggedCountry;
-										let popCustomercustfield1 = data.tcustomervs1[i].fields.CUSTFLD1 || "";
-										let popCustomercustfield2 = data.tcustomervs1[i].fields.CUSTFLD2 || "";
-										let popCustomercustfield3 = data.tcustomervs1[i].fields.CUSTFLD3 || "";
-										let popCustomercustfield4 = data.tcustomervs1[i].fields.CUSTFLD4 || "";
-										let popCustomernotes = data.tcustomervs1[i].fields.Notes || "";
-										let popCustomerpreferedpayment = data.tcustomervs1[i].fields.PaymentMethodName || "";
-										let popCustomerterms = data.tcustomervs1[i].fields.TermsName || "";
-										let popCustomerdeliverymethod = data.tcustomervs1[i].fields.ShippingMethodName || "";
-										let popCustomeraccountnumber = data.tcustomervs1[i].fields.ClientNo || "";
-										let popCustomerisContractor = data.tcustomervs1[i].fields.Contractor || false;
-										let popCustomerissupplier = data.tcustomervs1[i].fields.IsSupplier || false;
-										let popCustomeriscustomer = data.tcustomervs1[i].fields.IsCustomer || false;
-										let popCustomerTaxCode = data.tcustomervs1[i].fields.TaxCodeName || "";
-										let popCustomerDiscount = data.tcustomervs1[i].fields.Discount || 0;
-										let popCustomerType = data.tcustomervs1[i].fields.ClientTypeName || "";
-										//$('#edtCustomerCompany').attr('readonly', true);
-										$("#edtCustomerCompany").val(popCustomerName);
-										$("#edtCustomerPOPID").val(popCustomerID);
-										$("#edtCustomerPOPEmail").val(popCustomerEmail);
-										$("#edtTitle").val(popCustomerTitle);
-										$("#edtFirstName").val(popCustomerFirstName);
-										$("#edtMiddleName").val(popCustomerMiddleName);
-										$("#edtLastName").val(popCustomerLastName);
-										$("#edtCustomerPhone").val(popCustomerPhone);
-										$("#edtCustomerMobile").val(popCustomerMobile);
-										$("#edtCustomerFax").val(popCustomerFaxnumber);
-										$("#edtCustomerSkypeID").val(popCustomerSkypeName);
-										$("#edtCustomerWebsite").val(popCustomerURL);
-										$("#edtCustomerShippingAddress").val(popCustomerStreet);
-										$("#edtCustomerShippingCity").val(popCustomerStreet2);
-										$("#edtCustomerShippingState").val(popCustomerState);
-										$("#edtCustomerShippingZIP").val(popCustomerPostcode);
-										$("#sedtCountry").val(popCustomerCountry);
-										$("#txaNotes").val(popCustomernotes);
-										$("#sltPreferedPayment").val(popCustomerpreferedpayment);
-										$("#sltTermsPOP").val(popCustomerterms);
-										$("#sltCustomerType").val(popCustomerType);
-										$("#edtCustomerCardDiscount").val(popCustomerDiscount);
-										$("#edtCustomeField1").val(popCustomercustfield1);
-										$("#edtCustomeField2").val(popCustomercustfield2);
-										$("#edtCustomeField3").val(popCustomercustfield3);
-										$("#edtCustomeField4").val(popCustomercustfield4);
-
-										$("#sltTaxCode").val(popCustomerTaxCode);
-
-										if (
-											data.tcustomervs1[i].fields.Street ==
-											data.tcustomervs1[i].fields.BillStreet &&
-											data.tcustomervs1[i].fields.Street2 ==
-											data.tcustomervs1[i].fields.BillStreet2 &&
-											data.tcustomervs1[i].fields.State ==
-											data.tcustomervs1[i].fields.BillState &&
-											data.tcustomervs1[i].fields.Postcode ==
-											data.tcustomervs1[i].fields.BillPostcode &&
-											data.tcustomervs1[i].fields.Country ==
-											data.tcustomervs1[i].fields.Billcountry
-										) {
-											$("#chkSameAsShipping2").attr("checked", "checked");
-										}
-
-										if (data.tcustomervs1[i].fields.IsSupplier == true) {
-											// $('#isformcontractor')
-											$("#chkSameAsSupplier").attr("checked", "checked");
-										} else {
-											$("#chkSameAsSupplier").removeAttr("checked");
-										}
-
-                                        let customerRecord = {
-                                            id:popCustomerID,
-                                            phone:popCustomerPhone,
-                                            firstname:popCustomerFirstName,
-                                            middlename: popCustomerMiddleName,
-                                            lastname:popCustomerLastName,
-                                            company:data.tcustomervs1[i].fields.Companyname || '',
-                                            email: popCustomerEmail,
-                                            title: popCustomerTitle,
-                                            tfn: popCustomertfn,
-                                            mobile: popCustomerMobile,
-                                            fax: popCustomerFaxnumber,
-                                            shippingaddress: popCustomerStreet,
-                                            scity: popCustomerStreet2,
-                                            sstate: popCustomerCountry,
-                                            terms: '',
-                                            spostalcode: popCustomerPostcode,
-                                            scountry: popCustomerState,
-                                            billingaddress: popCustomerbillingaddress,
-                                            bcity: popCustomerbcity,
-                                            bstate: popCustomerbstate,
-                                            bpostalcode: popCustomerbpostalcode,
-                                            bcountry: popCustomerCountry,
-                                            custFld1: popCustomercustfield1,
-                                            custFld2: popCustomercustfield2,
-                                            jobbcountry: '',
-                                            jobscountry: '',
-                                            discount:0
-                                        }
-                                        templateObject.customerRecord.set(customerRecord);
-										setTimeout(function() {
-											$("#addCustomerModal").modal("show");
-										}, 200);
-									}
-								}
-								if (!added) {
-									$(".fullScreenSpin").css("display", "inline-block");
-									sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
-											$(".fullScreenSpin").css("display", "none");
-											let lineItems = [];
-											$("#add-customer-title").text("Edit Customer");
-											let popCustomerID = data.tcustomer[0].fields.ID || "";
-											let popCustomerName = data.tcustomer[0].fields.ClientName || "";
-											let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-											let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-											let popCustomerFirstName = data.tcustomer[0].fields.FirstName || "";
-											let popCustomerMiddleName = data.tcustomer[0].fields.CUSTFLD10 || "";
-											let popCustomerLastName =
-												data.tcustomer[0].fields.LastName || "";
-											let popCustomertfn = "" || "";
-											let popCustomerPhone =
-												data.tcustomer[0].fields.Phone || "";
-											let popCustomerMobile =
-												data.tcustomer[0].fields.Mobile || "";
-											let popCustomerFaxnumber =
-												data.tcustomer[0].fields.Faxnumber || "";
-											let popCustomerSkypeName =
-												data.tcustomer[0].fields.SkypeName || "";
-											let popCustomerURL = data.tcustomer[0].fields.URL || "";
-											let popCustomerStreet =
-												data.tcustomer[0].fields.Street || "";
-											let popCustomerStreet2 =
-												data.tcustomer[0].fields.Street2 || "";
-											let popCustomerState =
-												data.tcustomer[0].fields.State || "";
-											let popCustomerPostcode =
-												data.tcustomer[0].fields.Postcode || "";
-											let popCustomerCountry =
-												data.tcustomer[0].fields.Country || LoggedCountry;
-											let popCustomerbillingaddress =
-												data.tcustomer[0].fields.BillStreet || "";
-											let popCustomerbcity =
-												data.tcustomer[0].fields.BillStreet2 || "";
-											let popCustomerbstate =
-												data.tcustomer[0].fields.BillState || "";
-											let popCustomerbpostalcode =
-												data.tcustomer[0].fields.BillPostcode || "";
-											let popCustomerbcountry =
-												data.tcustomer[0].fields.Billcountry || LoggedCountry;
-											let popCustomercustfield1 =
-												data.tcustomer[0].fields.CUSTFLD1 || "";
-											let popCustomercustfield2 =
-												data.tcustomer[0].fields.CUSTFLD2 || "";
-											let popCustomercustfield3 =
-												data.tcustomer[0].fields.CUSTFLD3 || "";
-											let popCustomercustfield4 =
-												data.tcustomer[0].fields.CUSTFLD4 || "";
-											let popCustomernotes =
-												data.tcustomer[0].fields.Notes || "";
-											let popCustomerpreferedpayment =
-												data.tcustomer[0].fields.PaymentMethodName || "";
-											let popCustomerterms =
-												data.tcustomer[0].fields.TermsName || "";
-											let popCustomerdeliverymethod =
-												data.tcustomer[0].fields.ShippingMethodName || "";
-											let popCustomeraccountnumber =
-												data.tcustomer[0].fields.ClientNo || "";
-											let popCustomerisContractor =
-												data.tcustomer[0].fields.Contractor || false;
-											let popCustomerissupplier =
-												data.tcustomer[0].fields.IsSupplier || false;
-											let popCustomeriscustomer =
-												data.tcustomer[0].fields.IsCustomer || false;
-											let popCustomerTaxCode =
-												data.tcustomer[0].fields.TaxCodeName || "";
-											let popCustomerDiscount =
-												data.tcustomer[0].fields.Discount || 0;
-											let popCustomerType =
-												data.tcustomer[0].fields.ClientTypeName || "";
-											//$('#edtCustomerCompany').attr('readonly', true);
-											$("#edtCustomerCompany").val(popCustomerName);
-											$("#edtCustomerPOPID").val(popCustomerID);
-											$("#edtCustomerPOPEmail").val(popCustomerEmail);
-											$("#edtTitle").val(popCustomerTitle);
-											$("#edtFirstName").val(popCustomerFirstName);
-											$("#edtMiddleName").val(popCustomerMiddleName);
-											$("#edtLastName").val(popCustomerLastName);
-											$("#edtCustomerPhone").val(popCustomerPhone);
-											$("#edtCustomerMobile").val(popCustomerMobile);
-											$("#edtCustomerFax").val(popCustomerFaxnumber);
-											$("#edtCustomerSkypeID").val(popCustomerSkypeName);
-											$("#edtCustomerWebsite").val(popCustomerURL);
-											$("#edtCustomerShippingAddress").val(popCustomerStreet);
-											$("#edtCustomerShippingCity").val(popCustomerStreet2);
-											$("#edtCustomerShippingState").val(popCustomerState);
-											$("#edtCustomerShippingZIP").val(popCustomerPostcode);
-											$("#sedtCountry").val(popCustomerCountry);
-											$("#txaNotes").val(popCustomernotes);
-											$("#sltPreferedPayment").val(popCustomerpreferedpayment);
-											$("#sltTermsPOP").val(popCustomerterms);
-											$("#sltCustomerType").val(popCustomerType);
-											$("#edtCustomerCardDiscount").val(popCustomerDiscount);
-											$("#edtCustomeField1").val(popCustomercustfield1);
-											$("#edtCustomeField2").val(popCustomercustfield2);
-											$("#edtCustomeField3").val(popCustomercustfield3);
-											$("#edtCustomeField4").val(popCustomercustfield4);
-
-											$("#sltTaxCode").val(popCustomerTaxCode);
-
-											if (
-												data.tcustomer[0].fields.Street ==
-												data.tcustomer[0].fields.BillStreet &&
-												data.tcustomer[0].fields.Street2 ==
-												data.tcustomer[0].fields.BillStreet2 &&
-												data.tcustomer[0].fields.State ==
-												data.tcustomer[0].fields.BillState &&
-												data.tcustomer[0].fields.Postcode ==
-												data.tcustomer[0].fields.BillPostcode &&
-												data.tcustomer[0].fields.Country ==
-												data.tcustomer[0].fields.Billcountry
-											) {
-												$("#chkSameAsShipping2").attr("checked", "checked");
-											}
-
-											if (data.tcustomer[0].fields.IsSupplier == true) {
-												// $('#isformcontractor')
-												$("#chkSameAsSupplier").attr("checked", "checked");
-											} else {
-												$("#chkSameAsSupplier").removeAttr("checked");
-											}
-
-											setTimeout(function() {
-												$("#addCustomerModal").modal("show");
-											}, 200);
-										})
-										.catch(function(err) {
-											$(".fullScreenSpin").css("display", "none");
-										});
-								}
-							}
-						})
-						.catch(function(err) {
-							sideBarService
-								.getOneCustomerDataExByName(customerDataName)
-								.then(function(data) {
-									$(".fullScreenSpin").css("display", "none");
-									let lineItems = [];
-									$("#add-customer-title").text("Edit Customer");
-									let popCustomerID = data.tcustomer[0].fields.ID || "";
-									let popCustomerName =
-										data.tcustomer[0].fields.ClientName || "";
-									let popCustomerEmail = data.tcustomer[0].fields.Email || "";
-									let popCustomerTitle = data.tcustomer[0].fields.Title || "";
-									let popCustomerFirstName =
-										data.tcustomer[0].fields.FirstName || "";
-									let popCustomerMiddleName =
-										data.tcustomer[0].fields.CUSTFLD10 || "";
-									let popCustomerLastName =
-										data.tcustomer[0].fields.LastName || "";
-									let popCustomertfn = "" || "";
-									let popCustomerPhone = data.tcustomer[0].fields.Phone || "";
-									let popCustomerMobile = data.tcustomer[0].fields.Mobile || "";
-									let popCustomerFaxnumber =
-										data.tcustomer[0].fields.Faxnumber || "";
-									let popCustomerSkypeName =
-										data.tcustomer[0].fields.SkypeName || "";
-									let popCustomerURL = data.tcustomer[0].fields.URL || "";
-									let popCustomerStreet = data.tcustomer[0].fields.Street || "";
-									let popCustomerStreet2 =
-										data.tcustomer[0].fields.Street2 || "";
-									let popCustomerState = data.tcustomer[0].fields.State || "";
-									let popCustomerPostcode =
-										data.tcustomer[0].fields.Postcode || "";
-									let popCustomerCountry =
-										data.tcustomer[0].fields.Country || LoggedCountry;
-									let popCustomerbillingaddress =
-										data.tcustomer[0].fields.BillStreet || "";
-									let popCustomerbcity =
-										data.tcustomer[0].fields.BillStreet2 || "";
-									let popCustomerbstate =
-										data.tcustomer[0].fields.BillState || "";
-									let popCustomerbpostalcode =
-										data.tcustomer[0].fields.BillPostcode || "";
-									let popCustomerbcountry =
-										data.tcustomer[0].fields.Billcountry || LoggedCountry;
-									let popCustomercustfield1 =
-										data.tcustomer[0].fields.CUSTFLD1 || "";
-									let popCustomercustfield2 =
-										data.tcustomer[0].fields.CUSTFLD2 || "";
-									let popCustomercustfield3 =
-										data.tcustomer[0].fields.CUSTFLD3 || "";
-									let popCustomercustfield4 =
-										data.tcustomer[0].fields.CUSTFLD4 || "";
-									let popCustomernotes = data.tcustomer[0].fields.Notes || "";
-									let popCustomerpreferedpayment =
-										data.tcustomer[0].fields.PaymentMethodName || "";
-									let popCustomerterms =
-										data.tcustomer[0].fields.TermsName || "";
-									let popCustomerdeliverymethod =
-										data.tcustomer[0].fields.ShippingMethodName || "";
-									let popCustomeraccountnumber =
-										data.tcustomer[0].fields.ClientNo || "";
-									let popCustomerisContractor =
-										data.tcustomer[0].fields.Contractor || false;
-									let popCustomerissupplier =
-										data.tcustomer[0].fields.IsSupplier || false;
-									let popCustomeriscustomer =
-										data.tcustomer[0].fields.IsCustomer || false;
-									let popCustomerTaxCode =
-										data.tcustomer[0].fields.TaxCodeName || "";
-									let popCustomerDiscount =
-										data.tcustomer[0].fields.Discount || 0;
-									let popCustomerType =
-										data.tcustomer[0].fields.ClientTypeName || "";
-									//$('#edtCustomerCompany').attr('readonly', true);
-									$("#edtCustomerCompany").val(popCustomerName);
-									$("#edtCustomerPOPID").val(popCustomerID);
-									$("#edtCustomerPOPEmail").val(popCustomerEmail);
-									$("#edtTitle").val(popCustomerTitle);
-									$("#edtFirstName").val(popCustomerFirstName);
-									$("#edtMiddleName").val(popCustomerMiddleName);
-									$("#edtLastName").val(popCustomerLastName);
-									$("#edtCustomerPhone").val(popCustomerPhone);
-									$("#edtCustomerMobile").val(popCustomerMobile);
-									$("#edtCustomerFax").val(popCustomerFaxnumber);
-									$("#edtCustomerSkypeID").val(popCustomerSkypeName);
-									$("#edtCustomerWebsite").val(popCustomerURL);
-									$("#edtCustomerShippingAddress").val(popCustomerStreet);
-									$("#edtCustomerShippingCity").val(popCustomerStreet2);
-									$("#edtCustomerShippingState").val(popCustomerState);
-									$("#edtCustomerShippingZIP").val(popCustomerPostcode);
-									$("#sedtCountry").val(popCustomerCountry);
-									$("#txaNotes").val(popCustomernotes);
-									$("#sltPreferedPayment").val(popCustomerpreferedpayment);
-									$("#sltTermsPOP").val(popCustomerterms);
-									$("#sltCustomerType").val(popCustomerType);
-									$("#edtCustomerCardDiscount").val(popCustomerDiscount);
-									$("#edtCustomeField1").val(popCustomercustfield1);
-									$("#edtCustomeField2").val(popCustomercustfield2);
-									$("#edtCustomeField3").val(popCustomercustfield3);
-									$("#edtCustomeField4").val(popCustomercustfield4);
-
-									$("#sltTaxCode").val(popCustomerTaxCode);
-
-									if (
-										data.tcustomer[0].fields.Street ==
-										data.tcustomer[0].fields.BillStreet &&
-										data.tcustomer[0].fields.Street2 ==
-										data.tcustomer[0].fields.BillStreet2 &&
-										data.tcustomer[0].fields.State ==
-										data.tcustomer[0].fields.BillState &&
-										data.tcustomer[0].fields.Postcode ==
-										data.tcustomer[0].fields.BillPostcode &&
-										data.tcustomer[0].fields.Country ==
-										data.tcustomer[0].fields.Billcountry
-									) {
-										$("#chkSameAsShipping2").attr("checked", "checked");
-									}
-
-									if (data.tcustomer[0].fields.IsSupplier == true) {
-										// $('#isformcontractor')
-										$("#chkSameAsSupplier").attr("checked", "checked");
-									} else {
-										$("#chkSameAsSupplier").removeAttr("checked");
-									}
-
-									setTimeout(function() {
-										$("#addCustomerModal").modal("show");
-									}, 200);
-								})
-								.catch(function(err) {
-									$(".fullScreenSpin").css("display", "none");
-								});
-						});
+                        if (dataObject.length == 0) {
+                            $(".fullScreenSpin").css("display", "inline-block");
+                            sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
+                                setOneCustomerData(data.tcustomer[0])
+                            })
+                            .catch(function(err) {
+                                $(".fullScreenSpin").css("display", "none");
+                            });
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            setOneCustomerData(data.tcustomervs1)
+                        }
+                    })
+                    .catch(function(err) {
+                        sideBarService.getOneCustomerDataExByName(customerDataName).then(function(data) {
+                            setOneCustomerData(data.tcustomer[0])
+                        })
+                        .catch(function(err) {
+                            $(".fullScreenSpin").css("display", "none");
+                        });
+                    });
 				} else {
 					if (FlowRouter.current().queryParams.leadid) {
-						openAppointModalDirectly(
-							FlowRouter.current().queryParams.leadid,
-							templateObject
-						);
+						openAppointModalDirectly(FlowRouter.current().queryParams.leadid,templateObject);
 					} else if (FlowRouter.current().queryParams.customerid) {
-						openAppointModalDirectly(
-							FlowRouter.current().queryParams.customerid,
-							templateObject
-						);
+						openAppointModalDirectly(FlowRouter.current().queryParams.customerid,templateObject);
 					} else if (FlowRouter.current().queryParams.supplierid) {
-						openAppointModalDirectly(
-							FlowRouter.current().queryParams.supplierid,
-							templateObject
-						);
+						openAppointModalDirectly(FlowRouter.current().queryParams.supplierid,templateObject);
 					} else {
 						$("#customerListModal").modal();
 					}
@@ -4738,92 +4330,7 @@ Template.calender.onRendered(function() {
         }, 500);
     });
 
-    function setOneCustomerData(data) {
-        $('.fullScreenSpin').css('display', 'none');
-        let lineItems = [];
-        $('#add-customer-title').text('Edit Customer');
-        let popCustomerID = data.fields.ID || "";
-        let popCustomerName = data.fields.ClientName || "";
-        let popCustomerEmail = data.fields.Email || "";
-        let popCustomerTitle = data.fields.Title || "";
-        let popCustomerFirstName = data.fields.FirstName || "";
-        let popCustomerMiddleName = data.fields.CUSTFLD10 || "";
-        let popCustomerLastName = data.fields.LastName || "";
-        let popCustomertfn = "" || "";
-        let popCustomerPhone = data.fields.Phone || "";
-        let popCustomerMobile = data.fields.Mobile || "";
-        let popCustomerFaxnumber = data.fields.Faxnumber || "";
-        let popCustomerSkypeName = data.fields.SkypeName || "";
-        let popCustomerURL = data.fields.URL || "";
-        let popCustomerStreet = data.fields.Street || "";
-        let popCustomerStreet2 = data.fields.Street2 || "";
-        let popCustomerState = data.fields.State || "";
-        let popCustomerPostcode = data.fields.Postcode || "";
-        let popCustomerCountry = data.fields.Country || LoggedCountry;
-        let popCustomerbillingaddress = data.fields.BillStreet || "";
-        let popCustomerbcity = data.fields.BillStreet2 || "";
-        let popCustomerbstate = data.fields.BillState || "";
-        let popCustomerbpostalcode = data.fields.BillPostcode || "";
-        let popCustomerbcountry = data.fields.Billcountry || LoggedCountry;
-        let popCustomercustfield1 = data.fields.CUSTFLD1 || "";
-        let popCustomercustfield2 = data.fields.CUSTFLD2 || "";
-        let popCustomercustfield3 = data.fields.CUSTFLD3 || "";
-        let popCustomercustfield4 = data.fields.CUSTFLD4 || "";
-        let popCustomernotes = data.fields.Notes || "";
-        let popCustomerpreferedpayment = data.fields.PaymentMethodName || "";
-        let popCustomerterms = data.fields.TermsName || "";
-        let popCustomerdeliverymethod = data.fields.ShippingMethodName || "";
-        let popCustomeraccountnumber = data.fields.ClientNo || "";
-        let popCustomerisContractor = data.fields.Contractor || false;
-        let popCustomerissupplier = data.fields.IsSupplier || false;
-        let popCustomeriscustomer = data.fields.IsCustomer || false;
-        let popCustomerTaxCode = data.fields.TaxCodeName || "";
-        let popCustomerDiscount = data.fields.Discount || 0;
-        let popCustomerType = data.fields.ClientTypeName || "";
-        //$('#edtCustomerCompany').attr('readonly', true);
-        $('#edtCustomerCompany').val(popCustomerName);
-        $('#edtCustomerPOPID').val(popCustomerID);
-        $('#edtCustomerPOPEmail').val(popCustomerEmail);
-        $('#edtTitle').val(popCustomerTitle);
-        $('#edtFirstName').val(popCustomerFirstName);
-        $('#edtMiddleName').val(popCustomerMiddleName);
-        $('#edtLastName').val(popCustomerLastName);
-        $('#edtCustomerPhone').val(popCustomerPhone);
-        $('#edtCustomerMobile').val(popCustomerMobile);
-        $('#edtCustomerFax').val(popCustomerFaxnumber);
-        $('#edtCustomerSkypeID').val(popCustomerSkypeName);
-        $('#edtCustomerWebsite').val(popCustomerURL);
-        $('#edtCustomerShippingAddress').val(popCustomerStreet);
-        $('#edtCustomerShippingCity').val(popCustomerStreet2);
-        $('#edtCustomerShippingState').val(popCustomerState);
-        $('#edtCustomerShippingZIP').val(popCustomerPostcode);
-        $('#sedtCountry').val(popCustomerCountry);
-        $('#txaNotes').val(popCustomernotes);
-        $('#sltPreferedPayment').val(popCustomerpreferedpayment);
-        $('#sltTermsPOP').val(popCustomerterms);
-        $('#sltCustomerType').val(popCustomerType);
-        $('#edtCustomerCardDiscount').val(popCustomerDiscount);
-        $('#edtCustomeField1').val(popCustomercustfield1);
-        $('#edtCustomeField2').val(popCustomercustfield2);
-        $('#edtCustomeField3').val(popCustomercustfield3);
-        $('#edtCustomeField4').val(popCustomercustfield4);
-        $('#sltTaxCode').val(popCustomerTaxCode);
-
-        if ((data.fields.Street == data.fields.BillStreet) && (data.fields.Street2 == data.fields.BillStreet2) &&
-            (data.fields.State == data.fields.BillState) && (data.fields.Postcode == data.fields.BillPostcode) &&
-            (data.fields.Country == data.fields.Billcountry)) {
-            $('#chkSameAsShipping2').attr("checked", "checked");
-        }
-        if (data.fields.IsSupplier == true) {
-            // $('#isformcontractor')
-            $('#chkSameAsSupplier').attr("checked", "checked");
-        } else {
-            $('#chkSameAsSupplier').removeAttr("checked");
-        }
-        setTimeout(function() {
-            $('#addCustomerModal').modal("show");
-        }, 200);
-    }
+    
 
     function initCustomerModal() {
         if (FlowRouter.current().queryParams.leadid) {
@@ -8241,8 +7748,7 @@ Template.calender.events({
                                                     const smsSettings = templateObject.defaultSMSSettings.get();
                                                     let sendSMSRes = true;
                                                     if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
-                                                        sendSMSRes =
-                                                            await templateObject.sendSMSMessage("start","+" + customerPhone.replace("+", ""));
+                                                        sendSMSRes = await templateObject.sendSMSMessage("start","+" + customerPhone.replace("+", ""));
                                                         if (!sendSMSRes.success) {
                                                             swal({
                                                                 title: "Oops...",
@@ -8263,18 +7769,13 @@ Template.calender.events({
                                                                 showCancelButton: false,
                                                                 confirmButtonText: "Ok",
                                                             });
-                                                            localStorage.setItem(
-                                                                "smsId",
-                                                                sendSMSRes.sid
-                                                            );
+                                                            localStorage.setItem("smsId",sendSMSRes.sid);
                                                             $("#tActualStartTime").val(
                                                                 moment().startOf("hour").format("HH") +
                                                                 ":" +
                                                                 moment().startOf("minute").format("mm")
                                                             );
-                                                            $("#btnCloseStartAppointmentModal").trigger(
-                                                                "click"
-                                                            );
+                                                            $("#btnCloseStartAppointmentModal").trigger("click");
                                                             //$('#frmAppointment').trigger('submit');
                                                             templateObject.checkRefresh.set(true);
                                                         }
@@ -8980,14 +8481,7 @@ Template.calender.events({
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
                         const companyName = localStorage.getItem("vs1companyName");
-                        const fullAddress =
-                            $("#address").val() +
-                            ", " +
-                            $("#suburb").val() +
-                            ", " +
-                            $("#state").val() +
-                            ", " +
-                            $("#country").val();
+                        const fullAddress = $("#address").val() + ", " + $("#suburb").val() + ", " + $("#state").val() + ", " + $("#country").val();
                         const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                         const productService = $("#product-list").val();
                         const saveAppointmentSMS = templateObject.defaultSMSSettings
@@ -9032,14 +8526,7 @@ Template.calender.events({
                             const accountName = $("#customer").val();
                             const employeeName = $("#employee_name").val();
                             const companyName = localStorage.getItem("vs1companyName");
-                            const fullAddress =
-                                $("#address").val() +
-                                ", " +
-                                $("#suburb").val() +
-                                ", " +
-                                $("#state").val() +
-                                ", " +
-                                $("#country").val();
+                            const fullAddress = $("#address").val() + ", " + $("#suburb").val() + ", " + $("#state").val() + ", " + $("#country").val();
                             const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                             const productService = $("#product-list").val();
                             const saveAppointmentSMS = templateObject.defaultSMSSettings
@@ -9057,14 +8544,7 @@ Template.calender.events({
                         const accountName = $("#customer").val();
                         const employeeName = $("#employee_name").val();
                         const companyName = localStorage.getItem("vs1companyName");
-                        const fullAddress =
-                            $("#address").val() +
-                            ", " +
-                            $("#suburb").val() +
-                            ", " +
-                            $("#state").val() +
-                            ", " +
-                            $("#country").val();
+                        const fullAddress = $("#address").val() + ", " + $("#suburb").val() + ", " + $("#state").val() + ", " + $("#country").val();
                         const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                         const productService = $("#product-list").val();
                         const saveAppointmentSMS = templateObject.defaultSMSSettings
@@ -9368,7 +8848,6 @@ Template.calender.events({
             confirmButtonText: 'Yes'
         }).then((result) => {
             if (result.value) {
-
                 if (id == "0" || id == null) {
                     swal({
                         title: "Can't delete appointment, it does not exist",
@@ -9445,9 +8924,6 @@ Template.calender.events({
                 $('.fullScreenSpin').css('display', 'none');
             });
         }
-
-        //});
-
     },
     'change #startTime': function() {
         const templateObject = Template.instance();
@@ -9684,8 +9160,6 @@ Template.calender.events({
             // }).catch(function (err) {
             //     $('.fullScreenSpin').css('display', 'none');
             // });
-
-
     },
     'click #btnHold span': function(event) {
         if (startAndStopAppointmentOnly == true) {
@@ -9975,7 +9449,6 @@ Template.calender.events({
     "submit form#frmAppointment": async function(event) {
         $(".fullScreenSpin").css("display", "inline-block");
         event.preventDefault();
-
         /*
             if (createAppointment == false) {
                 $('.modal-backdrop').css('display', 'none');
@@ -9994,7 +9467,6 @@ Template.calender.events({
             } */
 
         $("#btnselProductFees").trigger("click");
-
         var frmAppointment = $("#frmAppointment")[0];
         templateObject = Template.instance();
         let appointmentService = new AppointmentService();
@@ -10024,18 +9496,8 @@ Template.calender.events({
         let suburb = formData.get("suburb") || "";
         var startdateGet = new Date($("#dtSODate").datepicker("getDate"));
         var endDateGet = new Date($("#dtSODate2").datepicker("getDate"));
-        let startDate =
-            startdateGet.getFullYear() +
-            "-" +
-            ("0" + (startdateGet.getMonth() + 1)).slice(-2) +
-            "-" +
-            ("0" + startdateGet.getDate()).slice(-2);
-        let endDate =
-            endDateGet.getFullYear() +
-            "-" +
-            ("0" + (endDateGet.getMonth() + 1)).slice(-2) +
-            "-" +
-            ("0" + endDateGet.getDate()).slice(-2);
+        let startDate = startdateGet.getFullYear() + "-" + ("0" + (startdateGet.getMonth() + 1)).slice(-2) + "-" + ("0" + startdateGet.getDate()).slice(-2);
+        let endDate = endDateGet.getFullYear() + "-" + ("0" + (endDateGet.getMonth() + 1)).slice(-2) + "-" + ("0" + endDateGet.getDate()).slice(-2);
         let employeeName = formData.get("employee_name").trim() || "";
         let id = formData.get("updateID") || "0";
         let notes = formData.get("txtNotes") || " ";
@@ -10089,9 +9551,7 @@ Template.calender.events({
             result = appointmentData.filter((apmt) => {
                 return apmt.id == $("#updateID").val();
             });
-
             hourlyRate = result[0].rate;
-
             if (result[0].aStartTime == "" && $("#tActualStartTime").val() != "") {
                 obj = {
                     type: "TAppointmentsTimeLog",
@@ -10102,21 +9562,8 @@ Template.calender.events({
                         Description: "Job Started",
                     },
                 };
-            } else if (
-                result[0].aStartTime != "" &&
-                result[0].aEndTime == "" &&
-                $("#tActualEndTime").val() != ""
-            ) {
-                let startTime1 =
-                    date.getFullYear() +
-                    "-" +
-                    ("0" + (date.getMonth() + 1)).slice(-2) +
-                    "-" +
-                    ("0" + date.getDate()).slice(-2) +
-                    " " +
-                    ("0" + date.getHours()).slice(-2) +
-                    ":" +
-                    ("0" + date.getMinutes()).slice(-2);
+            } else if (result[0].aStartTime != "" && result[0].aEndTime == "" && $("#tActualEndTime").val() != "") {
+                let startTime1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + date.getDate()).slice(-2) + " " + ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2);
                 obj = {
                     type: "TAppointmentsTimeLog",
                     fields: {
@@ -10130,10 +9577,7 @@ Template.calender.events({
                 aEndDate = moment().format("YYYY-MM-DD") + " " + aEndTime;
             }
         } else {
-            if (
-                $("#tActualStartTime").val() != "" &&
-                $("#tActualEndTime").val() != ""
-            ) {
+            if ($("#tActualStartTime").val() != "" && $("#tActualEndTime").val() != "") {
                 obj = {
                     type: "TAppointmentsTimeLog",
                     fields: {
@@ -10157,7 +9601,6 @@ Template.calender.events({
         }
 
         let objectData = "";
-
         const messageSid = localStorage.getItem("smsId") || "";
         if (createAppointment == false) {
             if (id == "0") {
@@ -10199,7 +9642,6 @@ Template.calender.events({
                         Status: status,
                         CUSTFLD12: messageSid || "",
                         CUSTFLD13: !!messageSid ? "Yes" : "No",
-
                         //   CustomerEmail: customerEmail,
                         //   UserEmail: userEmail
                     },
@@ -10509,7 +9951,6 @@ Template.calender.events({
                 //     });
             }
         } else {
-
             if (id == "0") {
                 objectData = {
                     type: "TAppointmentEx",
@@ -10580,10 +10021,7 @@ Template.calender.events({
                     },
                 };
 
-                if (
-                    $("#tActualStartTime").val() != "" &&
-                    $("#tActualEndTime").val() != ""
-                ) {
+                if ($("#tActualStartTime").val() != "" && $("#tActualEndTime").val() != "") {
                     obj.fields.Description = "Job Completed";
                 } else {
                     obj.fields.Description = "Job Started";
@@ -10692,7 +10130,6 @@ Template.calender.events({
                 //         }
                 //     });
             } else {
-
                 // appointmentService
                 //     .saveAppointment(objectData)
                 //     .then(function(data) {
@@ -10996,7 +10433,6 @@ Template.calender.events({
                 //             confirmButtonText: "Try Again",
                 //         });
                 //     });
-
                 templateObject.updateEvents(objectData)
                 $(".fullScreenSpin").css("display", "none");
             }
@@ -11273,8 +10709,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
-            document.getElementById("employee_name").value =
-                localStorage.getItem("mySessionEmployee");
+            document.getElementById("employee_name").value = localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11365,8 +10800,7 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
-            document.getElementById("employee_name").value =
-                localStorage.getItem("mySessionEmployee");
+            document.getElementById("employee_name").value = localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
@@ -11456,17 +10890,13 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             let checkIncludeAllProducts = templateObject.includeAllProducts.get();
             let getAllEmployeeData = templateObject.employeerecords.get() || "";
             let getEmployeeID = templateObject.empID.get() || "";
-            document.getElementById("employee_name").value =
-                localStorage.getItem("mySessionEmployee");
+            document.getElementById("employee_name").value = localStorage.getItem("mySessionEmployee");
             document.getElementById("customer").value = data.fields.ClientName;
             document.getElementById("phone").value = data.fields.Phone;
             document.getElementById("mobile").value = data.fields.Mobile;
             document.getElementById("state").value = data.fields.State;
             document.getElementById("country").value = data.fields.Country;
-            document.getElementById("address").value = data.fields.Street.replace(
-                /(?:\r\n|\r|\n)/g,
-                ", "
-            );
+            document.getElementById("address").value = data.fields.Street.replace(/(?:\r\n|\r|\n)/g,", ");
             if (localStorage.getItem("CloudAppointmentNotes") == true) {
                 document.getElementById("txtNotes").value = data.fields.Notes;
                 document.getElementById("txtNotes-1").value = data.fields.Notes;
@@ -11476,14 +10906,8 @@ openAppointModalDirectly = (leadid, templateObject, auto = false) => {
             if (auto == true) {
                 let dateStart = getRegalTime();
                 let dateEnd = new Date(dateStart.getTime() + 2 * 3600 * 1000);
-                let startTime =
-                    ("0" + dateStart.getHours()).toString().slice(-2) +
-                    ":" +
-                    ("0" + dateStart.getMinutes()).toString().slice(-2);
-                let endTime =
-                    ("0" + dateEnd.getHours()).toString().slice(-2) +
-                    ":" +
-                    ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
                 document.getElementById("startTime").value = startTime;
                 document.getElementById("endTime").value = endTime;
             }
