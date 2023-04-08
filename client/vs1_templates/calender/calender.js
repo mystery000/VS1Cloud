@@ -606,7 +606,7 @@ Template.calender.onRendered(function() {
         }).catch(function(err) {});
     });
     function setGlobalSettings(data) {
-        console.log('setGlobalSettings:',data)
+        console.log('setGlobalSettings:')
         templateObject.getAllAppointmentListData();
         let appEndTimeDataToLoad = "19:00";
         globalSet.defaultProduct = "";
@@ -836,6 +836,7 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
+        console.log('renderCalendar')
         let calendarSet = templateObject.globalSettings.get();
         var calendarEl = document.getElementById("calendar");
         var currentDate = new Date();
@@ -1380,6 +1381,7 @@ Template.calender.onRendered(function() {
     };
 
     templateObject.renderNormalCalendar = function() {
+        console.log('renderNormalCalendar')
         let calendarSet = templateObject.globalSettings.get();
         let hideDays = "";
         let slotMin = "06:00:00";
@@ -1419,7 +1421,6 @@ Template.calender.onRendered(function() {
                 newappointment: {
                     text: "New Appointment",
                     click: function() {
-                        // FlowRouter.go("/appointmentlist");
                         $("#employeeListModal").modal("show");
                         $("#btnCopyOptions").attr("disabled", true);
                     },
@@ -1427,7 +1428,6 @@ Template.calender.onRendered(function() {
                 appointments: {
                     text: "Appointment List",
                     click: function() {
-                        //window.open('/appointmentlist', '_self');
                         FlowRouter.go("/appointmentlist");
                     },
                 },
@@ -1459,19 +1459,15 @@ Template.calender.onRendered(function() {
             selectMirror: true,
             dayHeaderFormat: function(date) {
                 if (LoggedCountry == "United States") {
-                    return (
-                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD")
-                    );
+                    return (moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD"));
                 } else {
-                    return (
-                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM")
-                    );
+                    return (moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM"));
                 }
             },
             select: function(info) {
                 $("#frmAppointment")[0].reset();
                 $(".paused").hide();
-                //templateObject.getAllProductData();
+                templateObject.getAllProductData();
                 let calendarData = templateObject.employeeOptions.get();
                 let calendarSet = templateObject.globalSettings.get();
                 templateObject.empID.set(localStorage.getItem("mySessionEmployeeLoggedID"));
@@ -1539,7 +1535,6 @@ Template.calender.onRendered(function() {
                 var hours = "0";
                 var id = info.event.id;
                 let getAllEmployeeData = templateObject.employeerecords.get() || "";
-
                 var appointmentData = templateObject.appointmentrecords.get();
 
                 var result = appointmentData.filter((apmt) => {
@@ -1801,12 +1796,10 @@ Template.calender.onRendered(function() {
                         let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
                         let index = appointmentData.map(function(e) {
                                 return e.id;
-                            })
-                            .indexOf(parseInt(eventDropID));
+                            }).indexOf(parseInt(eventDropID));
                         let resourceIndex = resourceData.map(function(e) {
                                 return e.employeeName;
-                            })
-                            .indexOf(appointmentData[index].employeename);
+                            }).indexOf(appointmentData[index].employeename);
                         var result = appointmentData.filter((apmt) => {
                             return apmt.id == eventDropID;
                         });
@@ -2706,16 +2699,19 @@ Template.calender.onRendered(function() {
         getVS1Data("TAppointment").then(function(dataObject) {
             if (dataObject.length == 0) {
                 sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+                    addVS1Data("TAppointment", JSON.stringify(data));
                     setAppointmentData(data);
                 }).catch(function(err) {
                     setInitCalendarData();
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
+                addVS1Data("TAppointment", JSON.stringify(data));
                 setAppointmentData(data);
             }
         }).catch(function(err) {
             sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+                addVS1Data("TAppointment", JSON.stringify(data));
                 setAppointmentData(data);
             }).catch(function(err) {
                 setInitCalendarData();
@@ -2728,7 +2724,7 @@ Template.calender.onRendered(function() {
         let employeeColor;
         let jobs;
         let dataList;
-        addVS1Data("TAppointment", JSON.stringify(data));
+       
         let appColor = '#00a3d3';
         let dataColor = "";
         let allEmp = templateObject.employeerecords.get();
@@ -2789,12 +2785,10 @@ Template.calender.onRendered(function() {
             let street = data.tappointmentex[i].fields.Street || "";
             let state = data.tappointmentex[i].fields.State || "";
             let country = data.tappointmentex[i].fields.Country || "";
-            // let getAddress = data.tappointmentex[i].fields.ClientName + ',' + street + ',' + state + ',' + surbub + " " + zip;
             let getAddress = 'Client Name: ' + data.tappointmentex[i].fields.ClientName + '<br /> Address: ' + street + ',' + state + ',' + country + ',' + surbub + " " + zip;
             dataList = {
                 id: data.tappointmentex[i].fields.ID.toString() || "",
                 title: data.tappointmentex[i].fields.ClientName,
-                // title: data.tappointmentex[i].fields.ClientName,
                 start: data.tappointmentex[i].fields.StartTime || "",
                 end: data.tappointmentex[i].fields.EndTime || "",
                 description: getAddress,
@@ -2942,6 +2936,7 @@ Template.calender.onRendered(function() {
                         templateObject.uploadedFiles.set(result[0].attachments);
                     }
                 }
+                console.log('Showing event modal')
                 $("#event-modal").modal();
                 // this.$body.addClass('modal-open');
             }
@@ -2956,6 +2951,7 @@ Template.calender.onRendered(function() {
         $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenWeekend");
         if (templateObject.eventdata.get()) {
             setTimeout(function() {
+                console.log('Re-renderNormalCalendar')
                 templateObject.renderNormalCalendar();
             }, 1000);
         }
@@ -3350,6 +3346,7 @@ Template.calender.onRendered(function() {
     }
 
     function setInitCalendarData() {
+        console.log('setInitCalendarData')
         $('.fullScreenSpin').css('display', 'none');
         const calendarEl = document.getElementById("calendar");
         const currentDate = new Date();
@@ -3375,17 +3372,14 @@ Template.calender.onRendered(function() {
                 appointments: {
                     text: "Appointment List",
                     click: function() {
-                        //window.open("/appointmentlist", '_self');
                         FlowRouter.go("/appointmentlist");
                     }
                 },
                 ...refreshButton
             },
             headerToolbar: {
-                // left: 'prev,next appointments refresh',
                 left: 'prev,next',
                 center: 'title',
-                // right: "",
                 right: 'dayGridMonth,timeGridWeek,timeGridDay'
             },
             initialDate: begunDate,
