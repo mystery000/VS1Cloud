@@ -3054,6 +3054,10 @@
             </div>
         </div>
     </div>
-    
+    {{#if customerRecord}}
+    <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
+        {{> addcustomerpop record=customerRecord}}
+    </div>
+    {{/if}}
     {{> newLeaveRequestModal}}
 </template>
