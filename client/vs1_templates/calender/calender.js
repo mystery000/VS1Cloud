@@ -813,23 +813,55 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.updateEvents = async (updatedEvent) => {
-        let tempEvents = await getVS1Data("TNewAppointment")
+        // console.log('updateEvent:',updatedEvent)
+        // console.log('eventData:',templateObject.eventdata.get())
+        let tempNewEvents = await getVS1Data("TNewAppointment")
+        let events = templateObject.eventdata.get();
         localStorage.setItem("isFormUpdated", true);
-        if(tempEvents.length == 0){
-            addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
-        }else{
-            let data = JSON.parse(tempEvents[0].data)
-            if(data.length === 0){
-                let currentEventIndex = data?.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
-                if(currentEventIndex > -1){
-                    data[currentEventIndex] = updatedEvent;
+        if(events){
+            let formattedEvent = {
+                color: updatedEvent.fields.Color ||"",
+                description:updatedEvent.fields.Description ||"",
+                end:updatedEvent.fields.EndTime ||"",
+                id:updatedEvent.fields.Id.toString() ||"",
+                start:updatedEvent.fields.StartTime ||"",
+                title:updatedEvent.fields.Title ||""
+            }
+            let tempEvents = [...events];
+            // console.log('tempEvents.length:',tempEvents.length)
+            if(tempEvents.length == 0){
+                tempEvents.push(formattedEvent)
+            }else{
+                if(tempEvents.length !== 0){
+                    let currentEventIndex = tempEvents?.findIndex((event) => event.id == updatedEvent.fields.Id.toString())
+                    if(currentEventIndex > -1){
+                        tempEvents[currentEventIndex] = formattedEvent;
+                    }else{
+                        tempEvents.push(formattedEvent)
+                    }
+                }else{
+                    tempEvents.push(formattedEvent)
+                }
+            }
+            templateObject.eventdata.set(tempEvents);
+        }
+        if(tempNewEvents){
+            if(tempNewEvents.length == 0){
+                addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
+            }else{
+                let data = JSON.parse(tempNewEvents[0].data)
+                if(data.length !== 0){
+                    let currentEventIndex = data?.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
+                    if(currentEventIndex > -1){
+                        data[currentEventIndex] = updatedEvent;
+                    }else{
+                        data.push(updatedEvent)
+                    }
                 }else{
                     data.push(updatedEvent)
                 }
-            }else{
-                data.push(updatedEvent)
+                addVS1Data("TNewAppointment", JSON.stringify(data))
             }
-            addVS1Data("TNewAppointment", JSON.stringify(data))
         }
     }
 
@@ -939,15 +971,7 @@ Template.calender.onRendered(function() {
                 }
             },
             eventClick: function(info) {
-                $("#frmAppointment")[0].reset();
-                $("#btnHold").prop("disabled", false);
-                $("#btnStartAppointment").prop("disabled", false);
-                $("#btnStopAppointment").prop("disabled", false);
-                $("#startTime").prop("disabled", false);
-                $("#endTime").prop("disabled", false);
-                $("#tActualStartTime").prop("disabled", false);
-                $("#tActualEndTime").prop("disabled", false);
-                $("#txtActualHoursSpent").prop("disabled", false);
+                initAppointmentForm();
 
                 var hours = "0";
                 var id = info.event.id;
@@ -1513,15 +1537,7 @@ Template.calender.onRendered(function() {
                 }
             },
             eventClick: function(info) {
-                $("#frmAppointment")[0].reset();
-                $("#btnHold").prop("disabled", false);
-                $("#btnStartAppointment").prop("disabled", false);
-                $("#btnStopAppointment").prop("disabled", false);
-                $("#startTime").prop("disabled", false);
-                $("#endTime").prop("disabled", false);
-                $("#tActualStartTime").prop("disabled", false);
-                $("#tActualEndTime").prop("disabled", false);
-                $("#txtActualHoursSpent").prop("disabled", false);
+                initAppointmentForm();
                 var hours = "0";
                 var id = info.event.id;
                 let getAllEmployeeData = templateObject.employeerecords.get() || "";
@@ -1778,6 +1794,9 @@ Template.calender.onRendered(function() {
                         let appointmentData = templateObject.appointmentrecords.get();
                         let resourceData = templateObject.resourceAllocation.get();
                         let eventDropID = info.event._def.publicId || "0";
+                        let eventColor = info.event._def.ui.backgroundColor || "";
+                        let eventDescription = info.event._def.extendedProps.description || "";
+                        let eventTitle = info.event._def.title
                         let dateStart = new Date(info.event.start);
                         let dateEnd = new Date(info.event.end);
                         let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
@@ -1800,6 +1819,9 @@ Template.calender.onRendered(function() {
                                     Id: parseInt(eventDropID) || 0,
                                     StartTime: startDate + " " + startTime + ":00" || "",
                                     EndTime: endDate + " " + endTime + ":00" || "",
+                                    Description:eventDescription,
+                                    Color:eventColor,
+                                    Title:eventTitle
                                 },
                             };
                             let nameid = appointmentData[index].employeename.replace(" ", "-");
@@ -1826,46 +1848,7 @@ Template.calender.onRendered(function() {
                             });
                             templateObject.updateEvents(objectData)
                             $(".fullScreenSpin").css("display", "none");
-                            // appointmentService.saveAppointment(objectData).then(function(data) {
-                            //         appointmentData[index].startDate = startDate + " " + startTime;
-                            //         appointmentData[index].endDate = endDate + " " + endTime;
-                            //         templateObject.appointmentrecords.set(appointmentData);
-                            //         $(".droppable #" + eventDropID).remove();
-                            //         $("#" + nameid + " ." + day + " .droppable").append(job);
-                            //         $("#allocationTable tbody tr").each(function() {
-                            //             if (this.id == nameid) {
-                            //                 $(this).attr("id", $(this).attr("id").replace("-", " "));
-                            //             }
-                            //         });
-                            //         sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                            //                 addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                            //                         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                            //                             window.open(localStorage.getItem("appt_historypage"), "_self");
-                            //                         } else {
-                            //                             window.open("/appointments", "_self");
-                            //                         }
-                            //                     }).catch(function(err) {
-                            //                         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                            //                             window.open(localStorage.getItem("appt_historypage"), "_self");
-                            //                         } else {
-                            //                             window.open("/appointments", "_self");
-                            //                         }
-                            //                     });
-                            //             }).catch(function(err) {
-                            //                 if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                            //                     window.open(localStorage.getItem("appt_historypage"), "_self");
-                            //                 } else {
-                            //                     window.open("/appointments", "_self");
-                            //                 }
-                            //             });
-                            //     }).catch(function(err) {
-                            //         if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                            //             window.open(localStorage.getItem("appt_historypage"), "_self");
-                            //         } else {
-                            //             window.open("/appointments", "_self");
-                            //         }
-                            //     });
-                        }
+                           }
                     }
                 }
             },
@@ -2064,6 +2047,9 @@ Template.calender.onRendered(function() {
                     let appointmentData = templateObject.appointmentrecords.get();
                     let resourceData = templateObject.resourceAllocation.get();
                     let eventDropID = info.event._def.publicId || "0";
+                    let eventColor = info.event._def.ui.backgroundColor || "";
+                    let eventDescription = info.event._def.extendedProps.description || "";
+                    let eventTitle = info.event._def.title
                     let dateStart = new Date(info.event.start);
                     let dateEnd = new Date(info.event.end);
                     let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
@@ -2089,6 +2075,9 @@ Template.calender.onRendered(function() {
                                 Id: parseInt(eventDropID) || 0,
                                 StartTime: startDate + " " + startTime + ":00" || "",
                                 EndTime: endDate + " " + endTime + ":00" || "",
+                                Description:eventDescription,
+                                Color:eventColor,
+                                Title:eventTitle
                             },
                         };
                         let nameid = appointmentData[index].employeename.replace(" ", "-");
@@ -2698,6 +2687,177 @@ Template.calender.onRendered(function() {
         });
     };
 
+    function renderAllocationCalendar(){
+        const currentDate = moment();
+        const dateCurrent = new Date();
+        const weekStart = currentDate.clone().startOf('isoWeek').format("YYYY-MM-DD");
+        const weekEnd = currentDate.clone().endOf('isoWeek').format("YYYY-MM-DD");
+        const days = [];
+
+        let weeksOfCurrentMonth = getWeeksInMonth(dateCurrent.getFullYear(), dateCurrent.getMonth());
+        const weekResults = weeksOfCurrentMonth.filter(week => {
+            return week.dates.includes(parseInt(moment(weekStart).format('DD')));
+        });
+        let currentDay = moment().format("dddd");
+        let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+        $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+        $('#here_table thead tr').append('<th class="employeeName"></th>');
+
+        for (let w = 0; w < daysOfTheWeek.length; w++) {
+            if (daysOfTheWeek[w] === "Sunday") {
+                if ($('#showSunday').is(":checked")) {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                } else {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                }
+            } else if (daysOfTheWeek[w] === "Saturday") {
+                if ($('#showSaturday').is(":checked")) {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                } else {
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                }
+            } else {
+                $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+            }
+        }
+
+        $('#here_table').append('</tr ></thead >');
+
+        for (let i = 0; i <= weekResults[0].dates.length; i++) {
+            days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
+        }
+        $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
+        $('.sunday').attr("id", moment(weekStart).subtract(1, 'days').format("YYYY-MM-DD"));
+        $('.monday').attr("id", moment(weekStart).add(0, 'days').format("YYYY-MM-DD"));
+        $('.tuesday').attr("id", moment(weekStart).add(1, 'days').format("YYYY-MM-DD"));
+        $('.wednesday').attr("id", moment(weekStart).add(2, 'days').format("YYYY-MM-DD"));
+        $('.thursday').attr("id", moment(weekStart).add(3, 'days').format("YYYY-MM-DD"));
+        $('.friday').attr("id", moment(weekStart).add(4, 'days').format("YYYY-MM-DD"));
+        $('.saturday').attr("id", moment(weekStart).add(5, 'days').format("YYYY-MM-DD"));
+
+        if (LoggedCountry == "United States") {
+            $(".dateMon").text(moment(weekStart).add(0, 'days').format("MM/DD"));
+            $(".dateTue").text(moment(weekStart).add(1, 'days').format("MM/DD"));
+            $(".dateWed").text(moment(weekStart).add(2, 'days').format("MM/DD"));
+            $(".dateThu").text(moment(weekStart).add(3, 'days').format("MM/DD"));
+            $(".dateFri").text(moment(weekStart).add(4, 'days').format("MM/DD"));
+            $(".dateSat").text(moment(weekStart).add(5, 'days').format("MM/DD"));
+            $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
+        } else {
+            $(".dateMon").text(moment(weekStart).add(0, 'days').format("DD/MM"));
+            $(".dateTue").text(moment(weekStart).add(1, 'days').format("DD/MM"));
+            $(".dateWed").text(moment(weekStart).add(2, 'days').format("DD/MM"));
+            $(".dateThu").text(moment(weekStart).add(3, 'days').format("DD/MM"));
+            $(".dateFri").text(moment(weekStart).add(4, 'days').format("DD/MM"));
+            $(".dateSat").text(moment(weekStart).add(5, 'days').format("DD/MM"));
+            $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("DD/MM"));
+        }
+        if (currentDay == "Monday" && moment().format('DD') == moment($('thead tr th.monday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.monday').addClass("currentDay");
+            });
+        }
+        if (currentDay == "Tuesday" && moment().format('DD') == moment($('thead tr th.tuesday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.tuesday').addClass("currentDay");
+            });
+        }
+        if (currentDay == "Wednesday" && moment().format('DD') == moment($('thead tr th.wednesday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.wednesday').addClass("currentDay");
+            });
+        }
+        if (currentDay == "Thursday" && moment().format('DD') == moment($('thead tr th.thursday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.thursday').addClass("currentDay");
+            });
+        }
+        if (currentDay == "Friday" && moment().format('DD') == moment($('thead tr th.friday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.friday').addClass("currentDay");
+            });
+        }
+        if (currentDay == "Saturday" && moment().format('DD') == moment($('thead tr th.saturday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.saturday').addClass("currentDay");
+            });
+        }
+        if (currentDay == "Sunday" && moment().format('DD') == moment($('thead tr th.sunday').attr("id")).format('DD')) {
+            $(document).on('DOMNodeInserted', function(e) {
+                $("#allocationTable").find('tbody tr td.sunday').addClass("currentDay");
+            });
+        }
+    }
+    function initAppointmentForm(){
+        $("#frmAppointment")[0].reset();
+        $("#btnHold").prop("disabled", false);
+        $("#btnStartAppointment").prop("disabled", false);
+        $("#btnStopAppointment").prop("disabled", false);
+        $("#startTime").prop("disabled", false);
+        $("#endTime").prop("disabled", false);
+        $("#tActualStartTime").prop("disabled", false);
+        $("#tActualEndTime").prop("disabled", false);
+        $("#txtActualHoursSpent").prop("disabled", false);
+    }
+    function setShowWeekendAllocationHeader(){
+        $("#allocationTable .sunday").removeClass("hidesunday");
+        $("#allocationTable .saturday").removeClass("hidesaturday");
+        $("#allocationTable > thead > tr> th").addClass("fullWeek");
+        $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
+        $("#allocationTable > thead > tr> th").removeClass("cardHiddenSundayOrSaturday");
+
+        $("#allocationTable > tbody > tr> td").addClass("fullWeek");
+        $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
+        $("#allocationTable > tbody > tr> td").removeClass("cardHiddenSundayOrSaturday");
+
+        $("#allocationTable > tbody > tr> td > .card").addClass("cardFullWeek");
+        $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
+        $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenSundayOrSaturday");
+
+    }
+
+    function setNormalAllocationHeader(){
+        $("#allocationTable .sunday").addClass("hidesunday");
+        $("#allocationTable .saturday").addClass("hidesaturday");
+        $("#allocationTable > thead > tr> th").addClass("fullWeek");
+        $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
+        $("#allocationTable > thead > tr> th").removeClass("cardHiddenSundayOrSaturday");
+
+        $("#allocationTable > tbody > tr> td").addClass("fullWeek");
+        $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
+        $("#allocationTable > tbody > tr> td").removeClass("cardHiddenSundayOrSaturday");
+
+        $("#allocationTable > tbody > tr> td > .card").addClass("cardFullWeek");
+        $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
+        $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenSundayOrSaturday");
+    }
+    function setAllocationTableHeader(withWeekend){
+        $("#allocationTable > thead > tr> th").removeClass("fullWeek");
+        if(withWeekend){
+            $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
+            $("#allocationTable > thead > tr> th").addClass("cardHiddenSundayOrSaturday");
+        } else{
+            $("#allocationTable > thead > tr> th").addClass("cardHiddenWeekend");
+        }
+
+        $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
+        if(withWeekend){
+            $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
+            $("#allocationTable > tbody > tr> td").addClass("cardHiddenSundayOrSaturday");
+        } else{
+            $("#allocationTable > tbody > tr> td").addClass("cardHiddenWeekend");
+        }
+
+        $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
+        if(withWeekend){
+            $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
+            $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenSundayOrSaturday");
+        } else{
+            $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenWeekend");
+        }
+    }
+
     function setAppointmentData(data) {
         let result;
         let employeeColor;
@@ -2709,8 +2869,9 @@ Template.calender.onRendered(function() {
         let allEmp = templateObject.employeerecords.get();
         let mySessionEmployee = localStorage.getItem("mySessionEmployee");
         for (let i = 0; i < data.tappointmentex.length; i++) {
+            let useData = data.tappointmentex[i];
             employeeColor = allEmp.filter(apmt => {
-                return apmt.employeeName == data.tappointmentex[i].fields.TrainerName;
+                return apmt.employeeName == useData.fields.TrainerName;
             });
             if (employeeColor.length > 0) {
                 appColor = employeeColor[0].color || '#00a3d3';
@@ -2718,58 +2879,58 @@ Template.calender.onRendered(function() {
                 appColor = '#00a3d3';
             }
             const appointment = {
-                id: data.tappointmentex[i].fields.ID || "",
-                sortdate: data.tappointmentex[i].fields.CreationDate ? moment(data.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
-                appointmentdate: data.tappointmentex[i].fields.CreationDate ? moment(data.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
-                accountname: data.tappointmentex[i].fields.ClientName || "",
-                statementno: data.tappointmentex[i].fields.TrainerName || "",
-                employeename: data.tappointmentex[i].fields.TrainerName || "",
-                extraProducts: data.tappointmentex[i].fields.ExtraProducts || "",
-                department: data.tappointmentex[i].fields.DeptClassName || "",
-                phone: data.tappointmentex[i].fields.Phone || "",
-                mobile: data.tappointmentex[i].fields.Mobile || "",
-                suburb: data.tappointmentex[i].fields.Suburb || "",
-                street: data.tappointmentex[i].fields.Street || "",
-                state: data.tappointmentex[i].fields.State || "",
-                country: data.tappointmentex[i].fields.Country || "",
-                zip: data.tappointmentex[i].fields.Postcode || "",
-                timelog: data.tappointmentex[i].fields.AppointmentsTimeLog || "",
-                startTime: data.tappointmentex[i].fields.StartTime.split(" ")[1] || "",
-                totalHours: data.tappointmentex[i].fields.TotalHours || 0,
-                endTime: data.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
-                startDate: data.tappointmentex[i].fields.StartTime || "",
-                endDate: data.tappointmentex[i].fields.EndTime || "",
-                fromDate: data.tappointmentex[i].fields.Actual_EndTime ? moment(data.tappointmentex[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
-                openbalance: data.tappointmentex[i].fields.Actual_EndTime || "",
-                aStartTime: data.tappointmentex[i].fields.Actual_StartTime.split(" ")[1] || "",
-                aEndTime: data.tappointmentex[i].fields.Actual_EndTime.split(" ")[1] || "",
-                aStartDate: data.tappointmentex[i].fields.Actual_StartTime.split(" ")[0] || "",
-                aEndDate: data.tappointmentex[i].fields.Actual_EndTime.split(" ")[0] || "",
+                id: useData.fields.ID || "",
+                sortdate: useData.fields.CreationDate ? moment(useData.fields.CreationDate).format("YYYY/MM/DD") : "",
+                appointmentdate: useData.fields.CreationDate ? moment(useData.fields.CreationDate).format("DD/MM/YYYY") : "",
+                accountname: useData.fields.ClientName || "",
+                statementno: useData.fields.TrainerName || "",
+                employeename: useData.fields.TrainerName || "",
+                extraProducts: useData.fields.ExtraProducts || "",
+                department: useData.fields.DeptClassName || "",
+                phone: useData.fields.Phone || "",
+                mobile: useData.fields.Mobile || "",
+                suburb: useData.fields.Suburb || "",
+                street: useData.fields.Street || "",
+                state: useData.fields.State || "",
+                country: useData.fields.Country || "",
+                zip: useData.fields.Postcode || "",
+                timelog: useData.fields.AppointmentsTimeLog || "",
+                startTime: useData.fields.StartTime.split(" ")[1] || "",
+                totalHours: useData.fields.TotalHours || 0,
+                endTime: useData.fields.EndTime.split(" ")[1] || "",
+                startDate: useData.fields.StartTime || "",
+                endDate: useData.fields.EndTime || "",
+                fromDate: useData.fields.Actual_EndTime ? moment(useData.fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                openbalance: useData.fields.Actual_EndTime || "",
+                aStartTime: useData.fields.Actual_StartTime.split(" ")[1] || "",
+                aEndTime: useData.fields.Actual_EndTime.split(" ")[1] || "",
+                aStartDate: useData.fields.Actual_StartTime.split(" ")[0] || "",
+                aEndDate: useData.fields.Actual_EndTime.split(" ")[0] || "",
                 actualHours: "",
                 closebalance: "",
-                rate: data.tappointmentex[i].fields.Rate || 1,
-                product: data.tappointmentex[i].fields.ProductDesc || "",
-                finished: data.tappointmentex[i].fields.Status || "",
-                //employee: data.tappointmentex[i].EndTime != "" ? moment(data.tappointmentex[i].EndTime).format("DD/MM/YYYY") : data.tappointmentex[i].EndTime,
-                notes: data.tappointmentex[i].fields.Notes || "",
-                attachments: data.tappointmentex[i].fields.Attachments || "",
-                isPaused: data.tappointmentex[i].fields.Othertxt || "",
-                msRef: data.tappointmentex[i].fields.MsRef || "",
-                custFld13: data.tappointmentex[i].fields.CUSTFLD13 || "",
-                custFld11: data.tappointmentex[i].fields.CUSTFLD11 || "",
+                rate: useData.fields.Rate || 1,
+                product: useData.fields.ProductDesc || "",
+                finished: useData.fields.Status || "",
+                //employee: useData.EndTime != "" ? moment(useData.EndTime).format("DD/MM/YYYY") : useData.EndTime,
+                notes: useData.fields.Notes || "",
+                attachments: useData.fields.Attachments || "",
+                isPaused: useData.fields.Othertxt || "",
+                msRef: useData.fields.MsRef || "",
+                custFld13: useData.fields.CUSTFLD13 || "",
+                custFld11: useData.fields.CUSTFLD11 || "",
             };
 
-            let surbub = data.tappointmentex[i].fields.Suburb || "";
-            let zip = data.tappointmentex[i].fields.Postcode || "";
-            let street = data.tappointmentex[i].fields.Street || "";
-            let state = data.tappointmentex[i].fields.State || "";
-            let country = data.tappointmentex[i].fields.Country || "";
-            let getAddress = 'Client Name: ' + data.tappointmentex[i].fields.ClientName + '<br /> Address: ' + street + ',' + state + ',' + country + ',' + surbub + " " + zip;
+            let surbub = useData.fields.Suburb || "";
+            let zip = useData.fields.Postcode || "";
+            let street = useData.fields.Street || "";
+            let state = useData.fields.State || "";
+            let country = useData.fields.Country || "";
+            let getAddress = 'Client Name: ' + useData.fields.ClientName + '<br /> Address: ' + street + ',' + state + ',' + country + ',' + surbub + " " + zip;
             dataList = {
-                id: data.tappointmentex[i].fields.ID.toString() || "",
-                title: data.tappointmentex[i].fields.ClientName,
-                start: data.tappointmentex[i].fields.StartTime || "",
-                end: data.tappointmentex[i].fields.EndTime || "",
+                id: useData.fields.ID.toString() || "",
+                title: useData.fields.ClientName,
+                start: useData.fields.StartTime || "",
+                end: useData.fields.EndTime || "",
                 description: getAddress,
                 color: appColor
             };
@@ -2920,14 +3081,7 @@ Template.calender.onRendered(function() {
                 // this.$body.addClass('modal-open');
             }
         }
-        $("#allocationTable > thead > tr> th").removeClass("fullWeek");
-        $("#allocationTable > thead > tr> th").addClass("cardHiddenWeekend");
-
-        $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
-        $("#allocationTable > tbody > tr> td").addClass("cardHiddenWeekend");
-
-        $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
-        $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenWeekend");
+        setAllocationTableHeader(false);
         if (templateObject.eventdata.get()) {
             setTimeout(function() {
                 console.log('Re-renderNormalCalendar')
@@ -2942,99 +3096,9 @@ Template.calender.onRendered(function() {
         const days = [];
 
         let weeksOfCurrentMonth = getWeeksInMonth(dateCurrent.getFullYear(), dateCurrent.getMonth());
-        const weekResults = weeksOfCurrentMonth.filter(week => {
-            return week.dates.includes(parseInt(moment(weekStart).format('DD')));
-        });
-        let currentDay = moment().format("dddd");
-        let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-        $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-        $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-        $('#here_table thead tr').append('<th class="employeeName"></th>');
+        renderAllocationCalendar();
 
-        for (let w = 0; w < daysOfTheWeek.length; w++) {
-            if (daysOfTheWeek[w] === "Sunday") {
-                if ($('#showSunday').is(":checked")) {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
-                }
-            } else if (daysOfTheWeek[w] === "Saturday") {
-                if ($('#showSaturday').is(":checked")) {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                }
-            } else {
-                $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
-            }
-        }
-
-        $('#here_table').append('</tr ></thead >');
-        for (let i = 0; i <= weekResults[0].dates.length; i++) {
-            days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
-        }
-        $(".allocationHeaderDate h2").text(moment().format('MMM') + " " + moment(days[0]).format('DD') + ' - ' + moment(days[4]).format('DD') + ', ' + moment().format('YYYY'));
-        $('.sunday').attr("id", moment(weekStart).subtract(1, 'days').format("YYYY-MM-DD"));
-        $('.monday').attr("id", moment(weekStart).add(0, 'days').format("YYYY-MM-DD"));
-        $('.tuesday').attr("id", moment(weekStart).add(1, 'days').format("YYYY-MM-DD"));
-        $('.wednesday').attr("id", moment(weekStart).add(2, 'days').format("YYYY-MM-DD"));
-        $('.thursday').attr("id", moment(weekStart).add(3, 'days').format("YYYY-MM-DD"));
-        $('.friday').attr("id", moment(weekStart).add(4, 'days').format("YYYY-MM-DD"));
-        $('.saturday').attr("id", moment(weekStart).add(5, 'days').format("YYYY-MM-DD"));
-
-        if (LoggedCountry == "United States") {
-            $(".dateMon").text(moment(weekStart).add(0, 'days').format("MM/DD"));
-            $(".dateTue").text(moment(weekStart).add(1, 'days').format("MM/DD"));
-            $(".dateWed").text(moment(weekStart).add(2, 'days').format("MM/DD"));
-            $(".dateThu").text(moment(weekStart).add(3, 'days').format("MM/DD"));
-            $(".dateFri").text(moment(weekStart).add(4, 'days').format("MM/DD"));
-            $(".dateSat").text(moment(weekStart).add(5, 'days').format("MM/DD"));
-            $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("MM-DD"));
-        } else {
-            $(".dateMon").text(moment(weekStart).add(0, 'days').format("DD/MM"));
-            $(".dateTue").text(moment(weekStart).add(1, 'days').format("DD/MM"));
-            $(".dateWed").text(moment(weekStart).add(2, 'days').format("DD/MM"));
-            $(".dateThu").text(moment(weekStart).add(3, 'days').format("DD/MM"));
-            $(".dateFri").text(moment(weekStart).add(4, 'days').format("DD/MM"));
-            $(".dateSat").text(moment(weekStart).add(5, 'days').format("DD/MM"));
-            $(".dateSun").text(moment(weekStart).subtract(1, 'days').format("DD/MM"));
-        }
-        if (currentDay == "Monday" && moment().format('DD') == moment($('thead tr th.monday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.monday').addClass("currentDay");
-            });
-        }
-        if (currentDay == "Tuesday" && moment().format('DD') == moment($('thead tr th.tuesday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.tuesday').addClass("currentDay");
-            });
-        }
-        if (currentDay == "Wednesday" && moment().format('DD') == moment($('thead tr th.wednesday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.wednesday').addClass("currentDay");
-            });
-        }
-        if (currentDay == "Thursday" && moment().format('DD') == moment($('thead tr th.thursday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.thursday').addClass("currentDay");
-            });
-        }
-        if (currentDay == "Friday" && moment().format('DD') == moment($('thead tr th.friday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.friday').addClass("currentDay");
-            });
-        }
-        if (currentDay == "Saturday" && moment().format('DD') == moment($('thead tr th.saturday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.saturday').addClass("currentDay");
-            });
-        }
-        if (currentDay == "Sunday" && moment().format('DD') == moment($('thead tr th.sunday').attr("id")).format('DD')) {
-            $(document).on('DOMNodeInserted', function(e) {
-                $("#allocationTable").find('tbody tr td.sunday').addClass("currentDay");
-            });
-        }
         templateObject.weeksOfMonth.set(weeksOfCurrentMonth);
         let startWeek = new Date(moment(weekStart).format('YYYY-MM-DD'));
         let endWeek = new Date(moment(weekEnd).format('YYYY-MM-DD'));
@@ -3332,14 +3396,7 @@ Template.calender.onRendered(function() {
         const begunDate = moment(currentDate).format("YYYY-MM-DD");
         $("#allocationTable .sunday").addClass("hidesunday");
         $("#allocationTable .saturday").addClass("hidesaturday");
-        $("#allocationTable > thead > tr> th").removeClass("fullWeek");
-        $("#allocationTable > thead > tr> th").addClass("cardHiddenWeekend");
-
-        $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
-        $("#allocationTable > tbody > tr> td").addClass("cardHiddenWeekend");
-
-        $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
-        $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenWeekend");
+        setAllocationTableHeader(false);
 
         //if(eventData.length > 0){
         const calendar = new Calendar(calendarEl, {
@@ -4912,15 +4969,7 @@ Template.calender.onRendered(function() {
             //             }
             //         },
             //         eventClick: function(info) {
-            //             document.getElementById("frmAppointment").reset();
-            //             $("#btnHold").prop("disabled", false);
-            //             $("#btnStartAppointment").prop("disabled", false);
-            //             $("#btnStopAppointment").prop("disabled", false);
-            //             $("#startTime").prop("disabled", false);
-            //             $("#endTime").prop("disabled", false);
-            //             $("#tActualStartTime").prop("disabled", false);
-            //             $("#tActualEndTime").prop("disabled", false);
-            //             $("#txtActualHoursSpent").prop("disabled", false);
+            //            initAppointmentForm();
             //             var hours = "0";
             //             var id = info.event.id;
             //             var appointmentData = appointmentList;
@@ -5247,20 +5296,7 @@ Template.calender.onRendered(function() {
             }
             if (checkbox.checked && (checkboxSaturday.checked)) {
                 let hideDays = "";
-                $("#allocationTable .sunday").removeClass("hidesunday");
-                $("#allocationTable .saturday").removeClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").addClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").addClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenSundayOrSaturday");
-
+                setShowWeekendAllocationHeader()
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
@@ -5268,17 +5304,7 @@ Template.calender.onRendered(function() {
                 let hideDays = [6];
                 $("#allocationTable .sunday").removeClass("hidesunday");
                 $("#allocationTable .saturday").addClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").removeClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenSundayOrSaturday");
+                setAllocationTableHeader(true)
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
@@ -5286,36 +5312,13 @@ Template.calender.onRendered(function() {
                 let hideDays = [0];
                 $("#allocationTable .sunday").addClass("hidesunday");
                 $("#allocationTable .saturday").removeClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").removeClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenSundayOrSaturday");
+                setAllocationTableHeader(true)
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else {
                 let hideDays = [0, 6];
-                $("#allocationTable .sunday").addClass("hidesunday");
-                $("#allocationTable .saturday").addClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").addClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").addClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenSundayOrSaturday");
-
+                setNormalAllocationHeader();
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
@@ -5336,20 +5339,7 @@ Template.calender.onRendered(function() {
             }
             if (checkbox.checked && (checkboxSaturday.checked)) {
                 let hideDays = "";
-                $("#allocationTable .sunday").removeClass("hidesunday");
-                $("#allocationTable .saturday").removeClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").addClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").addClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenSundayOrSaturday");
-
+                setShowWeekendAllocationHeader()
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
@@ -5357,17 +5347,7 @@ Template.calender.onRendered(function() {
                 let hideDays = [6];
                 $("#allocationTable .sunday").removeClass("hidesunday");
                 $("#allocationTable .saturday").addClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").removeClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenSundayOrSaturday");
+                setAllocationTableHeader(true)
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
@@ -5375,36 +5355,13 @@ Template.calender.onRendered(function() {
                 let hideDays = [0];
                 $("#allocationTable .sunday").addClass("hidesunday");
                 $("#allocationTable .saturday").removeClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").removeClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").removeClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").addClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardHiddenSundayOrSaturday");
+                setAllocationTableHeader(true)
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else {
                 let hideDays = [0, 6];
-                $("#allocationTable .sunday").addClass("hidesunday");
-                $("#allocationTable .saturday").addClass("hidesaturday");
-                $("#allocationTable > thead > tr> th").addClass("fullWeek");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenWeekend");
-                $("#allocationTable > thead > tr> th").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td").addClass("fullWeek");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td").removeClass("cardHiddenSundayOrSaturday");
-
-                $("#allocationTable > tbody > tr> td > .card").addClass("cardFullWeek");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenWeekend");
-                $("#allocationTable > tbody > tr> td > .card").removeClass("cardHiddenSundayOrSaturday");
-
+                setNormalAllocationHeader();
                 setTimeout(function() {
                     templateObject.renderCalendar(slotMin, slotMax, hideDays);
                 }, 50);
