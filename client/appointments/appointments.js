@@ -261,27 +261,6 @@ Template.appointments.onRendered(function() {
 	
 	$(".fullScreenSpin").css("display", "inline-block");
 
-    const refreshPage = () => {
-        if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-            window.open(localStorage.getItem("appt_historypage"), "_self");
-        } else {
-            window.open("/appointments", "_self");
-        }
-    }
-
-    templateObject.fetchAppointments = function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-			addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function() {
-				refreshPage();
-			})
-			.catch(function() {});
-		})
-		.catch(function() {
-			refreshPage();
-		});
-    };
-
 	templateObject.diff_hours = function(dt2, dt1) {
         var diff = (dt2.getTime() - dt1.getTime()) / 1000;
         diff /= 60 * 60;
@@ -409,7 +388,6 @@ Template.appointments.onRendered(function() {
             if (dataObject.length == 0) {
                 contactService.getAllEmployeeSideData().then(function(data) {
                     let lineItems = [];
-
                     for (let i = 0; i < data.temployee.length; i++) {
                         let randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
@@ -463,19 +441,16 @@ Template.appointments.onRendered(function() {
                             -1;
                     });
                     templateObject.employeerecords.set(lineItems);
-
                     if (templateObject.employeerecords.get()) {
                         setTimeout(function() {
                             $(".counter").text(lineItems.length + " items");
                         }, 100);
                     }
-                })
-                .catch(function() {});
+                }).catch(function() {});
             } else {
                 let data = JSON.parse(dataObject[0].data);
                 let useData = data.temployee;
                 let lineItems = [];
-
                 for (let i = 0; i < useData.length; i++) {
                     let randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
@@ -489,34 +464,23 @@ Template.appointments.onRendered(function() {
                             fields: {
                                 ID: useData[i].fields.ID,
                                 CustFld6: selectedColor,
-                                Email: useData[i].fields.Email ||
-                                    useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
+                                Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
                                 Sex: useData[i].fields.Sex || "M",
-                                DateStarted: useData[i].fields.DateStarted ||
-                                    moment().format("YYYY-MM-DD"),
-                                DOB: useData[i].fields.DOB ||
-                                    moment("2018-07-01").format("YYYY-MM-DD"),
+                                DateStarted: useData[i].fields.DateStarted || moment().format("YYYY-MM-DD"),
+                                DOB: useData[i].fields.DOB || moment("2018-07-01").format("YYYY-MM-DD"),
                             },
                         };
-
-                        contactService
-                            .saveEmployeeEx(objDetails)
-                            .then(function() {});
+                        contactService.saveEmployeeEx(objDetails).then(function() {});
                     }
 
-                    if (
-                        localStorage.getItem("mySessionEmployee") == useData[i].fields.EmployeeName
-                    ) {
+                    if (localStorage.getItem("mySessionEmployee") == useData[i].fields.EmployeeName) {
                         if (useData[i].fields.CustFld8 == "false") {
                             templateObject.includeAllProducts.set(false);
                         }
                     }
 
                     if (JSON.parse(seeOwnAppointments) == true) {
-                        if (
-                            useData[i].fields.EmployeeName ==
-                            localStorage.getItem("mySessionEmployee")
-                        ) {
+                        if (useData[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
                             var dataList = {
                                 id: useData[i].fields.ID || "",
                                 employeeName: useData[i].fields.EmployeeName || "",
@@ -547,59 +511,32 @@ Template.appointments.onRendered(function() {
                     } else if (b.employeeName == "NA") {
                         return -1;
                     }
-                    return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ?
-                        1 :
-                        -1;
+                    return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
                 });
                 templateObject.employeerecords.set(lineItems);
-
                 if (templateObject.employeerecords.get()) {
                     setTimeout(function() {
                         $(".counter").text(lineItems.length + " items");
                     }, 100);
                 }
             }
-        })
-        .catch(function() {
-            contactService
-                .getAllEmployeeSideData()
-                .then(function(data) {
-                    let lineItems = [];
+        }).catch(function() {
+            contactService.getAllEmployeeSideData().then(function(data) {
+                let lineItems = [];
+                for (let i = 0; i < data.temployee.length; i++) {
+                    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
 
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let randomColor = Math.floor(Math.random() * 16777215).toString(
-                            16
-                        );
-
-                        if (randomColor.length < 6) {
-                            randomColor = randomColor + "6";
+                    if (randomColor.length < 6) {
+                        randomColor = randomColor + "6";
+                    }
+                    let selectedColor = "#" + randomColor;
+                    if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
+                        if (useData[i].fields.CustFld8 == "false") {
+                            templateObject.includeAllProducts.set(false);
                         }
-                        let selectedColor = "#" + randomColor;
-                        if (
-                            localStorage.getItem("mySessionEmployee") ==
-                            data.temployee[i].fields.EmployeeName
-                        ) {
-                            if (useData[i].fields.CustFld8 == "false") {
-                                templateObject.includeAllProducts.set(false);
-                            }
-                        }
-                        if (JSON.parse(seeOwnAppointments) == true) {
-                            if (
-                                data.temployee[i].fields.EmployeeName ==
-                                localStorage.getItem("mySessionEmployee")
-                            ) {
-                                var dataList = {
-                                    id: data.temployee[i].fields.ID || "",
-                                    employeeName: data.temployee[i].fields.EmployeeName || "",
-                                    color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                    priority: data.temployee[i].fields.CustFld5 || "0",
-                                    override: data.temployee[i].fields.CustFld14 || "false",
-                                    custFld7: data.temployee[i].fields.CustFld7 || "",
-                                    custFld8: data.temployee[i].fields.CustFld8 || "",
-                                };
-                                lineItems.push(dataList);
-                            }
-                        } else {
+                    }
+                    if (JSON.parse(seeOwnAppointments) == true) {
+                        if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
                             var dataList = {
                                 id: data.temployee[i].fields.ID || "",
                                 employeeName: data.temployee[i].fields.EmployeeName || "",
@@ -611,126 +548,36 @@ Template.appointments.onRendered(function() {
                             };
                             lineItems.push(dataList);
                         }
+                    } else {
+                        var dataList = {
+                            id: data.temployee[i].fields.ID || "",
+                            employeeName: data.temployee[i].fields.EmployeeName || "",
+                            color: data.temployee[i].fields.CustFld6 || selectedColor,
+                            priority: data.temployee[i].fields.CustFld5 || "0",
+                            override: data.temployee[i].fields.CustFld14 || "false",
+                            custFld7: data.temployee[i].fields.CustFld7 || "",
+                            custFld8: data.temployee[i].fields.CustFld8 || "",
+                        };
+                        lineItems.push(dataList);
                     }
-                    lineItems.sort(function(a, b) {
-                        if (a.employeeName == "NA") {
-                            return 1;
-                        } else if (b.employeeName == "NA") {
-                            return -1;
-                        }
-                        return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ?
-                            1 :
-                            -1;
-                    });
-                    templateObject.employeerecords.set(lineItems);
+                }
+                lineItems.sort(function(a, b) {
+                    if (a.employeeName == "NA") {
+                        return 1;
+                    } else if (b.employeeName == "NA") {
+                        return -1;
+                    }
+                    return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
+                });
+                templateObject.employeerecords.set(lineItems);
 
-                    if (templateObject.employeerecords.get()) {
-                        setTimeout(function() {
-                            $(".counter").text(lineItems.length + " items");
-                        }, 100);
-                    }
-                })
-                .catch(function() {});
+                if (templateObject.employeerecords.get()) {
+                    setTimeout(function() {
+                        $(".counter").text(lineItems.length + " items");
+                    }, 100);
+                }
+            }).catch(function() {});
         });
-    };
-
-    templateObject.getAllSelectedProducts = function(employeeID) {
-        let productlist = [];
-        templateObject.datatablerecords.set([]);
-        var splashArrayProductServiceListGet = [];
-        //$('#product-list').editableSelect('clear');
-        getVS1Data("TRepServices").then(function(dataObject){
-            if (dataObject.length == 0) {
-            sideBarService.getSelectedProducts(employeeID).then(function(data) {
-                addVS1Data("TRepServices", JSON.stringify(data));
-                var dataList = {};
-                let getallinvproducts = templateObject.allnoninvproducts.get();
-                if (data.trepservices.length > 0) {
-                    for (let i = 0; i < data.trepservices.length; i++) {
-                        dataList = {
-                            id: data.trepservices[i].Id || "",
-                            productname: data.trepservices[i].ServiceDesc || "",
-                            productcost: data.trepservices[i].Rate || 0.0,
-                        };
-
-                        productlist.push(dataList);
-                    }
-                    if (splashArrayProductServiceListGet) {
-                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
-                        var datatable = $("#tblInventoryPayrollService").DataTable();
-                        datatable.clear();
-                        datatable.rows.add(uniqueChars);
-                        datatable.draw(false);
-                    }
-
-                    templateObject.datatablerecords.set(productlist);
-                } else {
-                    templateObject.getAllProductData();
-                }
-            })
-            .catch(function() {
-                templateObject.getAllProductData();
-            });
-            }else{
-                let data = JSON.parse(dataObject[0].data);
-                var dataList = {};
-                let getallinvproducts = templateObject.allnoninvproducts.get();
-                if (data.trepservices.length > 0) {
-                    for (let i = 0; i < data.trepservices.length; i++) {
-                        dataList = {
-                            id: data.trepservices[i].Id || "",
-                            productname: data.trepservices[i].ServiceDesc || "",
-                            productcost: data.trepservices[i].Rate || 0.0,
-                        };
-
-                        productlist.push(dataList);
-                    }
-                    if (splashArrayProductServiceListGet) {
-                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
-                        var datatable = $("#tblInventoryPayrollService").DataTable();
-                        datatable.clear();
-                        datatable.rows.add(uniqueChars);
-                        datatable.draw(false);
-                    }
-
-                    templateObject.datatablerecords.set(productlist);
-                } else {
-                    templateObject.getAllProductData();
-                }
-            }
-        }).catch(function() {
-            sideBarService.getSelectedProducts(employeeID).then(function(data) {
-                addVS1Data("TRepServices", JSON.stringify(data));
-                var dataList = {};
-                let getallinvproducts = templateObject.allnoninvproducts.get();
-                if (data.trepservices.length > 0) {
-                    for (let i = 0; i < data.trepservices.length; i++) {
-                        dataList = {
-                            id: data.trepservices[i].Id || "",
-                            productname: data.trepservices[i].ServiceDesc || "",
-                            productcost: data.trepservices[i].Rate || 0.0,
-                        };
-
-                        productlist.push(dataList);
-                    }
-                    if (splashArrayProductServiceListGet) {
-                        let uniqueChars = [...new Set(splashArrayProductServiceListGet)];
-                        var datatable = $("#tblInventoryPayrollService").DataTable();
-                        datatable.clear();
-                        datatable.rows.add(uniqueChars);
-                        datatable.draw(false);
-                    }
-
-                    templateObject.datatablerecords.set(productlist);
-                } else {
-                    templateObject.getAllProductData();
-                }
-            })
-            .catch(function() {
-                templateObject.getAllProductData();
-            });
-        })
-
     };
 
     templateObject.getAllProductData = function() {
@@ -1222,19 +1069,16 @@ Template.appointments.onRendered(function() {
                 if (data.tappointmentpreferences.length > 0) {
                     templateObject.employeeOptions.set(data.tappointmentpreferences);
                 }
-            })
-            .catch(function() {});
+            }).catch(function() {});
         } else {
             let data = JSON.parse(dataObject[0].data);
             let useData = data.tappointmentpreferences;
             templateObject.employeeOptions.set(useData);
         }
-    })
-    .catch(function() {
+    }).catch(function() {
         appointmentService.getCalendarsettings().then(function(data) {
                 templateObject.employeeOptions.set(data.tappointmentpreferences);
-        })
-        .catch(function() {});
+        }).catch(function() {});
     });
 
     templateObject.getAllClients = function() {
@@ -1247,8 +1091,7 @@ Template.appointments.onRendered(function() {
 				let data = JSON.parse(dataObject[0].data);
 				templateObject.setAllClientsData(data);
 			}
-		})
-		.catch(function() {
+		}).catch(function() {
 			clientsService.getClientVS1().then(function(data) {
 				templateObject.setAllClientsData(data)
 			});
@@ -1283,10 +1126,7 @@ Template.appointments.onRendered(function() {
 				} else if (b.customername == "NA") {
 					return -1;
 				}
-				return a.customername.toUpperCase() >
-					b.customername.toUpperCase() ?
-					1 :
-					-1;
+				return a.customername.toUpperCase() > b.customername.toUpperCase() ? 1 : -1;
 			})
 		);
 
@@ -1294,48 +1134,6 @@ Template.appointments.onRendered(function() {
 			//$('#customer').editableSelect('add', clientList[i].customername);
 		}
 	}
-
-    templateObject.updateEvents = async (updatedEvent) => {
-        let tempEvents = await getVS1Data("TNewAppointment")
-        localStorage.setItem("isFormUpdated", true);
-        if(tempEvents.length == 0){
-            addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
-        }else{
-            let data = JSON.parse(tempEvents[0].data)
-            if(data.length === 0){
-                let currentEventIndex = data?.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
-                if(currentEventIndex > -1){
-                    data[currentEventIndex] = updatedEvent;
-                }else{
-                    data.push(updatedEvent)
-                }
-            }else{
-                data.push(updatedEvent)
-            }
-            addVS1Data("TNewAppointment", JSON.stringify(data))
-        }
-    }
-
-    templateObject.updateTimeLogs = async (updatedTimeLog) => {
-        let tempTimeLogs = await getVS1Data("TAppointmentsTimeLog")
-        localStorage.setItem("isFormUpdated", true);
-        if(tempTimeLogs.length == 0){
-            addVS1Data("TAppointmentsTimeLog", JSON.stringify(updatedTimeLog))
-        }else{
-            let data = JSON.parse(tempTimeLogs[0].data)
-            if(data.length === 0){
-                let currentTimeLogIndex = data?.findIndex((event) => event.fields.Id == updatedTimeLog.fields.Id)
-                if(currentTimeLogIndex > -1){
-                    data[currentTimeLogIndex] = updatedTimeLog;
-                }else{
-                    data.push(updatedTimeLog)
-                }
-            }else{
-                data.push(updatedTimeLog)
-            }
-            addVS1Data("TAppointmentsTimeLog", JSON.stringify(data))
-        }
-    }
 
     $(document).on("click", "#tblInventory tbody tr", async function() {
         $(".colProductName").removeClass("boldtablealertsborder");
@@ -1384,31 +1182,6 @@ Template.appointments.onRendered(function() {
         }, 100);
     });
 
-    getHours = function(start, end) {
-        var hour = 0;
-        hour = parseInt(start.split(":")[0]) - parseInt(end.split(":")[0]);
-        var min = parseInt(start.split(":")[1]) + parseInt(end.split(":")[1]);
-        var checkmin = parseInt(start.split(":")[1]) - parseInt(end.split(":")[1]);
-        if (parseInt(start.split(":")[1]) > parseInt(end.split(":")[1])) {
-            checkmin = parseInt(start.split(":")[1]) - parseInt(end.split(":")[1]);
-        } else if (parseInt(end.split(":")[1]) > parseInt(start.split(":")[1])) {
-            checkmin = parseInt(end.split(":")[1]) - parseInt(start.split(":")[1]);
-        }
-
-        if (checkmin == 0) {
-            hour += 1;
-        } else if (checkmin > 0) {
-            hour += 1;
-        } else if (min == 60) {
-            hour += 1;
-        }
-        return hour;
-    };
-
-    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
-        //$("#btnHold").prop("disabled", true);
-    }
-
     // BEGIN DATE CODE
     $(".formClassDate").datepicker({
         showOn: "button",
@@ -1448,15 +1221,12 @@ Template.appointments.onRendered(function() {
     document.addEventListener("dragstart",function(event) {
             // store a ref. on the dragged elem
             dragged = event.target;
-
             event.target.style.opacity = 0.5;
         },
         false
     );
 
-    document.addEventListener(
-        "dragend",
-        function(event) {
+    document.addEventListener("dragend", function(event) {
             // reset the transparency
             event.target.style.opacity = "";
         },
@@ -1464,18 +1234,14 @@ Template.appointments.onRendered(function() {
     );
 
     /* events fired on the drop targets */
-    document.addEventListener(
-        "dragover",
-        function(event) {
+    document.addEventListener("dragover",function(event) {
             // prevent default to allow drop
             event.preventDefault();
         },
         false
     );
 
-    document.addEventListener(
-        "dragenter",
-        function(event) {
+    document.addEventListener("dragenter", function(event) {
             // highlight potential drop target when the draggable element enters it
             if (event.target.className.includes("droppable")) {
                 event.target.style.background = "#99ccff";
@@ -1484,9 +1250,7 @@ Template.appointments.onRendered(function() {
         false
     );
 
-    document.addEventListener(
-        "dragleave",
-        function(event) {
+    document.addEventListener("dragleave",function(event) {
             // reset background of potential drop target when the draggable element leaves it
             if (event.target.className.includes("droppable")) {
                 event.target.style.background = "";
@@ -1504,62 +1268,6 @@ Template.appointments.onRendered(function() {
         }
     });
 
-	templateObject.sendSMSMessage = async function(type, phoneNumber) {
-        return new Promise(async(resolve) => {
-            const smsSettings = templateObject.defaultSMSSettings.get();
-            const companyName = localStorage.getItem("vs1companyName");
-            const message =
-                smsSettings.headerAppointmentSMSMessage.replace(
-                    "[Company Name]",
-                    companyName
-                ) +
-                " - " +
-                $(`#${type}AppointmentSMSMessage`).val();
-            const sendSMSResult = await new Promise((res, rej) => {
-                Meteor.call(
-                    "sendSMS",
-                    smsSettings.twilioAccountId,
-                    smsSettings.twilioAccountToken,
-                    smsSettings.twilioTelephoneNumber,
-                    phoneNumber,
-                    message,
-                    function(error, result) {
-                        if (error) rej(error);
-                        res(result);
-                    }
-                );
-            });
-            resolve(sendSMSResult);
-            // var endpoint = 'https://api.twilio.com/2010-04-01/Accounts/' + smsSettings.twilioAccountId + '/SMS/Messages.json';
-            // const message = $(`#${type}AppointmentSMSMessage`).val();
-            // var data = {
-            //     Body: message,
-            //     MessagingServiceSid: smsSettings.twilioMessagingServiceSid,
-            //     To: phoneNumber,
-            //     From: smsSettings.twilioTelephoneNumber,
-            // };
-            // $.ajax(
-            //     {
-            //         method: 'POST',
-            //         url: endpoint,
-            //         data: data,
-            //         dataType: 'json',
-            //         contentType: 'application/x-www-form-urlencoded', // !
-            //         beforeSend: function(xhr) {
-            //             xhr.setRequestHeader("Authorization",
-            //                 "Basic " + btoa(smsSettings.twilioAccountId + ":" + smsSettings.twilioAccountToken)
-            //             );
-            //         },
-            //         success: function(data) {
-            //             resolve({ success: true, sid: data.sid });
-            //         },
-            //         error: function(error) {
-            //             resolve({ success: false, message: error.responseJSON.message });
-            //         }
-            //     }
-            // );
-        });
-    };
     //TODO: Check SMS Settings and confirm if continue or go to SMS settings page
     const accessLevel = localStorage.getItem("CloudApptSMS");
     if (!accessLevel) {
@@ -1794,16 +1502,13 @@ Template.appointments.onRendered(function() {
 
     $(document).on("change", "#chkmyAppointments", function() {
         if (JSON.parse(seeOwnAppointments) == true) {
+            seeOwnAppointments = false;
             localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', false);
         } else {
+            seeOwnAppointments = true;
             localStorage.setItem('CloudAppointmentSeeOwnAppointmentsOnly__', true);
         }
-        // FlowRouter.go('/dashboardsalesmanager', '_self');
-        // Meteor._reload.reload();
-        setTimeout(() => {
-            location.reload();
-        }, 200);
-        // FlowRouter.reload();
+        templateObject.getEmployeesList();
     });
 });
 
