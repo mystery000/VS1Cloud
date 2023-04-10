@@ -9,7 +9,8 @@
                 <div class="card-body p-1 rounded" >
 <!--                   {{> non_transactional_list tablename = 'tblInventoryAccountList'}}-->
                     {{>datatablelist
-                            tablename="tblInventoryAccountList"
+                            tableclass="tblInventoryAccountList"
+                            tablename=tablename
                             apiName= apiFunction
                             indexeddbname = 'TAccountVS1List'
                             tableheaderrecords = tableheaderrecords
