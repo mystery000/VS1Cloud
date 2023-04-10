@@ -182,11 +182,12 @@
                 <!-- <td contenteditable="false" class="lineAccountName colAccountName" taxCode="{{item.taxCode}}" lineid="{{item.id}}">{{item.accountname}}</td> -->
                 <td contenteditable="false" class="colAccountName">
 <!--                    <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}">-->
-                    {{> vs1___dropdown
+                    {{> vs1_dropdown
                             type='search'
                             id=item.id
                             name=item.id
-                            modalId= 'accountListModal1'
+                            modalId= 'accountListModal'
+                            usedModal=false
                             list_template_name='accountlistpop'
                             innerModal=true
                             modal_title='Account List'
@@ -194,6 +195,7 @@
                             colNameForValue = 'colAccountName'
                             target_modal_id= 'addAccountModal'
                             target_template_id='addaccountpop'
+                            custid='rcq7ZWZnptT6TzBwP'
                             is_editable=true
                             noBorder=true
                     }}

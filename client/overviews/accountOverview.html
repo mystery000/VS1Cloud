@@ -349,48 +349,32 @@
             <div class="modal-body">
               <div class="row">
                 <div class="col-6">
-                  <div class="form-group">
-                    <label for="edtSummarisedDate">(1) Summarised Transactions Before</label>
-                    <div class="input-group date" style="cursor: pointer;">
-                      <input type="text" class="form-control" id="edtSummarisedDate" name="edtSummarisedDate" title="Select date for summarised transactions before">
-                      <div class="input-group-addon" style="">
-                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                      </div>
-                    </div>
-                  </div>
+                    {{> single_date_picker
+                            label='(1) Summarised Transactions Before'
+                            id='edtSummarisedDate'
+                            name='edtSummarisedDate'
+                    }}
                 </div>
                 <div class="col-6">
-                  <div class="form-group">
-                    <label for="edtGlobal">(2) Global</label>
-                    <div class="input-group date" style="cursor: pointer;">
-                      <input type="text" class="form-control" id="edtGlobal" name="edtGlobal" title="Select date for global">
-                      <div class="input-group-addon" style="">
-                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                      </div>
-                    </div>
-                  </div>
+                    {{> single_date_picker
+                            label='(2) Global'
+                            id='edtGlobal'
+                            name='edtGlobal'
+                    }}
                 </div>
                 <div class="col-6">
-                  <div class="form-group">
-                    <label for="edtReceivable">(3) Accounts Receivable</label>
-                    <div class="input-group date" style="cursor: pointer;">
-                      <input type="text" class="form-control" id="edtReceivable" name="edtReceivable" title="Select date for accounts receiveable">
-                      <div class="input-group-addon" style="">
-                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                      </div>
-                    </div>
-                  </div>
+                   {{> single_date_picker
+                            label='(3) Accounts Receivable'
+                            id='edtReceivable'
+                            name='edtReceivable'
+                   }}
                 </div>
                 <div class="col-6">
-                  <div class="form-group">
-                    <label for="edtPayable">(4) Accounts Payable</label>
-                    <div class="input-group date" style="cursor: pointer;">
-                      <input type="text" class="form-control" id="edtPayable" name="edtPayable" title="Select date for accounts payable">
-                      <div class="input-group-addon" style="">
-                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                      </div>
-                    </div>
-                  </div>
+                    {{> single_date_picker
+                            label='(4) Accounts Payable'
+                            id='edtPayable'
+                            name='edtPayable'
+                    }}
                 </div>
                 <div class="form-group">
                   <div class="row col-lg-12">

@@ -2245,7 +2245,7 @@ Template.accountsoverview.events({
         $("#edtSubAccount1").val("");
         $("#edtSubAccount2").val("");
         $("#edtSubAccount3").val("");
-        $("#sltTaxCode").val("NT" || "");
+        $("#sltTaxCode").val("");
         $("#txaAccountDescription").val("");
         $("#edtBankAccountName").val("");
         $("#edtBSB").val("");
