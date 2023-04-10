@@ -180,12 +180,48 @@
         {{#each item in recordLineItems}}
             <tr class="dnd-moved" id="{{item.lineID}}">
                 <!-- <td contenteditable="false" class="lineAccountName colAccountName" taxCode="{{item.taxCode}}" lineid="{{item.id}}">{{item.accountname}}</td> -->
-                <td contenteditable="false" class="colAccountName"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}"></td>
+                <td contenteditable="false" class="colAccountName">
+<!--                    <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}">-->
+                    {{> vs1_dropdown
+                            type='search'
+                            id=item.id
+                            name=item.id
+                            modalId= 'accountListModal'
+                            usedModal=false
+                            list_template_name='accountlistpop'
+                            innerModal=true
+                            modal_title='Account List'
+                            label = ''
+                            colNameForValue = 'colAccountName'
+                            target_modal_id= 'addAccountModal'
+                            target_template_id='addaccountpop'
+                            custid='rcq7ZWZnptT6TzBwP'
+                            is_editable=true
+                            noBorder=true
+                    }}
+                </td>
                 <!-- <td contenteditable="true" class="lineAccountNo colAccountNo">{{item.accountno}}</td> -->
                 <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
 
                 <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
-                <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"></td>
+                <td contenteditable="false" class="colTaxCode">
+<!--                    <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">-->
+                    {{> vs1___dropdown
+                            type='search'
+                            id=item.id
+                            name=item.id
+                            modalId= 'taxratelistModal'
+                            list_template_name='taxratelistpop'
+                            innerModal=true
+                            modal_title='Tax Code List'
+                            label = ''
+                            colNameForValue = 'colAccountName'
+                            target_modal_id= 'taxratelistModal'
+                            target_template_id='taxratelistpop'
+                            is_editable=true
+                            noBorder=true
+                    }}
+                </td>
 
 
                 <td class="BcolCreditExCheck-{{item.lineID}}" style="text-align: right!important;">
@@ -215,15 +251,41 @@
                 <!-- Department -->
                 <td contenteditable="false" class="colDepartment" id="department-select-{{item.lineID}}">
                     <div class="form-group">
-                        <select type="search" class="form-control select-department" id="select-department-{{item.lineID}}" name="department-{{item.lineID}}"
-                                style="background-color:rgb(255, 255, 255); cursor: pointer;" onloadeddata={{onloadDepartmentSelect item.lineID item.department}} value="{{item.department}}">
-                            <option value="{{item.department}}" selected>{{item.department}}</option>
-                        </select>
+<!--                        <select type="search" class="form-control select-department" id="select-department-{{item.lineID}}" name="department-{{item.lineID}}"-->
+<!--                                style="background-color:rgb(255, 255, 255); cursor: pointer;" onloadeddata={{onloadDepartmentSelect item.lineID item.department}} value="{{item.department}}">-->
+<!--                            <option value="{{item.department}}" selected>{{item.department}}</option>-->
+<!--                        </select>-->
+                        {{> vs1___dropdown
+                                type='search'
+                                classes='select-department'
+                                id=item.lineID
+                                name=item.lineID
+                                modalId= 'departmentModal'
+                                list_template_name='departmentpop'
+                                innerModal=true
+                                modal_title='Department List'
+                                colNameForValue = 'colDeptName'
+                                target_modal_id= 'addAccountModal'
+                                target_template_id='addaccountpop'
+                                is_editable=true
+                                noBorder=true
+                        }}
                     </div>
                 </td>
                 <td contenteditable="false" class="colCustomerJob" id="td-customer-{{item.lineID}}">
-                    {{> vs1_dropdown name='lineCustomerJob' type='search' classes='es-input lineCustomerJob' value=item.customerJob
-                            onloadeddata=onloadedLineCustomerJob
+<!--                    {{> vs1_dropdown name='lineCustomerJob' type='search' classes='es-input lineCustomerJob' value=item.customerJob onloadeddata=onloadedLineCustomerJob}}-->
+
+                    {{> vs1___dropdown
+                            type='search'
+                            id=item.lineID
+                            name=item.lineID
+                            modalId= 'customerModal'
+                            list_template_name='customerlistpop'
+                            innerModal=true
+                            modal_title='Customer List'
+                            colNameForValue = 'colDeptName'
+                            is_editable=true
+                            noBorder=true
                     }}
                 </td>
                 <td class="th colFixedAsset" assetID="{{item.fixedAssetID}}" assetname="{{item.fixedAssetName}}"

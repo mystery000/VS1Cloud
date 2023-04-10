@@ -1561,7 +1561,7 @@ Template.accountsoverview.onRendered(function() {
     };
 
     setTimeout(function() {
-        templateObject.getAllTaxCodes();
+        //templateObject.getAllTaxCodes();
     }, 500);
 
     function makeNegativeGlobal() {
@@ -2245,7 +2245,7 @@ Template.accountsoverview.events({
         $("#edtSubAccount1").val("");
         $("#edtSubAccount2").val("");
         $("#edtSubAccount3").val("");
-        $("#sltTaxCode").val("NT" || "");
+        $("#sltTaxCode").val("");
         $("#txaAccountDescription").val("");
         $("#edtBankAccountName").val("");
         $("#edtBSB").val("");
