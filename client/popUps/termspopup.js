@@ -40,6 +40,7 @@ Template.termlistpop.onCreated(function() {
 
 
     templateObject.getDataTableList = function(data){
+      console.log(data);
         let linestatus = '';
             if (data.Active == true) {
                 linestatus = "";
@@ -121,7 +122,7 @@ Template.termlistpop.onCreated(function() {
     }
 
     let headerStructure  = [
-        { index: 0, label: '#ID', class: 'colTermsID', active: false, display: true, width: "10" },
+        { index: 0, label: 'ID', class: 'colTermsID', active: false, display: true, width: "10" },
         { index: 1, label: 'Term Name', class: 'colName', active: true, display: true, width: "150" },
         { index: 2, label: 'Terms Amount', class: 'colTermsAmount', active: true, display: true, width: "120" },
         { index: 3, label: 'EOM', class: 'colIsEOM', active: true, display: true, width: "50" },
@@ -144,7 +145,7 @@ Template.termlistpop.onCreated(function() {
 });
 
 Template.termlistpop.onRendered(function() {
-    
+
 });
 
 
