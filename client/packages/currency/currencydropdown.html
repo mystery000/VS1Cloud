@@ -8,19 +8,23 @@
         <!-- <input type="search" class="form-control es-input" id="sltCurrency" name="sltCurrency"
             style="background-color:rgb(255, 255, 255); cursor: pointer;" value={{CurrentForeignExchangeCode}} /> -->
         {{> vs1___dropdown
-            type='search'
-            id='sltCurrency'
-            name='sltCurrency'
-            modalId= 'currencyModal'
-            list_template_name='currencypop'
-            modal_title='Currency List'
-            label = checkLabel
-            colNameForValue = 'colCode'
-            target_modal_id= 'edtCurrency_modal'
-            target_template_id='newcurrencypop'
-            is_editable=item.editable
-            innerModal=true
+                type='search'
+                id='sltCurrency'
+                name='sltCurrency'
+                usedModal=false
+                modalId= 'currencyModal'
+                list_template_name='currencypop'
+                modal_title='Currency List'
+                label = checkLabel
+                colNameForValue = 'colCode'
+                target_modal_id= 'edtCurrency_modal'
+                target_template_id='newcurrencypop'
+                is_editable=true
+                innerModal=true
+                custid='FUtekl2396238'
+                noBorder=false
         }}
+
     </div>
 
 

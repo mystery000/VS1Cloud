@@ -43,15 +43,17 @@
                                     type='search'
                                     id='sltBankName1'
                                     name='sltBankName1'
-                                    modalId= 'bankAccountNameModal'
+                                    usedModal=false
+                                    modalId= 'bankNameModal1'
                                     list_template_name='bankNameModal'
                                     innerModal=true
                                     modal_title='Bank Account Name'
                                     label = ''
                                     colNameForValue = 'colBankName'
-                                    target_modal_id= 'bankAccountNameModal1'
+                                    target_modal_id= 'bankNameModal'
                                     target_template_id='bankNameModal'
-                                    is_editable=true
+                                    is_editable=false
+                                    custid='FUtekl2396238'
                                     noBorder=false
                             }}
                         </div>
@@ -89,14 +91,32 @@
                     <div class="col-4">
                         <div class="form-group">
                             <label>Transaction Description</label>
-                            <select
-                                type="search"
-                                class="form-control pointer"
-                                id="sltTransactionDescription"
-                                name="sltTransactionDescription"
-                                style="background-color: rgb(255, 255, 255); cursor: pointer"
-                                value="Supplier"
-                            ></select>
+<!--                            <select-->
+<!--                                type="search"-->
+<!--                                class="form-control pointer"-->
+<!--                                id="sltTransactionDescription"-->
+<!--                                name="sltTransactionDescription"-->
+<!--                                style="background-color: rgb(255, 255, 255); cursor: pointer"-->
+<!--                                value="Supplier"-->
+<!--                            ></select>-->
+
+                            {{> vs1___dropdown
+                                    type='search'
+                                    id='sltTransactionDescription1'
+                                    name='sltTransactionDescription1'
+                                    usedModal=false
+                                    modalId= 'transactionDescriptionModal'
+                                    list_template_name='transactionDescriptionModal'
+                                    innerModal=true
+                                    modal_title='Account List'
+                                    label = ''
+                                    colNameForValue = 'colTransactionDescription'
+                                    target_modal_id= 'addAccountModal'
+                                    target_template_id='addaccountpop'
+                                    custid='rcq7ZWZnptT6TzBwP'
+                                    is_editable=false
+                                    noBorder=false
+                            }}
                         </div>
                     </div>
                 </div>

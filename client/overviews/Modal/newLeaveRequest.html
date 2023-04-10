@@ -25,19 +25,22 @@
                                 <!-- <select type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;">
                                 </select>  -->
 <!--                                <input type="search" class="form-control" id="edtLeaveTypeofRequest" name="edtLeaveTypeofRequest" style="cursor: pointer;" />-->
+
                                 {{> vs1___dropdown
                                         type='search'
                                         id='edtLeaveTypeofRequest'
                                         name='edtLeaveTypeofRequest'
+                                        usedModal=false
                                         modalId= 'newLeaveRequestModal'
                                         list_template_name='assignLeaveTypePop'
-                                        innerModal=true
                                         modal_title='Assign Leave Title'
                                         label = ''
                                         colNameForValue = ''
-                                        target_modal_id= ''
-                                        target_template_id=''
-                                        is_editable=true
+                                        target_modal_id= 'edtCurrency_modal'
+                                        target_template_id='newcurrencypop'
+                                        is_editable=false
+                                        innerModal=true
+                                        custid='FUtekl2396238'
                                         noBorder=false
                                 }}
 

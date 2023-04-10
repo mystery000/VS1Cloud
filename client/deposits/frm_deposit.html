@@ -369,13 +369,68 @@
                                         {{#each item in record.LineItems}}
                                         <tr class="dnd-moved" id="{{item.lineID}}">
                                             <!-- <td contenteditable="false" class="colAccount lineAccountName" lineid="{{item.id}}">{{item.accountname}}</td> -->
-                                            <td contenteditable="false" class="colAccount"><input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" ></td>
+                                            <td contenteditable="false" class="colAccount">
+<!--                                                <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" >-->
+                                                {{> vs1___dropdown
+                                                        type='search'
+                                                        id='sltAccountName'
+                                                        name='sltAccountName'
+                                                        usedModal=false
+                                                        modalId= 'accountListModal'
+                                                        list_template_name='accountlistpop'
+                                                        innerModal=true
+                                                        modal_title='Account List'
+                                                        label = ''
+                                                        colNameForValue = 'colAccountName'
+                                                        target_modal_id= 'addAccountModal'
+                                                        target_template_id='addaccountpop'
+                                                        is_editable=true
+                                                        custid='rcq7ZWZnptT6TzBwP'
+                                                        noBorder=false
+                                                }}
+                                            </td>
                                             <!-- <td contenteditable="false" class="colPaymentMethod td-input">{{item.paymentmethod}}</td> -->
-                                            <td contenteditable="false" class="colPaymentMethod"><input class="es-input highlightSelect linePaymentMethod" type="search" value="{{item.paymentmethod}}" ></td>
+                                            <td contenteditable="false" class="colPaymentMethod">
+<!--                                                <input class="es-input highlightSelect linePaymentMethod" type="search" value="{{item.paymentmethod}}" >-->
+                                                {{> vs1___dropdown
+                                                        type='search'
+                                                        id='sltPaymentMethod'
+                                                        name='sltPaymentMethod'
+                                                        usedModal=false
+                                                        modalId= 'sltPaymentMethodModal'
+                                                        list_template_name='paymentmethodpop'
+                                                        innerModal=true
+                                                        modal_title='Payment Method'
+                                                        label = ''
+                                                        colNameForValue = 'colName'
+                                                        target_modal_id= 'addAccountModal'
+                                                        target_template_id='addaccountpop'
+                                                        is_editable=false
+                                                        custid='rcq7ZWZnptT6TzBwP'
+                                                        noBorder=false
+                                                }}
+                                            </td>
                                             <td style="text-align: right!important;"><input class="colAmount highlightInput" type="text" value="{{item.lineamount}}"></td>
                                             <td contenteditable="true" class="colReference">{{item.memo}}</td>
                                             <td contenteditable="false" class="colCompany">
-                                              <input class="es-input highlightSelect lineCompany" type="search" value="{{item.companyname}}" >
+<!--                                              <input class="es-input highlightSelect lineCompany" type="search" value="{{item.companyname}}" >-->
+                                                {{> vs1___dropdown
+                                                        type='search'
+                                                        id='sltReceivedFrom'
+                                                        name='sltReceivedFrom'
+                                                        usedModal=false
+                                                        modalId= 'sltReceivedFromModal'
+                                                        list_template_name='customerlistpop'
+                                                        innerModal=true
+                                                        modal_title='Customer List'
+                                                        label = ''
+                                                        colNameForValue = 'colCompany'
+                                                        target_modal_id= 'addcustomerpopModal'
+                                                        target_template_id='addcustomerpop'
+                                                        is_editable=true
+                                                        custid='rcq7ZWZnptT6TzBwP'
+                                                        noBorder=false
+                                                }}
                                             </td>
 
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>

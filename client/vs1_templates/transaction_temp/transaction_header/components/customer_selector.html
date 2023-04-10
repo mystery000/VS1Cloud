@@ -25,14 +25,25 @@
           is_editable=true
         }}
       {{else}} -->
-        {{> vs1_dropdown
+
+      <!-- {{/if}} -->
+        {{> vs1___dropdown
                 type='search'
                 id=id
-                name=name
-                value=value
-              }}
-      <!-- {{/if}} -->
-      
+                name='sltSupplier1'
+                usedModal=false
+                modalId= 'supplierlistpopModal'
+                list_template_name='supplierlistpop'
+                innerModal=true
+                modal_title='Account List'
+                label = ''
+                colNameForValue = 'colCompany'
+                target_modal_id= 'addsupplierpopModal'
+                target_template_id='addsupplierpop'
+                custid='rcq7ZWZnptT6TzBwP'
+                is_editable=true
+                noBorder=false
+        }}
       
       <input type="hidden" name="__customer_id" id="__customer_id" value="{{value}}">
     </div>

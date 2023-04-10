@@ -11,8 +11,25 @@
 <template name="default_select">
   <div class="form-group">
     <label>{{label}}</label>
-    <select type="{{type}}" class="form-control {{classes}}" id="{{id}}" name="{{name}}"
-      style="background-color:rgb(255, 255, 255); cursor: pointer;">
-    </select>
+<!--    <select type="{{type}}" class="form-control {{classes}}" id="{{id}}" name="{{name}}"-->
+<!--      style="background-color:rgb(255, 255, 255); cursor: pointer;">-->
+<!--    </select>-->
+      {{> vs1___dropdown
+              type=type
+              id=id
+              name=name
+              usedModal=false
+              modalId= 'accountlistpopModal'
+              list_template_name='accountlistpop'
+              innerModal=true
+              modal_title='Account List'
+              label = ''
+              colNameForValue = 'colAccountName'
+              target_modal_id= 'addsupplierpopModal'
+              target_template_id='addsupplierpop'
+              custid='rcq7ZWZnptT6TzBwP'
+              is_editable=false
+              noBorder=false
+      }}
   </div>
 </template>

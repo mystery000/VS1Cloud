@@ -528,9 +528,28 @@
                 {{#each item in chequerecord.LineItems}}
                 <tr class="dnd-moved" id={{item.lineID}}>
                   <!-- <td contenteditable="false" class="lineAccountName colAccountName" style="cursor: pointer;" lineid="{{item.id}}">{{item.accountname}}</td> -->
-                  <td contenteditable="false" class="colAccountName"><input
-                      class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}"
-                      lineid="{{item.id}}"></td>
+                  <td contenteditable="false" class="colAccountName">
+<!--                      <input-->
+<!--                      class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}"-->
+<!--                      lineid="{{item.id}}">-->
+                      {{> vs1___dropdown
+                              type='search'
+                              id='edtSubAccount1'
+                              name='edtSubAccount1'
+                              usedModal=false
+                              modalId= 'accountListModal'
+                              list_template_name='accountlistpop'
+                              innerModal=true
+                              modal_title='Account List'
+                              label = ''
+                              colNameForValue = 'colAccountName'
+                              target_modal_id= 'addAccountModal'
+                              target_template_id='addaccountpop'
+                              custid='rcq7ZWZnptT6TzBwP'
+                              is_editable=false
+                              noBorder=false
+                      }}
+                  </td>
                   <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
                   <!--                                    <td contenteditable="true" class="lineAmount colAmount" style="text-align: right!important;">{{item.unitPrice}}</td>-->
 
@@ -543,8 +562,25 @@
                   <td contenteditable="false" class="lineTaxRate colTaxRate hiddenColumn"
                     style="text-align: right!important;cursor: pointer;">{{item.taxRate}}</td>
                   <!-- <td contenteditable="false" class="lineTaxCode colTaxCode td-input" style="cursor: pointer;">{{item.taxCode}}</td> -->
-                  <td contenteditable="false" class="colTaxCode"><input class="es-input highlightSelect lineTaxCode"
-                      type="search" value="{{item.taxCode}}"></td>
+                  <td contenteditable="false" class="colTaxCode">
+<!--                      <input class="es-input highlightSelect lineTaxCode"-->
+<!--                      type="search" value="{{item.taxCode}}">-->
+                      {{> vs1___dropdown
+                              type='search'
+                              id='bankAccountName1'
+                              name='bankAccountName1'
+                              modalId= 'taxratelistpopModal'
+                              list_template_name='taxratelistpop'
+                              innerModal=true
+                              modal_title='Tax Rate List'
+                              label = ''
+                              colNameForValue = ''
+                              target_modal_id= 'targetModal'
+                              target_template_id='addaccountpop'
+                              is_editable=false
+                              noBorder=false
+                      }}
+                  </td>
                   <td contenteditable="false" class="lineTaxAmount colTaxAmount pointer"
                     style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
                   <td contenteditable="true" class="lineCustomField1 colCustomField1 hiddenColumn">{{item.CustomField1}}
