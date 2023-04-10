@@ -81,9 +81,9 @@ export class ManufacturingService extends BaseService {
                   "POStatus": "not created",
                   "Status": "unscheduled",
                   "TrackedTime": 0,
-                  "StartedTimes": "[]",
-                  "PausedTimes": "[]",
-                  "StoppedTime": "",
+                  "StartedTimes": [],
+                  "PausedTimes": [],
+                  "StoppedTimes": [],
                   "EmployeeId"  : "",
                   "EmployeeName" : "Dene Mills",
               }
@@ -108,9 +108,9 @@ export class ManufacturingService extends BaseService {
                   "POStatus": "not created",
                   "Status": "unscheduled",
                   "TrackedTime": 0,
-                  "StartedTimes": "[]",
-                  "PausedTimes": "[]",
-                  "StoppedTime": "",
+                  "StartedTimes": [],
+                  "PausedTimes": [],
+                  "StoppedTimes": [],
                   "EmployeeId"  : "",
                   "EmployeeName" : "Dene Mills"
               }

@@ -104,7 +104,7 @@ Template.mobileapp.onRendered(async function() {
             })
         })
     }
-    let temp = await templateObject.getAllWorkorders()
+    let temp = await templateObject.getAllWorkorders();
     templateObject.workOrderRecords.set(temp);
     templateObject.inputStatus.set("enterJobNumber");  // enterProcess, enterEmployee,  
 });
@@ -662,7 +662,9 @@ Template.mobileapp.events({
 
     },
 
-    'click #btnClockIn': function(e, instance) {
+    'click #btnClockIn': async function(e, instance) {
+        
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(true);
         
        // Template.instance().inputStatus.set("enterEmployee");
@@ -680,9 +682,36 @@ Template.mobileapp.events({
         $("#btnStartBreak").removeAttr('disabled');
         $("#btnStartJob").removeAttr('disabled');
         $(".mobile-header-status-text").text("Clock In");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let startedTimes = currentworkorder.fields.StartedTimes;
+            startedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
-    'click #btnClockIn_phone': function(e, instance) {
+    'click #btnClockIn_phone': async function(e, instance) {
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(true);
         // Template.instance().isEnterJobNumber.set(false);
         // Template.instance().isEnterJobProcess.set(false);
@@ -703,12 +732,38 @@ Template.mobileapp.events({
         $("#btnStartBreak_phone").removeAttr('disabled');
         $("#btnStartJob_phone").removeAttr('disabled');
         $(".mobile-header-status-text").text("Clock In");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let startedTimes = currentworkorder.fields.StartedTimes;
+            startedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
-    'click #btnClockOut': function (e, instance) {
-
+    'click #btnClockOut': async function (e, instance) {
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(false);
-        Template.instance().inputStatus.set("enterJobNumber");
+     //   Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
@@ -722,14 +777,41 @@ Template.mobileapp.events({
         $('#btnStopJob').prop('disabled', true);
         $("#btnStopBreak").css('background', '#0084D1');
         $('#btnStopBreak').prop('disabled', true);
-        $(".mobile-header-status-text").text("Enter Job Number");
+        $(".mobile-header-status-text").text("Clock Out");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let stoppedTimes = currentworkorder.fields.StoppedTimes;
+            stoppedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
-    'click #btnClockOut_phone': function (e, instance) {
+    'click #btnClockOut_phone': async function (e, instance) {
 
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(false);
 
-        Template.instance().inputStatus.set("enterJobNumber");
+       // Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut_phone').prop('disabled', true);
         $("#btnClockOut_phone").css('background', '#0084D1');
@@ -743,7 +825,33 @@ Template.mobileapp.events({
         $('#btnStopJob_phone').prop('disabled', true);
         $("#btnStopBreak_phone").css('background', '#0084D1');
         $('#btnStopBreak_phone').prop('disabled', true);
-        $(".mobile-header-status-text").text("Enter Job Number");
+        $(".mobile-header-status-text").text("Clock Out");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let stoppedTimes = currentworkorder.fields.StoppedTimes;
+            stoppedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
 
@@ -1160,6 +1268,7 @@ Template.mobileapp.events({
 
         let workorders = await templateObject.getAllWorkorders();
         let currentworkorder;
+        let currentime = new Date().toLocaleTimeString();
 
         let workorderindex = workorders.findIndex(order => {
             return order.fields.ID == jobNumber;
@@ -1171,17 +1280,24 @@ Template.mobileapp.events({
             // Set bom Structure for current workorder
             templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
 
+            let stoppedTimes = currentworkorder.fields.StoppedTimes;
 
+            stoppedTimes.push(currentime);
+
+                         
 
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
+            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed', StoppedTimes: stoppedTimes}
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
              //   $('.fullScreenSpin').css('display', 'none')
              //   swal('Work Order state is updated', '', 'success');
             })
+             
+          
 
+            
             let BomDataList = [];
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
@@ -1332,12 +1448,9 @@ Template.mobileapp.events({
                        $('.fullScreenSpin').css('display', 'none')
                        swal('The wastage is saved', '', 'success');
                        $('#WastageModal').modal('toggle');
-                }) 
-        
-                
-        
-            });
-            
+                })       
+                        
+            });           
 
         }
 
@@ -1387,6 +1500,7 @@ Template.mobileapp.events({
  
         $(".mobile-header-status-text").text("Enter Job Number");
         $(".mobile-main-input").val(" ");
+
 
     },
 

@@ -24,33 +24,11 @@ Template.buildcostreport.onCreated(function() {
 
     templateObject.getDataTableList = function(data) {  
         
-        // let percent_variance;
-        // if(parseFloat(data.TotalClockedTime) == 0) {
-        //     percent_variance = 0;
-        // }
-        // else {
-            
-        //     percent_variance = parseFloat(data.ProcessClockedTime)/parseFloat(data.TotalClockedTime);
-        // }
-
-        
-        // var dataList = [
-        //     data.EmployeeId || '',
-        //     data.EmployeeName || '',
-        //     data.TotalClockedTime.toFixed(2) || 0,
-        //     data.ProcessClockedTime.toFixed(2) || 0,
-        //     (parseFloat(data.TotalClockedTime) - parseFloat(data.ProcessClockedTime)).toFixed(2) || 0,
-        //     percent_variance.toFixed(2) + "%",
-        // ];
-
-        let clocked_hrs = templateObject.timeToHours(data.TotalClockedTime);
-
-        console.log(clocked_hrs);
-
+        let clocked_hrs = data.TotalClockedTime;
         let variance = parseFloat(data.ChangedQty) - parseFloat(data.BOMQty);
         let wastage_value = variance;
-        let labour_cost = (data.HourlyLabourCost * clocked_hrs).toFixed(2);
         
+        let labour_cost = (data.HourlyLabourCost * clocked_hrs).toFixed(2);
         if(isNaN(labour_cost)) {
             labour_cost = "";
         }
@@ -63,33 +41,39 @@ Template.buildcostreport.onCreated(function() {
         let RawMaterialcost = parseFloat(data.UnitCost) * (parseFloat(data.BOMQty) + parseFloat(wastage_value));
         let wastage_cost = parseFloat(wastage_value * data.UnitCost);
         let total_bom_cost; 
-        
-        if(labour_cost == "" ) {
-             total_bom_cost =  RawMaterialcost + wastage_cost; 
 
+        let clocked_times ;
+        if(clocked_hrs == "") {
+            clocked_times = "";
+        } else {
+          //  clocked_times = templateObject.timeFormat(clocked_hrs);
+          clocked_times = parseFloat(clocked_hrs).toFixed(4);
+        }
+        
+        
+        if(labour_cost == "" || over_head_cost == "" ) {
+             total_bom_cost =  RawMaterialcost + wastage_cost;
         } else {
              total_bom_cost = (parseFloat(labour_cost) + parseFloat(over_head_cost) + parseFloat(RawMaterialcost) + parseFloat(wastage_cost)).toFixed(2); 
-        }
-       
-
+        }     
 
         var dataList = [ data.WorkorderID,
-        data.ProductID,
-        data.ProcessBOM || ' ',
-        data.BOMChanged || ' ',
-        data.BOMProducts|| ' ',
-        data.ProductsChanged || ' ',
-        data.UnitCost || 0,
-        data.BOMQty || 0,
-        data.ChangedQty || 0,
-        variance,
-        wastage_value,
-        data.TotalClockedTime || ' ' ,
-        labour_cost,
-        over_head_cost,
-        RawMaterialcost || 0,
-        wastage_cost ,
-        total_bom_cost || 0,     ];
+                        data.ProductID,
+                        data.ProcessBOM || ' ',
+                        data.BOMChanged || ' ',
+                        data.BOMProducts|| ' ',
+                        data.ProductsChanged || ' ',
+                        data.UnitCost || 0,
+                        data.BOMQty || 0,
+                        data.ChangedQty || 0,
+                        variance,
+                        wastage_value,
+                        clocked_times || ' ' ,
+                        labour_cost,
+                        over_head_cost,
+                        RawMaterialcost || 0,
+                        wastage_cost ,
+                        total_bom_cost || 0,     ];
 
         return dataList;
     }
@@ -112,9 +96,7 @@ Template.buildcostreport.onCreated(function() {
         { index: 13, label: 'Overhead Cost', class: 'colOverheadCost', active: true, display: true, width: "" },
         { index: 14, label: 'Raw Material Cost', class: 'colRawMaterialCost', active: true, display: true, width: "" },
         { index: 15, label: 'Wastage Cost', class: 'colWastageCost', active: true, display: true, width: "" },
-        { index: 16, label: 'Total BOM Cost', class: 'colTotalBOMCost', active: true, display: true, width: "" },
-
-       
+        { index: 16, label: 'Total BOM Cost', class: 'colTotalBOMCost', active: true, display: true, width: "" },       
     ];
 
     templateObject.tableheaderrecords.set(headerStructure);
@@ -126,6 +108,151 @@ Template.buildcostreport.onRendered(function() {
  
     let templateObject = Template.instance();
 
+
+    
+    templateObject.makeIndexedDBdata = function () {
+       
+        let buildcostreport_data = [];
+        getVS1Data('TVS1Workorder').then(function(workorderDataObject) {
+            let workorder;
+            let templateObject = Template.instance();
+
+            if(workorderDataObject.length == 0) {
+                workorder = manufacturingService.getWorkOrderList();
+
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorder})).then(function(datareturn){
+                    
+                }).catch(function(err){
+                });
+
+            }else {
+                workorder = JSON.parse(workorderDataObject[0].data).tvs1workorder;
+            }
+            getVS1Data('TProcessStep').then(function(dataObject) {
+                let process_data;
+                if (dataObject.length == 0) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then( function(data) {                            
+                        process_data = data;
+                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                        })
+                    })
+                } else {
+                    process_data = JSON.parse(dataObject[0].data).tprocessstep;
+                }
+                
+                let bomData;
+                let hourly_labour_cost;
+                let hourly_overhead_cost;
+                let unit_cost = 10;
+                
+             
+                let startedTimes ;
+                let stoppedTimes;
+
+                for (let i = 0; i < workorder.length; i++) {
+                    bomData = JSON.parse(workorder[i].fields.BOMStructure);
+                    for(let k =0 ; k < process_data.length; k++) {
+                        if (bomData.Info == process_data[k].fields.Description) {
+                            hourly_labour_cost = parseFloat(process_data[k].fields.HourlyLabourCost);
+                            hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);
+                        }
+                    }
+                  
+                    startedTimes = workorder[i].fields.StartedTimes;
+                    stoppedTimes = workorder[i].fields.StoppedTimes;
+                    let clocked_hrs = 0;  
+
+                                        
+                    for(let k=0; k < startedTimes.length; k++) {
+
+                        const startTimeString = startedTimes[k];
+                        const endTimeString = stoppedTimes[k];
+
+                        // Convert the time strings to Date objects
+                        const startTime = new Date(`04/07/2023 ${startTimeString}`);
+                        const endTime = new Date(`04/07/2023 ${endTimeString}`);
+
+                    // Calculate the difference in hours
+                       const hoursDiff = Math.abs(endTime - startTime) / 36e5; // 36e5 is the number of milliseconds in an hour
+                       clocked_hrs = clocked_hrs + hoursDiff;
+                    }
+
+                                                 
+                                      
+
+                    let details = JSON.parse(bomData.Details);
+
+                    let temp = {
+                        WorkorderID: workorder[i].fields.ID || ' ',
+                        ProductID: workorder[i].fields.ProductName || ' ',
+                        ProcessBOM: bomData.Info || ' ',
+                        BOMChanged: " ",
+                        BOMProducts: bomData.Caption || ' ',
+                        ProductsChanged: " ",
+                        UnitCost: unit_cost || 0,
+                        BOMQty: bomData.TotalQtyOriginal || 0,
+                        ChangedQty : bomData.TotalChangeQty || 0,
+                        TotalClockedTime: clocked_hrs || '0' ,
+                        HourlyLabourCost: hourly_labour_cost || 0,
+                        HourlyOverHeadCost : hourly_overhead_cost || 0,
+                        RawMaterialcost : 0,
+                        WastageCost : 0,
+                        TotalBOMCost: 0,                   
+                        
+
+                    };
+
+
+                    buildcostreport_data.push(temp);
+
+                    for(let j=0; j<details.length;j++) {
+
+                        temp = {
+                            WorkorderID: ' ',
+                            ProductID: ' ',
+                            ProcessBOM: ' ',
+                            BOMChanged: ' ',
+                            BOMProducts: details[j].productName || ' ',
+                            ProductsChanged: " ",
+                            UnitCost: unit_cost || 0,
+                            BOMQty: details[j].qty  || 0,
+                            ChangedQty : details[j].changed_qty  || 0,
+                            TotalClockedTime: "" ,
+                            HourlyLabourCost: hourly_labour_cost || 0,
+                            HourlyOverHeadCost : hourly_overhead_cost || 0,
+                            RawMaterialcost : unit_cost * parseFloat(bomData.TotalQtyOriginal),
+                            WastageCost : 0,
+                            TotalBOMCost: 0,     
+                        }  
+
+                        buildcostreport_data.push(temp);
+                    }
+                    
+
+                }     
+                
+
+                addVS1Data('TVS1BuildCostReport', JSON.stringify({tvs1buildcostreport: buildcostreport_data})).then(function(datareturn){
+                }).catch(function(err){
+                    
+                });
+                
+                    
+            }).catch(function(e) {
+                manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(data) {
+                    addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                                                                            })
+                })
+            })           
+
+                                
+        })       
+
+    }
+    
+    templateObject.makeIndexedDBdata();       
+       
+   
     templateObject.timeToHours = function (time) {
         const parts = time.split(":");
         const hours = parseInt(parts[0]);
@@ -136,140 +263,7 @@ Template.buildcostreport.onRendered(function() {
     } ;
 
     
-    templateObject.makeIndexedDBdata = function () {
 
-            let buildcostreport_data = [];
-            getVS1Data('TVS1Workorder').then(function(workorderDataObject) {
-                let workorder;
-                let templateObject = Template.instance();
-
-                if(workorderDataObject.length == 0) {
-                    workorder = manufacturingService.getWorkOrderList();
-
-                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorder})).then(function(datareturn){
-                        
-                    }).catch(function(err){
-                    });
-
-                }else {
-                    workorder = JSON.parse(workorderDataObject[0].data).tvs1workorder;
-                }
-                getVS1Data('TProcessStep').then(function(dataObject) {
-                    let process_data;
-                    if (dataObject.length == 0) {
-                        manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then( function(data) {                            
-                            process_data = data;
-                            addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
-                            })
-                        })
-                    } else {
-                        process_data = JSON.parse(dataObject[0].data).tprocessstep;
-                    }
-                    
-                    let bomData;
-                    let hourly_labour_cost;
-                    let hourly_overhead_cost;
-                    let unit_cost = 10;
-                    
-                    for (let i = 0; i < workorder.length; i++) {
-                        bomData = JSON.parse(workorder[i].fields.BOMStructure);
-                        for(let k =0 ; k < process_data.length; k++) {
-                            if (bomData.Info == process_data[k].fields.Description) {
-                                hourly_labour_cost = parseFloat(process_data[k].fields.HourlyLabourCost);
-                                hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);
-                            }
-                        }
-
-                        
-                        let details = JSON.parse(bomData.Details);
-
-                        let temp = {
-                            WorkorderID: workorder[i].fields.ID || ' ',
-                            ProductID: workorder[i].fields.ProductName || ' ',
-                            ProcessBOM: bomData.Info || ' ',
-                            BOMChanged: " ",
-                            BOMProducts: bomData.Caption || ' ',
-                            ProductsChanged: " ",
-                            UnitCost: unit_cost || 0,
-                            BOMQty: bomData.TotalQtyOriginal || 0,
-                            ChangedQty : bomData.TotalChangeQty || 0,
-                            TotalClockedTime: workorder[i].fields.TotalClockedTime || "00:12:35" ,
-                            HourlyLabourCost: hourly_labour_cost || 0,
-                            HourlyOverHeadCost : hourly_overhead_cost || 0,
-                            RawMaterialcost : 0,
-                            WastageCost : 0,
-                            TotalBOMCost: 0,                   
-                          
-
-                        };
-
-
-                        buildcostreport_data.push(temp);
-
-                        for(let j=0; j<details.length;j++) {
-
-                            temp = {
-                                WorkorderID: ' ',
-                                ProductID: ' ',
-                                ProcessBOM: ' ',
-                                BOMChanged: ' ',
-                                BOMProducts: details[j].productName || ' ',
-                                ProductsChanged: " ",
-                                UnitCost: unit_cost || 0,
-                                BOMQty: details[j].qty  || 0,
-                                ChangedQty : details[j].changed_qty  || 0,
-                                TotalClockedTime: ' ' ,
-                                HourlyLabourCost: hourly_labour_cost || 0,
-                                HourlyOverHeadCost : hourly_overhead_cost || 0,
-                                RawMaterialcost : unit_cost * parseFloat(bomData.TotalQtyOriginal),
-                                WastageCost : 0,
-                                TotalBOMCost: 0,     
-                            }  
-
-                            console.log(temp);
-
-                            buildcostreport_data.push(temp);
-                        }
-                       
-
-                    }     
-                   
-
-                    addVS1Data('TVS1BuildCostReport', JSON.stringify({tvs1buildcostreport: buildcostreport_data})).then(function(datareturn){
-                    }).catch(function(err){
-                        
-                    });
-
-
-                    
-                     
-                }).catch(function(e) {
-                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(data) {
-                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
-                                                                                })
-                    })
-                })
-
-                
-
-                                   
-            }) 
-
-      
-
-    }
-    
-    templateObject.makeIndexedDBdata();       
-       
-   
-   
-    templateObject.timeToDecimal = function(time) {
-        var hoursMinutes = time.split(/[.:]/);
-        var hours = parseInt(hoursMinutes[0], 10);
-        var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
-        return hours + minutes / 60;
-    }
-    
     templateObject.timeFormat = function(hours) {
         var decimalTime = parseFloat(hours).toFixed(2);
         decimalTime = decimalTime * 60 * 60;
@@ -281,7 +275,16 @@ Template.buildcostreport.onRendered(function() {
         minutes = ("0" + Math.round(minutes)).slice(-2);
         let time = hours + ":" + minutes;
         return time;
-    }     
+    }  
+   
+    templateObject.timeToDecimal = function(time) {
+        var hoursMinutes = time.split(/[.:]/);
+        var hours = parseInt(hoursMinutes[0], 10);
+        var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
+        return hours + minutes / 60;
+    }
+    
+      
 
 });
 
