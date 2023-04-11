@@ -108,6 +108,7 @@
                                 <label>Employee Name</label>
                                 <input type="search" class="form-control" id="employee_name" name="employee_name" style="background-color:rgb(255, 255, 255); cursor: pointer; width : 54%">
                                 <input type="hidden" id="employee_id" name="employee_id">
+                                <input id="updateID" name="updateID" type="hidden">
                                 <!-- <input id="employee_name" name="employee_name" type="text" required class="form-control employee_name" readonly> -->
                             </div>
                         </div>
@@ -184,7 +185,56 @@
                 </div>
             </div>
         </div>
-      </div>
+    </div>
+    <div class="modal fade" role="dialog" id="frmOnHoldModal">
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document" style="max-width: 400px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Reason For Pausing Job</h4><button type="button" class="close" data-dismiss="modal"
+                        aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body" style="padding: 24px;">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="break" value="Break" />
+                                <label class="custom-control-label" for="break">Break</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="lunch" value="Lunch" />
+                                <label class="custom-control-label" for="lunch">Lunch</label></div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="custom-control custom-switch">
+                                <input type="checkbox" class="custom-control-input" id="purchase" value="Purchase" />
+                                <label class="custom-control-label" for="purchase">Purchase</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 1em;">
+                        <div class="col-12">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px 0px 0px;">
+                                <label>Notes</label><textarea class="form-control" id="txtpause-notes">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success btnPauseJob"><i class="fa fa-save"
+                            style="margin-right: 5px;"></i>Save</button>
+                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove"
+                            style="margin-right: 5px;"></i>Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  
     <script>
         modalDraggable();
     </script>

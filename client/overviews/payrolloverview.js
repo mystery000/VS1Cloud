@@ -4359,18 +4359,11 @@ Template.payrolloverview.events({
     FlowRouter.go("/timesheet");
   },
   
-  // "click #btnEmployeeClockOnOff": function ()  {
-
-  //   alert("ddddd")
-
-  //   $("#employeeClockonoffModal").modal("show");
-
-  // },
   
-  "click #btnClockOnOff": (event, templateObject) => {
+  "click #btnClockOnOff_old": (event, templateObject) => {
     // $("#clockOnOffModal").modal("show");
     // return;
-   // const templateObject = Template.instance();
+    // const templateObject = Template.instance();
     let checkIncludeAllProducts = templateObject.includeAllProducts.get();
     $("#clock_employee_name").val(localStorage.getItem("mySessionEmployee"));
     $("#sltJob").val("");
@@ -4506,22 +4499,32 @@ Template.payrolloverview.events({
       }
     } else {
       $(".paused").hide();
-      $("#btnHold").prop("disabled", false);
+
     }
     $("#clockOnOffModal").modal("show");
   },
 
+  "click #btnClockOnOff": function () {
+    FlowRouter.go("/clockOnOff");
+  },
+
+
   "click #clockOnOffModal #btnClockOn": function () {
+
     const templateObject = Template.instance();
 
     let clockList = templateObject.timesheetrecords.get();
+
+   
     var product = $("#product-list").val() || "";
+
     clockList = clockList.filter((clkList) => {
       return (
         clkList.employee == $("#employee_name").val() &&
         clkList.id == $("#updateID").val()
       );
     });
+   
     let contactService = new ContactService();
     let updateID = $("#updateID").val() || "";
     let checkStatus = "";
@@ -4559,6 +4562,8 @@ Template.payrolloverview.events({
     // if (checkStatus == "paused") {
     //     return false;
     // }
+    
+
     if (checkStatus == "completed") {
       $("#updateID").val("");
       $("#startTime").val(
@@ -5310,7 +5315,7 @@ Template.payrolloverview.events({
               .text("Clocked On");
             $("#startTime").prop("disabled", true);
             templateObject.timesheetrecords.set([]);
-            templateObject.getAllTimeSheetDataClock();
+     //       templateObject.getAllTimeSheetDataClock();
             $("#clockOnOffModal").modal("hide");
             // setTimeout(function(){
             //    let getTimesheetRecords = templateObject.timesheetrecords.get();

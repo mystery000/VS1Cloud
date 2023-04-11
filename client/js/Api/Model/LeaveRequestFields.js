@@ -2,6 +2,7 @@ export default class LeaveRequestFields {
     constructor({
         ID,
         EmployeeID,
+        EmployeeName,
         TypeofRequest,
         Description,
         StartDate,
@@ -15,6 +16,7 @@ export default class LeaveRequestFields {
     }){
         this.ID = ID,
         this.EmployeeID = EmployeeID;
+        this.EmployeeName = EmployeeName;
         this.TypeofRequest = TypeofRequest;
         this.Description = Description;
         this.StartDate = StartDate;

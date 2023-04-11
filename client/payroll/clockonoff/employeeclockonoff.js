@@ -96,6 +96,8 @@ Template.clockOnOff.onRendered(function () {
         $("#btnDesktopSearch").trigger("click");
       }
     });
+  
+    
 
   //
   // Initializes jQuery Raty control
@@ -168,6 +170,8 @@ Template.clockOnOff.onRendered(function () {
     return hours + minutes / 60;
   };
 
+  $("#btnClockOff").prop("disabled", true);
+
 });
 
 Template.clockOnOff.events({
@@ -181,7 +185,13 @@ Template.clockOnOff.events({
     if (endTime > startTime) {
       document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
     }
+    
+    $("#btnClockOn").prop("disabled", true);
+    $(".btnClockOff").removeAttr("disabled");
+
   },
+
+
   'click #btnClockOff': function () {
     const templateObject = Template.instance();
     let date = new Date();
@@ -190,7 +200,16 @@ Template.clockOnOff.events({
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
     document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
+
+    $("#btnClockOff").prop("disabled", true);
+    $(".btnClockOn").removeAttr("disabled");
+   
   },
+
+  "click #btnHoldOne": function (event) {
+    $("#frmOnHoldModal").modal("show");
+  },
+
   'change #startTime': function () {
     const templateObject = Template.instance();
     let date = new Date();
@@ -249,7 +268,7 @@ Template.clockOnOff.events({
       
       var startTime = $("#startTime").val() || "";
       var endTime = $("#endTime").val() || "";
-      var edthour = $("#txtBookedHoursSpent").val() || "00:01";
+      var edthour = $("#txtBookedHoursSpent").val() || "00:00";
       let hours = templateObject.timeToDecimal(edthour);
       var techNotes = $("#txtNotes").val() || "";
          
@@ -332,6 +351,7 @@ Template.clockOnOff.events({
                   TimeSheetClassName: "Default" || "",
                   Notes: techNotes || "",
                   InvoiceNotes: "Clocked On",
+                  Status: "Unprocessed",
                   // EntryDate: accountdesc|| ''
                 },
               },
@@ -340,6 +360,8 @@ Template.clockOnOff.events({
             WhoEntered: localStorage.getItem("mySessionEmployee") || "",
           },
         };
+
+        console.log(data);
 
         contactService
         .saveTimeSheet(data)
@@ -351,8 +373,7 @@ Template.clockOnOff.events({
             //   "now-success"
             // );
 
-            console.log(data);
-            
+           
             addVS1Data("TTimeSheet", JSON.stringify(data));
 
             $("#employeeStatusField").removeClass("statusOnHold");
@@ -899,7 +920,183 @@ Template.clockOnOff.events({
           $(".fullScreenSpin").css("display", "none");
         });
     }
-  }
+  },
+
+  "click #btnProcessClockOnOff": function () {
+    playSaveAudio();
+
+    let templateObject = Template.instance();
+    let contactService = new ContactService();
+    
+    setTimeout(async function(){      
+    //  LoadingOverlay.show();
+      let checkStatus = "";
+      let checkStartTime = "";     
+     
+      var employeeName = $("#employee_name").val();      
+      var employeeId = $("#employee_id").val();      
+
+
+      var startdateGet = new Date();
+      var endDateGet = new Date();
+      let date =
+        startdateGet.getFullYear() +
+        "-" +
+        ("0" + (startdateGet.getMonth() + 1)).slice(-2) +
+        "-" +
+        ("0" + startdateGet.getDate()).slice(-2);
+        
+      let endDate =
+        endDateGet.getFullYear() +
+        "-" +
+        ("0" + (endDateGet.getMonth() + 1)).slice(-2) +
+        "-" +
+        ("0" + endDateGet.getDate()).slice(-2);
+      
+      var startTime = $("#startTime").val() || "";
+      var endTime = $("#endTime").val() || "";
+      var edthour = $("#txtBookedHoursSpent").val() || "00:00";
+      let hours = templateObject.timeToDecimal(edthour);
+      var techNotes = $("#txtNotes").val() || "";
+         
+      let isPaused = checkStatus;
+      let obj = {};
+      let data = "";
+
+      if (startTime != "") {
+        startTime = date + " " + startTime;
+      }
+
+      if (endTime != "") {
+        endTime = date + " " + endTime;
+      }
+      
+      if (checkStartTime == "" && startTime == "") {
+        
+        swal({
+          title: "Oooops...",
+          text: "You can't save this entry with no start time",
+          type: "warning",
+          showCancelButton: false,
+          confirmButtonText: "Try Again",
+        })
+        $(".fullScreenSpin").css("display", "none");
+      }    
+      else {
+
+        LoadingOverlay.show();
+        $('.fullScreenSpin').css('display', 'inline-block'); 
+
+        if ($("#startTime").val() != "" && $("#endTime").val() != "") {
+          obj = {
+            type: "TTimeLog",
+            fields: {
+              EmployeeID: employeeId,
+              StartDatetime: startTime,
+              EndDatetime: endTime,
+              Product: '',
+              Description: "Timesheet Started & Completed",
+              EnteredBy: localStorage.getItem("mySessionEmployeeLoggedID"),
+            },
+          };
+          isPaused = "completed";
+        } else if ($("#startTime").val() != "" && $("#endTime").val() == "") {
+          obj = {
+            type: "TTimeLog",
+            fields: {
+              EmployeeID: employeeId,
+              StartDatetime: startTime,
+              EndDatetime: endTime,
+              Product: '',
+              Description: "Timesheet Started",
+              EnteredBy: localStorage.getItem("mySessionEmployeeLoggedID"),
+            },
+          };
+          isPaused = "";
+        }
+        data = {
+          type: "TTimeSheetEntry",
+          fields: {
+            // "EntryDate":"2020-10-12 12:39:14",
+            TimeSheet: [
+              {
+                type: "TTimeSheet",
+                fields: {
+                  EmployeeName: employeeName || "",
+                  ServiceName: "",
+                  HourlyRate:  0,
+                  LabourCost: 1,
+                  Allowedit: true,
+                  Logs: obj,
+                  TimeSheetDate: date,
+                  StartTime: startTime,
+                  EndTime: endTime,
+                  Hours: hours || 0,
+                  // OverheadRate: 90,
+                  Job: "",
+                  // ServiceName: "Test"|| '',
+                  TimeSheetClassName: "Default" || "",
+                  Notes: techNotes || "",
+                  InvoiceNotes: "Clocked On",
+                  Status: "Processed",
+                  // EntryDate: accountdesc|| ''
+                },
+              },
+            ],
+            TypeName: "Payroll",
+            WhoEntered: localStorage.getItem("mySessionEmployee") || "",
+          },
+        };
+
+        console.log(data);
+
+        contactService
+        .saveTimeSheet(data)
+        .then(function (dataReturnRes) {
+
+          sideBarService.getAllTimeSheetList().then(function (data) {
+            // Bert.alert(
+            //   $("#employee_name").val() + " you are now Clocked On",
+            //   "now-success"
+            // );
+
+           
+            addVS1Data("TTimeSheet", JSON.stringify(data));
+
+                     
+            $("#startTime").prop("disabled", true);
+          
+            swal($("#employee_name").val() + ' Clock On data is saved', '', 'success');
+            $("#employeeClockonoffModal").modal("hide");
+             
+            $(".fullScreenSpin").css("display", "none");
+
+            // FlowRouter.go('/');
+
+
+          });
+        })
+        .catch(function (err) {
+          swal({
+            title: "Oooops...",
+            text: err,
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "Try Again",
+          }).then((result) => {
+            if (result.value) {
+              // Meteor._reload.reload();
+            } else if (result.dismiss == "cancel") {
+            }
+          });
+          $(".fullScreenSpin").css("display", "none");
+        });
+
+      }
+          
+    }, delayTimeAfterSound);
+
+  }  
  
 });
 
