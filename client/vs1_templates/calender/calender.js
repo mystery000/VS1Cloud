@@ -54,8 +54,6 @@ Template.calender.onCreated(function() {
     templateObject.defaultSMSSettings = new ReactiveVar();
     templateObject.includeAllProducts = new ReactiveVar();
     templateObject.includeAllProducts.set(true);
-    templateObject.useProductCostaspayRate = new ReactiveVar();
-    templateObject.useProductCostaspayRate.set(false);
     templateObject.allnoninvproducts = new ReactiveVar([]);
     templateObject.textnote = new ReactiveVar();
     //templateObject.uploadedFiles = new ReactiveVar([]);

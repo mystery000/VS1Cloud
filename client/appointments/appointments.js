@@ -36,35 +36,11 @@ Template.appointments.onCreated(function() {
     templateObject.employeerecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.clientrecords = new ReactiveVar([]);
-    templateObject.appointmentrecords = new ReactiveVar([]);
-    templateObject.eventdata = new ReactiveVar([]);
-    templateObject.resourceAllocation = new ReactiveVar([]);
-    templateObject.resourceJobs = new ReactiveVar([]);
-    templateObject.resourceDates = new ReactiveVar([]);
-    templateObject.weeksOfMonth = new ReactiveVar([]);
-    templateObject.checkEmployee = new ReactiveVar([]);
-    templateObject.calendarOptions = new ReactiveVar([]);
-    templateObject.globalSettings = new ReactiveVar([]);
     templateObject.employeeOptions = new ReactiveVar([]);
     templateObject.repeatDays = new ReactiveVar([]);
-    templateObject.checkRefresh = new ReactiveVar();
-    templateObject.empDuration = new ReactiveVar();
-    templateObject.uploadedFiles = new ReactiveVar([]);
-    templateObject.uploadedFile = new ReactiveVar();
-    templateObject.defaultSMSSettings = new ReactiveVar();
     templateObject.includeAllProducts = new ReactiveVar();
     templateObject.includeAllProducts.set(true);
-    templateObject.useProductCostaspayRate = new ReactiveVar();
-    templateObject.useProductCostaspayRate.set(false);
     templateObject.allnoninvproducts = new ReactiveVar([]);
-    templateObject.textnote = new ReactiveVar();
-    templateObject.clientrecords = new ReactiveVar([]);
-    templateObject.productextrasellrecords = new ReactiveVar([]);
-    templateObject.taxraterecords = new ReactiveVar([]);
-    //templateObject.uploadedFiles = new ReactiveVar([]);
-    templateObject.attachmentCount = new ReactiveVar();
-    templateObject.displayfields = new ReactiveVar([]);
-    templateObject.checkRefresh.set(false);
     templateObject.empID = new ReactiveVar();
     let dayObj = {
         saturday: 0,
@@ -76,7 +52,6 @@ Template.appointments.onCreated(function() {
         friday: 0,
     };
     templateObject.repeatDays.set(dayObj);
-    templateObject.toupdatelogid = new ReactiveVar();
     templateObject.isAccessLevels = new ReactiveVar();
     templateObject.productFees = new ReactiveVar();
     templateObject.extraProductFees = new ReactiveVar([]);
@@ -261,72 +236,7 @@ Template.appointments.onRendered(function() {
 	
 	$(".fullScreenSpin").css("display", "inline-block");
 
-	templateObject.diff_hours = function(dt2, dt1) {
-        var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-        diff /= 60 * 60;
-        return Math.abs(diff);
-    };
-
     document.getElementById("currentDate").value = moment().format("YYYY-MM-DD");
-    changeColumnColor = async function(day) {
-        let dayOfWeek = moment(day).format("dddd");
-        let dayInDigit = moment(day).format("DD");
-        let dd = moment(document.getElementById("currentDate").value).format("DD");
-        if (dayOfWeek == moment().format("dddd") && dayInDigit == dd) {
-            $(document).on("DOMNodeInserted", function() {
-                $("#allocationTable").find("tbody tr td." + dayOfWeek.toLowerCase() + "").addClass("currentDay");
-            });
-        } else {
-            $("#allocationTable tbody tr td." + dayOfWeek.toLocaleLowerCase()).removeClass("currentDay");
-            $("#allocationTabletbody tr td." + dayOfWeek.toLocaleLowerCase()).css("background-color","#fff");
-        }
-        setTimeout(function() {
-            if ($("#showSaturday").is(":checked") && $("#showSunday").is(":checked")) {
-                $(".draggable").addClass("cardWeeekend");
-                $(".draggable").removeClass("cardHiddenWeekend");
-                $(".draggable").removeClass("cardHiddenSundayOrSaturday");
-            }
-
-            if ($("#showSaturday").prop("checked") == false && $("#showSunday").prop("checked") == false) {
-                $(".draggable").removeClass("cardWeeekend");
-                $(".draggable").addClass("cardHiddenWeekend");
-                $(".draggable").removeClass("cardHiddenSundayOrSaturday");
-            }
-
-            if (($("#showSaturday").prop("checked") == false && $("#showSunday").prop("checked") == true) || ($("#showSaturday").prop("checked") == true && $("#showSunday").prop("checked") == false)) {
-                $(".draggable").removeClass("cardWeeekend");
-                $(".draggable").removeClass("cardHiddenWeekend");
-                $(".draggable").addClass("cardHiddenSundayOrSaturday");
-            }
-        }, 100);
-    };
-
-    templateObject.dateFormat = function(date) {
-        var dateParts = date.split("/");
-        var dateObject = dateParts[2] + "/" + ("0" + (dateParts[1] - 1)).toString().slice(-2) + "/" + dateParts[0];
-        return dateObject;
-    };
-
-    templateObject.timeToDecimal = function(time) {
-        var hoursMinutes = time.split(/[.:]/);
-        var hours = parseInt(hoursMinutes[0], 10);
-        var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
-        return hours + minutes / 60;
-    };
-
-    templateObject.timeFormat = function(hours) {
-        var decimalTime = parseFloat(hours).toFixed(2);
-        decimalTime = decimalTime * 60 * 60;
-        var hours = Math.floor(decimalTime / (60 * 60));
-        decimalTime = decimalTime - hours * 60 * 60;
-        var minutes = Math.abs(decimalTime / 60);
-        decimalTime = decimalTime - minutes * 60;
-        hours = ("0" + hours).slice(-2);
-        minutes = ("0" + Math.round(minutes)).slice(-2);
-        let time = hours + ":" + minutes;
-        return time;
-    };
-
     // templateObject.getLeaveRequests = async function() {
     //     let result = false;
     //     const dataObject = await getVS1Data("TLeavRequest");
@@ -367,6 +277,70 @@ Template.appointments.onRendered(function() {
         return '';
     };
 
+    function setEmployeeRecordsData(data){
+        let lineItems = [];
+        let lineItemObj = {};
+        let totalUser = 0;
+        let totAmount = 0;
+        let totAmountOverDue = 0;
+
+        for (let i = 0; i < data.temployee.length; i++) {
+            let randomColor = Math.floor(Math.random() * 16777215).toString(16);
+            if (randomColor.length < 6) {
+                randomColor = randomColor + "6";
+            }
+            let selectedColor = "#" + randomColor;
+            if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
+                if (data.temployee[i].fields.CustFld8 == "false") {
+                    templateObject.includeAllProducts.set(false);
+                }
+            }
+
+            if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
+                if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
+                    var dataList = {
+                        id: data.temployee[i].fields.ID || "",
+                        employeeName: data.temployee[i].fields.EmployeeName || "",
+                        color: data.temployee[i].fields.CustFld6 || selectedColor,
+                        priority: data.temployee[i].fields.CustFld5 || "0",
+                        override: data.temployee[i].fields.CustFld14 || "false",
+                        custFld7: data.temployee[i].fields.CustFld7 || "",
+                        custFld8: data.temployee[i].fields.CustFld8 || "",
+                    };
+                    lineItems.push(dataList);
+                    allEmployees.push(dataList);
+                }
+            } else {
+                var dataList = {
+                    id: data.temployee[i].fields.ID || "",
+                    employeeName: data.temployee[i].fields.EmployeeName || "",
+                    color: data.temployee[i].fields.CustFld6 || selectedColor,
+                    priority: data.temployee[i].fields.CustFld5 || "0",
+                    override: data.temployee[i].fields.CustFld14 || "false",
+                    custFld7: data.temployee[i].fields.CustFld7 || "",
+                    custFld8: data.temployee[i].fields.CustFld8 || "",
+                };
+                lineItems.push(dataList);
+                allEmployees.push(dataList);
+            }
+        }
+        lineItems.sort(function(a, b) {
+            if (a.employeeName == "NA") {
+                return 1;
+            } else if (b.employeeName == "NA") {
+                return -1;
+            }
+            return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
+        });
+        templateObject.employeerecords.set(lineItems);
+
+        if (templateObject.employeerecords.get()) {
+            setTimeout(function() {
+                $(".counter").text(lineItems.length + " items");
+            }, 100);
+        }
+    }
+
     templateObject.getEmployeesList = async function() {
         let leaveArr = [];
         let data = []
@@ -379,7 +353,9 @@ Template.appointments.onRendered(function() {
         if (data.tleavrequest.length > 0) {
             data.tleavrequest.forEach((item) => {
                 const fields = item.fields;
-                leaveArr.push(fields);
+                if(fields.Status !== "Deleted" && fields.Active){
+                    leaveArr.push(fields);
+                }
             });
         }
         templateObject.leaveemployeerecords.set(leaveArr);
@@ -387,196 +363,17 @@ Template.appointments.onRendered(function() {
         getVS1Data("TEmployee").then(async function(dataObject) {
             if (dataObject.length == 0) {
                 contactService.getAllEmployeeSideData().then(function(data) {
-                    let lineItems = [];
-                    for (let i = 0; i < data.temployee.length; i++) {
-                        let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                        if (randomColor.length < 6) {
-                            randomColor = randomColor + "6";
-                        }
-                        let selectedColor = "#" + randomColor;
-                        if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
-                            if (data.temployee[i].fields.CustFld8 == "false") {
-                                templateObject.includeAllProducts.set(false);
-                            }
-                        }
-
-                        if (JSON.parse(seeOwnAppointments) == true) {
-                            if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
-                                var dataList = {
-                                    id: data.temployee[i].fields.ID || "",
-                                    employeeName: data.temployee[i].fields.EmployeeName || "",
-                                    color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                    priority: data.temployee[i].fields.CustFld5 || "0",
-                                    override: data.temployee[i].fields.CustFld14 || "false",
-                                    custFld7: data.temployee[i].fields.CustFld7 || "",
-                                    custFld8: data.temployee[i].fields.CustFld8 || "",
-                                };
-                                lineItems.push(dataList);
-                                allEmployees.push(dataList);
-                            }
-                        } else {
-                            var dataList = {
-                                id: data.temployee[i].fields.ID || "",
-                                employeeName: data.temployee[i].fields.EmployeeName || "",
-                                color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                priority: data.temployee[i].fields.CustFld5 || "0",
-                                override: data.temployee[i].fields.CustFld14 || "false",
-                                custFld7: data.temployee[i].fields.CustFld7 || "",
-                                custFld8: data.temployee[i].fields.CustFld8 || "",
-                            };
-                            lineItems.push(dataList);
-                            allEmployees.push(dataList);
-                        }
-                    }
-                    lineItems.sort(function(a, b) {
-                        if (a.employeeName == "NA") {
-                            return 1;
-                        } else if (b.employeeName == "NA") {
-                            return -1;
-                        }
-                        return a.employeeName.toUpperCase() >
-                            b.employeeName.toUpperCase() ?
-                            1 :
-                            -1;
-                    });
-                    templateObject.employeerecords.set(lineItems);
-                    if (templateObject.employeerecords.get()) {
-                        setTimeout(function() {
-                            $(".counter").text(lineItems.length + " items");
-                        }, 100);
-                    }
-                }).catch(function() {});
+                    setEmployeeRecordsData(data)
+                }).catch(function(err) {});
             } else {
                 let data = JSON.parse(dataObject[0].data);
-                let useData = data.temployee;
-                let lineItems = [];
-                for (let i = 0; i < useData.length; i++) {
-                    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                    if (randomColor.length < 6) {
-                        randomColor = randomColor + "6";
-                    }
-                    let selectedColor = "#" + randomColor;
-                    if (useData[i].fields.CustFld6 == "") {
-                        objDetails = {
-                            type: "TEmployeeEx",
-                            fields: {
-                                ID: useData[i].fields.ID,
-                                CustFld6: selectedColor,
-                                Email: useData[i].fields.Email || useData[i].fields.FirstName.toLowerCase() + "@gmail.com",
-                                Sex: useData[i].fields.Sex || "M",
-                                DateStarted: useData[i].fields.DateStarted || moment().format("YYYY-MM-DD"),
-                                DOB: useData[i].fields.DOB || moment("2018-07-01").format("YYYY-MM-DD"),
-                            },
-                        };
-                        contactService.saveEmployeeEx(objDetails).then(function() {});
-                    }
-
-                    if (localStorage.getItem("mySessionEmployee") == useData[i].fields.EmployeeName) {
-                        if (useData[i].fields.CustFld8 == "false") {
-                            templateObject.includeAllProducts.set(false);
-                        }
-                    }
-
-                    if (JSON.parse(seeOwnAppointments) == true) {
-                        if (useData[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
-                            var dataList = {
-                                id: useData[i].fields.ID || "",
-                                employeeName: useData[i].fields.EmployeeName || "",
-                                color: useData[i].fields.CustFld6 || selectedColor,
-                                priority: useData[i].fields.CustFld5 || "0",
-                                override: useData[i].fields.CustFld14 || "false",
-                                custFld7: useData[i].fields.CustFld7 || "",
-                                custFld8: useData[i].fields.CustFld8 || "",
-                            };
-                            lineItems.push(dataList);
-                        }
-                    } else {
-                        var dataList = {
-                            id: useData[i].fields.ID || "",
-                            employeeName: useData[i].fields.EmployeeName || "",
-                            color: useData[i].fields.CustFld6 || selectedColor,
-                            priority: useData[i].fields.CustFld5 || "0",
-                            override: useData[i].fields.CustFld14 || "false",
-                            custFld7: useData[i].fields.CustFld7 || "",
-                            custFld8: useData[i].fields.CustFld8 || "",
-                        };
-                        lineItems.push(dataList);
-                    }
-                }
-                lineItems.sort(function(a, b) {
-                    if (a.employeeName == "NA") {
-                        return 1;
-                    } else if (b.employeeName == "NA") {
-                        return -1;
-                    }
-                    return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
-                });
-                templateObject.employeerecords.set(lineItems);
-                if (templateObject.employeerecords.get()) {
-                    setTimeout(function() {
-                        $(".counter").text(lineItems.length + " items");
-                    }, 100);
-                }
+                setEmployeeRecordsData(data)
             }
-        }).catch(function() {
+        }).catch(function(err) {
             contactService.getAllEmployeeSideData().then(function(data) {
-                let lineItems = [];
-                for (let i = 0; i < data.temployee.length; i++) {
-                    let randomColor = Math.floor(Math.random() * 16777215).toString(16);
-
-                    if (randomColor.length < 6) {
-                        randomColor = randomColor + "6";
-                    }
-                    let selectedColor = "#" + randomColor;
-                    if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
-                        if (useData[i].fields.CustFld8 == "false") {
-                            templateObject.includeAllProducts.set(false);
-                        }
-                    }
-                    if (JSON.parse(seeOwnAppointments) == true) {
-                        if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
-                            var dataList = {
-                                id: data.temployee[i].fields.ID || "",
-                                employeeName: data.temployee[i].fields.EmployeeName || "",
-                                color: data.temployee[i].fields.CustFld6 || selectedColor,
-                                priority: data.temployee[i].fields.CustFld5 || "0",
-                                override: data.temployee[i].fields.CustFld14 || "false",
-                                custFld7: data.temployee[i].fields.CustFld7 || "",
-                                custFld8: data.temployee[i].fields.CustFld8 || "",
-                            };
-                            lineItems.push(dataList);
-                        }
-                    } else {
-                        var dataList = {
-                            id: data.temployee[i].fields.ID || "",
-                            employeeName: data.temployee[i].fields.EmployeeName || "",
-                            color: data.temployee[i].fields.CustFld6 || selectedColor,
-                            priority: data.temployee[i].fields.CustFld5 || "0",
-                            override: data.temployee[i].fields.CustFld14 || "false",
-                            custFld7: data.temployee[i].fields.CustFld7 || "",
-                            custFld8: data.temployee[i].fields.CustFld8 || "",
-                        };
-                        lineItems.push(dataList);
-                    }
-                }
-                lineItems.sort(function(a, b) {
-                    if (a.employeeName == "NA") {
-                        return 1;
-                    } else if (b.employeeName == "NA") {
-                        return -1;
-                    }
-                    return a.employeeName.toUpperCase() > b.employeeName.toUpperCase() ? 1 : -1;
-                });
-                templateObject.employeerecords.set(lineItems);
-
-                if (templateObject.employeerecords.get()) {
-                    setTimeout(function() {
-                        $(".counter").text(lineItems.length + " items");
-                    }, 100);
-                }
-            }).catch(function() {});
+                setEmployeeRecordsData(data)
+            })
+            .catch(function(err) {});
         });
     };
 
@@ -627,116 +424,101 @@ Template.appointments.onRendered(function() {
                         productList.push(dataList);
                         //  }
                     }
-
                     if (splashArrayProductServiceList) {
-                        templateObject.allnoninvproducts.set(
-                            splashArrayProductServiceList
-                        );
-                        $("#tblInventoryPayrollService")
-                            .dataTable({
-                                data: splashArrayProductServiceList,
-
-                                sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                                columnDefs: [{
-                                        className: "chkBox pointer hiddenColumn",
-                                        orderable: false,
-                                        targets: [0],
-                                    },
-                                    {
-                                        className: "productName",
-                                        targets: [1],
-                                    },
-                                    {
-                                        className: "productDesc",
-                                        targets: [2],
-                                    },
-                                    {
-                                        className: "colBarcode",
-                                        targets: [3],
-                                    },
-                                    {
-                                        className: "costPrice text-right",
-                                        targets: [4],
-                                    },
-                                    {
-                                        className: "salePrice text-right",
-                                        targets: [5],
-                                    },
-                                    {
-                                        className: "prdqty text-right",
-                                        targets: [6],
-                                    },
-                                    {
-                                        className: "taxrate",
-                                        targets: [7],
-                                    },
-                                    {
-                                        className: "colProuctPOPID hiddenColumn",
-                                        targets: [8],
-                                    },
-                                    {
-                                        className: "colExtraSellPrice hiddenColumn",
-                                        targets: [9],
-                                    },
-                                    {
-                                        className: "salePriceInc hiddenColumn",
-                                        targets: [10],
-                                    },
-                                ],
-                                select: true,
-                                destroy: true,
-                                colReorder: true,
-                                pageLength: initialDatatableLoad,
-                                lengthMenu: [
-                                    [initialDatatableLoad, -1],
-                                    [initialDatatableLoad, "All"],
-                                ],
-                                info: true,
-                                responsive: true,
-                                order: [
-                                    [1, "asc"]
-                                ],
-                                fnDrawCallback: function() {
-                                    $(".paginate_button.page-item").removeClass("disabled");
-                                    $("#tblInventoryPayrollService_ellipsis").addClass(
-                                        "disabled"
-                                    );
+                        templateObject.allnoninvproducts.set(splashArrayProductServiceList);
+                        $("#tblInventoryPayrollService").dataTable({
+                            data: splashArrayProductServiceList,
+                            sDom: "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            columnDefs: [
+                                {
+                                    className: "chkBox pointer hiddenColumn",
+                                    orderable: false,
+                                    targets: [0],
                                 },
-                                fnInitComplete: function() {
-                                    $(
-                                        "<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
-                                    ).insertAfter("#tblInventoryPayrollService_filter");
-                                    $(
-                                        "<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
-                                    ).insertAfter("#tblInventoryPayrollService_filter");
-                                    $(
-                                        "<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
-                                    ).insertAfter("#tblInventoryPayrollService_filter");
+                                {
+                                    className: "productName",
+                                    targets: [1],
                                 },
-                            })
-                            .on("length.dt", function(e, settings) {
-                                $(".fullScreenSpin").css("display", "inline-block");
-                                let dataLenght = settings._iDisplayLength;
-                                // splashArrayProductList = [];
-                                if (dataLenght == -1) {
+                                {
+                                    className: "productDesc",
+                                    targets: [2],
+                                },
+                                {
+                                    className: "colBarcode",
+                                    targets: [3],
+                                },
+                                {
+                                    className: "costPrice text-right",
+                                    targets: [4],
+                                },
+                                {
+                                    className: "salePrice text-right",
+                                    targets: [5],
+                                },
+                                {
+                                    className: "prdqty text-right",
+                                    targets: [6],
+                                },
+                                {
+                                    className: "taxrate",
+                                    targets: [7],
+                                },
+                                {
+                                    className: "colProuctPOPID hiddenColumn",
+                                    targets: [8],
+                                },
+                                {
+                                    className: "colExtraSellPrice hiddenColumn",
+                                    targets: [9],
+                                },
+                                {
+                                    className: "salePriceInc hiddenColumn",
+                                    targets: [10],
+                                },
+                            ],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            pageLength: initialDatatableLoad,
+                            lengthMenu: [
+                                [initialDatatableLoad, -1],
+                                [initialDatatableLoad, "All"],
+                            ],
+                            info: true,
+                            responsive: true,
+                            order: [
+                                [1, "asc"]
+                            ],
+                            fnDrawCallback: function() {
+                                $(".paginate_button.page-item").removeClass("disabled");
+                                $("#tblInventoryPayrollService_ellipsis").addClass("disabled");
+                            },
+                            fnInitComplete: function() {
+                                $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>"
+                                ).insertAfter("#tblInventoryPayrollService_filter");
+                                $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>"
+                                ).insertAfter("#tblInventoryPayrollService_filter");
+                                $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>"
+                                ).insertAfter("#tblInventoryPayrollService_filter");
+                            },
+                        })
+                        .on("length.dt", function(e, settings) {
+                            $(".fullScreenSpin").css("display", "inline-block");
+                            let dataLenght = settings._iDisplayLength;
+                            // splashArrayProductList = [];
+                            if (dataLenght == -1) {
+                                $(".fullScreenSpin").css("display", "none");
+                            } else {
+                                if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                                     $(".fullScreenSpin").css("display", "none");
                                 } else {
-                                    if (
-                                        settings.fnRecordsDisplay() >= settings._iDisplayLength
-                                    ) {
-                                        $(".fullScreenSpin").css("display", "none");
-                                    } else {
-                                        $(".fullScreenSpin").css("display", "none");
-                                    }
+                                    $(".fullScreenSpin").css("display", "none");
                                 }
-                            });
+                            }
+                        });
 
-                        $("div.dataTables_filter input").addClass(
-                            "form-control form-control-sm"
-                        );
+                        $("div.dataTables_filter input").addClass("form-control form-control-sm");
                     }
-
                     templateObject.datatablerecords.set(productList);
                 });
             } else {
@@ -1115,7 +897,6 @@ Template.appointments.onRendered(function() {
 			};
 			//clientList.push(data.tcustomer[i].ClientName,customeremail: data.tcustomer[i].Email);
 			clientList.push(customerrecordObj);
-
 			//$('#edtCustomerName').editableSelect('add',data.tcustomervs1[i].ClientName);
 		}
 		templateObject.clientrecords.set(clientList);
@@ -1253,11 +1034,7 @@ Template.appointments.onRendered(function() {
                 { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
                 { label: "Disc %", class: "colDiscount", active: true },
                 { label: "Cost Price", class: "colCostPrice", active: false },
-                {
-                    label: "SalesLines CustField1",
-                    class: "colSalesLinesCustField1",
-                    active: false,
-                },
+                { label: "SalesLines CustField1", class: "colSalesLinesCustField1", active: false},
                 { label: "Tax Rate", class: "colTaxRate", active: false },
                 { label: "Tax Code", class: "colTaxCode", active: true },
                 { label: "Tax Amt", class: "colTaxAmount", active: true },
@@ -1278,11 +1055,7 @@ Template.appointments.onRendered(function() {
                 { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
                 { label: "Disc %", class: "colDiscount", active: true },
                 { label: "Cost Price", class: "colCostPrice", active: false },
-                {
-                    label: "SalesLines CustField1",
-                    class: "colSalesLinesCustField1",
-                    active: false,
-                },
+                { label: "SalesLines CustField1", class: "colSalesLinesCustField1",active: false},
                 { label: "Tax Rate", class: "colTaxRate", active: false },
                 { label: "Tax Code", class: "colTaxCode", active: true },
                 { label: "Tax Amt", class: "colTaxAmount", active: true },
@@ -1342,7 +1115,6 @@ Template.appointments.onRendered(function() {
 
         if(storeObj && storeObj.width){
             let width1 = storeObj.width;
-
             $("#colEmployeeList").width(parseInt(width1));
             // $("#colEmployeeList").height(parseInt(height1));
         }
@@ -1351,7 +1123,6 @@ Template.appointments.onRendered(function() {
 
         if(storeObj && storeObj.width){
             let width2 = storeObj.width;
-
             $("#colCalendar").width(parseInt(width2));
             // $("#colCalendar").height(parseInt(height2));
         }
@@ -1364,33 +1135,24 @@ Template.appointments.onRendered(function() {
                 // aspectRatio: 1.5 / 1
                 handles: "e,s",
                 stop: async (event, ui) => {
-
                     // add custom class to manage spacing
-
-
                     /**
                      * Build the positions of the widgets
                      */
                     if ($(ui.element[0]).parents(".sortable-chart-widget-js").hasClass("editCharts") == false) {
-
                         // ChartHandler.buildPositions();
                         // await ChartHandler.saveChart(
                         //     $(ui.element[0]).parents(".sortable-chart-widget-js")
                         // );
-
                     }
                 },
                 resize: function (event, ui) {
                     let chartHeight = ui.size.height;
                     let chartWidth = ui.size.width;
 
-                    $(ui.element[0])
-                        .parents(".sortable-chart-widget-js")
-                        .removeClass("col-md-6 col-md-8 col-md-4"); // when you'll star resizing, it will remove its size
+                    $(ui.element[0]).parents(".sortable-chart-widget-js").removeClass("col-md-6 col-md-8 col-md-4"); // when you'll star resizing, it will remove its size
                     // if ($(ui.element[0]).parents(".sortable-chart-widget-js").attr("key") != "purchases__expenses_breakdown") {
-                    $(ui.element[0])
-                        .parents(".sortable-chart-widget-js")
-                        .addClass("resizeAfterChart");
+                    $(ui.element[0]).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
                     $(ui.element[0]).parents(".sortable-chart-widget-js").css("width", "auto");
                     $(ui.element[0]).parents(".sortable-chart-widget-js").css("flex", "none");
 
@@ -1872,11 +1634,7 @@ Template.appointments.events({
                 { label: "Unit Price (Inc)", class: "colUnitPriceInc", active: false },
                 { label: "Disc %", class: "colDiscount", active: true },
                 { label: "Cost Price", class: "colCostPrice", active: false },
-                {
-                    label: "SalesLines CustField1",
-                    class: "colSalesLinesCustField1",
-                    active: false,
-                },
+                { label: "SalesLines CustField1", class: "colSalesLinesCustField1", active: false,},
                 { label: "Tax Rate", class: "colTaxRate", active: false },
                 { label: "Tax Code", class: "colTaxCode", active: true },
                 { label: "Tax Amt", class: "colTaxAmount", active: true },
@@ -2090,13 +1848,9 @@ Template.appointments.events({
                             days.push(i);
                         }
                     }
-                    if (dailyRadioOption == "dailyEvery") {
-
-                    }
+                    if (dailyRadioOption == "dailyEvery") {}
                 } else {
-                    repeatDates.push({
-                        "Dates": sDate2
-                    })
+                    repeatDates.push({"Dates": sDate2})
                     frequency2 = 1;
                 }
             }
@@ -2155,16 +1909,7 @@ Template.appointments.events({
                     };
                     var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                     var oPost = new XMLHttpRequest();
-                    oPost.open(
-                        "POST",
-                        URLRequest +
-                        erpGet.ERPIPAddress +
-                        ":" +
-                        erpGet.ERPPort +
-                        "/" +
-                        'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatAppointment"',
-                        true
-                    );
+                    oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ":" + erpGet.ERPPort + "/" + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatAppointment"',true);
                     oPost.setRequestHeader("database", erpGet.ERPDatabase);
                     oPost.setRequestHeader("username", erpGet.ERPUsername);
                     oPost.setRequestHeader("password", erpGet.ERPPassword);
@@ -2178,32 +1923,27 @@ Template.appointments.events({
                             var myArrResponse = JSON.parse(oPost.responseText);
                             if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
                                 if (x == days.length - 1) {
-                                    sideBarService
-                                        .getAllAppointmentList(initialDataLoad, 0)
-                                        .then(function(data) {
-                                            addVS1Data("TAppointment", JSON.stringify(data))
-                                                .then(function() {
-                                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                    } else {
-                                                        window.open("/appointments", "_self");
-                                                    }
-                                                })
-                                                .catch(function() {
-                                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                        window.open(localStorage.getItem("appt_historypage"), "_self");
-                                                    } else {
-                                                        window.open("/appointments", "_self");
-                                                    }
-                                                });
-                                        })
-                                        .catch(function() {
+                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+                                        addVS1Data("TAppointment", JSON.stringify(data)).then(function() {
+                                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                                window.open(localStorage.getItem("appt_historypage"), "_self");
+                                            } else {
+                                                window.open("/appointments", "_self");
+                                            }
+                                        }).catch(function() {
                                             if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
                                                 window.open(localStorage.getItem("appt_historypage"), "_self");
                                             } else {
                                                 window.open("/appointments", "_self");
                                             }
                                         });
+                                    }).catch(function() {
+                                        if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                            window.open(localStorage.getItem("appt_historypage"), "_self");
+                                        } else {
+                                            window.open("/appointments", "_self");
+                                        }
+                                    });
                                 }
                             } else {
                                 $(".modal-backdrop").css("display", "none");
@@ -2322,16 +2062,7 @@ Template.appointments.events({
                 }
                 var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
                 var oPost = new XMLHttpRequest();
-                oPost.open(
-                    "POST",
-                    URLRequest +
-                    erpGet.ERPIPAddress +
-                    ":" +
-                    erpGet.ERPPort +
-                    "/" +
-                    'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatAppointment"',
-                    true
-                );
+                oPost.open("POST", URLRequest + erpGet.ERPIPAddress + ":" + erpGet.ERPPort + "/" + 'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatAppointment"',true);
                 oPost.setRequestHeader("database", erpGet.ERPDatabase);
                 oPost.setRequestHeader("username", erpGet.ERPUsername);
                 oPost.setRequestHeader("password", erpGet.ERPPassword);
@@ -2345,33 +2076,28 @@ Template.appointments.events({
                     if (oPost.readyState == 4 && oPost.status == 200) {
                         var myArrResponse = JSON.parse(oPost.responseText);
                         if (myArrResponse.ProcessLog.ResponseStatus.includes("OK")) {
-                            sideBarService
-                                .getAllAppointmentList(initialDataLoad, 0)
-                                .then(function(data) {
-                                    addVS1Data("TAppointment", JSON.stringify(data))
-                                        .then(function() {
-                                            window.open("/appointments", "_self");
-                                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                                            } else {
-                                                window.open("/appointments", "_self");
-                                            }
-                                        })
-                                        .catch(function() {
-                                            if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                                                window.open(localStorage.getItem("appt_historypage"), "_self");
-                                            } else {
-                                                window.open("/appointments", "_self");
-                                            }
-                                        });
-                                })
-                                .catch(function() {
+                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
+                                addVS1Data("TAppointment", JSON.stringify(data)).then(function() {
+                                    window.open("/appointments", "_self");
+                                    if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                        window.open(localStorage.getItem("appt_historypage"), "_self");
+                                    } else {
+                                        window.open("/appointments", "_self");
+                                    }
+                                }).catch(function() {
                                     if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
                                         window.open(localStorage.getItem("appt_historypage"), "_self");
                                     } else {
                                         window.open("/appointments", "_self");
                                     }
                                 });
+                            }).catch(function() {
+                                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
+                                    window.open(localStorage.getItem("appt_historypage"), "_self");
+                                } else {
+                                    window.open("/appointments", "_self");
+                                }
+                            });
                         } else {
                             $(".modal-backdrop").css("display", "none");
                             $(".fullScreenSpin").css("display", "none");
