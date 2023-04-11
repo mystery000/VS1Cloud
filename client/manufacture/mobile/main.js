@@ -376,9 +376,7 @@ Template.mobileapp.events({
                                 ]
                             })
 
-                        }
-
-                       
+                        }                    
 
 
                         $("#startBreakContainer").css('display', 'none');
@@ -656,7 +654,6 @@ Template.mobileapp.events({
             Template.instance().isSelectEmployeeNumber.set(true);
         }
 
-
         // html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
         // }).catch((err) => console.log(err));
 
@@ -684,7 +681,6 @@ Template.mobileapp.events({
         $(".mobile-header-status-text").text("Clock In");
 
         let jobNumber = templateObject.jobNumber.get();
-
        
         let workorders = await templateObject.getAllWorkorders();
         let currentworkorder;
