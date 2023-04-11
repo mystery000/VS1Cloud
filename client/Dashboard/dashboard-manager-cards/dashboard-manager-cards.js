@@ -155,6 +155,10 @@ Template.dashboardManagerCards.onRendered(() => {
     setTimeout(function() {
         templateObject.getDashboardData();
     }, 100);
+
+    $(document).on("change", "#dateFrom, #dateTo", () => {
+        templateObject.getDashboardData();
+    })
 });
 
 Template.dashboardManagerCards.events({
