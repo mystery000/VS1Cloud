@@ -444,11 +444,7 @@ Template.datatablelist.onRendered(async function () {
         let aitems = [];
 
         const tabledraw = () => {
-            let tableId = currenttablename;
-            if(templateObject.data.custId) {
-                tableId = currenttablename+'_'+templateObject.data.custId
-            }
-            $('#' + tableId).DataTable({
+            $('#' + currenttablename).DataTable({
                 dom: 'BRlfrtip',
                 data: splashDataArray,
                 // "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
@@ -544,14 +540,14 @@ Template.datatablelist.onRendered(async function () {
                 "order": templateObject.data.orderby ? eval(templateObject.data.orderby):[[1, "asc"]],
                 //"autoWidth": false,
                 action: function () {
-                    $('#' + tableId).DataTable().ajax.reload();
+                    $('#' + currenttablename).DataTable().ajax.reload();
                 },
                 "fnCreatedRow": function( nRow, aData, iDataIndex ) {
                     $(nRow).attr('id', templateObject.data.attRowID ? templateObject.data.attRowID:aData[0]);
                 },
                 "fnDrawCallback": function (oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
-                    $('#' + tableId + '_ellipsis').addClass('disabled');
+                    $('#' + currenttablename + '_ellipsis').addClass('disabled');
                     if (oSettings._iDisplayLength == -1) {
                         if (oSettings.fnRecordsDisplay() > 150) {
 
@@ -567,7 +563,7 @@ Template.datatablelist.onRendered(async function () {
                         $('.fullScreenSpin').css('display', 'inline-block');
                         //var splashArrayCustomerListDupp = new Array();
                         let dataLenght = oSettings._iDisplayLength;
-                        let customerSearch = $('#' + tableId + '_filter input').val();
+                        let customerSearch = $('#' + currenttablename + '_filter input').val();
 
                         var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
                         var dateTo = new Date($("#dateTo").datepicker("getDate"));
@@ -600,12 +596,12 @@ Template.datatablelist.onRendered(async function () {
                             }
                             let uniqueChars = [...new Set(splashDataArray)];
                             templateObject.transactiondatatablerecords.set(uniqueChars);
-                            var datatable = $('#' + tableId).DataTable();
+                            var datatable = $('#' + currenttablename).DataTable();
                             datatable.clear();
                             datatable.rows.add(uniqueChars);
                             datatable.draw(false);
                             setTimeout(function () {
-                                $('#' + tableId).dataTable().fnPageChange('last');
+                                $('#' + currenttablename).dataTable().fnPageChange('last');
                             }, 400);
 
                             $('.fullScreenSpin').css('display', 'none');
@@ -621,14 +617,14 @@ Template.datatablelist.onRendered(async function () {
                 "fnInitComplete": function (oSettings) {
 
                       if(templateObject.data.showCameraButton == true){
-                        $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter('#' + tableId + '_filter');
+                        $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter('#' + currenttablename + '_filter');
                       };
 
                       if(templateObject.data.viewConvertedButton == true){
-                         $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #1cc88a !important;border-color: #1cc88a!important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + tableId + '_filter');
+                         $("<button class='btn btn-primary btnViewConverted' type='button' id='btnViewConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #1cc88a !important;border-color: #1cc88a!important;'><i class='fa fa-trash' style='margin-right: 5px'></i>View Converted</button>").insertAfter('#' + currenttablename + '_filter');
                       };
                       if(templateObject.data.hideConvertedButton == true){
-                        $("<button class='btn btn-danger btnHideConverted' type='button' id='btnHideConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #f6c23e !important;border-color: #f6c23e!important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Converted</button>").insertAfter('#' + tableId + '_filter');
+                        $("<button class='btn btn-danger btnHideConverted' type='button' id='btnHideConverted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;background-color: #f6c23e !important;border-color: #f6c23e!important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide Converted</button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
                       if(templateObject.data.showPlusButtonCRM == true){
@@ -638,26 +634,26 @@ Template.datatablelist.onRendered(async function () {
                             <div class="dropdown-menu">
                                 <a class="dropdown-item btnAddLineTask pointer" id="btnAddLineTask">+ Task</a>
                             </div>
-                        </div>`).insertAfter('#' + tableId + '_filter');
+                        </div>`).insertAfter('#' + currenttablename + '_filter');
                       }
                       if(templateObject.data.showPlusButton == true){
-                        $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='.edtCustomer_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + tableId + '_filter');
+                        $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='.edtCustomer_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
                       if (data.Params) {
                         if (data.Params.Search.replace(/\s/g, "") == "") {
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + tableId + '_filter');
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                         } else {
                           if (data.Params.Search == "IsBill = true and IsCheque != true") {
-                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + tableId + '_filter');
+                            $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>"+hideViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                           }else{
-                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + tableId + '_filter');
+                            $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                           }
                         }
                     } else {
-                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + tableId + '_filter');
+                        $("<button class='btn btn-primary btnViewDeleted' type='button' id='btnViewDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fa fa-trash' style='margin-right: 5px'></i>"+activeViewDeletedLabel+"</button>").insertAfter('#' + currenttablename + '_filter');
                     }
-                    $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + tableId + '_filter');
+                    $("<button class='btn btn-primary btnRefreshTable' type='button' id='btnRefreshTable' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter('#' + currenttablename + '_filter');
                     if(typeof templateObject.data.callBack == 'function'){//Alexei
                       templateObject.data.callBackFunc();
                     }
@@ -700,8 +696,8 @@ Template.datatablelist.onRendered(async function () {
 
             setTimeout(async function () {
               await $('div.dataTables_filter input').addClass('form-control form-control-sm');
-              $('#' + tableId+'_filter .form-control-sm').focus();
-              $('#' + tableId+'_filter .form-control-sm').trigger("input");
+              $('#' + currenttablename+'_filter .form-control-sm').focus();
+              $('#' + currenttablename+'_filter .form-control-sm').trigger("input");
             }, 0);
             // setTimeout(function () {
             //   for (let c = 0; c < acolDef.length; c ++) {
