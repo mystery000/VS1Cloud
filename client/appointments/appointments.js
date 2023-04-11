@@ -1789,7 +1789,6 @@ Template.appointments.events({
         let columHeaderUpdate = $(event.target).attr("valueupdate");
         $("" + columHeaderUpdate + "").html(columData);
     },
-
     // custom field displaysettings
     "click .btnSaveGridSettings": function() {
         playSaveAudio();
@@ -1841,28 +1840,22 @@ Template.appointments.events({
                 };
             }
 
-            organisationService
-                .saveCustomField(objDetails1)
-                .then(function() {
-                    $(".fullScreenSpin").css("display", "none");
-                    $("#myModal2").modal("hide");
-                })
-                .catch(function() {
-                    $(".fullScreenSpin").css("display", "none");
-                    $("#myModal2").modal("hide");
-                });
+            organisationService.saveCustomField(objDetails1).then(function() {
+                $(".fullScreenSpin").css("display", "none");
+                $("#myModal2").modal("hide");
+            }).catch(function() {
+                $(".fullScreenSpin").css("display", "none");
+                $("#myModal2").modal("hide");
+            });
         });
 
         setTimeout(() => {
             // tempcode until InvoiceLines is added on backend
-            sideBarService
-                .getAllCustomFieldsWithQuery("ltSalesLines")
-                .then(function(data) {
-                    addVS1Data("TltSaleslines", JSON.stringify(data));
-                });
+            sideBarService.getAllCustomFieldsWithQuery("ltSalesLines").then(function(data) {
+                addVS1Data("TltSaleslines", JSON.stringify(data));
+            });
         }, 8000);
     },
-
     // custom field displaysettings
     "click .btnResetGridSettings": async function() {
         let templateObject = Template.instance();
@@ -1953,45 +1946,12 @@ Template.appointments.events({
             }
         });
     },
-
     "click .btnResetSettings": function() {
       Meteor._reload.reload();
     },
-	"click .img_new_attachment_btn": function() {
-        $("#img-attachment-upload").trigger("click");
-    },
-    "click .closeView": function() {
-        $("#files_view").modal("hide");
-    },
-    "click .calendar .days li": function() {
-        FlowRouter.go("/newappointments");
-    },
-    "click #btnCloseStartAppointmentModal": function() {
-        $("#startAppointmentModal").modal("hide");
-    },
-    "click #btnCloseSaveAppointmentModal": function() {
-        $("#saveAppointmentModal").modal("hide");
-    },"change #chkSMSCustomer": function() {
-        if ($("#chkSMSCustomer").is(":checked")) {
-            const templateObject = Template.instance();
-            templateObject.checkSMSSettings();
-        }
-    },
-    "change #chkSMSUser": function() {
-        if ($("#chkSMSUser").is(":checked")) {
-            const templateObject = Template.instance();
-            templateObject.checkSMSSettings();
-        }
-    },"click #btnCloseStopAppointment": function() {
+    "click #btnCloseStopAppointment": function() {
         document.getElementById("tActualEndTime").value = "";
         document.getElementById("txtActualHoursSpent").value = "0";
-    },"change #showSaturday1": function() {
-        var checkbox = document.querySelector("#showSaturday");
-        if (checkbox.checked) {} else {}
-    },
-    "change #showSunday1": function() {
-        var checkbox = document.querySelector("#showSunday");
-        if (checkbox.checked) {} else {}
     },
     'click .btnSaveFrequency': async function() {
         playSaveAudio();
@@ -2528,14 +2488,6 @@ Template.appointments.events({
     "change #lunch": function() {
         $("#break").prop("checked", false);
         $("#purchase").prop("checked", false);
-    },
-    "change #break": function() {
-        $("#lunch").prop("checked", false);
-        $("#purchase").prop("checked", false);
-    },
-    "change #purchase": function() {
-        $("#break").prop("checked", false);
-        $("#lunch").prop("checked", false);
     },
    'click .addLeaveEmp': function(event) {
         templateObject = Template.instance();
