@@ -5,10 +5,8 @@ import { SMSService } from "../../js/sms-settings-service";
 import { UtilityService } from "../../utility-service";
 import "jquery-ui-dist/external/jquery/jquery";
 import { SalesBoardService } from "../../js/sales-service";
-import { OrganisationService } from "../../js/organisation-service";
 import { AppointmentService } from "../../appointments/appointment-service";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
-import { Random } from "meteor/random";
 //Calendar
 import { Calendar } from "@fullcalendar/core";
 import interactionPlugin, { Draggable } from "@fullcalendar/interaction";
@@ -318,6 +316,20 @@ Template.calender.onRendered(function() {
         launchAllocations = dataObject;
     }).catch(function(err) {});
 
+    function setHasFollowing(apptData,apptIdList){
+        let cnt = 0;
+        for (let i = 0; i < apptIdList.length; i++) {
+            if (apptIdList[i].Id > apptData.fields.ID) {
+                cnt++;
+            }
+        }
+        if (cnt > 1) {
+            $("#btn_follow2").css("display", "inline-block");
+        } else {
+            $("#btn_follow2").css("display", "none");
+        }
+    }
+
     templateObject.hasFollowings = async function() {
         var currentDate = new Date();
         var url = FlowRouter.current().path;
@@ -332,31 +344,11 @@ Template.calender.onRendered(function() {
                     let appointmentService = new AppointmentService();
                     let apptIds = await appointmentService.getAllAppointmentListCount();
                     let apptIdList = apptIds.tappointmentex;
-                    let cnt = 0;
-                    for (let i = 0; i < apptIdList.length; i++) {
-                        if (apptIdList[i].Id > apptData.fields.ID) {
-                            cnt++;
-                        }
-                    }
-                    if (cnt > 1) {
-                        $("#btn_follow2").css("display", "inline-block");
-                    } else {
-                        $("#btn_follow2").css("display", "none");
-                    }
+                    setHasFollowing(apptData,apptIdList)
                 }else{
                     let apptIds = JSON.parse(dataObject[0].data);
                     let apptIdList = apptIds.tappointmentex;
-                    let cnt = 0;
-                    for (let i = 0; i < apptIdList.length; i++) {
-                        if (apptIdList[i].Id > apptData.fields.ID) {
-                            cnt++;
-                        }
-                    }
-                    if (cnt > 1) {
-                        $("#btn_follow2").css("display", "inline-block");
-                    } else {
-                        $("#btn_follow2").css("display", "none");
-                    }
+                    setHasFollowing(apptData,apptIdList)
                 }
             })
         }
@@ -390,10 +382,7 @@ Template.calender.onRendered(function() {
     templateObject.saveLeaveRequestLocalDB = async function() {
         const employeePayrolApis = new EmployeePayrollApi();
         // now we have to make the post request to save the data in database
-        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(
-            employeePayrolApis.collectionNames.TLeavRequest
-        );
-
+        const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
         employeePayrolEndpoint.url.searchParams.append("ListType","'Detail'");
         const employeePayrolEndpointResponse = await employeePayrolEndpoint.fetch(); // here i should get from database all charts to be displayed
 
@@ -502,8 +491,7 @@ Template.calender.onRendered(function() {
         }).catch(function(err) {
             contactService.getAllEmployeeSideData().then(function(data) {
                 setEmployeeRecordsData(data)
-            })
-            .catch(function(err) {});
+            }).catch(function(err) {});
         });
     };
     templateObject.getEmployeesList();
@@ -863,10 +851,7 @@ Template.calender.onRendered(function() {
             $(".fullScreenSpin").css("display", "inline-block");
             if(pattern.test(info.event._def.publicId)){
                 let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                let appointmentData = templateObject.appointmentrecords.get();
-                let eventData = templateObject.eventdata.get();
                 let splitId = info.event.id.split(":");
-                let empID = splitId[1];
                 let leaveID = splitId[2];
                 let currentLeaveRequest = leaveemployeerecords.filter((item) => item.ID == leaveID);
                 if(currentLeaveRequest && currentLeaveRequest.length !== 0){
@@ -3926,50 +3911,46 @@ Template.calender.onRendered(function() {
 
 					setTimeout(function() {
 						var begin_day_value = $("#event_begin_day").attr("value");
-						$("#dtDateTo")
-							.datepicker({
-								showOn: "button",
-								buttonText: "Show Date",
-								buttonImageOnly: true,
-								buttonImage: "/img/imgCal2.png",
-								constrainInput: false,
-								dateFormat: "d/mm/yy",
-								showOtherMonths: true,
-								selectOtherMonths: true,
-								changeMonth: true,
-								changeYear: true,
-								yearRange: "-90:+10",
-							})
-							.keyup(function(e) {
-								if (e.keyCode == 8 || e.keyCode == 46) {
-									$("#dtDateTo,#dtDateFrom").val("");
-								}
-							});
+						$("#dtDateTo").datepicker({
+                            showOn: "button",
+                            buttonText: "Show Date",
+                            buttonImageOnly: true,
+                            buttonImage: "/img/imgCal2.png",
+                            constrainInput: false,
+                            dateFormat: "d/mm/yy",
+                            showOtherMonths: true,
+                            selectOtherMonths: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "-90:+10",
+                        })
+                        .keyup(function(e) {
+                            if (e.keyCode == 8 || e.keyCode == 46) {
+                                $("#dtDateTo,#dtDateFrom").val("");
+                            }
+                        });
 
-						$("#dtDateFrom")
-							.datepicker({
-								showOn: "button",
-								buttonText: "Show Date",
-								altField: "#dtDateFrom",
-								buttonImageOnly: true,
-								buttonImage: "/img/imgCal2.png",
-								constrainInput: false,
-								dateFormat: "d/mm/yy",
-								showOtherMonths: true,
-								selectOtherMonths: true,
-								changeMonth: true,
-								changeYear: true,
-								yearRange: "-90:+10",
-							})
-							.keyup(function(e) {
-								if (e.keyCode == 8 || e.keyCode == 46) {
-									$("#dtDateTo,#dtDateFrom").val("");
-								}
-							});
+						$("#dtDateFrom").datepicker({
+                            showOn: "button",
+                            buttonText: "Show Date",
+                            altField: "#dtDateFrom",
+                            buttonImageOnly: true,
+                            buttonImage: "/img/imgCal2.png",
+                            constrainInput: false,
+                            dateFormat: "d/mm/yy",
+                            showOtherMonths: true,
+                            selectOtherMonths: true,
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "-90:+10",
+                        })
+                        .keyup(function(e) {
+                            if (e.keyCode == 8 || e.keyCode == 46) {
+                                $("#dtDateTo,#dtDateFrom").val("");
+                            }
+                        });
 
-						$(".ui-datepicker .ui-state-hihglight").removeClass(
-							"ui-state-highlight"
-						);
+						$(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
 					}, 1000);
 					//}
 
@@ -4005,15 +3986,11 @@ Template.calender.onRendered(function() {
 					setTimeout(function() {
 						$("#tblInventoryPayrollService_filter .form-control-sm").focus();
 						$("#tblInventoryPayrollService_filter .form-control-sm").val("");
-						$("#tblInventoryPayrollService_filter .form-control-sm").trigger(
-							"input"
-						);
+						$("#tblInventoryPayrollService_filter .form-control-sm").trigger("input");
 
 						var datatable = $("#tblInventoryPayrollService").DataTable();
 						datatable.draw();
-						$("#tblInventoryPayrollService_filter .form-control-sm").trigger(
-							"input"
-						);
+						$("#tblInventoryPayrollService_filter .form-control-sm").trigger("input");
 					}, 500);
 				}
 			}
@@ -7331,11 +7308,7 @@ Template.calender.events({
                                                             confirmButtonText: "Ok",
                                                         });
                                                         localStorage.setItem("smsId",sendSMSRes.sid);
-                                                        $("#tActualStartTime").val(
-                                                            moment().startOf("hour").format("HH") +
-                                                            ":" +
-                                                            moment().startOf("minute").format("mm")
-                                                        );
+                                                        $("#tActualStartTime").val(moment().startOf("hour").format("HH") + ":" + moment().startOf("minute").format("mm"));
                                                         $("#btnCloseStartAppointmentModal").trigger("click");
                                                         //$('#frmAppointment').trigger('submit');
                                                         templateObject.checkRefresh.set(true);
@@ -7585,8 +7558,7 @@ Template.calender.events({
                                 const customerPhone = $("#mobile").val();
                                 const smsCustomer = $("#chkSMSCustomer").is(":checked");
                                 const smsUser = $("#chkSMSUser").is(":checked");
-                                const smsSettings =
-                                    templateObject.defaultSMSSettings.get();
+                                const smsSettings = templateObject.defaultSMSSettings.get();
                                 let sendSMSRes = true;
                                 if ((smsCustomer || smsUser) && customerPhone != "0" && smsSettings.twilioAccountId) {
                                     sendSMSRes = await templateObject.sendSMSMessage("start", "+" + customerPhone.replace("+", ""));
@@ -7878,9 +7850,7 @@ Template.calender.events({
                         const employeeName = $("#employee_name").val();
                         const companyName = localStorage.getItem("vs1companyName");
                         const productService = $("#product-list").val();
-                        const startAppointmentSMS = templateObject.defaultSMSSettings
-                            .get()
-                            .startAppointmentSMSMessage.replace("[Customer Name]", accountName)
+                        const startAppointmentSMS = templateObject.defaultSMSSettings.get().startAppointmentSMSMessage.replace("[Customer Name]", accountName)
                             .replace("[Employee Name]", employeeName)
                             .replace("[Company Name]", companyName)
                             .replace("[Product/Service]", productService);
@@ -7951,9 +7921,7 @@ Template.calender.events({
                     const employeeName = $("#employee_name").val();
                     const companyName = localStorage.getItem("vs1companyName");
                     const productService = $("#product-list").val();
-                    const stopAppointmentSMS = templateObject.defaultSMSSettings
-                        .get()
-                        .stopAppointmentSMSMessage.replace("[Customer Name]", accountName)
+                    const stopAppointmentSMS = templateObject.defaultSMSSettings.get().stopAppointmentSMSMessage.replace("[Customer Name]", accountName)
                         .replace("[Employee Name]", employeeName)
                         .replace("[Company Name]", companyName)
                         .replace("[Product/Service]", productService);
@@ -8029,9 +7997,7 @@ Template.calender.events({
                         const fullAddress = $("#address").val() + ", " + $("#suburb").val() + ", " + $("#state").val() + ", " + $("#country").val();
                         const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                         const productService = $("#product-list").val();
-                        const saveAppointmentSMS = templateObject.defaultSMSSettings
-                            .get()
-                            .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
+                        const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
                             .replace("[Employee Name]", employeeName)
                             .replace("[Company Name]", companyName)
                             .replace("[Product/Service]", productService)
@@ -8074,9 +8040,7 @@ Template.calender.events({
                             const fullAddress = $("#address").val() + ", " + $("#suburb").val() + ", " + $("#state").val() + ", " + $("#country").val();
                             const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                             const productService = $("#product-list").val();
-                            const saveAppointmentSMS = templateObject.defaultSMSSettings
-                                .get()
-                                .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
+                            const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
                                 .replace("[Employee Name]", employeeName)
                                 .replace("[Company Name]", companyName)
                                 .replace("[Product/Service]", productService)
@@ -8092,9 +8056,7 @@ Template.calender.events({
                         const fullAddress = $("#address").val() + ", " + $("#suburb").val() + ", " + $("#state").val() + ", " + $("#country").val();
                         const bookedTime = $("#startTime").val() ? $("#startTime").val() : "";
                         const productService = $("#product-list").val();
-                        const saveAppointmentSMS = templateObject.defaultSMSSettings
-                            .get()
-                            .saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
+                        const saveAppointmentSMS = templateObject.defaultSMSSettings.get().saveAppointmentSMSMessage.replace("[Customer Name]", accountName)
                             .replace("[Employee Name]", employeeName)
                             .replace("[Company Name]", companyName)
                             .replace("[Product/Service]", productService)
@@ -8874,7 +8836,6 @@ Template.calender.events({
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 })
-
             }).catch(function(err) {
                 $('.fullScreenSpin').css('display', 'none');
             });
