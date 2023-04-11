@@ -763,12 +763,10 @@ Template.calender.onRendered(function() {
     }
 
     templateObject.updateEvents = async (updatedEvent,isCreate,isLeave) => {
-        let tempNewAppointmentEvents = await getVS1Data("TNewAppointment")
-        let tempNewLeaveRequestEvents = await getVS1Data("TNewLeaveRequest")
-        let events = templateObject.eventdata.get();
         localStorage.setItem("isFormUpdated", true);
         if(isCreate){
         }else{
+            let events = templateObject.eventdata.get();
             if(events){
                 if(isLeave){
                     let tempEvents = [...events];
@@ -815,6 +813,7 @@ Template.calender.onRendered(function() {
                 }
             }
             if(isLeave){
+                let tempNewLeaveRequestEvents = await getVS1Data("TNewLeaveRequest")
                 if(tempNewLeaveRequestEvents){
                     if(tempNewLeaveRequestEvents.length == 0){
                         addVS1Data("TNewLeaveRequest", JSON.stringify(updatedEvent.apiData))
@@ -834,6 +833,7 @@ Template.calender.onRendered(function() {
                     }
                 }
             }else{
+                let tempNewAppointmentEvents = await getVS1Data("TNewAppointment")
                 if(tempNewAppointmentEvents){
                     if(tempNewAppointmentEvents.length == 0){
                         addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
@@ -853,6 +853,129 @@ Template.calender.onRendered(function() {
                     }
                 }
             }
+        }
+    }
+
+    function evenDropAndResize(info){
+        const pattern = /leave/;
+        var leaveFlag = false;
+        if (info.event._def.publicId != "") {
+            $(".fullScreenSpin").css("display", "inline-block");
+            if(pattern.test(info.event._def.publicId)){
+                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                let appointmentData = templateObject.appointmentrecords.get();
+                let eventData = templateObject.eventdata.get();
+                let splitId = info.event.id.split(":");
+                let empID = splitId[1];
+                let leaveID = splitId[2];
+                let currentLeaveRequest = leaveemployeerecords.filter((item) => item.ID == leaveID);
+                if(currentLeaveRequest && currentLeaveRequest.length !== 0){
+                    const {
+                        ID,
+                        EmployeeID,
+                        EmployeeName,
+                        TypeOfRequest,
+                        LeaveMethod,
+                        Description,
+                        PayPeriod,
+                        Hours,
+                        Status
+                    } = currentLeaveRequest[0];
+                    let eventColor = info.event._def.ui.backgroundColor || "";
+                    let eventDescription = info.event._def.extendedProps.description || "";
+                    let eventTitle = info.event._def.title
+                    let dateStart = new Date(info.event.start);
+                    let dateEnd = new Date(info.event.end);
+                    let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
+                    let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
+                    let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                    let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
+                    
+                    objectData = {
+                        calendarData:{
+                            id: info.event.id,
+                            title: eventTitle,
+                            start: startDate + " " + startTime + ":00" || "",
+                            end: endDate + " " + endTime + ":00" || "",
+                            description: eventDescription || "",
+                            color: eventColor,
+                        },
+                        apiData:{
+                            ID,
+                            EmployeeID,
+                            EmployeeName,
+                            TypeOfRequest,
+                            LeaveMethod,
+                            Description,
+                            StartDate: startDate + " " + startTime + ":00" || "",
+                            EndDate: endDate + " " + endTime + ":00" || "",
+                            PayPeriod,
+                            Hours,
+                            Status
+                        }
+                    }
+                }
+                templateObject.updateEvents(objectData,false,true)
+            }else{
+                let appointmentData = templateObject.appointmentrecords.get();
+                let resourceData = templateObject.resourceAllocation.get();
+                let eventDropID = info.event._def.publicId || "0";
+                let eventColor = info.event._def.ui.backgroundColor || "";
+                let eventDescription = info.event._def.extendedProps.description || "";
+                let eventTitle = info.event._def.title
+                let dateStart = new Date(info.event.start);
+                let dateEnd = new Date(info.event.end);
+                let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
+                let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
+                let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
+                let index = appointmentData.map(function(e) {
+                        return e.id;
+                    }).indexOf(parseInt(eventDropID));
+                let resourceIndex = resourceData.map(function(e) {
+                        return e.employeeName;
+                    }).indexOf(appointmentData[index].employeename);
+                var result = appointmentData.filter((apmt) => {
+                    return apmt.id == eventDropID;
+                });
+                if (result.length > 0) {
+                    objectData = {
+                        type: "TAppointmentEx",
+                        fields: {
+                            Id: parseInt(eventDropID) || 0,
+                            StartTime: startDate + " " + startTime + ":00" || "",
+                            EndTime: endDate + " " + endTime + ":00" || "",
+                            Description:eventDescription,
+                            Color:eventColor,
+                            Title:eventTitle
+                        },
+                    };
+                    let nameid = appointmentData[index].employeename.replace(" ", "-");
+                    $("#allocationTable tbody tr").each(function() {
+                        if (this.id == appointmentData[index].employeename) {
+                            $(this).attr("id", $(this).attr("id").replace(" ", "-"));
+                        }
+                    });
+                    let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' +
+                        resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' + "" +
+                        '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' +
+                        "" + '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname + "</p>" +
+                        "" + "</div>" + "" + "</div>";
+                    let day = moment(startDate).format("dddd").toLowerCase();
+                    appointmentData[index].startDate = startDate + " " + startTime;
+                    appointmentData[index].endDate = endDate + " " + endTime;
+                    templateObject.appointmentrecords.set(appointmentData);
+                    $(".droppable #" + eventDropID).remove();
+                    $("#" + nameid + " ." + day + " .droppable").append(job);
+                    $("#allocationTable tbody tr").each(function() {
+                        if (this.id == nameid) {
+                            $(this).attr("id", $(this).attr("id").replace("-", " "));
+                        }
+                    });
+                    templateObject.updateEvents(objectData,false,false)
+                }
+            }
+            $(".fullScreenSpin").css("display", "none");
         }
     }
 
@@ -1102,69 +1225,7 @@ Template.calender.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                const pattern = /leave/;
-                if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
-                    $(".fullScreenSpin").css("display", "inline-block");
-                    let appointmentData = templateObject.appointmentrecords.get();
-                    let resourceData = templateObject.resourceAllocation.get();
-                    let eventDropID = info.event._def.publicId || "0";
-                    let eventColor = info.event._def.ui.backgroundColor || "";
-                    let eventDescription = info.event._def.extendedProps.description || "";
-                    let eventTitle = info.event._def.title
-                    let dateStart = new Date(info.event.start);
-                    let dateEnd = new Date(info.event.end);
-                    let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                    let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                    let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                    let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                    let index = appointmentData.map(function(e) {
-                            return e.id;
-                        }).indexOf(parseInt(eventDropID));
-                    let resourceIndex = resourceData.map(function(e) {
-                            return e.employeeName;
-                        }).indexOf(appointmentData[index].employeename);
-                    var result = appointmentData.filter((apmt) => {
-                        return apmt.id == eventDropID;
-                    });
-                    if (result.length > 0) {
-                        objectData = {
-                            type: "TAppointmentEx",
-                            fields: {
-                                Id: parseInt(eventDropID) || 0,
-                                StartTime: startDate + " " + startTime + ":00" || "",
-                                EndTime: endDate + " " + endTime + ":00" || "",
-                                Description:eventDescription,
-                                Color:eventColor,
-                                Title:eventTitle
-                            },
-                        };
-                        let nameid = appointmentData[index].employeename.replace(" ", "-");
-
-                        $("#allocationTable tbody tr").each(function() {
-                            if (this.id == appointmentData[index].employeename) {
-                                $(this).attr("id",$("#allocationTable tbody tr").attr("id").replace(" ", "-"));
-                            }
-                        });
-                        let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' +
-                            resourceData[resourceIndex].color +'; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' +
-                            "" + '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname +
-                            "</p>" + "" + "</div>" + "" + "</div>";
-                        let day = moment(startDate).format("dddd").toLowerCase();
-                        templateObject.updateEvents(objectData,false,false)
-                        appointmentData[index].startDate = startDate + " " + startTime;
-                        appointmentData[index].endDate = endDate + " " + endTime;
-                        templateObject.appointmentrecords.set(appointmentData);
-                        $(".droppable #" + eventDropID).remove();
-                        $("#" + nameid + " ." + day + " .droppable").append(job);
-                        $("#allocationTable tbody tr").each(function() {
-                            if (this.id == nameid) {
-                                $(this).attr("id",$("#allocationTable tbody tr").attr("id").replace("-", " "));
-                            }
-                        });
-                        $(".fullScreenSpin").css("display", "none");
-                    }
-                }
+                evenDropAndResize(info)
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
@@ -1693,7 +1754,8 @@ Template.calender.onRendered(function() {
                         });
 
                         if (getLeaveInfo.length > 0) {
-                            $('#removeLeaveRequestBtn').show();
+                            // $('#removeLeaveRequestBtn').show();
+                            $('#removeLeaveRequestBtn').css('visibility','initial');
                             $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
                             $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
                             $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
@@ -1723,126 +1785,7 @@ Template.calender.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-                const pattern = /leave/;
-                var leaveFlag = false;
-                if (info.event._def.publicId != "") {
-                    $(".fullScreenSpin").css("display", "inline-block");
-                    if(pattern.test(info.event._def.publicId)){
-                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                        let appointmentData = templateObject.appointmentrecords.get();
-                        let eventData = templateObject.eventdata.get();
-                        let splitId = info.event.id.split(":");
-                        let empID = splitId[1];
-                        let leaveID = splitId[2];
-                        let currentLeaveRequest = leaveemployeerecords.filter((item) => item.ID == leaveID);
-                        if(currentLeaveRequest && currentLeaveRequest.length !== 0){
-                            const {
-                                ID,
-                                EmployeeID,
-                                EmployeeName,
-                                TypeOfRequest,
-                                LeaveMethod,
-                                Description,
-                                PayPeriod,
-                                Hours,
-                                Status
-                            } = currentLeaveRequest[0];
-                            let eventColor = info.event._def.ui.backgroundColor || "";
-                            let eventDescription = info.event._def.extendedProps.description || "";
-                            let eventTitle = info.event._def.title
-                            let dateStart = new Date(info.event.start);
-                            let dateEnd = new Date(info.event.end);
-                            let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                            let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                            let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                            let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
-                            
-                            objectData = {
-                                calendarData:{
-                                    id: info.event.id,
-                                    title: eventTitle,
-                                    start: startDate + " " + startTime + ":00" || "",
-                                    end: endDate + " " + endTime + ":00" || "",
-                                    description: eventDescription || "",
-                                    color: eventColor,
-                                },
-                                apiData:{
-                                    ID,
-                                    EmployeeID,
-                                    EmployeeName,
-                                    TypeOfRequest,
-                                    LeaveMethod,
-                                    Description,
-                                    StartDate: startDate + " " + startTime + ":00" || "",
-                                    EndDate: endDate + " " + endTime + ":00" || "",
-                                    PayPeriod,
-                                    Hours,
-                                    Status
-                                }
-                            }
-                        }
-                        templateObject.updateEvents(objectData,false,true)
-                    }else{
-                        let appointmentData = templateObject.appointmentrecords.get();
-                        let resourceData = templateObject.resourceAllocation.get();
-                        let eventDropID = info.event._def.publicId || "0";
-                        let eventColor = info.event._def.ui.backgroundColor || "";
-                        let eventDescription = info.event._def.extendedProps.description || "";
-                        let eventTitle = info.event._def.title
-                        let dateStart = new Date(info.event.start);
-                        let dateEnd = new Date(info.event.end);
-                        let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                        let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                        let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                        let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
-                        let index = appointmentData.map(function(e) {
-                                return e.id;
-                            }).indexOf(parseInt(eventDropID));
-                        let resourceIndex = resourceData.map(function(e) {
-                                return e.employeeName;
-                            }).indexOf(appointmentData[index].employeename);
-                        var result = appointmentData.filter((apmt) => {
-                            return apmt.id == eventDropID;
-                        });
-                        if (result.length > 0) {
-                            objectData = {
-                                type: "TAppointmentEx",
-                                fields: {
-                                    Id: parseInt(eventDropID) || 0,
-                                    StartTime: startDate + " " + startTime + ":00" || "",
-                                    EndTime: endDate + " " + endTime + ":00" || "",
-                                    Description:eventDescription,
-                                    Color:eventColor,
-                                    Title:eventTitle
-                                },
-                            };
-                            let nameid = appointmentData[index].employeename.replace(" ", "-");
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == appointmentData[index].employeename) {
-                                    $(this).attr("id", $(this).attr("id").replace(" ", "-"));
-                                }
-                            });
-                            let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' +
-                                resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                                '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' +
-                                "" + '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname + "</p>" +
-                                "" + "</div>" + "" + "</div>";
-                            let day = moment(startDate).format("dddd").toLowerCase();
-                            appointmentData[index].startDate = startDate + " " + startTime;
-                            appointmentData[index].endDate = endDate + " " + endTime;
-                            templateObject.appointmentrecords.set(appointmentData);
-                            $(".droppable #" + eventDropID).remove();
-                            $("#" + nameid + " ." + day + " .droppable").append(job);
-                            $("#allocationTable tbody tr").each(function() {
-                                if (this.id == nameid) {
-                                    $(this).attr("id", $(this).attr("id").replace("-", " "));
-                                }
-                            });
-                            templateObject.updateEvents(objectData,false,false)
-                        }
-                    }
-                    $(".fullScreenSpin").css("display", "none");
-                }
+             evenDropAndResize(info)
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
@@ -2034,69 +1977,7 @@ Template.calender.onRendered(function() {
                 };
             },
             eventResize: function(info) {
-                if (info.event._def.publicId != "") {
-                    $(".fullScreenSpin").css("display", "inline-block");
-                    let appointmentData = templateObject.appointmentrecords.get();
-                    let resourceData = templateObject.resourceAllocation.get();
-                    let eventDropID = info.event._def.publicId || "0";
-                    let eventColor = info.event._def.ui.backgroundColor || "";
-                    let eventDescription = info.event._def.extendedProps.description || "";
-                    let eventTitle = info.event._def.title
-                    let dateStart = new Date(info.event.start);
-                    let dateEnd = new Date(info.event.end);
-                    let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                    let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                    let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                    let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
-
-                    let index = appointmentData.map(function(e) {
-                            return e.id;
-                        }).indexOf(parseInt(eventDropID));
-                    let resourceIndex = resourceData.map(function(e) {
-                            return e.employeeName;
-                        }).indexOf(appointmentData[index].employeename);
-                    var result = appointmentData.filter((apmt) => {
-                        return apmt.id == eventDropID;
-                    });
-                    if (result.length > 0) {
-                        objectData = {
-                            type: "TAppointmentEx",
-                            fields: {
-                                Id: parseInt(eventDropID) || 0,
-                                StartTime: startDate + " " + startTime + ":00" || "",
-                                EndTime: endDate + " " + endTime + ":00" || "",
-                                Description:eventDescription,
-                                Color:eventColor,
-                                Title:eventTitle
-                            },
-                        };
-                        let nameid = appointmentData[index].employeename.replace(" ", "-");
-                        $("#allocationTable tbody tr").each(function() {
-                            if (this.id == appointmentData[index].employeename) {
-                                $(this).attr("id", $(this).attr("id").replace(" ", "-"));
-                            }
-                        });
-                        let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' +
-                            resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' +
-                            "" + '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' +
-                            "" + '<p class="text-nowrap text-truncate" style="margin: 0px;">' +
-                            appointmentData[index].accountname + "</p>" + "" + "</div>" + "" + "</div>";
-                        let day = moment(startDate).format("dddd").toLowerCase();
-
-                        templateObject.updateEvents(objectData,false,false)
-                        appointmentData[index].startDate = startDate + " " + startTime;
-                        appointmentData[index].endDate = endDate + " " + endTime;
-                        templateObject.appointmentrecords.set(appointmentData);
-                        $(".droppable #" + eventDropID).remove();
-                        $("#" + nameid + " ." + day + " .droppable").append(job);
-                        $("#allocationTable tbody tr").each(function() {
-                            if (this.id == nameid) {
-                                $(this).attr("id", $(this).attr("id").replace("-", " "));
-                            }
-                        });
-                        $(".fullScreenSpin").css("display", "none");
-                    }
-                }
+               evenDropAndResize(info)
             }
         });
 
@@ -3418,55 +3299,7 @@ Template.calender.onRendered(function() {
                 }
             },
             eventDrop: function(info) {
-                const pattern = /leave/;
-                if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
-                    let appointmentData = templateObject.appointmentrecords.get();
-                    let resourceData = templateObject.resourceAllocation.get();
-                    let eventDropID = info.event._def.publicId || "0";
-                    let eventColor = info.event._def.ui.backgroundColor || "";
-                    let eventDescription = info.event._def.extendedProps.description || "";
-                    let eventTitle = info.event._def.title
-                    let dateStart = new Date(info.event.start);
-                    let dateEnd = new Date(info.event.end);
-                    let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                    let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                    let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                    let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                    let index = appointmentData.map(function(e) {
-                        return e.id;
-                    }).indexOf(parseInt(eventDropID));
-                    let resourceIndex = resourceData.map(function(e) {
-                        return e.employeeName;
-                    }).indexOf(appointmentData[index].employeename);
-                    if (result.length > 0) {
-                        let objectData = {
-                            type: "TAppointmentEx",
-                            fields: {
-                                Id: parseInt(eventDropID) || 0,
-                                StartTime: startDate + " " + startTime + ":00" || "",
-                                EndTime: endDate + " " + endTime + ":00" || "",
-                                Description:eventDescription,
-                                Color:eventColor,
-                                Title:eventTitle
-                            }
-                        }
-                        let nameid = appointmentData[index].employeename.replace(" ", "-");
-                        $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace(" ", "-"));
-                        let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' + resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                            '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                            '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname + '</p>' + "" +
-                            '</div>' + "" +
-                            '</div>';
-                        let day = moment(startDate).format("dddd").toLowerCase();
-                        appointmentData[index].startDate = startDate + " " + startTime;
-                        appointmentData[index].endDate = endDate + " " + endTime;
-                        templateObject.appointmentrecords.set(appointmentData);
-                        $("#" + nameid + " ." + day + " .droppable").append(job);
-                        $("#" + eventDropID).remove();
-                        $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
-                        templateObject.updateEvents(objectData,false,false)
-                    }
-                }
+               evenDropAndResize(info)
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {

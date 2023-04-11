@@ -3111,7 +3111,8 @@ Template.appointments.events({
                 }
             }
             $('#edtEmployeeName').val(currentEmployeeName)
-            $('#removeLeaveRequestBtn').hide();
+            // $('#removeLeaveRequestBtn').hide();
+            $('#removeLeaveRequestBtn').css('visibility','hidden');
             $('#newLeaveRequestModal').modal('show');
             $('#newLeaveRequestLabel.new-leave-title').removeClass('hide');
             $('#newLeaveRequestLabel.edit-leave-title').addClass('hide');
