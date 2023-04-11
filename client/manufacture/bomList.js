@@ -95,7 +95,6 @@ Template.bom_list.onRendered(function(){
 Template.bom_list.events({
   "click #tblBOMList tbody tr": async function (event) {
     // index = $(event.target).closest("tr").find(".colPayMethodID").html();
-    // console.log(index);
     // if (index) {
     //   FlowRouter.go("/bomsetupcard?id=" + index);
     // }
