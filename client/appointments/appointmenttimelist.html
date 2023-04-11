@@ -290,26 +290,20 @@
                                                                 Name</label><input id="employee_name" name="employee_name" type="text" class="form-control employee_name" readonly></div>
                                                         </div>
                                                         <div class="col-3 colStartDate" id="colStartDate">
-                                                            <div class="form-group" style="margin: 8px 0px;">
-                                                                <label>Start Date</label>
-                                                                <div class="input-group date" style="cursor: pointer;">
-                                                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate" name="dtSODate" value="{{invoicerecord.saledate}}">
-                                                                    <div class="input-group-addon" style="">
-                                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            {{>single_date_picker
+                                                                    id="dtSODate"
+                                                                    name="dtSODate"
+                                                                    label="Start Date"
+                                                                    defaultValue=invoicerecord.saledate
+                                                            }}
                                                         </div>
                                                         <div class="col-3 colEndDate" id="colEndDate">
-                                                            <div class="form-group" style="margin: 8px 0px;">
-                                                                <label>End Date</label>
-                                                                <div class="input-group date" style="cursor: pointer;">
-                                                                    <input type="text" class="form-control formClassDate statementDate" id="dtSODate2" name="dtSODate2" value="{{invoicerecord.saledate}}">
-                                                                    <div class="input-group-addon" style="">
-                                                                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            {{>single_date_picker
+                                                                    id="dtSODate2"
+                                                                    name="dtSODate2"
+                                                                    label="End Date"
+                                                                    defaultValue=invoicerecord.saledate
+                                                            }}
                                                         </div>
                                                     </div>
                                                     <div class="row" style="padding: 0px 8px;">

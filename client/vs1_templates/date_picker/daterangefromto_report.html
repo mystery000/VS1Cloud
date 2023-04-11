@@ -9,6 +9,15 @@
                 </div>
             </div>
         </div>
+    {{else if basreturn }}
+            <div class="form-group" style="float:right;">-->
+                <label>Previous Return</label>
+                <div>
+                    <input type="text" class="form-control" id="previousStartDate" name="previousStartDate" style="width:150px; float:left" readonly="readonly">
+                    <span style="float:left; padding:8px;">To</span>
+                    <input type="text" class="form-control" id="previousEndDate" name="previousEndDate" style="width:150px; float:left" readonly="readonly">
+                </div>
+            </div>
     {{else}}
         <div class="form-group clsDateRange" style="margin: 8px; margin-top: 0px;">
             <label style="margin-top: 8px; margin-right: 16px;">From</label>
