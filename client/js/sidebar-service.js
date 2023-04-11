@@ -2709,7 +2709,7 @@ export class SideBarService extends BaseService {
 
   getAgedPayableDetailsSummaryData(dateFrom, dateTo, ignoreDate,contactID) {
     let options = "";
-    if(contactID != ''){
+    if(contactID && contactID != ''){
       options = {
         IgnoreDates: true,
         ReportType: "Summary",

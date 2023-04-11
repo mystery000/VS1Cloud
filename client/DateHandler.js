@@ -13,7 +13,7 @@ export default class Datehandler {
 
   static domDateToUpdate(date, format = "DD/MM/YYYY") {
     $("#dateTo").val(moment(date).format(format));
-    // $("#dateTo").trigger("change");
+    $("#dateTo").trigger("change");
   }
 
   static initCurrentMonth() {
