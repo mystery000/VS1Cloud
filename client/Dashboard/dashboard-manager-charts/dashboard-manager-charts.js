@@ -413,9 +413,9 @@ Template.dashboardManagerCharts.onRendered(function () {
         templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
     }
 
-    setTimeout(function(){
+    $(document).on("change", "#dateFrom, #dateTo", () => {
         templateObject.setDateVal();
-    },500);
+    })
 });
 
 Template.dashboardManagerCharts.events({

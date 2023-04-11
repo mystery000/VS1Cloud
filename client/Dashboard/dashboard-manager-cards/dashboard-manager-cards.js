@@ -5,7 +5,7 @@ import './dashboard-manager-cards.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
-
+let loadedCount = 0
 Template.dashboardManagerCards.onRendered(() => {
     let templateObject = Template.instance();
 
@@ -19,6 +19,7 @@ Template.dashboardManagerCards.onRendered(() => {
         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         const toDate = new Date($("#dateTo").datepicker("getDate"));
         $(".fullScreenSpin").css("display", "inline-block");
+        loadedCount = 0
         getVS1Data('TProspectEx').then(function(dataObject) {
             if (dataObject.length) {
                 let { tprospect = [] } = JSON.parse(dataObject[0].data);
@@ -35,6 +36,8 @@ Template.dashboardManagerCards.onRendered(() => {
             } else {
                 $('#new-leads-month').text("No Data in Range");
             }
+            loadedCount++
+            if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
         }).catch(function(err) {});
 
         // getVS1Data('TQuoteList').then(function(dataObject) {
@@ -125,6 +128,9 @@ Template.dashboardManagerCards.onRendered(() => {
             }
         }).catch(function(err) {
 
+        }).finally(() => {
+            loadedCount++
+            if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
         });
 
         sideBarService.getAllTInvoiceListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), false, 10000, 0).then(function(dataInvoice) {
@@ -151,7 +157,12 @@ Template.dashboardManagerCards.onRendered(() => {
                 $('#closed-deals-month').text("No Data in Range");
                 $('#closed-deals-year').text("No Data in Range");
             }
-        }).catch(function(err) {}).finally(() => {$(".fullScreenSpin").css("display", "none");});
+        }).catch(function(err) {
+
+        }).finally(() => {
+            loadedCount++
+            if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
+        });
     };
     
     $(document).on("change", "#dateFrom, #dateTo", async () => {        

@@ -214,9 +214,9 @@ Template.opportunitiesStatus.onRendered(function() {
         }
     }
 
-    setTimeout(function() {
+    $(document).on("change", "#dateFrom, #dateTo", () => {        
         templateObject.setDateVal();
-    }, 100);
+    })
 });
 
 Template.opportunitiesStatus.events({
