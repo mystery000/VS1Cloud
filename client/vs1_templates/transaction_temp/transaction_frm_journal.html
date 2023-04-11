@@ -182,7 +182,7 @@
                 <!-- <td contenteditable="false" class="lineAccountName colAccountName" taxCode="{{item.taxCode}}" lineid="{{item.id}}">{{item.accountname}}</td> -->
                 <td contenteditable="false" class="colAccountName">
 <!--                    <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}">-->
-                    {{> vs1_dropdown
+                    {{> vs1___dropdown
                             type='search'
                             id=item.id
                             name=item.id
@@ -218,7 +218,7 @@
                             colNameForValue = 'colAccountName'
                             target_modal_id= 'taxratelistModal'
                             target_template_id='taxratelistpop'
-                            is_editable=true
+                            is_editable=false
                             noBorder=true
                     }}
                 </td>
