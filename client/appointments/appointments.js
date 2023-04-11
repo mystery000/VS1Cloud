@@ -1135,53 +1135,6 @@ Template.appointments.onRendered(function() {
 		}
 	}
 
-    $(document).on("click", "#tblInventory tbody tr", async function() {
-        $(".colProductName").removeClass("boldtablealertsborder");
-        let selectLineID = $("#selectLineID").val();
-        let taxcodeList = await templateObject.taxraterecords.get();
-        var table = $(this);
-
-        let lineTaxRate = "";
-
-        if (selectLineID) {
-            let lineProductId = table.find(".colProuctPOPID").text();
-            let lineProductName = table.find(".productName").text();
-            let lineProductDesc = table.find(".productDesc").text();
-            let lineUnitPrice = table.find(".salePrice").text();
-
-            if (taxcodeList) {
-                for (var i = 0; i < taxcodeList.length; i++) {
-                    if (taxcodeList[i].codename == lineTaxRate) {
-                        $("#" + selectLineID + " .lineTaxRate").text(
-                            taxcodeList[i].coderate
-                        );
-                    }
-                }
-            }
-
-            $("#" + selectLineID + " .lineProductName").val(lineProductName);
-            // $('#' + selectLineID + " .lineProductName").attr("prodid", table.find(".colProuctPOPID").text());
-            $("#" + selectLineID + " .lineProductDesc").text(lineProductDesc);
-            // $("#" + selectLineID + " .lineOrdered").val(1);
-            // $("#" + selectLineID + " .lineQty").val(1);
-            $("#" + selectLineID + " .lineSalesPrice").text(lineUnitPrice);
-            $("#" + selectLineID).attr("id", lineProductId);
-
-            $("#productCheck-" + selectLineID).prop("checked", false);
-            $("#productCheck-" + lineProductId).prop("checked", true);
-            $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
-
-            $("#productListModal2").modal("toggle");
-        }
-
-        $("#tblInventory_filter .form-control-sm").val("");
-        setTimeout(function() {
-            //$('#tblCustomerlist_filter .form-control-sm').focus();
-            $("#btnselProductFees").trigger("click");
-            $(".fullScreenSpin").css("display", "none");
-        }, 100);
-    });
-
     // BEGIN DATE CODE
     $(".formClassDate").datepicker({
         showOn: "button",
@@ -2528,53 +2481,6 @@ Template.appointments.events({
             $('.modal-backdrop').css('display', 'none');
         }, delayTimeAfterSound);
     },
-    "click .btnAddAttachmentSave": function() {
-        let appointmentService = new AppointmentService();
-        let templateObject = Template.instance();
-        let uploadedItems = templateObject.uploadedFiles.get();
-        let id = document.getElementById("updateID").value || "0";
-        $(".fullScreenSpin").css("display", "inline-block");
-        if (id == "0" || id == null) {
-            // $('#event-modal').modal('hide');
-            $(".fullScreenSpin").css("display", "none");
-            $("#myModalAttachment").modal("hide");
-        } else {
-            let objectData = {
-                type: "TAppointmentEx",
-                fields: {
-                    Id: parseInt(id),
-                    Attachments: uploadedItems,
-                },
-            };
-
-            appointmentService
-                .saveAppointment(objectData)
-                .then(function() {
-                    $("#myModalAttachment").modal("hide");
-                    sideBarService
-                        .getAllAppointmentList(initialDataLoad, 0)
-                        .then(function(dataList) {
-                            addVS1Data("TAppointment", JSON.stringify(dataList))
-                                .then(function() {
-                                    // setTimeout(function () {
-                                    $(".fullScreenSpin").css("display", "none");
-                                    // }, 500);
-                                })
-                                .catch(function() {
-                                    $(".fullScreenSpin").css("display", "none");
-                                });
-                        })
-                        .catch(function() {
-                            $(".fullScreenSpin").css("display", "none");
-                        });
-                })
-                .catch(function() {
-                    $(".fullScreenSpin").css("display", "none");
-                });
-        }
-
-        //});
-    },
     "click #btnDeleteDisbale span": function() {
         swal({
             title: "Oops...",
@@ -2712,36 +2618,6 @@ Template.appointments.events({
         setTimeout(function() {
             $("#" + tokenid + " .lineProductName").trigger("click");
         }, 200);
-    },
-    "click .lineProductName, keydown .lineProductName": function(event) {
-        var $earch = $(event.currentTarget);
-        var offset = $earch.offset();
-        // $("#selectProductID").val("");
-        var productDataName = $(event.target).val() || "";
-        if (event.pageX > offset.left + $earch.width() - 10) {
-            // X button 16px wide?
-            $("#productListModal2").modal("toggle");
-            var targetID = $(event.target).closest("tr").attr("id");
-            $("#selectLineID").val(targetID);
-            setTimeout(function() {
-                $("#tblInventory_filter .form-control-sm").focus();
-                $("#tblInventory_filter .form-control-sm").val("");
-                $("#tblInventory_filter .form-control-sm").trigger("input");
-
-                var datatable = $("#tblInventory").DataTable();
-                datatable.draw();
-                $("#tblInventory_filter .form-control-sm").trigger("input");
-            }, 500);
-        } else {
-            if (productDataName.replace(/\s/g, "") != "") {
-                var itemId = $(event.target).attr("itemid");
-                window.open("/productview?id=" + itemId, "_self");
-            } else {
-                $("#productListModal2").modal("toggle");
-                var targetID = $(event.target).closest("tr").attr("id");
-                $("#selectLineID").val(targetID);
-            }
-        }
     },
 });
 
