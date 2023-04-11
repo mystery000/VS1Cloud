@@ -18,6 +18,7 @@ import listPlugin from "@fullcalendar/list";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import { SideBarService } from "../../js/sidebar-service";
 import "../../lib/global/indexdbstorage.js";
+import ApiService from "../../js/Api/Module/ApiService";
 
 import { Template } from 'meteor/templating';
 import './calender.html';
@@ -726,9 +727,24 @@ Template.calender.onRendered(function() {
             }
         }
         if(updatedLeaveRequestEvents){
-            let data = JSON.parse(updatedAppointmentEvents[0]?.data)
+            let data = JSON.parse(updatedLeaveRequestEvents[0]?.data)
             if(data?.length !== 0){
-              console.log('data:',data)
+                const employeePayrolApis = new EmployeePayrollApi();
+                const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
+                for(var i = 0; i< data.length; i++){
+                    let formattedEvent = {
+                        type:"TLeavRequest",
+                        fields:data[i]
+                    }
+                    const ApiResponse = await employeePayrolEndpoint.fetch(null, {
+                        method: "POST",
+                        headers: ApiService.getPostHeaders(),
+                        body: JSON.stringify(formattedEvent),
+                    });
+                    if (ApiResponse.ok == true) {
+                        await templateObject.saveLeaveRequestLocalDB();
+                    }
+                }
             }
         }
         if(updatedTimeLogs){
@@ -755,20 +771,12 @@ Template.calender.onRendered(function() {
         }else{
             if(events){
                 if(isLeave){
-                    // dataList = {
-                    //     id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
-                    //     title: leaveEmpName,
-                    //     start: leaveemployeerecords[i].StartDate || "",
-                    //     end: leaveemployeerecords[i].EndDate || "",
-                    //     description: leaveemployeerecords[i].Description || "",
-                    //     color: appColor,
-                    // };
                     let tempEvents = [...events];
                     if(tempEvents.length == 0){
                         tempEvents.push(updatedEvent.calendarData)
                     }else{
                         if(tempEvents.length !== 0){
-                            let currentEventIndex = tempEvents?.findIndex((event) => event.id == updatedEvent.calendarData.Id.toString())
+                            let currentEventIndex = tempEvents?.findIndex((event) => event.id == updatedEvent.calendarData.id)
                             if(currentEventIndex > -1){
                                 tempEvents[currentEventIndex] = updatedEvent.calendarData;
                             }else{
@@ -822,7 +830,7 @@ Template.calender.onRendered(function() {
                         }else{
                             data.push(updatedEvent.apiData)
                         }
-                        addVS1Data("TNewLeaveRequest", JSON.stringify(data.apiData))
+                        addVS1Data("TNewLeaveRequest", JSON.stringify(data))
                     }
                 }
             }else{
