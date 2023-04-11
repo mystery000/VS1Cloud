@@ -193,6 +193,10 @@ Template.taxratelistpop.helpers({
     apiParams: function() {
         return [];
     },
+    tablename: () => {
+        let templateObject = Template.instance();
+        return 'tblTaxRate'+templateObject.data.custid;
+      },
 });
 
 Template.registerHelper('equals', function (a, b) {

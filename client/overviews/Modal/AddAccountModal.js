@@ -269,31 +269,43 @@ Template.addAccountModal.onRendered(function () {
 
   $("#addNewAccountModal #edtSubAccount1").editableSelect()
   $("#addNewAccountModal #edtSubAccount1").editableSelect().on("click.editable-select", (e) => {
-    if (!$("#sltAccountType").val()) return swal("WARNING", "Please select Account Type first.", "warning")
-    currentSubAccount = $("#addNewAccountModal #edtSubAccount1")
-    editableService.clickAccount(e)
+    if (!$("#sltAccountType").val()) {
+      e.preventDefault();
+      e.stopPropagation();
+      return swal("WARNING", "Please select Account Type first.", "warning")
+    }
+    //currentSubAccount = $("#addNewAccountModal #edtSubAccount1")
+    //editableService.clickAccount(e)
   })
 
   $("#addNewAccountModal #edtSubAccount2").editableSelect()
   $("#addNewAccountModal #edtSubAccount2").editableSelect().on("click.editable-select", (e) => {
-    if (!$("#edtSubAccount1").val()) return swal("WARNING", "Please select Sub Account 1 first.", "warning")
-    currentSubAccount = $("#addNewAccountModal #edtSubAccount2")
-    editableService.clickAccount(e)
+    if (!$("#edtSubAccount1").val()){
+      e.preventDefault();
+      e.stopPropagation();
+      return swal("WARNING", "Please select Sub Account 1 first.", "warning")
+    }
+    //currentSubAccount = $("#addNewAccountModal #edtSubAccount2")
+    //editableService.clickAccount(e)
   })
 
   $("#addNewAccountModal #edtSubAccount3").editableSelect()
   $("#addNewAccountModal #edtSubAccount3").editableSelect().on("click.editable-select", (e) => {
-    if (!$("#edtSubAccount2").val()) return swal("WARNING", "Please select Sub Account 2 first.", "warning")
-    currentSubAccount = $("#addNewAccountModal #edtSubAccount3")
-    editableService.clickAccount(e)
+    if (!$("#edtSubAccount2").val()) {
+      e.preventDefault();
+      e.stopPropagation();
+      return swal("WARNING", "Please select Sub Account 2 first.", "warning")
+    }
+    //currentSubAccount = $("#addNewAccountModal #edtSubAccount3")
+    //editableService.clickAccount(e)
   })
 
-  $(document).on("click", "#accountListModal #tblAccountListPop tbody tr", (e) => {
-    var table = $(e.currentTarget);
-    let accountName = table.find(".colAccountName").text();
-    currentSubAccount.val(accountName);
-    $("#accountListModal").modal("toggle");
-  });
+  // $(document).on("click", "#accountListModal #tblAccountListPop tbody tr", (e) => {
+  //   var table = $(e.currentTarget);
+  //   let accountName = table.find(".colAccountName").text();
+  //   currentSubAccount.val(accountName);
+  //   $("#accountListModal").modal("toggle");
+  // });
 
 
   templateObject.getTaxRates = function () {

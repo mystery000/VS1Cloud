@@ -65,6 +65,13 @@ Template.inventorylist.onCreated(function () {
     }else{
       checkIfSerialorLot = '<i class="fas fa-plus-square text-success btnNoBatchorSerial"  style="font-size: 22px;" ></i>';
     }
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
 
     onBOOrder = data.TotalQtyInStock - availableQty;
     var dataList = [
@@ -86,13 +93,13 @@ Template.inventorylist.onCreated(function () {
       data.PurchaseDescription || "",
       data.CUSTFLD1 || "",
       data.CUSTFLD2 || "",
-      data.Active ? "" : "In-Active"
+      linestatus
     ];
     return dataList;
   }
 
   let headerStructure = [
-    { index: 0, label: "#ID", class: "colProductID", width: "10", active: false, display: true },
+    { index: 0, label: "ID", class: "colProductID", width: "10", active: false, display: true },
     { index: 1, label: "Product Name", class: "colProductName", width: "150", active: true, display: true },
     { index: 2, label: "Sales Description", class: "colSalesDescription", width: "300", active: true, display: true },
     { index: 3, label: "Available", class: "colAvailable", width: "80", active: true, display: true },
@@ -100,17 +107,17 @@ Template.inventorylist.onCreated(function () {
     { index: 5, label: "On BO", class: "colOnBO", width: "80", active: true, display: true },
     { index: 6, label: "In Stock", class: "colInStock", width: "80", active: true, display: true },
     { index: 7, label: "On Order", class: "colOnOrder", width: "80", active: true, display: true },
-    { index: 8, label: "#Cost Price (Ex)", class: "colCostPrice", width: "135", active: false, display: true },
+    { index: 8, label: "Cost Price (Ex)", class: "colCostPrice", width: "135", active: false, display: true },
     { index: 9, label: "Cost Price (Inc)", class: "colCostPriceInc", width: "135", active: true, display: true },
     { index: 10, label: "#Sale Price (Ex)", class: "colSalePrice", width: "135", active: false, display: true },
     { index: 11, label: "Sale Price (Inc)", class: "colSalePriceInc", width: "135", active: true, display: true },
-    { index: 12, label: "#Serial/Lot No", class: "colSerialNo", width: "124", active: false, display: true },
-    { index: 13, label: "#Barcode", class: "colBarcode", width: "80", active: false, display: true },
-    { index: 14, label: "#Department", class: "colDepartmentth", width: "100", active: false, display: true },
-    { index: 15, label: "#Purchase Description", class: "colPurchaseDescription", width: "80", active: false, display: true },
-    { index: 16, label: "#Custom Field 1", class: "colProdCustField1", width: "80", active: false, display: true },
-    { index: 17, label: "#Custom Field 2", class: "colProdCustField2", width: "80", active: false, display: true },
-    { index: 18, label: "Status", class: "colStatus", width: "60", active: true, display: true },
+    { index: 12, label: "Serial/Lot No", class: "colSerialNo", width: "124", active: false, display: true },
+    { index: 13, label: "Barcode", class: "colBarcode", width: "80", active: false, display: true },
+    { index: 14, label: "Department", class: "colDepartmentth", width: "100", active: false, display: true },
+    { index: 15, label: "Purchase Description", class: "colPurchaseDescription", width: "80", active: false, display: true },
+    { index: 16, label: "Custom Field 1", class: "colProdCustField1", width: "80", active: false, display: true },
+    { index: 17, label: "Custom Field 2", class: "colProdCustField2", width: "80", active: false, display: true },
+    { index: 18, label: "Status", class: "colStatus", width: "120", active: true, display: true },
   ];
 
   templateObject.tableheaderrecords.set(headerStructure);
@@ -1438,8 +1445,9 @@ Template.inventorylist.events({
             results.data[0][10] == "Product Type"
           ) {
             let dataLength = results.data.length * 3000;
-            setTimeout(function () {
+            setTimeout(async function () {
               // $('#importModal').modal('toggle');
+              await clearData('TProductVS1');
               window.open("/inventorylist?success=true", "_self");
               $(".fullScreenSpin").css("display", "none");
             }, parseInt(dataLength));
@@ -1476,7 +1484,7 @@ Template.inventorylist.events({
                     .saveProductVS1(objDetails)
                     .then(function (data) {
                       //$('.fullScreenSpin').css('display','none');
-                      FlowRouter.go("/inventorylist?success=true");
+                      // FlowRouter.go("/inventorylist?success=true");
                     })
                     .catch(function (err) {
                       //$('.fullScreenSpin').css('display','none');
@@ -1608,7 +1616,7 @@ Template.inventorylist.events({
     }
   },
   "click td.colOnBO": function (event) {
-    var listData = $(event.target).closest('tr').attr('id');
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - On Back Order");
@@ -1622,7 +1630,7 @@ Template.inventorylist.events({
     }
   },
   "click td.colInStock": function (event) {
-    var listData = $(event.target).closest('tr').attr('id');
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - In Stock");
@@ -1635,7 +1643,7 @@ Template.inventorylist.events({
     }
   },
   "click td.colAvailable": function (event) {
-    var listData = $(event.target).closest('tr').attr('id');
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - Available");
@@ -1649,7 +1657,7 @@ Template.inventorylist.events({
   },
 
   "click td.colOnSO": function (event) {
-    var listData = $(event.target).closest('tr').attr('id');
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - On Sales Order");
@@ -1663,7 +1671,7 @@ Template.inventorylist.events({
   },
 
   "click td.colOnOrder": function (event) {
-    var listData = $(event.target).closest('tr').attr('id');
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
     var listProductName = $(event.target).closest("tr").find(".colProductName").text();
     if (listData) {
       $("#transTitle").text(listProductName + " - On Order");
@@ -1679,7 +1687,7 @@ Template.inventorylist.events({
   },
 
   "click td.colProductName, click td.colSalesDescription, ": function (event) {
-    var listData = $(event.target).closest('tr').attr('id');
+    var listData = $(event.target).closest("tr").find(".colProductID").text();
     if (listData) {
       FlowRouter.go("/productview?id=" + listData);
     }
