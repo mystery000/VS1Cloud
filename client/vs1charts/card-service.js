@@ -32,6 +32,7 @@ export class CardService extends BaseService {
   }
 
   async setCardPositions() {
+    if ($(".card-visibility").length === 0) return;
     $(".card-visibility").addClass("hideelement");
     let Tvs1CardPref = await getVS1Data("Tvs1CardPreference");
     let cardList = [];
@@ -48,7 +49,8 @@ export class CardService extends BaseService {
       ).filter((card) => {
         if (
           parseInt(card.fields.EmployeeID) == employeeID &&
-          parseInt(card.fields.TabGroup) == $(".connectedCardSortable").data("tabgroup")
+          parseInt(card.fields.TabGroup) ==
+            $(".connectedCardSortable").data("tabgroup")
         ) {
           return card;
         }
@@ -64,7 +66,7 @@ export class CardService extends BaseService {
         $(`[card-key='${card.fields.CardKey}']`).attr(
           "card-id",
           card.fields.ID
-        );        
+        );
         if (card.fields.Active == false) {
           $(`[card-key='${card.fields.CardKey}']`).addClass("hideelement");
           $(`[card-key='${card.fields.CardKey}']`)
@@ -89,13 +91,16 @@ export class CardService extends BaseService {
       $(".card-visibility").each(function () {
         $(this).find(".cardShowOption").prop("checked", true);
         let position = $(this).data("default-position");
-        $(this).attr("position", position);        
-      });      
-      $(`[chartgroup='${$(".connectedCardSortable").data("chartgroup")}']`).removeClass("hideelement");
+        $(this).attr("position", position);
+      });
+      $(
+        `[chartgroup='${$(".connectedCardSortable").data("chartgroup")}']`
+      ).removeClass("hideelement");
     }
   }
 
   async saveCards() {
+    if ($(".card-visibility").length === 0) return;
     $(".fullScreenSpin").css("display", "block");
     // Here we get that list and create and object
 
@@ -121,7 +126,9 @@ export class CardService extends BaseService {
             CardKey: $(cards[i]).attr("card-key"),
             Position: parseInt($(cards[i]).attr("position")),
             TabGroup: parseInt($(".connectedCardSortable").data("tabgroup")),
-            Active: $(cards[i]).find(".cardShowOption").prop("checked") ? true : false,
+            Active: $(cards[i]).find(".cardShowOption").prop("checked")
+              ? true
+              : false,
           }),
         })
       );
@@ -145,10 +152,7 @@ export class CardService extends BaseService {
         $(".fullScreenSpin").css("display", "none");
       }
     }
-    $(".card-visibility").removeClass("dimmedChart");
-    $(".cardSettingBtn").removeClass("hideelement");
-    $(".cardEditOptions").addClass("hideelement");
-    $(".actionButtonsTop").addClass("hideelement");
+    await this.exitEdit()
     $(".card-visibility").addClass("hideelement");
     $.each(cards, function (i, card) {
       if ($(card).find(".cardShowOption").prop("checked"))
@@ -157,8 +161,9 @@ export class CardService extends BaseService {
     $(".fullScreenSpin").css("display", "none");
   }
 
-  async resetCards() {
-    $(".fullScreenSpin").css("display", "block");    
+  async resetCards() {    
+    if ($(".card-visibility").length === 0) return;
+    $(".fullScreenSpin").css("display", "block");
     let employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
     const cardsApis = new ChartsApi();
     // now we have to make the post request to save the data in database
@@ -182,15 +187,9 @@ export class CardService extends BaseService {
 
       if (ApiResponse.ok == true) {
         const jsonResponse = await ApiResponse.json();
-        // $('.cardShowBtn').addClass('hideelement');
-        $(".actionButtonsTop").addClass("hideelement");
-        // $('.cardSettingBtn').find('i').removeClass('fa-save')
-        // $('.cardSettingBtn').find('i').addClass('fa-cog');
         await this.saveCardsLocalDB();
         await this.setCardPositions();
-        $(".card-visibility").removeClass("dimmedChart");
-        $(".cardEditOptions").addClass("hideelement");
-        $(".cardSettingBtn").removeClass("hideelement");
+        await this.exitEdit();
         $(".fullScreenSpin").css("display", "none");
       }
     } catch (error) {
@@ -199,14 +198,27 @@ export class CardService extends BaseService {
   }
 
   async cancelCards() {
-    $(".fullScreenSpin").css("display", "block");
+    if ($(".card-visibility").length === 0) return;
+    $(".fullScreenSpin").css("display", "block");    
+    await this.setCardPositions();
+    await this.exitEdit();
+    $(".fullScreenSpin").css("display", "none");
+  }
+
+  async onEdit() {
+    $(".cardSettingBtn").addClass("hideelement");
+    $(".card-visibility").removeClass("hideelement");
+    $(".card-visibility").addClass("dimmedChart");
+    $(".cardEditOptions").removeClass("hideelement");
+    $(".actionButtonsTop").removeClass("hideelement");
+  }
+
+  async exitEdit() {
     $(".actionButtonsTop").addClass("hideelement");
     // $('.cardSettingBtn').find('i').removeClass('fa-save')
     // $('.cardSettingBtn').find('i').addClass('fa-cog');
-    await this.setCardPositions();
     $(".card-visibility").removeClass("dimmedChart");
     $(".cardEditOptions").addClass("hideelement");
     $(".cardSettingBtn").removeClass("hideelement");
-    $(".fullScreenSpin").css("display", "none");
   }
 }

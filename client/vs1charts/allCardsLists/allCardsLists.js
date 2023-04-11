@@ -7,8 +7,10 @@ import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './allCardsLists.html';
 import { CardService } from "../card-service";
+import { ChartService } from "../chart-service";
 
 const cardService = new CardService()
+const chartService = new ChartService()
 
 Template.allCardsLists.onRendered(function () {
     cardService.setCardPositions();
@@ -100,20 +102,8 @@ Template.allCardsLists.events({
     },
     "click .cardSettingBtn": async function (e) {        
         e.preventDefault();
-        // if ($('.cardSettingBtn').find('i').hasClass('fa-save')) {
-        //     $('.cardSettingBtn').find('i').removeClass('fa-save')
-        //     $('.cardSettingBtn').find('i').addClass('fa-cog');            
-        //     $(".card-visibility").find(".cardEditOptions").addClass("hideelement");            
-        //     $('.card-visibility').removeClass('dimmedChart');                        
-        // } else {
-            // $('.cardSettingBtn').find('i').removeClass('fa-cog')
-            // $('.cardSettingBtn').find('i').addClass('fa-save');            
-            $(".cardSettingBtn").addClass("hideelement");
-            $(".card-visibility").removeClass('hideelement');
-            $(".card-visibility").addClass('dimmedChart');                    
-            $(".cardEditOptions").removeClass("hideelement");
-            $(".actionButtonsTop").removeClass("hideelement");
-        // }
+        cardService.onEdit();
+        chartService.onEdit();
     },    
 });
 

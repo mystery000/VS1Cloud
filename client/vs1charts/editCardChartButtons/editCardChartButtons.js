@@ -1,30 +1,25 @@
 import { Template } from "meteor/templating";
 import "./editCardChartButtons.html";
 import { CardService } from "../card-service";
+import { ChartService } from "../chart-service";
 
 const cardService = new CardService();
-
-const cardExist = () => {
-  return $(".card-visibility").length;
-};
+const chartService = new ChartService();
 
 Template.editCardChartButtons.events({
   "click .saveButton": async function (e) {
-    e.preventDefault();
-    if (cardExist()) {
-      cardService.saveCards();
-    }
+    e.preventDefault();    
+    cardService.saveCards();    
+    chartService.saveCharts();
   },
   "click .resetButton": async function (e) {
-    e.preventDefault();
-    if (cardExist()) {
-      cardService.resetCards();
-    }
+    e.preventDefault();    
+    cardService.resetCards();          
+    chartService.resetCharts();
   },
   "click .cancelButton": async function (e) {
-    e.preventDefault();
-    if (cardExist()) {
-      cardService.cancelCards();
-    }     
+    e.preventDefault();    
+    cardService.cancelCards();         
+    chartService.cancelCharts();
   },
 });

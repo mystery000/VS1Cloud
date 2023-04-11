@@ -66,6 +66,10 @@ Template.dashboardsalesmanager.onRendered(function () {
         }
         $('[data-toggle="tooltip"]').tooltip({html: true});
     },500);
+
+    $(document).on("change", "#dateFrom, #dateTo", () => {
+        alert('there')
+    })
 });
 
 Template.dashboardsalesmanager.events({
