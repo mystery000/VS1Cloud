@@ -516,6 +516,7 @@ Template.newLeaveRequestModal.events({
         let templateObject = Template.instance();
         setTimeout(async function() {
             let currentId     = $("#edtEmpID").val();
+            let employeeName     = $("#edtEmployeeName").val();
             let employeeID    = (!isNaN(currentId) && parseInt(currentId) !== 0) ? currentId : localStorage.getItem("mySessionEmployeeLoggedID")? localStorage.getItem("mySessionEmployeeLoggedID"):0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
@@ -561,6 +562,7 @@ Template.newLeaveRequestModal.events({
                         fields: new LeaveRequestFields({
                             ID: parseInt(ID),
                             EmployeeID: parseInt(employeeID),
+                            EmployeeName:employeeName,
                             TypeOfRequest: parseInt(TypeofRequest),
                             LeaveMethod: Leave,
                             Description: Description,
