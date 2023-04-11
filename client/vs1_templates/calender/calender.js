@@ -687,8 +687,9 @@ Template.calender.onRendered(function() {
     const refreshButton = {
         refresh: {
             text: "Refresh",
-            click: function() {
-                templateObject.saveUpdatedEvents();
+            click: async function() {
+                $(".fullScreenSpin").css("display", "inline-block");
+                await templateObject.saveUpdatedEvents();
                 templateObject.fetchAppointments();
             },
         },
@@ -702,64 +703,65 @@ Template.calender.onRendered(function() {
         },
     };
 
-    templateObject.saveUpdatedEvents = async() => {
-        localStorage.setItem("isFormUpdated", false);
-        let updatedAppointmentEvents = await getVS1Data("TNewAppointment");
-        let updatedLeaveRequestEvents = await getVS1Data("TNewLeaveRequest");
-        let updatedTimeLogs = await getVS1Data("TAppointmentsTimeLog");
-        if(updatedAppointmentEvents){
-            let data = JSON.parse(updatedAppointmentEvents[0]?.data)
-            if(data?.length !== 0){
-                for(var i = 0; i< data.length; i++){
-                    let formattedEvent = {
-                        type:data[i].type,
-                        fields:{
-                            Id:data[i].fields.Id,
-                            StartTime:data[i].fields.StartTime,
-                            EndTime:data[i].fields.EndTime,
+    templateObject.saveUpdatedEvents = () => {
+        new Promise(async(resolve,reject) => {
+            localStorage.setItem("isFormUpdated", false);
+            let updatedAppointmentEvents = await getVS1Data("TNewAppointment");
+            let updatedLeaveRequestEvents = await getVS1Data("TNewLeaveRequest");
+            let updatedTimeLogs = await getVS1Data("TAppointmentsTimeLog");
+            if(updatedAppointmentEvents){
+                let data = JSON.parse(updatedAppointmentEvents[0]?.data)
+                if(data?.length !== 0){
+                    for(var i = 0; i< data.length; i++){
+                        let formattedEvent = {
+                            type:data[i].type,
+                            fields:{
+                                Id:data[i].fields.Id,
+                                StartTime:data[i].fields.StartTime,
+                                EndTime:data[i].fields.EndTime,
+                            }
+                        }
+                        await appointmentService.saveAppointment(formattedEvent);
+                    }
+                   let dataUpdate = await sideBarService.getAllAppointmentList(initialDataLoad, 0);
+                    addVS1Data("TAppointment", JSON.stringify(dataUpdate));
+                }
+            }
+            if(updatedLeaveRequestEvents){
+                let data = JSON.parse(updatedLeaveRequestEvents[0]?.data)
+                if(data?.length !== 0){
+                    const employeePayrolApis = new EmployeePayrollApi();
+                    const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
+                    for(var i = 0; i< data.length; i++){
+                        let formattedEvent = {
+                            type:"TLeavRequest",
+                            fields:data[i]
+                        }
+                        const ApiResponse = await employeePayrolEndpoint.fetch(null, {
+                            method: "POST",
+                            headers: ApiService.getPostHeaders(),
+                            body: JSON.stringify(formattedEvent),
+                        });
+                        if (ApiResponse.ok == true) {
+                            await templateObject.saveLeaveRequestLocalDB();
                         }
                     }
-                    await appointmentService.saveAppointment(formattedEvent);
                 }
-                sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                    addVS1Data("TAppointment", JSON.stringify(dataUpdate))
-                })
             }
-        }
-        if(updatedLeaveRequestEvents){
-            let data = JSON.parse(updatedLeaveRequestEvents[0]?.data)
-            if(data?.length !== 0){
-                const employeePayrolApis = new EmployeePayrollApi();
-                const employeePayrolEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
-                for(var i = 0; i< data.length; i++){
-                    let formattedEvent = {
-                        type:"TLeavRequest",
-                        fields:data[i]
-                    }
-                    const ApiResponse = await employeePayrolEndpoint.fetch(null, {
-                        method: "POST",
-                        headers: ApiService.getPostHeaders(),
-                        body: JSON.stringify(formattedEvent),
-                    });
-                    if (ApiResponse.ok == true) {
-                        await templateObject.saveLeaveRequestLocalDB();
+            if(updatedTimeLogs){
+                if(updatedTimeLogs[0] && updatedTimeLogs[0].data){
+                    let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
+                    if(timeLogData?.length !== 0){
+                        for(var i = 0; i< timeLogData.length; i++){
+                            await appointmentService.saveTimeLog(timeLogData[i]);
+                        }
+                        let dataUpdate = await sideBarService.getAllAppointmentList(initialDataLoad, 0);
+                        addVS1Data("TAppointment", JSON.stringify(dataUpdate));
                     }
                 }
             }
-        }
-        if(updatedTimeLogs){
-            if(updatedTimeLogs[0] && updatedTimeLogs[0].data){
-                let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
-                if(timeLogData?.length !== 0){
-                    for(var i = 0; i< timeLogData.length; i++){
-                        await appointmentService.saveTimeLog(timeLogData[i]);
-                    }
-                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                        addVS1Data("TAppointment", JSON.stringify(dataUpdate))
-                    })
-                }
-            }
-        }
+            resolve('OK')
+        })
     }
 
     templateObject.updateEvents = async (updatedEvent,isCreate,isLeave) => {
@@ -9837,9 +9839,9 @@ Template.calender.events({
     },
     'click #chkmyAppointments': function(event) {
     },
-    'click .btn-auto-save': function(event) {
+    'click .btn-auto-save': async function(event) {
         let templateObject = Template.instance();
-        templateObject.saveUpdatedEvents();
+        await templateObject.saveUpdatedEvents();
     },
     'click .chkServiceCard': function() {
         //  templateObject = Template.instance();
