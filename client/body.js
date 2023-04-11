@@ -267,8 +267,6 @@ import './settings/service-checker/serviceChecker.js';
 
 /* Riley*/
 import './accounts/addApcaModal/addApcaModal.html';
-
-import './vs1charts/editCardChartButtons/editCardChartButtons.js';
 /* Riley*/
 
 /* Tinyiko */
