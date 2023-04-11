@@ -17,6 +17,12 @@
                 <div class="modal-body">
                     <form class="row" id="leaveRequestForm">
                         <div class="col-12">
+                            <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                <label>Employee Name</label>
+                                <input id="edtEmployeeName" name="edtEmployeeName" type="text" class="form-control edtEmployeeName" readonly>
+                            </div>
+                        </div>
+                        <div class="col-12">
                             <div class="form-group">
                                 <label>Type of Request</label>
                                 <input type="hidden" id="edtEmpID" value="0">
@@ -92,7 +98,7 @@
                             </div>
                         </div>
                     </div>
-                    <button type="button" id="removeLeaveRequestBtn" data-id="0" style="display: none;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
+                    <button type="button" id="removeLeaveRequestBtn" data-id="0" style="visibility: hidden;" class="btn btn-danger removeLeaveRequest mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Delete</button>
                     <button type="button " id="btnSaveLeaveRequest" class="btn btn-success mt-3"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
                     <button type="button" class="btn btn-secondary mt-3 close-modal" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
                 </div>
