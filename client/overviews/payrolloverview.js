@@ -30,6 +30,7 @@ import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import './payrolloverview.html';
 import '../overviews/Modal/AddPayRunModal.html';
 
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -83,6 +84,13 @@ Template.payrolloverview.onRendered(function () {
   const clockedOnEmpList = [];
   const jobsList = [];
   let clockEntry = [];
+
+  let modalId = FlowRouter.current().queryParams.modalId;
+
+  if(modalId == "newPayRunModal") {
+    $('#newPayRunModal').modal("show");
+
+  }
 
   templateObject.loadPayRuns = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
@@ -293,10 +301,7 @@ Template.payrolloverview.onRendered(function () {
     });
     templateObject.timeSheetList.set(timesheets);
 
-
-
     // TODO: Datable jquery to be added
-
     // setTimeout(() => {
 
     //   $("#tblTimeSheet").DataTable({
@@ -4353,6 +4358,15 @@ Template.payrolloverview.events({
   "click #btnTimesheet": function (event) {
     FlowRouter.go("/timesheet");
   },
+  
+  // "click #btnEmployeeClockOnOff": function ()  {
+
+  //   alert("ddddd")
+
+  //   $("#employeeClockonoffModal").modal("show");
+
+  // },
+  
   "click #btnClockOnOff": (event, templateObject) => {
     // $("#clockOnOffModal").modal("show");
     // return;
@@ -4496,6 +4510,7 @@ Template.payrolloverview.events({
     }
     $("#clockOnOffModal").modal("show");
   },
+
   "click #clockOnOffModal #btnClockOn": function () {
     const templateObject = Template.instance();
 
@@ -5448,6 +5463,7 @@ Template.payrolloverview.events({
     }
   }, delayTimeAfterSound);
   },
+  
   "click .processTimesheet": function () {
     LoadingOverlay.show();
     let templateObject = Template.instance();

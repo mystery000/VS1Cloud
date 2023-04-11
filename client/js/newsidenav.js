@@ -3019,6 +3019,27 @@ Template.newsidenav.events({
     templateObject.getSetSideNavFocus();
   },
 
+  'click #sidenavstpayroll': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/singletouch');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
+  'click #sidenavpayrollleave': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/payrollleave');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
+  'click #sidenavaddpayrun': function (event) {
+    event.preventDefault();
+    FlowRouter.go('/payrolloverview?modalId=newPayRunModal');
+    let templateObject = Template.instance();
+    templateObject.getSetSideNavFocus();
+  },
+
   'click #sidenavClockonReport': function (event) {
     event.preventDefault();
     FlowRouter.go('/clockonreport');
@@ -3046,6 +3067,7 @@ Template.newsidenav.events({
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
+  
   'click #sidenavseedtosale': function (event) {
     $('.accountsLi').addClass('opacityNotActive');
     $('.appointmentsLi').addClass('opacityNotActive');

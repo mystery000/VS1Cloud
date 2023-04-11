@@ -140,6 +140,7 @@ Template.buildcostreport.onRendered(function() {
                     process_data = JSON.parse(dataObject[0].data).tprocessstep;
                 }
                 
+                
                 let bomData;
                 let hourly_labour_cost;
                 let hourly_overhead_cost;
