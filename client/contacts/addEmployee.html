@@ -1423,6 +1423,21 @@
                                     </tbody>
 
                                   </table>
+                                  <!-- {{>datatablelist
+                                    tablename="tblEmpServiceList"
+                                    apiName= serviceApiFunction
+                                    indexeddbname = 'TProductVS1'
+                                    tableheaderrecords = serviceTableHeaderRecords
+                                    exportfilename = 'Employee Service List'
+                                    istransaction = false
+                                    apiParams= serviceApiParams
+                                    datahandler = serviceDataHandler
+                                    service = serviceService
+                                    lowercaseDataName='tproductvs1'
+                                    exIndexDBName = 'tproductvs1'
+                                    exdatahandler = serviceExDataHandler
+                                    searchAPI = serviceSearchAPI
+                                }} -->
                                 </div>
                               </div>
                             </div>
@@ -4344,7 +4359,7 @@
           </style>
           <!-- {{> non_transactional_list tablename="tblPayCalendars"}} -->
             {{> datatablelist
-              tablename="tblPayCalendars"
+              tablename="tablPayCalendars"
               apiName=payApiFunction
               indexeddbname='TPayrollCalendars'
               tableheaderrecords=tablepayheaderrecords
@@ -4384,7 +4399,10 @@
           </button>
         </div>
         <div class="modal-body">
-          <style>
+          <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+            {{> export_import_print_display_button tablename="tblHoilidays"}}
+        </div>
+          <!-- <style>
               #tblHolidays .colHolidayName{
                   width: 45%!important;
               }
@@ -4394,10 +4412,10 @@
               #tblHolidays .colStatus{
                   width: 10%!important;
               }              
-          </style>
+          </style> -->
           <!-- {{> non_transactional_list tablename="tblHolidays"}} -->
           {{>datatablelist
-            tablename="tblHolidays"
+            tablename="tblHoilidays"
             apiName= holidayApiFunction
             indexeddbname = 'TPayrollHolidays'
             tableheaderrecords = holidayTableHeaderRecords
@@ -4406,8 +4424,8 @@
             apiParams= holidayApiParams
             datahandler = holidayDataHandler
             service = holidayService
-            lowercaseDataName='tpayrullholidays' 
-            exIndexDBName = 'tpayrullholidays'
+            lowercaseDataName='tpayrollholidays' 
+            exIndexDBName = 'tpayrollholidays'
             exdatahandler = holidayExDataHandler
             searchAPI = holidaySearchAPI
           }}

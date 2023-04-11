@@ -139,8 +139,8 @@ Template.employeescard.onCreated(function () {
         data.fields.Description || '',
         data.fields.PayPeriod || '',
         data.fields.LeaveMethod || '',
+        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
         data.fields.Status || '',
-        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
       ];
     }
     return dataList;
@@ -164,8 +164,8 @@ Template.employeescard.onCreated(function () {
     { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
     { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
     { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
-    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
-    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+    { index: 4, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+    { index: 5, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
 ];
 templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
 
@@ -183,65 +183,90 @@ templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
 
   templateObject.customerTableHeaderRecords = new ReactiveVar([]);
   templateObject.getCustomerDataTableList = function(data) {
-    var dataList = [
-      data.id || "",
-      data.date || "",
-      data.category || "",
-      data.taskName || "",
-      data.description || "",
-      data.completedby || "",
-      data.completed ? "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.id + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit' checked='checked'><label class='custom-control-label' for='chkCompleted_" + data.id + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>" :
-      "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.id + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit'><label class='custom-control-label' for='chkCompleted_" + data.id + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>"
+        
+    let sort_date = data.MsTimeStamp == "" ? "1770-01-01" : data.MsTimeStamp;
+    sort_date = new Date(sort_date);
+    
+    // let taskLabel = data.TaskLabel;
+    let taskLabelArray = [];
+    // if (taskLabel !== null) {
+    //     if (taskLabel.length === undefined || taskLabel.length === 0) {
+    //         taskLabelArray.push(taskLabel.fields);
+    //     } else {
+    //         for (let j = 0; j < taskLabel.length; j++) {
+    //             taskLabelArray.push(taskLabel[j].fields);
+    //         }
+    //     }
+    // }
+    let taskDescription = data.TaskDescription || '';
+    taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+    const dataList = [
+        data.ID || 0,
+        data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+        data.Position,
+        data.TaskName || '',
+        taskDescription,
+        data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+        data.Completed ? "Completed" : "",
+        data.Active ? "" : "In-Active",
+        // priority: data.priority || 0,                
+        // projectID: data.ProjectID || '',
+        // projectName: data.ProjectName || '',
+        // labels: taskLabelArray,
+        // category: 'Task',                
+        
     ];
+    
     return dataList;
   }
   let customerHeaderStructure = [
-    { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "10" },
+    { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
     { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
     { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
-    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "120" },
+    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
     { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
     { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
-    { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "110" },
+    { index: 6, label: 'Completed', class: 'colCompleteTask', active: true, display: true, width: "120" },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.customerTableHeaderRecords.set(customerHeaderStructure);
 
   templateObject.transactionTableHeaderRecords = new ReactiveVar([]);
   templateObject.getTransactionDataTableList = function(data) {
     var dataList = [
-      data.id || "",
-      data.sortdate || "",
-      data.saledate || "",
-      data.id || "",
-      data.customername || "",
-      data.totalamountex || "",
-      data.totaltax || "",
-      data.totalamount || "",
-      data.totalpaid || "",
-      data.totaloustanding || "",
-      data.salestatus || "",
-      data.custfield1 || "",
-      data.custfield2 || "",
-      data.employee || "",
-      data.comments || "",
+      data.fields.ID || "",
+      data.fields.SaleDate || "",
+      data.fields.ID || "",
+      data.fields.CustomerName || "",
+      data.fields.TotalAmountInc || "",
+      data.fields.TotalTax || "",
+      data.fields.TotalAmount || "",
+      data.fields.TotalPaid || "",
+      data.fields.TotalBalance || "",
+      data.fields.SaleCustField1 || "",
+      data.fields.SaleCustField2 || "",
+      data.fields.Employee || "",
+      data.fields.Comments || "",
+      data.fields.SalesStatus || "",
     ];
     return dataList;
   }
   let transactionHeaderStructure = [
-    { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true, width: "10" },
-    { index: 1, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "40" },
-    { index: 2, label: 'Sales No.', class: 'colSalesNo', active: true, display: true, width: "40" },
-    { index: 3, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "100" },
-    { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "40" },
-    { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "40" },
-    { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "40" },
-    { index: 7, label: 'Paid', class: 'colPaid', active: true, display: true, width: "40" },
+    { index: 0, label: 'ID', class: 'colSortDate', active: false, display: true, width: "10" },
+    { index: 1, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "80" },
+    { index: 2, label: 'Sales No.', class: 'colSalesNo', active: true, display: true, width: "80" },
+    { index: 3, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "200" },
+    { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "110" },
+    { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "110" },
+    { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "110" },
+    { index: 7, label: 'Paid', class: 'colPaid', active: true, display: true, width: "110" },
     { index: 8, label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, display: true, width: "110" },
-    { index: 9, label: 'Status', class: 'colStatus', active: false, display: true, width: "120" },
-    { index: 10, label: 'Custom Field 1', class: 'colSaleCustField1', active: false, display: true, width: "110" },
-    { index: 11, label: 'Custom Field 2', class: 'colSaleCustField2', active: false, display: true, width: "110" },
-    { index: 12, label: 'Employee', class: 'colEmployee', active: false, display: true, width: "110" },
-    { index: 13, label: 'Comments', class: 'colComments', active: false, display: true, width: "300" },
+    { index: 9, label: 'Custom Field 1', class: 'colSaleCustField1', active: false, display: true, width: "110" },
+    { index: 10, label: 'Custom Field 2', class: 'colSaleCustField2', active: false, display: true, width: "110" },
+    { index: 11, label: 'Employee', class: 'colEmployee', active: false, display: true, width: "110" },
+    { index: 12, label: 'Comments', class: 'colComments', active: false, display: true, width: "300" },
+    { index: 13, label: 'Status', class: 'colStatus', active: false, display: true, width: "120" },
   ];
   templateObject.transactionTableHeaderRecords.set(transactionHeaderStructure);
 
@@ -260,7 +285,7 @@ templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
     { index: 0, label: 'ID', class: 'colHolidayID', active: false, display: true, width: "10" },
     { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "120" },
     { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "80" },
-    { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "110" },
+    { index: 3, label: 'Holiday group', class: 'colHolidaygroup', active: false, display: true, width: "110" },
     { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.holidayTableHeaderRecords.set(holidayHeaderStructure);
@@ -10646,12 +10671,12 @@ Template.employeescard.helpers({
   },
   customerApiFunction:function() {
     const crmService = new CRMService();
-    return crmService.getAllTasksByContactName;
+    return crmService.getAllProjectTasksList;
   },
 
   customerSearchAPI: function() {
     const crmService = new CRMService();
-    return crmService.getAllTasksByContactName;
+    return crmService.getAllProjectTasksByTaskName;
   },
 
   customerService: ()=>{
@@ -10676,7 +10701,7 @@ Template.employeescard.helpers({
   },
 
   customerApiParams: function() {
-    return ['ContactName'];
+    return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
   },
 
   transactionTableHeaderRecords: () => {
@@ -10684,12 +10709,12 @@ Template.employeescard.helpers({
   },
   transactionApiFunction:function() {
     const contactService = new ContactService();
-    return contactService.getAllInvoiceListByEmployee;
+    return contactService.getAllInvoiceList;
   },
 
   transactionSearchAPI: function() {
     const contactService = new ContactService();
-    return contactService.getAllInvoiceListByEmployee;
+    return contactService.getInvoiceListsByEmployeeName;
   },
 
   transactionService: ()=>{
@@ -10714,11 +10739,11 @@ Template.employeescard.helpers({
   },
 
   transactionApiParams: function() {
-    return ['employeeName'];
+    return ['limitcount', 'limitfrom', 'deleteFilter'];
   },
 
   holidayTableHeaderRecords: () => {
-    return Template.instance().tableheaderrecords.get();
+    return Template.instance().holidayTableHeaderRecords.get();
   },
   holidayApiFunction:function() {
     let sideBarService = new SideBarService();

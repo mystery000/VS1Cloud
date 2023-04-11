@@ -387,6 +387,31 @@ export class ContactService extends BaseService {
         return this.getList(this.ERPObjects.TInvoice, options);
     }
 
+    getAllInvoiceList(limitcount, limitfrom, deleteFilter) {
+        let options = {
+            ListType: "Detail",
+            Search:"Active=true",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TInvoice, options);
+    }
+
+    getInvoiceListsByEmployeeName(EmployeeName = '') {
+        var options = {
+            ListType: "Detail",
+            select: "[Deleted]=false"
+        };
+        if (EmployeeName) {
+            options = {
+                ListType: "Detail",
+                select: "EmployeeName='" + EmployeeName + "' and [Deleted]=false",
+            };
+        }
+        return this.getList(this.ERPObjects.TInvoice, options);
+    }
+
     getAllPurchaseOrderListBySupplier(supplierName) {
         let options = {
             PropertyList: "ID,EmployeeName,SaleClassName,OrderDate,SupplierName,TotalAmount,OrderStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,comments",

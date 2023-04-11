@@ -1112,28 +1112,53 @@ Template.customerscard.onCreated(function () {
     }
 
     //Datatablelist template using from here
-    templateObject.getDataTableList_CrmListWithDate = function (data) {
-        var dataList = [
-            data.id || "",
-            data.date || "",
-            data.category || "",
-            data.taskName || "",
-            data.description || "",
-            data.completedby || "",
-            data.completed ? "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.id + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit' checked='checked'><label class='custom-control-label' for='chkCompleted_" + data.id + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>" :
-            "<div class='custom-control custom-switch' style='cursor: pointer;'><input class='custom-control-input additionalModule chkComplete pointer' type='checkbox' id=chkCompleted_" + data.id + "name='Additional' style='cursor: pointer;' additionalqty='1' autocomplete='off' data-id='edit'><label class='custom-control-label' for='chkCompleted_" + data.id + "style='cursor: pointer; max-width: 200px;' data-id='edit'>Completed</label></div>"
+    templateObject.getDataTableList_CrmListWithDate = function(data) {
+        
+        let sort_date = data.MsTimeStamp == "" ? "1770-01-01" : data.MsTimeStamp;
+        sort_date = new Date(sort_date);
+        
+        // let taskLabel = data.TaskLabel;
+        let taskLabelArray = [];
+        // if (taskLabel !== null) {
+        //     if (taskLabel.length === undefined || taskLabel.length === 0) {
+        //         taskLabelArray.push(taskLabel.fields);
+        //     } else {
+        //         for (let j = 0; j < taskLabel.length; j++) {
+        //             taskLabelArray.push(taskLabel[j].fields);
+        //         }
+        //     }
+        // }
+        let taskDescription = data.TaskDescription || '';
+        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+    
+        const dataList = [
+            data.ID || 0,
+            data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+            data.Position,
+            data.TaskName || '',
+            taskDescription,
+            data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+            data.Completed ? "Completed" : "",
+            data.Active ? "" : "In-Active",
+            // priority: data.priority || 0,                
+            // projectID: data.ProjectID || '',
+            // projectName: data.ProjectName || '',
+            // labels: taskLabelArray,
+            // category: 'Task',                
+            
         ];
+        
         return dataList;
     }
     let headerStructure_CrmListWithDate = [
-        {index: 0, label: '#ID', class: 'colTaskId', active: false, display: false, width: "10"},
-        {index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80"},
-        {index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110"},
-        {index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110"},
-        {index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300"},
-        {index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110"},
-        {index: 6, label: 'Is Completed', class: 'colCompleteTask', active: true, display: true, width: "110"},
-        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
+        { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
+        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+        { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
+        { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
+        { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
+        { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
+        { index: 6, label: 'Completed', class: 'colCompleteTask', active: true, display: true, width: "120" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords_CrmListWithDate.set(headerStructure_CrmListWithDate);
 
@@ -3954,12 +3979,12 @@ Template.customerscard.helpers({
     },
     apiFunction_CrmListWithDate: function () {
         let crmService = new CRMService();
-        return crmService.getAllTasksByContactName;
+        return crmService.getAllProjectTasksList;
     },
 
     searchAPI_CrmListWithDate: function () {
         let crmService = new CRMService();
-        return crmService.getAllTasksByName;
+        return crmService.getAllProjectTasksByTaskName;
     },
 
     service_CrmListWithDate: () => {
@@ -3985,7 +4010,7 @@ Template.customerscard.helpers({
     },
 
     apiParams_CrmListWithDate: function () {
-        return ['ContactName'];
+        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
     },
 
 
