@@ -38,7 +38,7 @@ Template.dashboardsalesmanager.onRendered(function () {
                 // Hide (close) the picker
                 // $(this).datepicker('hide');
                 // // Change ttrigger the on change function
-                // $(this).trigger('change');
+                $(this).trigger('change');
             }
         });
         let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
@@ -64,7 +64,8 @@ Template.dashboardsalesmanager.onRendered(function () {
             $("#dateFrom").val(null);
             $("#dateTo").val(null);
         }
-        $('[data-toggle="tooltip"]').tooltip({html: true});
+        $('[data-toggle="tooltip"]').tooltip({html: true});        
+        $("#dateTo, #dateFrom").trigger("change")
     },500);
 });
 

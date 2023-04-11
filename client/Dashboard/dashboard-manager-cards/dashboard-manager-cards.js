@@ -18,6 +18,7 @@ Template.dashboardManagerCards.onRendered(() => {
     templateObject.getDashboardData = async function() {
         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         const toDate = new Date($("#dateTo").datepicker("getDate"));
+        $(".fullScreenSpin").css("display", "inline-block");
         getVS1Data('TProspectEx').then(function(dataObject) {
             if (dataObject.length) {
                 let { tprospect = [] } = JSON.parse(dataObject[0].data);
@@ -92,7 +93,7 @@ Template.dashboardManagerCards.onRendered(() => {
         // }).catch(function(err) {});
 
 
-        sideBarService.getAllTQuoteListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), true, 10000, 0).then(function(data) {
+        sideBarService.getAllTQuoteListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), false, 10000, 0).then(function(data) {
             if (data.tquotelist.length > 0) {
                 let tquotelist = data.tquotelist;
                 let dealsThisMonthCount = 0;
@@ -126,7 +127,7 @@ Template.dashboardManagerCards.onRendered(() => {
 
         });
 
-        sideBarService.getAllTInvoiceListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), true, 10000, 0).then(function(dataInvoice) {
+        sideBarService.getAllTInvoiceListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), false, 10000, 0).then(function(dataInvoice) {
             if (dataInvoice.tinvoicelist.length > 0) {
                 let tinvoicelist = dataInvoice.tinvoicelist;
                 let closedDealsThisMonth = 0;
@@ -150,14 +151,11 @@ Template.dashboardManagerCards.onRendered(() => {
                 $('#closed-deals-month').text("No Data in Range");
                 $('#closed-deals-year').text("No Data in Range");
             }
-        }).catch(function(err) {});
+        }).catch(function(err) {}).finally(() => {$(".fullScreenSpin").css("display", "none");});
     };
-    setTimeout(function() {
-        templateObject.getDashboardData();
-    }, 100);
-
-    $(document).on("change", "#dateFrom, #dateTo", () => {
-        templateObject.getDashboardData();
+    
+    $(document).on("change", "#dateFrom, #dateTo", async () => {        
+        await templateObject.getDashboardData();        
     })
 });
 
