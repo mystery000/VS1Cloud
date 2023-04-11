@@ -82,6 +82,7 @@ Template.calender.onCreated(function() {
     templateObject.changedEvents = new ReactiveVar([]);
     templateObject.extraProductFees = new ReactiveVar([]);
     addVS1Data("TNewAppointment", JSON.stringify([]))
+    addVS1Data("TNewLeaveRequest", JSON.stringify([]))
     templateObject.customerRecord = new ReactiveVar();
 });
 
@@ -317,87 +318,6 @@ Template.calender.onRendered(function() {
     getVS1Data("CloudAppointmentAllocationLaunch").then(function(dataObject) {
         launchAllocations = dataObject;
     }).catch(function(err) {});
-
-    templateObject.getDayNumber = function(day) {
-        day = day.toLowerCase();
-        if (day == "") {
-            return;
-        }
-        if (day == "monday") {
-            return 1;
-        }
-        if (day == "tuesday") {
-            return 2;
-        }
-        if (day == "wednesday") {
-            return 3;
-        }
-        if (day == "thursday") {
-            return 4;
-        }
-        if (day == "friday") {
-            return 5;
-        }
-        if (day == "saturday") {
-            return 6;
-        }
-        if (day == "sunday") {
-            return 0;
-        }
-    }
-    templateObject.getMonths = function(startDate, endDate) {
-        let dateone = "";
-        let datetwo = "";
-        if (startDate != "") {
-            dateone = moment(startDate).format('M');
-        }
-        if (endDate != "") {
-            datetwo = parseInt(moment(endDate).format('M')) + 1;
-        }
-        if (dateone != "" && datetwo != "") {
-            for (let x = dateone; x < datetwo; x++) {
-                if (x == 1) {
-                    $("#formCheck-january").prop('checked', true);
-                }
-                if (x == 2) {
-                    $("#formCheck-february").prop('checked', true);
-                }
-                if (x == 3) {
-                    $("#formCheck-march").prop('checked', true);
-                }
-                if (x == 4) {
-                    $("#formCheck-april").prop('checked', true);
-                }
-                if (x == 5) {
-                    $("#formCheck-may").prop('checked', true);
-                }
-                if (x == 6) {
-                    $("#formCheck-june").prop('checked', true);
-                }
-                if (x == 7) {
-                    $("#formCheck-july").prop('checked', true);
-                }
-                if (x == 8) {
-                    $("#formCheck-august").prop('checked', true);
-                }
-                if (x == 9) {
-                    $("#formCheck-september").prop('checked', true);
-                }
-                if (x == 10) {
-                    $("#formCheck-october").prop('checked', true);
-                }
-                if (x == 11) {
-                    $("#formCheck-november").prop('checked', true);
-                }
-                if (x == 12) {
-                    $("#formCheck-december").prop('checked', true);
-                }
-            }
-        }
-        if (dateone == "") {
-            $("#formCheck-january").prop('checked', true);
-        }
-    }
 
     templateObject.hasFollowings = async function() {
         var currentDate = new Date();
@@ -783,10 +703,11 @@ Template.calender.onRendered(function() {
 
     templateObject.saveUpdatedEvents = async() => {
         localStorage.setItem("isFormUpdated", false);
-        let updatedEvents = await getVS1Data("TNewAppointment");
+        let updatedAppointmentEvents = await getVS1Data("TNewAppointment");
+        let updatedLeaveRequestEvents = await getVS1Data("TNewLeaveRequest");
         let updatedTimeLogs = await getVS1Data("TAppointmentsTimeLog");
-        if(updatedEvents){
-            let data = JSON.parse(updatedEvents[0]?.data)
+        if(updatedAppointmentEvents){
+            let data = JSON.parse(updatedAppointmentEvents[0]?.data)
             if(data?.length !== 0){
                 for(var i = 0; i< data.length; i++){
                     let formattedEvent = {
@@ -804,6 +725,12 @@ Template.calender.onRendered(function() {
                 })
             }
         }
+        if(updatedLeaveRequestEvents){
+            let data = JSON.parse(updatedAppointmentEvents[0]?.data)
+            if(data?.length !== 0){
+              console.log('data:',data)
+            }
+        }
         if(updatedTimeLogs){
             if(updatedTimeLogs[0] && updatedTimeLogs[0].data){
                 let timeLogData = JSON.parse(updatedTimeLogs[0]?.data)
@@ -819,54 +746,103 @@ Template.calender.onRendered(function() {
         }
     }
 
-    templateObject.updateEvents = async (updatedEvent,isCreate) => {
-        let tempNewEvents = await getVS1Data("TNewAppointment")
+    templateObject.updateEvents = async (updatedEvent,isCreate,isLeave) => {
+        let tempNewAppointmentEvents = await getVS1Data("TNewAppointment")
+        let tempNewLeaveRequestEvents = await getVS1Data("TNewLeaveRequest")
         let events = templateObject.eventdata.get();
         localStorage.setItem("isFormUpdated", true);
         if(isCreate){
         }else{
             if(events){
-                let formattedEvent = {
-                    color: updatedEvent.fields.Color ||"",
-                    description:updatedEvent.fields.Description ||"",
-                    end:updatedEvent.fields.EndTime ||"",
-                    id:updatedEvent.fields.Id?.toString() ||"",
-                    start:updatedEvent.fields.StartTime ||"",
-                    title:updatedEvent.fields.Title ||""
-                }
-                let tempEvents = [...events];
-                if(tempEvents.length == 0){
-                    tempEvents.push(formattedEvent)
+                if(isLeave){
+                    // dataList = {
+                    //     id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                    //     title: leaveEmpName,
+                    //     start: leaveemployeerecords[i].StartDate || "",
+                    //     end: leaveemployeerecords[i].EndDate || "",
+                    //     description: leaveemployeerecords[i].Description || "",
+                    //     color: appColor,
+                    // };
+                    let tempEvents = [...events];
+                    if(tempEvents.length == 0){
+                        tempEvents.push(updatedEvent.calendarData)
+                    }else{
+                        if(tempEvents.length !== 0){
+                            let currentEventIndex = tempEvents?.findIndex((event) => event.id == updatedEvent.calendarData.Id.toString())
+                            if(currentEventIndex > -1){
+                                tempEvents[currentEventIndex] = updatedEvent.calendarData;
+                            }else{
+                                tempEvents.push(updatedEvent.calendarData)
+                            }
+                        }else{
+                            tempEvents.push(updatedEvent.calendarData)
+                        }
+                    }
+                    templateObject.eventdata.set(tempEvents);
                 }else{
-                    if(tempEvents.length !== 0){
-                        let currentEventIndex = tempEvents?.findIndex((event) => event.id == updatedEvent.fields.Id.toString())
-                        if(currentEventIndex > -1){
-                            tempEvents[currentEventIndex] = formattedEvent;
+                    let formattedEvent = {
+                        color: updatedEvent.fields.Color ||"",
+                        description:updatedEvent.fields.Description ||"",
+                        end:updatedEvent.fields.EndTime ||"",
+                        id:updatedEvent.fields.Id?.toString() ||"",
+                        start:updatedEvent.fields.StartTime ||"",
+                        title:updatedEvent.fields.Title ||""
+                    }
+                    let tempEvents = [...events];
+                    if(tempEvents.length == 0){
+                        tempEvents.push(formattedEvent)
+                    }else{
+                        if(tempEvents.length !== 0){
+                            let currentEventIndex = tempEvents?.findIndex((event) => event.id == updatedEvent.fields.Id.toString())
+                            if(currentEventIndex > -1){
+                                tempEvents[currentEventIndex] = formattedEvent;
+                            }else{
+                                tempEvents.push(formattedEvent)
+                            }
                         }else{
                             tempEvents.push(formattedEvent)
                         }
+                    }
+                    templateObject.eventdata.set(tempEvents);
+                }
+            }
+            if(isLeave){
+                if(tempNewLeaveRequestEvents){
+                    if(tempNewLeaveRequestEvents.length == 0){
+                        addVS1Data("TNewLeaveRequest", JSON.stringify(updatedEvent.apiData))
                     }else{
-                        tempEvents.push(formattedEvent)
+                        let data = JSON.parse(tempNewLeaveRequestEvents[0].data)
+                        if(data.length !== 0){
+                            let currentEventIndex = data?.findIndex((event) => event.fields.ID == updatedEvent.apiData.ID)
+                            if(currentEventIndex > -1){
+                                data[currentEventIndex] = updatedEvent.apiData;
+                            }else{
+                                data.push(updatedEvent.apiData)
+                            }
+                        }else{
+                            data.push(updatedEvent.apiData)
+                        }
+                        addVS1Data("TNewLeaveRequest", JSON.stringify(data.apiData))
                     }
                 }
-                templateObject.eventdata.set(tempEvents);
-            }
-            if(tempNewEvents){
-                if(tempNewEvents.length == 0){
-                    addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
-                }else{
-                    let data = JSON.parse(tempNewEvents[0].data)
-                    if(data.length !== 0){
-                        let currentEventIndex = data?.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
-                        if(currentEventIndex > -1){
-                            data[currentEventIndex] = updatedEvent;
+            }else{
+                if(tempNewAppointmentEvents){
+                    if(tempNewAppointmentEvents.length == 0){
+                        addVS1Data("TNewAppointment", JSON.stringify(updatedEvent))
+                    }else{
+                        let data = JSON.parse(tempNewAppointmentEvents[0].data)
+                        if(data.length !== 0){
+                            let currentEventIndex = data?.findIndex((event) => event.fields.Id == updatedEvent.fields.Id)
+                            if(currentEventIndex > -1){
+                                data[currentEventIndex] = updatedEvent;
+                            }else{
+                                data.push(updatedEvent)
+                            }
                         }else{
                             data.push(updatedEvent)
                         }
-                    }else{
-                        data.push(updatedEvent)
+                        addVS1Data("TNewAppointment", JSON.stringify(data))
                     }
-                    addVS1Data("TNewAppointment", JSON.stringify(data))
                 }
             }
         }
@@ -1167,7 +1143,7 @@ Template.calender.onRendered(function() {
                             "" + '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname +
                             "</p>" + "" + "</div>" + "" + "</div>";
                         let day = moment(startDate).format("dddd").toLowerCase();
-                        templateObject.updateEvents(objectData,false)
+                        templateObject.updateEvents(objectData,false,false)
                         appointmentData[index].startDate = startDate + " " + startTime;
                         appointmentData[index].endDate = endDate + " " + endTime;
                         templateObject.appointmentrecords.set(appointmentData);
@@ -1740,28 +1716,65 @@ Template.calender.onRendered(function() {
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
                 const pattern = /leave/;
-                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                 var leaveFlag = false;
-                // let empID = $(event.draggedEl.childNodes[2].childNodes[5]).attr('id').split("_")[1];
-                // // let empID = $(event.draggedEl.childNodes[1]).attr('id').split("_")[1];
-                // templateObject.empID.set(empID);
-                // leaveemployeerecords.forEach((item) => {
-                //     if (item.EmployeeID == empID && new Date(event.dateStr) >= new Date(item.StartDate) && new Date(event.dateStr) <= new Date(item.EndDate)) {
-                //         swal(
-                //             "Employee is unavailable due to being on Leave",
-                //             "",
-                //             "warning"
-                //         );
-                //         leaveFlag = true;
-                //     }
-                // });
-                // if (!leaveFlag) {
-                //     $("#customerListModal").modal();
-                // }
                 if (info.event._def.publicId != "") {
+                    $(".fullScreenSpin").css("display", "inline-block");
                     if(pattern.test(info.event._def.publicId)){
+                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                        let appointmentData = templateObject.appointmentrecords.get();
+                        let eventData = templateObject.eventdata.get();
+                        let splitId = info.event.id.split(":");
+                        let empID = splitId[1];
+                        let leaveID = splitId[2];
+                        let currentLeaveRequest = leaveemployeerecords.filter((item) => item.ID == leaveID);
+                        if(currentLeaveRequest && currentLeaveRequest.length !== 0){
+                            const {
+                                ID,
+                                EmployeeID,
+                                EmployeeName,
+                                TypeOfRequest,
+                                LeaveMethod,
+                                Description,
+                                PayPeriod,
+                                Hours,
+                                Status
+                            } = currentLeaveRequest[0];
+                            let eventColor = info.event._def.ui.backgroundColor || "";
+                            let eventDescription = info.event._def.extendedProps.description || "";
+                            let eventTitle = info.event._def.title
+                            let dateStart = new Date(info.event.start);
+                            let dateEnd = new Date(info.event.end);
+                            let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
+                            let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
+                            let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
+                            let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
+                            
+                            objectData = {
+                                calendarData:{
+                                    id: info.event.id,
+                                    title: eventTitle,
+                                    start: startDate + " " + startTime + ":00" || "",
+                                    end: endDate + " " + endTime + ":00" || "",
+                                    description: eventDescription || "",
+                                    color: eventColor,
+                                },
+                                apiData:{
+                                    ID,
+                                    EmployeeID,
+                                    EmployeeName,
+                                    TypeOfRequest,
+                                    LeaveMethod,
+                                    Description,
+                                    StartDate: startDate + " " + startTime + ":00" || "",
+                                    EndDate: endDate + " " + endTime + ":00" || "",
+                                    PayPeriod,
+                                    Hours,
+                                    Status
+                                }
+                            }
+                        }
+                        templateObject.updateEvents(objectData,false,true)
                     }else{
-                        $(".fullScreenSpin").css("display", "inline-block");
                         let appointmentData = templateObject.appointmentrecords.get();
                         let resourceData = templateObject.resourceAllocation.get();
                         let eventDropID = info.event._def.publicId || "0";
@@ -1817,10 +1830,10 @@ Template.calender.onRendered(function() {
                                     $(this).attr("id", $(this).attr("id").replace("-", " "));
                                 }
                             });
-                            templateObject.updateEvents(objectData,false)
-                            $(".fullScreenSpin").css("display", "none");
+                            templateObject.updateEvents(objectData,false,false)
                         }
                     }
+                    $(".fullScreenSpin").css("display", "none");
                 }
             },
             //Triggers modal once external object is dropped to calender.
@@ -2062,7 +2075,7 @@ Template.calender.onRendered(function() {
                             appointmentData[index].accountname + "</p>" + "" + "</div>" + "" + "</div>";
                         let day = moment(startDate).format("dddd").toLowerCase();
 
-                        templateObject.updateEvents(objectData,false)
+                        templateObject.updateEvents(objectData,false,false)
                         appointmentData[index].startDate = startDate + " " + startTime;
                         appointmentData[index].endDate = endDate + " " + endTime;
                         templateObject.appointmentrecords.set(appointmentData);
@@ -2250,13 +2263,6 @@ Template.calender.onRendered(function() {
         const dateParts = date.split("/");
         const dateObject = dateParts[2] + '/' + ("0" + (dateParts[1] - 1)).toString().slice(-2) + '/' + dateParts[0];
         return dateObject;
-    };
-
-    templateObject.timeToDecimal = function(time) {
-        const hoursMinutes = time.split(/[.:]/);
-        const hours = parseInt(hoursMinutes[0], 10);
-        const minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
-        return hours + minutes / 60;
     };
 
     templateObject.timeFormat = function(hours) {
@@ -3450,7 +3456,7 @@ Template.calender.onRendered(function() {
                         $("#" + nameid + " ." + day + " .droppable").append(job);
                         $("#" + eventDropID).remove();
                         $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
-                        templateObject.updateEvents(objectData,false)
+                        templateObject.updateEvents(objectData,false,false)
                     }
                 }
             },
@@ -4755,7 +4761,7 @@ Template.calender.onRendered(function() {
                     TrainerName: employeeName || "",
                 }
             };
-            templateObject.updateEvents(objectData,false)
+            templateObject.updateEvents(objectData,false,false)
             // appointmentService.saveAppointment(objectData).then(function(data) {
                 let calendarSet = templateObject.calendarOptions.get();
                 appointmentList[index].employeename = employeeName;
@@ -9296,7 +9302,7 @@ Template.calender.events({
                         //   UserEmail: userEmail
                     },
                 };
-                // templateObject.updateEvents(objectData,true)
+                // templateObject.updateEvents(objectData,true,false)
                 // $(".fullScreenSpin").css("display", "none");
                 appointmentService.saveAppointment(objectData).then(function(data) {
                     let id = data.fields.ID;
@@ -9697,7 +9703,7 @@ Template.calender.events({
                 //     }
                 // });
             } else {
-                templateObject.updateEvents(objectData,true)
+                templateObject.updateEvents(objectData,true,false)
                 $(".fullScreenSpin").css("display", "none");
                 appointmentService.saveAppointment(objectData).then(function(data) {
                     let id = data.fields.ID;
