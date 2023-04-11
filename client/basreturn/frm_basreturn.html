@@ -149,14 +149,7 @@
                                             </div>
                                             <div class="row no-gutters" style="padding: 8px;">
                                                 <div class="col-12 col-md-12" style="padding-right:50px">
-                                                    <div class="form-group" style="float:right;">
-                                                        <label>Previous Return</label>
-                                                        <div>
-                                                            <input type="text" class="form-control" id="previousStartDate" name="previousStartDate" style="width:150px; float:left" readonly="readonly">
-                                                            <span style="float:left; padding:8px;">To</span>
-                                                            <input type="text" class="form-control" id="previousEndDate" name="previousEndDate" style="width:150px; float:left" readonly="readonly">
-                                                        </div>
-                                                    </div>
+                                                    {{> daterangefromto basreturn=true}}
                                                 </div>
                                             </div>
                                             <div class="row no-gutters" style="padding: 8px;">

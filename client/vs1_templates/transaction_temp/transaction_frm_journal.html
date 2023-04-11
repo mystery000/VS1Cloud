@@ -184,8 +184,9 @@
 <!--                    <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}">-->
                     {{> vs1___dropdown
                             type='search'
-                            id=item.id
-                            name=item.id
+                            classes='lineAccountName'
+                            id=item.lineID
+                            name=item.lineID
                             modalId= 'accountListModal'
                             usedModal=false
                             list_template_name='accountlistpop'
@@ -208,8 +209,8 @@
 <!--                    <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">-->
                     {{> vs1___dropdown
                             type='search'
-                            id=item.id
-                            name=item.id
+                            id=item.lineID
+                            name=item.lineID
                             modalId= 'taxratelistModal'
                             list_template_name='taxratelistpop'
                             innerModal=true
