@@ -1293,9 +1293,10 @@
                                                   modal_title='Default Product / Service'
                                                   innerModal=true
                                                   label = ''
-                                                  colNameForValue = 'productName'
+                                                  colNameForValue = 'colproductName'
                                                   is_editable=true
                                                   noBorder=false
+                                                  custid='myCustId'
                                           }}
                                       </div>
                                     </div>
@@ -4248,24 +4249,6 @@
       {{> dashboardoptionspopup options=record.dashboardOptions}}
     </div>
     {{/if}}
-  </div>
-
-  <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-    {{> employeeproductlistpop}}
-  </div>
-
-
-
-  <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
-    {{> newproductpop}}
-  </div>
-
-  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal" style="z-index: 9999999 !important;">
-    {{> accountlistpop}}
-  </div>
-
-  <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal" style="z-index: 99999999 !important;">
-    {{> addaccountpop}}
   </div>
 
   <div class="modal fade" role="dialog" tabindex="-1" id="AppTableModal" style="z-index: 99999999 !important;">

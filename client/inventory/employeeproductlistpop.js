@@ -26,30 +26,30 @@ Template.employeeproductlistpop.onCreated(() => {
 
   templateObject.getDataTableList = function (data) {
     let linestatus = '';
-    if(data.fields.Active == true){
+    if(data.Active == true){
       linestatus = "";
     }
-    else if(data.fields.Active == false){
+    else if(data.Active == false){
       linestatus = "In-Active";
     }
     let dataList = [
       '<div  class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' +
-        data.fields.ID +
+        data.ID +
         '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
-        data.fields.ID +
+        data.ID +
         '"><label class="custom-control-label chkBox pointer" for="formCheck-' +
-        data.fields.ID +
+        data.ID +
         '"></label></div>',
-      data.fields.ProductName || "-",
-      data.fields.SalesDescription || "",
-      data.fields.BARCODE || "",
-      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.BuyQty1Cost * 100) / 100),
-      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
-      data.fields.TotalQtyInStock,
-      data.fields.TaxCodeSales || "",
-      data.fields.ID || "",
-      JSON.stringify(data.fields.ExtraSellPrice) || null,
-      utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100),
+      data.ProductName || "-",
+      data.SalesDescription || "",
+      data.BARCODE || "",
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.BuyQty1Cost * 100) / 100),
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1Price * 100) / 100),
+      data.TotalQtyInStock,
+      data.TaxCodeSales || "",
+      data.ID || "",
+      JSON.stringify(data.ExtraSellPrice) || null,
+      utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1PriceInc * 100) / 100),
       linestatus,
     ];
     return dataList;
@@ -903,5 +903,9 @@ Template.employeeproductlistpop.helpers({
       let dataReturn = templateObject.getExData(data);
       return dataReturn;
     };
+  },
+  tablename: () => {
+    let templateObject = Template.instance();
+    return 'tblInventoryServicePop'+templateObject.data.custid;
   },
 });

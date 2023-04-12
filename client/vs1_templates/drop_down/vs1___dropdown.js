@@ -47,8 +47,8 @@ Template.vs1___dropdown.onRendered(async function(){
     await setEditableSelect();
     setTimeout(()=>{
         if(templateObject.data.data) {
-          if(templateObject.data.custid) {
-              $('#'+id+"[custid='"+templateObject.data.custid+"']").val(templateObject.data.data);
+          if(templateObject.data.custId) {
+              $('#'+id+"[custId='"+templateObject.data.custId+"']").val(templateObject.data.data);
           }else{
              $('#'+id).val(templateObject.data.data);
           }
@@ -120,7 +120,7 @@ Template.vs1___dropdown.helpers({
         return listempname
     },
     listparam:()=>{
-        let obj = {custid: Template.instance().data.custid}
+        let obj = {custId: Template.instance().data.custId}
         return obj
     }
 })

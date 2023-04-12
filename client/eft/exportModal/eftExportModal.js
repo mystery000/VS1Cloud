@@ -313,7 +313,7 @@ Template.eftExportModal.onRendered(function () {
 
     $(document).on('click', '#tblBankName tbody tr', function (e) {
         var table = $(this);
-        let BankName = table.find('.bankName').text();
+        let BankName = table.find('.colBankName').text();
         $('#bankNameModal').modal('toggle');
         $('#sltBankName').val(BankName);
     });
