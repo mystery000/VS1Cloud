@@ -74,8 +74,8 @@ Template.assignLeaveTypePop.events({
         let Hours = $(e.currentTarget).closest("tr").find(".colALTypeHours").text() ||'';
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
-        $('#edtLeaveTypeofRequest').val(name); 
-        $('#edtLeaveHours').val(Hours); 
+        $('#edtLeaveTypeofRequest').val(name);
+        $('#edtLeaveHours').val(Hours);
 
         $('#assignLeaveTypeSettingsModal').on('hidden.bs.modal', function(e) {
             // window.open("/appointments", "_self");
@@ -117,7 +117,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-        
+
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -232,7 +232,7 @@ Template.assignLeaveTypePop.onCreated(function () {
 
         //                     $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
         //                     $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-                            
+
         //                     $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
         //                     $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
         //                     $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
@@ -255,7 +255,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);
         $('#edtLeaveHours').val(Hours);
-        
+
         $('#assignLeaveTypeSettingsModal').modal('toggle');
     });
 
@@ -265,7 +265,7 @@ Template.assignLeaveTypePop.helpers({
     terminationBalance: (t) => {
         return t ?  'Paid Out': 'Not Paid Out';
     },
-    leaveTypesList: () => { 
+    leaveTypesList: () => {
         return Template.instance().leaveTypesList.get();
     },
 
@@ -306,5 +306,10 @@ Template.assignLeaveTypePop.helpers({
 
     apiParams: function() {
         return ['limitCount', 'limitFrom'];
+    },
+    tablename: () => {
+      let templateObject = Template.instance();
+      let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+    	return 'tblAssignLeaveTypes'+selCustID;
     },
 });

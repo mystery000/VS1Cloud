@@ -1,17 +1,20 @@
 <template name="vs1___dropdown">
     {{#if label}}<label>{{label}}</label>{{/if}}
-    <select 
-        type="search" 
-        class="form-control vs1dropdown {{classes}} {{id}}" 
+    <select
+        type="search"
+        class="form-control vs1dropdown {{classes}} {{id}}"
         id="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
-        name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}" 
+        name="{{#if id}}{{id}}{{else}}edtCustomerName{{/if}}"
         custid="{{custid}}"
-        custtaxcode=" " 
+        custtaxcode=" "
         disabled = "{{disabled}}"
         suppid=" "
         style="background-color:rgb(255, 255, 255); cursor: pointer; {{#if noBorder}}border: 0; outline:0; padding-top:0; padding-bottom:0; line-height:1.2; background-color: transparent{{/if}}">
     </select>
-    <div class="modal fade vs1_dropdown_modal" id="{{modalId}}">
+    {{#if usedModal}}
+
+    {{else}}
+    <div class="modal fade vs1_dropdown_modal" id="{{modalId}}" selectedID="{{custid}}">
         {{#if innerModal}}
             {{#if listTemp}}
                 {{> Template.dynamic template=listTemp data=listparam}}
@@ -39,4 +42,5 @@
             </div>
         {{/if}}
     {{/if}}
+  {{/if}}
 </template>

@@ -185,6 +185,7 @@
                         }
                     </style>
                     {{>datatablelist
+                        tableclass="tblStatementlist"
                         tablename="tblStatementlist"
                         apiName= apiFunction
                         indexeddbname = 'TStatementList'
@@ -270,7 +271,7 @@
         </div>
 
     </div>
-    
+
     <div class="modal  fade" id="templatePreviewModal" tabindex="2" role="dialog" aria-labelledby="templatePreviewLabel" aria-hidden="true">
         {{> custom_print_template modalId="templatePreviewModal" idPrefix="html-2-pdfwrapper_quotes" namePrefix="pdfwrapper_quotes" }}
     </div>

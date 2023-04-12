@@ -991,7 +991,6 @@ Template.taxRatesSettings.events({
                 });
         })
         .catch(function(err) {
-            console.error("err", err);
             // location.reload(true);
         });
     },

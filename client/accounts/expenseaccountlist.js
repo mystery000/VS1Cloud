@@ -392,4 +392,9 @@ Template.expenseaccountlistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter', 'typeFilter', 'useReceiptClaim'];
     },
+    tablename: () => {
+      let templateObject = Template.instance();
+      let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+    	return 'tblExpenseAccountList'+selCustID;
+    }
 })

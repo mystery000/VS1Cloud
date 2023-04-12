@@ -9,8 +9,9 @@
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
                     <!-- {{> non_transactional_list tablename='termsList'}} -->
-                    {{> datatablelist 
-                        tablename="termsList"
+                    {{> datatablelist
+                        tableclass="tblTermsList"
+                        tablename="tblTermsList"
                         apiName= apiFunction
                         service = service
                         indexeddbname = 'TTermsVS1List'

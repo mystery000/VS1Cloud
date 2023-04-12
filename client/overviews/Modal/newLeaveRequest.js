@@ -476,10 +476,9 @@ Template.newLeaveRequestModal.onRendered(() => {
             yearRange: "-90:+10",
         });
         let edate0 = new Date();
-        let edate1 = new Date();
+        edate0.setDate(edate0.getDate() + 1);
         $("#edtLeaveStartDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
-        edate1.setDate(edate1.getDate() + 7);
-        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate1);
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
         $("#edtLeaveTypeofRequest").val('Annual Leave');
         $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
         $('#edtLeavePayPeriod').editableSelect('add', 'Weekly');
@@ -516,6 +515,7 @@ Template.newLeaveRequestModal.events({
         let templateObject = Template.instance();
         setTimeout(async function() {
             let currentId     = $("#edtEmpID").val();
+            let employeeName     = $("#edtEmployeeName").val();
             let employeeID    = (!isNaN(currentId) && parseInt(currentId) !== 0) ? currentId : localStorage.getItem("mySessionEmployeeLoggedID")? localStorage.getItem("mySessionEmployeeLoggedID"):0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
@@ -556,11 +556,14 @@ Template.newLeaveRequestModal.events({
                 $('.fullScreenSpin').css('display', 'block');
                 let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
                 let dbEndDate   = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
+                console.log('employeeID:',employeeID)
+                console.log('employeeName:',employeeName)
                 let leaveRequestSettings = new LeaveRequest({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
                             ID: parseInt(ID),
                             EmployeeID: parseInt(employeeID),
+                            EmployeeName:employeeName,
                             TypeOfRequest: parseInt(TypeofRequest),
                             LeaveMethod: Leave,
                             Description: Description,
