@@ -2358,8 +2358,15 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let chkBox;
+        let data_length;
+        if(data.length > 25 ) {
+            data_length = 25;
+        } else {
+            data_length = data.length;
+        }
 
-        for (let t = 0; t < data.length; t++) {
+
+        for (let t = 0; t < data_length; t++) {
             chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data[t].fields.ID +
                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data[t].fields.ID +
                 '"></label></div>'; //switchbox
