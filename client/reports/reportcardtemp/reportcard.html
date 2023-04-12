@@ -1,6 +1,22 @@
 <template name="reportcard">
-    {{# vs1_report_template tabledisplayname=tabledisplayname tablename=tablename dateAsAt=dateAsAt sheetname=sheetname reset_data=reset_data}}
-        <div class="table-responsive">
+    <style>
+
+        .report_template_table #tableExport tbody tr.titleLine {
+            font-weight: 700;
+        }
+        .totalline {
+            font-weight: 800;
+        }
+
+        .report_template_table #tableExport tbody tr:not(.totalline) td:not(:nth-child(2)) {
+            color: #00a3d3 !important
+        }
+        .report_template_table #tableExport tbody tr td:first-child {
+            width: 30%!important
+        }
+    </style>
+    {{# vs1_report_template tabledisplayname=tabledisplayname tablename=tablename dateAsAt=dateAsAt sheetname=sheetname reset_data=reset_data currencyList=currencyList filterfunction=filterfunction}}
+        <div class="table-responsive report_template_table">
         <table class="table table-sm" id="tableExport" name="tableExport">
             <thead>
                 <tr class="table-active">
@@ -13,31 +29,82 @@
                 </tr>
             </thead>
             <tbody>
-
-                {{#if reportdata}}
-                    {{#each object in reportdata}}
-                        <tr>
-                            <td class="{{mainfieldClass}}">{{object.type}}</td>
-                            {{#each item in reset_data}}
+                {{#unless equals reportdata ''}}
+                  {{#each object in reportdata}}
+                  {{#let object_idx=@index}}
+                    <tr class="{{#if equals object.type ''}}hiddenColumn{{/if}}">
+                      <td class="hiddenColumn">{{@index}}</td>
+                      <td class="{{mainfieldClass}}">{{object.type}}</td>
+                      {{#each item in reset_data}}
+                        {{#unless equals item.label '#'}}
+                            {{#unless equals item.label mainfieldname}}
+                                <td class="{{item.class}}{{#if item.active}}{{else}} hiddenColumn{{/if}}" data-column="{{item.label}}">{{lookup item @index}}</td>
+                            {{/unless}}
+                        {{/unless}}
+                      {{/each}}
+                    </tr>
+                    {{#each item in object.subArr}}
+                      <tr>
+                        <td class="hiddenColumn">{{concat object_idx @index}}</td>
+                        {{#each setting in reset_data}}
+                        {{#unless equals setting.label '#'}}
+                          {{#if setting.display}}
+                            <td class="{{setting.class}}{{#if setting.active}}{{else}} hiddenColumn{{/if}}" data-column="{{setting.label}}">{{lookup item @index}}</td>
+                          {{/if}}
+                        {{/unless}}
+                        {{/each}}
+                      </tr>
+                    {{/each}}
+                  {{/let}}
+                  {{/each}}
+                {{/unless}}
+              </tbody>
+        </table>
+        </div>
+        <div class="hiddenColumn" style="width: 210mm; background-color: #fff; padding: 20px; height: fit-content; font-size: 13.33px; color: #000; overflow-x:visible;">
+            <table class="table table-sm" id="tablePrint" name="tablePrint">
+                <thead>
+                    <tr class="table-active">
+                    {{#if reset_data}}
+                        {{#each setting in reset_data}}
+                            <th data-class="{{setting.class}}" data-col-index="{{setting.index}}" data-col-active="{{setting.active}}" 
+                            class="th {{setting.class}} {{#if setting.active}}{{else}}hiddenColumn{{/if}}" style="text-align: left; width:{{setting.width}}px">{{setting.label}}</th>
+                        {{/each}}
+                    {{/if}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#unless equals reportdata ''}}
+                      {{#each object in reportdata}}
+                      {{#let object_idx=@index}}
+                        <tr class="{{#if equals object.type ''}}hiddenColumn{{/if}}">
+                          <td class="hiddenColumn">{{@index}}</td>
+                          <td class="{{mainfieldClass}}">{{object.type}}</td>
+                          {{#each item in reset_data}}
+                            {{#unless equals item.label '#'}}
                                 {{#unless equals item.label mainfieldname}}
-                                    <td class="{{item.class}}{{#if item.active}}{{else}} hiddenColumn{{/if}}"></td>
+                                    <td class="{{item.class}}{{#if item.active}}{{else}} hiddenColumn{{/if}}" data-column="{{item.label}}">{{lookup item @index}}</td>
                                 {{/unless}}
-                            {{/each}}
+                            {{/unless}}
+                          {{/each}}
                         </tr>
                         {{#each item in object.subArr}}
-                            <tr>
-                                {{#each setting in reset_data}}
-                                    {{#if setting.display}}
-                                                    <td class="{{setting.class}}{{#if setting.active}}{{else}} hiddenColumn{{/if}}">{{lookup item @index}}
-                                                    </td>
-                                    {{/if}}
-                                {{/each}}
-                            </tr>
+                          <tr>
+                            <td class="hiddenColumn">{{concat object_idx @index}}</td>
+                            {{#each setting in reset_data}}
+                            {{#unless equals setting.label '#'}}
+                              {{#if setting.display}}
+                                <td class="{{setting.class}}{{#if setting.active}}{{else}} hiddenColumn{{/if}}" data-column="{{setting.label}}">{{lookup item @index}}</td>
+                              {{/if}}
+                            {{/unless}}
+                            {{/each}}
+                          </tr>
                         {{/each}}
-                    {{/each}}
-                {{/if}}
-            </tbody>
-        </table>
+                      {{/let}}
+                      {{/each}}
+                    {{/unless}}
+                  </tbody>
+            </table>
         </div>
     {{/vs1_report_template}}
 </template>

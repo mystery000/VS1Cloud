@@ -40,7 +40,6 @@ Template.termlistpop.onCreated(function() {
 
 
     templateObject.getDataTableList = function(data){
-      console.log(data);
         let linestatus = '';
             if (data.Active == true) {
                 linestatus = "";
