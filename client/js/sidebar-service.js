@@ -4697,4 +4697,4 @@ export class SideBarService extends BaseService {
         });
         return promise;
     }
-}
+  }
