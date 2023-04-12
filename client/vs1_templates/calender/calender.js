@@ -2783,7 +2783,7 @@ Template.calender.onRendered(function() {
             if (resourceChat.length > 0) {
                 if (date >= startWeek && date <= endWeek) {
                     if (JSON.parse(seeOwnAppointments) == true) {
-                        if (data.tappointmentex[t].fields.TrainerName == localStorage.getItem("mySessionEmployee")) {
+                        if (data.tappointmentex[t].fields.TrainerName == mySessionEmployee) {
                             let found = resourceChat.some(emp => emp.employeeName == data.tappointmentex[t].fields.TrainerName);
                             if (!found) {
                                 let resourceColor = templateObject.employeerecords.get();
@@ -2909,6 +2909,55 @@ Template.calender.onRendered(function() {
                 }
             }
         }
+        // for (let i = 0; i < leaveemployeerecords.length; i++) {
+        //     let date = new Date(leaveemployeerecords[i].StartDate.split(" ")[0]);
+        //     let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
+        //     if (resourceChat.length > 0) {
+        //         if (date >= startWeek && date <= endWeek) {
+        //             let employeeColor = "'#00a3d3'";
+        //             if (JSON.parse(seeOwnAppointments) == true) {
+        //                 dataList = {
+        //                     id: leaveemployeerecords[i].ID,
+        //                     employeeName: leaveemployeerecords[i].EmployeeName,
+        //                     color: employeeColor
+        //                 };
+        //                 resourceChat.push(dataList);
+        //                 jobs = {
+        //                     id: leaveemployeerecords[i].ID,
+        //                     job: leaveemployeerecords[i].Description,
+        //                     day: weekDay,
+        //                 };
+        //                 resourceJob.push(jobs)
+        //             }else{
+        //                 dataList = {
+        //                     id: leaveemployeerecords[i].ID,
+        //                     employeeName: leaveemployeerecords[i].EmployeeName,
+        //                     color: employeeColor
+        //                 };
+        //                 resourceChat.push(dataList);
+        //                 jobs = {
+        //                     id: leaveemployeerecords[i].ID,
+        //                     job: leaveemployeerecords[i].Description,
+        //                     day: weekDay,
+        //                 };
+        //                 resourceJob.push(jobs)
+        //             }
+        //         } 
+        //     }else{
+        //         dataList = {
+        //             id: leaveemployeerecords[i].ID,
+        //             employeeName: leaveemployeerecords[i].EmployeeName,
+        //             color: employeeColor
+        //         };
+        //         resourceChat.push(dataList);
+        //         jobs = {
+        //             id: leaveemployeerecords[i].ID,
+        //             job: leaveemployeerecords[i].Description,
+        //             day: weekDay,
+        //         };
+        //         resourceJob.push(jobs)
+        //     }
+        // }
         setTimeout(function() {
             let allEmployeesData = templateObject.employeerecords.get();
             for (let e = 0; e < allEmployeesData.length; e++) {
