@@ -283,7 +283,7 @@ Template.productview.onRendered(function () {
         $("#taxRateListModal").modal("toggle");
       });
 
-      $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+      $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
         var table = $(this);
         let accountsName = table.find(".colAccountName").text();
         accSelected = $("#accSelected").val();

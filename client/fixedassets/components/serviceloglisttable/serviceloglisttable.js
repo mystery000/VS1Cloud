@@ -46,7 +46,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 0,
       label: "ID",
-      class: "colLogId",
+      class: "colLogId ",
       active: false,
       display: true,
       width: "150",
@@ -112,7 +112,7 @@ Template.serviceloglisttable.onCreated(function () {
 });
 Template.serviceloglisttable.onRendered(function () {
   $("#tblServiceLogList tbody").on("click", "tr", function () {
-    var ID = parseInt($(this).find(".colLogId").html());
+    var ID = parseInt($(this).attr("id"));
     FlowRouter.go("/servicelogcard?id=" + ID);
   });
 
@@ -239,7 +239,7 @@ Template.serviceloglisttable.helpers({
   },
 
   apiParams: function () {
-    return ["ID"];
+    return ["limitCount", "limitFrom", "deleteFilter"];
   },
 
   service: () => {

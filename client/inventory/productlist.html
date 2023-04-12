@@ -381,7 +381,7 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
             <!-- <div class="col-5 col-md-7 d-xl-flex justify-content-xl-end align-items-xl-start">
                 {{> export_import_print_display_button  tablename="tblInventory"}}
             </div> -->
-            <div class="card-body p-3 rounded">
+            <div class="card-body p-1 rounded">
                 
                 <style>
                     td.colAmountEx, td.colTax, td.colAmount{
@@ -389,6 +389,7 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
                       }
                   </style>
                   {{>datatablelist
+                      tableclass="tblInventory"
                       tablename="tblInventory"
                       apiName= apiFunction
                       indexeddbname = 'TProductVS1'

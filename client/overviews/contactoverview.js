@@ -90,8 +90,8 @@ Template.contactoverview.onCreated(function() {
 
 
         var dataList = [
-            '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.ID + '-' + clienttype + '"></label></div>',
             data.ID || "",
+            '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.ID + '-' + clienttype + '"></label></div>',
             data.name || "",
             clienttype || "",
             data.phone || "",
@@ -117,8 +117,8 @@ Template.contactoverview.onCreated(function() {
   
   
     let headerStructure = [
-        { index: 0, label: '', class: 'colchkBox', active: false, display: true, width: "10" },
-        { index: 1, label: 'ID', class: 'colContactID', active: false, display: true, width: "10" },
+        { index: 0, label: 'ID', class: 'colContactID', active: false, display: true, width: "10" },
+        { index: 1, label: '', class: 'colchkBox', active: false, display: true, width: "10" },
         { index: 2, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200" },
         { index: 3, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
         { index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
@@ -899,8 +899,8 @@ Template.contactoverview.onRendered(function () {
   //     setTimeout(function() {$('div.dataTables_filter input').addClass('form-control form-control-sm');}, 0);
   //   }
   //   templateObject.getContactOverviewData();
-  $("#tblcontactoverview tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").find(".colContactID").html();
+  $(".tblcontactoverview tbody").on("click", "tr", function () {
+    var listData = $(this).closest("tr").attr('id');
     var transactiontype =
       $(event.target).closest("tr").find(".colType").text() || "";
     if (listData && transactiontype) {
@@ -1015,7 +1015,7 @@ Template.contactoverview.events({
           let issupplier = false;
           $(".btnRefreshContactOverview").removeClass("btnSearchAlert");
           if (data.terpcombinedcontactsvs1.length > 0) {
-            $("#tblcontactoverview > tbody").empty();
+            $(".tblcontactoverview > tbody").empty();
 
             for (let i = 0; i < data.terpcombinedcontactsvs1.length; i++) {
               isprospect = data.terpcombinedcontactsvs1[i].isprospect;
@@ -1141,7 +1141,7 @@ Template.contactoverview.events({
                 splashArrayContactOverviewSearch.push(dataList);
               }
             }
-            var datatable = $("#tblcontactoverview").DataTable();
+            var datatable = $(".tblcontactoverview").DataTable();
             datatable.clear();
             datatable.rows.add(splashArrayContactOverviewSearch);
             datatable.draw(false);
@@ -1198,7 +1198,7 @@ Template.contactoverview.events({
             let dataNew =
               templateObject.transactiondatatablerecords.get() || "";
 
-            var datatable = $("#tblcontactoverview").DataTable();
+            var datatable = $(".tblcontactoverview").DataTable();
             datatable.clear();
             datatable.rows.add(dataNew);
             datatable.draw(false);
@@ -1239,11 +1239,11 @@ Template.contactoverview.events({
         .catch(function (err) {});
     }
   },
-  "click #exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblcontactoverview_wrapper .dt-buttons .btntabletocsv").click();
-    $(".fullScreenSpin").css("display", "none");
-  },
+  // "click #exportbtn": function () {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   jQuery("#tblcontactoverview_wrapper .dt-buttons .btntabletocsv").click();
+  //   $(".fullScreenSpin").css("display", "none");
+  // },
   "click .printConfirm": function (event) {
     $(".fullScreenSpin").css("display", "inline-block");
     jQuery("#tblcontactoverview_wrapper .dt-buttons .btntabletopdf").click();

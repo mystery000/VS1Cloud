@@ -43,6 +43,7 @@ Template.assetregisteroverview.onCreated(function () {
       data.DepreciationStartDate ? moment(data.DepreciationStartDate).format("DD/MM/YYYY") : "",
       linestatus,
     ];
+    
     return dataList;
   };
 
@@ -140,7 +141,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 7,
       label: "Number",
       class: "colRegisterAssetNumber",
-      active: true,
+      active: false,
       display: true,
       width: "100",
     },
@@ -148,7 +149,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 8,
       label: "Registration No",
       class: "colRegisterAssetRegistrationNo",
-      active: true,
+      active: false,
       display: true,
       width: "160",
     },
@@ -164,7 +165,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 10,
       label: "Capacity Weight",
       class: "colRegisterAssetCapacityWeight",
-      active: true,
+      active: false,
       display: true,
       width: "160",
     },
@@ -172,7 +173,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 11,
       label: "Capacity Volume",
       class: "colRegisterAssetCapacityVolume",
-      active: true,
+      active: false,
       display: true,
       width: "160",
     },
@@ -212,7 +213,7 @@ Template.assetregisteroverview.onCreated(function () {
       index: 16,
       label: "Insurance Info",
       class: "colRegisterAssetInsuranceInfo",
-      active: true,
+      active: false,
       display: true,
       width: "140",
     },
@@ -237,8 +238,9 @@ Template.assetregisteroverview.onCreated(function () {
 });
 
 Template.assetregisteroverview.onRendered(function () {
+  $(".fullScreenSpin").css("display", "inline-block");
   $("#tblAssetRegisterList tbody").on("click", "tr", function () {
-    var assetID = parseInt($(this).find(".colAssetRegisterId").html());
+    var assetID = $(this).closest("tr").attr("id");
     FlowRouter.go("/fixedassetcard?assetId=" + assetID);
   });
 });

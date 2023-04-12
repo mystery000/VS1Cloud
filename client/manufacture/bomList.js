@@ -93,7 +93,7 @@ Template.bom_list.onRendered(function(){
   checkSetupFinished();
 })
 Template.bom_list.events({
-  "click #tblBOMList tbody tr": async function (event) {
+  "click .tblBOMList tbody tr": async function (event) {
     // index = $(event.target).closest("tr").find(".colPayMethodID").html();
     // if (index) {
     //   FlowRouter.go("/bomsetupcard?id=" + index);

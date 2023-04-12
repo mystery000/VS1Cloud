@@ -534,6 +534,10 @@ Template.processlistpopup.helpers({
   apiParams: () => {
     return ["limitCount", "limitFrom", "deleteFilter"];
   },
+  talbename : () => {
+    let templateObject = Template.instance();
+    return 'tblProcessList' + templateObject.data.custid;
+  }
 });
 
 Template.processlistpopup.events({
@@ -542,7 +546,7 @@ Template.processlistpopup.events({
     $("#newProcessModal").modal("toggle");
   },
   "click #tblProcessList tbody tr": function (e) {
-    var listData = $(e.target).closest("tr").find(".colProcessId").text();
+    var listData = $(e.target).closest("tr").attr('id');
     FlowRouter.go("/processcard?id=" + listData);
   },
 });

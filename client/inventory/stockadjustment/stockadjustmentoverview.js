@@ -15,9 +15,14 @@ Template.stockadjustmentoverview.onCreated(function () {
   templateObject.tableheaderrecords = new ReactiveVar([]);
 
   templateObject.getDataTableList = function (data) {
-    let totalCostEx =
-      utilityService.modifynegativeCurrencyFormat(data.fields.TotalCostEx) ||
-      0.0;
+    let totalCostEx =  utilityService.modifynegativeCurrencyFormat(data.fields.TotalCostEx) || 0.0;
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     let dataList = [
       data.fields.ID || "",
       data.fields.Employee || "",
@@ -30,15 +35,21 @@ Template.stockadjustmentoverview.onCreated(function () {
       "",
       data.fields.Notes || "",
       data.fields.IsStockTake,
-      data.fields.IsProcessed == true ? "Processed" : "On-Hold",      
+      data.fields.IsProcessed == true ? "Processed" : "On-Hold",  
+      linestatus    
     ];
     return dataList;
   };
 
   templateObject.getExData = function (data) {
-    let totalCostEx =
-      utilityService.modifynegativeCurrencyFormat(data.fields.TotalCostEx) ||
-      0.0;
+    let totalCostEx = utilityService.modifynegativeCurrencyFormat(data.fields.TotalCostEx) || 0.0;
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     let dataList = [
       data.fields.ID || "",
       data.fields.Employee || "",
@@ -51,7 +62,8 @@ Template.stockadjustmentoverview.onCreated(function () {
       "",
       data.fields.Notes || "",
       data.fields.IsStockTake,
-      data.fields.IsProcessed == true ? "Processed" : "On-Hold",      
+      data.fields.IsProcessed == true ? "Processed" : "On-Hold",
+      linestatus
     ];
     return dataList;
   };
@@ -149,6 +161,14 @@ Template.stockadjustmentoverview.onCreated(function () {
     },
     {
       index: 11,
+      label: "Finished",
+      class: "colFinished",
+      active: true,
+      display: true,
+      width: "200",
+    },
+    {
+      index: 12,
       label: "Status",
       class: "colStatus",
       active: true,
@@ -203,8 +223,8 @@ Template.stockadjustmentoverview.onRendered(function () {
     window.open("/stockadjustmentoverview?page=last", "_self");
   };
 
-  $("#tblStockAdjustOverview tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").find(".colStockAdjID").html();
+  $(".tblStockAdjustOverview tbody").on("click", "tr", function () {
+    var listData = $(this).closest("tr").attr('id');
     if (listData) {
       window.open("/stockadjustmentcard?id=" + listData, "_self");
     }
@@ -907,25 +927,25 @@ Template.stockadjustmentoverview.events({
     'click .btnnewstockadjustment' : function(event){
         FlowRouter.go('/stockadjustmentcard');
     },
-    'click .chkDatatable' : function(event){
-        var columns = $('#tblStockAdjustOverview th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    // 'click .chkDatatable' : function(event){
+    //     var columns = $('#tblStockAdjustOverview th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
 
-        $.each(columns, function(i,v) {
-            let className = v.classList;
-            let replaceClass = className[1];
+    //     $.each(columns, function(i,v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
 
-            if(v.innerText == columnDataValue){
-                if($(event.target).is(':checked')){
-                    $("."+replaceClass+"").css('display','table-cell');
-                    $("."+replaceClass+"").css('padding','.75rem');
-                    $("."+replaceClass+"").css('vertical-align','top');
-                }else{
-                    $("."+replaceClass+"").css('display','none');
-                }
-            }
-        });
-    },
+    //         if(v.innerText == columnDataValue){
+    //             if($(event.target).is(':checked')){
+    //                 $("."+replaceClass+"").css('display','table-cell');
+    //                 $("."+replaceClass+"").css('padding','.75rem');
+    //                 $("."+replaceClass+"").css('vertical-align','top');
+    //             }else{
+    //                 $("."+replaceClass+"").css('display','none');
+    //             }
+    //         }
+    //     });
+    // },
      'keyup #tblStockAdjustOverview_filter input': function (event) {
           if($(event.target).val() != ''){
             $(".btnRefreshStockAdjustment").addClass('btnSearchAlert');
@@ -939,97 +959,97 @@ Template.stockadjustmentoverview.events({
         'click .btnRefreshStockAdjustment':function(event){
         $(".btnRefresh").trigger("click");
     },
-    'click .resetTable' : function(event){
-        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblStockAdjustOverview'});
-                if (checkPrefDetails) {
-                    CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
-                        if (err) {
+    // 'click .resetTable' : function(event){
+    //     var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
+    //     if(getcurrentCloudDetails){
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblStockAdjustOverview'});
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.remove({_id:checkPrefDetails._id}, function(err, idTag) {
+    //                     if (err) {
 
-                        }else{
-                            Meteor._reload.reload();
-                        }
-                    });
+    //                     }else{
+    //                         Meteor._reload.reload();
+    //                     }
+    //                 });
 
-                }
-            }
-        }
-    },
-    'click .saveTable' : function(event){
-        let lineItems = [];
-        //let datatable =$('#tblStockAdjustOverview').DataTable();
-        $('.columnSettings').each(function (index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text()||'';
-            var colWidth = $tblrow.find(".custom-range").val()||0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
-            var colHidden = false;
-            if($tblrow.find(".custom-control-input").is(':checked')){
-                colHidden = false;
-            }else{
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
+    //             }
+    //         }
+    //     }
+    // },
+    // 'click .saveTable' : function(event){
+    //     let lineItems = [];
+    //     //let datatable =$('#tblStockAdjustOverview').DataTable();
+    //     $('.columnSettings').each(function (index) {
+    //         var $tblrow = $(this);
+    //         var colTitle = $tblrow.find(".divcolumn").text()||'';
+    //         var colWidth = $tblrow.find(".custom-range").val()||0;
+    //         var colthClass = $tblrow.find(".divcolumn").attr("valueupdate")||'';
+    //         var colHidden = false;
+    //         if($tblrow.find(".custom-control-input").is(':checked')){
+    //             colHidden = false;
+    //         }else{
+    //             colHidden = true;
+    //         }
+    //         let lineItemObj = {
+    //             index: index,
+    //             label: colTitle,
+    //             hidden: colHidden,
+    //             width: colWidth,
+    //             thclass: colthClass
+    //         }
 
-            lineItems.push(lineItemObj);
-        });
-        //datatable.state.save();
+    //         lineItems.push(lineItemObj);
+    //     });
+    //     //datatable.state.save();
 
-        var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
-        if(getcurrentCloudDetails){
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblStockAdjustOverview'});
-                if (checkPrefDetails) {
-                    CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
-                                                                               PrefGroup:'salesform',PrefName:'tblStockAdjustOverview',published:true,
-                                                                               customFields:lineItems,
-                                                                               updatedAt: new Date() }}, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
+    //     var getcurrentCloudDetails = CloudUser.findOne({_id:localStorage.getItem('mycloudLogonID'),clouddatabaseID:localStorage.getItem('mycloudLogonDBID')});
+    //     if(getcurrentCloudDetails){
+    //         if (getcurrentCloudDetails._id.length > 0) {
+    //             var clientID = getcurrentCloudDetails._id;
+    //             var clientUsername = getcurrentCloudDetails.cloudUsername;
+    //             var clientEmail = getcurrentCloudDetails.cloudEmail;
+    //             var checkPrefDetails = CloudPreference.findOne({userid:clientID,PrefName:'tblStockAdjustOverview'});
+    //             if (checkPrefDetails) {
+    //                 CloudPreference.update({_id: checkPrefDetails._id},{$set: { userid: clientID,username:clientUsername,useremail:clientEmail,
+    //                                                                            PrefGroup:'salesform',PrefName:'tblStockAdjustOverview',published:true,
+    //                                                                            customFields:lineItems,
+    //                                                                            updatedAt: new Date() }}, function(err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
+    //                     }
+    //                 });
 
-                }else{
-                    CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
-                                            PrefGroup:'salesform',PrefName:'tblStockAdjustOverview',published:true,
-                                            customFields:lineItems,
-                                            createdAt: new Date() }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
+    //             }else{
+    //                 CloudPreference.insert({ userid: clientID,username:clientUsername,useremail:clientEmail,
+    //                                         PrefGroup:'salesform',PrefName:'tblStockAdjustOverview',published:true,
+    //                                         customFields:lineItems,
+    //                                         createdAt: new Date() }, function(err, idTag) {
+    //                     if (err) {
+    //                         $('#myModal2').modal('toggle');
+    //                     } else {
+    //                         $('#myModal2').modal('toggle');
 
-                        }
-                    });
+    //                     }
+    //                 });
 
-                }
-            }
-        }
+    //             }
+    //         }
+    //     }
 
-        //Meteor._reload.reload();
-    },
+    //     //Meteor._reload.reload();
+    // },
     'blur .divcolumn' : function(event){
         let columData = $(event.target).text();
 
         let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
 
-        var datable = $('#tblStockAdjustOverview').DataTable();
+        var datable = $('.tblStockAdjustOverview').DataTable();
         var title = datable.column( columnDatanIndex ).header();
         $(title).html(columData);
 
@@ -1040,7 +1060,7 @@ Template.stockadjustmentoverview.events({
 
         // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
         let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblStockAdjustOverview th');
+        var datable = $('.tblStockAdjustOverview th');
         $.each(datable, function(i,v) {
 
             if(v.innerText == columnDataValue){
@@ -1084,13 +1104,13 @@ Template.stockadjustmentoverview.events({
 
   //     templateObject.tableheaderrecords.set(tableHeaderList);
   // },
-  'click #exportbtn': function () {
+  // 'click #exportbtn': function () {
 
-      $('.fullScreenSpin').css('display','inline-block');
-      jQuery('#tblStockAdjustOverview_wrapper .dt-buttons .btntabletocsv').click();
-      $('.fullScreenSpin').css('display','none');
+  //     $('.fullScreenSpin').css('display','inline-block');
+  //     jQuery('#tblStockAdjustOverview_wrapper .dt-buttons .btntabletocsv').click();
+  //     $('.fullScreenSpin').css('display','none');
 
-  },
+  // },
   'click .printConfirm' : function(event){
       playPrintAudio();
       setTimeout(function(){

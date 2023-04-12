@@ -341,5 +341,9 @@ Template.bomlistpop.helpers({
   tableheaderrecords: () => {
     return Template.instance().tableheaderrecords.get();
   },
+  tablename : () => {
+    let templateObject = Template.instance();
+    return 'tblBOMList' + templateObject.data.custid;
+  }
 
 })

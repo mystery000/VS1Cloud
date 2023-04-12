@@ -223,8 +223,8 @@ Template.processList.events({
         FlowRouter.go('/processcard');
     },
 
-  "click #tblProcessList tbody tr": function (e) {
-    var listData = $(e.target).closest("tr").find(".colProcessId").text();
+  "click .tblProcessList tbody tr": function (e) {
+    var listData = $(e.target).closest("tr").attr('id');
     FlowRouter.go("/processcard?id=" + listData);
   },
 

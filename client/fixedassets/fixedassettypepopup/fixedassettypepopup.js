@@ -61,7 +61,7 @@ Template.fixedassettypepopup.onCreated(function () {
       class: "colFixedID",
       active: false,
       display: true,
-      width: "0",
+      width: "30",
     },
     {
       index: 1,
@@ -69,7 +69,7 @@ Template.fixedassettypepopup.onCreated(function () {
       class: "colAssetCode",
       active: true,
       display: true,
-      width: "300",
+      width: "200",
     },
     {
       index: 2,
@@ -77,7 +77,7 @@ Template.fixedassettypepopup.onCreated(function () {
       class: "colAssetName",
       active: true,
       display: true,
-      width: "300",
+      width: "200",
     },
     {
       index: 3,
@@ -85,7 +85,7 @@ Template.fixedassettypepopup.onCreated(function () {
       class: "colNotes",
       active: true,
       display: true,
-      width: "300",
+      width: "200",
     },
     {
       index: 4,

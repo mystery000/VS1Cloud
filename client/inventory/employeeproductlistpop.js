@@ -33,6 +33,7 @@ Template.employeeproductlistpop.onCreated(() => {
       linestatus = "In-Active";
     }
     let dataList = [
+      data.fields.ID,
       '<div  class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' +
         data.fields.ID +
         '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
@@ -47,7 +48,6 @@ Template.employeeproductlistpop.onCreated(() => {
       utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
       data.fields.TotalQtyInStock,
       data.fields.TaxCodeSales || "",
-      data.fields.ID || "",
       JSON.stringify(data.fields.ExtraSellPrice) || null,
       utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100),
       linestatus,
@@ -64,6 +64,7 @@ Template.employeeproductlistpop.onCreated(() => {
       linestatus = "In-Active";
     }
     let dataList = [
+      data.fields.ID,
       '<div  class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input product-id="' +
         data.fields.ID +
         '" class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' +
@@ -78,7 +79,6 @@ Template.employeeproductlistpop.onCreated(() => {
       utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1Price * 100) / 100),
       data.fields.TotalQtyInStock,
       data.fields.TaxCodeSales || "",
-      data.fields.ID || "",
       JSON.stringify(data.fields.ExtraSellPrice) || null,
       utilityService.modifynegativeCurrencyFormat(Math.floor(data.fields.SellQty1PriceInc * 100) / 100),
       linestatus,
@@ -90,75 +90,75 @@ Template.employeeproductlistpop.onCreated(() => {
     // { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
     {
       index: 0,
+      class: "colProuctPOPID",
+      label: "ID",
+      active: false,
+      display: true,
+      width: "30",
+    },
+    {
+      index: 1,
       label: "  ",
       class: "colchkBox pointer",
       active: true,
       display: true,
-      widht: "50",
+      width: "50",
     },
     {
-      index: 1,
+      index: 2,
       class: "colproductName",
       label: "Product Name",
       active: true,
       display: true,
-      widht: "200",
+      width: "200",
     },
     {
-      index: 2,
+      index: 3,
       class: "colproductDesc",
       label: "Product Description",
       active: true,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
-      index: 3,
+      index: 4,
       class: "colBarcode",
       label: "Barcode",
       active: true,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
-      index: 4,
+      index: 5,
       class: "colcostPrice text-right",
       label: "Cost Price",
       active: true,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
-      index: 5,
+      index: 6,
       class: "colsalePrice text-right",
       label: "Sale Price",
       active: true,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
-      index: 6,
+      index: 7,
       class: "colprdqty text-right",
       label: "Quantity",
       active: true,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
-      index: 7,
+      index: 8,
       class: "coltaxrate",
       label: "Tax Rate",
       active: true,
       display: true,
-      widht: "100",
-    },
-    {
-      index: 8,
-      class: "colProuctPOPID",
-      label: "Prouct ID",
-      active: false,
-      display: true,
-      widht: "100",
+      width: "100",
     },
     {
       index: 9,
@@ -166,7 +166,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Prouct ID",
       active: false,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
       index: 10,
@@ -174,7 +174,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Sale Price Inc",
       active: false,
       display: true,
-      widht: "100",
+      width: "100",
     },
     {
       index: 11,
@@ -182,7 +182,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Status",
       active: true,
       display: true,
-      widht: "120",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
@@ -819,7 +819,7 @@ Template.employeeproductlistpop.events({
     Meteor._reload.reload();
     templateObject.getAllProducts();
   },
-  "click .scanProdBarcodePOP": function (event) {
+  "click .scanProdServiceBarcodePOP": function (event) {
     if (
       /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
         navigator.userAgent
@@ -827,15 +827,19 @@ Template.employeeproductlistpop.events({
     ) {
       $("#scanBarcodeModalProduct").modal("toggle");
     } else {
-      Bert.alert(
-        "<strong>Please Note:</strong> This function is only available on mobile devices!",
-        "now-dangerorange"
-      );
+      swal({
+        title: "Please Note:",
+        text: "This function is only available on mobile devices!",
+        type: "warning",
+      }).then((result) => {});
     }
   },
   "click .btnCloseProdModal": function (event) {
     $("#scanBarcodeModalProduct").modal("toggle");
   },
+  "click .btnNewProduct": function () {
+    $('#newProductModal').modal('toggle');
+  }
 });
 
 Template.employeeproductlistpop.helpers({
@@ -876,9 +880,6 @@ Template.employeeproductlistpop.helpers({
 
   apiParams: function () {
     return [
-      "dateFrom",
-      "dateTo",
-      "ignoredate",
       "limitCount",
       "limitFrom",
       "deleteFilter",
@@ -904,4 +905,9 @@ Template.employeeproductlistpop.helpers({
       return dataReturn;
     };
   },
+
+  tablename : () => {
+    let templateObject = Template.instance();//damieon's fix
+    return 'tblInventoryService'+templateObject.data.custid;
+  }
 });
