@@ -610,15 +610,6 @@ export class SalesBoardService extends BaseService {
       return this.getList(this.ERPObjects.TCustomerPaymentLine, options);
   }
 
-  getNewInvoiceListByNameOrID(dataSearchName) {
-    let options = "";
-    options = {
-      ListType: "Detail",
-      select:'[CustomerName] f7like "' +dataSearchName +'" OR [ID] f7like "' +dataSearchName +'"',
-    };
-    return this.getList(this.ERPObjects.TInvoiceEx, options);
-  }
-
   getCheckPaymentDetailsByName(customerName) {
       let options = {
           ListType: "Detail",
