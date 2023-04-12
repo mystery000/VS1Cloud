@@ -252,7 +252,7 @@ Template.reportcard.onRendered(async function() {
             }
             for(let o = 0; o<sumFieldsIndex.length; o++) {
             
-              totalLine[sumFieldsIndex[o]] = GlobalFunctions.showCurrency(totalValues[o])
+              totalLine[sumFieldsIndex[o-1]] = GlobalFunctions.showCurrency(totalValues[o])
             }
             totalLine[0]='Grand Total';
             datatableArr.push({type:'', subArr: [totalLine]})
@@ -506,7 +506,8 @@ Template.reportcard.events({
 
   'click .btnRefresh': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
-    Meteor._reload.reload();
+    // Meteor._reload.reload();
+    location.reload();
   },
 
   'click td a': function (event) {
