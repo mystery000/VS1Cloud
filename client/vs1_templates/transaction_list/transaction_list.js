@@ -2140,9 +2140,7 @@ Template.transaction_list.onRendered(function() {
     }
 
     templateObject.displayTimeSheetListData = function(data){
-
-        console.log(data);
-        
+     
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
