@@ -479,7 +479,7 @@ Template.fixedassetcard.events({
     });
     if (templateObject.currentAssetID.get() == 0) {
       fixedAssetService.saveTFixedAsset(newFixedAsset).then((data) => {
-        fixedAssetService.getTFixedAssetsList().then(function (data) {
+        fixedAssetService.getTFixedAssetsList(25, 1).then(function (data) {
           addVS1Data('TFixedAssetsList', JSON.stringify(data));
         }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
@@ -492,7 +492,7 @@ Template.fixedassetcard.events({
     } else {
       newFixedAsset.fields['ID'] = templateObject.currentAssetID.get();
       fixedAssetService.updateTFixedAsset(newFixedAsset).then((data) => {
-        fixedAssetService.getTFixedAssetsList().then(function (data) {
+        fixedAssetService.getTFixedAssetsList(25, 1).then(function (data) {
           addVS1Data('TFixedAssetsList', JSON.stringify(data));
         }).catch(function (err) {
           $(".fullScreenSpin").css("display", "none");
@@ -526,12 +526,12 @@ Template.fixedassetcard.events({
     const enterAmountFlag = templateObject.chkEnterAmount.get();
     const totalDepreciationVal = enterAmountFlag ? (salvage * businessPercent / 100) : accumulateDepVal;
     if (totalDepreciationVal == 0) {
-      Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
+      // Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans.set([]);
       return;
     }
     if (!enterAmountFlag && yearEnding !== 0 && (yearEnding - startYear - life + 1) < 0) {
-      Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
+      // Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans.set([]);
       return;
     }
@@ -597,12 +597,12 @@ Template.fixedassetcard.events({
     const totalDepreciationVal = enterAmountFlag ? (salvage * businessPercent / 100) : accumulateDepVal;
 
     if (totalDepreciationVal == 0) {
-      Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
+      // Bert.alert( '<strong>WARNING:</strong>Depreciation price is zero ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans2.set([]);
       return;
     }
     if (!enterAmountFlag && yearEnding !== 0 && (yearEnding - startYear - life + 1) < 0) {
-      Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
+      // Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans2.set([]);
       return;
     }
