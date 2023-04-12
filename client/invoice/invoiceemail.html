@@ -142,11 +142,11 @@
                     <button id="btnInvoiceBOList" name="btnInvoiceBOList" class="btn btn-primary" type="button" style="margin: 12px;">BO List</button>
                 </div>
 
-                <div class="col">
-                     <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                     <!-- <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                      <button class="btn btn-primary printConfirm float-right" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="emailinvoice" name="emailinvoice"><i class="fas fa-envelope" style="padding-right: 5px;"></i>Email</button>
-
+                    <button class="btn btn-primary export float-right" type="button" style="margin: 12px;" id="emailinvoice" name="emailinvoice"><i class="fas fa-envelope" style="padding-right: 5px;"></i>Email</button> -->
+                    {{> export_import_print_display_button Import="hiddenButton" tablename="tblInvoicelistemail"}}
                 </div>
 
             </div>
@@ -187,7 +187,7 @@
                               background-color: #e74a3b !important; color:#fff;
                             }
                         </style>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                             </div>
@@ -220,8 +220,8 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <table id="tblInvoicelistemail" name="tblInvoicelistemail" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
+                        </div> -->
+                        <!-- <table id="tblInvoicelistemail" name="tblInvoicelistemail" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblInvoicelist">
                             <thead>
                                 <tr class="dnd-moved">
                                     <th class="th chkBox" style="width:15px;"><div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll" for="formCheck-All"></label></div></th>
@@ -268,7 +268,23 @@
                                 {{/if}}
 
                             </tbody>
-                        </table>
+                        </table> -->
+                        {{>datatablelist
+                            tablename="tblInvoicelistemail"
+                            apiName= apiFunction
+                            indexeddbname = 'TInvoiceNonBackOrder'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Email Invoice List'
+                            istransaction = true
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tinvoicenonbackorder'
+                            exIndexDBName = 'tinvoiceex'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
+                        }}
                     </div>
                 </div>
             </div>
