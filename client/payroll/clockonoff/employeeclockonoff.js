@@ -14,6 +14,7 @@ import erpObject from "../../lib/global/erp-objects";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+let contactService = new ContactService();  
 
 
 Template.clockOnOff.onCreated(function () {
@@ -25,13 +26,14 @@ Template.clockOnOff.onCreated(function () {
   templateObject.appointmentrecords = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
   templateObject.timesheetrecords = new ReactiveVar([]);
+  templateObject.breaktime = new ReactiveVar();
+  templateObject.breakStartTime = new ReactiveVar();
   
 });
 
 Template.clockOnOff.onRendered(function () {
   $('.fullScreenSpin').css('display', 'inline-block');
   let templateObject = Template.instance();
-  let contactService = new ContactService();
   let appointmentService = new AppointmentService();
   let appointmentList = [];
   $(".formClassDate").datepicker({
@@ -201,7 +203,6 @@ Template.clockOnOff.onRendered(function () {
         t.Status = "Draft";
       }
     });
-    console.log(data);
     
   templateObject.timesheetrecords.set(timesheets); 
   }
@@ -231,6 +232,10 @@ Template.clockOnOff.events({
     $("#btnClockOn").prop("disabled", true);
     $(".btnClockOff").removeAttr("disabled");
 
+    swal($("#employee_name").val() + ' is Clocked On now', '', 'success');
+
+
+
 
     // let clockList = templateObject.timesheetrecords.get();
 
@@ -253,10 +258,24 @@ Template.clockOnOff.events({
     // });
 
 
-    // let contactService = new ContactService();    
+    // let productcost = 10;
 
+    // LoadingOverlay.show();
     
     // if(updateID == "") {
+      
+    //   obj = {
+    //     type: "TTimeLog",
+    //     fields: {
+    //       EmployeeID: employeeId,
+    //       StartDatetime: startTime,
+    //       EndDatetime: startTime,
+    //       Product: product,
+    //       Description: "Clockon Started",
+    //       EnteredBy: localStorage.getItem("mySessionEmployeeLoggedID"),
+    //     },
+    //   };
+
     //   data = {
     //     type: "TTimeSheetEntry",
     //     fields: {
@@ -267,6 +286,7 @@ Template.clockOnOff.events({
     //           fields: {
     //             EmployeeName: employeeName || "",
     //             TimeSheetDate: date,
+    //             Logs: obj,
     //             StartTime: startTime,
     //             InvoiceNotes: "Clocked On",
     //             Status: "Unprocessed",
@@ -279,74 +299,159 @@ Template.clockOnOff.events({
     //       WhoEntered: localStorage.getItem("mySessionEmployee") || "",
     //     },
     //   };
+    //   contactService
+    //   .saveTimeSheet(data)
+    //   .then(function (dataReturnRes) {
+        
+    //     sideBarService.getAllTimeSheetList().then(function (data) {
+    //       $("#updateID").val(data.ttimesheet[0].fields.ID);
+    //       addVS1Data("TTimeSheet", JSON.stringify(data));
+                   
+                
+    //       swal($("#employee_name").val() + ' is Clocked On now', '', 'success');
+    //       // $("#employeeClockonoffModal").modal("hide");
+          
+    //       $(".fullScreenSpin").css("display", "none");
+    //       // FlowRouter.go('/');
+    //     });
+    //   })
+    //   .catch(function (err) {
+    //     swal({
+    //       title: "Oooops...",
+    //       text: err,
+    //       type: "error",
+    //       showCancelButton: false,
+    //       confirmButtonText: "Try Again",
+    //     }).then((result) => {
+    //       if (result.value) {
+    //         // Meteor._reload.reload();
+    //       } else if (result.dismiss == "cancel") {
+    //       }
+    //     });
+    //     $(".fullScreenSpin").css("display", "none");
+    //   });
 
     // } else {
     //   data = {
-    //     type: "TTimeSheetEntry",
+    //     type: "TTimeSheet",
     //     fields: {
-    //       TimeSheet: [
-    //         {
-    //           type: "TTimeSheet",
-    //           fields: {
-    //             EmployeeName: employeeName || "",
-    //             TimeSheetDate: date,
-    //             StartTime: startTime,
-    //             InvoiceNotes: "Clocked On",
-    //             Status: "Unprocessed",
-    //             Hours: 0.001,
-    //             ID : updateID,
-    //             // EntryDate: accountdesc|| ''
-    //           },
-    //         },
-    //       ],
-    //       TypeName: "Payroll",
-    //       WhoEntered: localStorage.getItem("mySessionEmployee") || "",
+    //       ID: updateID,
+    //       EmployeeName: employeeName || "",
+    //       ServiceName: product || "",
+    //       HourlyRate: productcost || 0,
+    //       LabourCost: 1,
+    //       Allowedit: true,
+    //       Hours: 0.0001,
+    //       TimeSheetDate: date,
+    //       StartTime: startTime,
+    //       EndTime: startTime,
+    //       // OverheadRate: 90,
+    //       // ServiceName: "Test"|| '',
+    //       TimeSheetClassName: "Default" || "",
+    //       Notes: "",
+    //       InvoiceNotes: "Clocked On",
+    //       // EntryDate: accountdesc|| ''
     //     },
     //   };
+
+
+    //   contactService
+    //     .saveClockTimeSheet(data)
+    //     .then(function (data) {
+    //       if (Object.keys(obj).length > 0) {
+    //         if (obj.fields.Description == "Timesheet Completed") {
+    //           let endTime1 = endTime;
+    //           if (Array.isArray(clockList[clockList.length - 1].timelog)) {
+    //             toUpdateID =
+    //               clockList[clockList.length - 1].timelog[
+    //                 clockList[clockList.length - 1].timelog.length - 1
+    //               ].fields.ID;
+    //           } else {
+    //             toUpdateID = clockList[clockList.length - 1].timelog.fields.ID;
+    //           }
+
+    //           if (toUpdateID != "") {
+    //             updateData = {
+    //               type: "TTimeLog",
+    //               fields: {
+    //                 ID: toUpdateID,
+    //                 EndDatetime: startTime,
+    //               },
+    //             };
+    //           }
+    //           contactService
+    //             .saveTimeSheetLog(obj)
+    //             .then(function (data) {
+    //               contactService
+    //                 .saveTimeSheetLog(updateData)
+    //                 .then(function (data) {
+    //                   sideBarService
+    //                     .getAllTimeSheetList()
+    //                     .then(function (data) {
+    //                       addVS1Data("TTimeSheet", JSON.stringify(data));
+    //                       swal($("#employee_name").val() + ' is Clocked On now', '', 'success');
+    //                       if (showTimesheetStatus == true) {
+    //                         setTimeout(function () {
+    //                           templateObject.checkAccessSaveRedirect();
+    //                         }, 500);
+    //                       } else {
+    //                         setTimeout(function () {
+    //                           window.open("/dashboard", "_self");
+    //                         }, 500);
+    //                       }
+    //                     });
+    //                 })
+    //                 .catch(function (err) {});
+    //             })
+    //             .catch(function (err) {});
+    //         } else if (obj.fields.Description == "Timesheet Started") {
+    //           contactService
+    //             .saveTimeSheetLog(obj)
+    //             .then(function (data) {
+    //               sideBarService.getAllTimeSheetList().then(function (data) {
+    //                 addVS1Data("TTimeSheet", JSON.stringify(data));
+    //                 setTimeout(function () {
+    //                   if (showTimesheetStatus == true) {
+    //                     setTimeout(function () {templateObject.checkAccessSaveRedirect(); }, 500);
+    //                   } else {   setTimeout(function () { window.open("/dashboard", "_self"); }, 500);
+    //                   }
+    //                 }, 500);
+    //               });
+    //             })
+    //             .catch(function (err) {});
+    //         }
+    //       } else {
+    //         sideBarService.getAllTimeSheetList().then(function (data) {
+    //           addVS1Data("TTimeSheet", JSON.stringify(data));
+    //           if (showTimesheetStatus == true) {
+    //             setTimeout(function () {
+    //               templateObject.checkAccessSaveRedirect();
+    //             }, 500);
+    //           } else {
+    //             setTimeout(function () {
+    //               window.open("/dashboard", "_self");
+    //             }, 500);
+    //           }
+    //         });
+    //       }
+    //     })
+    //     .catch(function (err) {
+    //       swal({
+    //         title: "Oooops...",
+    //         text: err,
+    //         type: "error",
+    //         showCancelButton: false,
+    //         confirmButtonText: "Try Again",
+    //       }).then((result) => {
+    //         if (result.value) {
+    //           // Meteor._reload.reload();
+    //         } else if (result.dismiss == "cancel") {
+    //         }
+    //       });
+    //       $(".fullScreenSpin").css("display", "none");
+    //     });
     // }
-    // console.log(data);
-
-    // contactService
-    // .saveTimeSheet(data)
-    // .then(function (dataReturnRes) {
-      
-    //   sideBarService.getAllTimeSheetList().then(function (data) {
-    //     $("#updateID").val(data.ttimesheet[0].fields.ID);
-    //     console.log(data.ttimesheet[0].fields.ID);        
-    //     addVS1Data("TTimeSheet", JSON.stringify(data));
-
-    //     $("#employeeStatusField").removeClass("statusOnHold");
-    //     $("#employeeStatusField").removeClass("statusClockedOff");
-    //     $("#employeeStatusField")
-    //       .addClass("statusClockedOn")
-    //       .text("Clocked On");
-        
-    //     $("#startTime").prop("disabled", true);
-    
-    //     swal($("#employee_name").val() + ' is Clocked On now', '', 'success');
-    //     // $("#employeeClockonoffModal").modal("hide");
-        
-    //     $(".fullScreenSpin").css("display", "none");
-    //     // FlowRouter.go('/');
-    //   });
-    // })
-    // .catch(function (err) {
-    //   swal({
-    //     title: "Oooops...",
-    //     text: err,
-    //     type: "error",
-    //     showCancelButton: false,
-    //     confirmButtonText: "Try Again",
-    //   }).then((result) => {
-    //     if (result.value) {
-    //       // Meteor._reload.reload();
-    //     } else if (result.dismiss == "cancel") {
-    //     }
-    //   });
-    //   $(".fullScreenSpin").css("display", "none");
-    // });
-
-       
+          
 
 
 
@@ -364,11 +469,68 @@ Template.clockOnOff.events({
 
     $("#btnClockOff").prop("disabled", true);
     $(".btnClockOn").removeAttr("disabled");
+
+    swal($("#employee_name").val() + ' is Clocked Off ', '', 'success');
+
+    // let clockList = templateObject.timesheetrecords.get();
+
+    // let updateID = $("#updateID").val() || "";
+    // let employeeName = $("#employee_name").val() || "";
+    // let employeeId = $("#employee_id").val() || "";
+    
+    // LoadingOverlay.show();
+
+    // data = {
+    //   type: "TTimeSheetEntry",
+    //   fields: {
+        
+    //     TimeSheet: [
+    //       {
+    //         type: "TTimeSheet",
+    //         fields: {
+    //           ID:updateID,
+    //           EmployeeName: employeeName || "",
+    //           TimeSheetDate: date,
+    //           StartTime: startTime,
+    //           InvoiceNotes: "Clocked Off",
+    //           Status: "Unprocessed",
+    //           Hours: 0.001,
+    //           // EntryDate: accountdesc|| ''
+    //         },
+    //       },
+    //     ],
+    //     TypeName: "Payroll",
+    //     WhoEntered: localStorage.getItem("mySessionEmployee") || "",
+    //   },
+    // };
+
+
+    // contactService
+    //   .saveTimeSheet(data)
+    //   .then(function (dataReturnRes) {
+        
+    //     sideBarService.getAllTimeSheetList().then(function (data) {
+    //       $("#updateID").val(data.ttimesheet[0].fields.ID);
+
+    //       addVS1Data("TTimeSheet", JSON.stringify(data));
+                   
+                
+    //       swal($("#employee_name").val() + ' is Clocked Off ', '', 'success');
+    //       // $("#employeeClockonoffModal").modal("hide");
+          
+    //       $(".fullScreenSpin").css("display", "none");
+    //       // FlowRouter.go('/');
+    //     });
+    //   })
    
   },
 
   "click #btnHoldOne": function (event) {
+    let templateObject = Template.instance();
     $("#frmOnHoldModal").modal("show");
+    let break_start_time = new Date();
+    templateObject.breakStartTime.set(break_start_time);
+
   },
 
   'change #startTime': function () {
@@ -400,7 +562,6 @@ Template.clockOnOff.events({
     playSaveAudio();
 
     let templateObject = Template.instance();
-    let contactService = new ContactService();
     
     setTimeout(async function(){      
     //  LoadingOverlay.show();
@@ -411,7 +572,8 @@ Template.clockOnOff.events({
       var employeeId = $("#employee_id").val();
       var updateId = $("#updateId").val();
 
-
+      let break_time ;
+      break_time = templateObject.breaktime.get();
 
       var startdateGet = new Date();
       var endDateGet = new Date();
@@ -432,7 +594,7 @@ Template.clockOnOff.events({
       var startTime = $("#startTime").val() || "";
       var endTime = $("#endTime").val() || "";
       var edthour = $("#txtBookedHoursSpent").val() || "00:00";
-      let hours = templateObject.timeToDecimal(edthour);
+      let hours = templateObject.timeToDecimal(edthour) - break_time;
       var techNotes = $("#txtNotes").val() || "";
          
       let isPaused = checkStatus;
@@ -490,6 +652,7 @@ Template.clockOnOff.events({
           };
           isPaused = "";
         }
+
         data = {
           type: "TTimeSheetEntry",
           fields: {
@@ -524,7 +687,6 @@ Template.clockOnOff.events({
           },
         };
 
-        console.log(data);
 
         contactService
         .saveTimeSheet(data)
@@ -534,7 +696,8 @@ Template.clockOnOff.events({
             //   $("#employee_name").val() + " you are now Clocked On",
             //   "now-success"
             // );
-           
+            console.log(data);
+
             addVS1Data("TTimeSheet", JSON.stringify(data));
 
             $("#employeeStatusField").removeClass("statusOnHold");
@@ -582,7 +745,6 @@ Template.clockOnOff.events({
     alert("sdfsdfsf");
     playSaveAudio();
     let templateObject = Template.instance();
-    let contactService = new ContactService();
     setTimeout(async function(){
       LoadingOverlay.show();
 
@@ -671,6 +833,8 @@ Template.clockOnOff.events({
       let toUpdate = {};
       let obj = {};
       let data = "";
+     
+      
       if (startTime != "") {
         startTime = date + " " + startTime;
       }
@@ -1029,7 +1193,6 @@ Template.clockOnOff.events({
 
   "click .btnDesktopSearch": function (e) {
     const templateObject = Template.instance();
-    let contactService = new ContactService();
     let barcodeData = $("#barcodeScanInput").val();
     let empNo = barcodeData.replace(/^\D+/g, "");
     LoadingOverlay.show();
@@ -1088,7 +1251,6 @@ Template.clockOnOff.events({
     playSaveAudio();
 
     let templateObject = Template.instance();
-    let contactService = new ContactService();
     
     setTimeout(async function(){      
     //  LoadingOverlay.show();
@@ -1210,7 +1372,6 @@ Template.clockOnOff.events({
           },
         };
 
-        console.log(data);
 
         contactService
         .saveTimeSheet(data)
@@ -1258,7 +1419,20 @@ Template.clockOnOff.events({
           
     }, delayTimeAfterSound);
 
-  }  
+  },
+
+  "click .btnHoldSave" : function() {
+    let templateObject = Template.instance();
+    
+    let current_time = new Date();
+    let break_start_time = templateObject.breakStartTime.get();
+    
+    let break_time = parseFloat(templateObject.diff_hours(current_time, break_start_time)).toFixed(3);
+        
+    templateObject.breaktime.set(break_time);
+    
+    $("#frmOnHoldModal").modal("hide");
+  }
  
 });
 
