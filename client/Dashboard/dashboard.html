@@ -79,7 +79,8 @@
                     <div class="form-group">
                       <button class="btn btn-primary btnBatchUpdate float-right" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
                       <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
-                   </div>
+                    </div>
+                    {{> datesforcardchart}}
                 </div>
 
                 <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -128,6 +129,7 @@
                 }
             </style>
 
+            {{> editCardChartButtons}}
             <!-- Fix 2022/12/21 -->
             {{> dashboardCardCharts tabGroupID="1" chartGroup="Dashboard" currentTemplate="Dashboard_Overview" isShowCharts=isShowCharts}}
             <!-- All Cards List -->
