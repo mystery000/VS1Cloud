@@ -3,10 +3,115 @@ import { CRMService } from '../../crm-service';
 import { Template } from 'meteor/templating';
 import './taskDetailModal.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import moment from "moment";
 
 let crmService = new CRMService();
 
-Template.taskDetailModal.onCreated(function() {});
+Template.taskDetailModal.onCreated(function() {
+    let templateObject = Template.instance();
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.getDataTableList = function (data) {
+        var splashArrayLeadList = new Array();
+        let lineItems = [];
+        let lineItemObj = {};
+
+        let td0, td1, tflag, td11, td2, td3, td4, td5, td6 = "",
+            tcontact = "";
+        let projectName = "";
+        let labelsForExcel = "";
+        let color_num = '100';
+
+        let todayDate = moment().format("ddd");
+        let tomorrowDay = moment().add(1, "day").format("ddd");
+        let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
+
+        let chk_complete, completed = "";
+        let completed_style = "";
+
+        // let linestatus = '';
+        // if (data.Completed) {
+        //     completed = "checked";
+        //     chk_complete = "chk_uncomplete";
+        //     // completed_style = "display:none;"
+        // } else {
+        //     completed = "";
+        //     chk_complete = "chk_complete";
+        // }
+
+        // td0 = `<div class="custom-control custom-checkbox chkBox pointer no-modal "
+        //     style="width:15px;margin-right: -6px;">
+        //     <input class="custom-control-input chkBox chkComplete pointer ${chk_complete}" type="checkbox"
+        //         id="formCheck-${data.ID}" ${completed}>
+        //     <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.ID}"
+        //         for="formCheck-${data.ID}"></label>
+        //     </div>`;
+
+        tflag = `<i class="fas fa-flag task_modal_priority_${data.priority}" data-id="${data.ID}" aria-haspopup="true" aria-expanded="false"></i>`;
+
+
+        // if (data.due_date == "" || data.due_date == null) {
+        //     td1 = "";
+        //     td11 = "";
+        // } else {
+        //     td11 = moment(data.due_date).format("DD/MM/YYYY");
+        //     td1 = `<label style="display:none;">${data.due_date}</label>` + td11;
+        //
+        //     let tdue_date = moment(data.due_date).format("YYYY-MM-DD");
+        //     if (tdue_date <= moment().format("YYYY-MM-DD")) {
+        //         color_num = 3; // Red
+        //     } else if (tdue_date > moment().format("YYYY-MM-DD") && tdue_date <= moment().add(2, "day").format("YYYY-MM-DD")) {
+        //         color_num = 2; // Orange
+        //     } else if (tdue_date > moment().add(2, "day").format("YYYY-MM-DD") && tdue_date <= moment().add(7, "day").format("YYYY-MM-DD")) {
+        //         color_num = 0; // Green
+        //     }
+        //
+        //     td0 = `<div class="custom-control custom-checkbox chkBox pointer no-modal task_priority_${color_num}"
+        //         style="width:15px;margin-right: -6px;${completed_style}">
+        //         <input class="custom-control-input chkBox chkComplete pointer" type="checkbox"
+        //             id="formCheck-${data.ID}" ${completed}>
+        //         <label class="custom-control-label chkBox pointer ${chk_complete}" data-id="${data.ID}"
+        //             for="formCheck-${data.ID}"></label>
+        //         </div>`;
+        // }
+
+
+        projectName = data.ProjectName;
+        if (data.ProjectName == "" || data.ProjectName == "Default") {
+            projectName = "";
+        }
+
+
+        var dataList = [
+            data.ID,
+            tflag,
+            data.ContactName,
+            moment(data.due_date).format("DD/MM/YYYY"),
+            data.TaskName,
+            data.TaskDescription.length < 80 ? data.TaskDescription : data.TaskDescription.substring(0, 79) + "...",
+            data.TaskName,
+            projectName,
+            data.Active ? "" : "In-Active",
+            // data.ID,
+            // color_num,
+            // labelsForExcel,
+            // data.Completed,
+        ];
+
+        return dataList;
+    }
+    let headerStructure = [
+        { index: 0, label: 'ID', class: 'colID', active: false, display: true, width: "10" },
+        { index: 1, label: '', class: 'colCompleteTask', active: true, display: true, width: "20" },
+        { index: 2, label: 'Priority', class: 'colPriority no-modal', active: false, display: true, width: "100" },
+        { index: 3, label: 'Date', class: 'colSubDate', active: true, display: true, width: "150" },
+        { index: 4, label: 'Task', class: 'colSubTaskName', active: true, display: true, width: "100" },
+        { index: 5, label: 'Description', class: 'colTaskDesc no-modal', active: true, display: true, width: "300" },
+        { index: 6, label: 'Labels', class: 'colTaskLabels no-modal', active: false, display: true, width: "250" },
+        { index: 7, label: 'Project', class: 'colTaskProjects no-modal', active: true, display: true, width: "100" },
+        { index: 8, label: 'Status', class: 'colStatus no-modal', active: true, display: true, width: "120" },
+    ]
+    templateObject.tableheaderrecords.set(headerStructure);
+});
 
 Template.taskDetailModal.onRendered(function() {
     let templateObject = Template.instance();
@@ -430,4 +535,46 @@ Template.taskDetailModal.events({
     },
 });
 
-Template.taskDetailModal.helpers({});
+Template.taskDetailModal.helpers({
+    salesCloudPreferenceRec: () => {
+        return CloudPreference.findOne({
+            userid: localStorage.getItem('mycloudLogonID'),
+            PrefName: 'tblSubtaskDatatable'
+        });
+    },
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+
+    apiFunction: function () {
+        return crmService.getAllTasksList;
+    },
+
+    searchAPI: function () {
+        return crmService.getAllTasksByName;
+    },
+
+    service: () => {
+        return crmService;
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function () {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+    },
+});

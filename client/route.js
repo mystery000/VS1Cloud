@@ -210,7 +210,7 @@ FlowRouter.triggers.enter([
                     localStorage.setItem("enteredURL", context.path);
                     $(document).find(".btn-auto-save").click();
                     // FlowRouter.go(previous_url);
-                    FlowRouter.reload();
+                    // FlowRouter.reload();
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
                     // Meteor._reload.reload();
