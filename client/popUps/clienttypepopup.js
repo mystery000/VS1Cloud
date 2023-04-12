@@ -40,7 +40,7 @@ Template.clienttypepopup.onCreated(function() {
           ];
           return dataList;
         }
-      
+
         let headerStructure = [
           { index: 0, label: 'ID', class: 'colClientTypeID', active: false, display: true, width: "10" },
           { index: 1, label: 'Type Name', class: 'colTypeName', active: true, display: true, width: "200" },
@@ -767,19 +767,19 @@ Template.clienttypepopup.helpers({
         let sideBarService = new SideBarService();
         return sideBarService.getClientTypeDataList
       },
-  
+
     searchAPI: function() {
         return sideBarService.getClientTypeDataByName
     },
-  
+
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
-  
+
     service: ()=>{
         return sideBarService;
     },
-  
+
     datahandler: function () {
         let templateObject = Template.instance();
         return function(data) {
@@ -787,7 +787,7 @@ Template.clienttypepopup.helpers({
             return dataReturn
         }
     },
-  
+
     exDataHandler: function() {
         let templateObject = Template.instance();
         return function(data) {
@@ -801,6 +801,11 @@ Template.clienttypepopup.helpers({
           PrefName: "clienttypeList",
         });
       },
+      tablename: () => {
+        let templateObject = Template.instance();
+        let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+    	return 'tblClienttypeList'+selCustID;
+    	}
     // include7Days: () => {
     //     return Template.instance().include7Days.get();
     // },
