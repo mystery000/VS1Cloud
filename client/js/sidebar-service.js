@@ -2682,7 +2682,7 @@ export class SideBarService extends BaseService {
 
   getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID) {
     let options = "";
-    if(contactID != ''){
+    if(contactID && contactID != ''){
       options = {
         IgnoreDates: true,
         ClientID:contactID,
