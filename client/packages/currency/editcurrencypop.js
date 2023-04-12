@@ -782,6 +782,7 @@ Template.editcurrencypop.events({
         Active: false,
       },
     };
+      LoadingOverlay.show();
 
     taxRateService
       .saveCurrency(objDetails)
@@ -874,13 +875,14 @@ Template.editcurrencypop.events({
         type: "TCurrency",
         fields: {
           Active: true,
-          //Country: country,
+          Country: country,
           Code: currencyCode,
           CurrencySymbol: currencySymbol,
           Currency: currencyName,
           CurrencyDesc: currencyDesc,
           BuyRate: parseFloat(currencyBuyRate) || 1,
           SellRate: parseFloat(currencySellRate) || 1,
+          RateLastModified: moment(Date()).format("YYYY-MM-DD"),
         },
       };
     } else {
@@ -889,13 +891,14 @@ Template.editcurrencypop.events({
         fields: {
           ID: parseInt(currencyid),
           Active: true,
-          //Country: country,
+          Country: country,
           Code: currencyCode,
           CurrencySymbol: currencySymbol,
           Currency: currencyName,
           CurrencyDesc: currencyDesc,
           BuyRate: parseFloat(currencyBuyRate) || 1,
           SellRate: parseFloat(currencySellRate) || 1,
+          RateLastModified: moment(Date()).format("YYYY-MM-DD"),
         },
       };
     }

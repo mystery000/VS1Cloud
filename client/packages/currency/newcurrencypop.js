@@ -873,13 +873,14 @@ Template.newcurrencypop.events({
         type: "TCurrency",
         fields: {
           Active: true,
-          //Country: country,
+          Country: country,
           Code: currencyCode,
           CurrencySymbol: currencySymbol,
           Currency: currencyName,
           CurrencyDesc: currencyDesc,
           BuyRate: parseFloat(currencyBuyRate) || 1,
           SellRate: parseFloat(currencySellRate) || 1,
+          RateLastModified: moment(Date()).format("YYYY-MM-DD"),
         },
       };
     } else {
@@ -888,13 +889,14 @@ Template.newcurrencypop.events({
         fields: {
           ID: parseInt(currencyid),
           Active: true,
-          //Country: country,
+          Country: country,
           Code: currencyCode,
           CurrencySymbol: currencySymbol,
           Currency: currencyName,
           CurrencyDesc: currencyDesc,
           BuyRate: parseFloat(currencyBuyRate) || 1,
           SellRate: parseFloat(currencySellRate) || 1,
+          RateLastModified: moment(Date()).format("YYYY-MM-DD"),
         },
       };
     }
@@ -906,19 +908,22 @@ Template.newcurrencypop.events({
           .getCurrencies()
           .then(function (dataReload) {
             $("#sltCurrency").val(currencyCode);
-            addVS1Data("TCurrency", JSON.stringify(dataReload))
+            addVS1Data("TCurrencyList", JSON.stringify(dataReload))
               .then(function (datareturn) {
-                $("#newCurrencyModal").modal("toggle");
-                $(".fullScreenSpin").css("display", "none");
+                //$("#newCurrencyModal").modal("toggle");
+                //$(".fullScreenSpin").css("display", "none");
+                window.location.reload();
               })
               .catch(function (err) {
-                $("#newCurrencyModal").modal("toggle");
-                $(".fullScreenSpin").css("display", "none");
+                //$("#newCurrencyModal").modal("toggle");
+                //$(".fullScreenSpin").css("display", "none");
+                window.location.reload();
               });
           })
           .catch(function (err) {
-            $("#newCurrencyModal").modal("toggle");
-            $(".fullScreenSpin").css("display", "none");
+            //$("#newCurrencyModal").modal("toggle");
+            //$(".fullScreenSpin").css("display", "none");
+            window.location.reload();
           });
       })
       .catch(function (err) {
