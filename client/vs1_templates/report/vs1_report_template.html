@@ -1,5 +1,5 @@
 <template name="vs1_report_template">
-    <div style="margin-top: -24px;">
+    <div style="margin-top: -24px;" class="vs1_report_template">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
@@ -69,7 +69,7 @@
             }
         </style>
         <div class="row no-gutters justify-content-center mb-3" style="padding: 32px;">
-            <div class="col-12 col-md-8">
+            <div class="col-12 col-md-9">
                 <div class="card shadow mb-3">
                     <div class="card-header py-3" style="background-color: rgb(248,249,252);">
                         <p class="text-primary m-0 font-weight-bold">{{tabledisplayname}}</p>
@@ -206,7 +206,7 @@
                                 </div>
                                 <div class="row no-gutters justify-content-end">
                                     {{> spreadsheet_link templateName=sheetname}}
-                                    {{> report_export_import_print_display_button Export="btnExportReport" Import="hiddenButton" Print="btnPrintReport" DisplaySettings="btnOpenReportSettings"}}
+                                    {{> report_export_import_print_display_button tablename=tablename Export="btnExportReport" Import="hiddenButton" Print="btnPrintReport" DisplaySettings="btnOpenReportSettings" }}
                                 </div>
                             </div>
                         </div>
