@@ -94,13 +94,6 @@
       z-index: 9999999999 !important;
     }
 
-
-    /* form Zindedx */
-    #addReimbursementLineModal,
-    #addSuperannuationLineModal {
-      z-index: 9999 !important;
-    }
-
     #newReimbursementModal,
     #newSuperannuationFundModal {
       z-index: 99999 !important;
@@ -113,6 +106,14 @@
     p.annualLeave::first-letter {
       font-size: inherit;
     }
+
+
+    /* Damien */
+    #tblTitleList {
+        min-width: 99%;
+    }
+
+
   </style>
   <div>
     <div class="fullScreenSpin" style="display:none;">
@@ -319,7 +320,7 @@
                 </ul>
                 <div class="tab-content">
                   <style>
-                    .table-responsive {
+                      .table-responsive {
                       overflow-x: auto;
                     }
 
@@ -417,7 +418,7 @@
                             <div class="form-group" style="margin: 4px;padding-right :4px;">
                                 <label>Title</label>
 
-                                {{>vs1___dropdown
+                                {{> vs1___dropdown
                                         data=record.title
                                         type='search'
                                         id='leadTitle'
@@ -1507,9 +1508,6 @@
                         </div>
                       </div>
                       <!-- Set Payroll Templates -->
-                        {{> earningRateSettings}}
-                        {{> deductionSettings}}
-                        {{> superannuationSettings }}
                         {{> reimbursementSettings}}
                       <!-- END Payroll Templates -->
                       <div class="col-12 col-md-3" style="padding: 8px; margin: 0px;">
@@ -2931,10 +2929,22 @@
                                         <div class="col-6 col-md-7">
                                           <div class="form-group">
                                             <label class="borderBottom1">Earnings Rate</label>
-                                            <input type="search" class="form-control earningLineDropDown"
-                                              id="ptEarningRate{{ item.ID }}" data-value="{{ item.EarningRate }}"
-                                              value="{{ item.EarningRate }}"
-                                              style="background-color:rgb(255, 255, 255); cursor: pointer;" />
+
+                                              {{> vs1___dropdown
+                                                      data=item.EarningRate
+                                                      type='search'
+                                                      id=(generateEarningRateDropdownId item.ID)
+                                                      name='earningRateSelect'
+                                                      modalId= (generateEarningRateModalId item.ID)
+                                                      list_template_name='earningRateSettings'
+                                                      modal_title='Earning Rate'
+                                                      innerModal=true
+                                                      label = ''
+                                                      colNameForValue = 'colEarningsNames'
+                                                      is_editable=true
+                                                      noBorder=false
+                                                      custid=item.ID
+                                              }}
                                           </div>
                                         </div>
                                         <div class="col-5 col-md-2">
@@ -2982,16 +2992,17 @@
                                                         {{> vs1___dropdown
                                                                 data=''
                                                                 type='search'
-                                                                id='earningRateSelect'
-                                                                name='earningRateSelect'
+                                                                id='earningRateSelect1'
+                                                                name='earningRateSelect1'
                                                                 modalId= 'earningRateSelectListPopModal'
                                                                 list_template_name='earningRateSettings'
                                                                 modal_title='Earning Rate'
                                                                 innerModal=true
                                                                 label = ''
-                                                                colNameForValue = 'colName'
+                                                                colNameForValue = 'colEarningsNames'
                                                                 is_editable=true
                                                                 noBorder=false
+                                                                custid='emp1'
                                                         }}
                                                       <input type="hidden" id="earningRateSelectID" value="0">
                                                     </div>
@@ -3030,8 +3041,20 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Expense Account</label>
-                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
-                                                        id="expenseAccount" name="expenseAccount">
+
+                                                        {{> vs1___dropdown
+                                                                type='search'
+                                                                id='expenseAccount1'
+                                                                name='expenseAccount1'
+                                                                modalId= 'expenseAccountModal'
+                                                                list_template_name='accountlistpop'
+                                                                innerModal=true
+                                                                modal_title='Account List'
+                                                                label = ''
+                                                                colNameForValue = 'colAccountName'
+                                                                is_editable=true
+                                                                custid='emp_expense1'
+                                                        }}
                                                     </div>
                                                   </div>
                                                 </div>
@@ -3191,6 +3214,7 @@
                                                                 target_modal_id= 'addAccountModal'
                                                                 target_template_id='addaccountpop'
                                                                 is_editable=true
+                                                                custid='emp_control'
                                                         }}
                                                     </div>
                                                   </div>
@@ -3277,8 +3301,21 @@
                                                     <div class="form-group">
                                                       <label>Superannuation Fund</label>
                                                       <input type="hidden" id="superannuationFundID" value="0">
-                                                      <input type="search" class="form-control superannuationDropDown"
-                                                        id="superannuationFund">
+
+                                                        {{> vs1___dropdown
+                                                                data=''
+                                                                type='search'
+                                                                id='superannuationFund'
+                                                                name='superannuationFund'
+                                                                modalId= 'superannuationFundPopModal'
+                                                                list_template_name='superannuationSettings'
+                                                                modal_title='Superannuation Fund'
+                                                                innerModal=true
+                                                                label = 'Superannuation Fund'
+                                                                colNameForValue = 'colSuperannuationName'
+                                                                is_editable=true
+                                                                noBorder=false
+                                                        }}
                                                     </div>
                                                   </div>
                                                   <div class="col-12">
@@ -3363,6 +3400,7 @@
                                                                 target_modal_id= 'addAccountModal'
                                                                 target_template_id='addaccountpop'
                                                                 is_editable=true
+                                                                custid='emp_expense'
                                                         }}
                                                     </div>
                                                   </div>
@@ -3383,6 +3421,7 @@
                                                                 target_modal_id= 'addAccountModal'
                                                                 target_template_id='addaccountpop'
                                                                 is_editable=true
+                                                                custid='emp_liability'
                                                         }}
                                                     </div>
                                                   </div>
@@ -3504,14 +3543,20 @@
                                                   </div>
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                      {{> default_input
-                                                        label="Control of Expense Account"
-                                                        classes="edtExpenseAccountDropDown"
-                                                        id="controlExpenseAccount"
-                                                        name="controlExpenseAccount"
-                                                        defaultValue=""
-                                                        type="search"
-                                                      }}
+                                                        <label>Control of Expense Account</label>
+                                                        {{> vs1___dropdown
+                                                                type='search'
+                                                                id='controlExpenseAccount'
+                                                                name='controlExpenseAccount'
+                                                                modalId= 'controlExpenseAccountModal'
+                                                                list_template_name='accountlistpop'
+                                                                innerModal=true
+                                                                modal_title='Account List'
+                                                                label = ''
+                                                                colNameForValue = 'colAccountName'
+                                                                is_editable=true
+                                                                custid='emp_control1'
+                                                        }}
                                                     </div>
                                                   </div>
                                                 </div>
@@ -3605,7 +3650,7 @@
                                                                 modal_title='Earnings Name'
                                                                 innerModal=true
                                                                 label = ''
-                                                                colNameForValue = 'colName'
+                                                                colNameForValue = 'colEarningsNames'
                                                                 is_editable=true
                                                                 noBorder=false
                                                         }}
@@ -3704,6 +3749,7 @@
                                                                 colNameForValue = 'colDeductionsNames'
                                                                 is_editable=true
                                                                 noBorder=false
+                                                                custid='emp1'
                                                         }}
                                                       <input type="hidden" id="obDeductionTypeID" value="0">
                                                     </div>
@@ -3803,6 +3849,7 @@
                                                                 colNameForValue = 'colSuperannuationName'
                                                                 is_editable=true
                                                                 noBorder=false
+                                                                custid='emp_add1'
                                                         }}
                                                       <input type="hidden" id="obSuperannuationFundID" value="0">
                                                     </div>

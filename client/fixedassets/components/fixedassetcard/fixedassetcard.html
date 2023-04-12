@@ -423,6 +423,7 @@
                                     colNameForValue = 'colCompany'
                                     is_editable=true
                                     noBorder=false
+                                    custid='insuredby'
                             }}
                         </div>
 
@@ -628,6 +629,7 @@
                                       colNameForValue = 'colAccountName'
                                       is_editable=true
                                       noBorder=false
+                                      custid='faba'
                               }}
                           </div>
                         </div>
@@ -652,6 +654,7 @@
                                       colNameForValue = 'colAccountName'
                                       is_editable=true
                                       noBorder=false
+                                      custid='daa'
                               }}
                           </div>
                         </div>
@@ -672,6 +675,7 @@
                                       colNameForValue = 'colAccountName'
                                       is_editable=true
                                       noBorder=false
+                                      custid='dea'
                               }}
                           </div>
                         </div>
@@ -823,6 +827,7 @@
                                       colNameForValue = 'colAccountName'
                                       is_editable=true
                                       noBorder=false
+                                      custid='facaa1'
                               }}
                           </div>
                         </div>
@@ -843,6 +848,7 @@
                                       colNameForValue = 'colAccountName'
                                       is_editable=true
                                       noBorder=false
+                                      custid='faba1'
                               }}
                           </div>
                         </div>
@@ -853,15 +859,43 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Asset Account</label>
-                            <select type="search" class="form-control" id="edtDepreciationAssetAccount2" name="edtDepreciationAssetAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                            </select>
+
+                              {{> vs1___dropdown
+                                      data=''
+                                      type='search'
+                                      id='edtDepreciationAssetAccount2'
+                                      name='edtDepreciationAssetAccount2'
+                                      modalId= 'edtDepreciationAssetAccountModal2'
+                                      list_template_name='accountlistpop'
+                                      modal_title='Fixed Assets Bank Account'
+                                      innerModal=true
+                                      label = ''
+                                      colNameForValue = 'colAccountName'
+                                      is_editable=true
+                                      noBorder=false
+                                      custid='daa1'
+                              }}
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Expense Account</label>
-                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount2" name="edtDepreciationExpenseAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                            </select>
+
+                              {{> vs1___dropdown
+                                      data=''
+                                      type='search'
+                                      id='edtDepreciationExpenseAccount2'
+                                      name='edtDepreciationExpenseAccount2'
+                                      modalId= 'edtDepreciationExpenseAccountModal2'
+                                      list_template_name='accountlistpop'
+                                      modal_title='Fixed Assets Bank Account'
+                                      innerModal=true
+                                      label = ''
+                                      colNameForValue = 'colAccountName'
+                                      is_editable=true
+                                      noBorder=false
+                                      custid='dea1'
+                              }}
                           </div>
                         </div>
                       </div>

@@ -995,19 +995,6 @@ Template.earningRateSettings.onRendered(function() {
         $('#taxRateListModal').modal('toggle');
     });
 
-    $(document).on("click", "#tblAccount tbody tr", function (e) {
-        var table = $(this);
-        let name = table.find(".productName").text() ||'';
-        let accountID = table.find(".colAccountID").text() ||'';
-        let description = table.find(".productDesc").text() ||'';
-        // let searchFilterID = templateObject.currentDrpDownID.get()
-        let searchFilterID = $('#selectLineID').val();
-        // $('#' + searchFilterID).val(name);
-        $("#edtDeductionAccountID").val(accountID);
-        // $("#edtDeductionDesctiption").val(description);
-        $('#accountListModal').modal('toggle');
-    });
-
 });
 
 
@@ -1253,7 +1240,10 @@ Template.earningRateSettings.helpers({
     },
     apiParams4: ()=>{
         return ['limitCount', 'limitFrom', 'deleteFilter'];
-    }
+    },
+    tablename: () => {
+        let templateObject = Template.instance();
+        let accCustID = templateObject.data.custid ? templateObject.data.custid : '';
+        return 'tblEarnings'+ accCustID;
+    },
 });
-
-//

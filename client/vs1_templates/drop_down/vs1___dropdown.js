@@ -19,7 +19,7 @@ Template.vs1___dropdown.onCreated(function(){
     templateObject.targetTemp = new ReactiveVar();
     templateObject.listTemp = new ReactiveVar();
     templateObject.targetEle = new ReactiveVar();
-
+    
     let keyword = templateObject.data.data
     let idVal = templateObject.data.value
     let email = templateObject.data.email
@@ -37,7 +37,7 @@ Template.vs1___dropdown.onRendered(async function(){
     let templateObject = Template.instance();
     let id= templateObject.data.id;
     let popupid = templateObject.data.modalId;
-
+    
     async function setEditableSelect() {
         // $('#'+id).editableSelect();
         $('.'+id).each(function(i, obj) {
@@ -47,11 +47,7 @@ Template.vs1___dropdown.onRendered(async function(){
     await setEditableSelect();
     setTimeout(()=>{
         if(templateObject.data.data) {
-          if(templateObject.data.custId) {
-              $('#'+id+"[custId='"+templateObject.data.custId+"']").val(templateObject.data.data);
-          }else{
-             $('#'+id).val(templateObject.data.data);
-          }
+            $('#'+id+"[custid='"+templateObject.data.custid+"']").val(templateObject.data.data);
         }
         if(templateObject.data.email) {
             let label = templateObject.data.label;
@@ -61,7 +57,7 @@ Template.vs1___dropdown.onRendered(async function(){
             }
             let email = templateObject.data.email;
             $('#'+clientEmailInput).val(email)
-
+         
         }
     }, 1000)
     // $('#'+id).editableSelect().on('click', function(event) {
@@ -80,7 +76,7 @@ Template.vs1___dropdown.onRendered(async function(){
             // X button 16px wide?
             templateObject.targetTemp.set('');
             $(popupmodal).modal('show');
-
+            
         } else {
             setTimeout(()=>{
                 let value = event.target.value;
@@ -88,9 +84,9 @@ Template.vs1___dropdown.onRendered(async function(){
                     templateObject.targetTemp.set('');
                     $(popupmodal).modal('show');
                 } else {
-
+                    
                     if(templateObject.data.is_editable == true) {
-
+                        
                         let params = templateObject.edtParam.get();
                         if(!params.name || params.name == '' ) {
                             params.name = value;
@@ -120,7 +116,7 @@ Template.vs1___dropdown.helpers({
         return listempname
     },
     listparam:()=>{
-        let obj = {custId: Template.instance().data.custId}
+        let obj = {custid: Template.instance().data.custid}
         return obj
     }
 })
@@ -139,22 +135,21 @@ Template.vs1___dropdown.events({
         let objectId = $(event.target).closest('tr').find('.colID')?.text();
 
         let email = $(event.target).closest('tr').find('.colEmail')?.text();
-
+       
         templateObject.edtParam.set({name: value, id: objectId, email: email })
-
+        
         templateObject.targetTemp.set(templateObject.data.target_template_id)
-
+        
         // $('#'+id).val(value)
         let target = templateObject.targetEle.get();
         $(target).val(value)
-        $(modal).modal('hide');
-        $('.modal-backdrop').css('display','none');
+        $(modal).modal('hide');    
         // $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .dataTables_filter input').val('');
         // setTimeout(function() {
         //     $(modal).find('> .modal-content > .modal-body >.table-responsive >.datatables-wrapper .btnRefreshTable').trigger('click')
-
+            
         // }, 100)
-
+        
     },
 
 })

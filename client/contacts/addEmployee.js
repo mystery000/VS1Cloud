@@ -2211,17 +2211,6 @@ Template.employeescard.onRendered(function () {
       $('#edtHolidays').val($(this).find(".colHolidayName").text());
       $('#holidaysPopModal').modal('toggle');
     });
-
-    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
-        var table = $(this);
-        const id = table.find('.colAccountID').text();
-        const accountName = table.find('.colAccountName').text();
-        $("#edtExpenseAccount").val(accountName);
-        $(".paste-expenses").val(accountName);
-        $(".paste-expenses").attr('account-id', id);
-        $(".paste-expenses").removeClass('paste-expenses')
-        $("#accountListModal").modal("toggle");
-    });
   });
 
   $(document).on('click', '#editEmployeeTitle', function (e, li) {
@@ -10231,6 +10220,12 @@ Template.employeescard.events({
 });
 
 Template.employeescard.helpers({
+  generateEarningRateDropdownId: (id) => {
+    return "ptEarningRate" + id;
+  },
+  generateEarningRateModalId: (id) => {
+    return "earningRateSelectListPopModal" + id;
+  },
   AppTableModalData: () => {
     return Template.instance().AppTableModalData.get();
   },
