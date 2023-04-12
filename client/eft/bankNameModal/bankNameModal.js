@@ -22,7 +22,7 @@ Template.bankNameModal.onCreated(function () {
   }
 
   let headerStructure = [
-    {index: 0, label: "Account Name", class: "colBankName", width: "100", active: true, display: true},
+    {index: 0, label: "Account Name", class: "colBankName", width: "200", active: true, display: true},
     {index: 1, label: "Description", class: "colDescription", width: "300", active: true, display: true},
   ];
   templateObject.tableheaderrecords.set(headerStructure);
