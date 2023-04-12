@@ -2241,6 +2241,8 @@ Template.appointments.events({
                 }
             }
             $('#edtEmployeeName').val(currentEmployeeName)
+            $('#edtLeaveDescription').val("Annual Leave Request, Awaiting")
+            $('#edtLeaveHours').val("8")
             // $('#removeLeaveRequestBtn').hide();
             $('#removeLeaveRequestBtn').css('visibility','hidden');
             $('#newLeaveRequestModal').modal('show');
