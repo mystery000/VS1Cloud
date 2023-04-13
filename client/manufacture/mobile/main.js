@@ -1343,7 +1343,7 @@ Template.mobileapp.events({
                 }
 
                     
-                if(isNaN(change_to_detail) || change_to_detail == "") {
+                if(isNaN(change_to_detail) || change_to_detail == "" || change_to_detail == 0) {
                     change_to_detail = total_qty_detail;
                 }else {
                     change_to_detail = parseFloat(change_to_detail).toFixed(2);
