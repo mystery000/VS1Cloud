@@ -59,12 +59,12 @@ Template.employee_clock_status_template.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: 'EmpID', class: 'colEmpID', active: true, display: true, width: "50" },
-        { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "120" },
+        { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "150" },
         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "120" },
-        { index: 3, label: 'WorkorderNumber', class: 'colTotalProcess', active: true, display: true, width: "130" },
+        { index: 3, label: 'WorkorderNumber', class: 'colTotalProcess', active: true, display: true, width: "150" },
         { index: 4, label: 'Clocked On/Off', class: 'colVariance', active: true, display: true, width: "100" },
-        { index: 5, label: 'Process Clocked On/Off', class: 'colPercent', active: true, display: true, width: "100" },
-        { index: 6, label: 'On a Break/Lunch', class: 'colPercent', active: true, display: true, width: "100" },
+        { index: 5, label: 'Process Clocked On/Off', class: 'colPercent', active: true, display: true, width: "150" },
+        { index: 6, label: 'On a Break/Lunch', class: 'colPercent', active: true, display: true, width: "150" },
         { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
         
     ];

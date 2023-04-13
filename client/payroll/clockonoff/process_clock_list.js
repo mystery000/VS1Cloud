@@ -30,7 +30,7 @@ Template.process_clock_template.onCreated(function() {
             '<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" /><label class="custom-control-label"></label></div>', 
             data.EmpId || '',
             data.EmpName || '',
-            data.Date || '',
+            data.ProcessDate || '',
             data.WorkorderID || '',
             data.Process || '',
             data.Product || '',
@@ -55,15 +55,15 @@ Template.process_clock_template.onRendered(function() {
     let headerStructure = [
         { index: 0, label: '', class: 'colID', active: true, display: true, width: "50" },
         { index: 1, label: '', class: 'colCheckbox', active: true, display: true, width: "50" },
-        { index: 2, label: 'EmployeeID', class: 'colEmpID', active: true, display: true, width: "110" },
-        { index: 3, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "110" },
-        { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "110" },
-        { index: 5, label: 'Workorder Number', class: 'colWorkorder', active: true, display: true, width: "110" },
-        { index: 6, label: 'Process', class: 'colProcess', active: true, display: true, width: "110" },
-        { index: 7, label: 'Product', class: 'colProduct', active: true, display: true, width: "110" },
-        { index: 8, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "110" },
-        { index: 9, label: 'Note', class: 'colNote', active: true, display: true, width: "120" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+        { index: 2, label: 'EmployeeID', class: 'colEmpID', active: true, display: true, width: "100" },
+        { index: 3, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "150" },
+        { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
+        { index: 5, label: 'Workorder Number', class: 'colWorkorder', active: true, display: true, width: "150" },
+        { index: 6, label: 'Process', class: 'colProcess', active: true, display: true, width: "100" },
+        { index: 7, label: 'Product', class: 'colProduct', active: true, display: true, width: "100" },
+        { index: 8, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "120" },
+        { index: 9, label: 'Note', class: 'colNote', active: true, display: true, width: "150" },
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         
     ];
 
@@ -94,7 +94,7 @@ Template.process_clock_template.onRendered(function() {
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
                                 EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                                Date: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                                Date: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || new Date(),
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
                                 Product: workorderdata[t].fields.ProductName || '',
@@ -136,7 +136,7 @@ Template.process_clock_template.onRendered(function() {
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
                                 EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                                Date: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                                ProcessDate: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
                                 Product: workorderdata[t].fields.ProductName || '',

@@ -20,7 +20,7 @@ Template.joblist.onCreated(function () {
 
     templateObject.selectedFile = new ReactiveVar();
 
-    templateObject.getDataTableList = function(data) {        
+    templateObject.getDataTableList = function(data) {
         let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
         let creditBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
         let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;

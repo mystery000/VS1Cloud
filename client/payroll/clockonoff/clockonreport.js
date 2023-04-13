@@ -64,11 +64,11 @@ Template.clockonreport_template.onRendered(function() {
     let headerStructure = [
         { index: 0, label: 'EmpID', class: 'colEmpID', active: true, display: true, width: "50" },
         { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "120" },
-        { index: 2, label: 'Total Clocked Hours', class: 'colTotalHour', active: true, display: true, width: "120" },
+        { index: 2, label: 'Total Clocked Hours', class: 'colTotalHour', active: true, display: true, width: "130" },
         { index: 3, label: 'Total Process Clocked Hours', class: 'colTotalProcess', active: true, display: true, width: "120" },
-        { index: 4, label: 'Variance in Hours', class: 'colVariance', active: true, display: true, width: "100" },
-        { index: 5, label: 'Variance in Percentage', class: 'colPercent', active: true, display: true, width: "100" },
-        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+        { index: 4, label: 'Variance in Hours', class: 'colVariance', active: true, display: true, width: "150" },
+        { index: 5, label: 'Variance in Percentage', class: 'colPercent', active: true, display: true, width: "150" },
+        { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         
     ];
 
