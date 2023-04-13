@@ -1405,6 +1405,35 @@ Template.calender.onRendered(function() {
         }, 500);
     }
 
+    function renderEventContent(event){
+        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                let eventLeave  = [];
+                let eventStatus = [];
+
+                leaveemployeerecords.forEach((item) => {
+                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
+                    eventStatus[item.EmployeeID] = item.Status;
+                });
+
+                let title = document.createElement("p");
+                if (event.timeText != '') {
+                    title.innerHTML = event.timeText + " " + event.event.title;
+                    title.style.backgroundColor = event.backgroundColor;
+                    title.style.color = "#ffffff";
+                } else {
+                    var empid = event.event._def.publicId.split(':')[1];
+                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+                        title.style.color = "#dddddd";
+                    }
+                }
+
+                let arrayOfDomNodes = [title];
+                return {
+                    domNodes: arrayOfDomNodes,
+                };
+    }
+
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
         var calendarEl = document.getElementById("calendar");
@@ -1492,20 +1521,7 @@ Template.calender.onRendered(function() {
                 eventDidMount(info)
             },
             eventContent: function(event) {
-                let title = document.createElement("p");
-                if (event.event.title) {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                    title.style.backgroundColor = event.backgroundColor;
-                    title.style.color = "#ffffff";
-                    title.style.overflow = "hidden";
-                } else {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                }
-
-                let arrayOfDomNodes = [title];
-                return {
-                    domNodes: arrayOfDomNodes,
-                };
+                renderEventContent(event)
             },
         });
         calendar.render();
@@ -1649,32 +1665,7 @@ Template.calender.onRendered(function() {
                 eventDidMount(info)
             },
             eventContent: function(event) {
-                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                let eventLeave  = [];
-                let eventStatus = [];
-
-                leaveemployeerecords.forEach((item) => {
-                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
-                    eventStatus[item.EmployeeID] = item.Status;
-                });
-
-                let title = document.createElement("p");
-                if (event.timeText != '') {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                    title.style.backgroundColor = event.backgroundColor;
-                    title.style.color = "#ffffff";
-                } else {
-                    var empid = event.event._def.publicId.split(':')[1];
-                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-                        title.style.color = "#dddddd";
-                    }
-                }
-
-                let arrayOfDomNodes = [title];
-                return {
-                    domNodes: arrayOfDomNodes,
-                };
+                renderEventContent(event)
             },
             eventResize: function(info) {
                evenDropAndResize(info)
