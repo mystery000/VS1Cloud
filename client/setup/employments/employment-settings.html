@@ -126,12 +126,12 @@
           </div>
           <div class="card-body">
             <div class="card-body p-3 rounded">
-              <div class="bg-white row d-xl-flex flex-row justify-content-xl-center m-0 p-2">
+              <div class="bg-white row d-xl-flex flex-row justify-c ontent-xl-center m-0 p-2">
                 <div class="modal fade addEmployeeModalNew" role="dialog" tabindex="-1" id="addEmployeeModal">
                   {{> addemployeepop editableEmployee=editableEmployee isSetup="true" }}
                 </div>
 
-                <div class="col-sm-8 float-left flex-grow-1 pl-0 text-left">
+                <div class="col-7 col-md-5 float-left flex-grow-1 mb-4 pl-0 text-left">
                   <button class="btn btn-primary btnRefreshEmployee" type="button" style="margin: 12px 12px 0 0;"><i
                       class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                   <button id="btnNewEmployee" name="btnNewEmployee" class="btn btn-primary alerts-border" type="button"
@@ -143,18 +143,12 @@
                     style="margin-top: 12px;" class="btn btn-primary downloadHelpFile alerts-border">Download
                     Help File</a>
                 </div>
-                <div class="col-sm-4 float-left flex-grow-1 pl-0 text-right">
-                  <button id="exportbtn" class="btn btn-primary btnNav vs1ButtonMargin" type="button"><i
-                    class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                  <button class="btn btn-primary btnNav vs1ButtonMargin" role="button"
-                  data-toggle="modal" href="#importModal"><i class="fas fa-file-import"
-                    style="padding-right: 5px;"></i>Import</button>
-                  <button class="btn btn-primary printConfirm btnNav vs1ButtonMargin" type="button"><i
-                    class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
-                  <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 12px;"
+                <div class="col-5 col-md-7 pl-0 d-xl-flex justify-content-xl-end align-items-xl-start">
+                  {{> export_import_print_display_button DisplaySettings="hiddenButton" tablename="tblEmployeelist"}}
+                  <button class="btn btn-success float-right confirmBtn" type="button" style="margin: 14px;"
                     data-step-id="5">Confirm</button>
                 </div>
-                <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
+                <!-- <div class="modal fade" role="dialog" tabindex="-1" id="importModal">
                   <div class="modal-dialog" role="document">
                     <div class="modal-content">
                       <div class="modal-header">
@@ -224,7 +218,8 @@
                     </div>
                   </div>
                 </div>
-<!--                {{> non_transactional_list tablename='tblEmployeelist'}}-->
+                {{> non_transactional_list tablename='tblEmployeelist'}}-->
+
                   {{>datatablelist
                           tablename="tblEmployeelist"
                           apiName= apiFunction
@@ -240,6 +235,7 @@
                           exdatahandler = exDataHandler
                           searchAPI = searchAPI
                   }}
+
               </div>
             </div>
             <div class="row no-gutters">
@@ -255,4 +251,8 @@
       </div>
     </div>
   </div>
+  {{> import_template}}
+  <script>
+    modalDraggable();
+</script>
 </template>

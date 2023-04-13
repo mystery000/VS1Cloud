@@ -8,11 +8,29 @@
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="row">
 
-                    <div class="col-12 d-flex align-items-center mb-4 justify-content-end">
+                    <!-- <div class="col-12 d-flex align-items-center mb-4 justify-content-end">
                         {{> export_import_print_display_button tablename="tblProcessList"}}
-                    </div>
+                    </div> -->
                     <div class="col-12">
-                        {{> non_transactional_list tablename="tblProcessList"}}
+                        <!-- {{> non_transactional_list tablename="tblProcessList"}} -->
+                        {{>datatablelist 
+                            tablename="tblProcessList"
+                            apiName= apiFunction
+                            service = service
+                            indexeddbname = 'TProcessStep'
+                            datahandler = datahandler
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Process List'
+                            istransaction = false
+                            apiParams=apiParams
+                            lowercaseDataName='tprocessstep'
+                            exIndexDBName = 'tprocessstep'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            showPlusButton = true
+                            showPlusButtonDataTarget = "newProcessModal"
+                            showPlusButtonClass = "btnAddNewProcess"
+                        }}
                     </div>
                 </div>
             </div>

@@ -464,21 +464,22 @@
                                 }
                               </style>
 <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
-                                  {{>datatablelist
-                                    tablename="tblCustomerCrmListWithDate"
-                                    apiName= apiFunction_CrmListWithDate
-                                    indexeddbname = 'TCRMTaskList'
-                                    tableheaderrecords = tableheaderrecords_CrmListWithDate
-                                    exportfilename = 'Customer CRM List With Date'
-                                    istransaction = true
-                                    apiParams= apiParams_CrmListWithDate
-                                    datahandler = datahandler_CrmListWithDate
-                                    service = service_CrmListWithDate
-                                    lowercaseDataName='tprojecttaskslist' 
-                                    exIndexDBName = 'tprojecttaskslist'
-                                    exdatahandler = exDataHandler_CrmListWithDate
-                                    searchAPI = searchAPI_CrmListWithDate
-                                  }}
+                                {{>datatablelist
+                                        tableclass="tblCustomerCrmListWithDate"
+                                        tablename="tblCustomerCrmListWithDate"
+                                        apiName= apiFunction
+                                        indexeddbname = 'TCRMTaskList'
+                                        tableheaderrecords = tableheaderrecords
+                                        exportfilename = 'Customer CRM Task List'
+                                        istransaction = true
+                                        apiParams= apiParams
+                                        datahandler = datahandler
+                                        service=service
+                                        lowercaseDataName='tprojecttaskslist'
+                                        exIndexDBName = 'tprojecttaskslist'
+                                        exdatahandler = exDataHandler
+                                        searchAPI = searchAPI
+                                }}
                             </div>
                             <div class="tab-pane border rounded-0 tab-Job4" role="tabpanel" id="tab-Job4"
                               style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;overflow: auto;">
@@ -1156,21 +1157,22 @@
                                   width: 12% !important;
                                 }
                               </style>
-                             <!-- {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}} -->
+<!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
                                 {{>datatablelist
-                                  tablename="tblCustomerCrmListWithDate"
-                                  apiName= apiFunction_CrmListWithDate
-                                  indexeddbname = 'TCRMTaskList'
-                                  tableheaderrecords = tableheaderrecords_CrmListWithDate
-                                  exportfilename = 'Customer CRM List With Date'
-                                  istransaction = true
-                                  apiParams= apiParams_CrmListWithDate
-                                  datahandler = datahandler_CrmListWithDate
-                                  service = service_CrmListWithDate
-                                  lowercaseDataName='tprojecttaskslist' 
-                                  exIndexDBName = 'tprojecttaskslist'
-                                  exdatahandler = exDataHandler_CrmListWithDate
-                                  searchAPI = searchAPI_CrmListWithDate
+                                        tableclass="tblCustomerCrmListWithDate"
+                                        tablename="tblCustomerCrmListWithDate"
+                                        apiName= apiFunction
+                                        indexeddbname = 'TCRMTaskList'
+                                        tableheaderrecords = tableheaderrecords
+                                        exportfilename = 'Customer CRM Task List'
+                                        istransaction = true
+                                        apiParams= apiParams
+                                        datahandler = datahandler
+                                        service=service
+                                        lowercaseDataName='tprojecttaskslist'
+                                        exIndexDBName = 'tprojecttaskslist'
+                                        exdatahandler = exDataHandler
+                                        searchAPI = searchAPI
                                 }}
                             </div>
                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4"
@@ -1863,7 +1865,7 @@
                             <div class="modal-header">
                               <h4>Delete</h4>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true"> </span>
+                                <span aria-hidden="true">�</span>
                               </button>
                             </div>
                             <div class="modal-body">
@@ -1882,161 +1884,139 @@
                   <div class="tab-pane border rounded-0 tab-3" role="tabpanel" id="tab-3"
                     style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
                     {{#if equals currentTab 'tab-3'}}
-<!--                    <div class="row d-xl-flex flex-row justify-content-xl-center">-->
-<!--                      <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">-->
-<!--                        <button class="btn btn-primary btnRefreshJobDetails" type="button" style="margin: 14px;"><i-->
-<!--                            class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>-->
-<!--                        <button id="btnNewJob" name="btnNewJob" class="btn btn-primary" type="button"-->
-<!--                          style="margin: 14px;" role="button" data-toggle="modal" href="#addNewJobModal"><i-->
-<!--                            class="icon ion-plus" style="padding-right: 5px;"></i>New Job</button>-->
-<!--                      </div>-->
-<!--                      <div class="col">-->
-<!--                        <button id="printConfirmJob" class="btn btn-primary float-right jobprintConfirm printConfirmJob"-->
-<!--                          type="button" style="margin:14px; background-color: #00A3D3; border-color: #00A3D3;">-->
-<!--                          <i class="fa fa-print"-->
-<!--                            style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print-->
-<!--                        </button>-->
-<!--                        <button class="btn btn-primary jobexport float-right" type="button"-->
-<!--                          style="margin: 14px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtnJob"-->
-<!--                          name="exportbtnJob">-->
-<!--                          <i class="fas fa-file-export"-->
-<!--                            style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export-->
-<!--                        </button>-->
-<!--                      </div>-->
-<!--                    </div>-->
+                    <div class="row d-xl-flex flex-row justify-content-xl-center">
+                      <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0 !important;">
+                        <button class="btn btn-primary btnRefreshJobDetails" type="button" style="margin: 14px;"><i
+                            class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                        <button id="btnNewJob" name="btnNewJob" class="btn btn-primary" type="button"
+                          style="margin: 14px;" role="button" data-toggle="modal" href="#addNewJobModal"><i
+                            class="icon ion-plus" style="padding-right: 5px;"></i>New Job</button>
+                      </div>
+                      <div class="col">
+                        <button id="printConfirmJob" class="btn btn-primary float-right jobprintConfirm printConfirmJob"
+                          type="button" style="margin:14px; background-color: #00A3D3; border-color: #00A3D3;">
+                          <i class="fa fa-print"
+                            style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print
+                        </button>
+                        <button class="btn btn-primary jobexport float-right" type="button"
+                          style="margin: 14px; background-color: #00A3D3; border-color: #00A3D3;" id="exportbtnJob"
+                          name="exportbtnJob">
+                          <i class="fas fa-file-export"
+                            style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export
+                        </button>
+                      </div>
+                    </div>
                     <div class="row rowB" style="margin: 14px; margin-top: 0">
                       <div class="card-body rounded" style="padding: 0;">
-<!--                        <div class="d-xl-flex justify-content-xl-end">-->
-<!--                          <div><a class="btn btnOpenSettingsJob" role="button" data-toggle="modal" href="#myModalJob"><i-->
-<!--                                class="icon ion-android-more-horizontal"></i></a>-->
-<!--                            <div class="modal fade" role="dialog" tabindex="-1" id="myModalJob">-->
-<!--                              <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">-->
-<!--                                <div class="modal-content">-->
-<!--                                  <div class="modal-header">-->
-<!--                                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"-->
-<!--                                      aria-label="Close"><span aria-hidden="true"> </span></button>-->
-<!--                                  </div>-->
-<!--                                  <div class="modal-body">-->
-<!--                                    <div>-->
-<!--                                      {{#if tableheaderrecordsjob}}-->
-<!--                                      <form class="d-xl-flex align-items-xl-center">-->
-<!--                                        <div class="flex-grow-1">-->
-<!--                                          <style>-->
-<!--                                            .groove {-->
-<!--                                              border-style: solid;-->
-<!--                                              border-width: 1px;-->
-<!--                                              width: 200px;-->
-<!--                                              padding: 2px;-->
-<!--                                              border-radius: .35rem;-->
-<!--                                            }-->
+                        <div class="d-xl-flex justify-content-xl-end">
+                          <div><a class="btn btnOpenSettingsJob" role="button" data-toggle="modal" href="#myModalJob"><i
+                                class="icon ion-android-more-horizontal"></i></a>
+                            <div class="modal fade" role="dialog" tabindex="-1" id="myModalJob">
+                              <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal"
+                                      aria-label="Close"><span aria-hidden="true">�</span></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <div>
+                                      {{#if tableheaderrecordsjob}}
+                                      <form class="d-xl-flex align-items-xl-center">
+                                        <div class="flex-grow-1">
+                                          <style>
+                                            .groove {
+                                              border-style: solid;
+                                              border-width: 1px;
+                                              width: 200px;
+                                              padding: 2px;
+                                              border-radius: .35rem;
+                                            }
 
-<!--                                            .custom-control-label {-->
-<!--                                              position: absolute;-->
-<!--                                            }-->
+                                            .custom-control-label {
+                                              position: absolute;
+                                            }
 
-<!--                                            .rngRange {-->
-<!--                                              position: relative;-->
-<!--                                              display: flex;-->
-<!--                                              flex-direction: column;-->
-<!--                                              width: 100%;-->
-<!--                                              pointer-events: auto;-->
-<!--                                              background-color: rgb(255, 255, 255);-->
-<!--                                              background-clip: padding-box;-->
-<!--                                              border: 1px solid rgb(133, 135, 150);-->
-<!--                                              padding: 2px;-->
-<!--                                              border-radius: .35rem;-->
-<!--                                              color: rgb(128, 128, 128);-->
-<!--                                              height: inherit !important;-->
-<!--                                            }-->
+                                            .rngRange {
+                                              position: relative;
+                                              display: flex;
+                                              flex-direction: column;
+                                              width: 100%;
+                                              pointer-events: auto;
+                                              background-color: rgb(255, 255, 255);
+                                              background-clip: padding-box;
+                                              border: 1px solid rgb(133, 135, 150);
+                                              padding: 2px;
+                                              border-radius: .35rem;
+                                              color: rgb(128, 128, 128);
+                                              height: inherit !important;
+                                            }
 
-<!--                                            @media only screen and (max-width: 480px) {-->
-<!--                                              .modal.show .modal-dialog {-->
-<!--                                                float: inherit !important;-->
-<!--                                                left: inherit !important;-->
-<!--                                                top: auto !important;-->
+                                            @media only screen and (max-width: 480px) {
+                                              .modal.show .modal-dialog {
+                                                float: inherit !important;
+                                                left: inherit !important;
+                                                top: auto !important;
 
-<!--                                              }-->
-<!--                                            }-->
-<!--                                          </style>-->
-<!--                                          {{#each itemjob in-->
-<!--                                          tableheaderrecordsjob}}-->
-<!--                                          {{#if equals itemjob.sTitle "id"}}-->
-<!--                                          {{else}}-->
-<!--                                          <div id="{{itemjob.sIndex}}" class="columnSettings">-->
-<!--                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">-->
-<!--                                              <input class="custom-control-input chkDatatable" type="checkbox"-->
-<!--                                                id="chkSalesNo-{{itemjob.sIndex}}" name="chkSalesNo-{{itemjob.sIndex}}"-->
-<!--                                                checked="{{#if itemjob.sVisible}}checked{{else}}{{/if}}"-->
-<!--                                                value="{{itemjob.sTitle}}">-->
-<!--                                              <label class="custom-control-label"-->
-<!--                                                for="chkSalesNo-{{itemjob.sIndex}}"></label>-->
-<!--                                              <div contenteditable="true" class="groove divcolumn" type="text"-->
-<!--                                                value="{{itemjob.sTitle}}" valueupdate="{{itemjob.sClass}}">-->
-<!--                                                {{itemjob.sTitle}}-->
-<!--                                              </div>-->
-<!--                                            </div>-->
-<!--                                            <div class="d-xl-flex align-items-xl-center divColWidth"-->
-<!--                                              style="margin: 8px;">-->
-<!--                                              <label class="text-nowrap"-->
-<!--                                                style="padding-left: 0px;margin-top: 8px;">Width:-->
-<!--                                              </label>-->
-<!--                                              <input class="custom-range rngRange" type="number" style="margin: 8px;"-->
-<!--                                                value="{{itemjob.sWidth}}" min="0" max="1000">-->
-<!--                                            </div>-->
-<!--                                          </div>-->
-<!--                                          {{#if equals itemjob.sVisible true}}-->
-<!--                                          <script>-->
-<!--                                            $("#" + {{ itemjob.sIndex }} + ".chkDatatable").attr("checked", "checked");-->
-<!--                                          </script>-->
-<!--                                          {{else}}-->
-<!--                                          <script>-->
-<!--                                            $("#" + {{ itemjob.sIndex }} + ".chkDatatable").removeAttr("checked");-->
-<!--                                          </script>-->
-<!--                                          {{/if}}-->
-<!--                                          {{/if}}-->
-<!--                                          {{/each}}-->
-<!--                                        </div>-->
-<!--                                      </form>-->
-<!--                                      {{/if}}-->
-<!--                                    </div>-->
-<!--                                  </div>-->
-<!--                                  <div class="modal-footer">-->
-<!--                                    <button class="btn btn-success saveTableJob" type="button"><i class="fa fa-save"-->
-<!--                                        style="margin-right: 5px;"></i>Save</button>-->
-<!--                                    <button class="btn btn-warning resetTableJob" data-dismiss="modal" type="reset"><i-->
-<!--                                        class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>-->
-<!--                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i-->
-<!--                                        class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>-->
-<!--                                  </div>-->
-<!--                                </div>-->
-<!--                              </div>-->
-<!--                            </div>-->
-<!--                          </div>-->
-<!--                        </div>-->
-                        <!-- End -->
-<!--                        {{> non_transactional_list tablename="tblCustomerJobDetailsList"}}-->
-                          <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                              {{> export_import_print_display_button  Import="hiddenButton" tablename="tblCustomerJobDetailsList"}}
+                                              }
+                                            }
+                                          </style>
+                                          {{#each itemjob in
+                                          tableheaderrecordsjob}}
+                                          {{#if equals itemjob.sTitle "id"}}
+                                          {{else}}
+                                          <div id="{{itemjob.sIndex}}" class="columnSettings">
+                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
+                                              <input class="custom-control-input chkDatatable" type="checkbox"
+                                                id="chkSalesNo-{{itemjob.sIndex}}" name="chkSalesNo-{{itemjob.sIndex}}"
+                                                checked="{{#if itemjob.sVisible}}checked{{else}}{{/if}}"
+                                                value="{{itemjob.sTitle}}">
+                                              <label class="custom-control-label"
+                                                for="chkSalesNo-{{itemjob.sIndex}}"></label>
+                                              <div contenteditable="true" class="groove divcolumn" type="text"
+                                                value="{{itemjob.sTitle}}" valueupdate="{{itemjob.sClass}}">
+                                                {{itemjob.sTitle}}
+                                              </div>
+                                            </div>
+                                            <div class="d-xl-flex align-items-xl-center divColWidth"
+                                              style="margin: 8px;">
+                                              <label class="text-nowrap"
+                                                style="padding-left: 0px;margin-top: 8px;">Width:
+                                              </label>
+                                              <input class="custom-range rngRange" type="number" style="margin: 8px;"
+                                                value="{{itemjob.sWidth}}" min="0" max="1000">
+                                            </div>
+                                          </div>
+                                          {{#if equals itemjob.sVisible true}}
+                                          <script>
+                                            $("#" + {{ itemjob.sIndex }} + ".chkDatatable").attr("checked", "checked");
+                                          </script>
+                                          {{else}}
+                                          <script>
+                                            $("#" + {{ itemjob.sIndex }} + ".chkDatatable").removeAttr("checked");
+                                          </script>
+                                          {{/if}}
+                                          {{/if}}
+                                          {{/each}}
+                                        </div>
+                                      </form>
+                                      {{/if}}
+                                    </div>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button class="btn btn-success saveTableJob" type="button"><i class="fa fa-save"
+                                        style="margin-right: 5px;"></i>Save</button>
+                                    <button class="btn btn-warning resetTableJob" data-dismiss="modal" type="reset"><i
+                                        class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
+                                    <button class="btn btn-secondary" data-dismiss="modal" type="button"><i
+                                        class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
                           </div>
-
-                          {{>datatablelist
-                                  tablename="tblCustomerJobDetailsList"
-                                  apiName= apiFunction_JobDetailsList
-                                  indexeddbname = 'TJobVS1List'
-                                  tableheaderrecords = tableheaderrecords_JobDetailsList
-                                  exportfilename = 'Customer Jov VS1 List'
-                                  istransaction = false
-                                  apiParams= apiParams_JobDetailsList
-                                  datahandler = datahandler_JobDetailsList
-                                  service=service_JobDetailsList
-                                  lowercaseDataName='tjobvs1list'
-                                  exIndexDBName = 'tjobvs1list'
-                                  exdatahandler = exDataHandler_JobDetailsList
-                                  searchAPI = searchAPI_JobDetailsList
-                                  showPlusButton = true
-                                  showPlusButtonDataTarget = "edtCustomer_modal"
-                                  showPlusButtonClass = "btnAddNewCustomer"
-                          }}
+                        </div>
+                        <!-- End -->
+                        {{> non_transactional_list tablename="tblCustomerJobDetailsList"}}
                       </div>
                     </div>
                     <!-- New Job Pop Up Start Here  -->
@@ -2048,7 +2028,7 @@
                               Job <a role="button" data-toggle="modal" href="#helpModal2"><label
                                   class="lblplay">PLAY</label><i class="far fa-play-circle"
                                   style="font-size: 20px;"></i></a></h4><button type="button" class="close"
-                              data-dismiss="modal" aria-label="Close"><span aria-hidden="true"> </span></button>
+                              data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
                           </div>
                           <div class="modal-body" style="background-color: #ededed;">
                             <input type="hidden" class="form-control" id="edtJobID" name="edtJobID"
@@ -2744,7 +2724,7 @@
                             <div class="modal-header">
                               <h4 class="title-header">New Job</h4>
                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                                  aria-hidden="true"> </span></button>
+                                  aria-hidden="true">�</span></button>
                             </div>
                             <div class="modal-body">
                               <video preload="none" id="myVideo" width="640" height="360" controls="" name="media"
@@ -2797,41 +2777,11 @@
                       <div class="card-body rounded" style="padding: 0;">
                         <!-- End -->
                         {{#if checkedAppointments}}
-                          <!-- {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}} -->
-                            {{>datatablelist
-                                    tablename="tblAppointmentsByCustomer"
-                                    apiName= apiFunction_AppointmentsByCustomer
-                                    indexeddbname = 'TAppointmentList'
-                                    tableheaderrecords = tableheaderrecords_AppointmentsByCustomer
-                                    exportfilename = 'Appointments By Customer List'
-                                    istransaction = false
-                                    apiParams= apiParams_AppointmentsByCustomer
-                                    datahandler = datahandler_AppointmentsByCustomer
-                                    service=service_AppointmentsByCustomer
-                                    lowercaseDataName='tappointmentlist'
-                                    exIndexDBName = 'tappointmentlist'
-                                    exdatahandler = exDataHandler_AppointmentsByCustomer
-                                    searchAPI = searchAPI_AppointmentsByCustomer
-                            }}
+                          {{> non_transactional_list tablename="tblAppointmentsByCustomer" customerId=record.id}}
                         {{/if}}
                         {{#if checkedSales}}
                         <div class="mt-4">
                           {{> non_transactional_list tablename="tblSalesListByCustomer" customerName=record.company}}
-                          <!-- {{>datatablelist
-                            tablename="tblSalesListByCustomer"
-                            apiName= apiFunction
-                            indexeddbname = 'TSupplierVS1List'
-                            tableheaderrecords = tableheaderrecords
-                            exportfilename = 'Setup Supplier List'
-                            istransaction = false
-                            apiParams= apiParams
-                            datahandler = datahandler
-                            service=service
-                            lowercaseDataName='tsuppliervs1list'
-                            exIndexDBName = 'tsuppliervs1list'
-                            exdatahandler = exDataHandler
-                            searchAPI = searchAPI
-                        }} -->
                         </div>
                         {{/if}}
                       </div>
@@ -2983,7 +2933,7 @@
   </div>
 
   {{> taskDetailModal}}
-  <!-- {{> frmappointmentpop}} temp commented out because of using all_transaction_modal-->  
+  <!-- {{> frmappointmentpop}} temp commented out because of using all_transaction_modal-->
   {{> newTaskModal}}
 
 

@@ -46,7 +46,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 0,
       label: "ID",
-      class: "LogId",
+      class: "colLogId",
       active: false,
       display: true,
       width: "150",
@@ -54,7 +54,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 1,
       label: "Asset Code",
-      class: "AssetCode",
+      class: "colAssetCode",
       active: true,
       display: true,
       width: "200",
@@ -62,7 +62,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 2,
       label: "Asset Name",
-      class: "AssetName",
+      class: "colAssetName",
       active: true,
       display: true,
       width: "200",
@@ -70,7 +70,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 3,
       label: "Service Type",
-      class: "ServiceType",
+      class: "colServiceType",
       active: true,
       display: true,
       width: "200",
@@ -78,7 +78,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 4,
       label: "Service Date",
-      class: "ServiceDate",
+      class: "colServiceDate",
       active: true,
       display: true,
       width: "350",
@@ -86,7 +86,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 5,
       label: "Service Provider",
-      class: "ServiceProvider",
+      class: "colServiceProvider",
       active: true,
       display: true,
       width: "200",
@@ -94,7 +94,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 6,
       label: "Next Service Due Date",
-      class: "ServiceDueDate",
+      class: "colServiceDueDate",
       active: true,
       display: true,
       width: "350",
@@ -102,7 +102,7 @@ Template.serviceloglisttable.onCreated(function () {
     {
       index: 7,
       label: "Status",
-      class: "ServiceStatus",
+      class: "colServiceStatus",
       active: true,
       display: true,
       width: "120",
@@ -112,7 +112,7 @@ Template.serviceloglisttable.onCreated(function () {
 });
 Template.serviceloglisttable.onRendered(function () {
   $("#tblServiceLogList tbody").on("click", "tr", function () {
-    var ID = parseInt($(this).find(".LogId").html());
+    var ID = parseInt($(this).find(".colLogId").html());
     FlowRouter.go("/servicelogcard?id=" + ID);
   });
 

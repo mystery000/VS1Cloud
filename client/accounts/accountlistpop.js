@@ -102,17 +102,17 @@ Template.accountlistpop.onCreated(() => {
     }
 
     let headerStructure = [
-        { index: 0, label: 'ID', class: 'colAccountId', active: false, display: true, width: "50" },
-        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "100" },
-        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "150" },
-        { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "50" },
+        { index: 0, label: 'ID', class: 'colAccountId', active: false, display: true, width: "10" },
+        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "300" },
+        { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "80" },
         { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60" },
-        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-        { index: 6, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "80" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Tax Code', class: 'colTaxCode', active: false, display: true, width: "110" },
         { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "100" },
         { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "100" },
-        { index: 9, label: 'BSB', class: 'colBSB', active: true, display: true, width: "60" },
-        { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "60" },
+        { index: 9, label: 'BSB', class: 'colBSB', active: true, display: true, width: "110" },
+        { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "110" },
         { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "60" },
         { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "150" },
         { index: 13, label: 'CVC', class: 'colCVC', active: false, display: true, width: "60" },
@@ -124,12 +124,16 @@ Template.accountlistpop.onCreated(() => {
         { index: 19, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "60" },
         { index: 20, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "60" },
         { index: 21, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "60" },
-        { index: 22, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+        { index: 22, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
 Template.accountlistpop.onRendered(function() {
-
+    $( "#accountListModal" ).on('shown.bs.modal', function(){
+        setTimeout(function() {
+            $('#tblAccountListPop_filter .form-control-sm').get(0).focus()
+        }, 500);
+    });
 
 //     let templateObject = Template.instance();
 //     let sideBarService = new SideBarService();
@@ -708,6 +712,11 @@ Template.accountlistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter', 'typeFilter', 'useReceiptClaim'];
     },
+    tablename: () => {
+        let templateObject = Template.instance();
+        let accCustID = templateObject.data.custid ? templateObject.data.custid : '';
+        return 'tblAccountListPop'+ accCustID;
+      },
 });
 
 Template.accountlistpop.events({

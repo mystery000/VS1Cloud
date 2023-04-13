@@ -3798,8 +3798,20 @@ Template.customerscard.events({
 
 Template.customerscard.helpers({
     record: () => {
-        let temp = Template.instance().records.get();
-        return temp;
+        let parentRecord = Template.parentData(0).record;
+        if (parentRecord) {
+            return parentRecord;
+        } else {
+            let temp = Template.instance().records.get();
+            let phoneCodes = Template.instance().phoneCodeData.get();
+            if (temp && temp.mobile && temp.country) {
+                let thisCountry = phoneCodes.find(item => {
+                    return item.name == temp.country
+                })
+                temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
+            }
+            return temp;
+        }
     },
     phoneCodeList: () => {
         return Template.instance().phoneCodeData.get();

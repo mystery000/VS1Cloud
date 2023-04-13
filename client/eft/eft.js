@@ -225,7 +225,8 @@ Template.eft_export.onRendered(function () {
 
     $(document).on('click', '#tblAccountListPop tbody tr', function (e) {
         var table = $(this);
-        let colAccountID = table.find('.colAccountId').text();
+        //let colAccountID = table.find('.colAccountId').text();
+        let colAccountID = table.attr("ID");
         let lineProductName = table.find('.colAccountName').text();
         if (selectLineId === undefined) {
             $('.colAccount').removeClass('boldtablealertsborder');            

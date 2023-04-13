@@ -683,10 +683,6 @@ import './vs1_templates/transaction_temp/transaction_frm_journal.js';
 //import { FlowRouter } from 'meteor/kadira:flow-router';
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 
-/*Nikola*/
-import './payments/overdueCustomerAwaitingPayments.js';
-/** */
-
 Template.body.onCreated(function bodyOnCreated() {
     const templateObject = Template.instance();
     Meteor.subscribe('RegisterUsers');
