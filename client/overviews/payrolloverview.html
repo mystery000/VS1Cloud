@@ -490,7 +490,6 @@
                     <!-- <div class="table-responsive my-3">
                         {{> non_transactional_list tablename = "tblPayRuns"}}
                     </div> -->
-                    <div class="table-responsive my-3">
                         {{>datatablelist
                                 tablename="tblPayRuns"
                                 tableclass="tblPayRuns"
@@ -507,38 +506,38 @@
                                 exdatahandler = exDataHandler
                                 searchAPI = searchAPI
                         }}
-                    </div>
-                    <div class="table-responsive my-3">
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                                <h4 style="font-weight: 600;">Pay Runs</h4>
-                            </div>
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                            </div>
-                        </div>
-                        <!-- {{> non_transactional_list tablename = "tblDraftPayRun"}} -->
-                        <style>
-                            div.dataTables_wrapper .JCLRFlex { 
-                                width: 100%!important;
-                            }
-                        </style>
                         {{>datatablelist
-                            tablename="tblDraftPayRun"
-                            tableclass="tblDraftPayRun"
-                            apiName= draftApiFunction
-                            indexeddbname = 'TPayRunHistory'
-                            tableheaderrecords = draftTableHeaderRecords
-                            exportfilename = 'Draft PayRun'
-                            istransaction = false
-                            apiParams= draftApiParams
-                            datahandler = draftDataHandler
-                            service=service
-                            lowercaseDataName='tpayrunhistory'
-                            exIndexDBName = 'tpayrunhistory'
-                            exdatahandler = draftExDataHandler
-                            searchAPI = draftSearchAPI
+                                tablename="tblDraftPayRun"
+                                tableclass="tblDraftPayRun"
+                                apiName= draftApiFunction
+                                indexeddbname = 'TPayRunHistory'
+                                tableheaderrecords = draftTableHeaderRecords
+                                exportfilename = 'Draft PayRun'
+                                istransaction = false
+                                apiParams= draftApiParams
+                                datahandler = draftDataHandler
+                                service=service
+                                lowercaseDataName='tpayrunhistory'
+                                exIndexDBName = 'tpayrunhistory'
+                                exdatahandler = draftExDataHandler
+                                searchAPI = draftSearchAPI
                         }}
-                    </div>
+<!--                    <div class="table-responsive my-3">-->
+<!--                        <div class="row no-gutters d-xl-flex align-items-xl-end">-->
+<!--                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">-->
+<!--                                <h4 style="font-weight: 600;">Pay Runs</h4>-->
+<!--                            </div>-->
+<!--                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        &lt;!&ndash; {{> non_transactional_list tablename = "tblDraftPayRun"}} &ndash;&gt;-->
+<!--                        <style>-->
+<!--                            div.dataTables_wrapper .JCLRFlex { -->
+<!--                                width: 100%!important;-->
+<!--                            }-->
+<!--                        </style>-->
+<!--                        -->
+<!--                    </div>-->
                     <hr class="mt-2" />
                     </div>
                 </div>
