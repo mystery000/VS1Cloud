@@ -1226,6 +1226,7 @@ Template.mobileapp.events({
     'click #btnSaveClose': function(e, instance) {
         $('.mobile-stop-job-container').css('display', 'none');
         $('.mobile-right-btn-containner').css('display', 'flex');
+        $('.mobile-stop-job-input').val(0);
     },
 
     'click #btnCompleteProcess': async function(e, instance) {
@@ -1562,6 +1563,7 @@ Template.mobileapp.events({
         } else {
             $(".mobile-left-btn-containner").css('display', 'block');
         }
+        $('#txtpause-notes').val("");
     }
     ,
     'click #breakClose': function(e,instance) {
