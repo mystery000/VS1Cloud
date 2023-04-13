@@ -36,45 +36,7 @@ Template.datesforcardchart.onRendered(function () {
     $('[data-toggle="tooltip"]').tooltip({html: true});        
 });
 
-Template.datesforcardchart.events({
-    // "change #dateTo": function () {
-    //     $("#dateFrom").attr("readonly", false);
-    //     $("#dateTo").attr("readonly", false);
-    //     const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    //     const dateTo = new Date($("#dateTo").datepicker("getDate"));
-    //     let formatDateFrom =
-    //         dateFrom.getFullYear() +
-    //         "-" +
-    //         (dateFrom.getMonth() + 1) +
-    //         "-" +
-    //         dateFrom.getDate();
-    //     let formatDateTo =
-    //         dateTo.getFullYear() +
-    //         "-" +
-    //         (dateTo.getMonth() + 1) +
-    //         "-" +
-    //         dateTo.getDate();
-    //     window.open("/datesforcardchart?fromDate="+formatDateFrom+"&toDate="+formatDateTo, '_self');
-    // },
-    // "change #dateFrom": function () {
-    //     $("#dateFrom").attr("readonly", false);
-    //     $("#dateTo").attr("readonly", false);
-    //     const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-    //     const dateTo = new Date($("#dateTo").datepicker("getDate"));
-    //     let formatDateFrom =
-    //         dateFrom.getFullYear() +
-    //         "-" +
-    //         (dateFrom.getMonth() + 1) +
-    //         "-" +
-    //         dateFrom.getDate();
-    //     let formatDateTo =
-    //         dateTo.getFullYear() +
-    //         "-" +
-    //         (dateTo.getMonth() + 1) +
-    //         "-" +
-    //         dateTo.getDate();
-    //     window.open("/datesforcardchart?fromDate="+formatDateFrom+"&toDate="+formatDateTo, '_self');
-    // },
+Template.datesforcardchart.events({    
     "click #today": function () {
         $("#dateFrom").attr("readonly", false);
         $("#dateTo").attr("readonly", false);

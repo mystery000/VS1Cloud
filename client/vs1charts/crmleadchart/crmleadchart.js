@@ -7,6 +7,9 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 // import Chart from 'chart.js';
 
 let _ = require('lodash');
+let barChart
+let pieChart
+
 
 Template.crmleadchart.onCreated(() => {
   const templateObject = Template.instance();
@@ -60,7 +63,8 @@ Template.crmleadchart.onRendered(() => {
 
     try {
       var ctx = document.getElementById("chart_leadbarchart").getContext("2d");
-      var barChart = new Chart(ctx, {
+      if (barChart) barChart.destroy()
+      barChart = new Chart(ctx, {
         type: 'bar',
         data: {
           labels: labels,
@@ -148,7 +152,8 @@ Template.crmleadchart.onRendered(() => {
 
     try {
       var ctx = document.getElementById("chart_leadpiechart").getContext("2d");
-      var pieChart = new Chart(ctx, {
+      if (pieChart) pieChart.destroy()
+      pieChart = new Chart(ctx, {
         type: "pie",
         data: {
           labels: labels,
@@ -180,25 +185,26 @@ Template.crmleadchart.onRendered(() => {
     }
   };
 
-  templateObject.getLeadBarChartData = function () {
+  templateObject.getDataFromAPI = function() {
     let crmService = new CRMService();
-    let dateFrom = moment().subtract(3, "months").format("YYYY-MM-DD") + " 00:00:00";
+    let fromDate = moment($("#dateFrom").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+    let toDate = moment($("#dateTo").val(), "DD/MM/YYYY").format("YYYY-MM-DD");
+    crmService.getAllLeadCharts(fromDate, toDate).then(function (data) {
+      addVS1Data("TCRMLeadChart", JSON.stringify(data));
+      templateObject.setLeadChartData(data);
+    });
+  }
 
+  templateObject.getLeadBarChartData = function () {
     getVS1Data("TCRMLeadChart").then(function (dataObject) {
       if (dataObject.length) {
         let data = JSON.parse(dataObject[0].data);
         templateObject.setLeadChartData(data);
       }else{
-        crmService.getAllLeadCharts().then(function (data) {
-          addVS1Data("TCRMLeadChart", JSON.stringify(data));
-          templateObject.setLeadChartData(data);
-        });
+        templateObject.getDataFromAPI()  
       }
     }).catch(function (err) {
-      crmService.getAllLeadCharts().then(function (data) {
-        addVS1Data("TCRMLeadChart", JSON.stringify(data));
-        templateObject.setLeadChartData(data);
-      });
+      templateObject.getDataFromAPI()
     });
   /*
     getVS1Data("TCRMLeadBarChart").then(function (dataObject) {
@@ -312,5 +318,5 @@ Template.crmleadchart.onRendered(() => {
   };
 
   templateObject.getLeadBarChartData();
-
+  $(document).on("change", "#dateFrom, #dateTo", templateObject.getDataFromAPI)
 });
