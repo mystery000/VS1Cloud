@@ -962,6 +962,243 @@ Template.calender.onRendered(function() {
         }
     }
 
+    function leaveRequestEventClick(info){
+        initAppointmentForm();
+        var hours = "0";
+        var id = info.event.id;
+        let getAllEmployeeData = templateObject.employeerecords.get() || "";
+        var appointmentData = templateObject.appointmentrecords.get();
+
+        var result = appointmentData.filter((apmt) => {
+            return apmt.id == id;
+        });
+
+        if (result.length > 0) {
+            var filterEmpData = getAllEmployeeData.filter((empdData) => {
+                return empdData.employeeName == result[0].employeename;
+            });
+            if (filterEmpData) {
+                if (filterEmpData[0].custFld8 == "false") {
+                    templateObject.getAllSelectedProducts(filterEmpData[0].id);
+                } else {
+                    templateObject.getAllProductData();
+                }
+            } else {
+                templateObject.getAllProductData();
+            }
+
+            if (result[0].isPaused == "Paused") {
+                $(".paused").show();
+                $("#btnHold").prop("disabled", true);
+            } else {
+                $(".paused").hide();
+                $("#btnHold").prop("disabled", false);
+            }
+
+            if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
+                //$("#btnHold").prop("disabled", true);
+            }
+
+            if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
+                $("#btnHold").prop("disabled", true);
+                $("#btnStartAppointment").prop("disabled", true);
+                $("#btnStopAppointment").prop("disabled", true);
+                $("#startTime").prop("disabled", true);
+                $("#endTime").prop("disabled", true);
+                $("#tActualStartTime").prop("disabled", true);
+                $("#tActualEndTime").prop("disabled", true);
+                $("#txtActualHoursSpent").prop("disabled", true);
+            }
+            if (result[0].aEndTime != "") {
+                $("#btnHold").prop("disabled", true);
+                $("#btnStartAppointment").prop("disabled", true);
+                $("#btnStopAppointment").prop("disabled", true);
+                $("#startTime").prop("disabled", true);
+                $("#endTime").prop("disabled", true);
+                $("#tActualStartTime").prop("disabled", true);
+                $("#tActualEndTime").prop("disabled", true);
+                $("#txtActualHoursSpent").prop("disabled", true);
+            }
+            templateObject.getAllProductData();
+            if (result[0].aStartTime != "" && result[0].aEndTime != "") {
+                var startTime = moment(result[0].aStartDate + " " + result[0].aStartTime);
+                var endTime = moment(result[0].aEndDate + " " + result[0].aEndTime);
+                var duration = moment.duration(moment(endTime).diff(moment(startTime)));
+                hours = duration.asHours();
+            }
+
+            let hoursFormatted = templateObject.timeFormat(hours) || "";
+            let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
+
+            document.getElementById("aStartDate").value = result[0].aStartDate || "";
+            document.getElementById("updateID").value = result[0].id || 0;
+            document.getElementById("appID").value = result[0].id;
+            document.getElementById("customer").value = result[0].accountname;
+            document.getElementById("phone").value = result[0].phone;
+            document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
+            document.getElementById("state").value = result[0].state || "";
+            document.getElementById("address").value = result[0].street || "";
+            if (localStorage.getItem("CloudAppointmentNotes") == true) {
+                document.getElementById("txtNotes").value = result[0].notes || "";
+                document.getElementById("txtNotes-1").value = result[0].notes || "";
+            }
+            document.getElementById("suburb").value = result[0].suburb;
+            document.getElementById("zip").value = result[0].zip;
+            document.getElementById("country").value = result[0].country;
+            document.getElementById("product-list").value = result[0].product || "";
+            document.getElementById("product-list-1").value = result[0].product || "";
+            $(".chkBox").prop("checked", false);
+            $(`.tblInventoryCheckbox .colChkBox`).closest('tr').removeClass('checkRowSelected');
+            if (result[0].extraProducts && result[0].extraProducts != "") {
+                let extraProducts = result[0].extraProducts.split(":");
+                let extraProductFees = [];
+                getVS1Data("TProductVS1").then(function(dataObject){
+                    if (dataObject.length == 0) {
+                        productService.getNewProductServiceListVS1().then(function(products) {
+                            extraProducts.forEach((item) => {
+                                $("#productCheck-" + item).prop("checked", true);
+                                products.tproductvs1.forEach((product) => {
+                                    if (product.Id == item) {
+                                        extraProductFees.push(product);
+                                    }
+                                    $("#productCheck-" + item).prop("checked", true);
+                                    $("#productCheck-" + item).closest('tr').addClass('checkRowSelected');
+                                });
+                            });
+                            templateObject.extraProductFees.set(extraProductFees);
+                        }).catch(function(err) {
+                        });
+                    }else{
+                        let data = JSON.parse(dataObject[0].data);
+                        extraProducts.forEach((item) => {
+                            $("#productCheck-" + item).prop("checked", true);
+                            data.tproductvs1.forEach((product) => {
+                                if (product.Id == item) {
+                                    extraProductFees.push(product);
+                                }
+                                $("#productCheck-" + item).prop("checked", true);
+                                $("#productCheck-" + item).closest('tr').addClass('checkRowSelected');
+                            });
+                        });
+                        templateObject.extraProductFees.set(extraProductFees);
+                    }
+                });
+                $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+            }
+
+            // if (result[0].product.replace(/\s/g, '') != "") {
+            //     $('#product-list').prepend('<option value="' + result[0].product + '" selected>' + result[0].product + '</option>');
+            //
+            // } else {
+            //     $('#product-list').prop('selectedIndex', -1);
+            // }
+            document.getElementById("employee_name").value = result[0].employeename;
+            document.getElementById("dtSODate").value = moment(result[0].startDate.split(" ")[0]).format("DD/MM/YYYY");
+            document.getElementById("dtSODate2").value = moment(result[0].endDate.split(" ")[0]).format("DD/MM/YYYY");
+            document.getElementById("startTime").value = result[0].startTime;
+            document.getElementById("endTime").value = result[0].endTime;
+            document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
+            document.getElementById("tActualStartTime").value = result[0].aStartTime;
+            document.getElementById("tActualEndTime").value = result[0].aEndTime;
+            document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
+            templateObject.attachmentCount.set(0);
+            if (result[0].attachments) {
+                if (result.length) {
+                    templateObject.attachmentCount.set(result[0].attachments.length);
+                    templateObject.uploadedFiles.set(result[0].attachments);
+                }
+            } else {
+                templateObject.attachmentCount.set("");
+                templateObject.uploadedFiles.set("");
+                templateObject.uploadedFile.set("");
+            }
+            if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none"))
+                $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
+            if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none"))
+                $("#smsConfirmedFlag i.fa-close").addClass("d-none");
+            if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none"))
+                $("#smsConfirmedFlag i.fa-question").addClass("d-none");
+            if (!$("#smsConfirmedFlag i.fa-minus-circle").hasClass("d-none"))
+                $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
+            if (result[0].custFld13 === "Yes") {
+                if (result[0].custFld11 === "Yes") {
+                    $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
+                } else {
+                    if (result[0].custFld11 === "No") {
+                        $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
+                    } else {
+                        $("#smsConfirmedFlag i.fa-question").removeClass("d-none");
+                    }
+                }
+            } else {
+                $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
+            }
+
+            setTimeout(() => {
+                $("#btnCopyOptions").attr("disabled", false);
+                $("#event-modal").modal();
+                if (localStorage.getItem("smsCustomerAppt") == "false") {
+                    $("#chkSMSCustomer").prop("checked", false);
+                }
+                if (localStorage.getItem("smsUserAppt") == "false") {
+                    $("#chkSMSUser").prop("checked", false);
+                }
+                if (localStorage.getItem("emailCustomerAppt") == "false") {
+                    $("#customerEmail").prop("checked", false);
+                }
+                if (localStorage.getItem("emailUserAppt") == "false") {
+                    $("#userEmail").prop("checked", false);
+                }
+            }, 200);
+            // this.$body.addClass('modal-open');
+        } else {
+            let splitId = id.split(":");
+            // FlowRouter.go("/employeescard?id=" + splitId[1]);
+            setTimeout(function() {
+                // $('.payrollTab').tab('show');
+                // $('a[href="#leave"]').tab('show');
+                // $('#removeLeaveRequestBtn').show();
+                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                var getLeaveInfo = leaveemployeerecords.filter((leave) => {
+                    return (splitId[2] == leave.ID);
+                });
+
+                if (getLeaveInfo.length > 0) {
+                    // $('#removeLeaveRequestBtn').show();
+                    $('#removeLeaveRequestBtn').css('visibility','initial');
+                    $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
+                    $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
+                    $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
+                    $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
+                    $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                    $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
+                    $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
+                    let eventData = templateObject.eventdata.get();
+                    let currentLeaveRequest = eventData.filter((item) => item.id == id)
+                    let startDate = "";
+                    let EndDate = "";
+                    if(currentLeaveRequest.length !== 0){
+                        startDate = currentLeaveRequest[0].start
+                        EndDate = currentLeaveRequest[0].end
+                    }
+                    $('#edtLeaveStartDate').val(moment(startDate).format('DD/MM/YYYY'));
+                    $('#edtLeaveEndDate').val(moment(EndDate).format('DD/MM/YYYY'));
+                    $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
+                    $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
+                    setTimeout(function() {
+                        $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
+                    }, 200);
+                    $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
+                    $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
+                    $('#newLeaveRequestModal').modal('show');
+                }
+                $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                    // window.open("/appointments", "_self");
+                });
+            }, 1000);
+        }
+    }
+
     function renderCalendarDropEvent(event){
         let draggedEmployeeID = templateObject.empID.get();
         let calendarData = templateObject.employeeOptions.get();
@@ -1541,232 +1778,7 @@ Template.calender.onRendered(function() {
                 }
             },
             eventClick: function(info) {
-                initAppointmentForm();
-                var hours = "0";
-                var id = info.event.id;
-                let getAllEmployeeData = templateObject.employeerecords.get() || "";
-                var appointmentData = templateObject.appointmentrecords.get();
-
-                var result = appointmentData.filter((apmt) => {
-                    return apmt.id == id;
-                });
-
-                if (result.length > 0) {
-                    var filterEmpData = getAllEmployeeData.filter((empdData) => {
-                        return empdData.employeeName == result[0].employeename;
-                    });
-                    if (filterEmpData) {
-                        if (filterEmpData[0].custFld8 == "false") {
-                            templateObject.getAllSelectedProducts(filterEmpData[0].id);
-                        } else {
-                            templateObject.getAllProductData();
-                        }
-                    } else {
-                        templateObject.getAllProductData();
-                    }
-
-                    if (result[0].isPaused == "Paused") {
-                        $(".paused").show();
-                        $("#btnHold").prop("disabled", true);
-                    } else {
-                        $(".paused").hide();
-                        $("#btnHold").prop("disabled", false);
-                    }
-
-                    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
-                        //$("#btnHold").prop("disabled", true);
-                    }
-
-                    if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
-                        $("#btnHold").prop("disabled", true);
-                        $("#btnStartAppointment").prop("disabled", true);
-                        $("#btnStopAppointment").prop("disabled", true);
-                        $("#startTime").prop("disabled", true);
-                        $("#endTime").prop("disabled", true);
-                        $("#tActualStartTime").prop("disabled", true);
-                        $("#tActualEndTime").prop("disabled", true);
-                        $("#txtActualHoursSpent").prop("disabled", true);
-                    }
-                    if (result[0].aEndTime != "") {
-                        $("#btnHold").prop("disabled", true);
-                        $("#btnStartAppointment").prop("disabled", true);
-                        $("#btnStopAppointment").prop("disabled", true);
-                        $("#startTime").prop("disabled", true);
-                        $("#endTime").prop("disabled", true);
-                        $("#tActualStartTime").prop("disabled", true);
-                        $("#tActualEndTime").prop("disabled", true);
-                        $("#txtActualHoursSpent").prop("disabled", true);
-                    }
-                    templateObject.getAllProductData();
-                    if (result[0].aStartTime != "" && result[0].aEndTime != "") {
-                        var startTime = moment(result[0].aStartDate + " " + result[0].aStartTime);
-                        var endTime = moment(result[0].aEndDate + " " + result[0].aEndTime);
-                        var duration = moment.duration(moment(endTime).diff(moment(startTime)));
-                        hours = duration.asHours();
-                    }
-
-                    let hoursFormatted = templateObject.timeFormat(hours) || "";
-                    let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
-
-                    document.getElementById("aStartDate").value = result[0].aStartDate || "";
-                    document.getElementById("updateID").value = result[0].id || 0;
-                    document.getElementById("appID").value = result[0].id;
-                    document.getElementById("customer").value = result[0].accountname;
-                    document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
-                    document.getElementById("state").value = result[0].state || "";
-                    document.getElementById("address").value = result[0].street || "";
-                    if (localStorage.getItem("CloudAppointmentNotes") == true) {
-                        document.getElementById("txtNotes").value = result[0].notes || "";
-                        document.getElementById("txtNotes-1").value = result[0].notes || "";
-                    }
-                    document.getElementById("suburb").value = result[0].suburb;
-                    document.getElementById("zip").value = result[0].zip;
-                    document.getElementById("country").value = result[0].country;
-                    document.getElementById("product-list").value = result[0].product || "";
-                    document.getElementById("product-list-1").value = result[0].product || "";
-                    $(".chkBox").prop("checked", false);
-                    $(`.tblInventoryCheckbox .colChkBox`).closest('tr').removeClass('checkRowSelected');
-                    if (result[0].extraProducts && result[0].extraProducts != "") {
-                        let extraProducts = result[0].extraProducts.split(":");
-                        let extraProductFees = [];
-                        getVS1Data("TProductVS1").then(function(dataObject){
-                            if (dataObject.length == 0) {
-                                productService.getNewProductServiceListVS1().then(function(products) {
-                                    extraProducts.forEach((item) => {
-                                        $("#productCheck-" + item).prop("checked", true);
-                                        products.tproductvs1.forEach((product) => {
-                                            if (product.Id == item) {
-                                                extraProductFees.push(product);
-                                            }
-                                            $("#productCheck-" + item).prop("checked", true);
-                                            $("#productCheck-" + item).closest('tr').addClass('checkRowSelected');
-                                        });
-                                    });
-                                    templateObject.extraProductFees.set(extraProductFees);
-                                }).catch(function(err) {
-                                });
-                            }else{
-                                let data = JSON.parse(dataObject[0].data);
-                                extraProducts.forEach((item) => {
-                                    $("#productCheck-" + item).prop("checked", true);
-                                    data.tproductvs1.forEach((product) => {
-                                        if (product.Id == item) {
-                                            extraProductFees.push(product);
-                                        }
-                                        $("#productCheck-" + item).prop("checked", true);
-                                        $("#productCheck-" + item).closest('tr').addClass('checkRowSelected');
-                                    });
-                                });
-                                templateObject.extraProductFees.set(extraProductFees);
-                            }
-                        });
-                        $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
-                    }
-
-                    // if (result[0].product.replace(/\s/g, '') != "") {
-                    //     $('#product-list').prepend('<option value="' + result[0].product + '" selected>' + result[0].product + '</option>');
-                    //
-                    // } else {
-                    //     $('#product-list').prop('selectedIndex', -1);
-                    // }
-                    document.getElementById("employee_name").value = result[0].employeename;
-                    document.getElementById("dtSODate").value = moment(result[0].startDate.split(" ")[0]).format("DD/MM/YYYY");
-                    document.getElementById("dtSODate2").value = moment(result[0].endDate.split(" ")[0]).format("DD/MM/YYYY");
-                    document.getElementById("startTime").value = result[0].startTime;
-                    document.getElementById("endTime").value = result[0].endTime;
-                    document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                    document.getElementById("tActualStartTime").value = result[0].aStartTime;
-                    document.getElementById("tActualEndTime").value = result[0].aEndTime;
-                    document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
-                    templateObject.attachmentCount.set(0);
-                    if (result[0].attachments) {
-                        if (result.length) {
-                            templateObject.attachmentCount.set(result[0].attachments.length);
-                            templateObject.uploadedFiles.set(result[0].attachments);
-                        }
-                    } else {
-                        templateObject.attachmentCount.set("");
-                        templateObject.uploadedFiles.set("");
-                        templateObject.uploadedFile.set("");
-                    }
-                    if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
-                    if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-close").addClass("d-none");
-                    if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-question").addClass("d-none");
-                    if (!$("#smsConfirmedFlag i.fa-minus-circle").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
-                    if (result[0].custFld13 === "Yes") {
-                        if (result[0].custFld11 === "Yes") {
-                            $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
-                        } else {
-                            if (result[0].custFld11 === "No") {
-                                $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
-                            } else {
-                                $("#smsConfirmedFlag i.fa-question").removeClass("d-none");
-                            }
-                        }
-                    } else {
-                        $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
-                    }
-
-                    setTimeout(() => {
-                        $("#btnCopyOptions").attr("disabled", false);
-                        $("#event-modal").modal();
-                        if (localStorage.getItem("smsCustomerAppt") == "false") {
-                            $("#chkSMSCustomer").prop("checked", false);
-                        }
-                        if (localStorage.getItem("smsUserAppt") == "false") {
-                            $("#chkSMSUser").prop("checked", false);
-                        }
-                        if (localStorage.getItem("emailCustomerAppt") == "false") {
-                            $("#customerEmail").prop("checked", false);
-                        }
-                        if (localStorage.getItem("emailUserAppt") == "false") {
-                            $("#userEmail").prop("checked", false);
-                        }
-                    }, 200);
-                    // this.$body.addClass('modal-open');
-                } else {
-                    let splitId = id.split(":");
-                    // FlowRouter.go("/employeescard?id=" + splitId[1]);
-                    setTimeout(function() {
-                        // $('.payrollTab').tab('show');
-                        // $('a[href="#leave"]').tab('show');
-                        // $('#removeLeaveRequestBtn').show();
-                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                        var getLeaveInfo = leaveemployeerecords.filter((leave) => {
-                            return (splitId[2] == leave.ID);
-                        });
-
-                        if (getLeaveInfo.length > 0) {
-                            // $('#removeLeaveRequestBtn').show();
-                            $('#removeLeaveRequestBtn').css('visibility','initial');
-                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
-                            $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
-                            $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
-                            $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
-                            $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
-                            $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
-                            $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
-                            $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
-                            $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
-                            $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
-                            $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
-                            setTimeout(function() {
-                                $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
-                            }, 200);
-                            $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
-                            $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
-                            $('#newLeaveRequestModal').modal('show');
-                        }
-                        $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                            // window.open("/appointments", "_self");
-                        });
-                    }, 1000);
-                }
+                leaveRequestEventClick(info)
             },
             editable: true,
             droppable: true, // this allows things to be dropped onto the calendar
@@ -4724,40 +4736,40 @@ Template.calender.onRendered(function() {
                         }else{
                             let splitId = id.split(":");
                     // FlowRouter.go("/employeescard?id=" + splitId[1]);
-                    setTimeout(function() {
-                        // $('.payrollTab').tab('show');
-                        // $('a[href="#leave"]').tab('show');
-                        // $('#removeLeaveRequestBtn').show();
-                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                        var getLeaveInfo = leaveemployeerecords.filter((leave) => {
-                            return (splitId[2] == leave.ID);
-                        });
-
-                        if (getLeaveInfo.length > 0) {
-                            // $('#removeLeaveRequestBtn').show();
-                            $('#removeLeaveRequestBtn').css('visibility','initial');
-                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
-                            $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
-                            $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
-                            $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
-                            $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
-                            $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
-                            $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
-                            $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
-                            $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
-                            $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
-                            $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
                             setTimeout(function() {
-                                $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
-                            }, 200);
-                            $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
-                            $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
-                            $('#newLeaveRequestModal').modal('show');
-                        }
-                        $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
-                            // window.open("/appointments", "_self");
-                        });
-                    }, 1000);
+                                // $('.payrollTab').tab('show');
+                                // $('a[href="#leave"]').tab('show');
+                                // $('#removeLeaveRequestBtn').show();
+                                let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                                var getLeaveInfo = leaveemployeerecords.filter((leave) => {
+                                    return (splitId[2] == leave.ID);
+                                });
+
+                                if (getLeaveInfo.length > 0) {
+                                    // $('#removeLeaveRequestBtn').show();
+                                    $('#removeLeaveRequestBtn').css('visibility','initial');
+                                    $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
+                                    $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
+                                    $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
+                                    $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
+                                    $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                                    $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
+                                    $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
+                                    $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
+                                    $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
+                                    $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
+                                    $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
+                                    setTimeout(function() {
+                                        $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
+                                    }, 200);
+                                    $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
+                                    $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
+                                    $('#newLeaveRequestModal').modal('show');
+                                }
+                                $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                                    // window.open("/appointments", "_self");
+                                });
+                            }, 1000);
                         }
                     },
                     editable: true,
