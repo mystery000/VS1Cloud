@@ -322,6 +322,7 @@ openDb = function (dbName) {
         keyPath: "EmployeeEmail",
       });
       db.createObjectStore("TAssignLeaveType", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TAssignLeaveTypeList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("Tvs1CardPreference", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TQuoteFilterList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSalesOrderFilterList", {
