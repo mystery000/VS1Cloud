@@ -15,6 +15,13 @@ Template.assetregisteroverview.onCreated(function () {
   templateObject.convertedStatus = new ReactiveVar();
 
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.AssetID || "",
       data.AssetCode || "",
@@ -33,15 +40,20 @@ Template.assetregisteroverview.onCreated(function () {
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
-      data.DepreciationStartDate
-        ? moment(data.DepreciationStartDate).format("DD/MM/YYYY")
-        : "",
-      data.Active || false,
+      data.DepreciationStartDate ? moment(data.DepreciationStartDate).format("DD/MM/YYYY") : "",
+      linestatus,
     ];
     return dataList;
   };
 
   templateObject.getExData = function (data) {
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.AssetID || "",
       data.AssetCode || "",
@@ -60,10 +72,8 @@ Template.assetregisteroverview.onCreated(function () {
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
-      data.DepreciationStartDate
-        ? moment(data.DepreciationStartDate).format("DD/MM/YYYY")
-        : "",
-      data.Active || false,
+      data.DepreciationStartDate ? moment(data.DepreciationStartDate).format("DD/MM/YYYY") : "",
+      linestatus,
     ];
     return dataList;
   };
@@ -73,15 +83,15 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 0,
       label: "ID",
-      class: "AssetRegisterId",
-      active: true,
+      class: "colAssetRegisterId",
+      active: false,
       display: true,
       width: "60",
     },
     {
       index: 1,
       label: "Asset Code",
-      class: "RegisterAssetCode",
+      class: "colRegisterAssetCode",
       active: true,
       display: true,
       width: "130",
@@ -89,7 +99,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 2,
       label: "Asset Name",
-      class: "RegisterAssetName",
+      class: "colRegisterAssetName",
       active: true,
       display: true,
       width: "150",
@@ -97,7 +107,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 3,
       label: "Asset Description",
-      class: "RegisterAssetDescription",
+      class: "colRegisterAssetDescription",
       active: true,
       display: true,
       width: "170",
@@ -105,7 +115,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 4,
       label: "Asset Type",
-      class: "RegisterAssetType",
+      class: "colRegisterAssetType",
       active: true,
       display: true,
       width: "130",
@@ -113,7 +123,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 5,
       label: "Brand",
-      class: "RegisterAssetBrand",
+      class: "colRegisterAssetBrand",
       active: true,
       display: true,
       width: "120",
@@ -121,7 +131,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 6,
       label: "Model",
-      class: "RegisterAssetModel",
+      class: "colRegisterAssetModel",
       active: true,
       display: true,
       width: "90",
@@ -129,7 +139,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 7,
       label: "Number",
-      class: "RegisterAssetNumber",
+      class: "colRegisterAssetNumber",
       active: true,
       display: true,
       width: "100",
@@ -137,7 +147,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 8,
       label: "Registration No",
-      class: "RegisterAssetRegistrationNo",
+      class: "colRegisterAssetRegistrationNo",
       active: true,
       display: true,
       width: "160",
@@ -145,7 +155,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 9,
       label: "Type",
-      class: "RegisterAssetType",
+      class: "colRegisterAssetType",
       active: true,
       display: true,
       width: "80",
@@ -153,7 +163,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 10,
       label: "Capacity Weight",
-      class: "RegisterAssetCapacityWeight",
+      class: "colRegisterAssetCapacityWeight",
       active: true,
       display: true,
       width: "160",
@@ -161,7 +171,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 11,
       label: "Capacity Volume",
-      class: "RegisterAssetCapacityVolume",
+      class: "colRegisterAssetCapacityVolume",
       active: true,
       display: true,
       width: "160",
@@ -169,7 +179,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 12,
       label: "Purchased Date",
-      class: "RegisterAssetPurchasedDate",
+      class: "colRegisterAssetPurchasedDate",
       active: true,
       display: true,
       width: "160",
@@ -177,7 +187,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 13,
       label: "Cost",
-      class: "RegisterAssetCost",
+      class: "colRegisterAssetCost",
       active: true,
       display: true,
       width: "100",
@@ -185,7 +195,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 14,
       label: "Supplier",
-      class: "RegisterAssetSupplier",
+      class: "colRegisterAssetSupplier",
       active: true,
       display: true,
       width: "110",
@@ -193,7 +203,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 15,
       label: "Registration Renewal Date",
-      class: "RegisterAssetRegisterRenewDate",
+      class: "colRegisterAssetRegisterRenewDate",
       active: true,
       display: true,
       width: "250",
@@ -201,7 +211,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 16,
       label: "Insurance Info",
-      class: "RegisterAssetInsuranceInfo",
+      class: "colRegisterAssetInsuranceInfo",
       active: true,
       display: true,
       width: "140",
@@ -209,7 +219,7 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 17,
       label: "Depreciation Start Date",
-      class: "RegisterAssetRenewDate",
+      class: "colRegisterAssetRenewDate",
       active: true,
       display: true,
       width: "250",
@@ -217,10 +227,10 @@ Template.assetregisteroverview.onCreated(function () {
     {
       index: 18,
       label: "Status",
-      class: "AssetStatus",
+      class: "colAssetStatus",
       active: true,
       display: true,
-      width: "100",
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
@@ -228,7 +238,7 @@ Template.assetregisteroverview.onCreated(function () {
 
 Template.assetregisteroverview.onRendered(function () {
   $("#tblAssetRegisterList tbody").on("click", "tr", function () {
-    var assetID = parseInt($(this).find(".AssetRegisterId").html());
+    var assetID = parseInt($(this).find(".colAssetRegisterId").html());
     FlowRouter.go("/fixedassetcard?assetId=" + assetID);
   });
 });

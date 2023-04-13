@@ -139,14 +139,8 @@
                     style="margin-top: 12px;" class="btn btn-primary alerts-border downloadHelpFile">Download
                     Help File</a>
                 </div>
-                <div class="col-sm-6 text-right">
-                  <button id="exportbtn" class="btn btn-primary btnNav vs1ButtonMargin" type="button"><i
-                    class="fas fa-file-export" style="margin-right: 5px;"></i>Export</button>
-                  <button class="btn btn-primary vs1ButtonMargin" type="button" data-toggle="modal"
-                    href="#importInveontoryOverviewModal"><i class="fas fa-file-import"
-                      style="margin-left:5px"></i>Import</button>
-                  <button class="btn btn-primary printConfirm btnNav vs1ButtonMargin" type="button"><i
-                    class="fa fa-print" style="margin-right: 5px;"></i>Print</button>
+                <div class="col-sm-6 d-xl-flex justify-content-xl-end align-items-xl-start text-right">
+                  {{> export_import_print_display_button DisplaySettings="hiddenButton" tablename="tblTermsList"}}
                   <button class="btn btn-success float-right confirmBtn" id="saveStep4" type="button"
                     style="margin: 12px 0 0 15px;" data-step-id="4">Confirm</button>
                 </div>
@@ -158,7 +152,7 @@
                     Term</button>
                 </div>
               </div>
-              <div class="modal fade" role="dialog" tabindex="-1" id="importInveontoryOverviewModal">
+              <!-- <div class="modal fade" role="dialog" tabindex="-1" id="importInveontoryOverviewModal">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -242,7 +236,7 @@
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> -->
               <div class="table-responsive">
                 <div class="modal fade" role="dialog" tabindex="-1" id="deleteTermLineModal">
                   <div class="modal-dialog" role="document">
@@ -266,7 +260,27 @@
                   </div>
                 </div>
 
-                {{> non_transactional_list tablename='tblTermsList'}}
+                <!-- {{> non_transactional_list tablename='tblTermsList'}} -->
+                <style>
+                  td.colTermsAmount, td.colEarlyPayDiscount, td.colSellRate{
+                      text-align: right !important;
+                  }
+              </style>
+              {{>datatablelist
+                      tablename="tblTermsList"
+                      apiName= apiFunction
+                      indexeddbname = 'TTermsVS1List'
+                      tableheaderrecords = tableheaderrecords
+                      exportfilename = 'Terms List'
+                      istransaction = false
+                      apiParams= apiParams
+                      datahandler = datahandler
+                      service=service
+                      lowercaseDataName='ttermsvs1list'
+                      exIndexDBName = 'ttermsvs1list'
+                      exdatahandler = exDataHandler
+                      searchAPI = searchAPI
+              }}
               </div>
             </div>
             <div class="row no-gutters">
@@ -282,4 +296,8 @@
       </div>
     </div>
   </div>
+  {{> import_template ImportformName="Terms Settings"}}
+  <script>
+      modalDraggable();
+  </script>
 </template>

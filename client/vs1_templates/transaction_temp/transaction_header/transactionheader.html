@@ -1,7 +1,7 @@
 <template name="transactionheader">
     <div class="transaction_header"
     style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;">
-     
+
       <div class="row">
           <div class="col-12 col-md-4">
               <h2 style="margin: 16px;margin-bottom: 0px;" class="heading">
@@ -42,7 +42,7 @@
                                 is_editable=true
                                 colNameForValue='colCompany'
                                 modal_title=getModalTitle
-                                lineTableId=gridTableId
+                                lineTableId=getgridTableId
                                 printTableId=printTableId
                               }}
                         </div>
@@ -121,20 +121,20 @@
                             {{/if}}
                         </div>
                         {{/each}}
-                        <style>
-                            .transaction_header .currency-module {
-                                margin: 0
-                            }
-                        </style>
-                        <div class="d-flex align-items-center">
+<!--                        <style>-->
+<!--                            .transaction_header .currency-module {-->
+<!--                                margin: 0-->
+<!--                            }-->
+<!--                        </style>-->
+<!--                        <div class="d-flex align-items-center">-->
                             {{#if currency}}
-                                {{#if equals clientType 'Customer'}}
+                                {{#if equals Category 'purchase'}}
                                     {{> CurrencyWidget rate="sell" trans="true"}}
                                 {{else}}
                                     {{> CurrencyWidget rate="buy" row="true"}}
                                 {{/if}}
                             {{/if}}
-                        </div>
+<!--                        </div>-->
                         {{> custom_fields
                             containerClasses="col-12 col-md-6 col-lg-4 col-xl-2"
                             salesCloudPreferenceRec=salesCloudPreferenceRec
@@ -156,7 +156,7 @@
                       </div>
                     </div>
                   </div>
-        
+
                 </div>
             </div>
         </div>

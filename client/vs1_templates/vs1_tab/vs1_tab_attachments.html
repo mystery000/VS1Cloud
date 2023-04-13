@@ -1,0 +1,225 @@
+<template name="vs1_tab_attachments">
+  <div class="tab-pane border rounded-0" role="tabpanel" id="{{id}}"
+    style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+    <div class="row no-gutters" style="margin: 12px;">
+      <div class="col">
+        <style>
+          .file-name span {
+            width: 100%;
+            float: left;
+          }
+
+          .uploaded-on {
+            display: none !important;
+          }
+
+          #file-display .fileIocns i.fa.fa-file {
+            color: rgb(252, 181, 38);
+            font-size: 24px;
+          }
+
+          #file-display {
+            padding: 0;
+            margin: 0;
+          }
+
+          .uploaded-element {
+            display: inherit;
+          }
+
+          .uploaded-element {
+
+            border: 1px solid rgb(237, 237, 237);
+            border-top: none;
+
+            /* float: left; */
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+          }
+
+          #file-display .fileIocns {
+            background-image: url(img/file_icons-samall.png);
+            background-repeat: no-repeat;
+            background-position: 0 -105px;
+          }
+
+          #file-display .fileIocns {
+            float: left;
+            margin-right: 10px;
+          }
+
+          .file-name {
+            float: left;
+            width: 95%;
+          }
+
+          .uploaded-element-header {
+            border: 1px solid rgb(237, 237, 237);
+            border-top: none;
+            float: left;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: #e3e6f0;
+          }
+
+          .uploaded-header {
+            width: 100%;
+            text-align: center;
+          }
+
+          .uploaded-element .confirm-action a.confirm-delete-attachment {
+            padding: 6px 13px 5px;
+            background-color: rgb(216, 68, 68) !important;
+            border-color: rgb(197, 112, 119) rgb(169, 29, 29) rgb(169, 29, 29) rgb(197, 112, 119);
+            color: rgb(255, 255, 255) !important;
+            text-shadow: 1px 1px 1px rgba(30, 30, 30, 0.15);
+            line-height: initial;
+            font-size: 12px;
+            float: left;
+          }
+
+          button.save-to-library {
+            padding: 6px 13px 5px;
+            border-radius: 4px;
+            background: linear-gradient(rgb(255, 255, 255), rgb(230, 234, 236));
+            border: 1px solid rgb(230, 230, 230);
+            border-color: rgb(230, 230, 230) rgb(179, 179, 179) rgb(179, 179, 179) rgb(230, 230, 230) !important;
+            color: rgb(204, 0, 0) !important;
+            font-weight: bold;
+            margin-left: 10px !important;
+            font-size: 12px;
+          }
+
+          .uploaded-element {
+            display: inherit;
+          }
+
+          /* HERE */
+          #files_view .modal-title {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width: 70%;
+          }
+
+          #files_view .modal-title {
+            color: #333;
+            font-size: 18px;
+            font-weight: 700;
+            text-rendering: optimizelegibility;
+            padding: 9px 0;
+            padding-left: 15px;
+            padding-top: 11px;
+          }
+
+          #files_view .modal-dialog {
+            width: 750px;
+            margin: 30px auto;
+          }
+
+          #files_view .modal-header .close {
+            margin-top: 0;
+            width: 46px;
+            height: 46px;
+            padding: 6px 0 0;
+            border-left: 1px solid #ddd;
+            opacity: 1;
+            margin: 0;
+          }
+
+          #files_view .modal-header {
+            padding: 0;
+            display: block;
+          }
+
+          #files_view .modal-body {
+            background-color: rgb(250, 251, 251);
+          }
+
+          #files_view .image-previewer img {
+            border: 3px solid #fff;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, .2);
+            width: 100%;
+          }
+
+          .download_button {
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+          }
+
+          @media screen and (max-width: 450px) {
+            .attachementsImage1 {
+              width: 100% !important;
+            }
+          }
+        </style>
+        <!-- Start Attachemt -->
+        <div class="divTable" id="file-display">
+          <div class="col inboxcol1">
+            <img src="/icons/nofiles_icon.png" class="attachementsImage1">
+          </div>
+          <div class="col inboxcol2">
+            <div>Upload files or add files from <br class="breakPhone" style="display: none;">the file
+              library</div>
+            <p style="color: #ababab;">Only users with
+              access to your<br class="breakPhone" style="display: none;"> company can
+              view these files</p>
+          </div>
+        </div>
+
+        <input type="file" id="attachment-upload" style="display:none" multiple
+          accept="image/*;capture=camera,.jpg,.gif,.png,.bmp,.tiff,.pdf,.doc,.docx,.xls,.xlsx,.ppt,
+                                            .pptx,.odf,.csv,.txt,.rtf,.eml,.msg,.ods,.odt,.keynote,.key,.pages-tef,
+                                            .pages,.numbers-tef,.numbers,.zip,.rar,.zipx,.xzip,.7z,image/jpeg,
+                                            image/gif,image/png,image/bmp,image/tiff,application/pdf,
+                                            application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                                            application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                                            application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,
+                                            application/vnd.oasis.opendocument.formula,text/csv,text/plain,text/rtf,message/rfc822,
+                                            application/vnd.ms-outlook,application/vnd.oasis.opendocument.spreadsheet,
+                                            application/vnd.oasis.opendocument.text,application/x-iwork-keynote-sffkey,
+                                            application/vnd.apple.keynote,application/x-iwork-pages-sffpages,
+                                            application/vnd.apple.pages,application/x-iwork-numbers-sffnumbers,
+                                            application/vnd.apple.numbers,application/zip,application/rar,
+                                            application/x-zip-compressed,application/x-zip,application/x-7z-compressed">
+
+        <button class="btn btn-primary btnUploadFile new_attachment_btn" type="button" style="margin: 4px;">
+          <i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>
+          Upload
+        </button>
+      </div>
+    </div>
+  </div>
+  <div id="{{divid}}" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">x</button>
+          <h4 class="modal-title">{{uploadedFile.name}}
+          </h4>
+        </div>
+        <div class="modal-body">
+          {{#if uploadedFile.image}}
+          <div class="image-previewer">
+            <img src="{{uploadedFile.link}}">
+          </div>
+          {{else}}
+          <div class=" default-file {{uploadedFile.class}}">
+
+          </div>
+          {{/if}}
+          <div class="download_button">
+            <a class="new_create_btn btn btn-primary" id="downloadButton"
+              download="{{uploadedFile.name}}" href="{{uploadedFile.link}}">Download</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

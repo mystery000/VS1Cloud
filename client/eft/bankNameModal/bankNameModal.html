@@ -14,6 +14,7 @@
                 }
             </style>
             {{>datatablelist
+                tableclass="tblBankName"
                 tablename="tblBankName"
                 apiName= apiFunction
                 indexeddbname = 'TBankNameList'
@@ -23,10 +24,13 @@
                 apiParams= apiParams
                 datahandler = datahandler
                 service=service
-                lowercaseDataName='tbanknamelist'
-                exIndexDBName = 'tbanknamelist'
+                lowercaseDataName='tbankcode'
+                exIndexDBName = 'tbankcode'
                 exdatahandler = exDataHandler
                 searchAPI = searchAPI
+                showPlusButton = true
+                showPlusButtonDataTarget = "newBankNameModal"
+                showPlusButtonClass = "newBankNameMod"
             }}
         </div>
       </div>

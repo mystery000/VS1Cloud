@@ -33,23 +33,82 @@
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="form-group" style="margin: 4px;"><label>Tax Code</label>
-                            <input type="search" class="form-control sltTaxCode" id="sltTaxCode" name="sltTaxCode" style="background-color: #fff; cursor: pointer;" />
+                        <div class="form-group" style="margin: 4px;">
+                            {{> vs1___dropdown
+                                    type='search'
+                                    id='sltTaxCode'
+                                    name='sltTaxCode'
+                                    modalId= 'taxRateListModal'
+                                    list_template_name='taxratelistpop'
+                                    innerModal=true
+                                    modal_title='Tax Code List'
+                                    label = 'Tax Code'
+                                    colNameForValue = 'colName'
+                                    target_modal_id= 'newTaxRateModal'
+                                    target_template_id='newtaxratepop'
+                                    is_editable=true
+                                    noBorder=false
+                            }}
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="form-group" style="margin: 4px;"><label>Sub Account 1</label>
-                            <input type="search" class="form-control" id="edtSubAccount1" name="edtSubAccount1" style="background-color: #fff; cursor: pointer;">
+                        <div class="form-group" style="margin: 4px;">
+                            {{> vs1___dropdown
+                                    type='search'
+                                    id='edtSubAccount1'
+                                    name='edtSubAccount1'
+                                    modalId= 'accountListModal'
+                                    list_template_name='accountlistpop'
+                                    innerModal=true
+                                    modal_title='Account List'
+                                    label = 'Sub Account 1'
+                                    colNameForValue = 'colAccountName'
+                                    target_modal_id= 'addAccountModal'
+                                    target_template_id='addaccountpop'
+                                    custid='rcq7ZWZnptT6TzBwP'
+                                    is_editable=true
+                                    noBorder=false
+                            }}
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="form-group" style="margin: 4px;"><label>Sub Account 2</label>
-                            <input type="search" class="form-control" id="edtSubAccount2" name="edtSubAccount2" style="background-color: #fff; cursor: pointer;">
+                        <div class="form-group" style="margin: 4px;">
+                            {{> vs1___dropdown
+                                    type='search'
+                                    id='edtSubAccount2'
+                                    name='edtSubAccount2'
+                                    modalId= 'accountListModal'
+                                    list_template_name='accountlistpop'
+                                    innerModal=true
+                                    modal_title='Account List'
+                                    label = 'Sub Account 2'
+                                    colNameForValue = 'colAccountName'
+                                    target_modal_id= 'addAccountModal'
+                                    target_template_id='addaccountpop'
+                                    custid='GP4z5E8SpdZafRfLd'
+                                    is_editable=true
+                                    noBorder=false
+                            }}
                         </div>
                     </div>
                     <div class="col-6 col-md-3">
-                        <div class="form-group" style="margin: 4px;"><label>Sub Account 3</label>
-                            <input type="search" class="form-control" id="edtSubAccount3" name="edtSubAccount3" style="background-color: #fff; cursor: pointer;">
+                        <div class="form-group" style="margin: 4px;">
+                            {{> vs1___dropdown
+                                    type='search'
+                                    id='edtSubAccount3'
+                                    name='edtSubAccount3'
+                                    modalId= 'accountListModal'
+                                    list_template_name='accountlistpop'
+                                    innerModal=true
+                                    modal_title='Account List'
+                                    label = 'Sub Account 3'
+                                    colNameForValue = 'colAccountName'
+                                    target_modal_id= 'addAccountModal'
+                                    target_template_id='addaccountpop'
+                                    custid='GP4z5Eddax8SpdZafR'
+                                    is_editable=true
+                                    noBorder=false
+                            }}
                         </div>
                     </div>
                     <div class="col-12">
@@ -134,12 +193,6 @@
                             <div class="col-6 col-md-4">
                                 <div class="form-group" style="margin: 4px;"><label>Bank Name</label>
                                     <input type="text" class="form-control" id="edtBankName" name="edtBankName">
-                                    <!-- <select class="form-control pointer" id="edtBankName" name="edtBankName">
-                                        {{#each item in bankNames}}
-                                            <option value="{{item.name}}">{{item.name}}
-                                            </option>
-                                        {{/each}}
-                                    </select> -->
                                 </div>
                             </div>
                             <div class="col-6 col-md-4">

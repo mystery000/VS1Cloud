@@ -1,0 +1,168 @@
+<template name="reports">
+    <div style="margin-top: -24px;">
+        <div class="fullScreenSpin" style="display:none;">
+            <div class="spinner"></div>
+        </div>
+        <div class="row" style="padding: 15px 20px !important;">
+            <div class="col-12 col-md-4">
+                <h2>Reports {{> helpbutton}}</h2>
+            </div>
+            <div class="col-12 col-md-4">
+                {{> loggedcompanyoverview}}
+            </div>
+            <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding-bottom: 8px;">
+                            <h4>Help</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-center text-muted"><a role="button" data-toggle="modal" href="#helpModal" class="btn btn-primary helpModal">View Help Video</a></p>
+                            <p class="text-center text-muted"><a href="https://vs1forum.com/viewtopic.php?f=6&t=49" target="_blank" class="btn btn-primary">Download Help File</a></p>
+                            {{> helpadvisor}}
+                            {{> helpgotoforum}}
+                        </div>
+                        <div class="modal-footer" style="padding: 6px;"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+                    </div>
+                </div>
+            </div>
+<!--            <h3 class="text-dark mb-0">Reports-->
+<!--                &lt;!&ndash; <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> &ndash;&gt;-->
+<!--                {{> helpbutton}}-->
+
+<!--                &lt;!&ndash; Start Help View Modal &ndash;&gt;-->
+<!--                &lt;!&ndash; End Help View Modal &ndash;&gt;-->
+<!--            </h3>-->
+            <!-- <button class="btn btn-primary btnBatchUpdate" id="btnBatchUpdate" type="button" style=""><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button> -->
+            <div class="col-12 col-md-4 form-group">
+              <button class="btn btn-primary btnBatchUpdate float-right btn-auto-save" id="btnBatchUpdate" type="button"><i class="fas fa-sync-alt" style="padding-right: 5px;"></i>Update Reporting Tables</button>
+              <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
+           </div>
+        </div>
+        <style>
+            @media only screen and (min-width: 428px) {
+                .rowB {
+                    display: block;
+                }
+            }
+
+            @media screen and (min-width: 429px) and (max-width: 2024px) {
+                .rowB {
+                    display: none;
+                }
+            }
+
+            .reportCard {
+                margin: 16px;
+                min-width: 100%;
+                height: 455px;
+            }
+
+            .all-reports ul {
+                padding: 0;
+               
+            }
+
+            .all-reports ul li:not(:first-child) {
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
+            .all-reports ul li:first-child  {
+                padding-bottom: 4px
+            }
+            .all-reports ul li:last-child  {
+                padding-bottom: 0
+            }
+
+            .all-reports ul li:not(:last-child) {
+                border-bottom: 1px solid rgba(0,0,0, .1);
+            }
+        </style>
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-10">
+                <div class="row justify-content-center">
+                    <div class="col-12 all-reports">
+                        <!-- <div class="row justify-content-center"> -->
+                        <div class="row">
+                            <div class="col-12 col-md-3" id="favorites">
+                                <div class="card shadow mb-3 reportCard">
+                                    <div class="card-header py-3" >
+                                        <p class="text-primary m-0 font-weight-bold">Favorites</p>
+                                    </div>
+                                    <div class="card-body" style="overflow-x: auto;">
+                                        {{#if noFavorite}}
+                                        <div class="text-center">You have no favorite reports.</div>
+                                        {{else}}
+                                            {{#each report in favoritereports}}
+                                                    <li class="report-item d-flex align-items-center justify-content-between">
+                                                        <a  style="text-decoration: none;">{{report.label}}</a>
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input class="custom-control-input removeFavChkbox" type="checkbox" id="formCheck-fav-{{tolowercase report.id}}" data-id="{{report.id}}" >
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-fav-{{tolowercase report.id}}"></label>
+                                                        </div>
+                                                    </li>
+                                                {{/each}}
+                                        {{/if}}
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{#each group in reports}}
+                                <div class="col-12 col-md-3">
+                                    <div class="card shadow mb-3 reportCard">
+                                        <div class="card-header py-3">
+                                            <p class="text-primary m-0 font-weight-bold" style="float: left;">{{group.label}}</p>
+                                            <p class="text-info m-0 font-weight-bold" style="float: right;">Add to Favorites</p>
+                                        </div>
+                                        <div class="card-body" style="overflow-x: auto;">
+                                            <ul>
+                                                {{#each report in group.reports}}
+                                                    <li class="report-item d-flex align-items-center justify-content-between">
+                                                        <a  style="text-decoration: none;" href="{{report.route }}">{{report.label}}</a>
+                                                        <div class="custom-control custom-checkbox">
+                                                            {{#if isFavorite report.id}}
+                                                            <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-{{report.id}}" data-id="{{report.id}}" checked>
+                                                            {{else}}
+                                                            <input class="custom-control-input favCheckBox" type="checkbox" id="formCheck-{{report.id}}" data-id="{{report.id}}" >
+                                                            {{/if}}
+                                                            <label style="cursor: pointer;" class="custom-control-label" for="formCheck-{{report.id}}"></label>
+                                                        </div>
+                                                    </li>
+                                                {{/each}}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            {{/each}}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Start Help Video Modal -->
+    <div class="modal fade" role="dialog" tabindex="-1" id="helpModal">
+        <div class="modal-dialog" role="document" style="max-width: 670px!important;">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="title-header">Reports</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
+                    <!-- <iframe width="640" height="360" src="https://www.youtube.com/embed/BzxoYOp42fg" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/reports.mp4" type="video/mp4">
+                    </video>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</template>

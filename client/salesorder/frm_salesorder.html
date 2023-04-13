@@ -8,6 +8,7 @@
     <form>
       {{> transaction_header
       cardType="Sales Order"
+      clientType='Customer'
       data=salesorderrecord
       uploadedFile=uploadedFile
       isCurrencyEnable=isCurrencyEnable
@@ -34,6 +35,8 @@
       showCopyToOrder=false
       modal_id = 'customerListModal'
       colName='colCompany'
+      gridTableId='tblSalesOrderLine'
+      templateName=templateName
       }}
 
       <div>
@@ -1062,7 +1065,7 @@
     </div>
     <!-- END PDF -->
     {{/if}}
-    {{> all_transaction_modals customerRecord=customerRecord}}
+    <!-- {{> all_transaction_modals customerRecord=customerRecord}} -->
   </div>
 
   <!-- Start Help Video Modal -->

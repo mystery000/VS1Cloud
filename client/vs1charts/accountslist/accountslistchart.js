@@ -31,7 +31,6 @@ Template.accountslistchart.onCreated(() => {
     templateObject.selectedFile = new ReactiveVar();
     templateObject.isBankAccount = new ReactiveVar();
     templateObject.isBankAccount.set(false);
-
     templateObject.getDataTableList = function (data) {
         let accBalance;
 
@@ -41,15 +40,15 @@ Template.accountslistchart.onCreated(() => {
             accBalance = Currency + "0.00";
         }
         if (data.ReceiptCategory && data.ReceiptCategory != '') {
-            usedCategories.push(data.fields);
+            // usedCategories.push(data.fields);
         }
         let linestatus = '';
         if (data.Active == true) {
             linestatus = "";
         } else if (data.Active == false) {
             linestatus = "In-Active";
-        }
-        ;
+        };
+
         var dataList = [
             data.AccountID || "",
             data.AccountName || "",
@@ -70,29 +69,25 @@ Template.accountslistchart.onCreated(() => {
             data.IsHeader || false,
             data.AllowExpenseClaim || false,
             data.ReceiptCategory || "",
-            linestatus,
             data.Level1 || "",
             data.Level2 || "",
             data.Level3 || "",
+            linestatus,
         ];
         return dataList;
     }
 
-    let bsbname = "Branch Code";
-    if (localStorage.getItem("ERPLoggedCountry") === "Australia") {
-        bsbname = "BSB";
-    }
     let headerStructure = [
-        {index: 0, label: '#ID', class: 'colAccountId', active: false, display: false, width: "10"},
+        {index: 0, label: 'ID', class: 'colAccountId', active: false, display: false, width: "10"},
         {index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200"},
-        {index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "720"},
+        {index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "300"},
         {index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90"},
         {index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60"},
-        {index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80"},
+        {index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110"},
         {index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80"},
         {index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120"},
         {index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120"},
-        {index: 9, label: bsbname, class: 'colBSB', active: true, display: true, width: "95"},
+        {index: 9, label: "BsB Name", class: 'colBSB', active: true, display: true, width: "95"},
         {index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120"},
         {index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120"},
         {index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60"},
@@ -102,10 +97,10 @@ Template.accountslistchart.onCreated(() => {
         {index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60"},
         {index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60"},
         {index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80"},
-        {index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100"},
-        {index: 20, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "80"},
-        {index: 21, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "80"},
-        {index: 22, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "80"},
+        {index: 19, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "80"},
+        {index: 20, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "80"},
+        {index: 21, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "80"},
+        {index: 22, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -925,7 +920,8 @@ Template.accountslistchart.onRendered(() => {
     }
 
     $("#tblDashboardAccountChartList tbody").on("click", "tr .colAccountName, tr .colAccountName, tr .colDescription, tr .colAccountNo, tr .colType, tr .colTaxCode, tr .colBankAccountName, tr .colBSB, tr .colBankAccountNo, tr .colExtra, tr .colAPCANumber", function () {
-        var listData = $(this).closest("tr").find('.colAccountId').text();
+        //var listData = $(this).closest("tr").find('.colAccountId').text();
+        var listData = $(this).closest("tr").attr("id");
         var tabletaxtcode = $(event.target).closest("tr").find(".colTaxCode").text();
         var accountName = $(event.target).closest("tr").find(".colAccountName").text();
         let columnBalClass = $(event.target).attr("class");
@@ -1017,7 +1013,7 @@ Template.accountslistchart.onRendered(() => {
     });
 
     $("#tblDashboardAccountChartList tbody").on("click", "tr .colBalance", async function () {
-        var listData = $(this).closest("tr").find(".colAccountId").text();
+        var listData = $(this).closest("tr").attr("id");
         var accountName = $(event.target).closest("tr").find(".colAccountName").text();
         let columnBalClass = $(event.target).attr("class");
         let accountService = new AccountService();
@@ -1775,7 +1771,7 @@ Template.accountslistchart.events({
     'click .accountslistchart #tblDashboardCategory tbody tr': function (e) {
         let category = $(e.target).closest('tr').find(".colReceiptCategory").text() || '';
         let accountName = $(e.target).closest('tr').find(".colAccountName").text() || '';
-        let accountID = $(e.target).closest('tr').find(".colAccountID").text() || '';
+        let accountID = $(e.target).closest('tr').attr("id") || '';
 
         $('.expenseCategory').val(category);
         $('#categoryAccountID').val(accountID);

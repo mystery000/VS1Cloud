@@ -55,6 +55,7 @@ Template.expenseaccountlistpop.onCreated(function(e) {
 
     templateObject.getDataTableList = function(data) {
         let accBalance;
+        let usedCategories = [];
         if (!isNaN(data.Balance)) {
             accBalance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.0;
         } else {
@@ -391,4 +392,9 @@ Template.expenseaccountlistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter', 'typeFilter', 'useReceiptClaim'];
     },
+    tablename: () => {
+      let templateObject = Template.instance();
+      let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+    	return 'tblExpenseAccountList'+selCustID;
+    }
 })

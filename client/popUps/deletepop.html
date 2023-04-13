@@ -15,14 +15,12 @@
                 <div class="modal-header">
                     <h4>Delete</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
+                        <span aria-hidden="true" style="font-size: 32px;">×</span>
                     </button>
                 </div>
                 <div class="modal-body" style="justify-content: center;">
                     {{#if equals itemName1 "Appointment"}}
-                    <p>Please select "Delete {{itemName1}}" to delete the {{itemName2}} or "Delete {{itemName1}}
-                        <br>and Following {{itemName3}}s" to delete {{itemName2}} and following {{itemName2}}s
-                    </p>
+                    <p>Please choose</p>
                     {{else}}
                     <p>"Delete Line" Will Remove Row and "Delete {{itemName1}}" Will Delete
                         Entire {{itemName1}}</p>
@@ -34,12 +32,12 @@
                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete Line
                         </button>
                         {{/if}}
+                        <button type="button" class="btn btn-secondary close-modal" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
                         <button class="btn btn-danger {{button1}}" id="btn_data" type="button" style="margin-right: 5px;">
                             <i class="fa fa-close" style="margin-right: 5px;"></i>Delete {{itemName1}}
                         </button>
                         <input type="hidden" id="following_cnt" />
-                        <button class="btn btn-danger {{button2}}" type="button" id="btn_follow1"
-                            style="display: none;">
+                        <button class="btn btn-danger {{button2}}" type="button" id="btn_follow1">
                             <i class="fa fa-close" style="display: none; margin-right: 5px;"></i>Delete {{itemName1}}
                             and Following {{itemName3}}
                         </button>

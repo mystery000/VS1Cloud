@@ -322,13 +322,13 @@ export class UtilityService {
         $('.fullScreenSpin').css('display', 'none');
     }
 
-    exportReportToSpreadSheet = function (tableName, filename, type) {
-        $("#" + tableName).tableToSpreadSheet({
-            type: 'xlsx',
-            filename: filename,
-        });
-        $('.fullScreenSpin').css('display', 'none');
-    }
+    // exportReportToSpreadSheet = function (tableName, filename, type) {
+    //     $("#" + tableName).tableToSpreadSheet({
+    //         type: 'xlsx',
+    //         filename: filename,
+    //     });
+    //     $('.fullScreenSpin').css('display', 'none');
+    // }
 
     exportReportToCsv = function(rows, filename, type) {
         let processRow = function(row) {
@@ -1571,4 +1571,23 @@ export class UtilityService {
         }
     }
 
+    waitForElm(selector) {
+        return new Promise(resolve => {
+            if (document.querySelector(selector)) {
+                return resolve(document.querySelector(selector));
+            }
+    
+            const observer = new MutationObserver(mutations => {
+                if (document.querySelector(selector)) {
+                    resolve(document.querySelector(selector));
+                    observer.disconnect();
+                }
+            });
+    
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
 }

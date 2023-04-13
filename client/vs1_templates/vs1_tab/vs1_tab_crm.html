@@ -1,0 +1,50 @@
+<template name="vs1_tab_crm">
+    <div class="tab-pane border rounded-0 tab-crm active" role="tabpanel" id="tab-crm"
+    style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;padding: 20px;">
+    <style>
+      #tblCustomerCrmListWithDate {
+        width: 100% !important;
+      }
+
+      #tblCustomerCrmListWithDate .colDate {
+        width: 12% !important;
+      }
+
+      #tblCustomerCrmListWithDate .colType {
+        width: 12% !important;
+      }
+
+      #tblCustomerCrmListWithDate .colTaskName {
+        width: 18% !important;
+      }
+
+      #tblCustomerCrmListWithDate .colTaskDesc {
+        width: 30% !important;
+      }
+
+      #tblCustomerCrmListWithDate .colCompletedBy {
+        width: 15% !important;
+      }
+
+      #tblCustomerCrmListWithDate .colCompleteTask {
+        width: 12% !important;
+      }
+    </style>
+    <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
+    {{>datatablelist
+    tablename="tblCustomerCrmListWithDate"
+    apiName= apiFunction
+    indexeddbname = 'TCRMTaskList'
+    tableheaderrecords = tableheaderrecords
+    exportfilename = 'Customer CRM Task List'
+    istransaction = true
+    apiParams= apiParams
+    datahandler = datahandler
+    service=service
+    lowercaseDataName='tprojecttaskslist'
+    exIndexDBName = 'tprojecttaskslist'
+    exdatahandler = exDataHandler
+    searchAPI = searchAPI
+    }}
+  </div>
+</template>

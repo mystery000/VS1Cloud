@@ -17,7 +17,7 @@ let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 let productService = new ProductService();
 let editableService = new EditableService();
-Template.binlocationslist.onCreated(function () {
+Template.binlocationslist.onCreated(async function () {
   const templateObject = Template.instance();
 
   templateObject.deptrecords = new ReactiveVar();
@@ -40,6 +40,87 @@ Template.binlocationslist.onCreated(function () {
   templateObject.binrecords = new ReactiveVar();
   templateObject.binlocation = new ReactiveVar();
   templateObject.binnumber = new ReactiveVar();
+
+  let productsData = [];
+
+  await getVS1Data("TProductVS1").then(function(dataObject) {
+      if (dataObject.length == 0) {
+          sideBarService.getNewProductListVS1(400,0).then(function (data) {
+              productData = data.tproductvs1;
+              addVS1Data('TProductVS1',JSON.stringify(data));
+          });
+
+      } else {
+          let data = JSON.parse(dataObject[0].data);
+          productsData = data.tproductvs1;
+      }
+  });
+
+  templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    let productDetail;
+    let productname = "N/A";
+    let productsalesdescription = '';
+    let productinstock = '';
+    let productId = '';
+    if (data.Active == true) {
+        linestatus = "";
+    } else if (data.Active == false) {
+        linestatus = "In-Active";
+    };
+    let flag = 0;
+    for (let j = 0; j < productsData.length ; j++ ){
+        if(productsData[j].fields.ProductClass[0].fields.DefaultbinLocation == data.BinLocation && productsData[j].fields.ProductClass[0].fields.DefaultbinNumber == data.BinNumber) {
+            productDetail = productsData[j].fields;
+            productname = productsData[j].fields.ProductName;
+            productsalesdescription = productsData[j].fields.SalesDescription;
+            productinstock = productsData[j].fields.ProductClass[0].fields.OnOrderQuantity;
+            productId = productsData[j].fields.ID;
+            flag = 1;
+            var dataList = [
+                data.Id || "",
+                data.BinLocation || "-",
+                data.BinNumber || "",
+                data.BinClassName || "",
+                productId || "",
+                productname || "",
+                productsalesdescription || "",
+                productinstock || "",
+                linestatus,
+            ];
+        }
+    }
+    if(flag == 0) {
+        var dataList = [
+            data.Id || "",
+            data.BinLocation || "-",
+            data.BinNumber || "",
+            data.BinClassName || "",
+            productId || "",
+            productname || "",
+            productsalesdescription || "",
+            productinstock || "",
+            linestatus,
+        ];
+    }
+    return dataList;
+  };
+
+  
+
+  let headerStructure = [
+    // { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
+    { index: 0, label: "ID", class: "colBinID", width: "10", active: false, display: true },
+    { index: 1, label: "Rack", class: "colRack", width: "120", active: true, display: true },
+    { index: 2, label: "Bin #", class: "colBinNumber", width: "150", active: true, display: true },
+    { index: 3, label: "Department", class: "colDepartment", width: "100", active: true, display: true },
+    { index: 4, label: "Product ID", class: "colProductID hiddenColumn", width: "60", active: true, display: true },
+    { index: 5, label: "Product Name", class: "colProductName", width: "200", active: true, display: true },
+    { index: 6, label: "Sales Description", class: "colSalesDescription", width: "200", active: true, display: true },
+    { index: 7, label: "In Stock", class: "colInStock", width: "65", active: true, display: true },
+    { index: 8, label: "Status", class: "colStatus", width: "120", active: true, display: true },
+  ];
+  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.binlocationslist.onRendered(function () {
@@ -100,7 +181,7 @@ Template.binlocationslist.onRendered(function () {
       templateObject.binrecords.set(binrecords);
     }
   }
-    templateObject.getProductBinData();
+    // templateObject.getProductBinData();
   // $('.tblInventory tbody').on( 'click', 'tr', function () {
   //   var listData = $(this).closest('tr').find('.colProductID').text();
   //   if(listData){
@@ -230,17 +311,17 @@ Template.binlocationslist.onRendered(function () {
   templateObject.getAccountNames = function () {
     productService.getAccountName().then(function (data) {
       // let productData = templateObject.records.get();
-      for (let i in data.taccount) {
+      for (let i in data.taccountvs1) {
 
         let accountnamerecordObj = {
-          accountname: data.taccount[i].AccountName || ' '
+          accountname: data.taccountvs1[i].AccountName || ' '
         };
 
-        if ((data.taccount[i].AccountTypeName == "COGS")) {
+        if ((data.taccountvs1[i].AccountTypeName == "COGS")) {
           coggsaccountrecords.push(accountnamerecordObj);
           templateObject.coggsaccountrecords.set(coggsaccountrecords);
         }
-        if ((data.taccount[i].AccountTypeName == "INC")) {
+        if ((data.taccountvs1[i].AccountTypeName == "INC")) {
           salesaccountrecords.push(accountnamerecordObj);
           templateObject.salesaccountrecords.set(salesaccountrecords);
         }
@@ -461,7 +542,7 @@ Template.binlocationslist.helpers({
     return Template.instance().tableheaderrecords.get();
   },
   salesCloudPreferenceRec: () => {
-    return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblInventory' });
+    return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblBinLocations' });
   },
   taxraterecords: () => {
     return Template.instance().taxraterecords.get();
@@ -472,47 +553,83 @@ Template.binlocationslist.helpers({
   salesaccountrecords: () => {
     return Template.instance().salesaccountrecords.get();
   },
-  binarray: () =>{
-    let binData = Template.instance().binrecords.get().sort(function(a, b) {
-      if (a.binnumber == 'NA') {
-        return 1;
-      } else if (b.binnumber == 'NA') {
-        return -1;
-      }
-      return (a.binnumber > b.binnumber) ? 1 : -1;
-    });
-    let sortFunction = function(a, b) {
-      if (a.binnumber === b.binnumber) {
-        return 0;
-      } else {
-        return (a.binnumber - 0 < b.binnumber - 0) ? -1 : 1;
-      }
-    }
-    return binData.sort(sortFunction);
+  apiFunction: function () {
+    // do not use arrow function
+    return productService.getBins;
   },
-  binlocationarray: () =>{
-    let binData = Template.instance().binrecords.get();
-    let usedData = {};
-    let locationarray = [];
-    binData.forEach(item =>{
-      if(usedData[item.binlocation + item.binclass] == undefined)
-        locationarray.push(item), usedData[item.binlocation + item.binclass] = true;
-    });
-    let sortFunction = function(a, b) {
-      if (a.binlocation === b.binlocation) {
-        return 0;
-      } else {
-        return (a.binlocation < b.binlocation) ? -1 : 1;
-      }
-    }
-    return locationarray.sort(sortFunction);
+
+  searchAPI: function () {
+    return productService.getBins;
   },
-  binlocation: () =>{
-    return Template.instance().binlocation.get();
+
+  apiParams: function () {
+    return [
+      "limitCount",
+      "limitFrom",
+      "deleteFilter",
+    ];
   },
-  binnumber: () =>{
-    return Template.instance().binnumber.get();
-  }
+
+  service: () => {
+    return productService;
+  },
+
+  datahandler: function () {
+    let templateObject = Template.instance();
+    return function (data) {
+      let dataReturn = templateObject.getDataTableList(data);
+      return dataReturn;
+    };
+  },
+
+  exDataHandler: function () {
+    let templateObject = Template.instance();
+    return function (data) {
+      let dataReturn = templateObject.getDataTableList(data);
+      return dataReturn;
+    };
+  },
+  // binarray: () =>{
+  //   let binData = Template.instance().binrecords.get().sort(function(a, b) {
+  //     if (a.binnumber == 'NA') {
+  //       return 1;
+  //     } else if (b.binnumber == 'NA') {
+  //       return -1;
+  //     }
+  //     return (a.binnumber > b.binnumber) ? 1 : -1;
+  //   });
+  //   let sortFunction = function(a, b) {
+  //     if (a.binnumber === b.binnumber) {
+  //       return 0;
+  //     } else {
+  //       return (a.binnumber - 0 < b.binnumber - 0) ? -1 : 1;
+  //     }
+  //   }
+  //   return binData.sort(sortFunction);
+  // },
+  // binlocationarray: () =>{
+  //   let binData = Template.instance().binrecords.get();
+  //   let usedData = {};
+  //   let locationarray = [];
+  //   binData.forEach(item =>{
+  //     if(usedData[item.binlocation + item.binclass] == undefined)
+  //       locationarray.push(item), usedData[item.binlocation + item.binclass] = true;
+  //   });
+  //   let sortFunction = function(a, b) {
+  //     if (a.binlocation === b.binlocation) {
+  //       return 0;
+  //     } else {
+  //       return (a.binlocation < b.binlocation) ? -1 : 1;
+  //     }
+  //   }
+  //   return locationarray.sort(sortFunction);
+  // },
+  // binlocation: () =>{
+  //   return Template.instance().binlocation.get();
+  // },
+  // binnumber: () =>{
+  //   return Template.instance().binnumber.get();
+  // }
 });
 
 
@@ -704,19 +821,19 @@ Template.binlocationslist.events({
   },
 
   // Open Edit Bin Modal
-  "click td.BinID , click td.Rack, click td.BinNumber ": function (event) {
+  "click td.colBinID , click td.colRack, click td.colBinNumber ": function (event) {
     $("#editBinId").val($(event.target).closest("tr").find(".colBinID").text());
-    $("#editBinDepartmentList").val($(event.target).closest("tr").find(".Department").text());
-    $("#editBinRack").val($(event.target).closest("tr").find(".Rack").text());
-    $("#editBinNum").val($(event.target).closest("tr").find(".BinNumber").text());
+    $("#editBinDepartmentList").val($(event.target).closest("tr").find(".colDepartment").text());
+    $("#editBinRack").val($(event.target).closest("tr").find(".colRack").text());
+    $("#editBinNum").val($(event.target).closest("tr").find(".colBinNumber").text());
     $("#editBinLocationModal").modal('show');
-    Template.instance().bindept.set($(event.target).closest("tr").find(".Department").text());
-    Template.instance().binnumber.set($(event.target).closest("tr").find(".BinNumber").text());
-    Template.instance().binlocation.set($(event.target).closest("tr").find(".Rack").text());
+    Template.instance().bindept.set($(event.target).closest("tr").find(".colDepartment").text());
+    Template.instance().binnumber.set($(event.target).closest("tr").find(".colBinNumber").text());
+    Template.instance().binlocation.set($(event.target).closest("tr").find(".colRack").text());
   },
 
   // Open Product Detail Link
-  "click td.Department , click td.ProductName, click td.SalesDescription, click td.InStock ": function (event) {
+  "click td.colDepartment , click td.colProductName, click td.colSalesDescription, click td.colInStock ": function (event) {
     var listData = $(event.target).closest("tr").find(".colProductID").text();
     if (listData) {
       FlowRouter.go("/productview?id=" + listData);
@@ -724,35 +841,35 @@ Template.binlocationslist.events({
   },
 
   // Open Disp Setting
-  'click .btnOpenSettings': function (event) {
-    let templateObject = Template.instance();
-    var columns = $('#tblBinLocations th');
+  // 'click .btnOpenSettings': function (event) {
+  //   let templateObject = Template.instance();
+  //   var columns = $('#tblBinLocations th');
 
-    const tableHeaderList = [];
+  //   const tableHeaderList = [];
 
-    let sWidth = "";
-    let columVisible = false;
+  //   let sWidth = "";
+  //   let columVisible = false;
 
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if ((v.className.includes("hiddenColumn"))) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace('px', "");
+  //   $.each(columns, function (i, v) {
+  //     if (v.hidden == false) {
+  //       columVisible = true;
+  //     }
+  //     if ((v.className.includes("hiddenColumn"))) {
+  //       columVisible = false;
+  //     }
+  //     sWidth = v.style.width.replace('px', "");
 
-      let datatablerecordObj = {
-        sTitle: v.innerText || '',
-        sWidth: sWidth || '',
-        sIndex: v.cellIndex || 0,
-        sVisible: columVisible || false,
-        sClass: v.className || ''
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecords.set(tableHeaderList);
-  },
+  //     let datatablerecordObj = {
+  //       sTitle: v.innerText || '',
+  //       sWidth: sWidth || '',
+  //       sIndex: v.cellIndex || 0,
+  //       sVisible: columVisible || false,
+  //       sClass: v.className || ''
+  //     };
+  //     tableHeaderList.push(datatablerecordObj);
+  //   });
+  //   templateObject.tableheaderrecords.set(tableHeaderList);
+  // },
 
   // Toggle Search Button Alert on keyup
   'keyup #tblBinLocations_filter input': function (event) {
@@ -774,7 +891,7 @@ Template.binlocationslist.events({
       $(".btnRefreshProduct").removeClass('btnSearchAlert');
     }
   },
-  
+
   // Search Button Action
   'click .btnRefreshProduct': function (event) {
     let templateObject = Template.instance();
@@ -804,7 +921,7 @@ Template.binlocationslist.events({
             splashArrayProductList.push(dataList);
           }
 
-          
+
           //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
           $('.fullScreenSpin').css('display', 'none');
           if (splashArrayProductList) {
@@ -866,10 +983,12 @@ Template.binlocationslist.events({
   },
 
   // Refresh Data
-  'click .btnRefresh': function () {
+  'click .btnRefresh': async function () {
     $('.fullScreenSpin').css('display', 'inline-block');
     let templateObject = Template.instance();
     let productService = new ProductService();
+    await clearData("TProductBin");
+    await clearData("TProductVS1");
     productService.getBins().then(function (data) {
       addVS1Data('TProductBin', JSON.stringify(data)).then(function (datareturn) {
           window.open("/binlocationslist", "_self");
@@ -1387,7 +1506,6 @@ Template.binlocationslist.events({
           getVS1Data('TProductBin').then(function (dataObject) {
             let data = JSON.parse(dataObject[0].data);
             if(data.tproductbin.length > 0) {
-              alert();
               let dataArray = {
                 BinLocation: editbinname,
                 BinNumber: editbinnum,

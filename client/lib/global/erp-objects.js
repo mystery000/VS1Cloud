@@ -143,6 +143,7 @@ const erpObject = {
     TStatementList: "TStatementList",
     TStatementForCustomer: "TStatementForCustomer",
     TJob: "TJob",
+    TJobVS1List: "TJobVS1List",
     TJobEx: "TJobEx",
     TERPCombinedContacts: "TERPCombinedContacts",
     TPaymentList: "TPaymentList",
@@ -324,8 +325,9 @@ const erpObject = {
     ProductionWorksheetReport: "ProductionWorksheetReport",
     WorkOrderReport: "WorkOrderReport",
     //TProductQtyList:"TProductQtyList",
-    TNewAppointment:"TNewAppointment ", 
+    TNewAppointment:"TNewAppointment", 
     TAppointmentsTimeLog:"TAppointmentsTimeLog ", 
+    TNewLeaveRequest:"TNewLeaveRequest",
 };
 
 export default erpObject;

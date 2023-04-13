@@ -153,6 +153,8 @@ Template.bankrecon.onRendered(function() {
         });
     };
 
+
+
     // API to pull Accounts END
     // BEGIN DATE CODE
     $("#dtSODate1,#dtSODate2").datepicker({

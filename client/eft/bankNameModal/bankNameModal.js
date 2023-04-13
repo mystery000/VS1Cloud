@@ -15,14 +15,14 @@ Template.bankNameModal.onCreated(function () {
 
   templateObject.getDataTableList = function(data) {
     let dataList = [
-        data[0],
-        data[1]
+        data.BankCode || "",
+        data.BankName || ""
     ];
     return dataList;
   }
 
   let headerStructure = [
-    {index: 0, label: "Account Name", class: "colBankName", width: "100", active: true, display: true},
+    {index: 0, label: "Account Name", class: "colBankName", width: "200", active: true, display: true},
     {index: 1, label: "Description", class: "colDescription", width: "300", active: true, display: true},
   ];
   templateObject.tableheaderrecords.set(headerStructure);
@@ -33,7 +33,7 @@ Template.bankNameModal.onRendered(function () {
       var eftTable = $(this).closest("tr");
       let eftBankName = eftTable.find('.colBankName').text();
       let eftDescription = eftTable.find('.colDescription').text();
-      $('#eftOptionsModal').modal('toggle');
+      // $('#eftOptionsModal').modal('toggle');
       $('#eftBankName').val(eftBankName);
       $('#eftDescription').val(eftDescription);
   });

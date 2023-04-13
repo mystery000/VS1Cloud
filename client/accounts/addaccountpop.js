@@ -44,7 +44,6 @@ Template.addaccountpop.onRendered(async function () {
     const dataTableList = [];
     const tableHeaderList = [];
     let currentId = FlowRouter.current().context.hash;
-
     if(templateObject.data.name) {
         let name = templateObject.data.name;
         async function getAccountDetailByName(accountName) {
@@ -73,11 +72,9 @@ Template.addaccountpop.onRendered(async function () {
                 })
             })
         }
-        
+
         $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
         let accountDetail = await getAccountDetailByName(name);
-        
-        
 
         $('#sltTaxCode').editableSelect();
         setTimeout(()=>{
@@ -100,15 +97,11 @@ Template.addaccountpop.onRendered(async function () {
         $('#chkEftOption_debit').prop('checked', accountDetail.IncludeDebitTotal)
         templateObject.record.set(accountDetail)
 
-        
-        
-       
-        
     } else {
         setTimeout(function () {
             $('.isBankAccount').addClass('isNotBankAccount');
             $('.isCreditAccount').addClass('isNotCreditAccount');
-    
+
             $('#add-account-title').text('Add New Account');
             $('#edtAccountID').val('');
             $('#sltAccountType').val('');
@@ -130,8 +123,6 @@ Template.addaccountpop.onRendered(async function () {
             $('.isCreditAccount').addClass('isNotCreditAccount');
         }, 500);
     }
-
-
 
     $("#edtExpiryDate").datepicker({
         showOn: 'button',
@@ -171,7 +162,7 @@ Template.addaccountpop.onRendered(async function () {
 });
       $(document).on("click", "#tblBankName tbody tr", function (e) {
         var table = $(this);
-        let BankName = table.find(".bankName").text();
+        let BankName = table.find(".colBankName").text();
         $('#bankNameModal').modal('toggle');
         $('#edtBankName').val(BankName);
       });

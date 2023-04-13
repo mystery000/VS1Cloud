@@ -1,0 +1,57 @@
+<template name="vs1_tab_invoicing">
+  <div class="tab-pane border rounded-0" role="tabpanel" id="{{id}}"
+    style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
+    <div class="row no-gutters" style="margin: 12px;">
+      <div class="col-md-2 col-6 p-0">
+        {{>vs1___dropdown
+        type='search'
+        id="sltCustomerType"
+        name="sltCustomerType"
+        modalId= "cutomer_type_modal"
+        list_template_name="clienttypepopup"
+        innerModal= "clienttypeListModal"
+        modal_title="Customer"
+        label = "Customer Type"
+        colNameForValue = "colTypeName"
+        target_modal_id= "client_type_modal"
+        target_template_id="clienttypemodal"
+        is_editable=true
+        data=record.clienttype
+        }}
+      </div>
+      <div class="col-md-2 col-6 p-0">
+        {{>vs1___dropdown
+        type='search'
+        id="sltTerms"
+        name="sltTerms"
+        modalId= "term_modal"
+        list_template_name="termlistpop"
+        innerModal= "termsListModal"
+        modal_title="Edit Terms"
+        label = "Terms"
+        colNameForValue = "colName"
+        target_modal_id= "new_term_modal"
+        target_template_id="newtermspop"
+        is_editable=true
+        data=record.terms
+        }}
+      </div>
+
+      <div class="col-md-2 col-6 p-0">
+        {{>default_input label='% Discount' divClass="d-xl-flex flex-column justify-content-xl-start" classes='pointer'
+        id="edtCustomerCardDiscount" name="edtCustomerCardDiscount" defaultValue=record.discount type='text'}}
+      </div>
+      <!-- I need to talk with Josef for this part-->
+      <div class="col-md-2 col-6 p-0">
+        {{>default_input label='Credit Limit' divClass="d-xl-flex flex-column justify-content-xl-start"
+        classes='pointer' id="edtCustomerCreditLimit" name="edtCustomerCreditLimit" defaultValue=record.discount
+        type='text'}}
+      </div>
+
+      <div class="col-md-2 col-6 p-0" style="margin: 4px;margin-top: 41px;">
+        {{> toggle_button className="chkGlobalSettings" id="customer_stop_credit_toggle"
+        width="131px" for="customer_stop_credit_toggle" displayName="Stop Credit"}}
+      </div>
+    </div>
+  </div>
+</template>

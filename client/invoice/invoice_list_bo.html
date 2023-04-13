@@ -161,7 +161,7 @@
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
 
-                    <div class="table-responsive">
+                    <!-- <div class="table-responsive"> -->
                         <style>
                             th {
                                 background-color: #ededed;
@@ -193,8 +193,11 @@
                             .text-deleted{
                               background-color: #e74a3b !important; color:#fff;
                             }
+                            th.colCustomerJob, th.colQty, th.colAmountEx, th.colTax, th.colAmountInc, th.colOutstanding {
+                                text-align: left !important;
+                            }
                         </style>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                             </div>
@@ -227,14 +230,14 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <table id="tblInvoicelistBO" name="tblInvoicelistBO" class="dataTable table table-hover table-striped table-bordered tblInvoicelistBO">
+                        </div> -->
+                        <!-- <table id="tblInvoicelistBO" name="tblInvoicelistBO" class="dataTable table table-hover table-striped table-bordered tblInvoicelistBO">
                             <thead>
                                 <tr class="dnd-moved">
                                     {{#each displayfield in displayfields}}
                                       {{#if displayfield.display}}
                                       <th data-class="{{displayfield.class}}" data-col-index="{{displayfield.id}}" data-col-active="{{ displayfield.active}}" class="th col{{displayfield.class}} {{#if displayfield.active}}{{else}}hiddenColumn{{/if}}" style="width:{{displayfield.width}}px">
-                                          {{displayfield.custfieldlabel}} 
+                                          {{displayfield.custfieldlabel}}
                                         </th>
                                       {{/if}}
                                     {{/each}}
@@ -260,7 +263,6 @@
                                     <td contenteditable="false" class="colAmountEx hiddenColumn" style="text-align: right!important;">{{item.totalamountex}}</td>
                                     <td contenteditable="false" class="colTax hiddenColumn" style="text-align: right!important;">{{item.totaltax}}</td>
                                     <td contenteditable="false" class="colAmount hiddenColumn" style="text-align: right!important;">{{item.totalamount}}</td>
-                                    <!-- <td contenteditable="false" class="colProduct">{{item.product}}</td> -->
                                     <td contenteditable="false" class="colBalanceOutstanding hiddenColumn" style="text-align: right!important;">{{item.totaloustanding}}</td>
                                     <td contenteditable="false" class="colStatus">{{item.salestatus}}</td>
                                     <td contenteditable="false" class="colSaleCustField1 hiddenColumn">{{item.custfield1}}</td>
@@ -281,8 +283,25 @@
                                 {{/if}}
 
                             </tbody>
-                        </table>
-                    </div>
+                        </table> -->
+                        {{>datatablelist
+                            tableclass="tblInvoicelistBO"
+                            tablename="tblInvoicelistBO"
+                            apiName= apiFunction
+                            indexeddbname = 'TSalesBackOrderReport'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Invoices - Back Orderd'
+                            istransaction = true
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tinvoicelist'
+                            exIndexDBName = 'tsalesbackorderreport'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
+                        }}
+                    <!-- </div> -->
                 </div>
             </div>
         </div>

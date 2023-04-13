@@ -1,0 +1,125 @@
+<template name="transactionfooter">
+    <div class="card-body d-flex align-items-center transactionfooter" style="margin-top: -20px; gap: 15px">
+        <div style="flex: 1; padding-right: 24px;">
+            <div class="row">
+                <style>
+                    .transactionfooter .footer-field {
+                        flex: 1;
+                        padding-left: 0.75rem;
+                        padding-right: 0.75rem
+                    }
+                </style>
+                {{#each field in footerFields}}
+                    <div class="footer-field">
+                        {{>vs1_textarea 
+                            label = field.label
+                            id = field.id
+                            name = field.name
+                            row = field.row
+                        }}
+                    </div>
+                {{/each}}
+            </div>
+            <div class="row align-items-center justify-content-center">
+                {{#each button in footerbuttons}}
+                    {{>vs1_button
+                        color= button.color
+                        classes= button.classes
+                        type='button'
+                        iconName= button.iconName
+                        title= button.title
+                    }}
+                {{/each}}
+            </div>
+        </div>
+        <style>
+            .fx_detail {
+                align-self: stretch;
+                padding: 16px;
+                background-color: lightblue;
+                border-radius: 10px;
+            }
+            .fx_detail>div {
+                height: 100%;
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            .fx_detail span, .fx_detail i {
+                font-size: 16px;
+                font-weight: 800;
+            }
+
+            .fx_detail div {
+                width: 100%;
+            }
+
+            .fx-price-detail {
+                padding-top: 16px;
+                padding-bottom: 16px;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+                border-bottom: 2px solid #696969;
+                border-top: 2px solid #696969
+            }
+        </style>
+        {{#each item in recordLineItems}}
+            {{#if equals item.lineID selectedLineId}}
+            <div class="fx_detail">
+                <div class="d-flex flex-column align-items-center justify-content-between">
+                    <p class="fx_detail_productname" style="font-size: 20px; font-weight: 800;">{{item.item}}</p>
+                    <div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>Fixed Asset</span>
+                            <i class="fas fa-plus-square text-success btnSnLotmodal" style="font-size: 22px;"></i>
+                        </div>
+                        {{#if item.serialnumbers}}
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>Serial/Lot Numbers</span>
+                            <i class="fas fa-plus-square text-success btnSnLotmodal" style="font-size: 22px;"></i>
+                        </div>
+                        {{else if item.lotnumbers}}
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>Serial/Lot Numbers</span>
+                            <i class="fas fa-plus-square text-success btnSnLotmodal" style="font-size: 22px;"></i>
+                        </div>
+                        {{/if}}
+                    </div>
+                    <div class="fx-price-detail">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>FX Cost</span>
+                            <span>{{convertToForeignAmount item.lineCost}}</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>FX Unit Price</span>
+                            <span>{{convertToForeignAmount item.unitPrice}}</span>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between">
+                            <span>FX Amount</span>
+                            <span>{{convertToForeignAmount item.TotalAmt}}</span>
+                        </div>
+                    </div>
+                    <div class="fx-footer d-flex align-items-center justify-content-between">
+                        <span>FX Total</span>
+                        <span>{{convertToForeignAmount item.TotalAmt}}</span>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        {{/each}}
+        {{> transaction_calculation
+            isPartialPaid=isPartialPaid
+            SubTotal=SubTotal
+            TotalTax=TotalTax
+            NetTotal=NetTotal
+            TotalDiscount=TotalDiscount
+            Total=Total
+            TotalPaid=TotalPaid
+            BalanceDue=BalanceDue
+        }}
+    </div>
+    <div class="d-flex align-items-center justify-content-center">
+        {{>transaction_footer  AttachmentCount=AttachmentCount TransactionType=TransactionType}}
+    </div>
+</template>

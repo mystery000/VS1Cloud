@@ -86,99 +86,172 @@
           <div class="tab-content" id="myTabContent">
 
             <div class="tab-pane fade show active" id="allTasks" role="tabpanel" aria-labelledby="allTasks-tab">
-
-             {{> non_transactional_list tablename = "tblAllTaskDatatable"}}
-                <!-- {{>datatablelist
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button Import="hiddenButton" Export="hiddenButton" tablename = "tblAllTaskDatatable"}}
+                </div>
+<!--             {{> non_transactional_list tablename = "tblAllTaskDatatable"}}-->
+             {{>datatablelist
+                        tableclass="tblAllTaskDatatable"
                         tablename="tblAllTaskDatatable"
-                        apiName= apiFunction
+                        apiName= apiFunction_AllTask
                         indexeddbname = 'TCRMTaskList'
-                        tableheaderrecords = tableheaderrecords
+                        tableheaderrecords = tableheaderrecords_AllTask
                         exportfilename = 'All Task Datatable List'
                         istransaction = true
-                        apiParams= apiParams
-                        datahandler = datahandler
-                        service=service
+                        apiParams= apiParams_AllTask
+                        datahandler = datahandler_AllTask
+                        service=service_AllTask
                         lowercaseDataName='tprojecttaskslist'
                         exIndexDBName = 'tprojecttaskslist'
-                        exdatahandler = exDataHandler
-                        searchAPI = searchAPI
-                }} -->
+                        exdatahandler = exDataHandler_AllTask
+                        searchAPI = searchAPI_AllTask
+                }}
             </div>
 
             <div class="tab-pane fade" id="todayTab" role="tabpanel" aria-labelledby="todayTab-tab">
-              <div class="tbl_responsive">
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button Import="hiddenButton" Export="hiddenButton" tablename = "tblTodayTaskDatatable"}}
+                </div>
+                  {{>datatablelist
+                          tablename="tblTodayTaskDatatable"
+                          apiName= apiFunction_TodayTask
+                          indexeddbname = 'TCRMTaskList'
+                          tableheaderrecords = tableheaderrecords_AllTask
+                          exportfilename = 'Today Task Datatable List'
+                          istransaction = true
+                          apiParams= apiParams_TodayTask
+                          datahandler = datahandler_TodayTask
+                          service=service_TodayTask
+                          lowercaseDataName='tprojecttaskslist'
+                          exIndexDBName = 'tprojecttaskslist'
+                          exdatahandler = exDataHandler_TodayTask
+                          searchAPI = searchAPI_TodayTask
+                  }}
+<!--                <table id="tblTodayTaskDatatable" name="tblTodayTaskDatatable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTodayTaskDatatable">-->
+<!--                  <thead>-->
+<!--                    <tr class="dnd-moved">-->
+<!--                      &lt;!&ndash; <th class="th colCompleteTask" style="width: 2%;">-->
+<!--                      </th> &ndash;&gt;-->
+<!--                      <th class="th colPriority no-modal">Priority</th>-->
+<!--                      <th class="th colContact no-modal">Contact</th>-->
+<!--                      <th class="th colDate no-modal">Date</th>-->
+<!--                      <th class="th colTaskName no-modal">Task</th>-->
+<!--                      <th class="th colTaskDesc no-modal">Description</th>-->
+<!--                      <th class="th colTaskLabels no-modal">Labels</th>-->
+<!--                      <th class="th colTaskProjects no-modal">Project</th>-->
+<!--                      <th class="th colStatus no-modal">Status</th>-->
+<!--                      &lt;!&ndash; <th class="th colTaskActions no-modal">Actions</th> &ndash;&gt;-->
+<!--                    </tr>-->
+<!--                  </thead>-->
+<!--                  <tbody>-->
+<!--                  </tbody>-->
+<!--                </table>-->
 
-                <table id="tblTodayTaskDatatable" name="tblTodayTaskDatatable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblTodayTaskDatatable">
-                  <thead>
-                    <tr class="dnd-moved">
-                      <!-- <th class="th colCompleteTask" style="width: 2%;">
-                      </th> -->
-                      <th class="th colPriority no-modal">Priority</th>
-                      <th class="th colContact no-modal">Contact</th>
-                      <th class="th colDate no-modal">Date</th>
-                      <th class="th colTaskName no-modal">Task</th>
-                      <th class="th colTaskDesc no-modal">Description</th>
-                      <th class="th colTaskLabels no-modal">Labels</th>
-                      <th class="th colTaskProjects no-modal">Project</th>
-                      <th class="th colStatus no-modal">Status</th>
-                      <!-- <th class="th colTaskActions no-modal">Actions</th> -->
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
             </div>
 
             <div class="tab-pane fade" id="upcomingTab" role="tabpanel" aria-labelledby="upcomingTab-tab">
-              <div class="table-responsive">
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button Import="hiddenButton" Export="hiddenButton" tablename = "tblUpcomingTaskDatatable"}}
+                </div>
+                {{>datatablelist
+                        tablename="tblUpcomingTaskDatatable"
+                        apiName= apiFunction_TodayTask
+                        indexeddbname = 'TCRMTaskList'
+                        tableheaderrecords = tableheaderrecords_AllTask
+                        exportfilename = 'Upcoming Task Datatable List'
+                        istransaction = true
+                        apiParams= apiParams_UpcomingTask
+                        datahandler = datahandler_UpcomingTask
+                        service=service_UpcomingTask
+                        lowercaseDataName='tprojecttaskslist'
+                        exIndexDBName = 'tprojecttaskslist'
+                        exdatahandler = exDataHandler_UpcomingTask
+                        searchAPI = searchAPI_UpcomingTask
+                }}
+<!--              <div class="table-responsive">-->
 
-                <table id="tblUpcomingTaskDatatable" name="tblUpcomingTaskDatatable" style="width:100%"
-                  class="dataTable table table-hover table-striped table-bordered tblUpcomingTaskDatatable">
-                  <thead>
-                    <tr class="dnd-moved">
-                      <!-- <th class="th colCompleteTask" style="width: 2%;">
-                      </th> -->
-                      <th class="th colPriority no-modal">Priority</th>
-                      <th class="th colContact no-modal">Contact</th>
-                      <th class="th colDate no-modal">Date</th>
-                      <th class="th colTaskName no-modal">Task</th>
-                      <th class="th colTaskDesc no-modal">Description</th>
-                      <th class="th colTaskLabels no-modal">Labels</th>
-                      <th class="th colTaskProjects no-modal">Project</th>
-                      <th class="th colActive no-modal">Status</th>
-                      <!-- <th class="th colTaskActions no-modal">Actions</th> -->
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
+<!--                <table id="tblUpcomingTaskDatatable" name="tblUpcomingTaskDatatable" style="width:100%"-->
+<!--                  class="dataTable table table-hover table-striped table-bordered tblUpcomingTaskDatatable">-->
+<!--                  <thead>-->
+<!--                    <tr class="dnd-moved">-->
+<!--                      &lt;!&ndash; <th class="th colCompleteTask" style="width: 2%;">-->
+<!--                      </th> &ndash;&gt;-->
+<!--                      <th class="th colPriority no-modal">Priority</th>-->
+<!--                      <th class="th colContact no-modal">Contact</th>-->
+<!--                      <th class="th colDate no-modal">Date</th>-->
+<!--                      <th class="th colTaskName no-modal">Task</th>-->
+<!--                      <th class="th colTaskDesc no-modal">Description</th>-->
+<!--                      <th class="th colTaskLabels no-modal">Labels</th>-->
+<!--                      <th class="th colTaskProjects no-modal">Project</th>-->
+<!--                      <th class="th colActive no-modal">Status</th>-->
+<!--                      &lt;!&ndash; <th class="th colTaskActions no-modal">Actions</th> &ndash;&gt;-->
+<!--                    </tr>-->
+<!--                  </thead>-->
+<!--                  <tbody>-->
+<!--                  </tbody>-->
+<!--                </table>-->
+<!--              </div>-->
             </div>
 
             <div class="tab-pane fade" id="projectsTab" role="tabpanel" aria-labelledby="projectsTab-tab">
-              <div class="tbl_responsive">
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename = "tblNewProjectsDatatable"}}
+                </div>
+                {{>datatablelist
+                        tablename="tblNewProjectsDatatable"
+                        apiName= apiFunction_NewProjects
+                        indexeddbname = 'TCRMTaskList'
+                        tableheaderrecords = tableheaderrecords_NewProjects
+                        exportfilename = 'New Project Datatable List'
+                        istransaction = true
+                        apiParams= apiParams_NewProjects
+                        datahandler = datahandler_NewProjects
+                        service=service_NewProjects
+                        lowercaseDataName='tprojecttaskslist'
+                        exIndexDBName = 'tprojecttaskslist'
+                        exdatahandler = exDataHandler_NewProjects
+                        searchAPI = searchAPI_NewProjects
+                }}
+<!--              <div class="tbl_responsive">-->
 
-                <table id="tblNewProjectsDatatable" name="tblNewProjectsDatatable" style="width:100%"
-                  class="dataTable table table-hover table-striped table-bordered tblNewProjectsDatatable">
-                  <thead>
-                    <tr class="dnd-moved">
-                      <th class="th colPrjectDate">Date</th>
-                      <th class="th colProjectName">Project</th>
-                      <th class="th colProjectDesc">Description</th>
-                      <th class="th colProjectStatus">Status</th>
-                      <th class="th colProjectTasks">Tasks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                  </tbody>
-                </table>
-              </div>
+<!--                <table id="tblNewProjectsDatatable" name="tblNewProjectsDatatable" style="width:100%"-->
+<!--                  class="dataTable table table-hover table-striped table-bordered tblNewProjectsDatatable">-->
+<!--                  <thead>-->
+<!--                    <tr class="dnd-moved">-->
+<!--                      <th class="th colPrjectDate">Date</th>-->
+<!--                      <th class="th colProjectName">Project</th>-->
+<!--                      <th class="th colProjectDesc">Description</th>-->
+<!--                      <th class="th colProjectStatus">Status</th>-->
+<!--                      <th class="th colProjectTasks">Tasks</th>-->
+<!--                    </tr>-->
+<!--                  </thead>-->
+<!--                  <tbody>-->
+<!--                  </tbody>-->
+<!--                </table>-->
+<!--              </div>-->
             </div>
 
             <div class="tab-pane fade" id="filterLabelsTab" role="tabpanel" aria-labelledby="filterLabelsTab-tab">
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename = "tblLabels"}}
+                </div>
               <div class="row">
                 <div class="col-12 pb-4">
+                    {{>datatablelist
+                            tablename="tblLabels"
+                            apiName= apiFunction_Labels
+                            indexeddbname = 'TCRMLabelList'
+                            tableheaderrecords = tableheaderrecords_Labels
+                            exportfilename = 'Label List'
+                            istransaction = true
+                            apiParams= apiParams_Labels
+                            datahandler = datahandler_Labels
+                            service=service_Labels
+                            lowercaseDataName='tprojecttaskslist'
+                            exIndexDBName = 'tprojecttaskslist'
+                            exdatahandler = exDataHandler_Labels
+                            searchAPI = searchAPI_Labels
+                    }}
                   <div class="tbl_responsive">
 
                     <table id="tblLabels" name="tblLabels" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblLabels">

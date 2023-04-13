@@ -348,8 +348,11 @@
                             background-color: #1cc88a !important;
                             color: #fff !important;
                         }
+                        th.colPaymentAmount {
+                            text-align: left !important;
+                        }
                     </style>
-                    <div class="row no-gutters d-xl-flex align-items-xl-end">
+                    <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                         <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                         </div>
@@ -404,7 +407,24 @@
                         </thead>
                         <tbody>
                         </tbody>
-                    </table>
+                    </table> -->
+                    {{>datatablelist
+                        tableclass="tblPaymentOverview"
+                        tablename="tblPaymentOverview"
+                        apiName= apiFunction
+                        indexeddbname = 'TPaymentList'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Payment Overview'
+                        istransaction = true
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tpaymentlist'
+                        exIndexDBName = 'tpaymentlist'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                        orderby = '[[ 0, "desc" ],[ 1, "asc" ]]'
+                    }}
                 </div>
             </div>
         </div>

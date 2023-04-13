@@ -1,5 +1,5 @@
 <template name="transactionCodeModal">
-  <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <h4>Transaction Code List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
@@ -9,6 +9,7 @@
         <input type="hidden" style="width: 100%; display:none;" id="selectTransactionCodeID" name="selectTransactionCodeID" readonly>
         <div class="card-body p-1 rounded">
             {{>datatablelist
+                    tableclass="tblTransactionCode"
                     tablename="tblTransactionCode"
                     apiName= apiFunction
                     indexeddbname = 'TTransactionCode'
