@@ -874,7 +874,6 @@ Template.calender.onRendered(function() {
                     let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
                     let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
                     let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateEnd.getMinutes()).toString().slice(-2);
-                    
                     objectData = {
                         calendarData:{
                             id: info.event.id,
@@ -1121,6 +1120,8 @@ Template.calender.onRendered(function() {
                 newappointment: {
                     text: "New Appointment",
                     click: function() {
+                        $("#employeeListModal").modal("show");
+                        $("#btnCopyOptions").attr("disabled", true);
                     },
                 },
                 appointments: {
@@ -1970,7 +1971,7 @@ Template.calender.onRendered(function() {
 
     document.getElementById('currentDate').value = moment().format('YYYY-MM-DD');
 
-    const changeColumnColor = async function(day) {
+    changeColumnColor = async function(day) {
         let dayOfWeek = moment(day).format("dddd");
         let dayInDigit = moment(day).format('DD');
         let dd = moment(document.getElementById('currentDate').value).format('DD');
@@ -2909,55 +2910,22 @@ Template.calender.onRendered(function() {
                 }
             }
         }
-        // for (let i = 0; i < leaveemployeerecords.length; i++) {
-        //     let date = new Date(leaveemployeerecords[i].StartDate.split(" ")[0]);
-        //     let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
-        //     if (resourceChat.length > 0) {
-        //         if (date >= startWeek && date <= endWeek) {
-        //             let employeeColor = "'#00a3d3'";
-        //             if (JSON.parse(seeOwnAppointments) == true) {
-        //                 dataList = {
-        //                     id: leaveemployeerecords[i].ID,
-        //                     employeeName: leaveemployeerecords[i].EmployeeName,
-        //                     color: employeeColor
-        //                 };
-        //                 resourceChat.push(dataList);
-        //                 jobs = {
-        //                     id: leaveemployeerecords[i].ID,
-        //                     job: leaveemployeerecords[i].Description,
-        //                     day: weekDay,
-        //                 };
-        //                 resourceJob.push(jobs)
-        //             }else{
-        //                 dataList = {
-        //                     id: leaveemployeerecords[i].ID,
-        //                     employeeName: leaveemployeerecords[i].EmployeeName,
-        //                     color: employeeColor
-        //                 };
-        //                 resourceChat.push(dataList);
-        //                 jobs = {
-        //                     id: leaveemployeerecords[i].ID,
-        //                     job: leaveemployeerecords[i].Description,
-        //                     day: weekDay,
-        //                 };
-        //                 resourceJob.push(jobs)
-        //             }
-        //         } 
-        //     }else{
-        //         dataList = {
-        //             id: leaveemployeerecords[i].ID,
-        //             employeeName: leaveemployeerecords[i].EmployeeName,
-        //             color: employeeColor
-        //         };
-        //         resourceChat.push(dataList);
-        //         jobs = {
-        //             id: leaveemployeerecords[i].ID,
-        //             job: leaveemployeerecords[i].Description,
-        //             day: weekDay,
-        //         };
-        //         resourceJob.push(jobs)
-        //     }
-        // }
+        for (let i = 0; i < leaveemployeerecords.length; i++) {
+            let date = new Date(leaveemployeerecords[i].StartDate.split(" ")[0]);
+            let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
+            // if (resourceChat.length > 0) {
+            if (date >= startWeek && date <= endWeek) {
+                jobs = {
+                    id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                    employeeName: leaveemployeerecords[i].EmployeeName,
+                    job: leaveemployeerecords[i].Description,
+                    day: weekDay,
+                };
+                resourceJob.push(jobs)
+            } 
+            // }else{
+            // }
+        }
         setTimeout(function() {
             let allEmployeesData = templateObject.employeerecords.get();
             for (let e = 0; e < allEmployeesData.length; e++) {
@@ -4465,9 +4433,7 @@ Template.calender.onRendered(function() {
         const updateData = appointmentData.filter(apmt => {
             return apmt.id == id;
         });
-        let index = appointmentData.map(function(e) {
-            return e.id;
-        }).indexOf(parseInt(id));
+       
         let calendarSet = templateObject.globalSettings.get();
         let hideDays = "";
         let slotMin = "06:00:00";
@@ -4488,6 +4454,9 @@ Template.calender.onRendered(function() {
             hideDays = [0, 6];
         }
         if (updateData.length > 0) {
+            let index = appointmentData.map(function(e) {
+                return e.id;
+            }).indexOf(parseInt(id));
             let objectData = {
                 type: "TAppointmentEx",
                 fields: {
@@ -4499,7 +4468,6 @@ Template.calender.onRendered(function() {
             };
             templateObject.updateEvents(objectData,false,false)
             // appointmentService.saveAppointment(objectData).then(function(data) {
-                let calendarSet = templateObject.calendarOptions.get();
                 appointmentList[index].employeename = employeeName;
                 let eventIndex = updateCalendarData.map(function(e) {
                     return e.id;
@@ -4509,11 +4477,71 @@ Template.calender.onRendered(function() {
                 appointmentData[index].startDate = allocDate + " " + updateCalendarData[eventIndex].start.split(" ")[1];
                 appointmentData[index].endDate = allocDate + " " + updateCalendarData[eventIndex].end.split(" ")[1];
                 templateObject.appointmentrecords.get(appointmentData);
-                const calendarEl = document.getElementById("calendar");
                 const currentDate = new Date();
-                const begunDate = moment(currentDate).format("YYYY-MM-DD");
-                //if(eventData.length > 0){
-                const calendar = new Calendar(calendarEl, {
+        } else {
+            let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+            let splitId = id.split(":");
+            let leaveID = splitId[2];
+            let currentLeaveRequest = leaveemployeerecords.filter((item) => item.ID == leaveID);
+            if(currentLeaveRequest && currentLeaveRequest.length !== 0){
+                let allEmp = templateObject.employeerecords.get();
+                employeeColor = allEmp.filter((apmt) => {
+                    return (apmt.id == currentLeaveRequest[0].EmployeeID);
+                });
+    
+                if (employeeColor.length > 0) {
+                    appColor = employeeColor[0].color || "#00a3d3";
+                    leaveEmpName = employeeColor[0].employeeName;
+                } else {
+                    appColor = "#00a3d3";
+                    leaveEmpName = "";
+                }
+    
+                const {
+                    ID,
+                    EmployeeID,
+                    EmployeeName,
+                    TypeOfRequest,
+                    LeaveMethod,
+                    Description,
+                    PayPeriod,
+                    Hours,
+                    Status,
+                    EndDate,
+                    StartDate
+                } = currentLeaveRequest[0];
+                objectData = {
+                    calendarData:{
+                        id,
+                        title: leaveEmpName,
+                        description: currentLeaveRequest[0].Description || "",
+                        start: allocDate + " " + StartDate.split(" ")[1] || "",
+                        end: allocDate + " " + EndDate.split(" ")[1] || "",
+                        color: appColor,
+                    },
+                    apiData:{
+                        ID,
+                        EmployeeID,
+                        EmployeeName,
+                        TypeOfRequest,
+                        LeaveMethod,
+                        Description,
+                        StartDate: allocDate + " " + StartDate.split(" ")[1] || "",
+                        EndDate: allocDate + " " + EndDate.split(" ")[1] || "",
+                        PayPeriod,
+                        Hours,
+                        Status
+                    }
+                }
+            }
+            templateObject.updateEvents(objectData,false,true)
+        }
+        setTimeout(() => {
+            let calendarSet = templateObject.calendarOptions.get();
+            const calendarEl = document.getElementById("calendar");
+            const currentDate = new Date();
+            const begunDate = moment(currentDate).format("YYYY-MM-DD");
+            const calendar = new Calendar(calendarEl, {
                     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin, bootstrapPlugin],
                     themeSystem: "bootstrap",
                     initialView: "dayGridMonth",
@@ -4522,13 +4550,13 @@ Template.calender.onRendered(function() {
                         newappointment: {
                             text: "New Appointment",
                             click: function() {
-                                // FlowRouter.go("/appointmentlist");
+                                $("#employeeListModal").modal("show");
+                                $("#btnCopyOptions").attr("disabled", true);
                             },
                         },
                         appointments: {
                             text: "Appointment List",
                             click: function() {
-                                //window.open("/appointmentlist", '_self');
                                 FlowRouter.go("/appointmentlist");
                             }
                         },
@@ -4598,11 +4626,12 @@ Template.calender.onRendered(function() {
                         }
                     },
                     eventClick: function(info) {
+                        // console.log('eventClick')
                        initAppointmentForm();
                         var hours = "0";
                         var id = info.event.id;
                         var appointmentData = appointmentList;
-
+    
                         var result = appointmentData.filter(apmt => {
                             return apmt.id == id
                         });
@@ -4614,10 +4643,10 @@ Template.calender.onRendered(function() {
                                 var duration = moment.duration(moment(endTime).diff(moment(startTime)));
                                 hours = duration.asHours();
                             }
-
+    
                             let hoursFormatted = templateObject.timeFormat(hours) || "";
                             let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
-
+    
                             if (result[0].isPaused == "Paused") {
                                 $(".paused").show();
                                 $("#btnHold").prop("disabled", true);
@@ -4625,7 +4654,7 @@ Template.calender.onRendered(function() {
                                 $(".paused").hide();
                                 $("#btnHold").prop("disabled", false);
                             }
-
+    
                             if (startAndStopAppointmentOnly == true) {
                                 //$("#btnHold").prop("disabled", true);
                             }
@@ -4664,7 +4693,7 @@ Template.calender.onRendered(function() {
                             document.getElementById("tActualStartTime").value = result[0].aStartTime;
                             document.getElementById("tActualEndTime").value = result[0].aEndTime;
                             document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
-
+    
                             if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none")) $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
                             if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none")) $("#smsConfirmedFlag i.fa-close").addClass("d-none");
                             if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none")) $("#smsConfirmedFlag i.fa-question").addClass("d-none");
@@ -4682,7 +4711,7 @@ Template.calender.onRendered(function() {
                             } else {
                                 $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
                             }
-
+    
                             templateObject.attachmentCount.set(0);
                             if (result[0].attachments) {
                                 if (result.length) {
@@ -4692,6 +4721,43 @@ Template.calender.onRendered(function() {
                             }
                             $("#event-modal").modal();
                             // this.$body.addClass('modal-open');
+                        }else{
+                            let splitId = id.split(":");
+                    // FlowRouter.go("/employeescard?id=" + splitId[1]);
+                    setTimeout(function() {
+                        // $('.payrollTab').tab('show');
+                        // $('a[href="#leave"]').tab('show');
+                        // $('#removeLeaveRequestBtn').show();
+                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                        var getLeaveInfo = leaveemployeerecords.filter((leave) => {
+                            return (splitId[2] == leave.ID);
+                        });
+
+                        if (getLeaveInfo.length > 0) {
+                            // $('#removeLeaveRequestBtn').show();
+                            $('#removeLeaveRequestBtn').css('visibility','initial');
+                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
+                            $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
+                            $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
+                            $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
+                            $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                            $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
+                            $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
+                            $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
+                            $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
+                            $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
+                            $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
+                            setTimeout(function() {
+                                $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
+                            }, 200);
+                            $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
+                            $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
+                            $('#newLeaveRequestModal').modal('show');
+                        }
+                        $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                            // window.open("/appointments", "_self");
+                        });
+                    }, 1000);
                         }
                     },
                     editable: true,
@@ -4699,61 +4765,7 @@ Template.calender.onRendered(function() {
                     dayMaxEvents: true, // allow "more" link when too many events
                     //Triggers modal once event is moved to another date within the calendar.
                     eventDrop: function(info) {
-                        const pattern = /leave/;
-                        if (info.event._def.publicId != "" && !pattern.test(info.event._def.publicId)) {
-                            let appointmentData = templateObject.appointmentrecords.get();
-                            let resourceData = templateObject.resourceAllocation.get();
-                            let eventDropID = info.event._def.publicId || "0";
-                            let dateStart = new Date(info.event.start);
-                            let dateEnd = new Date(info.event.end);
-                            let startDate = dateStart.getFullYear() + "-" + ("0" + (dateStart.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateStart.getDate()).toString().slice(-2);
-                            let endDate = dateEnd.getFullYear() + "-" + ("0" + (dateEnd.getMonth() + 1)).toString().slice(-2) + "-" + ("0" + dateEnd.getDate()).toString().slice(-2);
-                            let startTime = ("0" + dateStart.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                            let endTime = ("0" + dateEnd.getHours()).toString().slice(-2) + ":" + ("0" + dateStart.getMinutes()).toString().slice(-2);
-                            let index = appointmentData.map(function(e) {
-                                return e.id;
-                            }).indexOf(parseInt(eventDropID));
-                            let resourceIndex = resourceData.map(function(e) {
-                                return e.employeeName;
-                            }).indexOf(appointmentData[index].employeename);
-                            if (result.length > 0) {
-                                let objectData = {
-                                    type: "TAppointmentEx",
-                                    fields: {
-                                        Id: parseInt(eventDropID) || 0,
-                                        StartTime: startDate + " " + startTime + ":00" || "",
-                                        EndTime: endDate + " " + endTime + ":00" || "",
-                                    }
-                                };
-                                let nameid = appointmentData[index].employeename.replace(" ", "-");
-                                $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace(" ", "-"));
-                                let job = '<div class="card draggable cardHiddenWeekend" draggable="true" id="' + eventDropID + '" style="margin:4px 0px; background-color: ' + resourceData[resourceIndex].color + '; border-radius: 5px; cursor: pointer;">' + "" +
-                                    '<div class="card-body cardBodyInner d-xl-flex justify-content-xl-center align-items-xl-center" style="color: rgb(255,255,255); height: 30px; padding: 10px;">' + "" +
-                                    '<p class="text-nowrap text-truncate" style="margin: 0px;">' + appointmentData[index].accountname + '</p>' + "" +
-                                    '</div>' + "" +
-                                    '</div>';
-                                let day = moment(startDate).format("dddd").toLowerCase();
-                                appointmentService.saveAppointment(objectData).then(function(data) {
-                                    appointmentData[index].startDate = startDate + " " + startTime;
-                                    appointmentData[index].endDate = endDate + " " + endTime;
-                                    templateObject.appointmentrecords.set(appointmentData);
-
-                                    $("#" + nameid + " ." + day + " .droppable").append(job);
-                                    $("#" + eventDropID).remove();
-                                    $("#allocationTable tbody tr").attr("id", $("#allocationTable tbody tr").attr("id").replace("-", " "));
-                                    sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(dataUpdate) {
-                                        addVS1Data("TAppointment", JSON.stringify(dataUpdate)).then(function(datareturn) {
-                                            window.open("/appointments", '_self');
-                                        }).catch(function(err) {});
-                                    }).catch(function(err) {
-                                        window.open("/appointments", '_self');
-                                    });
-                                }).catch(function(err) {
-                                    window.open("/appointments", '_self');
-                                });
-                            }
-                        }
-
+                        evenDropAndResize(info)
                     },
                     //Triggers modal once external object is dropped to calender.
                     drop: function(event) {
@@ -4764,7 +4776,7 @@ Template.calender.onRendered(function() {
                         let overridesettings = employees.filter(employeeData => {
                             return employeeData.id == parseInt(draggedEmployeeID)
                         });
-
+    
                         let empData = calendarData.filter(calendarOpt => {
                             return calendarOpt.EmployeeID == parseInt(draggedEmployeeID)
                         });
@@ -4841,7 +4853,7 @@ Template.calender.onRendered(function() {
                                 let hoursFormattedStartTime = templateObject.timeFormat(hoursSpent.replace(/^0+/, "")) || "";
                                 document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
                             }
-
+    
                             if (empData.length > 0) {
                                 document.getElementById("product-list").value = empData[empData.length - 1].DefaultServiceProduct || "";
                                 // $('#product-list').prepend('<option value=' + empData[0].Id + ' selected>' + empData[empData.length - 1].DefaultServiceProduct + '</option>');
@@ -4851,9 +4863,9 @@ Template.calender.onRendered(function() {
                                 // $('#product-list').prepend('<option value=' + calendarSet.id + ' selected>' + calendarSet.defaultProduct + '</option>');
                                 // $("#product-list")[0].options[0].selected = true;
                             }
-
+    
                         }
-
+    
                         var endTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("endTime").value).format('DD/MM/YYYY HH:mm');
                         var startTime = moment(document.getElementById("dtSODate2").value + " " + document.getElementById("startTime").value).format('DD/MM/YYYY HH:mm');
                         if (FlowRouter.current().queryParams.leadid) {
@@ -4866,7 +4878,7 @@ Template.calender.onRendered(function() {
                             $("#customerListModal").modal();
                         }
                     },
-                    events: eventData,
+                    events: templateObject.eventdata.get(),
                     eventDidMount: function(event) {},
                     eventContent: function(event) {
                         let title = document.createElement('p');
@@ -4883,22 +4895,16 @@ Template.calender.onRendered(function() {
                         } else {
                             title.innerHTML = event.timeText + " " + event.event.title;
                         }
-
+    
                         let arrayOfDomNodes = [title];
                         return {
                             domNodes: arrayOfDomNodes
                         }
                     }
-
+    
                 });
-                calendar.render();
-                // sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data) {
-                //     addVS1Data("TAppointment", JSON.stringify(data)).then(function(datareturn) {}).catch(function(err) {});
-                // }).catch(function(err) {});
-            // }).catch(function(err) {
-            //     $('.fullScreenSpin').css('display', 'none');
-            // });
-        } else {}
+            calendar.render();
+        }, 200);    
     }, false);
 
     $(document).on("click", "#check-all", function() {
@@ -5389,7 +5395,8 @@ Template.calender.events({
         $("#frmAppointment")[0].reset();
         let element = $(event.target);
         if (element.is("p") || element.is(".card-body")) {
-            var id = parseInt($(event.target).closest('.card').attr("id"));
+            var id = $(event.target).closest('.card').attr("id");
+            // var id = parseInt($(event.target).closest('.card').attr("id"));
             var appointmentData = templateObject.appointmentrecords.get();
             var result = appointmentData.filter(apmt => {
                 return apmt.id == id
@@ -5515,8 +5522,40 @@ Template.calender.events({
                 } else {
                     $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
                 }
-
+                $('#allocationModal').modal('hide')
                 $("#event-modal").modal();
+            }else{
+                let splitId = id.split(":");
+                    setTimeout(function() {
+                        let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+                        var getLeaveInfo = leaveemployeerecords.filter((leave) => {
+                            return (splitId[2] == leave.ID);
+                        });
+
+                        if (getLeaveInfo.length > 0) {
+                            $('#removeLeaveRequestBtn').css('visibility','initial');
+                            $('#edtEmpID').val(getLeaveInfo[0].EmployeeID);
+                            $('#edtLeaveRequestID').val(getLeaveInfo[0].ID);
+                            $('#removeLeaveRequestBtn').data('id', getLeaveInfo[0].ID);
+                            $('#edtLeaveTypeofRequestID').val(getLeaveInfo[0].TypeOfRequest);
+                            $('#edtLeaveTypeofRequest').val(getLeaveInfo[0].LeaveMethod);
+                            $('#edtEmployeeName').val(getLeaveInfo[0].EmployeeName);
+                            $('#edtLeaveDescription').val(getLeaveInfo[0].Description);
+                            $('#edtLeaveStartDate').val(moment(getLeaveInfo[0].StartDate).format('DD/MM/YYYY'));
+                            $('#edtLeaveEndDate').val(moment(getLeaveInfo[0].EndDate).format('DD/MM/YYYY'));
+                            $('#edtLeavePayPeriod').val(getLeaveInfo[0].PayPeriod);
+                            $('#edtLeaveHours').val(getLeaveInfo[0].Hours);
+                            setTimeout(function() {
+                                $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
+                            }, 200);
+                            $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
+                            $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
+                            $('#allocationModal').modal('hide')
+                            $('#newLeaveRequestModal').modal('show');
+                        }
+                        $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
+                        });
+                    }, 1000);
             }
         } else {
             let bookingDate = new Date();
@@ -6500,7 +6539,23 @@ Template.calender.events({
                     }
                 }
             }
-
+            let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+            for (let i = 0; i < leaveemployeerecords.length; i++) {
+                let date = new Date(leaveemployeerecords[i].StartDate.split(" ")[0]);
+                let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
+                // if (resourceChat.length > 0) {
+                if (date >= startWeek && date <= endWeek) {
+                    jobs = {
+                        id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                        employeeName: leaveemployeerecords[i].EmployeeName,
+                        job: leaveemployeerecords[i].Description,
+                        day: weekDay,
+                    };
+                    resourceJob.push(jobs)
+                } 
+                // }else{
+                // }
+            }
             let allEmployeesData = templateObject.employeerecords.get();
             for (let e = 0; e < allEmployeesData.length; e++) {
                 let found = resourceChat.some(emp => emp.employeeName == allEmployeesData[e].employeeName);
@@ -6887,7 +6942,23 @@ Template.calender.events({
                     }
                 }
             }
-
+            let leaveemployeerecords = templateObject.leaveemployeerecords.get();
+            for (let i = 0; i < leaveemployeerecords.length; i++) {
+                let date = new Date(leaveemployeerecords[i].StartDate.split(" ")[0]);
+                let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
+                // if (resourceChat.length > 0) {
+                if (date >= startWeek && date <= endWeek) {
+                    jobs = {
+                        id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                        employeeName: leaveemployeerecords[i].EmployeeName,
+                        job: leaveemployeerecords[i].Description,
+                        day: weekDay,
+                    };
+                    resourceJob.push(jobs)
+                } 
+                // }else{
+                // }
+            }
             let allEmployeesData = templateObject.employeerecords.get();
             for (let e = 0; e < allEmployeesData.length; e++) {
                 let found = resourceChat.some(emp => emp.employeeName == allEmployeesData[e].employeeName);
