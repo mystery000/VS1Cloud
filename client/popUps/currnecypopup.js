@@ -50,32 +50,32 @@ Template.currencypop.onCreated(function () {
       data.Country || "",
       moment(data.RateLastModified).format("DD/MM/YYYY") || "",
       data.CurrencyDesc || "",
-      linestatus,
       data.FixedRate || 0.00,
       data.UpperVariation || 0.00,
       data.LowerVariation || 0.00,
       data.TriggerPriceVariation || 0.00,
-      data.CountryID || ""
+      data.CountryID || "",
+      linestatus,
     ];
     return dataList;
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
+    { index: 0, label: 'ID', class: 'colCurrencyID', active: false, display: false, width: "30" },
     { index: 1, label: 'Code', class: 'colCode', active: true, display: true, width: "50" },
     { index: 2, label: 'Currency', class: 'colCurrency', active: true, display: true, width: "100" },
-    { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100" },
+    { index: 3, label: 'Symbol', class: 'colSymbol', active: true, display: true, width: "100", align:"right" },
     { index: 4, label: 'Buy Rate', class: 'colBuyRate', active: true, display: true, width: "100" },
     { index: 5, label: 'Sell Rate', class: 'colSellRate', active: true, display: true, width: "100" },
     { index: 6, label: 'Country', class: 'colCountry', active: true, display: true, width: "200" },
-    { index: 7, label: '#Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
+    { index: 7, label: 'Rate Last Modified', class: 'colRateLastModified', active: false, display: true, width: "200" },
     { index: 8, label: 'Description', class: 'colDescription', active: true, display: true, width: "100" },
-    { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-    { index: 10, label: '#Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
-    { index: 11, label: '#Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
-    { index: 12, label: '#Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150" },
-    { index: 13, label: '#Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250" },
-    { index: 14, label: '#Country ID', class: 'colCountryID', active: false, display: true, width: "100" },
+    { index: 9, label: 'Fixed Rate', class: 'colFixedRate', active: false, display: true, width: "100" },
+    { index: 10, label: 'Upper Variation', class: 'colUpperVariation', active: false, display: true, width: "150" },
+    { index: 11, label: 'Lower Variation', class: 'colLowerVariation', active: false, display: true, width: "150" },
+    { index: 12, label: 'Trigger Price Variation', class: 'colTriggerPriceVariation', active: false, display: true, width: "250" },
+    { index: 13, label: 'Country ID', class: 'colCountryID', active: false, display: true, width: "100" },
+    { index: 14, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
   ];
 
   templateObject.tableheaderrecords.set(headerStructure);
@@ -843,8 +843,8 @@ Template.currencypop.events({
 
         //});
 
-        $(this).closest("tr").attr("data-target", "#myModal");
-        $(this).closest("tr").attr("data-toggle", "modal");
+        // $(this).closest("tr").attr("data-target", "#myModal");
+        // $(this).closest("tr").attr("data-toggle", "modal");
       }
     }
   },
