@@ -35,9 +35,9 @@ Template.employee_clock_status_template.onCreated(function() {
 
         let linestatus = "";
 
-        if (data.Status == true) {
+        if (data.Active  == true) {
             linestatus = "";
-        } else if (data.Status == false) {
+        } else if (data.Active  == false) {
             linestatus = "In-Active";
         }
 
@@ -133,7 +133,7 @@ Template.employee_clock_status_template.onRendered(function() {
                                                 OrderDate: order_date,
                                                 WorkorderNumber: order_number,
                                                 ClockedOn : clocked_on,
-                                                Status : false,
+                                                Active : false,
                                                 };
                                                 
                                 clockon_report_data.push(clockon_temp);

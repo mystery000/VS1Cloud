@@ -34,9 +34,9 @@ Template.clockonreport_template.onCreated(function() {
         }
 
         let linestatus = "";
-        if (data.Status == true) {
+        if (data.Active == true) {
             linestatus = "";
-        } else if (data.Status == false) {
+        } else if (data.Active == false) {
             linestatus = "In-Active";
         }
 
@@ -134,7 +134,7 @@ Template.clockonreport_template.onRendered(function() {
                                         EmployeeName: employee_name , 
                                         TotalClockedTime: total_clocked_time,
                                         ProcessClockedTime: process_clocked_time,
-                                        Status: false,
+                                        Active: false,
                                         };
                         clockon_report_data.push(clockon_temp);
 
