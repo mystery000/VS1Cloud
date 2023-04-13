@@ -235,7 +235,7 @@ Template.buildcostreport.onRendered(function() {
                             RawMaterialcost : unit_cost * parseFloat(bomData.TotalQtyOriginal),
                             WastageCost : 0,
                             TotalBOMCost: 0,     
-                            Active: true,
+                            Active: false,
                         }  
 
                         buildcostreport_data.push(temp);
