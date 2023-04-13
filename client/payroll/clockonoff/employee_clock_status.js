@@ -33,6 +33,15 @@ Template.employee_clock_status_template.onCreated(function() {
             percent_variance = parseFloat(data.ProcessClockedTime)/parseFloat(data.TotalClockedTime);
         }
 
+        let linestatus = "";
+
+        if (data.Status == true) {
+            linestatus = "";
+        } else if (data.Status == false) {
+            linestatus = "In-Active";
+        }
+
+
         
         var dataList = [
             data.EmployeeId || '',
@@ -42,6 +51,7 @@ Template.employee_clock_status_template.onCreated(function() {
             data.ClockedOn || '',
             '',
             '',
+            linestatus,
         ];
 
         return dataList;
@@ -49,12 +59,13 @@ Template.employee_clock_status_template.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: 'EmpID', class: 'colEmpID', active: true, display: true, width: "50" },
-        { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "" },
-        { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "" },
-        { index: 3, label: 'WorkorderNumber', class: 'colTotalProcess', active: true, display: true, width: "" },
-        { index: 4, label: 'Clocked On/Off', class: 'colVariance', active: true, display: true, width: "" },
-        { index: 5, label: 'Process Clocked On/Off', class: 'colPercent', active: true, display: true, width: "" },
-        { index: 6, label: 'On a Break/Lunch', class: 'colPercent', active: true, display: true, width: "" },
+        { index: 1, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "120" },
+        { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "120" },
+        { index: 3, label: 'WorkorderNumber', class: 'colTotalProcess', active: true, display: true, width: "130" },
+        { index: 4, label: 'Clocked On/Off', class: 'colVariance', active: true, display: true, width: "100" },
+        { index: 5, label: 'Process Clocked On/Off', class: 'colPercent', active: true, display: true, width: "100" },
+        { index: 6, label: 'On a Break/Lunch', class: 'colPercent', active: true, display: true, width: "100" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
         
     ];
 
@@ -94,9 +105,7 @@ Template.employee_clock_status_template.onRendered(function() {
                     let timesheet_data = timesheet.ttimesheet;
                     let workorder_data = workorder;
 
-                    console.log(timesheet);
-                    console.log(workorder_data);
-        
+                        
 
                     for(let i = 0; i < employee_data.length ; i++) {
                         let employee_name = employee_data[i].fields.EmployeeName;
@@ -119,20 +128,12 @@ Template.employee_clock_status_template.onRendered(function() {
                                 let order_number = workorder_data[k].fields.ID;
                                 let clocked_on = workorder_data[k].fields.status;
                             
-                             //  let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
-                            //  let bomDetailData = JSON.parse(bomData.Details);                            
-                         
-
-                            //  for(let l=0; l < bomDetailData.length; l++ ) {
-                            //     process_clocked_time = process_clocked_time + bomDetailData[l].ClockedTime;
-                                
-                            //  }
-
                                 clockon_temp = { EmployeeId : employee_id,
                                                 EmployeeName: employee_name , 
                                                 OrderDate: order_date,
                                                 WorkorderNumber: order_number,
-                                                ClockedOn : clocked_on
+                                                ClockedOn : clocked_on,
+                                                Status : false,
                                                 };
                                                 
                                 clockon_report_data.push(clockon_temp);
@@ -144,7 +145,6 @@ Template.employee_clock_status_template.onRendered(function() {
 
                     }
 
-                    console.log(clockon_report_data);
 
                     addVS1Data('TVS1EmployeeClockStatus', JSON.stringify({tvs1employeeclockstatus: clockon_report_data})).then(function(datareturn){
                     }).catch(function(err){
@@ -234,9 +234,8 @@ Template.employee_clock_status_template.events({
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
         let rows = [];
-        const filename = 'SampleCustomer' + '.csv';
-        rows[0] = ['Company', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'Street2', 'State', 'Post Code', 'Country'];
-        rows[1] = ['ABC Company', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Main Street', 'New York', '1234', 'United States'];
+        const filename = 'Employee Clocked Status' + '.csv';
+        rows[0] = ['EmpID', 'EmployeeName', 'Date', 'WorkorderNumber', 'Clock On/Off', 'Process Clocked On/Off', 'On a Break/Lunch', 'State'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
     'click .btnUploadFile': function (event) {
@@ -314,100 +313,7 @@ Template.employee_clock_status_template.events({
 
 
     },
-    'click .btnImport': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        let contactService = new ContactService();
-        let objDetails;
-        Papa.parse(templateObject.selectedFile.get(), {
-            complete: function (results) {
-
-                if (results.data.length > 0) {
-                    if ((results.data[0][0] == "Company") && (results.data[0][1] == "First Name")
-                        && (results.data[0][2] == "Last Name") && (results.data[0][3] == "Phone")
-                        && (results.data[0][4] == "Mobile") && (results.data[0][5] == "Email")
-                        && (results.data[0][6] == "Skype") && (results.data[0][7] == "Street")
-                        && (results.data[0][8] == "Street2") && (results.data[0][9] == "State")
-                        && (results.data[0][10] == "Post Code") && (results.data[0][11] == "Country")) {
-
-                        let dataLength = results.data.length * 500;
-                        setTimeout(function () {
-                            // $('#importModal').modal('toggle');
-                            Meteor._reload.reload();
-                        }, parseInt(dataLength));
-
-                        for (let i = 0; i < results.data.length - 1; i++) {
-                            objDetails = {
-                                type: "TCustomer",
-                                fields:
-                                {
-                                    ClientName: results.data[i + 1][0],
-                                    FirstName: results.data[i + 1][1],
-                                    LastName: results.data[i + 1][2],
-                                    Phone: results.data[i + 1][3],
-                                    Mobile: results.data[i + 1][4],
-                                    Email: results.data[i + 1][5],
-                                    SkypeName: results.data[i + 1][6],
-                                    Street: results.data[i + 1][7],
-                                    Street2: results.data[i + 1][8],
-                                    State: results.data[i + 1][9],
-                                    PostCode: results.data[i + 1][10],
-                                    Country: results.data[i + 1][11],
-
-                                    BillStreet: results.data[i + 1][7],
-                                    BillStreet2: results.data[i + 1][8],
-                                    BillState: results.data[i + 1][9],
-                                    BillPostCode: results.data[i + 1][10],
-                                    Billcountry: results.data[i + 1][11],
-                                    PublishOnVS1: true
-                                }
-                            };
-                            if (results.data[i + 1][1]) {
-                                if (results.data[i + 1][1] !== "") {
-                                    contactService.saveCustomer(objDetails).then(function (data) {
-                                        //$('.fullScreenSpin').css('display','none');
-                                        //Meteor._reload.reload();
-                                    }).catch(function (err) {
-                                        //$('.fullScreenSpin').css('display','none');
-                                        swal({
-                                            title: 'Oooops...',
-                                            text: err,
-                                            type: 'error',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'Try Again'
-                                        }).then((result) => {
-                                            if (result.value) {
-                                                Meteor._reload.reload();
-                                            } else if (result.dismiss === 'cancel') {
-
-                                            }
-                                        });
-                                    });
-                                }
-                            }
-                        }
-
-                    } else {
-                        $('.fullScreenSpin').css('display', 'none');
-                        // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-                        swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
-                    }
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                    // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
-                }
-
-            }
-        });
-    },
-      
-
     
-
-
-
-
 });
 
 
