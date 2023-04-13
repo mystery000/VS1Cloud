@@ -675,7 +675,9 @@ Template.calender.onRendered(function() {
             click: async function() {
                 $(".fullScreenSpin").css("display", "inline-block");
                 await templateObject.saveUpdatedEvents();
-                templateObject.fetchAppointments();
+                setTimeout(() => {
+                    templateObject.fetchAppointments();
+                }, 1000);
             },
         },
     };
