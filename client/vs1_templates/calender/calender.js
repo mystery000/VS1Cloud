@@ -843,7 +843,7 @@ Template.calender.onRendered(function() {
         }
     }
 
-    function evenDropAndResize(info){
+    function renderEventDropAndResize(info){
         const pattern = /leave/;
         var leaveFlag = false;
         if (info.event._def.publicId != "") {
@@ -1336,7 +1336,7 @@ Template.calender.onRendered(function() {
         }
     }
 
-    function eventSelect(info){
+    function renderEventSelect(info){
         $("#frmAppointment")[0].reset();
         $(".paused").hide();
         templateObject.getAllProductData();
@@ -1397,7 +1397,7 @@ Template.calender.onRendered(function() {
         }
     }
 
-    function eventDidMount(info){
+    function renderEventDidMount(info){
         info.el.children[0].setAttribute("data-toggle", "tooltip");
         info.el.children[0].setAttribute("title", info.event.extendedProps.description);
         setTimeout(function() {
@@ -1434,137 +1434,7 @@ Template.calender.onRendered(function() {
                 };
     }
 
-    templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
-        let calendarSet = templateObject.globalSettings.get();
-        var calendarEl = document.getElementById("calendar");
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("YYYY-MM-DD");
-        var calendar = new Calendar(calendarEl, {
-            plugins: [
-                interactionPlugin,
-                dayGridPlugin,
-                timeGridPlugin,
-                listPlugin,
-                bootstrapPlugin,
-            ],
-            themeSystem: "bootstrap",
-            initialView: "timeGridWeek",
-            hiddenDays: hideDays, // hide Sunday and Saturday
-            longPressDelay: 100,
-            customButtons: {
-                newappointment: {
-                    text: "New Appointment",
-                    click: function() {
-                        $("#employeeListModal").modal("show");
-                        $("#btnCopyOptions").attr("disabled", true);
-                    },
-                },
-                appointments: {
-                    text: "Appointment List",
-                    click: function() {
-                        FlowRouter.go("/appointmentlist");
-                    },
-                },
-                allocation: {
-                    text: "Allocations",
-                    click: function() {
-                        $("#allocationModal").modal('show');
-                    },
-                },
-                ...refreshButton,
-                ...settingsModalButton,
-            },
-            headerToolbar: {
-                left: "prev,next today newappointment appointments allocation refresh",
-                center: "title",
-                right: "dayGridMonth,timeGridWeek,timeGridDay,settingsmodalbutton",
-            },
-            buttonText: {
-                today: "Today",
-                dayGridMonth: "Month",
-                timeGridWeek: "Week",
-                timeGridDay: "Day"
-            },
-            slotMinTime: slotMin,
-            slotMaxTime: slotMax,
-            initialDate: begunDate,
-            navLinks: true, // can click day/week names to navigate views
-            selectable: true,
-            selectMirror: true,
-            dayHeaderFormat: function(date) {
-                if (LoggedCountry == "United States") {
-                    return (moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD"));
-                } else {
-                    return (moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM"));
-                }
-            },
-            select: function(info) {
-                eventSelect(info);
-            },
-            eventClick: function(info) {
-                renderEventClick(info);
-            },
-            editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar
-            dayMaxEvents: true, // allow "more" link when too many events
-            //Triggers modal once event is moved to another date within the calendar.
-            eventDrop: function(info) {
-                evenDropAndResize(info)
-            },
-            //Triggers modal once external object is dropped to calender.
-            drop: function(event) {
-                renderCalendarDropEvent(event)
-            },
-
-            events: templateObject.eventdata.get(),
-            eventDidMount: function(info) {
-                eventDidMount(info)
-            },
-            eventContent: function(event) {
-                renderEventContent(event)
-            },
-        });
-        calendar.render();
-        $('.fc-today-button').prop('disabled', false);
-
-        setTimeout(() => {
-            const child1 = document.querySelector(".fc-appointments-button");
-            if (child1 != null) {
-                const parent1 = child1.parentNode;
-                $(parent1).css("min-width", 714).css("text-align", "center");
-                $("#calendar .fc-toolbar-title").css("min-width", 275).css("text-align", "center").css("clear","both");
-            }
-
-            let url = window.location.href;
-            if (url.indexOf("?id") > 1) {} else {
-                if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                    $("#employeeListModal").modal("show");
-                }
-            }
-        }, 500);
-    };
-
-    templateObject.renderNormalCalendar = function() {
-        let calendarSet = templateObject.globalSettings.get();
-        let hideDays = "";
-        let slotMin = "06:00:00";
-        let slotMax = "21:00:00";
-        if (calendarSet.showSat == false) {
-            hideDays = [6];
-        }
-        if (calendarSet.apptStartTime) {
-            slotMin = calendarSet.apptStartTime;
-        }
-        if (calendarSet.apptEndTime) {
-            slotMax = calendarSet.apptEndTimeCal;
-        }
-        if (calendarSet.showSun == false) {
-            hideDays = [0];
-        }
-        if (calendarSet.showSat == false && calendarSet.showSun == false) {
-            hideDays = [0, 6];
-        }
-
+    templateObject.renderNormalCalendar = function(slotMin, slotMax, hideDays) {
         var calendarEl = document.getElementById("calendar");
         var currentDate = new Date();
         var begunDate = moment(currentDate).format("YYYY-MM-DD");
@@ -1628,7 +1498,7 @@ Template.calender.onRendered(function() {
                 }
             },
             select: function(info) {
-                eventSelect(info)
+                renderEventSelect(info)
             },
             eventClick: function(info) {
                 renderEventClick(info)
@@ -1638,7 +1508,7 @@ Template.calender.onRendered(function() {
             dayMaxEvents: true, // allow "more" link when too many events
             //Triggers modal once event is moved to another date within the calendar.
             eventDrop: function(info) {
-             evenDropAndResize(info)
+             renderEventDropAndResize(info)
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
@@ -1662,13 +1532,13 @@ Template.calender.onRendered(function() {
 
                 //     //     });
                 // }
-                eventDidMount(info)
+                renderEventDidMount(info)
             },
             eventContent: function(event) {
                 renderEventContent(event)
             },
             eventResize: function(info) {
-               evenDropAndResize(info)
+               renderEventDropAndResize(info)
             }
         });
 
@@ -2595,7 +2465,26 @@ Template.calender.onRendered(function() {
         setAllocationTableHeader(false);
         if (templateObject.eventdata.get()) {
             setTimeout(function() {
-                templateObject.renderNormalCalendar();
+                let calendarSet = templateObject.globalSettings.get();
+                let hideDays = "";
+                let slotMin = "06:00:00";
+                let slotMax = "21:00:00";
+                if (calendarSet.showSat == false) {
+                    hideDays = [6];
+                }
+                if (calendarSet.apptStartTime) {
+                    slotMin = calendarSet.apptStartTime;
+                }
+                if (calendarSet.apptEndTime) {
+                    slotMax = calendarSet.apptEndTimeCal;
+                }
+                if (calendarSet.showSun == false) {
+                    hideDays = [0];
+                }
+                if (calendarSet.showSat == false && calendarSet.showSun == false) {
+                    hideDays = [0, 6];
+                }
+                templateObject.renderNormalCalendar(slotMin,slotMax,hideDays);
             }, 1000);
         }
 
@@ -3006,7 +2895,7 @@ Template.calender.onRendered(function() {
                 }
             },
             eventDrop: function(info) {
-               evenDropAndResize(info)
+               renderEventDropAndResize(info)
             },
             //Triggers modal once external object is dropped to calender.
             drop: function(event) {
@@ -4600,7 +4489,7 @@ Template.calender.onRendered(function() {
                     dayMaxEvents: true, // allow "more" link when too many events
                     //Triggers modal once event is moved to another date within the calendar.
                     eventDrop: function(info) {
-                        evenDropAndResize(info)
+                        renderEventDropAndResize(info)
                     },
                     //Triggers modal once external object is dropped to calender.
                     drop: function(event) {
@@ -4768,7 +4657,7 @@ Template.calender.onRendered(function() {
                 let hideDays = "";
                 setShowWeekendAllocationHeader()
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else if (checkbox.checked) {
                 let hideDays = [6];
@@ -4776,7 +4665,7 @@ Template.calender.onRendered(function() {
                 $("#allocationTable .saturday").addClass("hidesaturday");
                 setAllocationTableHeader(true)
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else if (checkboxSaturday.checked) {
                 let hideDays = [0];
@@ -4784,13 +4673,13 @@ Template.calender.onRendered(function() {
                 $("#allocationTable .saturday").removeClass("hidesaturday");
                 setAllocationTableHeader(true)
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else {
                 let hideDays = [0, 6];
                 setNormalAllocationHeader();
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             }
         });
@@ -4811,7 +4700,7 @@ Template.calender.onRendered(function() {
                 let hideDays = "";
                 setShowWeekendAllocationHeader()
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else if (checkbox.checked) {
                 let hideDays = [6];
@@ -4819,7 +4708,7 @@ Template.calender.onRendered(function() {
                 $("#allocationTable .saturday").addClass("hidesaturday");
                 setAllocationTableHeader(true)
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else if (checkboxSaturday.checked) {
                 let hideDays = [0];
@@ -4827,13 +4716,13 @@ Template.calender.onRendered(function() {
                 $("#allocationTable .saturday").removeClass("hidesaturday");
                 setAllocationTableHeader(true)
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             } else {
                 let hideDays = [0, 6];
                 setNormalAllocationHeader();
                 setTimeout(function() {
-                    templateObject.renderCalendar(slotMin, slotMax, hideDays);
+                    templateObject.renderNormalCalendar(slotMin, slotMax, hideDays);
                 }, 50);
             }
         });
