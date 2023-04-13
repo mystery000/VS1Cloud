@@ -1027,9 +1027,9 @@ Template.leadscard.onRendered(function() {
                 sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (data) {
                     addVS1Data('TProspectEx', JSON.stringify(data)).then(function (res) {
                         setAllLeads(data);
-                    }).catch(function (err) {                        
+                    }).catch(function (err) {
                     });
-                }).catch(function (err) {                    
+                }).catch(function (err) {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -1044,9 +1044,9 @@ Template.leadscard.onRendered(function() {
             sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (data) {
                 addVS1Data('TProspectEx', JSON.stringify(data)).then(function (res) {
                     setAllLeads(data);
-                }).catch(function (err) {                        
+                }).catch(function (err) {
                 });
-            }).catch(function (err) {                    
+            }).catch(function (err) {
             });
         });
 
@@ -1095,16 +1095,6 @@ Template.leadscard.onRendered(function() {
         }, 1000)
 
     })
-
-    $(document).on('click', '#editLeadTitle', function(e, li) {
-        const $earch = $(this);
-        const offset = $earch.offset();
-        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            $('#leadTitlePopModal').modal('toggle');
-        } else {
-            $('#leadTitlePopModal').modal();
-        }
-    });
 
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function(e) {
         if ($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null) {
@@ -1448,11 +1438,6 @@ Template.leadscard.onRendered(function() {
     });
     $(document).on('click', '#leadRep', function(e, li) {
         $('#employeeListPOPModal').modal('show');
-    })
-
-    $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editLeadTitle').val($(this).find(".colTypeName").text());
-        $('#leadTitlePopModal').modal('toggle');
     });
 
     setTimeout(() => $('#leadStatus').editableSelect(), 500);
@@ -1801,7 +1786,7 @@ Template.leadscard.events({
     'click .tblLeadCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         let colType = $(event.target).parent().find(".colType").text();
-        
+
         if (taskID !== undefined && taskID !== "random") {
             if (colType == 'Task') {
                 // FlowRouter.go('/crmoverview?taskid=' + taskID);
@@ -2560,7 +2545,7 @@ Template.leadscard.events({
         if (getemp_id[1]) {
             TCustomerID = parseInt(currentEmployee);
         }
-        
+
         $("#contactID").val(TCustomerID);
         $('#contactType').val('Lead')
         $('#crmEditSelectLeadList').val($('#edtLeadEmployeeName').val());
@@ -2758,7 +2743,7 @@ function openEditTaskModals(id, type) {
     // let catg = e.target.dataset.catg;
     let templateObject = Template.instance();
     // $("#editProjectID").val("");
-    
+
     $("#txtCrmSubTaskID").val(id);
 
     $(".fullScreenSpin").css("display", "inline-block");
@@ -2875,7 +2860,7 @@ function openEditTaskModals(id, type) {
                     let tomorrowDay = moment().add(1, "day").format("ddd");
                     let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
                     let date_component = due_date;
-                    
+
                     $("#taskmodalDuedate").val(date_component);
                     $("#taskmodalDescription").html(selected_record.TaskDescription);
 

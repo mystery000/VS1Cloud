@@ -1548,12 +1548,6 @@ Template.customerscard.onRendered(function () {
     //         $('#customerTitlePopModal').modal();
     //     }
     // });
-
-    $(document).on("click", "#paymentmethodList tbody tr", function (e) {
-        let selectedDropdownID = $('#selectPaymentMethodLineID').val() || 'sltPreferredPayment';
-        $('#' + selectedDropdownID + '').val($(this).find(".colName").text());
-        $('#paymentMethodModal').modal('toggle');
-    });
     $(document).on("click", "#tblClienttypeList tbody tr", function (e) {
         let selectedClientTypeDropdownID = $('#selectLineID').val() || 'sltCustomerType';
         $('#' + selectedClientTypeDropdownID + '').val($(this).find(".colTypeName").text());

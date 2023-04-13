@@ -2098,11 +2098,6 @@ Template.supplierpaymentcard.onRendered(() => {
     $("#departmentModal").modal("toggle");
   });
 
-  $(document).on("click", "#paymentmethodList tbody tr", function (e) {
-    $("#sltPaymentMethod").val($(this).find(".colName").text());
-    $("#paymentMethodModal").modal("toggle");
-  });
-
   $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
     var table = $(this);
 
