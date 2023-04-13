@@ -962,7 +962,7 @@ Template.calender.onRendered(function() {
         }
     }
 
-    function leaveRequestEventClick(info){
+    function renderEventClick(info){
         initAppointmentForm();
         var hours = "0";
         var id = info.event.id;
@@ -1477,141 +1477,7 @@ Template.calender.onRendered(function() {
                 eventSelect(info);
             },
             eventClick: function(info) {
-                initAppointmentForm();
-
-                var hours = "0";
-                var id = info.event.id;
-                var appointmentData = templateObject.appointmentrecords.get();
-
-                var result = appointmentData.filter((apmt) => {
-                    return apmt.id == id;
-                });
-                if (result.length > 0) {
-                    if (result[0].isPaused == "Paused") {
-                        $(".paused").show();
-                        $("#btnHold").prop("disabled", true);
-                    } else {
-                        $(".paused").hide();
-                        $("#btnHold").prop("disabled", false);
-                    }
-
-                    if (localStorage.getItem("CloudAppointmentStartStopAccessLevel") == true) {
-                        //$("#btnHold").prop("disabled", true);
-                    }
-
-                    if (result[0].aEndTime != "" && templateObject.isAccessLevels.get() == false) {
-                        $("#btnHold").prop("disabled", true);
-                        $("#btnStartAppointment").prop("disabled", true);
-                        $("#btnStopAppointment").prop("disabled", true);
-                        $("#startTime").prop("disabled", true);
-                        $("#endTime").prop("disabled", true);
-                        $("#tActualStartTime").prop("disabled", true);
-                        $("#tActualEndTime").prop("disabled", true);
-                        $("#txtActualHoursSpent").prop("disabled", true);
-                    }
-                    if (result[0].aEndTime != "") {
-                        $("#btnHold").prop("disabled", true);
-                        $("#btnStartAppointment").prop("disabled", true);
-                        $("#btnStopAppointment").prop("disabled", true);
-                        $("#startTime").prop("disabled", true);
-                        $("#endTime").prop("disabled", true);
-                        $("#tActualStartTime").prop("disabled", true);
-                        $("#tActualEndTime").prop("disabled", true);
-                        $("#txtActualHoursSpent").prop("disabled", true);
-                    }
-                    templateObject.getAllProductData();
-                    if (result[0].aStartTime != "" && result[0].aEndTime != "") {
-                        var startTime = moment(result[0].aStartDate + " " + result[0].aStartTime);
-                        var endTime = moment(result[0].aEndDate + " " + result[0].aEndTime);
-                        var duration = moment.duration(moment(endTime).diff(moment(startTime)));
-                        hours = duration.asHours();
-                    }
-
-                    let hoursFormatted = templateObject.timeFormat(hours) || "";
-                    let hoursFormattedStartTime = templateObject.timeFormat(result[0].totalHours) || "";
-                    document.getElementById("aStartDate").value = result[0].aStartDate || "";
-                    document.getElementById("updateID").value = result[0].id || 0;
-                    document.getElementById("appID").value = result[0].id;
-                    document.getElementById("customer").value = result[0].accountname;
-                    document.getElementById("phone").value = result[0].phone;
-                    document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
-                    document.getElementById("state").value = result[0].state || "";
-                    document.getElementById("address").value = result[0].street || "";
-                    if (localStorage.getItem("CloudAppointmentNotes") == true) {
-                        document.getElementById("txtNotes").value = result[0].notes;
-                        document.getElementById("txtNotes-1").value = result[0].notes;
-                    }
-                    document.getElementById("suburb").value = result[0].suburb || "";
-                    document.getElementById("zip").value = result[0].zip || "";
-                    document.getElementById("country").value = result[0].country || "";
-                    document.getElementById("product-list").value = result[0].product || "";
-                    document.getElementById("product-list-1").value = result[0].product || "";
-                    // if (result[0].product.replace(/\s/g, '') != "") {
-                    //     $('#product-list').prepend('<option value="' + result[0].product + '" selected>' + result[0].product + '</option>');
-                    //
-                    // } else {
-                    //     $('#product-list').prop('selectedIndex', -1);
-                    // }
-                    document.getElementById("employee_name").value = result[0].employeename;
-                    document.getElementById("dtSODate").value = moment(result[0].startDate.split(" ")[0]).format("DD/MM/YYYY");
-                    document.getElementById("dtSODate2").value = moment(result[0].endDate.split(" ")[0]).format("DD/MM/YYYY");
-                    document.getElementById("startTime").value = result[0].startTime;
-                    document.getElementById("endTime").value = result[0].endTime;
-                    document.getElementById("txtBookedHoursSpent").value = hoursFormattedStartTime;
-                    document.getElementById("tActualStartTime").value = result[0].aStartTime;
-                    document.getElementById("tActualEndTime").value = result[0].aEndTime;
-                    document.getElementById("txtActualHoursSpent").value = hoursFormatted || "";
-                    templateObject.attachmentCount.set(0);
-                    if (result[0].attachments) {
-                        if (result.length) {
-                            templateObject.attachmentCount.set(result[0].attachments.length);
-                            templateObject.uploadedFiles.set(result[0].attachments);
-                        }
-                    } else {
-                        templateObject.attachmentCount.set("");
-                        templateObject.uploadedFiles.set("");
-                        templateObject.uploadedFile.set("");
-                    }
-
-                    if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
-                    if (!$("#smsConfirmedFlag i.fa-close").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-close").addClass("d-none");
-                    if (!$("#smsConfirmedFlag i.fa-question").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-question").addClass("d-none");
-                    if (!$("#smsConfirmedFlag i.fa-minus-circle").hasClass("d-none"))
-                        $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
-                    if (result[0].custFld13 === "Yes") {
-                        if (result[0].custFld11 === "Yes") {
-                            $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
-                        } else {
-                            if (result[0].custFld11 === "No") {
-                                $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
-                            } else {
-                                $("#smsConfirmedFlag i.fa-question").removeClass("d-none");
-                            }
-                        }
-                    } else {
-                        $("#smsConfirmedFlag i.fa-minus-circle").removeClass("d-none");
-                    }
-
-                    $("#event-modal").modal();
-                    setTimeout(() => {
-                        if (localStorage.getItem("smsCustomerAppt") == "false") {
-                            $("#chkSMSCustomer").prop("checked", false);
-                        }
-                        if (localStorage.getItem("smsUserAppt") == "false") {
-                            $("#chkSMSUser").prop("checked", false);
-                        }
-                        if (localStorage.getItem("emailCustomerAppt") == "false") {
-                            $("#customerEmail").prop("checked", false);
-                        }
-                        if (localStorage.getItem("emailUserAppt") == "false") {
-                            $("#userEmail").prop("checked", false);
-                        }
-                    }, 100);
-                    // this.$body.addClass('modal-open');
-                }
+                renderEventClick(info);
             },
             editable: true,
             droppable: true, // this allows things to be dropped onto the calendar
@@ -1753,7 +1619,7 @@ Template.calender.onRendered(function() {
                 eventSelect(info)
             },
             eventClick: function(info) {
-                leaveRequestEventClick(info)
+                renderEventClick(info)
             },
             editable: true,
             droppable: true, // this allows things to be dropped onto the calendar
