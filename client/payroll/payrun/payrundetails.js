@@ -18,10 +18,10 @@ import PayRunHandler from "../../js/ObjectManager/PayRunHandler";
 import {Template} from 'meteor/templating';
 import {FlowRouter} from 'meteor/ostrio:flow-router-extra';
 import './payrundetails.html';
+
 let utilityService = new UtilityService();
 let contactService = new ContactService();
 let sideBarService = new SideBarService();
-
 let payRunHandler = new PayRunHandler();
 
 const redirectToPayRollOverview = () => {
@@ -32,6 +32,7 @@ const getPayRuns = async () => {
   return await payRunHandler.loadFromLocal();
   // return JSON.parse(localStorage.getItem("TPayRunHistory")) || [];
 };
+
 const setPayRuns = items => {
   return localStorage.setItem("TPayRunHistory", JSON.stringify(items));
 };
@@ -408,6 +409,9 @@ Template.payrundetails.onRendered(function () {
     });
 
     data = data.response;
+
+    console.log("load pay run data : " + data);
+    
     let payRunsHistory = PayRun.fromList(data); // list of all payruns
 
     const isDraftAlreadyAvailableByCalendarId = calendarId => {
