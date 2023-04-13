@@ -1464,13 +1464,9 @@ Template.calender.onRendered(function() {
             selectMirror: true,
             dayHeaderFormat: function(date) {
                 if (LoggedCountry == "United States") {
-                    return (
-                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD")
-                    );
+                    return (moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("MM/DD"));
                 } else {
-                    return (
-                        moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM")
-                    );
+                    return (moment(date.date.marker).format("ddd") + " " + moment(date.date.marker).format("DD/MM"));
                 }
             },
             select: function(info) {
