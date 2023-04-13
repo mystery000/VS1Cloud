@@ -213,6 +213,8 @@ Template.opportunitiesStatus.onRendered(function() {
             renderCharts(formatDateFrom, formatDateTo, false);
         }
     }
+    
+    templateObject.setDateVal();
 
     $(document).on("change", "#dateFrom, #dateTo", () => {        
         templateObject.setDateVal();

@@ -429,10 +429,12 @@ return this.getList(this.ERPObjects.TContractorPaymentSummary, options);
 
 
 getInvSaleByEmployee() {
+  let fromDate = moment($("#dateFrom").val(), "DD/MM/YYYY").format("YYYY-MM-DD")
+  let toDate = moment($("#dateTo").val(), "DD/MM/YYYY").format("YYYY-MM-DD")
   let options = {
       PropertyList: "ID,DueDate,CustomerName,SaleDate,TotalPaid,TotalBalance,deleted,IsPaid,TotalAmountInc,EmployeeName",
-      select: "[deleted]=false",
-      LimitCount: parseInt(initialDataLoad),
+      select: `deleted=false and DueDate > "${fromDate}" and DueDate < "${toDate}" and EmployeeName > ""`,
+      // LimitCount: parseInt(initialDataLoad),
   };
     return this.getList(this.ERPObjects.TInvoiceEx, options);
 }

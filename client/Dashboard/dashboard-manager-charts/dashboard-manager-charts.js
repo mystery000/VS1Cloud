@@ -413,6 +413,8 @@ Template.dashboardManagerCharts.onRendered(function () {
         templateObject.getDashboardData(formatDateFrom, formatDateTo, false);
     }
 
+    templateObject.setDateVal()
+
     $(document).on("change", "#dateFrom, #dateTo", () => {
         templateObject.setDateVal();
     })

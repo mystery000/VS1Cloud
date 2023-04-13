@@ -236,54 +236,46 @@ Template.resalescomparision.onRendered(() => {
     }
 
     function getInvSales() {
-
-        return new Promise((res, rej) => {
-            // var salesBoardService = new SalesBoardService();
-            vs1chartService.getInvSaleByEmployee().then((data) => {
-                // templateObject.getAllData(data);
-                let useData = data.tinvoiceex;
-                let invoiceItems = [];
-                const fromDate = new Date($("#dateFrom").datepicker("getDate"));
-                const toDate = new Date($("#dateTo").datepicker("getDate"));
-
-                for (let j in useData) {
-                    const dueDate = new Date(useData[j].DueDate);
-                    if (fromDate <= dueDate && toDate >= dueDate) {
-                        invoiceItems.push(useData[j]);
-                    }
+        // var salesBoardService = new SalesBoardService();
+        vs1chartService.getInvSaleByEmployee().then((data) => {
+            // templateObject.getAllData(data);
+            let useData = data.tinvoiceex;
+            let groupData = _.omit(_.groupBy(useData, 'EmployeeName'), ['']);
+            let totalAmountCalculation = _.map(groupData, function(value, key) {
+                let totalPayment = 0;
+                let overDuePayment = 0;
+                for (let i = 0; i < value.length; i++) {
+                    totalPayment += value[i].TotalAmountInc;
                 }
+                let userObject = {};
+                userObject.name = key;
+                userObject.totalbalance = totalPayment;
+                return userObject;
 
-                let filterData = _.filter(invoiceItems, function(data) {
-                    return (!data.deleted)
-                });
-                let filterDueDateData = _.filter(filterData, function(data) {
-                    return data.EmployeeName
-                });
-
-                let groupData = _.omit(_.groupBy(filterDueDateData, 'EmployeeName'), ['']);
-                let totalAmountCalculation = _.map(groupData, function(value, key) {
-                    let totalPayment = 0;
-                    let overDuePayment = 0;
-                    for (let i = 0; i < value.length; i++) {
-                        totalPayment += value[i].TotalAmountInc;
-                    }
-                    let userObject = {};
-                    userObject.name = key;
-                    userObject.totalbalance = totalPayment;
-                    return userObject;
-
-                });
-
-                let sortedArray = [];
-                sortedArray = totalAmountCalculation.sort(function(a, b) {
-                    return b.totalbalance - a.totalbalance;
-                });
-                if (callback) {
-                    callback(sortedArray);
-                }
             });
+
+            let sortedArray = [];
+            sortedArray = totalAmountCalculation.sort(function(a, b) {
+                return b.totalbalance - a.totalbalance;
+            });
+            if (callback) {
+                callback(sortedArray);
+            }
         });
     }
+
+    function loadInitialData() {
+        let getData = localStorage.getItem('VS1SalesEmpReport_dash')
+        if (!getData) return getInvSales()
+        getData = JSON.parse(getData)
+        let sortedArray = [];
+        sortedArray = getData.sort(function(a, b) {
+            return b.fields.Totalsales - a.fields.Totalsales;
+        });
+        callback(sortedArray)
+    }
+    
+    loadInitialData()
     
     $(document).on("change", "#dateFrom, #dateTo", () => {
         getInvSales();

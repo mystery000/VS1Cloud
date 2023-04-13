@@ -301,6 +301,8 @@ Template.dsmTop10Customers.onRendered(function() {
         });
     }
 
+    getInvSales();
+
     $(document).on("change", "#dateFrom, #dateTo", () => {
         getInvSales();
     })

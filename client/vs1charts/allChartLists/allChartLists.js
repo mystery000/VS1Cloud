@@ -128,7 +128,7 @@ Template.allChartLists.onRendered(function() {
     chartService.checkChartToDisplay(); // we run this so we load the correct charts to diplay
     templateObject.activateDraggable(); // this will enable charts resiable features
 
-    $(document).on("change", "#dateFrom, #dateTo", () => {
+    templateObject.updateDateRange = () => {
         let dateFrom = $("#dateFrom").datepicker("getDate");
         $("#dateTo").datepicker("option", "minDate", dateFrom);
         let dateTo = $("#dateTo").datepicker("getDate");
@@ -142,6 +142,12 @@ Template.allChartLists.onRendered(function() {
             dateFrom: `${from[2]}-${from[1]}-${from[0]}`,
             dateTo: `${to[2]}-${to[1]}-${to[0]}`,
         });
+    }
+
+    templateObject.updateDateRange()
+
+    $(document).on("change", "#dateFrom, #dateTo", () => {
+        templateObject.updateDateRange()
     })
 });
 

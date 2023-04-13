@@ -34,7 +34,7 @@ Template.dashboardManagerCards.onRendered(() => {
 
                 $('#new-leads-month').text(leadsThisMonthCount);
             } else {
-                $('#new-leads-month').text("No Data in Range");
+                $('#new-leads-month').text(0);
             }
             loadedCount++
             if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
@@ -118,13 +118,13 @@ Template.dashboardManagerCards.onRendered(() => {
                 const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount / (convertedQuotesCount + nonConvertedQuotesCount)) * 100) : 0;
                 const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount / days(toDate, fromDate) : convertedQuotesAmount;
 
-                $('#sales-winrate').text(winRate.toFixed(2));
+                $('#sales-winrate').text(`$${winRate.toFixed(2)}`);
                 $('#new-deals-month').text(dealsThisMonthCount);
-                $('#avg-sales-cycle').text(avgSalesCycle.toFixed(2));
+                $('#avg-sales-cycle').text(`$${avgSalesCycle.toFixed(2)}`);
             } else {
-                $('#sales-winrate').text("No Data in Range");
-                $('#new-deals-month').text("No Data in Range");
-                $('#avg-sales-cycle').text("No Data in Range");
+                $('#sales-winrate').text("$0.00");
+                $('#new-deals-month').text("0");
+                $('#avg-sales-cycle').text("$0.00");
             }
         }).catch(function(err) {
 
@@ -154,8 +154,8 @@ Template.dashboardManagerCards.onRendered(() => {
                 $('#closed-deals-month').text(closedDealsThisMonth);
                 $('#closed-deals-year').text(`$${closedDealsThisYear.toFixed(2)}`);
             } else {
-                $('#closed-deals-month').text("No Data in Range");
-                $('#closed-deals-year').text("No Data in Range");
+                $('#closed-deals-month').text("0");
+                $('#closed-deals-year').text("$0.00");
             }
         }).catch(function(err) {
 
@@ -164,6 +164,8 @@ Template.dashboardManagerCards.onRendered(() => {
             if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
         });
     };
+    
+    templateObject.getDashboardData();
     
     $(document).on("change", "#dateFrom, #dateTo", async () => {        
         await templateObject.getDashboardData();        

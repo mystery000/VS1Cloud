@@ -9,35 +9,31 @@ Template.datesforcardchart.onCreated(function () {
 
 Template.datesforcardchart.onRendered(function () {    
     const currentDate = new Date();
-    let fromDate = moment().subtract(2, 'month').format('DD/MM/YYYY');
+    let fromDate = moment().subtract(6, 'month').format('DD/MM/YYYY');
     let toDate = moment(currentDate).format("DD/MM/YYYY");
-
-    setTimeout(function(){
-        $("#date-input,#dateTo,#dateFrom").datepicker({
-            showOn: "button",
-            buttonText: "Show Date",
-            buttonImageOnly: true,
-            buttonImage: "/img/imgCal2.png",
-            dateFormat: "dd/mm/yy",
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-90:+10",
-            onChangeMonthYear: function(year, month, inst){
-                // Set date to picker
-                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-                // Hide (close) the picker
-                // $(this).datepicker('hide');
-                // // Change ttrigger the on change function
-                $(this).trigger('change');
-            }
-        });        
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(toDate);    
-        $('[data-toggle="tooltip"]').tooltip({html: true});        
-        $("#dateTo").trigger("change")
-    },500);
+    $("#date-input,#dateTo,#dateFrom").datepicker({
+        showOn: "button",
+        buttonText: "Show Date",
+        buttonImageOnly: true,
+        buttonImage: "/img/imgCal2.png",
+        dateFormat: "dd/mm/yy",
+        showOtherMonths: true,
+        selectOtherMonths: true,
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "-90:+10",
+        // onChangeMonthYear: function(year, month, inst){
+        //     // Set date to picker
+        //     $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
+        //     // Hide (close) the picker
+        //     // $(this).datepicker('hide');
+        //     // // Change ttrigger the on change function
+        //     $(this).trigger('change');
+        // }
+    });        
+    $("#dateFrom").val(fromDate);
+    $("#dateTo").val(toDate);    
+    $('[data-toggle="tooltip"]').tooltip({html: true});        
 });
 
 Template.datesforcardchart.events({
