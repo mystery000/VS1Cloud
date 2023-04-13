@@ -12,8 +12,7 @@ import { ChartService } from "../chart-service";
 const cardService = new CardService()
 const chartService = new ChartService()
 
-Template.allCardsLists.onRendered(function () {
-    cardService.setCardPositions();
+Template.allCardsLists.onRendered(function () {    
     const templateObject = Template.instance();    
     templateObject.deactivateDraggable = () => {
         draggableCharts.disable();
@@ -36,6 +35,7 @@ Template.allCardsLists.onRendered(function () {
                     }
                 },
             }).disableSelection();
+            cardService.setCardPositions();
         }, 500)
     };
     templateObject.activateDraggable();    
