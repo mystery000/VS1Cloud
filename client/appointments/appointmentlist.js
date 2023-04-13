@@ -105,7 +105,7 @@ Template.appointmentlist.onCreated(function() {
         }
         let dataList = [
             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.id + '" name="' + data.id + '"> <label class="custom-control-label" for="f-' + data.id + '"></label></div>' || '',
-            dataList_origin.sortdate || '',
+            // dataList_origin.sortdate || '',
             dataList_origin.id || '',
             '<span style="display:none;">' + dataList_origin.sortdate + '</span> ' + dataList_origin.appointmentdate || '',
             dataList_origin.accountname || '',
@@ -117,7 +117,7 @@ Template.appointmentlist.onCreated(function() {
             dataList_origin.actual_start_time || '',
             dataList_origin.actual_end_time || '',
             dataList_origin.finished || '',
-            dataList_origin.status || '',
+            // dataList_origin.status || '',
             confirmedColumn,
             dataList_origin.notes || '',
             dataList_origin.product || '',
@@ -127,8 +127,8 @@ Template.appointmentlist.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: '', class: 'colCheckBox', active: true, display: true, width: "10" },
-        { index: 1, label: '#id', class: 'colSortDate', active: false, display: true, width: "200" },
-        { index: 2, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
+        // { index: 1, label: '#id', class: 'colSortDate', active: false, display: true, width: "200" },
+        { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "200" },
         { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "" },
         { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
@@ -138,8 +138,8 @@ Template.appointmentlist.onCreated(function() {
         { index: 8, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
         { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "100" },
         { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "100" },
-        { index: 11, label: 'Converted', class: 'colConverted', active: true, display: true, width: "100" },
-        { index: 12, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 11, label: 'Converted', class: 'colStatus', active: true, display: true, width: "100" },
+        // { index: 12, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 13, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
         { index: 14, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
         { index: 15, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
@@ -302,21 +302,13 @@ Template.appointmentlist.onRendered(async function() {
                     $('.fullScreenSpin').css('display', 'none');
                     getVS1Data('TAppointment').then(async function(dataObject2) {
                         if (dataObject2.length == 0) {
-                            sideBarService
-                            .getAllAppointmentList(initialDataLoad, 0)
-                            .then(function(data_) {
+                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data_) {
                                 addVS1Data("TAppointment", JSON.stringify(data_));
                                 for (let i = 0; i < data_.tappointmentex.length; i++) {
                                     var appointment = {
                                         id: data_.tappointmentex[i].fields.ID || "",
-                                        sortdate: data_.tappointmentex[i].fields.CreationDate ?
-                                            moment(data_.tappointmentex[i].fields.CreationDate).format(
-                                                "YYYY/MM/DD"
-                                            ) : "",
-                                        appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
-                                            moment(data_.tappointmentex[i].fields.CreationDate).format(
-                                                "DD/MM/YYYY"
-                                            ) : "",
+                                        sortdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
+                                        appointmentdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
                                         accountname: data_.tappointmentex[i].fields.ClientName || "",
                                         statementno: data_.tappointmentex[i].fields.TrainerName || "",
                                         employeename: data_.tappointmentex[i].fields.TrainerName || "",
@@ -334,23 +326,12 @@ Template.appointmentlist.onRendered(async function() {
                                         endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
                                         startDate: data_.tappointmentex[i].fields.StartTime || "",
                                         endDate: data_.tappointmentex[i].fields.EndTime || "",
-                                        fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
-                                            moment(
-                                                data_.tappointmentex[i].fields.Actual_EndTime
-                                            ).format("DD/MM/YYYY") : "",
+                                        fromDate: data_.tappointmentex[i].fields.Actual_EndTime ? moment(data_.tappointmentex[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                         openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
-                                        aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
-                                            " "
-                                        )[1] || "",
-                                        aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
-                                            " "
-                                        )[1] || "",
-                                        aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
-                                            " "
-                                        )[0] || "",
-                                        aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
-                                            " "
-                                        )[0] || "",
+                                        aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[1] || "",
+                                        aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[1] || "",
+                                        aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[0] || "",
+                                        aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[0] || "",
                                         actualHours: "",
                                         closebalance: "",
                                         rate: data_.tappointmentex[i].fields.Rate || 1,
@@ -365,10 +346,8 @@ Template.appointmentlist.onRendered(async function() {
                                         custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                         custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                     };
-
                                     appointmentList.push(appointment);
                                 }
-
                                 for (let i = 0; i < data.tappointmentlist.length; i++) {
                                     appStatus = data.tappointmentlist[i].Status || '';
                                     var apmt__ = appointmentList.filter((apmt) => {
@@ -504,8 +483,7 @@ Template.appointmentlist.onRendered(async function() {
                                     dataTableList.push(dataList);
                                 }
                                 templateObject.datatablerecords.set(dataTableList);
-                            })
-                            .catch(function(err) {
+                            }).catch(function(err) {
                                 $(".fullScreenSpin").css("display", "none");
                             });
                         }else{
@@ -513,14 +491,8 @@ Template.appointmentlist.onRendered(async function() {
                             for (let i = 0; i < data_.tappointmentex.length; i++) {
                                 var appointment = {
                                     id: data_.tappointmentex[i].fields.ID || "",
-                                    sortdate: data_.tappointmentex[i].fields.CreationDate ?
-                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
-                                            "YYYY/MM/DD"
-                                        ) : "",
-                                    appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
-                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
-                                            "DD/MM/YYYY"
-                                        ) : "",
+                                    sortdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
+                                    appointmentdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
                                     accountname: data_.tappointmentex[i].fields.ClientName || "",
                                     statementno: data_.tappointmentex[i].fields.TrainerName || "",
                                     employeename: data_.tappointmentex[i].fields.TrainerName || "",
@@ -538,23 +510,12 @@ Template.appointmentlist.onRendered(async function() {
                                     endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
                                     startDate: data_.tappointmentex[i].fields.StartTime || "",
                                     endDate: data_.tappointmentex[i].fields.EndTime || "",
-                                    fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
-                                        moment(
-                                            data_.tappointmentex[i].fields.Actual_EndTime
-                                        ).format("DD/MM/YYYY") : "",
+                                    fromDate: data_.tappointmentex[i].fields.Actual_EndTime ? moment(data_.tappointmentex[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
                                     openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
-                                    aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
-                                        " "
-                                    )[1] || "",
-                                    aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
-                                        " "
-                                    )[1] || "",
-                                    aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
-                                        " "
-                                    )[0] || "",
-                                    aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
-                                        " "
-                                    )[0] || "",
+                                    aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[1] || "",
+                                    aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[1] || "",
+                                    aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[0] || "",
+                                    aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[0] || "",
                                     actualHours: "",
                                     closebalance: "",
                                     rate: data_.tappointmentex[i].fields.Rate || 1,
@@ -569,7 +530,6 @@ Template.appointmentlist.onRendered(async function() {
                                     custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                     custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                 };
-
                                 appointmentList.push(appointment);
                             }
 
@@ -710,7 +670,6 @@ Template.appointmentlist.onRendered(async function() {
                             templateObject.datatablerecords.set(dataTableList);
                         }
                     })
-
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
@@ -733,21 +692,15 @@ Template.appointmentlist.onRendered(async function() {
                 $('.fullScreenSpin').css('display', 'none');
                 getVS1Data('TAppointment').then(async function(dataObject2) {
                     if (dataObject2.length == 0) {
-                        sideBarService
-                        .getAllAppointmentList(initialDataLoad, 0)
-                        .then(function(data_) {
+                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data_) {
                             addVS1Data("TAppointment", JSON.stringify(data_));
                             for (let i = 0; i < data_.tappointmentex.length; i++) {
                                 var appointment = {
                                     id: data_.tappointmentex[i].fields.ID || "",
                                     sortdate: data_.tappointmentex[i].fields.CreationDate ?
-                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
-                                            "YYYY/MM/DD"
-                                        ) : "",
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
                                     appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
-                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
-                                            "DD/MM/YYYY"
-                                        ) : "",
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
                                     accountname: data_.tappointmentex[i].fields.ClientName || "",
                                     statementno: data_.tappointmentex[i].fields.TrainerName || "",
                                     employeename: data_.tappointmentex[i].fields.TrainerName || "",
