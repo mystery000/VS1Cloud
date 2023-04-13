@@ -8,29 +8,26 @@ import "./process_clock_list.html";
 import { cloneDeep, template } from 'lodash';
 import { ManufacturingService } from "../../manufacture/manufacturing-service";
 
-
-
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
 let manufacturingService = new ManufacturingService();
 
 Template.process_clock_template.onCreated(function() {
     const templateObject = Template.instance();
-
     templateObject.workOrderRecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-
     templateObject.selectedFile = new ReactiveVar();
 
     templateObject.getDataTableList = function(data) {    
-        
+     
         if (data.Active  == false) {
             linestatus = "";
         } else if (data.Active  == true) {
             linestatus = "In-Active";
         }
         
+       
         var dataList = [
             data.EmpId,
             '<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" /><label class="custom-control-label"></label></div>', 
@@ -43,7 +40,7 @@ Template.process_clock_template.onCreated(function() {
             data.ClockedTime || 0,
             data.Note || '',
             data.Status || '', 
-            linestatus,           
+            linestatus,          
 
         ];
         return dataList;
@@ -76,7 +73,6 @@ Template.process_clock_template.onRendered(function() {
     ];
 
     templateObject.tableheaderrecords.set(headerStructure);
-
     templateObject.getProcessClockedList = function () {
         getVS1Data('TVS1Workorder').then(async function (dataObject) {
             if (dataObject.length == 0) {
@@ -90,6 +86,7 @@ Template.process_clock_template.onRendered(function() {
                 let workorderdata = workOrderList;
                 let bomData;
                 let tempData;
+                let format_date = moment().format('DD/MM/YYYY');
     
                 for (let t = 0; t < workorderdata.length; t++) {
                     bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
@@ -102,7 +99,8 @@ Template.process_clock_template.onRendered(function() {
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
                                 EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                                Date: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || new Date(),
+                             //   ProcessDate: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate ,
+                                ProcessDate:format_date,
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
                                 Product: workorderdata[t].fields.ProductName || '',
@@ -120,19 +118,17 @@ Template.process_clock_template.onRendered(function() {
                 }
     
                 addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
-                       console.log(datareturn); 
                 }).catch(function(err){
-                    console.log(err);
                 });
     
             } else {
-                let data = JSON.parse(dataObject[0].data);
-    
+                let data = JSON.parse(dataObject[0].data);    
                 let ProcessClockList = new Array();
                 let workorderdata = data.tvs1workorder;
                 let bomData;
                 let tempData;
-    
+                let format_date = moment().format('DD/MM/YYYY');
+
                 for (let t = 0; t < workorderdata.length; t++) {
                     bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
                     
@@ -144,7 +140,8 @@ Template.process_clock_template.onRendered(function() {
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
                                 EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                                ProcessDate: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                               // ProcessDate: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                                ProcessDate:format_date,
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
                                 Product: workorderdata[t].fields.ProductName || '',
@@ -165,10 +162,7 @@ Template.process_clock_template.onRendered(function() {
                 addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
                 }).catch(function(err){
                     
-                });
-    
-    
-    
+                });   
                 
             }
         }).catch(async function (err) {
@@ -183,19 +177,21 @@ Template.process_clock_template.onRendered(function() {
                 let workorderdata = workOrderList;
                 let bomData;
                 let tempData;
+                let format_date = moment().format('DD/MM/YYYY');
     
                 for (let t = 0; t < workorderdata.length; t++) {
-                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
+                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);         
                     
                     let bomdetails = JSON.parse(bomData.Details);
-    
+
                     for(let i = 0; i < bomdetails.length; i++) {
                         
                         if(bomdetails[i].process != '' ){
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
                                 EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                                Date: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                               // ProcessDate: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                                ProcessDate:format_date,
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
                                 Product: workorderdata[t].fields.ProductName || '',
@@ -216,14 +212,11 @@ Template.process_clock_template.onRendered(function() {
                 addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
                 }).catch(function(err){
                 });
-        });
-    
+        });    
 
     }
 
     templateObject.getProcessClockedList();
-
-
     
     //get all work orders
     templateObject.getAllWorkorders = async function() {
@@ -349,9 +342,8 @@ Template.process_clock_template.events({
 
     },
     'click .templateDownloadXLSX': function (e) {
-
         e.preventDefault();  //stop the browser from following
-        window.location.href = 'sample_imports/SampleCustomer.xlsx';
+      //  window.location.href = 'sample_imports/SampleCustomer.xlsx';
     },
     'change #attachment-upload': function (e) {
         let templateObj = Template.instance();
@@ -412,111 +404,12 @@ Template.process_clock_template.events({
             }
 
         }
-
-
-
     },
-    'click .btnImport': function () {
-        $('.fullScreenSpin').css('display', 'inline-block');
-        let templateObject = Template.instance();
-        let contactService = new ContactService();
-        let objDetails;
-        Papa.parse(templateObject.selectedFile.get(), {
-            complete: function (results) {
-
-                if (results.data.length > 0) {
-                    if ((results.data[0][0] == "Company") && (results.data[0][1] == "First Name")
-                        && (results.data[0][2] == "Last Name") && (results.data[0][3] == "Phone")
-                        && (results.data[0][4] == "Mobile") && (results.data[0][5] == "Email")
-                        && (results.data[0][6] == "Skype") && (results.data[0][7] == "Street")
-                        && (results.data[0][8] == "Street2") && (results.data[0][9] == "State")
-                        && (results.data[0][10] == "Post Code") && (results.data[0][11] == "Country")) {
-
-                        let dataLength = results.data.length * 500;
-                        setTimeout(function () {
-                            // $('#importModal').modal('toggle');
-                            Meteor._reload.reload();
-                        }, parseInt(dataLength));
-
-                        for (let i = 0; i < results.data.length - 1; i++) {
-                            objDetails = {
-                                type: "TCustomer",
-                                fields:
-                                {
-                                    ClientName: results.data[i + 1][0],
-                                    FirstName: results.data[i + 1][1],
-                                    LastName: results.data[i + 1][2],
-                                    Phone: results.data[i + 1][3],
-                                    Mobile: results.data[i + 1][4],
-                                    Email: results.data[i + 1][5],
-                                    SkypeName: results.data[i + 1][6],
-                                    Street: results.data[i + 1][7],
-                                    Street2: results.data[i + 1][8],
-                                    State: results.data[i + 1][9],
-                                    PostCode: results.data[i + 1][10],
-                                    Country: results.data[i + 1][11],
-
-                                    BillStreet: results.data[i + 1][7],
-                                    BillStreet2: results.data[i + 1][8],
-                                    BillState: results.data[i + 1][9],
-                                    BillPostCode: results.data[i + 1][10],
-                                    Billcountry: results.data[i + 1][11],
-                                    PublishOnVS1: true
-                                }
-                            };
-                            if (results.data[i + 1][1]) {
-                                if (results.data[i + 1][1] !== "") {
-                                    contactService.saveCustomer(objDetails).then(function (data) {
-                                        //$('.fullScreenSpin').css('display','none');
-                                        //Meteor._reload.reload();
-                                    }).catch(function (err) {
-                                        //$('.fullScreenSpin').css('display','none');
-                                        swal({
-                                            title: 'Oooops...',
-                                            text: err,
-                                            type: 'error',
-                                            showCancelButton: false,
-                                            confirmButtonText: 'Try Again'
-                                        }).then((result) => {
-                                            if (result.value) {
-                                                Meteor._reload.reload();
-                                            } else if (result.dismiss === 'cancel') {
-
-                                            }
-                                        });
-                                    });
-                                }
-                            }
-                        }
-
-                    } else {
-                        $('.fullScreenSpin').css('display', 'none');
-                        // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-                        swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
-                    }
-                } else {
-                    $('.fullScreenSpin').css('display', 'none');
-                    // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
-                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
-                }
-
-            }
-        });
-    },
-    'click #check-all': function(event) {
-        if ($(event.target).is(':checked')) {
-            $(".chkBox").prop("checked", true);
-        } else {
-            $(".chkBox").prop("checked", false);
-        }
-    },
-
-    
+   
      
     'click #btnGroupClockOnOff': function(event) {
         $('#groupclockonoff').modal('show');
     },
-
     
     'click .btnGroupClockSave': async function(event) {
 
