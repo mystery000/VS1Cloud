@@ -595,8 +595,6 @@ Template.newLeaveRequestModal.events({
                 let formattedEndDate = EndDate +' '+ apptEndTime;
                 let dbStartDate = moment(formattedStartDate, "DD/MM/YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss')
                 let dbEndDate   = moment(formattedEndDate, "DD/MM/YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss')
-                // console.log('employeeID:',employeeID)
-                // console.log('employeeName:',employeeName)
                 let leaveRequestSettings = new LeaveRequest({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
