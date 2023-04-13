@@ -302,8 +302,7 @@ Template.payrolloverview.onRendered(function () {
         t.Status = "Draft";
       }
     });
-    console.log(data);
-    
+   
     templateObject.timeSheetList.set(timesheets);
 
     // TODO: Datable jquery to be added
@@ -4190,7 +4189,6 @@ Template.payrolloverview.onRendered(function () {
   }
   templateObject.initPage(refresh);
 
-  console.log(templateObject.timeSheetList.get());
 });
 
 Template.payrolloverview.events({
