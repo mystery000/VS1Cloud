@@ -55,6 +55,14 @@ Template.buildcostreport.onCreated(function() {
              total_bom_cost =  RawMaterialcost + wastage_cost;
         } else {
              total_bom_cost = (parseFloat(labour_cost) + parseFloat(over_head_cost) + parseFloat(RawMaterialcost) + parseFloat(wastage_cost)).toFixed(2); 
+        }
+        
+        let linestatus = "";
+
+        if (data.Active  == false) {
+            linestatus = "";
+        } else if (data.Active  == true) {
+            linestatus = "In-Active";
         }     
 
         var dataList = [ data.WorkorderID,
@@ -73,7 +81,8 @@ Template.buildcostreport.onCreated(function() {
                         over_head_cost,
                         RawMaterialcost || 0,
                         wastage_cost ,
-                        total_bom_cost || 0,     ];
+                        total_bom_cost || 0, 
+                        linestatus,   ];
 
         return dataList;
     }
@@ -81,22 +90,23 @@ Template.buildcostreport.onCreated(function() {
        
     let headerStructure = [
         { index: 0, label: 'Work Order', class: 'colWorkorder', active: true, display: true, width: "100" },
-        { index: 1, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "" },
-        { index: 2, label: 'Process BOM', class: 'colProcessBOM', active: true, display: true, width: "" },
-        { index: 3, label: 'Process BOM Changed', class: 'colProcessBOMChanged', active: true, display: true, width: "" },
-        { index: 4, label: 'BOM Products', class: 'colBOMProduct', active: true, display: true, width: "" },
-        { index: 5, label: 'Product Changed', class: 'colProductChanged', active: true, display: true, width: "" },
-        { index: 6, label: 'Unit Cost', class: 'colUnitCost', active: true, display: true, width: "" },
-        { index: 7, label: 'BOM Qty', class: 'colBOMQty', active: true, display: true, width: "" },
-        { index: 8, label: 'Changed Qty', class: 'colChangedQty', active: true, display: true, width: "" },
-        { index: 9, label: 'Variance', class: 'colVariance', active: true, display: true, width: "" },
-        { index: 10, label: 'Wastage', class: 'colWastage', active: true, display: true, width: "" },
-        { index: 11, label: 'Total Clocked Hours', class: 'colTotalClockedHours', active: true, display: true, width: "" },
-        { index: 12, label: 'Labour Cost', class: 'colLabourCost', active: true, display: true, width: "" },
-        { index: 13, label: 'Overhead Cost', class: 'colOverheadCost', active: true, display: true, width: "" },
-        { index: 14, label: 'Raw Material Cost', class: 'colRawMaterialCost', active: true, display: true, width: "" },
-        { index: 15, label: 'Wastage Cost', class: 'colWastageCost', active: true, display: true, width: "" },
-        { index: 16, label: 'Total BOM Cost', class: 'colTotalBOMCost', active: true, display: true, width: "" },       
+        { index: 1, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
+        { index: 2, label: 'Process BOM', class: 'colProcessBOM', active: true, display: true, width: "120" },
+        { index: 3, label: 'Process BOM Changed', class: 'colProcessBOMChanged', active: true, display: true, width: "150" },
+        { index: 4, label: 'BOM Products', class: 'colBOMProduct', active: true, display: true, width: "100" },
+        { index: 5, label: 'Product Changed', class: 'colProductChanged', active: true, display: true, width: "100" },
+        { index: 6, label: 'Unit Cost', class: 'colUnitCost', active: true, display: true, width: "80" },
+        { index: 7, label: 'BOM Qty', class: 'colBOMQty', active: true, display: true, width: "70" },
+        { index: 8, label: 'Changed Qty', class: 'colChangedQty', active: true, display: true, width: "100" },
+        { index: 9, label: 'Variance', class: 'colVariance', active: true, display: true, width: "80" },
+        { index: 10, label: 'Wastage', class: 'colWastage', active: true, display: true, width: "70" },
+        { index: 11, label: 'Total Clocked Hours', class: 'colTotalClockedHours', active: true, display: true, width: "150" },
+        { index: 12, label: 'Labour Cost', class: 'colLabourCost', active: true, display: true, width: "100" },
+        { index: 13, label: 'Overhead Cost', class: 'colOverheadCost', active: true, display: true, width: "100" },
+        { index: 14, label: 'Raw Material Cost', class: 'colRawMaterialCost', active: true, display: true, width: "110" },
+        { index: 15, label: 'Wastage Cost', class: 'colWastageCost', active: true, display: true, width: "120" },
+        { index: 16, label: 'Total BOM Cost', class: 'colTotalBOMCost', active: true, display: true, width: "120" },  
+        { index: 17, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },     
     ];
 
     templateObject.tableheaderrecords.set(headerStructure);
@@ -198,7 +208,8 @@ Template.buildcostreport.onRendered(function() {
                         HourlyOverHeadCost : hourly_overhead_cost || 0,
                         RawMaterialcost : 0,
                         WastageCost : 0,
-                        TotalBOMCost: 0,                   
+                        TotalBOMCost: 0,    
+                        Active: false,               
                         
 
                     };
@@ -224,6 +235,7 @@ Template.buildcostreport.onRendered(function() {
                             RawMaterialcost : unit_cost * parseFloat(bomData.TotalQtyOriginal),
                             WastageCost : 0,
                             TotalBOMCost: 0,     
+                            Active: true,
                         }  
 
                         buildcostreport_data.push(temp);

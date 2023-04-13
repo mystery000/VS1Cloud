@@ -35,9 +35,9 @@ Template.employee_clock_status_template.onCreated(function() {
 
         let linestatus = "";
 
-        if (data.Active  == true) {
+        if (data.Active  == false) {
             linestatus = "";
-        } else if (data.Active  == false) {
+        } else if (data.Active  == true) {
             linestatus = "In-Active";
         }
 

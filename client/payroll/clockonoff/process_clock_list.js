@@ -23,7 +23,13 @@ Template.process_clock_template.onCreated(function() {
 
     templateObject.selectedFile = new ReactiveVar();
 
-    templateObject.getDataTableList = function(data) {               
+    templateObject.getDataTableList = function(data) {    
+        
+        if (data.Active  == false) {
+            linestatus = "";
+        } else if (data.Active  == true) {
+            linestatus = "In-Active";
+        }
         
         var dataList = [
             data.EmpId,
@@ -36,7 +42,8 @@ Template.process_clock_template.onCreated(function() {
             data.Product || '',
             data.ClockedTime || 0,
             data.Note || '',
-            data.Status || '',            
+            data.Status || '', 
+            linestatus,           
 
         ];
         return dataList;
@@ -62,8 +69,9 @@ Template.process_clock_template.onRendered(function() {
         { index: 6, label: 'Process', class: 'colProcess', active: true, display: true, width: "100" },
         { index: 7, label: 'Product', class: 'colProduct', active: true, display: true, width: "100" },
         { index: 8, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "120" },
-        { index: 9, label: 'Note', class: 'colNote', active: true, display: true, width: "150" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 9, label: 'Note', class: 'colNote', active: true, display: true, width: "180" },
+        { index: 10, label: 'Clock Status', class: 'colStatus', active: true, display: true, width: "150" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "110" },
         
     ];
 
@@ -142,7 +150,8 @@ Template.process_clock_template.onRendered(function() {
                                 Product: workorderdata[t].fields.ProductName || '',
                                 ClockedTime : bomdetails[i].ClockedTime || 0,
                                 Note : workorderdata[t].fields.Note || '',
-                                Status: workorderdata[t].fields.Status || ''                  
+                                Status: workorderdata[t].fields.Status || ''    ,
+                                Active:false              
                 
                             };
             
@@ -192,7 +201,8 @@ Template.process_clock_template.onRendered(function() {
                                 Product: workorderdata[t].fields.ProductName || '',
                                 ClockedTime : bomdetails[i].ClockedTime || 0,
                                 Note : workorderdata[t].fields.Note || '',
-                                Status: workorderdata[t].fields.Status || ''                  
+                                Status: workorderdata[t].fields.Status || '',
+                                Acitve: false           
                 
                             };
             
