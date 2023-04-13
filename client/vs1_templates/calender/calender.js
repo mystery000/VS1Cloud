@@ -1397,6 +1397,14 @@ Template.calender.onRendered(function() {
         }
     }
 
+    function eventDidMount(info){
+        info.el.children[0].setAttribute("data-toggle", "tooltip");
+        info.el.children[0].setAttribute("title", info.event.extendedProps.description);
+        setTimeout(function() {
+            $('[data-toggle="tooltip"]').tooltip({ html: true });
+        }, 500);
+    }
+
     templateObject.renderCalendar = function(slotMin, slotMax, hideDays) {
         let calendarSet = templateObject.globalSettings.get();
         var calendarEl = document.getElementById("calendar");
@@ -1619,11 +1627,7 @@ Template.calender.onRendered(function() {
 
             events: templateObject.eventdata.get(),
             eventDidMount: function(info) {
-                info.el.children[0].setAttribute("data-toggle", "tooltip");
-                info.el.children[0].setAttribute("title", info.event.extendedProps.description);
-                setTimeout(function() {
-                    $('[data-toggle="tooltip"]').tooltip({ html: true });
-                }, 500);
+                eventDidMount(info)
             },
             eventContent: function(event) {
                 let title = document.createElement("p");
@@ -1746,7 +1750,6 @@ Template.calender.onRendered(function() {
                 }
             },
             select: function(info) {
-                
                 eventSelect(info)
             },
             eventClick: function(info) {
@@ -1781,11 +1784,7 @@ Template.calender.onRendered(function() {
 
                 //     //     });
                 // }
-                info.el.children[0].setAttribute("data-toggle", "tooltip");
-                info.el.children[0].setAttribute("title", info.event.extendedProps.description);
-                setTimeout(function() {
-                    $('[data-toggle="tooltip"]').tooltip({ html: true });
-                }, 500);
+                eventDidMount(info)
             },
             eventContent: function(event) {
                 let leaveemployeerecords = templateObject.leaveemployeerecords.get();
