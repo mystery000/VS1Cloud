@@ -94,6 +94,17 @@ Template.new_invoice.onCreated(function () {
   templateObject.customers = new ReactiveVar([]);
   templateObject.customer = new ReactiveVar();
 
+  templateObject.print_displayfields = new ReactiveVar({});
+  templateObject.print_displayfields.set({
+    "Product Name": ["20", "left"],
+    Description: ["25", "left"],
+    "Bin Location": ["15", "left"],
+    Qty: ["10", "left"],
+    "Unit Price": ["10", "left"],
+    Tax: ["10", "left"],
+    Amount: ["10", "left"],
+  });
+
   templateObject.customerRecord = new ReactiveVar();
   templateObject.headerfields = new ReactiveVar();
   templateObject.headerbuttons = new ReactiveVar();
@@ -2358,6 +2369,7 @@ Template.new_invoice.onCreated(function () {
   };
 
   templateObject.exportSalesToPdf = function (template_title, number) {
+    console.log('exportSalesToPdf');
     if (template_title == "Invoices") {
       templateObject.showInvoice1(template_title, number, true);
     } else if (template_title == "Delivery Docket") {
@@ -4845,6 +4857,10 @@ Template.new_invoice.helpers({
   getTemplateNumber: function () {
     let template_numbers = ["1", "2", "3"];
     return template_numbers;
+  },
+
+  displaySettings: function() {
+    return Template.instance().print_displayfields.get();
   },
 
   isBatchSerialNoTracking: () => {

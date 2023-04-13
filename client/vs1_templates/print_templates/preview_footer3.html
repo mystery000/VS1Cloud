@@ -1,92 +1,171 @@
 <template name="preview_footer3">
     <style>
-        .template-preview-footer3 {
-            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-            font-family: Calibri, sans-serif !important;
-            width: 90%;
-            margin: 0px auto;
+        /* payment details */
+        .div_payment3_title {
+            left: 20px;
+            top: 700px;
         }
-        .footerTitle3 {
-            margin: 0px;
-            padding: 0px;
-            border: none !important;
-            justify-content: right;
-            flex-wrap: wrap;
-            align-content: center;
+        .bank_account_name_label {
+            left: 20px;
+            top: 716px;
         }
-        .infoBack3 {
-            width: 100%;
+        .ban3_wrap {
+            left: 20px;
+            top: 732px;
+        }
+        .bankname3_wrap {
+            left: 20px;
+            top: 748px;
+        }
+        .swift_label {
+            left: 20px;
+            top: 764px;
+        }
+        .swift3_wrap {
+            left: 95px;
+            top: 764px;
+        }
+        .account_number3_label {
+            left: 20px;
+            top: 780px;
+        }
+        .account_number3_wrap {
+            left: 110px;
+            top: 780px;
+        }
+        .account_detail_label {
+            left: 270px;
+            top: 716px;
+        }
+        .account_detail_wrap {
+            left: 270px;
+            top: 732px;
+        }
+        .payment_terms_label {
+            left: 500px;
+            top: 716px;
+        }
+        .termdays_wrap {
+            left: 595px;
+            top: 716px;
+        }
+        .termdesc_wrap {
+            left: 500px;
+            top: 732px;
+        }
+
+        /* horizontal line */
+        .horizontal_green_line-wrap {
+            left: 20px;
+            top: 800px;
+            border-bottom: 5px solid var(--green);
+            width: 665px;
+        }
+
+        /* footer */
+        .sub_total_label {
+            left: 500px;
+            top: 810px;
+            font-weight: bold;
+        }
+        .subtotal_totalPrint3_wrap {
+            right: 20px;
+            top: 810px;
+        }
+
+        .footer-logo-wrap {
+            left: 20px;
+            top: 832px;
+        }
+        .footer-logo-wrap img {
+            width: 85px;
+            height: 40px;
+        }
+        .light-gren-wrap {
+            top: 827px;
+            left: 130px;
+            width: 550px;
             height: 50px;
-            background-image: url("assets/img/print/tmp3_footer.png");
-            background-position: center right;
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-image: linear-gradient(135deg, transparent 50px, #76C8AB 50px);
+            z-index: 1;
+        }
+        .dark-gren-wrap {
+            top: 827px;
+            left: 155px;
+            width: 530px;
+            height: 50px;
+            background-image: linear-gradient(135deg, transparent 50px, var(--green) 50px);
+            z-index: 2;
+        }
+        .footer-item {
+            font-size: 10px;
+            color: white;
+            z-index: 9;
+        }
+        .o_name3_wrap {
+            left: 240px;
+            top: 830px;
+        }
+        .o_address3_wrap {
+            left: 450px;
+            top: 830px;
+        }
+        .o_city3_wrap {
+            left: 450px;
+            top: 845px;
+        }
+        .o_state3_wrap {
+            left: 450px;
+            top: 860px;
+        }
+        .o_phone3_wrap {
+            right: 20px;
+            top: 830px;
+        }
+        .o_email3_wrap {
+            right: 20px;
+            top: 845px;
+        }
+        .o_url3_wrap {
+            right: 20px;
+            top: 860px;
         }
     </style>
-    <div class="template-preview-footer3">
-        <div style="width: 100%; height: 30px;">
-            <div class="div_payment3_title" style="width: 100%;">
-                <p style="font-weight: bold; font-size: 18px; color: #00949e;">Payment Details</p>
-            </div>
-        </div>
-        <div class="div_payment3">
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="width: 100%; height: 90px; font-size: 18px;">
-            <div class="col-4 col-md-4 col-sm-12" style="padding-left: 0px;">
-                <p class="label-p">
-                    <span style="font-weight: bold;">Bank Account Name:</span>
-                    <br>
-                    <span class="ban3"></span>
-                    <br>
-                    <span style="font-weight: bold;">BANK:</span>&nbsp;<span class="bankname3"></span>
-                    <br>
-                    <span style="font-weight: bold;">Sort Code:</span>&nbsp;<span class="swift3"></span>
-                    <br>
-                    <span style="font-weight: bold;">A/C Number:</span>&nbsp;<span class="account_number3"></span>
-                </p>
-            </div>
-            <div class="col-4 col-md-4 col-sm-12">
-                <p class="label-p">
-                    <span style="font-weight: bold;">International Account Details:</span>
-                    <!-- <br><span>IBAN: 11ABC123456789000</span><br>
-                    <span>BIC: ABCDEF1XXX</span> -->
-                </p>
-            </div>
-            <div class="col-4 col-md-4 col-sm-12">
-                <p class="label-p" style="font-weight: bold;">
-                    <span>Payment Terms:</span>&nbsp;<span class="termdays"></span>
-                </p>
-                <p class="label-p termdesc"></p>
-            </div>    
-        </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px; height: 50px; margin-top: 30px;">
-            <div class="col-2 col-md-2 col-sm-12 d-flex companyLogo" style="height: 50px;">
-                <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <img src="assets/img/VS1.png" class="uploadedImage" style="width: 50%;">
-                </div>
-            </div>
-            <div class="col-10 col-md-10 col-sm-12 d-flex footerTitle3">
-                <div class="infoBack3"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 12px; color: white;">
-                        <div style="width: 50%; padding-left: 12%; margin-top: 8px;">
-                            <p class="label-p o_name3" style="font-size: 12px !important;"></p>
-                            <p class="label-p o_reg3" style="font-size: 12px !important;"></p>
-                        </div>
-                        <div style="width: 20%; margin-top: 8px;">
-                            <p class="label-p o_address3" style="font-size: 12px !important;"></p>
-                            <p class="label-p o_city3" style="font-size: 12px !important;"></p>
-                            <p class="label-p o_state3" style="font-size: 12px !important;"></p>
-                        </div>
-                        <div style="width:30%; margin-top: 8px; text-align: right; padding-right: 10px;">
-                            <div class="div_company_info3" style="width: 100%;">
-                            <p class="label-p o_phone3" style="font-size: 12px !important;"></p>
-                            <p class="label-p o_email3" style="font-size: 12px !important;"></p>
-                            <p class="label-p o_url3" style="font-size: 12px !important;"></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- footer -->
+    <span class="div_payment3_title divDraggable divResize bold">Payment Detials</span>
+    <span class="bold bank_account_name_label divDraggable divResize">Bank Account Name:</span>
+    <span class="ban3_wrap divDraggable divResize"><span class="ban3"></span></span>
+    <span class="bankname3_wrap divDraggable divResize"><span class="bankname3">Bank Name:</span></span>
+    <span class="bold swift_label divDraggable divResize">Sort Code:</span>
+    <span class="swift3_wrap divDraggable divResize"><span class="swift3"></span></span>
+    <span class="bold account_number3_label divDraggable divResize">A/C Number:</span>
+    <span class="account_number3_wrap divDraggable divResize"><span class="account_number3"></span></span>
+    <span class="bold account_detail_label divDraggable divResize">International Account Details:</span>
+    <span class="account_detail_wrap divDraggable divResize"><span class="account_detail"></span></span>
+    <span class="bold payment_terms_label divDraggable divResize">Payment Terms:</span>
+    <span class="termdays_wrap divDraggable divResize"><span class="termdays"></span></span>
+    <span class="termdesc_wrap divDraggable divResize"><span class="termdesc"></span></span>
+
+    <div class="item-wrapper horizontal_green_line-wrap divDraggable divResize"></div>
+
+    <span class="sub_total_label divDraggable divResize bold">Sub Total</span>
+    <span class="subtotal_totalPrint3_wrap divDraggable divResize"><span class="subtotal_totalPrint3" id="subtotal_totalPrint3"></span></span>
+
+    <div class="footer-logo-wrap divDraggable">
+        <img src="assets/img/VS1.png" class="divResize uploadedImage">
     </div>
+    <div class="item-wrapper divDraggable divResize light-gren-wrap">
+    </div>
+    <div class="item-wrapper divDraggable divResize dark-gren-wrap">
+    </div>
+
+    <span class="footer-item o_name3_wrap divDraggable divResize"><span class="o_name3"></span></span>
+    <span class="footer-item o_address3_wrap divDraggable divResize"><span class="o_address3"></span></span>
+    <span class="footer-item o_city3_wrap divDraggable divResize"><span class="o_city3"></span></span>
+    <span class="footer-item o_state3_wrap divDraggable divResize"><span class="o_state3"></span></span>
+    <span class="footer-item o_phone3_wrap divDraggable divResize"><span class="o_phone3"></span></span>
+    <span class="footer-item o_email3_wrap divDraggable divResize"><span class="o_email3"></span></span>
+    <span class="footer-item o_url3_wrap divDraggable divResize"><span class="o_url3"></span></span>
+
+    <!-- footer -->
 </template>

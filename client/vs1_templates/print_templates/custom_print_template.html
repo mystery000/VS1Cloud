@@ -5,10 +5,87 @@
             position: absolute;
         }
         =================================== */
-        .draggable {
-            position: absolute;
+        :root {
+            --blue: #00A3D3;
+            --black: #303134;
+            --green: #0099A3;
+            --secondary: #3d3d3d;
+            --white: #fff;
+        }
+        #print_template_modal .modal-body {
+            background-color: var(--secondary) !important;
+        }
+        #print_template_modal .modal-body * {
+            box-sizing: border-box;
+            margin-bottom: 0;
+            margin-top: 0;
+            font-family: 'Lato', sans-serif;
+        }
+        .bold{
+            font-weight: 900;
+        }
+        .divDraggable {
+            position: absolute !important;
             border: dashed 1px #ccc;
             cursor: move;
+        }
+        .wrapper {
+            position: relative;
+            width: fit-content !important;
+            margin: auto;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            background: var(--white);
+            color: var(--secondary);
+            padding: 30px;
+            font-family: 'Lato', sans-serif;
+            font-size: 12px;
+        }
+        .invoice_wrapper{
+            width: 700px;
+            max-width: 100%;
+            height: 900px;
+            position: relative;
+        }
+        .invoice_wrapper-black{
+            border: 3px solid var(--black);
+        }
+        .invoice_wrapper-blue{
+            border: 3px solid var(--blue);
+        }
+        .invoice_wrapper-green{
+            border: 3px solid var(--green);
+        }
+        .horizontal_line {
+            border-bottom: 2px solid black;
+        }
+        .item-wrapper {
+            position: absolute;
+            width: fit-content;
+            height: fit-content;
+            z-index: 9;
+        }
+        .main_table td.Tax, .main_table td.Amount,
+        .main_table td.Qty, .main_table td.Trans,
+        .main_table td.Original, .main_table td.Due,
+        .main_table td.Paid, .main_table td.Outstanding,
+        .main_table td.Total, .main_table td.Balance,
+        .main_table td.Unit, .main_table td.Credit,
+        .main_table td.Debit {
+            text-align: right;
+        }
+        .powered_by-wrap {
+            position: relative !important;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        .powered_by-wrap a {
+            text-decoration: none;
+            color: #00A3D3;
         }
         /* @} */
     </style>
@@ -33,24 +110,35 @@
                 </div>
             </div>
             <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
-                <div style="width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                    id="{{idPrefix}}" name="{{namePrefix}}">
-                    {{> preview_header1 }}
-                    <!-- <hr style="width: 90%; margin: 0px auto;"> -->
-                    {{> preview_body1 }}
-                    {{> preview_footer1 }}
+                <div class="wrapper" id="{{idPrefix}}" name="{{namePrefix}}">
+                    <div class="invoice_wrapper invoice_wrapper-blue">
+                        {{> preview_header1 }}
+                        {{> preview_body1 }}
+                        {{> preview_footer1 }}
+                    </div>
+                    <div class="item-wrapper powered_by-wrap divDraggable divResize">
+                        <strong>Powered by <a href="https://www.vs1cloud.com" target="_blank">VS1Cloud</a></strong>
+                    </div>
                 </div>
-                <div style="display: none; width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                    id="{{idPrefix}}2" name="{{namePrefix}}2">
-                    {{> preview_header2 }}
-                    {{> preview_body2 }}
-                    {{> preview_footer2 }}
+                <div class="wrapper" id="{{idPrefix}}2" name="{{namePrefix}}2">
+                    <div class="invoice_wrapper invoice_wrapper-black">
+                        {{> preview_header2 }}
+                        {{> preview_body2 }}
+                        {{> preview_footer2 }}
+                    </div>
+                    <div class="item-wrapper powered_by-wrap divDraggable divResize">
+                        <strong>Powered by <a href="https://www.vs1cloud.com" target="_blank">VS1Cloud</a></strong>
+                    </div>
                 </div>
-                <div style="display: none; width: 90%;position: relative; background-color: #ffffff; padding: 8px; height: 297mm; font-size: 13.33px; color: #000000; overflow-x: visible; margin: 0 auto; -webkit-font-smoothing: subpixel-antialiased;"
-                    id="{{idPrefix}}3" name="{{namePrefix}}3">
-                    {{> preview_header3 }}
-                    {{> preview_body3 }}
-                    {{> preview_footer3 }}
+                <div class="wrapper" id="{{idPrefix}}3" name="{{namePrefix}}3">
+                    <div class="invoice_wrapper invoice_wrapper-green">
+                        {{> preview_header3 }}
+                        {{> preview_body3 }}
+                        {{> preview_footer3 }}
+                    </div>
+                    <div class="item-wrapper powered_by-wrap divDraggable divResize">
+                        <strong>Powered by <a href="https://www.vs1cloud.com" target="_blank">VS1Cloud</a></strong>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -96,7 +184,7 @@
                                                     Grid
                                                 {{/if}}
                                             </label>
-                                            <div contenteditable="false" class="groove divcolumn" type="text"></div>
+                                            <div contenteditable="false" class="divcolumn" type="text"></div>
                                         </div>
                                     </div>
                                   {{/each}}
@@ -197,60 +285,16 @@
             }
         }
 
-        function dragElement(elmnt) {
-            var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
-                /* if present, the header is where you move the DIV from:*/
-                elmnt.onmousedown = dragMouseDown;
-                /* otherwise, move the DIV from anywhere inside the DIV:*/
-                //elmnt.onmousedown = dragMouseDown;
+        $(document).ready(function () {
 
-            function dragMouseDown(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // get the mouse cursor position at startup:
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                document.onmouseup = closeDragElement;
-                // call a function whenever the cursor moves:
-                document.onmousemove = elementDrag;
-            }
+            $(".main_table th").resizable({
+                minWidth: 100
+            });
 
-            function elementDrag(e) {
-                e = e || window.event;
-                e.preventDefault();
-                // calculate the new cursor position:
-                pos1 = pos3 - e.clientX;
-                pos2 = pos4 - e.clientY;
-                pos3 = e.clientX;
-                pos4 = e.clientY;
-                // set the element's new position:
-                // if (pos3 < 1200 && pos4 < 430) {
-                    elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
-                    elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
-                    elmnt.style.border = "1px solid blue";
-                // }
-            }
+            $('.divResize').resizable();
 
-            function closeDragElement() {
-                /* stop moving when mouse button is released:*/
-                document.onmouseup = null;
-                document.onmousemove = null;
-                elmnt.style.border = "";
-            }
-        }
+            $('.divDraggable').draggable();
 
-        function initDragElement() {
-            let dragElements = document.getElementsByClassName("draggable")
-
-            for(let i=0;i<dragElements.length;i++) {
-                // Alex: modify for print template {
-                // dragElement(dragElements[i])
-                //==================================
-                $(dragElements[i]).draggable().resizable();
-                // @}
-            }
-        }
-
-        initDragElement()
+        });
     </script>
 </template>

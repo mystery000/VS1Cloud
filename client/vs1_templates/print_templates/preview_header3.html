@@ -1,151 +1,165 @@
 <template name="preview_header3">
     <style>
-        .template-preview-header3 {
-            /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
-            font-family: Calibri, sans-serif !important;
-            width: 90%;
-            margin: 20px auto 0px;
+        .logo-wrap3 {
+            position: absolute !important;
+            left: 20px;
+            top: 20px;
         }
-        .companyLogo {
-            height: 180px;
-            margin: 0px;
-            padding: 0px;
-            flex-wrap: wrap;
-            align-content: center;
+        .logo-wrap3 img {
+            width: 145px;
+            height: 70px;
         }
-        .headerTitle3 {
-            font-family: Calibri, sans-serif !important;
-            margin: 0px;
-            padding: 0px;
-            border: none !important;
-            justify-content: right;
-            flex-wrap: wrap;
-            align-content: center;
+        .barcode-wrap3 {
+            position: absolute !important;
+            right: 20px;
+            top: 10px;
         }
-        .titleBack3 {
-            width: 100%;
+        .o_abn_label3_wrap {
+            left: 20px;
+            top: 95px;
+        }
+        .o_abn3_wrap {
+            left: 60px;
+            top: 95px;
+        }
+        .title-wrap {
+            position: absolute !important;
+            top: 80px;
+            left: 230px;
+            width: 450px;
             height: 50px;
-            background-image: url("assets/img/print/tmp3_header.png");
-            background-position: center right;
-            background-repeat: no-repeat;
-            background-size: cover;
+            background-image: linear-gradient(135deg, transparent 50px, var(--green) 50px);
         }
-        .label-p {
-            font-family: Calibri, sans-serif !important;
-            line-height: 1em;
-            margin-bottom: 0px;
-        }
-        .label-p3 {
-            font-family: Calibri, sans-serif !important;
-            line-height: 1em;
-            margin-bottom: 10px;
-        }
-        .print-header3 {
-            font-family: Calibri, sans-serif !important;
-            font-size: 36px !important;
-            line-height: 50px !important;
-            padding-right: 5px;
-            text-align: right;
+        .print-header3_wrap {
+            top: 81px;
+            left: 300px;
+            font-size: 28px;
             color: white;
         }
-        .pdfCustomerAddress3 {
-            font-family: Calibri, sans-serif !important;
-            font-size: 18px;
-            padding-left: 0px;
-            width: 100%;
-            margin-bottom: 0px;
-            color: rgb(0 0 0);
-            line-height: 1.2rem;
+        .toLabel3_wrap {
+            left: 20px;
+            top: 140px;
+            color: var(--green);
         }
-        .headerColumn3 {
-            font-family: Calibri, sans-serif !important;
-            width: 20%;
-            margin: 0px;
-            padding: 10px 5px;
-            text-align: center;
-            border: 1px solid black;
-            background-color: #e3e3e3;
+        .pdfCustomerAddress3_wrap {
+            left: 20px;
+            top: 160px;
+        }
+        .dateLabel3_wrap {
+            left: 485px;
+            top: 140px;
+            color: var(--green);
+        }
+        .date3_wrap {
+            left: 485px;
+            top: 160px;
+        }
+        .pay_now-wrap3 {
+            position: absolute;
+            left: 485px;
+            top: 190px;
+            width: 80px;
+            height: 30px;
+            background-color: #17a673;
+            border-color: #169b6b;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .linkText {
+            color: white;
+            text-decoration: none;
+        }
+        /* Invoice Table */
+        .invoice_info_table3-wrap {
+            left: 0;
+            top: 240px;
+            width: 100%;
+        }
+        .invoice_info_table3 {
+            margin: auto;
+            width: 100%;
+            border-collapse: collapse;
+            text-align:center;
+        }
+        .invoice_info_table3 thead th {
+            border: solid 1px black;
+            background-color: white !important;
+        }
+        .invoice_info_table3 p {
+            font-size: 12px !important;
         }
     </style>
-    <div class="template-preview-header3">
-        <div class="d-flex d-sm-flex d-md-flex flex-row" style="margin-bottom: 5px;">
-            <div class="col-4 col-md-4 col-sm-12">
-                
-            </div>
-            <div class="col-4 col-md-4 col-sm-12">
-                
-            </div>
-            <div class="col-4 col-md-4 col-sm-12">
-                <div style="width: 100%; text-align: right; z-index: 100;" class="draggable"><svg id="lbl_barcode3"></svg></div>
-                <script>
-                    JsBarcode(
-                        "#lbl_barcode3", 
-                        "BI-751", 
-                        {
-                            width: 2,
-                            height: 50,
-                            margin: 0,
-                            displayValue: false
-                        }
-                    );
-                </script>
-            </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex">
-            <div class="col-6 col-md-6 col-sm-12 d-flex companyLogo">
-                <div style="width: 100%;"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <img src="assets/img/VS1.png" class="uploadedImage draggable" style="width: 43%; margin-bottom: 0px; top: 25px;">
-                    <p class="label-p" style="padding-left: 15px; margin-top: 55px;">
-                        <span class="o_abn_label3 draggable"></span>&nbsp;
-                        <span class="o_abn3 draggable" style="left: 60px; top: 110px;"></span>
-                    </p>
-                </div>
-            </div>
-            <div class="col-6 col-md-6 col-sm-12 d-flex headerTitle3">
-                <div class="titleBack3 draggable" style="top: 65px;"><!-- max-width: 60mm; max-height: 30mm; -->
-                    <p class="label-p print-header3 draggable" style="font-size: 36px !important; margin-left: 35px">INVOICE</p>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="font-size: 18px;">
-            <div class="col-6 col-md-6 col-sm-12 d-flex">
-                <div style="width: 100%;">
-                    <p class="label-p3 toLabel3 draggable" style="color: #71c6a5; top: -30px;">INVOICE TO: </p>
-                    <div style="width: 100%; min-height: 100px;">
-                        <p class="label-p pdfCustomerAddress3 draggable"></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-6 col-md-6 col-sm-12 d-flex">
-                <div style="width: 100%;">
-                    <p class="label-p3 dateLabel3 draggable" style="color: #71c6a5; text-align: right; right: 0px;">INVOICE DATE: </p>
-                    <p class="label-p date3 draggable" style="font-weight: bold; text-align: right; right: 0px; top: 25px;"></p>
-                </div>
-            </div>
-        </div>
-        <div class="div_invoice3">
-        <div class="d-flex flex-row d-sm-flex d-md-flex" style="width: 100%; height: 60px; font-size: 18px; margin: 10px auto;">
-            <div class="headerColumn3 INVOICE">
-                <p class="label-p invNumber3">INVOICE NUMBER</p>
-                <p class="label-p io3">1038</p>
-            </div>
-            <div class="headerColumn3 PO/REFERENCE" style="background-color: white;">
-                <p class="label-p">PO/REFERENCE</p>
-                <p class="label-p ro3"></p>
-            </div>
-            <div class="headerColumn3 ACCOUNT">
-                <p class="label-p">ACCOUNT NUMBER</p>
-                <p class="label-p po3"></p>
-            </div>
-            <div class="headerColumn3 AMOUNT" style="background-color: white;">
-                <p class="label-p">AMOUNT DUE</p>
-                <p class="label-p amountdue3"></p>
-            </div>
-            <div class="headerColumn3 DUE">
-                <p class="label-p">DUE DATE</p>
-                <p class="label-p due3"></p>
-            </div>    
-        </div>
-        </div>
+    <!-- header -->
+    <div class="logo-wrap3 divDraggable">
+        <img src="assets/img/VS1.png" class="divResize uploadedImage">
     </div>
+    <span class="o_abn_label3_wrap divDraggable divResize"><span class="o_abn_label3">ABN</span></span>
+    <span class="o_abn3_wrap divDraggable divResize"><span class="o_abn3"></span></span>
+    <div class="barcode-wrap3 divDraggable">
+        <svg id="lbl_barcode3" width="205" height="50"></svg>
+    </div>
+    <div class="divDraggable divResize title-wrap"></div>
+    <span class="print-header3_wrap bold divDraggable divResize"><span class="print-header3">Bill</span></span>
+
+    <span class="toLabel3_wrap bold divDraggable divResize"><span class="toLabel3">BILL TO:</span></span>
+    <span class="pdfCustomerAddress3_wrap item-wrapper divDraggable divResize"><span class="pdfCustomerAddress3"></span></span>
+    <span class="dateLabel3_wrap bold divDraggable divResize"><span class="dateLabel3">BILL DATE:</span></span>
+    <span class="date3_wrap divDraggable divResize"><span class="date3"></span></span>
+    <div class="item-wrapper pay_now-wrap3 pay-link divDraggable divResize">
+        <a class="linkText" href="">Pay Now</a>
+    </div>
+    <div class="item-wrapper invoice_info_table3-wrap divDraggable">
+        <table class="invoice_info_table3">
+            <thead>
+            <tr>
+                <th>
+                    <p class="invNumber3">INVOICE NUMBER</p>
+                    <p class="io3">&nbsp;</p>
+                </th>
+                <th>
+                    <p>PO/REFERENCE</p>
+                    <p class="ro3">&nbsp;</p>
+                </th>
+                <th>
+                    <p>ACCOUNT NUMBER</p>
+                    <p class="po3">&nbsp;</p>
+                </th>
+                <th>
+                    <p>AMOUNT DUE</p>
+                    <p class="amountdue3">&nbsp;</p>
+                </th>
+                <th>
+                    <p>DUE DATE</p>
+                    <p class="due3">&nbsp;</p>
+                </th>
+            </tr>
+            </thead>
+        </table>
+    </div>
+    <!-- header -->
+    <script>
+        JsBarcode(
+                "#lbl_barcode3",
+                "BI-751",
+                {
+                    width: 2,
+                    height: 50,
+                    margin: 0,
+                    displayValue: false
+                }
+        );
+        $('.barcode-wrap3').resizable({
+            resize: function(e, ui) {
+                $('#lbl_barcode3').attr({
+                    width: ui.size.width,
+                    height: ui.size.height
+                });
+            }
+        });
+        $(".invoice_info_table3 th").resizable({
+            minWidth: 100
+        });
+    </script>
 </template>

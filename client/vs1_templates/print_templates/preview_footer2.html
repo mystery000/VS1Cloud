@@ -1,39 +1,98 @@
 <template name="preview_footer2">
     <style>
-        .template-preview-footer2 {
-            font-family: Calibri, sans-serif !important;
-            width: 90%;
-            margin: 0px auto;
+        .printcomment2_label_wrap {
+            left: 20px;
+            bottom: 140px;
         }
-        #printcomment2 {
-            color: black;
-            height: 3em;
-            line-height: 1em;
-            overflow: hidden;
-            padding: 2px;
-            font-size: 18px;
+        .printcomment2_wrap {
+            left: 20px;
+            bottom: 120px;
         }
+        .ban2_wrap {
+            left: 20px;
+            bottom: 80px;
+        }
+        .bankname2_wrap {
+            left: 20px;
+            bottom: 60px;
+        }
+        .bsb2_wrap {
+            left: 20px;
+            bottom: 40px;
+        }
+        .account_number2_wrap {
+            left: 20px;
+            bottom: 20px;
+        }
+        .subtotal_totalPrint2_label_wrap {
+            left: 440px;
+            bottom: 85px;
+        }
+        .subtotal_totalPrint2_wrap {
+            right: 10px;
+            bottom: 85px;
+        }
+        .sub_total_underline {
+            left: 425px;
+            bottom: 80px;
+            width: 260px;
+        }
+        .grandTotalPrint2_label_wrap {
+            left: 440px;
+            bottom: 60px;
+        }
+        .grandTotalPrint2_wrap {
+            right: 10px;
+            bottom: 60px;
+        }
+        .paid_amount2_label_wrap {
+            left: 440px;
+            bottom: 41px;
+        }
+        .paid_amount2_wrap {
+            right: 10px;
+            bottom: 41px;
+        }
+        .less_amount_underline {
+            left: 425px;
+            bottom: 40px;
+            width: 260px;
+        }
+        .totalBalanceDuePrint2_label_wrap {
+            left: 440px;
+            bottom: 20px;
+        }
+        .totalBalanceDuePrint2_wrap {
+            right: 10px;
+            bottom: 20px;
+        }
+        .horizontal_black_line {
+            left: 20px;
+            top: 780px;
+            border-bottom: 5px solid var(--black);
+            width: 665px;
+        }
+
     </style>
-    <div class="template-preview-footer2">
-        <div style="margin: 0px; width: 100%; height: 210px; font-size: 18px;">
-            <p style="font-weight: bold; margin-bottom: 0px;">Comments:</p>
-            <p id="printcomment2">
-                
-            </p>
-            <div class="div_payment2" style="width: 100%;">
-                <p class="label-p2">
-                    <span>Payments may be made via EFT to the following:</span>
-                </p>
-                <p style="margin-bottom: 0px; line-height: 1em;">
-                    <span class="ban2">Name :</span>
-                    <br>
-                    <span class="bankname2">BANK : </span>
-                    <br>
-                    <span class="bsb2">BSB : </span>
-                    <br>
-                    <span class="account_number2">ACC : </span>
-                </p>
-            </div>
-        </div>
-    </div>
+    <!-- footer -->
+    <span class="printcomment2_label_wrap divDraggable divResize bold"><span class="printcomment2_label">Comments:</span></span>
+    <span class="printcomment2_wrap divDraggable divResize"><span class="printcomment2"></span></span>
+    <div class="horizontal_black_line divDraggable divResize"></div>
+
+    <span class="ban2_wrap divDraggable divResize"><span class="ban2">Account Name:</span></span>
+    <span class="bankname2_wrap divDraggable divResize"><span class="bankname2">Bank Name:</span></span>
+    <span class="bsb2_wrap divDraggable divResize"><span class="bsb2">BSB(Branch Number):</span></span>
+    <span class="account_number2_wrap divDraggable divResize"><span class="account_number2">ACC:</span></span>
+
+    <span class="subtotal_totalPrint2_label_wrap divDraggable divResize bold"><span class="subtotal_totalPrint2_label">Sub Total</span></span>
+    <span class="subtotal_totalPrint2_wrap divDraggable divResize"><span class="subtotal_totalPrint2"  id="subtotal_totalPrint2"></span></span>
+    <div class="horizontal_line sub_total_underline divDraggable divResize"></div>
+    <span class="grandTotalPrint2_label_wrap bold divDraggable divResize bold"><span class="grandTotalPrint2_label">TOTAL AUD</span></span>
+    <span class="grandTotalPrint2_wrap divDraggable divResize"><span class="grandTotalPrint2" id="grandTotalPrint2"></span></span>
+    <span class="paid_amount2_label_wrap divDraggable divResize bold"><span class="paid_amount2_label">Less Amount Credited:</span></span>
+    <span class="paid_amount2_wrap divDraggable divResize"><span class="paid_amount2" id="paid_amount2"></span></span>
+    <div class="horizontal_line less_amount_underline divDraggable divResize"></div>
+    <span class="totalBalanceDuePrint2_label_wrap bold divDraggable divResize bold"><span class="totalBalanceDuePrint2_label">AMOUNT DUE AUD:</span></span>
+    <span class="totalBalanceDuePrint2_wrap divDraggable divResize"><span class="totalBalanceDuePrint2" id="totalBalanceDuePrint2"></span></span>
+    <!-- footer -->
 </template>

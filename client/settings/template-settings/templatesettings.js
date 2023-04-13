@@ -1863,6 +1863,7 @@ Template.templatesettings.onRendered(function () {
   }
 
   var tableId = 'printTemplateTable', table;
+  var tableDestroyed = false;
 
   var dataSet = [
 
@@ -1872,8 +1873,9 @@ Template.templatesettings.onRendered(function () {
   ];
 
   $("#templatePreviewModal").on("hide.bs.modal", function(){
-    if(table) {
-      table.destroy()
+    if(table && !tableDestroyed) {
+      table.destroy();
+      tableDestroyed = true;
     }
   })
 
@@ -1899,6 +1901,7 @@ Template.templatesettings.onRendered(function () {
 
       },
     });
+    tableDestroyed = false;
 
     tableResize();
   }
@@ -1933,6 +1936,14 @@ Template.templatesettings.onRendered(function () {
 
   }
 
+  function togglePayNow(template_name) {
+    let should_pay_templates = ['Quote', 'Sales Order', 'Invoice', 'Invoice Back Order', "Statement"];
+    if (should_pay_templates.indexOf(template_name) == -1) {
+      $("#templatePreviewModal .pay-link").hide();
+    } else {
+      $("#templatePreviewModal .pay-link").show();
+    }
+  }
 
   function saveColumnSettings() {
 
@@ -2378,7 +2389,7 @@ Template.templatesettings.onRendered(function () {
         break;
     }
 
-    let className = Object.entries(object_invoce[0]['fields'])
+    let className = Object.entries(object_invoce[0]['fields']);
     const data = object_invoce[0]["data"];
     let idx = 0;
 
@@ -2431,6 +2442,7 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter1(object_invoce);
     loadTemplateBody1(object_invoce);
+    togglePayNow(object_invoce[0]["title"]);
 
     let abnString = "Company #"
     let repString = "Rep"
@@ -2467,6 +2479,7 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter2(object_invoce);
     loadTemplateBody2(object_invoce);
+    togglePayNow(object_invoce[0]["title"]);
 
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
       value[value.length] = "true";
@@ -2495,6 +2508,7 @@ Template.templatesettings.onRendered(function () {
     $("#templatePreviewModal").modal("toggle");
     loadTemplateHeaderFooter3(object_invoce);
     loadTemplateBody3(object_invoce);
+    togglePayNow(object_invoce[0]["title"]);
 
     for (const [key, value] of Object.entries(object_invoce[0]["fields"])) {
       value[value.length] = "true";
@@ -2725,8 +2739,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "left"],
-          Amount: ["15", "left"],
+          Tax: ["15", "right"],
+          Amount: ["15", "right"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2772,8 +2786,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "left"],
-          Amount: ["15", "left"],
+          Tax: ["15", "right"],
+          Amount: ["15", "right"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2818,8 +2832,8 @@ Template.templatesettings.onRendered(function () {
         fields: {
           "Account Name": ["30", "left"],
           Description: ["40", "left"],
-          Tax: ["15", "left"],
-          Amount: ["15", "left"],
+          Tax: ["15", "right"],
+          Amount: ["15", "right"],
         },
         subtotal: "$125.00",
         gst: "$0.00",
@@ -2896,11 +2910,11 @@ Template.templatesettings.onRendered(function () {
         fields: {
           Date: ["15", "left"],
           Type: ["15", "left"],
-          Trans: ["10", "left"],
-          Original: ["15", "left"],
-          Due: ["15", "left"],
-          Paid: ["15", "left"],
-          Outstanding: ["15", "left"],
+          Trans: ["10", "right"],
+          Original: ["15", "right"],
+          Due: ["15", "right"],
+          Paid: ["15", "right"],
+          Outstanding: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -2945,11 +2959,11 @@ Template.templatesettings.onRendered(function () {
         fields: {
           Date: ["15", "left"],
           Type: ["15", "left"],
-          Trans: ["10", "left"],
-          Original: ["15", "left"],
-          Due: ["15", "left"],
-          Paid: ["15", "left"],
-          Outstanding: ["15", "left"],
+          Trans: ["10", "right"],
+          Original: ["15", "right"],
+          Due: ["15", "right"],
+          Paid: ["15", "right"],
+          Outstanding: ["15", "right"],
         },
         subtotal: "",
         gst: "",
@@ -2994,11 +3008,11 @@ Template.templatesettings.onRendered(function () {
         fields: {
           Date: ["15", "left"],
           Type: ["15", "left"],
-          Trans: ["10", "left"],
-          Original: ["15", "left"],
-          Due: ["15", "left"],
-          Paid: ["15", "left"],
-          Outstanding: ["15", "left"],
+          Trans: ["10", "right"],
+          Original: ["15", "right"],
+          Due: ["15", "right"],
+          Paid: ["15", "right"],
+          Outstanding: ["15", "right"],
         },
         subtotal: "",
         gst: "",
@@ -3098,9 +3112,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "left"],
-          Paid: ["15", "left"],
-          Balance: ["15", "left"],
+          Total: ["15", "right"],
+          Paid: ["15", "right"],
+          Balance: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3147,9 +3161,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "left"],
-          Paid: ["15", "left"],
-          Balance: ["15", "left"],
+          Total: ["15", "right"],
+          Paid: ["15", "right"],
+          Balance: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3196,9 +3210,9 @@ Template.templatesettings.onRendered(function () {
           Date: ["15", "left"],
           Type: ["15", "left"],
           "Due Date": ["15", "left"],
-          Total: ["15", "left"],
-          Paid: ["15", "left"],
-          Balance: ["15", "left"],
+          Total: ["15", "right"],
+          Paid: ["15", "right"],
+          Balance: ["15", "right"],
         },
         subtotal: "$0.00",
         gst: "$0.00",
@@ -3335,10 +3349,10 @@ Template.templatesettings.onRendered(function () {
           "Product Name": ["20", "left"],
           Description: ["25", "left"],
           "Bin Location": ["15", "left"],
-          Qty: ["10", "left"],
-          "Unit Price": ["10", "left"],
-          Tax: ["10", "left"],
-          Amount: ["10", "left"],
+          Qty: ["10", "right"],
+          "Unit Price": ["10", "right"],
+          Tax: ["10", "right"],
+          Amount: ["10", "right"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -3387,7 +3401,7 @@ Template.templatesettings.onRendered(function () {
           Qty: ["10", "left"],
           "Unit Price": ["10", "left"],
           Tax: ["10", "left"],
-          Amount: ["10", "left"],
+          Amount: ["10", "right"],
         },
         subtotal: "$500.00",
         gst: "$15.00",
@@ -5550,7 +5564,7 @@ Template.templatesettings.onRendered(function () {
           "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
-        subtotal: "",
+        subtotal: "$900.00",
         gst: "",
         total: "",
         paid_amount: "",
@@ -5596,7 +5610,7 @@ Template.templatesettings.onRendered(function () {
           "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
-        subtotal: "",
+        subtotal: "$900.00",
         gst: "",
         total: "",
         paid_amount: "",
@@ -5642,7 +5656,7 @@ Template.templatesettings.onRendered(function () {
           "Bin Location": ["20", "left"],
           Qty: ["20", "left"],
         },
-        subtotal: "",
+        subtotal: "$900.00",
         gst: "",
         total: "",
         paid_amount: "",

@@ -1,148 +1,97 @@
 <template name="preview_footer1">
     <style>
-        .template-preview-footer1 {
-            display: flex;
-            /* border-top: 5px solid black; */
-            /* border-bottom: 5px solid black; */
-            padding: 2px;
-            font-family: Calibri, sans-serif !important;
-            width: 90%;
-            margin: 0px auto;
+        .printcomment_label_wrap {
+            left: 20px;
+            bottom: 140px;
         }
-        #printcomment {
-            color: black;
-            height: 3em;
-            line-height: 1em;
-            overflow: hidden;
-            padding: 2px;
-            font-size: 18px;
+        .printcomment_wrap {
+            left: 20px;
+            bottom: 120px;
         }
-        .field_payment {
-            font-size: 18px;
-            padding: 0px 1px;
+        .ban_wrap {
+            left: 20px;
+            bottom: 80px;
         }
-        .field_payment p {
-            line-height: 1em;
+        .bankname_wrap {
+            left: 20px;
+            bottom: 60px;
         }
-        .field_amount {
-            font-size: 18px;
-            padding: 0px 1px;
-            margin-left: 1px;
+        .bsb_wrap {
+            left: 20px;
+            bottom: 40px;
         }
-        .field_amount p {
-            line-height: 1em;
+        .account_number_wrap {
+            left: 20px;
+            bottom: 20px;
         }
-        .field_company {
-            font-family: Calibri, sans-serif;
-            width: 90%;
-            margin: 5px auto;
-            font-size: 18px;
+        .subtotal_totalPrint_label_wrap {
+            left: 450px;
+            bottom: 85px;
         }
-        .field_company p {
-            text-align: center;
+        .subtotal_totalPrint_wrap {
+            right: 10px;
+            bottom: 85px;
+        }
+        .sub_total_underline {
+            left: 425px;
+            bottom: 80px;
+            width: 260px;
+        }
+        .grandTotalLabel_wrap {
+            left: 450px;
+            bottom: 60px;
+        }
+        .totalTax_totalPrint_wrap {
+            right: 10px;
+            bottom: 60px;
+        }
+        .grandTotalPrint_label_wrap {
+            left: 450px;
+            bottom: 41px;
+        }
+        .grandTotalPrint_wrap {
+            right: 10px;
+            bottom: 41px;
+        }
+        .less_amount_underline {
+            left: 425px;
+            bottom: 40px;
+            width: 260px;
+        }
+        .totalBalanceDuePrint_label_wrap {
+            left: 450px;
+            bottom: 20px;
+        }
+        .totalBalanceDuePrint_wrap {
+            right: 10px;
+            bottom: 20px;
+        }
+        .horizontal_blue_line {
+            left: 20px;
+            top: 780px;
+            border-bottom: 5px solid var(--blue);
+            width: 665px;
         }
     </style>
-    <div class="template-preview-footer1">
-        <div style="margin: 0px; width: 100%; border: 1px solid black;">
-            <div style="border: 1px solid black;height: 100px;width: 88%;" class="draggable">
-                <div class="col-12">
-                    <p id="printcomment">
-                        
-                    </p>
-                </div>
-            </div>
-            <div class="hp" style="display: flex; height: 120px; margin-top: 6.5rem;">
-                <div class="field_payment draggable" style="width: 47.6%; border: 1px solid black;">
-                    <!-- <div style="width: 100%;">
-                        <div class="col-12" style="font-weight: bold; color: black; text-align: left; margin-top: 2px;">
-                            <p style="margin-bottom: 0px;">
-                                <span class="bankname"></span>
-                                <br>
-                                <span class="bankdesc"></span>
-                                <br>
-                                <span class="ban">Name :</span>
-                                <br>
-                                <span class="bsb">BSB (Branch Number) :</span>
-                                <br>
-                                <span class="account_number">Account Number:</span>
-                                <br>
-                                <span class="swift">Swift Code:</span>
-                            </p>
-                        </div>
-                    </div> -->
-                    <div style="height: 100%; font-weight: bold; padding: 10px; border: none !important; display: flex; flex-direction: column; justify-content: space-evenly;">
-                        <div style="width: 100%; display: flex;">
-                            <p class="bankname" style="margin-bottom: 0px;"></p>
-                        </div>
-                        <div style="width: 100%; display: flex;">
-                            <p class="bankdesc" style="margin-bottom: 0px;"></p>
-                        </div>
-                        <div style="width: 100%; display: flex;">
-                            <p class="ban" style="margin-bottom: 0px;">Name :</p>
-                        </div>
-                        <div style="width: 100%; display: flex;">
-                            <p class="bsb" style="margin-bottom: 0px;">BSB (Branch Number) :</p>
-                        </div>
-                        <div style="width: 100%; display: flex;">
-                            <p class="account_number" style="margin-bottom: 0px;">Account Number :</p>
-                        </div>
-                        <div style="width: 100%; display: flex;">
-                            <p class="swift" style="margin-bottom: 0px;">Swift Code :</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="field_amount draggable" style="width: 40%; border: 1px solid black; right: 3.8rem;">
-                    <div style="height: 100%; padding: 10px; border: none !important; display: flex; flex-direction: column; justify-content: space-evenly;">
-                        <div style="width: 100%; display: flex;">
-                            <div style="width: 50%;">
-                                <p id="subtotal_totalLabel" style="margin-bottom: 0px;">
-                                    Sub Total</p>
-                            </div>
-                            <div style="width: 50%;">
-                                <p id="subtotal_totalPrint" style="text-align: right; margin-bottom: 0px;">
-                                </p>
-                            </div>
-                        </div>
-                        <div style="width: 100%; display: flex;">
-                            <div style="width: 50%;">
-                                <p id="grandTotalLabel" style="margin-bottom: 0px;">Total Tax</p>
-                            </div>
-                            <div style="width: 50%;">
-                                <p id="totalTax_totalPrint" style="text-align: right; margin-bottom: 0px;">
-                                </p>
-                            </div>
-                        </div>
-                        <div style="width: 100%; height: 5px; border-top: 2px solid black; border-bottom: 2px solid black;"></div>
-                        <div style="width: 100%; display: flex; font-weight: bold;">
-                            <div style="width: 50%;">
-                                <p style="margin-bottom: 0px;">TOTAL (inc. Tax)</p>
-                            </div>
-                            <div style="width: 50%;">
-                                <p id="grandTotalPrint" style="text-align: right; margin-bottom: 0px;">
-                                </p>
-                            </div>
-                        </div>
-                        <div style="width: 100%; display: flex; font-weight: bold;">
-                            <div style="width: 50%;">
-                                <p style="margin-bottom: 0px;">Balance Due</p>
-                            </div>
-                            <div style="width: 50%;">
-                                <p id="totalBalanceDuePrint" style="text-align: right; margin-bottom: 0px;">
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>  
-        </div>
-    </div>
-    <div class="field_company">
-        <p class="draggable" style="right: 18rem;">
-            <span class="companyInfo1"></span>
-            <br>
-            <span class="companyInfo2"></span>
-            <br>
-            <span class="companyInfo3" style="font-weight: bold;"></span>
-        </p>
-    </div>
+    <!-- footer -->
+    <span class="printcomment_label_wrap divDraggable divResize bold"><span class="printcomment_label">Comments:</span></span>
+    <span class="printcomment_wrap divDraggable divResize"><span class="printcomment"></span></span>
+    <div class="horizontal_blue_line divDraggable divResize"></div>
+
+    <span class="ban_wrap divDraggable divResize"><span class="ban">Account Name:</span></span>
+    <span class="bankname_wrap divDraggable divResize"><span class="bankname">Bank Name:</span></span>
+    <span class="bsb_wrap divDraggable divResize"><span class="bsb">BSB(Branch Number):</span></span>
+    <span class="account_number_wrap divDraggable divResize"><span class="account_number">ACC:</span></span>
+
+    <span class="subtotal_totalPrint_label_wrap divDraggable divResize bold"><span class="subtotal_totalPrint_label" id="subtotal_totalLabel">Sub Total</span></span>
+    <span class="subtotal_totalPrint_wrap divDraggable divResize"><span class="subtotal_totalPrint" id="subtotal_totalPrint"></span></span>
+    <div class="horizontal_line sub_total_underline divDraggable divResize"></div>
+    <span class="grandTotalLabel_wrap bold divDraggable divResize"><span class="grandTotalLabel" id="grandTotalLabel">TOTAL Tax</span></span>
+    <span class="totalTax_totalPrint_wrap divDraggable divResize"><span class="totalTax_totalPrint" id="totalTax_totalPrint"></span></span>
+    <span class="grandTotalPrint_label_wrap divDraggable divResize bold"><span class="grandTotalPrint_label">TOTAL (inc. Tax)</span></span>
+    <span class="grandTotalPrint_wrap divDraggable divResize"><span class="grandTotalPrint" id="grandTotalPrint"></span></span>
+    <div class="horizontal_line less_amount_underline divDraggable divResize"></div>
+    <span class="totalBalanceDuePrint_label_wrap bold divDraggable divResize"><span class="totalBalanceDuePrint_label">Balance Due:</span></span>
+    <span class="totalBalanceDuePrint_wrap divDraggable divResize"><span class="totalBalanceDuePrint" id="totalBalanceDuePrint"></span></span>
+    <!-- footer -->
 </template>
