@@ -330,13 +330,11 @@ Template.mobileapp.events({
             $(".mobile-left-employee-list").css('display', 'none');
             $(".mobile-left-workorder-list").css('display', 'none');
 
-
             getVS1Data('TProcessStep').then(function (dataObject) {
                 if(dataObject.length == 0) {
 
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                     
-
                         $(".mobile-left-jobprocess-list").css('display', 'block');
                         let processData = JSON.stringify(data);
                         

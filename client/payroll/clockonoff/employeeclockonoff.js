@@ -26,7 +26,7 @@ Template.clockOnOff.onCreated(function () {
   templateObject.appointmentrecords = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
   templateObject.timesheetrecords = new ReactiveVar([]);
-  templateObject.breaktime = new ReactiveVar();
+  templateObject.breaktime = new ReactiveVar(0);
   templateObject.breakStartTime = new ReactiveVar();
   
 });
@@ -222,6 +222,7 @@ Template.clockOnOff.events({
     let date1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2);
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
+    console.log(endTime);
     if (endTime > startTime) {
       document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
     }
@@ -536,9 +537,11 @@ Template.clockOnOff.events({
   'change #startTime': function () {
     const templateObject = Template.instance();
     let date = new Date();
-    let date1 = ("0" + date.getDate()).toString().slice(-2) + "/" + ("0" + (date.getMonth() + 1)).toString().slice(-2) + "/" + date.getFullYear();
+    let date1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2);
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
+
+    console.log(endTime);
     if (endTime > startTime) {
       document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
     } else {
@@ -548,12 +551,14 @@ Template.clockOnOff.events({
   'change #endTime': function () {
     const templateObject = Template.instance();
     let date = new Date();
-    let date1 = ("0" + date.getDate()).toString().slice(-2) + "/" + ("0" + (date.getMonth() + 1)).toString().slice(-2) + "/" + date.getFullYear();
+    let date1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2);
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
+   
     if (endTime > startTime) {
       document.getElementById('txtBookedHoursSpent').value = parseFloat(templateObject.diff_hours(endTime, startTime)).toFixed(2);
     } else {
+
     }
   },
    
@@ -595,6 +600,8 @@ Template.clockOnOff.events({
       var endTime = $("#endTime").val() || "";
       var edthour = $("#txtBookedHoursSpent").val() || "00:00";
       let hours = templateObject.timeToDecimal(edthour) - break_time;
+      break_time = templateObject.breaktime.set(0);
+
       var techNotes = $("#txtNotes").val() || "";
          
       let isPaused = checkStatus;
