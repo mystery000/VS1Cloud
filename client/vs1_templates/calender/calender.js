@@ -1188,6 +1188,8 @@ Template.calender.onRendered(function() {
                     setTimeout(function() {
                         $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
                     }, 200);
+                    $('#edtLeaveDescription').val("Annual Leave Request, Awaiting")
+                    $('#edtLeaveHours').val("8")
                     $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
                     $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
                     $('#newLeaveRequestModal').modal('show');
@@ -4733,6 +4735,8 @@ Template.calender.onRendered(function() {
                                     setTimeout(function() {
                                         $('#edtLeavePayStatus').val(getLeaveInfo[0].Status);
                                     }, 200);
+                                    $('#edtLeaveDescription').val("Annual Leave Request, Awaiting")
+                                    $('#edtLeaveHours').val("8")
                                     $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
                                     $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
                                     $('#newLeaveRequestModal').modal('show');
@@ -5534,6 +5538,8 @@ Template.calender.events({
                             $('#newLeaveRequestLabel.edit-leave-title').removeClass('hide');
                             $('#newLeaveRequestLabel.new-leave-title').addClass('hide');
                             $('#allocationModal').modal('hide')
+                            $('#edtLeaveDescription').val("Annual Leave Request, Awaiting")
+                            $('#edtLeaveHours').val("8")
                             $('#newLeaveRequestModal').modal('show');
                         }
                         $('#newLeaveRequestModal').on('hidden.bs.modal', function(e) {
@@ -10333,6 +10339,8 @@ Template.calender.events({
         $("#appointmentLeaveConfirmModal").modal("hide");
         let currentEmployeeName = localStorage.getItem("mySessionEmployee") || "";
         $('#edtEmployeeName').val(currentEmployeeName)
+        $('#edtLeaveDescription').val("Annual Leave Request, Awaiting")
+        $('#edtLeaveHours').val("8")
 		$('#newLeaveRequestModal').modal('show');
     },
     "click .lineProductName, keydown .lineProductName": function(event) {
