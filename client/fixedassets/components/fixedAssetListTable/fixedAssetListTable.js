@@ -291,9 +291,8 @@ Template.fixedAssetListTable.onCreated(function () {
 });
 
 Template.fixedAssetListTable.onRendered(function () {
-  $(".fullScreenSpin").css("display", "inline-block");
   $("#tblFixedAssetList tbody").on("click", "tr", function () {
-    var assetID = $(this).closest("tr").attr("id");
+    var assetID = $(this).closest("tr").attr('id');
     FlowRouter.go("/fixedassetcard?assetId=" + assetID);
   });
 });
