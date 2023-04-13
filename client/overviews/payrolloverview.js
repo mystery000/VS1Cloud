@@ -85,7 +85,7 @@ Template.payrolloverview.onCreated(function () {
     return dataTimeSheetList;
   }
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colTimeSheetId', active: false, display: true, width: "10" },
+    { index: 0, label: 'ID', class: 'colTimeSheetId', active: false, display: true, width: "10" },
     { index: 1, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "120" },
     { index: 2, label: 'Surname', class: 'colSurname', active: true, display: true, width: "120" },
     { index: 3, label: 'Period', class: 'colPeriod', active: true, display: true, width: "110" },

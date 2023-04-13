@@ -33,7 +33,7 @@ Template.SelectPayCalendar.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "10" },
+    { index: 0, label: 'ID', class: 'colCalenderID', active: false, display: true, width: "10" },
     { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "200" },
     { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "110" },
     { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "110" },

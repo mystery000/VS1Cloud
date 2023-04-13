@@ -591,6 +591,7 @@
                               <!-- {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}} -->
                               {{>datatablelist
                                 tablename="tblCustomerCrmListWithDate"
+                                tableclass="tblCustomerCrmListWithDate"
                                 apiName= customerApiFunction
                                 indexeddbname = 'TCRMTaskList'
                                 tableheaderrecords = customerTableHeaderRecords
@@ -1425,6 +1426,7 @@
                                   </table>
                                   <!-- {{>datatablelist
                                     tablename="tblEmpServiceList"
+                                    tableclass="tblEmpServiceList"
                                     apiName= serviceApiFunction
                                     indexeddbname = 'TProductVS1'
                                     tableheaderrecords = serviceTableHeaderRecords
@@ -4140,6 +4142,7 @@
                           <!-- {{> non_transactional_list tablename="tblEmployeeTransactionList"}} -->
                           {{>datatablelist
                             tablename="tblEmployeeTransactionList"
+                            tableclass="tblEmployeeTransactionList"
                             apiName= transactionApiFunction
                             indexeddbname = 'TInvoiceEx'
                             tableheaderrecords = transactionTableHeaderRecords
@@ -4414,6 +4417,7 @@
           <!-- {{> non_transactional_list tablename="tblHolidays"}} -->
           {{>datatablelist
             tablename="tblHoilidays"
+            tableclass="tblHoilidays"
             apiName= holidayApiFunction
             indexeddbname = 'TPayrollHolidays'
             tableheaderrecords = holidayTableHeaderRecords

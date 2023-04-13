@@ -493,6 +493,7 @@
                     <div class="table-responsive my-3">
                         {{>datatablelist
                                 tablename="tblPayRuns"
+                                tableclass="tblPayRuns"
                                 apiName= apiFunction
                                 indexeddbname = 'TTimeSheet'
                                 tableheaderrecords = tableheaderrecords
@@ -523,6 +524,7 @@
                         </style>
                         {{>datatablelist
                             tablename="tblDraftPayRun"
+                            tableclass="tblDraftPayRun"
                             apiName= draftApiFunction
                             indexeddbname = 'TPayRunHistory'
                             tableheaderrecords = draftTableHeaderRecords
@@ -596,6 +598,7 @@
                             </style>
                             {{>datatablelist
                                 tablename="tblPayRunHistory"
+                                tableclass="tblPayRunHistory"
                                 apiName= historyApiFunction
                                 indexeddbname = 'TPayHistory'
                                 tableheaderrecords = historyTableHeaderRecords

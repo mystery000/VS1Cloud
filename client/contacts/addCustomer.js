@@ -1194,7 +1194,7 @@ Template.customerscard.onCreated(function () {
         return dataList;
     }
     let headerStructure_JobDetailsList = [
-        { index: 0, label: '#ID', class: 'colSortDate', active: false, display: true, width: "10" },
+        { index: 0, label: 'ID', class: 'colSortDate', active: false, display: true, width: "10" },
         { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
         { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
         { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "100" },
