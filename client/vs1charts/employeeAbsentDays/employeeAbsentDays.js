@@ -34,16 +34,15 @@ Template.employeeAbsentDays.onRendered(() => {
 		let clockedOnEmpList = [];
 		let max = {};
 		let max_tmp = 0;
-
-		let empName = [];
-		let empClockedCount = [];
+		let empName = [], empClockedCount = [], backgroundColor = [], borderColor = [];
+		
 		for (let t = 0; t < data.ttimesheet.length; t++) {
 			if (data.ttimesheet[t].fields.Logs != null) {
 				if (
 					data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" ||
 					data.ttimesheet[t].fields.InvoiceNotes == "paused"
 				) {
-					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName]++;
+					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] ? clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] ++ : clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] = 1;
 				}else{
 					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] = 1;
 				}
@@ -54,11 +53,14 @@ Template.employeeAbsentDays.onRendered(() => {
 				}
 			}
 		}
+
 		var sortArray = [];
 		for (var emp in clockedOnEmpList) {
 			let dataObj = {
 				name: emp,
-				clockedOn: clockedOnEmpList[emp]
+				clockedOn: clockedOnEmpList[emp],
+				backgroundColor: "#f6c23e",
+				borderColor: "rgba(78,115,223,0)"
 			};
 			sortArray.push(dataObj);
 		}
@@ -66,9 +68,12 @@ Template.employeeAbsentDays.onRendered(() => {
 		sortArray.sort(function (a, b) {
 			return b.clockedOn > a.clockedOn ? 1 : -1;
 		});
+
 		for (let j = 0; j < sortArray.length; j++) {
 			empName.push(sortArray[j].name);
 			empClockedCount.push(sortArray[j].clockedOn);
+			backgroundColor.push(sortArray[j].backgroundColor);
+			borderColor.push(sortArray[j].borderColor);
 		}
 
 		empName.reverse();
@@ -79,44 +84,27 @@ Template.employeeAbsentDays.onRendered(() => {
 			type: "horizontalBar",
 			data: {
 				labels: empName,
-				datasets: [
-				{
+				datasets: [{
 					label: "Employee #" + this.empName,
 					data: empClockedCount,
-
-					backgroundColor: [
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e"
-					],
-					borderColor: [
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)"
-					],
+					backgroundColor: backgroundColor,
+					borderColor: borderColor,
 					borderWidth: 1
-				}
-				]
+				}]
 			},
 			options: {
 				onClick: chartClickEvent,
 				maintainAspectRatio: false,
 				responsive: true,
 				tooltips: {
-				callbacks: {
-					label: function (tooltipItem, data) {
-					return tooltipItem.xLabel;
+					callbacks: {
+						label: function (tooltipItem, data) {
+							return tooltipItem.xLabel;
+						}
 					}
-				}
 				},
 				legend: {
-				display: false
+					display: false
 				},
 				title: {},
 				scales: {
@@ -166,19 +154,28 @@ Template.employeeAbsentDays.onRendered(() => {
 		FlowRouter.go("/crmoverview?viewcompleted=true");
 	}
 
+	function heightMatch() {
+		setTimeout(() => {
+			$('#clockedOnEmployees').children('.overflow-hidden').css("height", $('#employeeAbsentDayschart').height() + 100);
+			$('#employeeAbsentDays').children('.overflow-hidden').css("height", $('#employeeAbsentDayschart').height() + 100);
+			$('#employeeLeave').children('.overflow-hidden').css("height", $('#employeeAbsentDayschart').height() + 100);
+			$('.draggable-panel').css("height", $('#employeeAbsentDayschart').height() + 300);
+		}, 4000);
+	}
+
 	templateObject.getAllTimeSheetDataClock = function () {
 		$('.sortable-chart-widget-js').addClass("hideelement");
 		getVS1Data("TTimeSheet").then(function (dataObject) {
 			if (dataObject == 0) {
-					sideBarService
-						.getAllTimeSheetList()
-						.then(function (data) {
-							setTimeout(function () {
-								setChart(data);
-							}, 0);
-					}).catch(function (err) {
-						setFullScreenSpin();
-					});
+				sideBarService
+					.getAllTimeSheetList()
+					.then(function (data) {
+						setTimeout(function () {
+							setChart(data);
+						}, 0);
+				}).catch(function (err) {
+					setFullScreenSpin();
+				});
 			} else {
 				setTimeout(function () {
 					let data = JSON.parse(dataObject[0].data);
@@ -196,6 +193,8 @@ Template.employeeAbsentDays.onRendered(() => {
 				setFullScreenSpin();
 			});
 		});
+		
+		heightMatch();
 	};
 
 	templateObject.getAllTimeSheetDataClock();
@@ -239,6 +238,7 @@ Template.employeeAbsentDays.helpers({
     });
   }
 });
+
 Template.registerHelper("equals", function (a, b) {
   return a === b;
 });

@@ -33,6 +33,7 @@
             width: 100%;
             height: calc(100% - 44px);
             position: relative;
+            overflow-x: scroll;
         }
 
         .canvasParentDiv canvas {
@@ -62,14 +63,14 @@
             width: 100%;
         }
 
-        .col-md-3 .minHeight100 .portlet.card,
+        /* .col-md-3 .minHeight100 .portlet.card,
         .col-md-4 .minHeight100 .portlet.card,
         .col-md-5 .minHeight100 .portlet.card,
         .col-md-6 .minHeight100 .portlet.card,
         .col-md-8 .minHeight100 .portlet.card,
         .col-md-12 .minHeight100 .portlet.card {
             height: 100% !important;
-        }
+        } */
 
         .col-md-3 .minHeight100 .canvasParentDiv,
         .col-md-4 .minHeight100 .canvasParentDiv,
@@ -163,7 +164,7 @@
             <i class="fa fa-close" style="margin-right: 5px;"></i>Cancel
         </button>
     </div>
-    <div class="row no-gutters justify-content-end">
+    <!-- <div class="row no-gutters justify-content-end">
         <div class="form-group float-right" style="margin: 8px; margin-top: 0px; display: inline-flex;">
             <label style="margin-top: 8px; margin-right: 16px;">From</label>
             <div class="input-group date" style="width: 160px;">
@@ -176,7 +177,7 @@
                 <input type="text" class="form-control" id="dateTo_charts" name="dateTo_charts" >
             </div>
         </div>
-    </div>
+    </div> -->
 
     <div class="charts row connectedChartSortable connectedSortable" id="connectedSortable" data-key="chart"
         data-chartgroup="{{ chartGroup }}" data-tabgroup="{{ tabGroupID }}" style="min-width: 100%;">
