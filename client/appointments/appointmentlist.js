@@ -136,11 +136,10 @@ Template.appointmentlist.onCreated(function() {
         { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "100" },
         { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "100" },
         { index: 11, label: 'Converted', class: 'colStatus', active: true, display: true, width: "100" },
-        { index: 13, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
-        { index: 14, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
-        { index: 15, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
+        { index: 12, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
+        { index: 13, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
+        { index: 14, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
     ];
-    console.log('headerStructure:',headerStructure)
     templateObject.tableheaderrecords.set(headerStructure);
 });
 
@@ -2279,7 +2278,6 @@ Template.appointmentlist.events({
             };
             tableHeaderList.push(datatablerecordObj);
         });
-
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
     'click #exportbtn': function() {
