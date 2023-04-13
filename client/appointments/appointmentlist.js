@@ -105,7 +105,6 @@ Template.appointmentlist.onCreated(function() {
         }
         let dataList = [
             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.id + '" name="' + data.id + '"> <label class="custom-control-label" for="f-' + data.id + '"></label></div>' || '',
-            // dataList_origin.sortdate || '',
             dataList_origin.id || '',
             '<span style="display:none;">' + dataList_origin.sortdate + '</span> ' + dataList_origin.appointmentdate || '',
             dataList_origin.accountname || '',
@@ -117,7 +116,6 @@ Template.appointmentlist.onCreated(function() {
             dataList_origin.actual_start_time || '',
             dataList_origin.actual_end_time || '',
             dataList_origin.finished || '',
-            // dataList_origin.status || '',
             confirmedColumn,
             dataList_origin.notes || '',
             dataList_origin.product || '',
@@ -127,7 +125,6 @@ Template.appointmentlist.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: '', class: 'colCheckBox', active: true, display: true, width: "10" },
-        // { index: 1, label: '#id', class: 'colSortDate', active: false, display: true, width: "200" },
         { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "200" },
         { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "" },
@@ -139,11 +136,11 @@ Template.appointmentlist.onCreated(function() {
         { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "100" },
         { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "100" },
         { index: 11, label: 'Converted', class: 'colStatus', active: true, display: true, width: "100" },
-        // { index: 12, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
         { index: 13, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
         { index: 14, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
         { index: 15, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
     ];
+    console.log('headerStructure:',headerStructure)
     templateObject.tableheaderrecords.set(headerStructure);
 });
 
@@ -1358,7 +1355,7 @@ Template.appointmentlist.events({
                         }
                         var dataListAppointmentList = [
                             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + useData[i].id + '" name="' + useData[i].id + '"> <label class="custom-control-label" for="f-' + useData[i].id + '"></label></div>' || '',
-                            useData[i].sortdate || '',
+                            // useData[i].sortdate || '',
                             useData[i].id || '',
                             '<span style="display:none;">' + useData[i].sortdate + '</span> ' + useData[i].appointmentdate || '',
                             useData[i].accountname || '',
@@ -1439,7 +1436,7 @@ Template.appointmentlist.events({
                 }
                 var dataListAppointmentList = [
                     '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + useData[i].id + '" name="' + useData[i].id + '"> <label class="custom-control-label" for="f-' + useData[i].id + '"></label></div>' || '',
-                    useData[i].sortdate || '',
+                    // useData[i].sortdate || '',
                     useData[i].id || '',
                     '<span style="display:none;">' + useData[i].sortdate + '</span> ' + useData[i].appointmentdate || '',
                     useData[i].accountname || '',
@@ -1986,7 +1983,7 @@ Template.appointmentlist.events({
                         }
                         var dataListAppointmentList = [
                             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + dataTableList[p].id + '" name="' + dataTableList[p].id + '"> <label class="custom-control-label" for="f-' + dataTableList[p].id + '"></label></div>' || '',
-                            dataTableList[p].sortdate || '',
+                            // dataTableList[p].sortdate || '',
                             dataTableList[p].id || '',
                             '<span style="display:none;">' + dataTableList[p].sortdate + '</span> ' + dataTableList[p].appointmentdate || '',
                             dataTableList[p].accountname || '',
@@ -2174,7 +2171,7 @@ Template.appointmentlist.events({
                     }
                     var dataListAppointmentList = [
                         '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + dataTableList[p].id + '" name="' + dataTableList[p].id + '"> <label class="custom-control-label" for="f-' + dataTableList[p].id + '"></label></div>' || '',
-                        dataTableList[p].sortdate || '',
+                        // dataTableList[p].sortdate || '',
                         dataTableList[p].id || '',
                         '<span style="display:none;">' + dataTableList[p].sortdate + '</span> ' + dataTableList[p].appointmentdate || '',
                         dataTableList[p].accountname || '',
