@@ -3,6 +3,7 @@ import erpObject from "../../lib/global/erp-objects";
 import LoadingOverlay from "../../LoadingOverlay";
 import {TaxRateService} from "../../settings/settings-service";
 import {UtilityService} from "../../utility-service";
+import "../../lib/global/indexdbstorage";
 
 export default class FxGlobalFunctions {
   /**
@@ -208,4 +209,46 @@ export default class FxGlobalFunctions {
       $(".convert-to-foreign").removeClass("fx-enabled");
     }
   }
+
+  static getCurrencySymbol = async (currencyCode) => {
+    let currencyData = [];
+    let dataObject = await getVS1Data("TCurrencyList");
+    if (dataObject.length == 0) {
+      taxRateService.getCurrencies().then(function (data) {
+        for (let i in data.tcurrencylist) {
+          let currencyObj = {
+            id: data.tcurrencylist[i].CurrencyID || "",
+            currency: data.tcurrencylist[i].Currency || "",
+            currencySellRate: data.tcurrencylist[i].SellRate || "",
+            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+            currencyCode: data.tcurrencylist[i].Code || "",
+            currencySymbol: data.tcurrencylist[i].CurrencySymbol || "",
+          };
+
+          currencyData.push(currencyObj);
+        }
+      });
+    } else {
+      let data = JSON.parse(dataObject[0].data);
+      let useData = data.tcurrencylist;
+      for (let i in useData) {
+        let currencyObj = {
+          id: data.tcurrencylist[i].CurrencyID || "",
+          currency: data.tcurrencylist[i].Currency || "",
+          currencySellRate: data.tcurrencylist[i].SellRate || "",
+          currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+          currencyCode: data.tcurrencylist[i].Code || "",
+          currencySymbol: data.tcurrencylist[i].CurrencySymbol || "",
+        };
+
+        currencyData.push(currencyObj)
+      }
+    }
+    for (let i = 0; i < currencyData.length; i++)
+    {
+      if(currencyData[i].currencyCode === currencyCode)
+        return currencyData[i].currencySymbol;
+    }
+  };
 }
+

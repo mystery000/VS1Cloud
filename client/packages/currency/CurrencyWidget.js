@@ -105,11 +105,12 @@ export const saveCurrencyHistory = async (date = null) => {
        type: "TCurrency",
        fields: {
          Active: true,
-         Country: _currencyObj.Country,
-         Code: _currencyObj.Code,
-         CurrencySymbol: _currencyObj.CurrencySymbol,
-         Currency: _currencyObj.Currency,
-         CurrencyDesc: _currencyObj.CurrencyDesc,
+         ID: _currencyObj.CurrencyID,
+         // Country: _currencyObj.Country,
+         // Code: _currencyObj.Code,
+         // CurrencySymbol: _currencyObj.CurrencySymbol,
+         // Currency: _currencyObj.Currency,
+         // CurrencyDesc: _currencyObj.CurrencyDesc,
          BuyRate: type == "buy" ? currencyRate : _currencyObj.BuyRate,
          SellRate: type == "sell" ? currencyRate : _currencyObj.SellRate,
        }
