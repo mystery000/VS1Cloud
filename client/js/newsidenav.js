@@ -3063,7 +3063,7 @@ Template.newsidenav.events({
     //   window.open('/payrolloverview#clockOnOff', '_self');
     // }
     event.preventDefault();
-    FlowRouter.go('/clockOnOff');
+    FlowRouter.go('/payrolloverview?modalId=clockonoff');
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },

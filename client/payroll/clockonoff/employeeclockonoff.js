@@ -1176,7 +1176,7 @@ Template.clockOnOff.events({
                      
             $("#startTime").prop("disabled", true);
           
-            swal($("#employee_name").val() + ' Clock On data is saved', '', 'success');
+            swal($("#employee_name").val() + ' Clock On data is processed', '', 'success');
             $("#employeeClockonoffModal").modal("hide");
              
             $(".fullScreenSpin").css("display", "none");

@@ -90,6 +90,9 @@ Template.payrolloverview.onRendered(function () {
   if(modalId == "newPayRunModal") {
     $('#newPayRunModal').modal("show");
 
+  } 
+  if(modalId == "clockonoff") {
+    FlowRouter.go("/clockOnOff");
   }
 
   templateObject.loadPayRuns = async (refresh = false) => {
