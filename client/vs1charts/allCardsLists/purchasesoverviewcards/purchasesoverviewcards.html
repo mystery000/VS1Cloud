@@ -2,17 +2,7 @@
     <div class="col-md-6 col-xl-3 mb-4 hideelement card-visibility"  card-id="0" data-default-position="0" position="0" chartgroup="Purchases" card-active="true" card-key="outstanding-purchase-orders">
         <div class="card shadow border-left-info py-2 customCardMainDiv" style="cursor: pointer;">
             <div class="hideShowDiv">
-                <div class="cardEditOptions cardShowBtn d-flex justify-content-end hideelement">
-                    <div class="custom-control custom-switch pointer nowrap" data-toggle="tooltip" data-bs-tooltip=""
-                title="Turn this on as a default chart when reset is selected" style="padding-right: 65px;">
-                        <input class="custom-control-input cardDefaultOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Default</label>
-                    </div> 
-                    <div class="custom-control custom-switch pointer nowrap" style="padding-right: 55px;">
-                        <input class="custom-control-input cardShowOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Show</label>
-                    </div>  
-                </div>
+                {{> editCardChartOptions}}
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body cardOutPO">
@@ -35,17 +25,7 @@
     <div class="col-md-6 col-xl-3 mb-4 hideelement card-visibility"  card-id="0" data-default-position="1" position="1" chartgroup="Purchases" card-active="true" card-key="outstanding-bills">
         <div class="card shadow border-left-info py-2 customCardMainDiv" style="cursor: pointer;">
             <div class="hideShowDiv">
-                <div class="cardEditOptions cardShowBtn d-flex justify-content-end hideelement">
-                    <div class="custom-control custom-switch pointer nowrap" data-toggle="tooltip" data-bs-tooltip=""
-                title="Turn this on as a default chart when reset is selected" style="padding-right: 65px;">
-                        <input class="custom-control-input cardDefaultOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Default</label>
-                    </div> 
-                    <div class="custom-control custom-switch pointer nowrap" style="padding-right: 55px;">
-                        <input class="custom-control-input cardShowOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Show</label>
-                    </div>  
-                </div>
+                {{> editCardChartOptions}}
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body cardBills">
@@ -62,17 +42,7 @@
     <div class="col-md-6 col-xl-3 mb-4 hideelement card-visibility"  card-id="0" data-default-position="2" position="2" chartgroup="Purchases" card-active="true" card-key="outstanding-credit">
         <div class="card shadow border-left-info py-2 customCardMainDiv" key="" style="cursor: pointer;">
             <div class="hideShowDiv">
-                <div class="cardEditOptions cardShowBtn d-flex justify-content-end hideelement">
-                    <div class="custom-control custom-switch pointer nowrap" data-toggle="tooltip" data-bs-tooltip=""
-                title="Turn this on as a default chart when reset is selected" style="padding-right: 65px;">
-                        <input class="custom-control-input cardDefaultOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Default</label>
-                    </div> 
-                    <div class="custom-control custom-switch pointer nowrap" style="padding-right: 55px;">
-                        <input class="custom-control-input cardShowOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Show</label>
-                    </div>  
-                </div>
+                {{> editCardChartOptions}}
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body cardCredit">

@@ -7,17 +7,7 @@
         <div
             class="card shadow customCardMainDiv {{#if equals @index 0 }} border-left-success{{/if}} {{#if equals @index 1 }} border-left-primary{{/if}} {{#if equals @index 2 }} shadow border-left-danger{{/if}}  {{#if equals @index 3 }} border-left-warning{{/if}} {{#if equals @index 4 }} border-left-info{{/if}} {{#if equals @index 5 }} border-left-secondary {{/if}}">
             <div class="hideShowDiv">
-                <div class="cardEditOptions cardShowBtn d-flex justify-content-end hideelement">
-                    <div class="custom-control custom-switch pointer nowrap" data-toggle="tooltip" data-bs-tooltip=""
-                title="Turn this on as a default chart when reset is selected" style="padding-right: 65px;">
-                        <input class="custom-control-input cardDefaultOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Default</label>
-                    </div> 
-                    <div class="custom-control custom-switch pointer nowrap" style="padding-right: 55px;">
-                        <input class="custom-control-input cardShowOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Show</label>
-                    </div>  
-                </div>  
+                {{> editCardChartOptions}} 
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body" style="cursor: pointer;">

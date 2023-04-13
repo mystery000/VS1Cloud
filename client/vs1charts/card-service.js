@@ -209,7 +209,7 @@ export class CardService extends BaseService {
     $(".cardSettingBtn").addClass("hideelement");
     $(".card-visibility").removeClass("hideelement");
     $(".card-visibility").addClass("dimmedChart");
-    $(".cardEditOptions").removeClass("hideelement");
+    $(".on-editor-change-mode").removeClass("hideelement");
     $(".actionButtonsTop").removeClass("hideelement");
   }
 
@@ -218,7 +218,7 @@ export class CardService extends BaseService {
     // $('.cardSettingBtn').find('i').removeClass('fa-save')
     // $('.cardSettingBtn').find('i').addClass('fa-cog');
     $(".card-visibility").removeClass("dimmedChart");
-    $(".cardEditOptions").addClass("hideelement");
+    $(".on-editor-change-mode").addClass("hideelement");
     $(".cardSettingBtn").removeClass("hideelement");
   }
 }

@@ -216,6 +216,54 @@ let crmOverviewchart = {
   },
 };
 
+let exeCashChart = {
+  fields: {
+    Active: true,
+    ChartGroup: "DashboardExe",
+    ChartName: "Cash",
+  },
+};
+
+let exeProfitabilityChart = {
+  fields: {
+    Active: true,
+    ChartGroup: "DashboardExe",
+    ChartName: "Profitability",
+  },
+};
+
+let exePerformanceChart = {
+  fields: {
+    Active: true,
+    ChartGroup: "DashboardExe",
+    ChartName: "Performance",
+  },
+};
+
+let exeBalanceSheetChart = {
+  fields: {
+    Active: true,
+    ChartGroup: "DashboardExe",
+    ChartName: "Balance Sheet",
+  },
+};
+
+let exeIncomeChart = {
+  fields: {
+    Active: true,
+    ChartGroup: "DashboardExe",
+    ChartName: "Income",
+  },
+};
+
+let exePositionChart = {
+  fields: {
+    Active: true,
+    ChartGroup: "DashboardExe",
+    ChartName: "Position",
+  },
+};
+
 export class ChartService extends BaseService {
   async checkChartToDisplay() {
     let defaultChartList = [];
@@ -272,6 +320,12 @@ export class ChartService extends BaseService {
         chartList.push(myTasksChart);
         chartList.push(myBankAccountschart);
         chartList.push(crmOverviewchart);
+        chartList.push(exeCashChart)
+        chartList.push(exeProfitabilityChart)
+        chartList.push(exePerformanceChart)
+        chartList.push(exeBalanceSheetChart)
+        chartList.push(exeIncomeChart)
+        chartList.push(exePositionChart)
       }
     }
 
