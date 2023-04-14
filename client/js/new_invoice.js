@@ -95,15 +95,6 @@ Template.new_invoice.onCreated(function () {
   templateObject.customer = new ReactiveVar();
 
   templateObject.print_displayfields = new ReactiveVar({});
-  templateObject.print_displayfields.set({
-    "Product Name": ["20", "left"],
-    Description: ["25", "left"],
-    "Bin Location": ["15", "left"],
-    Qty: ["10", "left"],
-    "Unit Price": ["10", "left"],
-    Tax: ["10", "left"],
-    Amount: ["10", "left"],
-  });
 
   templateObject.customerRecord = new ReactiveVar();
   templateObject.headerfields = new ReactiveVar();
@@ -2351,7 +2342,11 @@ Template.new_invoice.onCreated(function () {
     saveTemplateFields("fields" + template_title, object_invoce[0]["fields"]);
   }
 
-  templateObject.generateInvoiceData = function (template_title, number) {
+  templateObject.generateInvoiceData = async function (template_title, number) {
+    let printSettings = await getPrintSettings(template_title, number);
+    console.log('generateTemplateData', template_title, number, printSettings);
+    templateObject.print_displayfields.set(printSettings);
+
     object_invoce = [];
     switch (template_title) {
       case "Invoices":

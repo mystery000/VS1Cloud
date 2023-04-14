@@ -1335,6 +1335,307 @@ loadTemplateHeaderFooter3 = function(object_invoce) {
   }
 }
 
+var getPrintGridSettings = function() {
+    return {
+        "Bills": {
+            "Account Name": ["30", "left"],
+            "Description": ["40", "left"],
+            "Tax": ["15", "right"],
+            "Amount": ["15", "right"],
+        },
+        "Credits": {
+            Date: ["15", "left"],
+            Type: ["15", "left"],
+            Trans: ["10", "right"],
+            Original: ["15", "right"],
+            Due: ["15", "right"],
+            Paid: ["15", "right"],
+            Outstanding: ["15", "right"],
+        },
+        "Customer Payments": {
+            Date: ["15", "left"],
+            Type: ["15", "left"],
+            Trans: ["10", "right"],
+            Original: ["15", "right"],
+            Due: ["15", "right"],
+            Paid: ["15", "right"],
+            Outstanding: ["15", "right"],
+        },
+        "Customer Statements": {
+            ID: ["10", "left"],
+            Date: ["15", "left"],
+            Type: ["15", "left"],
+            "Due Date": ["15", "left"],
+            Total: ["15", "right"],
+            Paid: ["15", "right"],
+            Balance: ["15", "right"],
+        },
+        "Invoices": {
+            "Product Name": ["20", "left"],
+            Description: ["25", "left"],
+            "Bin Location": ["15", "left", false],
+            Qty: ["10", "left"],
+            "Unit Price": ["10", "left"],
+            Tax: ["10", "left"],
+            Amount: ["10", "left"],
+        },
+        "Invoice Back Orders": {
+            "Product Name": ["20", "left"],
+            Description: ["25", "left"],
+            "Bin Location": ["15", "left", false],
+            Qty: ["10", "left"],
+            "Unit Price": ["10", "left"],
+            Tax: ["10", "left"],
+            Amount: ["10", "left"],
+        },
+        "Purchase Orders": {
+            "Product Name": ["20", "left"],
+            Description: ["25", "left"],
+            "Bin Location": ["15", "left", false],
+            Qty: ["10", "left"],
+            "Unit Price": ["10", "left"],
+            Tax: ["10", "left"],
+            Amount: ["10", "left"],
+        },
+        "Quotes": {
+            "Product Name": ["20", "left"],
+            Description: ["25", "left"],
+            "Bin Location": ["15", "left", false],
+            Qty: ["10", "left"],
+            "Unit Price": ["10", "left"],
+            Tax: ["10", "left"],
+            Amount: ["10", "left"],
+        },
+        "Refunds": {
+            "Product Name": ["20", "left"],
+            Description: ["25", "left"],
+            "Bin Location": ["15", "left", false],
+            Qty: ["10", "left"],
+            "Unit Price": ["10", "left"],
+            Tax: ["10", "left"],
+            Amount: ["10", "left"],
+        },
+        "Sales Orders": {
+            "Product Name": ["20", "left"],
+            Description: ["25", "left"],
+            "Bin Location": ["15", "left", false],
+            Qty: ["10", "left"],
+            "Unit Price": ["10", "left"],
+            Tax: ["10", "left"],
+            Amount: ["10", "left"],
+        },
+        "Supplier Payments": {
+            Date: ["15", "left"],
+            Type: ["15", "left"],
+            No: ["10", "left"],
+            Amount: ["15", "left"],
+            Due: ["15", "left"],
+            Paid: ["15", "left"],
+            Outstanding: ["15", "left"],
+        },
+        "Statements": {
+            Date: ["15", "left"],
+            Type: ["15", "left"],
+            No: ["10", "left"],
+            Amount: ["15", "left"],
+            Due: ["15", "left"],
+            Paid: ["15", "left"],
+            Outstanding: ["15", "left"],
+        },
+        "Delivery Docket": {
+            "Product Name": ["30", "left"],
+            Description: ["30", "left"],
+            "Bin Location": ["20", "left", false],
+            Qty: ["20", "left"],
+        },
+        "Journal Entry": {
+            "Account Name": ["30", "left"],
+            Description: ["40", "left"],
+            "Credit (Ex)": ["15", "left"],
+            "Debit (Ex)": ["15", "left"],
+        },
+        "Deposits": {
+            "From Account": ["20", "left"],
+            "Payment Method": ["20", "left"],
+            "Reference No": ["20", "left"],
+            "Received From": ["25", "left"],
+            Amount: ["15", "left"],
+        },
+        "Cheques": {
+            "Account Name": ["30", "left"],
+            Description: ["40", "left"],
+            Tax: ["15", "left"],
+            Amount: ["15", "left"],
+        },
+        "Stock Transfer": {
+            "Product Name": ["30", "left"],
+            Description: ["30", "left"],
+            "Bin Location": ["20", "left", false],
+            Qty: ["20", "left"],
+        },
+        "Stock Adjustment": {
+            "Product Name": ["30", "left"],
+            Description: ["30", "left"],
+            "Bin Location": ["20", "left", false],
+            Qty: ["20", "left"],
+        },
+    };
+}
+getPrintMainSettings = function () {
+    return {
+        "1": {
+            "LOGO": ['', 'left', true],
+            "ABN": ['', 'left', true],
+            "HEADER_TITLE": ['', 'left', true],
+            "NO": ['', 'left', true],
+            "CUSTOMER_ADDRESS": ['', 'left', true],
+            "COMPANY_NAME": ['', 'left', true],
+            "COMPANY_ADDRESS": ['', 'left', true],
+            "COMPANY_CITY": ['', 'left', true],
+            "COMPANY_PHONE": ['', 'left', true],
+            "COMPANY_EMAIL": ['', 'left', true],
+            "COMPANY_STATE": ['', 'left', true],
+            "BARCODE": ['', 'left', true],
+            "PAY_LINK": ['', 'left', true],
+            "INVOICE_NUMBER": ['', 'left', true],
+            "REFERENCE": ['', 'left', true],
+            "ACCOUNT_NUMBER": ['', 'left', true],
+            "AMOUNT_DUE": ['', 'left', true],
+            "DUE_DATE": ['', 'left', true],
+            "COMMENT": ['', 'left', true],
+            "ACCOUNT_NAME": ['', 'left', true],
+            "BANK_NAME": ['', 'left', true],
+            "BSB": ['', 'left', true],
+            "ACC": ['', 'left', true],
+            "SUB_TOTAL": ['', 'left', true],
+            "TOTAL_TAX": ['', 'left', true],
+            "GST": ['', 'left', true],
+            "BALANCE": ['', 'left', true],
+        },
+        "2": {
+            "LOGO2": ['', 'left', true],
+            "ABN2": ['', 'left', true],
+            "HEADER_TITLE2": ['', 'left', true],
+            "CUSTOMER_ADDRESS2": ['', 'left', true],
+            "COMPANY_NAME2": ['', 'left', true],
+            "COMPANY_ADDRESS2": ['', 'left', true],
+            "COMPANY_CITY2": ['', 'left', true],
+            "COMPANY_PHONE2": ['', 'left', true],
+            "COMPANY_EMAIL2": ['', 'left', true],
+            "COMPANY_STATE2": ['', 'left', true],
+            "BARCODE2": ['', 'left', true],
+            "PAY_LINK2": ['', 'left', true],
+            "INVOICE_DATE2": ['', 'left', true],
+            "INVOICE_NUMBER2": ['', 'left', true],
+            "REFERENCE2": ['', 'left', true],
+            "AMOUNT_DUE2": ['', 'left', true],
+            "COMMENT2": ['', 'left', true],
+            "ACCOUNT_NAME2": ['', 'left', true],
+            "BANK_NAME2": ['', 'left', true],
+            "BSB2": ['', 'left', true],
+            "ACC2": ['', 'left', true],
+            "SUB_TOTAL2": ['', 'left', true],
+            "TOTAL_AUD2": ['', 'left', true],
+            "PAID_AMOUNT2": ['', 'left', true],
+            "AMOUNT_DUE_AUD2": ['', 'left', true],
+        },
+        "3": {
+            "LOGO3": ['', 'left', true],
+            "ABN3": ['', 'left', true],
+            "HEADER_TITLE3": ['', 'left', true],
+            "BARCODE3": ['', 'left', true],
+            "BILL_TO2": ['', 'left', true],
+            "BILL_DATE3": ['', 'left', true],
+            "CUSTOMER_ADDRESS3": ['', 'left', true],
+            "PAY_LINK3": ['', 'left', true],
+            "INVOICE_NUMBER3": ['', 'left', true],
+            "REFERENCE3": ['', 'left', true],
+            "ACCOUNT_NUMBER3": ['', 'left', true],
+            "AMOUNT_DUE3": ['', 'left', true],
+            "DUE_DATE3": ['', 'left', true],
+            "PAYMENT_DETAILS3": ['', 'left', true],
+            "ACCOUNT_NAME3": ['', 'left', true],
+            "BANK_NAME3": ['', 'left', true],
+            "SORT_CODE3": ['', 'left', true],
+            "ACC3": ['', 'left', true],
+            "ACCOUNT_DETAIL3": ['', 'left', true],
+            "PAYMENT_TERMS3": ['', 'left', true],
+            "SUB_TOTAL3": ['', 'left', true],
+            "BOTTOM_LOGO3": ['', 'left', true],
+            "COMPANY_NAME3": ['', 'left', true],
+            "COMPANY_ADDRESS3": ['', 'left', true],
+            "COMPANY_CITY3": ['', 'left', true],
+            "COMPANY_STATE3": ['', 'left', true],
+            "COMPANY_PHONE3": ['', 'left', true],
+            "COMPANY_EMAIL3": ['', 'left', true],
+            "COMPANY_URL3": ['', 'left', true],
+        }
+    };
+};
+
+getPrintSettings = async function (type, template) {
+    let settings = await getVS1Data('PrintDisplaySettings');
+    if (settings.length > 0) {
+        let parsedData = JSON.parse(settings);
+        if (parsedData[type]) {
+            return parsedData[type];
+        }
+    }
+
+    let gridSettings = getPrintGridSettings();
+    if (!gridSettings[type]) {
+        return null;
+    }
+
+    let printSettings = getPrintMainSettings()[template];
+    if (!printSettings) {
+        printSettings = {};
+    }
+
+    for (key in gridSettings[type]) {
+        printSettings[key] = [];
+        printSettings[key] = gridSettings[type][key];
+    }
+
+    console.log('getPrintSettings', printSettings);
+    return printSettings;
+};
+
+setPrintSettings = async function (type, template, newSettings) {
+    let printSettings = await getVS1Data('PrintDisplaySettings');
+    if (printSettings) {
+        let parsedData = JSON.parse(printSettings);
+        for (let key in newSettings) {
+            parsedData[type][template][key] = newSettings[key];
+        }
+        await addVS1Data('PrintDisplaySettings', JSON.stringify(parsedData));
+    } else {
+        let types = ['Bills', 'Credits', 'Customer Payments', 'Customer Statements', 'Invoices', 'Invoice Back Orders', 'Purchase Orders', 'Quotes', 'Refunds',
+            'Sales Orders', 'Supplier Payments', 'Statements', 'Delivery Docket', 'Journal Entry', 'Deposits', 'Cheques', 'Stock Transfer', 'Stock Adjustment'];
+
+        printSettings = {}
+        for (let i = 0; i < types.length; i++) {
+            let templates = {'1': {}, '2': {}, '3': {}};
+            printSettings[types[i]] = Object.assign({}, templates);
+            let printMainSettings = getPrintMainSettings();
+            for (templateKey in printMainSettings) {
+                if (type = types[i] && template == templateKey) {
+                    for (key in newSettings) {
+                        printSettings[type][template][key] = newSettings[key];
+                    }
+                } else {
+                    let values = printMainSettings[templateKey];
+                    for (innerKey in values) {
+                        printSettings[types[i]][templateKey][innerKey] = values[innerKey];
+                    }
+                }
+            }
+        }
+
+        await addVS1Data('PrintDisplaySettings', JSON.stringify(printSettings));
+    }
+};
+
 validateEmail = (email) => {
   return String(email)
     .toLowerCase()

@@ -5836,6 +5836,7 @@ Template.templatesettings.events({
     setTimeout(function () {
       // Alex: add for print options {
       $('.top-panel').css('display', 'none');
+      localStorage.setItem("isFormUpdated", false);
       // @}
       $(".fullScreenSpin").css("display", "inline-block");
       var bill = $('input[name="Bills"]:checked').val();
@@ -10474,9 +10475,14 @@ Template.templatesettings.events({
     $("#templatePreviewModal .modal-title").text(
       $('input[name="' + title + "_" + number + '"]').val()
     );
+    $('.divDraggable').removeClass('dashedborder');
   },
 
   "click .btnEditTemplate": function(event) {
+
+    $('.divResize').resizable();
+    $('.divDraggable').draggable();
+
     const title = $(event.target).parent().parent().data("id");
     const number = $(event.target).parent().parent().data("template-id");
     const templateObject = Template.instance()
@@ -10489,6 +10495,7 @@ Template.templatesettings.events({
     $("#templatePreviewModal #templatePreviewInput").val(
       $('input[name="' + title + "_" + number + '"]').val()
     );
+    $('.divDraggable').addClass('dashedborder');
     templateObject.setPrintTemplateDetail($('input[name="' + title + "_" + number + '"]').val());
   },
 

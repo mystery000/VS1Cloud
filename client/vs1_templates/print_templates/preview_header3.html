@@ -3,11 +3,11 @@
         .logo-wrap3 {
             position: absolute !important;
             left: 20px;
-            top: 20px;
+            top: 10px;
         }
         .logo-wrap3 img {
-            width: 145px;
-            height: 70px;
+            width: 200px;
+            height: 50px;
         }
         .barcode-wrap3 {
             position: absolute !important;
@@ -16,11 +16,11 @@
         }
         .o_abn_label3_wrap {
             left: 20px;
-            top: 95px;
+            top: 62px;
         }
         .o_abn3_wrap {
             left: 60px;
-            top: 95px;
+            top: 62px;
         }
         .title-wrap {
             position: absolute !important;
@@ -28,7 +28,7 @@
             left: 230px;
             width: 450px;
             height: 50px;
-            background-image: linear-gradient(135deg, transparent 50px, var(--green) 50px);
+            background-image: linear-gradient(135deg, transparent 15%, var(--green) 15%);
         }
         .print-header3_wrap {
             top: 81px;
@@ -92,47 +92,52 @@
         }
     </style>
     <!-- header -->
-    <div class="logo-wrap3 divDraggable">
-        <img src="assets/img/VS1.png" class="divResize uploadedImage">
+    <div class="LOGO3 logo-wrap3 divDraggable">
+        <img src="http://vs1cloud.com/images/VS1logo.png" class="divResize uploadedImage">
     </div>
-    <span class="o_abn_label3_wrap divDraggable divResize"><span class="o_abn_label3">ABN</span></span>
-    <span class="o_abn3_wrap divDraggable divResize"><span class="o_abn3"></span></span>
-    <div class="barcode-wrap3 divDraggable">
+    <span class="ABN3 o_abn_label3_wrap divDraggable divResize"><span class="o_abn_label3">ABN</span></span>
+    <span class="ABN3 o_abn3_wrap divDraggable divResize"><span class="o_abn3"></span></span>
+    <div class="BARCODE3 barcode-wrap3 divDraggable">
         <svg id="lbl_barcode3" width="205" height="50"></svg>
     </div>
     <div class="divDraggable divResize title-wrap"></div>
-    <span class="print-header3_wrap bold divDraggable divResize"><span class="print-header3">Bill</span></span>
+    <span class="HEADER_TITLE3 print-header3_wrap bold divDraggable divResize"><span class="print-header3"></span></span>
 
-    <span class="toLabel3_wrap bold divDraggable divResize"><span class="toLabel3">BILL TO:</span></span>
-    <span class="pdfCustomerAddress3_wrap item-wrapper divDraggable divResize"><span class="pdfCustomerAddress3"></span></span>
-    <span class="dateLabel3_wrap bold divDraggable divResize"><span class="dateLabel3">BILL DATE:</span></span>
-    <span class="date3_wrap divDraggable divResize"><span class="date3"></span></span>
-    <div class="item-wrapper pay_now-wrap3 pay-link divDraggable divResize">
+    <span class="BILL_TO2 toLabel3_wrap bold divDraggable divResize"><span class="toLabel3">BILL TO:</span></span>
+    <span class="CUSTOMER_ADDRESS3 pdfCustomerAddress3_wrap item-wrapper divDraggable divResize"><span class="pdfCustomerAddress3"></span></span>
+    <span class="BILL_DATE3 dateLabel3_wrap bold divDraggable divResize"><span class="dateLabel3">BILL DATE:</span></span>
+    <span class="BILL_DATE3 date3_wrap divDraggable divResize"><span class="date3"></span></span>
+    <div class="PAY_LINK3 item-wrapper pay_now-wrap3 pay-link divDraggable divResize">
         <a class="linkText" href="">Pay Now</a>
     </div>
     <div class="item-wrapper invoice_info_table3-wrap divDraggable">
         <table class="invoice_info_table3">
             <thead>
             <tr>
-                <th>
-                    <p class="invNumber3">INVOICE NUMBER</p>
-                    <p class="io3">&nbsp;</p>
+                <th class="INVOICE_NUMBER3">
+                    <span class="invNumber3">INVOICE NUMBER</span>
+                    <br>
+                    <span class="io3">&nbsp;</span>
                 </th>
-                <th>
-                    <p>PO/REFERENCE</p>
-                    <p class="ro3">&nbsp;</p>
+                <th class="REFERENCE3">
+                    <span>PO/REFERENCE</span>
+                    <br>
+                    <span class="ro3">&nbsp;</span>
                 </th>
-                <th>
-                    <p>ACCOUNT NUMBER</p>
-                    <p class="po3">&nbsp;</p>
+                <th class="ACCOUNT_NUMBER3">
+                    <span>ACCOUNT NUMBER</span>
+                    <br>
+                    <span class="po3">&nbsp;</span>
                 </th>
-                <th>
-                    <p>AMOUNT DUE</p>
-                    <p class="amountdue3">&nbsp;</p>
+                <th class="AMOUNT_DUE3">
+                    <span>AMOUNT DUE</span>
+                    <br>
+                    <span class="amountdue3">&nbsp;</span>
                 </th>
-                <th>
-                    <p>DUE DATE</p>
-                    <p class="due3">&nbsp;</p>
+                <th class="DUE_DATE3">
+                    <span>DUE DATE</span>
+                    <br>
+                    <span class="due3">&nbsp;</span>
                 </th>
             </tr>
             </thead>

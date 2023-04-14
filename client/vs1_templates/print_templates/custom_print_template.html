@@ -1,10 +1,5 @@
 <template name="custom_print_template">
     <style>
-        /*Alex: modify for print templates {
-        .draggable {
-            position: absolute;
-        }
-        =================================== */
         :root {
             --blue: #00A3D3;
             --black: #303134;
@@ -26,29 +21,17 @@
         }
         .divDraggable {
             position: absolute !important;
-            border: dashed 1px #ccc;
+            /*border: dashed 1px #ccc;*/
             cursor: move;
         }
+        .dashedborder {
+            border: dashed 1px #ccc;
+        }
         .wrapper {
-            position: relative;
-            width: fit-content !important;
-            margin: auto;
-
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-
-            background: var(--white);
-            color: var(--secondary);
-            padding: 30px;
-            font-family: 'Lato', sans-serif;
-            font-size: 12px;
+            position: relative;width: fit-content !important;margin: auto;display: flex;flex-direction: column;align-items: center;background: var(--white);color: var(--secondary);padding: 30px;font-family: 'Lato', sans-serif;font-size: 12px;
         }
         .invoice_wrapper{
-            width: 700px;
-            max-width: 100%;
-            height: 900px;
-            position: relative;
+            width: 700px;height: 1042px;position: relative;
         }
         .invoice_wrapper-black{
             border: 3px solid var(--black);
@@ -87,7 +70,6 @@
             text-decoration: none;
             color: #00A3D3;
         }
-        /* @} */
     </style>
     <div class="modal-dialog modal-xl modal-dialog-centered" id="print_template_modal" role="document">
         <div class="modal-content">
@@ -110,7 +92,7 @@
                 </div>
             </div>
             <div class="modal-body" style="background-color: #f8f9fc; max-height: calc(100vh - 200px); overflow-y: auto;">
-                <div class="wrapper" id="{{idPrefix}}" name="{{namePrefix}}">
+                <div class="wrapper" id="{{idPrefix}}" name="{{namePrefix}}" style="height:297mm;">
                     <div class="invoice_wrapper invoice_wrapper-blue">
                         {{> preview_header1 }}
                         {{> preview_body1 }}
@@ -120,7 +102,7 @@
                         <strong>Powered by <a href="https://www.vs1cloud.com" target="_blank">VS1Cloud</a></strong>
                     </div>
                 </div>
-                <div class="wrapper" id="{{idPrefix}}2" name="{{namePrefix}}2">
+                <div class="wrapper" id="{{idPrefix}}2" name="{{namePrefix}}2" style="height:297mm;">
                     <div class="invoice_wrapper invoice_wrapper-black">
                         {{> preview_header2 }}
                         {{> preview_body2 }}
@@ -130,7 +112,7 @@
                         <strong>Powered by <a href="https://www.vs1cloud.com" target="_blank">VS1Cloud</a></strong>
                     </div>
                 </div>
-                <div class="wrapper" id="{{idPrefix}}3" name="{{namePrefix}}3">
+                <div class="wrapper" id="{{idPrefix}}3" name="{{namePrefix}}3" style="height:297mm;">
                     <div class="invoice_wrapper invoice_wrapper-green">
                         {{> preview_header3 }}
                         {{> preview_body3 }}
@@ -152,44 +134,31 @@
                 <div class="modal-header">
                     <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="max-height: calc(100vh - 200px);overflow: scroll;">
                     <div>
-                            <form class="d-xl-flex align-items-xl-center">
-                                <div class="flex-grow-1" id="print_display_setting_div">
-
-                                  <!-- {{#each printfield in print_displayfields.display}}
-                                      {{#if printfield}}
-                                          <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
-                                              <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                  <input class="custom-control-input chkDatatable" type="checkbox" id="formCheck-{{@index}}" checked="{{printfield}}">
-                                                  <label class="custom-control-label" for="formCheck-{{@index}}">{{print_displayNames[index]}}</label>
-                                                  <div contenteditable="true" class="groove divcolumn" type="text"></div>
-                                              </div>
-                                          </div>
-                                      {{/if}}
-                                  {{/each}} -->
-                                  {{#each arrayify print_displayfields}}
-                                    <div class="columnSettings displaySettings">
-                                        <div class="custom-control custom-switch" style="margin: 8px; ">
-                                            <input class="custom-control-input chkDatatable" name="front" type="checkbox" id="formCheck-{{name}}" data-displaysetting-type="front{{value.[0]}}" onclick="showOrHidden(this)" checked="{{value.[2]}}">
-                                            <label class="custom-control-label" for="formCheck-{{name}}">
-                                                {{name}}
-                                            </label>
-
-                                            <input type="checkbox" name="end" id="{{value.[0]}}new" style="margin: 5px !important; float: right; display: none;" data-display-type="end{{value.[0]}}" onchange="grid_main(this)" checked="true">
-                                            <label style="float: right" for="{{value.[0]}}new">
-                                                {{#if equals value.[0] ''}}
-                                                    Main
-                                                {{else}}
-                                                    Grid
-                                                {{/if}}
-                                            </label>
-                                            <div contenteditable="false" class="divcolumn" type="text"></div>
-                                        </div>
+                        <form class="d-xl-flex align-items-xl-center">
+                            <div class="flex-grow-1" id="print_display_setting_div">
+                              {{#each arrayify print_displayfields}}
+                                <div class="columnSettings displaySettings">
+                                    <div class="custom-control custom-switch" style="margin: 8px; ">
+                                        <input class="custom-control-input chkDatatable" name="front" type="checkbox" id="formCheck-{{name}}" data-displaysetting-type="front{{value.[0]}}" onclick="showOrHidden(this)" checked="{{value.[2]}}">
+                                        <label class="custom-control-label" for="formCheck-{{name}}">
+                                            {{name}}
+                                        </label>
+                                        <input type="checkbox" name="end" id="{{value.[0]}}new" style="margin: 5px !important; float: right; display: none;" data-display-type="end{{value.[0]}}" onchange="grid_main(this)" checked="true">
+                                        <label style="float: right" for="{{value.[0]}}new">
+                                            {{#if equals value.[0] ''}}
+                                                Main
+                                            {{else}}
+                                                Grid
+                                            {{/if}}
+                                        </label>
+                                        <div contenteditable="false" class="divcolumn" type="text"></div>
                                     </div>
-                                  {{/each}}
                                 </div>
-                            </form>
+                              {{/each}}
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -284,17 +253,5 @@
                 }
             }
         }
-
-        $(document).ready(function () {
-
-            $(".main_table th").resizable({
-                minWidth: 100
-            });
-
-            $('.divResize').resizable();
-
-            $('.divDraggable').draggable();
-
-        });
     </script>
 </template>
