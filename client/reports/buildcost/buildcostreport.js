@@ -25,10 +25,21 @@ Template.buildcostreport.onCreated(function() {
     templateObject.getDataTableList = function(data) {  
         
         let clocked_hrs = data.TotalClockedTime;
-        let variance = parseFloat(data.ChangedQty) - parseFloat(data.BOMQty);
-        let wastage_value = variance;
-        
+        let variance ;
+        let wastage_value;
+             
         let labour_cost = (data.HourlyLabourCost * clocked_hrs).toFixed(2);
+        let changed_qty;
+
+        if(data.ChangedQty == 0) { 
+            changed_qty = data.BOMQty ;
+        } else {
+            changed_qty = data.ChangedQty;
+        }
+
+        variance = changed_qty - data.BOMQty;
+        wastage_value = variance;
+
         if(isNaN(labour_cost)) {
             labour_cost = "";
         }
@@ -46,10 +57,10 @@ Template.buildcostreport.onCreated(function() {
         if(clocked_hrs == "") {
             clocked_times = "";
         } else {
-          //  clocked_times = templateObject.timeFormat(clocked_hrs);
-          clocked_times = parseFloat(clocked_hrs).toFixed(4);
+          clocked_times = templateObject.timeFormat(clocked_hrs);
+          //clocked_times = parseFloat(clocked_hrs).toFixed(4);
         }
-        
+      
         
         if(labour_cost == "" || over_head_cost == "" ) {
              total_bom_cost =  RawMaterialcost + wastage_cost;
@@ -63,7 +74,7 @@ Template.buildcostreport.onCreated(function() {
             linestatus = "";
         } else if (data.Active  == true) {
             linestatus = "In-Active";
-        }     
+        }                   
 
         var dataList = [ data.WorkorderID,
                         data.ProductID,
@@ -72,8 +83,8 @@ Template.buildcostreport.onCreated(function() {
                         data.BOMProducts|| ' ',
                         data.ProductsChanged || ' ',
                         data.UnitCost || 0,
-                        data.BOMQty || 0,
-                        data.ChangedQty || 0,
+                        parseFloat(data.BOMQty).toFixed(0) || 0,
+                        parseFloat(changed_qty).toFixed(0) || 0,
                         variance,
                         wastage_value,
                         clocked_times || ' ' ,
@@ -83,7 +94,6 @@ Template.buildcostreport.onCreated(function() {
                         wastage_cost ,
                         total_bom_cost || 0, 
                         linestatus,   ];
-
         return dataList;
     }
 
