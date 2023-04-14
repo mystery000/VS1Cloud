@@ -397,6 +397,14 @@ Template.datatablelist.onRendered(async function () {
                 } else {
                     deleteFilter = true
                 }
+
+                if (data.Params.IgnoreDates == true) {
+                  $('.' + currenttablename+" #dateFrom").attr("readonly", true);
+                  $('.' + currenttablename+" #dateTo").attr("readonly", true);
+                }else{
+                  $('.' + currenttablename+" #dateFrom").attr("readonly", false);
+                  $('.' + currenttablename+" #dateTo").attr("readonly", false);
+                }
             }
             if (isEx == false) {
                 for (let i = 0; i < data[indexDBLowercase]?.length; i++) {
@@ -543,7 +551,7 @@ Template.datatablelist.onRendered(async function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
                 "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                    $(nRow).attr('id', templateObject.data.attRowID ? templateObject.data.attRowID:aData[0]);
+                    $(nRow).attr('id', templateObject.data.attRowID ? aData[templateObject.data.attRowID]:aData[0]);
                 },
                 "fnDrawCallback": function (oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
