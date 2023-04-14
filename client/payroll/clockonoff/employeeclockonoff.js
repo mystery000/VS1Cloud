@@ -234,7 +234,9 @@ Template.clockOnOff.events({
     $(".btnClockOff").removeAttr("disabled");
 
     swal($("#employee_name").val() + ' is Clocked On now', '', 'success');
-        
+
+
+         
 
 
 
