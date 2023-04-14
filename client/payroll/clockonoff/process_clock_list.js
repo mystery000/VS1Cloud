@@ -1,104 +1,244 @@
 import { ReactiveVar } from 'meteor/reactive-var';
-import { CoreService } from '../../js/core-service';
 import { UtilityService } from "../../utility-service";
 import { ContactService } from "../../contacts/contact-service";
-import { ProductService } from "../../product/product-service";
 import { SideBarService } from '../../js/sidebar-service';
 import 'jquery-editable-select';
-import CachedHttp from '../../lib/global/CachedHttp';
-import erpObject from '../../lib/global/erp-objects';
-import LoadingOverlay from '../../LoadingOverlay';
-import TableHandler from '../../js/Table/TableHandler';
 import { Template } from 'meteor/templating';
 import "./process_clock_list.html";
+import { cloneDeep, template } from 'lodash';
+import { ManufacturingService } from "../../manufacture/manufacturing-service";
 
 let utilityService = new UtilityService();
 let sideBarService = new SideBarService();
+let manufacturingService = new ManufacturingService();
+
 Template.process_clock_template.onCreated(function() {
     const templateObject = Template.instance();
+    templateObject.workOrderRecords = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
-    templateObject.datatablerecords1 = new ReactiveVar([]);
-    templateObject.productsdatatablerecords = new ReactiveVar([]);
-    templateObject.employeerecords = new ReactiveVar([]);
-    templateObject.jobsrecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
-    templateObject.selectedTimesheet = new ReactiveVar([]);
-    templateObject.timesheetrecords = new ReactiveVar([]);
-    templateObject.selectedTimesheetID = new ReactiveVar();
     templateObject.selectedFile = new ReactiveVar();
 
-    templateObject.includeAllProducts = new ReactiveVar();
-    templateObject.includeAllProducts.set(true);
+    templateObject.getDataTableList = function(data) {    
+     
+        if (data.Active  == false) {
+            linestatus = "";
+        } else if (data.Active  == true) {
+            linestatus = "In-Active";
+        }
+        
+       
+        var dataList = [
+            data.EmpId,
+            '<div class="custom-control custom-switch"><input type="checkbox" class="custom-control-input" /><label class="custom-control-label"></label></div>', 
+            data.EmpId || '',
+            data.EmpName || '',
+            data.ProcessDate || '',
+            data.WorkorderID || '',
+            data.Process || '',
+            data.Product || '',
+            data.ClockedTime || 0,
+            data.Note || '',
+            data.Status || '', 
+            linestatus,          
 
-    templateObject.useProductCostaspayRate = new ReactiveVar();
-    templateObject.useProductCostaspayRate.set(false);
-
-    templateObject.allnoninvproducts = new ReactiveVar([]);
-
-    templateObject.selectedConvertTimesheet = new ReactiveVar([]);
-    templateObject.isAccessLevels = new ReactiveVar();
-
-    templateObject.timesheets = new ReactiveVar([]);
-    templateObject.employees = new ReactiveVar([]);
-    templateObject.payPeriods = new ReactiveVar([]);
+        ];
+        return dataList;
+    }
 });
 
 Template.process_clock_template.onRendered(function() {
 
     $('.fullScreenSpin').css('display', 'inline-block');
+    
     let templateObject = Template.instance();
-    let contactService = new ContactService();
-    let productService = new ProductService();
-    const employeeList = [];
-    const jobsList = [];
-    const timesheetList = [];
-    const timeSheetList = [];
-    const dataTableList = [];
-    const tableHeaderList = [];
-
-    var splashArrayTimeSheetList = new Array();
-
-    let isAccessLevels = localStorage.getItem('CloudAccessLevelsModule');
-    templateObject.isAccessLevels.set(isAccessLevels);
-
-
-    let seeOwnTimesheets = localStorage.getItem('CloudTimesheetSeeOwnTimesheets') || false;
+     
     let launchClockOnOff = localStorage.getItem('CloudTimesheetLaunch') || false;
     let canClockOnClockOff = localStorage.getItem('CloudClockOnOff') || false;
-    let createTimesheet = localStorage.getItem('CloudCreateTimesheet') || false;
-    let timesheetStartStop = localStorage.getItem('CloudTimesheetStartStop') || false;
-    let showTimesheetEntry = localStorage.getItem('CloudTimesheetEntry') || false;
-    let showTimesheet = localStorage.getItem('CloudShowTimesheet') || false;
+ 
+    let headerStructure = [
+        { index: 0, label: '', class: 'colID', active: true, display: true, width: "50" },
+        { index: 1, label: '', class: 'colCheckbox', active: true, display: true, width: "50" },
+        { index: 2, label: 'EmployeeID', class: 'colEmpID', active: true, display: true, width: "100" },
+        { index: 3, label: 'Employee Name', class: 'colEmpName', active: true, display: true, width: "150" },
+        { index: 4, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
+        { index: 5, label: 'Workorder Number', class: 'colWorkorder', active: true, display: true, width: "150" },
+        { index: 6, label: 'Process', class: 'colProcess', active: true, display: true, width: "100" },
+        { index: 7, label: 'Product', class: 'colProduct', active: true, display: true, width: "100" },
+        { index: 8, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "120" },
+        { index: 9, label: 'Note', class: 'colNote', active: true, display: true, width: "180" },
+        { index: 10, label: 'Clock Status', class: 'colClockStatus', active: true, display: true, width: "150" },
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "110" },
+        
+    ];
+
+    templateObject.tableheaderrecords.set(headerStructure);
+    templateObject.getProcessClockedList = function () {
+        getVS1Data('TVS1Workorder').then(async function (dataObject) {
+            if (dataObject.length == 0) {
+                let workOrderList = manufacturingService.getWorkOrderList();
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderList})).then(function(datareturn){
+                        
+                }).catch(function(err){
+                });
+    
+                let ProcessClockList = new Array();
+                let workorderdata = workOrderList;
+                let bomData;
+                let tempData;
+                let format_date = moment().format('DD/MM/YYYY');
+    
+                for (let t = 0; t < workorderdata.length; t++) {
+                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
+                    
+                    let bomdetails = JSON.parse(bomData.Details);
+    
+                    for(let i = 0; i < bomdetails.length; i++) {
+                        
+                        if(bomdetails[i].process != '' ){
+                            tempData = {
+                                EmpId : workorderdata[t].fields.EmployeeId || i,
+                                EmpName: workorderdata[t].fields.EmployeeName || ' ',
+                                ProcessDate: workorderdata[t].fields.DueDate = '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate ,
+                                WorkorderID: workorderdata[t].fields.ID || '',
+                                Process: bomdetails[i].process || '',
+                                Product: workorderdata[t].fields.ProductName || '',
+                                ClockedTime : bomdetails[i].ClockedTime || 0,
+                                Note : workorderdata[t].fields.Note || '',
+                                Status: workorderdata[t].fields.Status || ''                  
+                
+                            };
+            
+                            ProcessClockList.push(tempData);
+    
+                        }
+                        
+                    }           
+                }
+    
+                addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
+                }).catch(function(err){
+                });
+    
+            } else {
+                let data = JSON.parse(dataObject[0].data);    
+                let ProcessClockList = new Array();
+                let workorderdata = data.tvs1workorder;
+                let bomData;
+                let tempData;
+                let format_date = moment().format('DD/MM/YYYY');
+
+                for (let t = 0; t < workorderdata.length; t++) {
+                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
+                    
+                    let bomdetails = JSON.parse(bomData.Details);
+    
+                    for(let i = 0; i < bomdetails.length; i++) {
+                        
+                        if(bomdetails[i].process != '' ){
+                            tempData = {
+                                EmpId : workorderdata[t].fields.EmployeeId || i,
+                                EmpName: workorderdata[t].fields.EmployeeName || ' ',
+                                ProcessDate: workorderdata[t].fields.DueDate = '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                                WorkorderID: workorderdata[t].fields.ID || '',
+                                Process: bomdetails[i].process || '',
+                                Product: workorderdata[t].fields.ProductName || '',
+                                ClockedTime : bomdetails[i].ClockedTime || 0,
+                                Note : workorderdata[t].fields.Note || '',
+                                Status: workorderdata[t].fields.Status || ''    ,
+                                Active:false              
+                
+                            };
+            
+                            ProcessClockList.push(tempData);
+    
+                        }
+                        
+                    }           
+                }
+    
+                addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
+                }).catch(function(err){
+                    
+                });   
+                
+            }
+        }).catch(async function (err) {
+            let workOrderList = manufacturingService.getWorkOrderList();
+    
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderList})).then(function(datareturn){
+                        
+                }).catch(function(err){
+                });
+    
+                let ProcessClockList = new Array();
+                let workorderdata = workOrderList;
+                let bomData;
+                let tempData;
+                let format_date = moment().format('DD/MM/YYYY');
+    
+                for (let t = 0; t < workorderdata.length; t++) {
+                    bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);         
+                    
+                    let bomdetails = JSON.parse(bomData.Details);
+
+                    for(let i = 0; i < bomdetails.length; i++) {
+                        
+                        if(bomdetails[i].process != '' ){
+                            tempData = {
+                                EmpId : workorderdata[t].fields.EmployeeId || i,
+                                EmpName: workorderdata[t].fields.EmployeeName || '',
+                                ProcessDate: workorderdata[t].fields.DueDate = '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
+                                WorkorderID: workorderdata[t].fields.ID || '',
+                                Process: bomdetails[i].process || '',
+                                Product: workorderdata[t].fields.ProductName || '',
+                                ClockedTime : bomdetails[i].ClockedTime || 0,
+                                Note : workorderdata[t].fields.Note || '',
+                                Status: workorderdata[t].fields.Status || '',
+                                Acitve: false           
+                
+                            };
+            
+                            ProcessClockList.push(tempData);
+    
+                        }
+                        
+                    }           
+                }
+    
+                addVS1Data('TVS1ProcessClockList', JSON.stringify({tvs1processclocklist: ProcessClockList})).then(function(datareturn){
+                }).catch(function(err){
+                });
+        });    
+
+    }
+
+    templateObject.getProcessClockedList();
+    
+    //get all work orders
+    templateObject.getAllWorkorders = async function() {
+        return new Promise(async(resolve, reject)=>{
+            getVS1Data('TVS1Workorder').then(function(dataObject){
+                if(dataObject.length == 0) {
+                    resolve ([]);
+                }else  {
+                    let data = JSON.parse(dataObject[0].data);
+                    resolve(data.tvs1workorder)
+                }
+            })
+        })
+    }
+
+    let temp =  templateObject.getAllWorkorders();
+    templateObject.workOrderRecords.set(temp);
+
     
     if (launchClockOnOff == true && canClockOnClockOff == true) {
         setTimeout(function() {
             $("#btnClockOnOff").trigger("click");
         }, 500);
     }
-
-    if (createTimesheet == false) {
-        setTimeout(function() {
-            $(".btnSaveTimeSheetForm").prop("disabled", true);
-        }, 500);
-    }
-
-    var currentBeginDate = new Date();
-    var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-    let fromDateMonth = (currentBeginDate.getMonth() + 1);
-    let fromDateDay = currentBeginDate.getDate();
-    if ((currentBeginDate.getMonth() + 1) < 10) {
-        fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-    } else {
-        fromDateMonth = (currentBeginDate.getMonth() + 1);
-    }
-
-    if (currentBeginDate.getDate() < 10) {
-        fromDateDay = "0" + currentBeginDate.getDate();
-    }
-
-    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
-
-    let prevMonthToDate = (moment().subtract(reportsloadMonths, 'months')).format("DD/MM/YYYY");
+ 
 
     Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblProcessClockList', function(error, result) {
         if (error) {} else {
@@ -126,10 +266,7 @@ Template.process_clock_template.onRendered(function() {
             if ($(this).text().indexOf('-' + Currency) >= 0)
                 $(this).addClass('text-danger')
         });
-    };
-
-
-    
+    }; 
 
 
     templateObject.timeToDecimal = function(time) {
@@ -151,285 +288,127 @@ Template.process_clock_template.onRendered(function() {
         let time = hours + ":" + minutes;
         return time;
     }
-
-    function checkStockColor() {
-        $('td.colStatus').each(function() {
-            if ($(this).text() == "Processed") {
-                $(this).addClass('isProcessedColumn');
-            } else if ($(this).text() == "Unprocessed") {
-                $(this).addClass('isUnprocessedColumn');
-            } else if ($(this).text() == "Converted") {
-                $(this).addClass('isConvertedColumn');
-            }
-
-        });
-    };
       
 
 });
 
 Template.process_clock_template.events({
    
-    'click .chkDatatable': function(event) {
-        var columns = $('#tblTimeSheet th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblTimeSheet'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {} else {
-                            Meteor._reload.reload();
-                        }
-                    });
-
-                }
-            }
-        }
-    },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        //let datatable =$('#tblTimeSheet').DataTable();
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-        var getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({
-                    userid: clientID,
-                    PrefName: 'tblTimeSheet'
-                });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblTimeSheet',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblTimeSheet',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-        //Meteor._reload.reload();
-    },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
-
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-
-        var datable = $('#tblTimeSheet').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-
-        // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblProcessClockList th');
-        $.each(datable, function(i, v) {
-
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
-    },
-    'click #check-all': function(event) {
-        if ($(event.target).is(':checked')) {
-            $(".chkBox").prop("checked", true);
-        } else {
-            $(".chkBox").prop("checked", false);
-        }
-    },
-    'click .chkBox': function() {
-        var listData = $(this).closest('tr').find(".colID").text() || 0;
-        const templateObject = Template.instance();
-        const selectedTimesheetList = [];
-        const selectedTimesheetToConvertList = [];
-        const selectedTimesheetCheck = [];
-        let ids = [];
-        let JsonIn = {};
-        let JsonIn1 = {};
-        let myStringJSON = '';
-        $('.chkBox:checkbox:checked').each(function() {
-            var chkIdLine = $(this).closest('tr').find(".colID").text() || 0;
-            let obj = {
-                TimesheetID: parseInt(chkIdLine)
-            }
-
-            selectedTimesheetList.push(obj);
-            selectedTimesheetToConvertList.push(parseInt(chkIdLine));
-            templateObject.selectedTimesheetID.set(chkIdLine);
-            // selectedAppointmentCheck.push(JsonIn1);
-            // }
-        });
-        templateObject.selectedTimesheet.set(selectedTimesheetList);
-        JsonIn = {
-            Name: "VS1_InvoiceTimesheet",
-            Params: {
-                TimesheetIDs: selectedTimesheetToConvertList
-            }
-        };
-        templateObject.selectedConvertTimesheet.set(JsonIn);
-    },
-  
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblProcessClockList th');
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || '',
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
-    
-    'click .btnRefreshOne': function() {
+    'click .exportbtn': function () {
         $('.fullScreenSpin').css('display', 'inline-block');
-        // sideBarService.getAllTimeSheetList().then(function(data) {
-        //     addVS1Data('TTimeSheet', JSON.stringify(data));
-        //     setTimeout(function() {
-        //         window.open('/timesheet', '_self');
-        //     }, 500);
-        // }).catch(function(err) {
-        //     $('.fullScreenSpin').css('display', 'none');
-        //     swal({
-        //         title: 'Oooops...',
-        //         text: err,
-        //         type: 'error',
-        //         showCancelButton: false,
-        //         confirmButtonText: 'Try Again'
-        //     }).then((result) => {
-        //         if (result.value) {
-        //             // Meteor._reload.reload();
-        //         } else if (result.dismiss === 'cancel') {}
-        //     });
-        // });
+        jQuery('#tblProcessClockList_wrapper .dt-buttons .btntabletocsv').click();
+        $('.fullScreenSpin').css('display', 'none');
+
+    },
+    'click .exportbtnExcel': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblProcessClockList_wrapper .dt-buttons .btntabletoexcel').click();
         $('.fullScreenSpin').css('display', 'none');
     },
+    'click .printConfirm': function (event) {
+        playPrintAudio();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblProcessClockList_wrapper .dt-buttons .btntabletopdf').click();
+        $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
+    },
+    'click .btnRefresh': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        templateObject.getProcessClockedList();
+        setTimeout(function () {
+            window.open('/process_clock_list','_self');
+            
+        }, 2000);
 
-  
+    },
+    'click .templateDownload': function () {
+        let utilityService = new UtilityService();
+        let rows = [];
+        const filename = 'SampleProcessClockList' + '.csv';
+        rows[0] = ['Company', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'Street2', 'State', 'Post Code', 'Country'];
+        rows[1] = ['ABC Company', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Main Street', 'New York', '1234', 'United States'];
+        utilityService.exportToCsv(rows, filename, 'csv');
+    },
+    'click .btnUploadFile': function (event) {
+        $('#attachment-upload').val('');
+        $('.file-name').text('');
+        //$(".btnImport").removeAttr("disabled");
+        $('#attachment-upload').trigger('click');
+
+    },
+    'click .templateDownloadXLSX': function (e) {
+        e.preventDefault();  //stop the browser from following
+        window.location.href = 'sample_imports/SampleProcessClockList.xlsx';
+    },
+    'change #attachment-upload': function (e) {
+        let templateObj = Template.instance();
+        var filename = $('#attachment-upload')[0].files[0]['name'];
+        var fileExtension = filename.split('.').pop().toLowerCase();
+        var validExtensions = ["csv", "txt", "xlsx"];
+        var validCSVExtensions = ["csv", "txt"];
+        var validExcelExtensions = ["xlsx", "xls"];
+
+        if (validExtensions.indexOf(fileExtension) == -1) {
+            // Bert.alert('<strong>formats allowed are : '+ validExtensions.join(', ')+'</strong>!', 'danger');
+            swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+            $('.file-name').text('');
+            $(".btnImport").Attr("disabled");
+        } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+
+            templateObj.selectedFile.set(selectedFile);
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+        } else if (fileExtension == 'xlsx') {
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+            var oFileIn;
+            var oFile = selectedFile;
+            var sFilename = oFile.name;
+            // Create A File Reader HTML5
+            var reader = new FileReader();
+
+            // Ready The Event For When A File Gets Selected
+            reader.onload = function (e) {
+                var data = e.target.result;
+                data = new Uint8Array(data);
+                var workbook = XLSX.read(data, { type: 'array' });
+
+                var result = {};
+                workbook.SheetNames.forEach(function (sheetName) {
+                    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                    templateObj.selectedFile.set(sCSV);
+
+                    if (roa.length) result[sheetName] = roa;
+                });
+                // see the result, caution: it works after reader event is done.
+
+            };
+            reader.readAsArrayBuffer(oFile);
+
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+
+        }
+    },
+   
+     
     'click #btnGroupClockOnOff': function(event) {
         $('#groupclockonoff').modal('show');
     },
-
     
-    'click .btnGroupClockSave': function(event) {
+    'click .btnGroupClockSave': async function(event) {
 
         $('.fullScreenSpin').css('display', 'inline-block');
 
@@ -459,10 +438,69 @@ Template.process_clock_template.events({
             return false;
         }
 
-        $('.fullScreenSpin').css('display', 'none');
+        let groups = [];
 
-        swal('The Group Clock On/Off  is saved', '', 'success');
-    
+        $("#tblProcessClockList tr").each(function() {
+            
+            // If the checkbox is checked, add its value to the corresponding group
+            if ($(this).find("input[type='checkbox']").is(":checked")) {
+                var empName = $(this).closest("tr").find("td:eq(2)").text();
+                var empId = $(this).closest("tr").find("td:eq(1)").text();
+                var workorderId = $(this).closest("tr").find("td:eq(4)").text();
+                var processName = $(this).closest("tr").find("td:eq(5)").text();
+                
+               // var clockedTime = $(this).closest("tr").find("td:eq(8)").text();
+                var pauseTime ;
+                if(type == "Lunch") {
+                    pauseTime = -45/60;
+                } else if(type == "Break" ) {
+                    pauseTime = -15/40 ;
+                } else {
+                    pauseTime = 0;
+                }
+               var temp = {EmpId:empId,  EmpName: empName,workorderId:workorderId, processName:processName, PauseTime: pauseTime} ;
+                groups.push(temp);
+            }
+        });
+
+
+        let workorders = await Template.instance().workOrderRecords.get();
+        
+        for(let i=0 ; i < groups.length; i++) {
+            let workorderindex = workorders.findIndex(order => {
+                return order.fields.ID == groups[i].workorderId;
+            });
+            let processName = groups[i].processName;
+            let pauseTime = groups[i].PauseTime;
+
+            if(workorderindex > -1) {
+                currentworkorder = workorders[workorderindex];
+                let tempworkorder = cloneDeep(currentworkorder);
+
+                let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
+                let bomDetailData = JSON.parse(bomStructureData.Details);
+                
+
+                for (let j = 0; j < bomDetailData.length; j++) {
+                    if(bomDetailData[j].process == processName) {
+                        bomDetailData[j].ClockedTime += pauseTime;  
+                    }
+                    
+                }
+
+                bomStructureData.Details = JSON.stringify(bomDetailData);
+                tempworkorder.fields = {...tempworkorder.fields, BOMStructure: JSON.stringify(bomStructureData) };
+                workorders.splice(workorderindex, 1, tempworkorder);
+
+            }
+        }
+
+        addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            $('.fullScreenSpin').css('display', 'none')
+            swal('The Group Clock On/Off is saved', '', 'success');
+            $('#groupclockonoff').modal('toggle');
+        })           
 
     },
 
@@ -488,84 +526,62 @@ Template.process_clock_template.events({
         $('#lunch').prop('checked', false);
         $('#clockoffswitch').prop('checked', false);
         $('#clockonswitch').prop('checked', false);
-
-    },
-        
-
-
+    }, 
 
 });
 
+
 Template.process_clock_template.helpers({
-    jobsrecords: () => {
-        return Template.instance().jobsrecords.get().sort(function(a, b) {
-            if (a.jobname == 'NA') {
-                return 1;
-            } else if (b.jobname == 'NA') {
-                return -1;
-            }
-            return (a.jobname.toUpperCase() > b.jobname.toUpperCase()) ? 1 : -1;
-        });
-    },
-    edithours: () => {
-        return localStorage.getItem('CloudEditTimesheetHours') || false;
-    },
-    clockOnOff: () => {
-        return localStorage.getItem('CloudClockOnOff') || false;
-    },
-    launchClockOnOff: () => {
-        return localStorage.getItem('launchClockOnOff') || false;
-    },
-    seeOwnTimesheets: () => {
-        return localStorage.getItem('seeOwnTimesheets') || false;
-    },
-    timesheetStartStop: () => {
-        return localStorage.getItem('timesheetStartStop') || false;
-    },
-    showTimesheetEntries: () => {
-        return localStorage.getItem('CloudTimesheetEntry') || false;
-    },
-    showTimesheet: () => {
-        return localStorage.getItem('CloudShowTimesheet') || false;
-    },
-    employeerecords: () => {
-        return Template.instance().employeerecords.get().sort(function(a, b) {
-            if (a.employeename == 'NA') {
-                return 1;
-            } else if (b.employeename == 'NA') {
-                return -1;
-            }
-            return (a.employeename.toUpperCase() > b.employeename.toUpperCase()) ? 1 : -1;
-        });
-    },
     datatablerecords: () => {
-        return Template.instance().datatablerecords.get().sort(function(a, b) {
-            if (a.sortdate == 'NA') {
+        return Template.instance().datatablerecords.get().sort(function (a, b) {
+            if (a.company == 'NA') {
                 return 1;
-            } else if (b.sortdate == 'NA') {
+            }
+            else if (b.company == 'NA') {
                 return -1;
             }
-            return (a.sortdate.toUpperCase() > b.sortdate.toUpperCase()) ? 1 : -1;
-        });
-    },
-    productsdatatablerecords: () => {
-        return Template.instance().productsdatatablerecords.get().sort(function(a, b) {
-            if (a.productname == 'NA') {
-                return 1;
-            } else if (b.productname == 'NA') {
-                return -1;
-            }
-            return (a.productname.toUpperCase() > b.productname.toUpperCase()) ? 1 : -1;
+            return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
         });
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
-    loggedCompany: () => {
-        return localStorage.getItem('mySession') || '';
+    salesCloudPreferenceRec: () => {
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblJoblist' });
     },
-    loggedInEmployee: () => {
-        return localStorage.getItem('mySessionEmployee') || '';
-    }
 
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllJobssDataVS1;
+    },
+
+    searchAPI: function() {
+        return sideBarService.getAllJobssDataVS1;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ["limitCount", "limitFrom", "deleteFilter"];
+    },
 });

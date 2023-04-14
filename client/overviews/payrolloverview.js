@@ -30,6 +30,7 @@ import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import './payrolloverview.html';
 import '../overviews/Modal/AddPayRunModal.html';
 
+
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 
@@ -83,6 +84,16 @@ Template.payrolloverview.onRendered(function () {
   const clockedOnEmpList = [];
   const jobsList = [];
   let clockEntry = [];
+
+  let modalId = FlowRouter.current().queryParams.modalId;
+
+  if(modalId == "newPayRunModal") {
+    $('#newPayRunModal').modal("show");
+
+  } 
+  if(modalId == "clockonoff") {
+    FlowRouter.go("/clockOnOff");
+  }
 
   templateObject.loadPayRuns = async (refresh = false) => {
     let data = await CachedHttp.get(erpObject.TPayRunHistory, async () => {
@@ -291,12 +302,10 @@ Template.payrolloverview.onRendered(function () {
         t.Status = "Draft";
       }
     });
+   
     templateObject.timeSheetList.set(timesheets);
 
-
-
     // TODO: Datable jquery to be added
-
     // setTimeout(() => {
 
     //   $("#tblTimeSheet").DataTable({
@@ -4179,6 +4188,7 @@ Template.payrolloverview.onRendered(function () {
     LoadingOverlay.hide();
   }
   templateObject.initPage(refresh);
+
 });
 
 Template.payrolloverview.events({
@@ -4353,10 +4363,12 @@ Template.payrolloverview.events({
   "click #btnTimesheet": function (event) {
     FlowRouter.go("/timesheet");
   },
-  "click #btnClockOnOff": (event, templateObject) => {
+  
+  
+  "click #btnClockOnOff_old": (event, templateObject) => {
     // $("#clockOnOffModal").modal("show");
     // return;
-   // const templateObject = Template.instance();
+    // const templateObject = Template.instance();
     let checkIncludeAllProducts = templateObject.includeAllProducts.get();
     $("#clock_employee_name").val(localStorage.getItem("mySessionEmployee"));
     $("#sltJob").val("");
@@ -4492,21 +4504,32 @@ Template.payrolloverview.events({
       }
     } else {
       $(".paused").hide();
-      $("#btnHold").prop("disabled", false);
+
     }
     $("#clockOnOffModal").modal("show");
   },
+
+  "click #btnClockOnOff": function () {
+    FlowRouter.go("/clockOnOff");
+  },
+
+
   "click #clockOnOffModal #btnClockOn": function () {
+
     const templateObject = Template.instance();
 
     let clockList = templateObject.timesheetrecords.get();
+
+   
     var product = $("#product-list").val() || "";
+
     clockList = clockList.filter((clkList) => {
       return (
         clkList.employee == $("#employee_name").val() &&
         clkList.id == $("#updateID").val()
       );
     });
+   
     let contactService = new ContactService();
     let updateID = $("#updateID").val() || "";
     let checkStatus = "";
@@ -4544,6 +4567,8 @@ Template.payrolloverview.events({
     // if (checkStatus == "paused") {
     //     return false;
     // }
+    
+
     if (checkStatus == "completed") {
       $("#updateID").val("");
       $("#startTime").val(
@@ -5295,7 +5320,7 @@ Template.payrolloverview.events({
               .text("Clocked On");
             $("#startTime").prop("disabled", true);
             templateObject.timesheetrecords.set([]);
-            templateObject.getAllTimeSheetDataClock();
+     //       templateObject.getAllTimeSheetDataClock();
             $("#clockOnOffModal").modal("hide");
             // setTimeout(function(){
             //    let getTimesheetRecords = templateObject.timesheetrecords.get();
@@ -5448,6 +5473,7 @@ Template.payrolloverview.events({
     }
   }, delayTimeAfterSound);
   },
+  
   "click .processTimesheet": function () {
     LoadingOverlay.show();
     let templateObject = Template.instance();

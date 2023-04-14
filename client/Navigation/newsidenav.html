@@ -711,11 +711,7 @@
                             </a>
                         </li>
 
-                        <li class="border-bottom-line">
-                            <a id="sideprocessclockonoff" name="sideprocessclockonoff" class="text-left">
-                                <i class="fas fa-hourglass-half"></i> Process Clock On/Off
-                            </a>
-                        </li>
+                        
                     </ul>
                 </div>
             </li>
@@ -778,17 +774,52 @@
                                 <a id="sidenavPayEmployees" name="sidenavPayEmployees" class="text-left"><i class="fas fa-hand-holding-usd"></i> Pay Employees
                                 </a>
                             </li>
-                            {{#if includeTimesheetEntry}}
+                            <!-- {{#if includeTimesheetEntry}}
                                 {{#if equals showTimesheet true}}
                                 <li>
                                     <a id="sidenavtimesheet" name="sidenavtimesheet" class="text-left"><i class="fas fa-user-clock"></i> Timesheet List</a>
                                 </li>
                                 {{/if}}
-                            {{/if}}
+                            {{/if}} -->
+                            <li>
+                                <a id="sidenavtimesheet" name="sidenavtimesheet" class="text-left"><i class="fas fa-user-clock"></i> Timesheet List</a>
+                            </li>
+
+                            <li>
+                                <a id="sidenavstpayroll" name="sidenavtimesheet" class="text-left"><i class="fas fa-dollar-sign"></i> ST Payroll</a>
+                            </li>
+
+                            <li>
+                                <a id="sidenavpayrollleave" name="sidenavpayrollleave" class="text-left"><i class="fas fa-user-clock"></i> Payroll Leave</a>
+                            </li>
+
+                            <li>
+                                <a id="sidenavaddpayrun" name="sidenavaddpayrun" class="text-left"><i class="fas fa-plus"></i> Add Pay Run</a>
+                            </li>
+
+                            <li class="border-bottom-line">
+                                <a id="sideprocessclockonoff" name="sideprocessclockonoff" class="text-left">
+                                    <i class="fas fa-hourglass-half"></i> Process Clock On/Off
+                                </a>
+                            </li>
+                            
+                            <li class="border-bottom-line">
+                                <a id="sidenavClockonReport" name="sidenavClockonReport" class="text-left"><i class="fas fa-hand-holding-usd"></i> Clocked Hour Report
+                                </a>
+                            </li>
+
+                            <li class="border-bottom-line">
+                                <a id="sidenavEmployeeClockedStatus" name="sidenavEmployeeClockedStatus" class="text-left"><i class="fas fa-hand-holding-usd"></i> Employee Clocked Status
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>
             {{/if}}
+
+            <!-- <li class="receiptLi" id="sidenavtimeclock">
+                <a class="liHeader receiptLiHeader text-center"><i class="fas fa-hourglass-half faHeader"></i> Clock On/Off</a>
+            </li> -->
 
             <!-- {{#if includeMyPayroll}} -->
                 <!-- <li class="payrollLi" id="sidenavmypayroll">
