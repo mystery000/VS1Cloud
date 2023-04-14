@@ -19,7 +19,6 @@ import { Template } from 'meteor/templating';
 import './supplierPaymentCard.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
-
 let sideBarService = new SideBarService();
 let utilityService = new UtilityService();
 const taxRateService = new TaxRateService();
@@ -55,6 +54,8 @@ Template.supplierpaymentcard.onCreated(() => {
   templateObject.accountID = new ReactiveVar();
   templateObject.stripe_fee_method = new ReactiveVar();
   templateObject.hasFollow = new ReactiveVar(false);
+
+  templateObject.currencyData = new ReactiveVar();
 });
 
 
@@ -75,6 +76,54 @@ export const _getTmpAppliedAmount = () => {
 Template.supplierpaymentcard.onRendered(() => {
   _setTmpAppliedAmount();
   const templateObject = Template.instance();
+
+    templateObject.getCurrencies = async function () {
+        let currencyData = [];
+        let dataObject = await getVS1Data("TCurrencyList");
+        if (dataObject.length == 0) {
+            taxRateService.getCurrencies().then(function (data) {
+                for (let i in data.tcurrencylist) {
+                    let currencyObj = {
+                        id: data.tcurrencylist[i].CurrencyID || "",
+                        currency: data.tcurrencylist[i].Currency || "",
+                        currencySellRate: data.tcurrencylist[i].SellRate || "",
+                        currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                        currencyCode: data.tcurrencylist[i].Code || "",
+                    };
+
+                    currencyData.push(currencyObj);
+                }
+                templateObject.currencyData.set(currencyData);
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tcurrencylist;
+            for (let i in useData) {
+                let currencyObj = {
+                    id: data.tcurrencylist[i].CurrencyID || "",
+                    currency: data.tcurrencylist[i].Currency || "",
+                    currencySellRate: data.tcurrencylist[i].SellRate || "",
+                    currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                    currencyCode: data.tcurrencylist[i].Code || "",
+                };
+
+                currencyData.push(currencyObj)
+            }
+            templateObject.currencyData.set(currencyData);
+        }
+    }
+    templateObject.getCurrencies();
+
+    templateObject.getCurrencyRate = (currency, type) => {
+        let currencyData = templateObject.currencyData.get();
+        for(let i = 0; i <currencyData.length; i++) {
+            if(currencyData[i].currencyCode == currency || currencyData[i].currency == currency) {
+                if (type == 0) return currencyData[i].currencySellRate;
+                else return currencyData[i].currencyBuyRate;
+            }
+        };
+    };
+
   templateObject.hasFollowings = async function() {
     var currentDate = new Date();
     let paymentService = new PaymentsService();
@@ -267,7 +316,8 @@ Template.supplierpaymentcard.onRendered(() => {
       let supplierPaymentData = await getVS1Data('TSupplierPayment');
       if( supplierPaymentData.length > 0 ){
 
-        var getsale_id = url.split("?billid=");
+        //var getsale_id = url.split("?billid=");
+        var getsale_id = url.split("?id=");
         var currentSalesID = getsale_id[getsale_id.length - 1];
         let paymentID = parseInt(currentSalesID);
         let useData = JSON.parse( supplierPaymentData[0].data );
@@ -275,12 +325,12 @@ Template.supplierpaymentcard.onRendered(() => {
         if(paymentID > 0) {
             curcode = localStorage.getItem("tempCurrencyState");
             currate = localStorage.getItem("tempExchangeRateState");
-            $("#sltCurrency").val(curcode);
+            $(".sltCurrency").val(curcode);
             $("#exchange_rate").val(currate);
 
             curcode = convertToForeignAmount($("#edtPaymentAmount").val(), currate, Currency);
             $("#edtForeignAmount").val(curcode);
-            $("#sltCurrency").trigger("change");
+            $(".sltCurrency").trigger("change");
             //FxGlobalFunctions.handleChangedCurrency(localStorage.getItem("tempCurrencyState"), defaultCurrencyCode);
         }
 
@@ -291,13 +341,21 @@ Template.supplierpaymentcard.onRendered(() => {
               }
           });
           if( suppPayment.length > 0 ){
-            $('#sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
-            $('#exchange_rate').val(suppPayment[0].fields.ForeignExchangeRate);
+            $('.sltCurrency').val(suppPayment[0].fields.ForeignExchangeCode);
+            let latest_rate = templateObject.getCurrencyRate(suppPayment[0].fields.ForeignExchangeCode, 0);
+            $('#exchange_rate').val(latest_rate);
           }
         }
       }
 
-      FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+      let currentCurrencySymbol = await FxGlobalFunctions.getCurrencySymbol($('.sltCurrency').val())
+      setCurrentCurrencySymbol(currentCurrencySymbol);
+      FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
+      let srcamount = $(".dynamic-converter-js input.linePaymentamount.convert-from").val();
+      let dstamount = convertToForeignAmount(srcamount, $("#exchange_rate").val(), getCurrentCurrencySymbol());
+
+      $(".linePaymentamount.convert-to").text(dstamount);
+      onExchangeRateChange();
 
   }
 
@@ -325,7 +383,7 @@ Template.supplierpaymentcard.onRendered(() => {
           var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
           var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
 
-          let fx = $('#sltCurrency').val();
+          let fx = $('.sltCurrency').val();
           if(fx == '')
           {
             fx = '  ';
@@ -550,7 +608,7 @@ Template.supplierpaymentcard.onRendered(() => {
         var customfieldlabel1 = $('.lblCustomField1').first().text() || 'Custom Field 1';
         var customfieldlabel2 = $('.lblCustomField2').first().text() || 'Custom Field 2';
         var customfieldlabel3 = $('.lblCustomField3').first().text() || 'Custom Field 3';
-        let fx = $('#sltCurrency').val() || '  ';
+        let fx = $('.sltCurrency').val() || '  ';
         var ref_daa = $('#edtReference').val() || '  ';
         var txaNotes = $('#txaNotes').val();
 
@@ -8113,9 +8171,9 @@ Template.supplierpaymentcard.events({
             ? $(e.currentTarget).find(".colBuyRate").text()
             : $(e.currentTarget).find(".colSellRate").text();
 
-        $("#sltCurrency").attr("currency-symbol", currencySymbol);
-        $("#sltCurrency").val(currencyCode);
-        $("#sltCurrency").trigger("change");
+        $(".sltCurrency").attr("currency-symbol", currencySymbol);
+        $(".sltCurrency").val(currencyCode);
+        $(".sltCurrency").trigger("change");
         $("#exchange_rate").val(currencyRate);
         $("#exchange_rate").trigger("change");
         $("#currencyModal").modal("hide");
@@ -8439,7 +8497,7 @@ Template.supplierpaymentcard.events({
     }
   },
   "change .sltCurrency": (en, ui) => {
-    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+    if ($(".sltCurrency").val() && $(".sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
 
       ui.isForeignEnabled.set(true);
@@ -8468,7 +8526,7 @@ Template.supplierpaymentcard.events({
   "click .btnSave": (e, ui) => {
   playSaveAudio();
   let templateObject = Template.instance();
-
+    e.preventDefault();
 
   let paymentService = new PaymentsService();
   setTimeout(function(){
@@ -8532,13 +8590,13 @@ Template.supplierpaymentcard.events({
      * Currency module data
      * TODO: Adding this into the saved object
      */
-    let foreignCurrency = $("#sltCurrency").val();
+    let foreignCurrency = $(".sltCurrency").val();
     let foreignAmount = $("#foreignAmount").val(); // this is the foreign amount by the currency, foreign Amount
     let variation = $("#edtVariation").val(); // this is the variation field
     let appliedAmount = $("#edtApplied").val(); // this is the variation field
     let exchangeRate = $('#exchange_rate').val();
     let foreignAppliedAmount = templateObject.isForeignEnabled.get() == true ? utilityService.removeCurrency(
-      $("#finalAppliedAmount").text(), $('#sltCurrency').attr('currency-symbol')
+      $("#finalAppliedAmount").text(), $('.sltCurrency').attr('currency-symbol')
       || getCurrentCurrencySymbol()) : null; // this is the foreign final amount
 
     /**
@@ -8941,7 +8999,7 @@ Template.supplierpaymentcard.events({
       var getsale_id = url.split("?poid=");
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let paymentID = parseInt(currentSalesID);
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -9381,7 +9439,7 @@ Template.supplierpaymentcard.events({
       var getsale_id = url.split("?billid=");
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let paymentID = parseInt(currentSalesID);
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -9813,7 +9871,7 @@ Template.supplierpaymentcard.events({
       var getsale_id = url.split("?creditid=");
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let paymentID = parseInt(currentSalesID);
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -10240,7 +10298,7 @@ Template.supplierpaymentcard.events({
         });
     } else if (url.indexOf("?suppname=") > 0 && url.indexOf("from=") > 0) {
       let paymentID = templateObject.supppaymentid.get();
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -10682,7 +10740,7 @@ Template.supplierpaymentcard.events({
       url.indexOf("?suppcreditname=") > 0 &&
       url.indexOf("pocreditid=") > 0
     ) {
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -11137,7 +11195,7 @@ Template.supplierpaymentcard.events({
       var currentSalesID = getsale_id[getsale_id.length - 1];
       let checkData = [];
       let allData = [];
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -11603,7 +11661,7 @@ Template.supplierpaymentcard.events({
           LoadingOverlay.hide();
         });
     } else {
-      let foreignCurrency = $("#sltCurrency").val();
+      let foreignCurrency = $(".sltCurrency").val();
       let exchangeRate = $('#exchange_rate').val();
       let foreignCurrencyFields = {}
       if( FxGlobalFunctions.isCurrencyEnabled() ){
@@ -13105,7 +13163,7 @@ Template.supplierpaymentcard.events({
     if(ui.isForeignEnabled.get() == true) {
       setTimeout(() => {
 
-        const targetCurrency = $('#sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
+        const targetCurrency = $('.sltCurrency').attr('currency-symbol') || getCurrentCurrencySymbol();
 
         // convert to forign payment amount
         const valueToConvert = $(e.currentTarget).val();
@@ -13132,7 +13190,7 @@ Template.supplierpaymentcard.events({
   // "change .tblSupplierPaymentcard input.linePaymentamount.foreign.convert-to": (e, ui) => {
   //  setTimeout(() => {
   //   const calculatedAppliedAmount = onForeignTableInputChange();
-  //   const currency = $('#sltCurrency').attr("currency-symbol");
+  //   const currency = $('.sltCurrency').attr("currency-symbol");
 
   //   $(e.currentTarget).val(currency + $(e.currentTarget).val().replace(/[^0-9.-]+/g, ""));
 
@@ -13144,17 +13202,16 @@ Template.supplierpaymentcard.events({
 });
 
 
-export function onExchangeRateChange(e) {
+export function onExchangeRateChange(e = null) {
  const templateObject = Template.instance();
   const mainValue = parseFloat($('#edtPaymentAmount').val().replace(/[^0-9.-]+/g, "")) ;
   const rate = parseFloat($("#exchange_rate").val());
   const currency = getCurrentCurrencySymbol();
 
-  // if(e.type =='keyup' || e.type == 'change') {
-  //   $(e.currentTarget).attr('hand-edited', true);
-  // } else {
-  //   $(e.currentTarget).attr('hand-edited', false);
-  // }
+  if(e)
+    if(e.type =='keyup' || e.type == 'change') {
+        $(e.currentTarget).attr('hand-edited', true);
+    }
 
   let foreignAmount = (rate * mainValue).toFixed(2);
   let appliedAmount = (rate * mainValue).toFixed(2);

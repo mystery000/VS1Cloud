@@ -79,7 +79,7 @@ Template.newcurrencypop.onRendered(function () {
           $("#edtCurrencyDesc").val(currencyDesc);
           $("#edtBuyRate").val(currencyBuyRate);
           $("#edtSellRate").val(currencySellRate);
-          $('#newcurrencypop').modal('show');
+//          $('#newcurrencypop').modal('show');
           //Make btnDelete "Make Active or In-Active"
           if(status == "In-Active"){
               $('#view-in-active').html("<button class='btn btn-success btnActivateCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make Active</button>");
@@ -679,8 +679,8 @@ Template.newcurrencypop.onRendered(function () {
 
           //});
 
-          $(this).closest("tr").attr("data-target", "#myModal");
-          $(this).closest("tr").attr("data-toggle", "modal");
+          // $(this).closest("tr").attr("data-target", "#myModal");
+          // $(this).closest("tr").attr("data-toggle", "modal");
         }
       }
     }
@@ -754,232 +754,10 @@ Template.newcurrencypop.events({
   "click #btnNewInvoice": function (event) {
     // FlowRouter.go('/invoicecard');
   },
-  "click .chkDatatable": function (event) {
-    var columns = $("#tblCurrencyList th");
-    let columnDataValue = $(event.target)
-      .closest("div")
-      .find(".divcolumn")
-      .text();
-
-    $.each(columns, function (i, v) {
-      let className = v.classList;
-      let replaceClass = className[1];
-
-      if (v.innerText == columnDataValue) {
-        if ($(event.target).is(":checked")) {
-          $("." + replaceClass + "").css("display", "table-cell");
-          $("." + replaceClass + "").css("padding", ".75rem");
-          $("." + replaceClass + "").css("vertical-align", "top");
-        } else {
-          $("." + replaceClass + "").css("display", "none");
-        }
-      }
-    });
-  },
-  "click .resetTable": function (event) {
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: localStorage.getItem("mycloudLogonID"),
-      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "tblCurrencyList",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.remove(
-            {
-              _id: checkPrefDetails._id,
-            },
-            function (err, idTag) {
-              if (err) {
-              } else {
-                Meteor._reload.reload();
-              }
-            }
-          );
-        }
-      }
-    }
-  },
-  "click .saveTable": function (event) {
-    let lineItems = [];
-    $(".columnSettings").each(function (index) {
-      var $tblrow = $(this);
-      var colTitle = $tblrow.find(".divcolumn").text() || "";
-      var colWidth = $tblrow.find(".custom-range").val() || 0;
-      var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-      var colHidden = false;
-      if ($tblrow.find(".custom-control-input").is(":checked")) {
-        colHidden = false;
-      } else {
-        colHidden = true;
-      }
-      let lineItemObj = {
-        index: index,
-        label: colTitle,
-        hidden: colHidden,
-        width: colWidth,
-        thclass: colthClass,
-      };
-
-      lineItems.push(lineItemObj);
-    });
-
-    var getcurrentCloudDetails = CloudUser.findOne({
-      _id: localStorage.getItem("mycloudLogonID"),
-      clouddatabaseID: localStorage.getItem("mycloudLogonDBID"),
-    });
-    if (getcurrentCloudDetails) {
-      if (getcurrentCloudDetails._id.length > 0) {
-        var clientID = getcurrentCloudDetails._id;
-        var clientUsername = getcurrentCloudDetails.cloudUsername;
-        var clientEmail = getcurrentCloudDetails.cloudEmail;
-        var checkPrefDetails = CloudPreference.findOne({
-          userid: clientID,
-          PrefName: "tblCurrencyList",
-        });
-        if (checkPrefDetails) {
-          CloudPreference.update(
-            {
-              _id: checkPrefDetails._id,
-            },
-            {
-              $set: {
-                userid: clientID,
-                username: clientUsername,
-                useremail: clientEmail,
-                PrefGroup: "salesform",
-                PrefName: "tblCurrencyList",
-                published: true,
-                customFields: lineItems,
-                updatedAt: new Date(),
-              },
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#myModal2").modal("toggle");
-              } else {
-                $("#myModal2").modal("toggle");
-              }
-            }
-          );
-        } else {
-          CloudPreference.insert(
-            {
-              userid: clientID,
-              username: clientUsername,
-              useremail: clientEmail,
-              PrefGroup: "salesform",
-              PrefName: "tblCurrencyList",
-              published: true,
-              customFields: lineItems,
-              createdAt: new Date(),
-            },
-            function (err, idTag) {
-              if (err) {
-                $("#myModal2").modal("toggle");
-              } else {
-                $("#myModal2").modal("toggle");
-              }
-            }
-          );
-        }
-      }
-    }
-    $("#myModal2").modal("toggle");
-  },
-  "blur .divcolumn": function (event) {
-    let columData = $(event.target).text();
-
-    let columnDatanIndex = $(event.target)
-      .closest("div.columnSettings")
-      .attr("id");
-    var datable = $("#tblCurrencyList").DataTable();
-    var title = datable.column(columnDatanIndex).header();
-    $(title).html(columData);
-  },
-  "change .rngRange": function (event) {
-    let range = $(event.target).val();
-    $(event.target)
-      .closest("div.divColWidth")
-      .find(".spWidth")
-      .html(range + "px");
-
-    let columData = $(event.target)
-      .closest("div.divColWidth")
-      .find(".spWidth")
-      .attr("value");
-    let columnDataValue = $(event.target)
-      .closest("div")
-      .prev()
-      .find(".divcolumn")
-      .text();
-    var datable = $("#tblCurrencyList th");
-    $.each(datable, function (i, v) {
-      if (v.innerText == columnDataValue) {
-        let className = v.className;
-        let replaceClass = className.replace(/ /g, ".");
-        $("." + replaceClass + "").css("width", range + "px");
-      }
-    });
-  },
-  "click .btnOpenSettings": function (event) {
-    let templateObject = Template.instance();
-    var columns = $("#tblCurrencyList th");
-
-    const tableHeaderList = [];
-    let sTible = "";
-    let sWidth = "";
-    let sIndex = "";
-    let sVisible = "";
-    let columVisible = false;
-    let sClass = "";
-    $.each(columns, function (i, v) {
-      if (v.hidden == false) {
-        columVisible = true;
-      }
-      if (v.className.includes("hiddenColumn")) {
-        columVisible = false;
-      }
-      sWidth = v.style.width.replace("px", "");
-
-      let datatablerecordObj = {
-        sTitle: v.innerText || "",
-        sWidth: sWidth || "",
-        sIndex: v.cellIndex || "",
-        sVisible: columVisible || false,
-        sClass: v.className || "",
-      };
-      tableHeaderList.push(datatablerecordObj);
-    });
-    templateObject.tableheaderrecords.set(tableHeaderList);
-  },
   "click #exportbtn": function () {
     LoadingOverlay.show();
     jQuery("#tblCurrencyList_wrapper .dt-buttons .btntabletocsv").click();
     $(".fullScreenSpin").css("display", "none");
-  },
-  "click .btnRefresh": function () {
-    LoadingOverlay.show();
-    sideBarService
-      .getCurrencies()
-      .then(function (dataReload) {
-        addVS1Data("TCurrency", JSON.stringify(dataReload))
-          .then(function (datareturn) {
-            location.reload(true);
-          })
-          .catch(function (err) {
-            location.reload(true);
-          });
-      })
-      .catch(function (err) {
-        location.reload(true);
-      });
   },
   "click .btnAddNewDepart": function () {
     $("#newTaxRate").css("display", "block");
@@ -1095,13 +873,14 @@ Template.newcurrencypop.events({
         type: "TCurrency",
         fields: {
           Active: true,
-          //Country: country,
+          Country: country,
           Code: currencyCode,
           CurrencySymbol: currencySymbol,
           Currency: currencyName,
           CurrencyDesc: currencyDesc,
           BuyRate: parseFloat(currencyBuyRate) || 1,
           SellRate: parseFloat(currencySellRate) || 1,
+          RateLastModified: moment(Date()).format("YYYY-MM-DD"),
         },
       };
     } else {
@@ -1110,13 +889,14 @@ Template.newcurrencypop.events({
         fields: {
           ID: parseInt(currencyid),
           Active: true,
-          //Country: country,
+          Country: country,
           Code: currencyCode,
           CurrencySymbol: currencySymbol,
           Currency: currencyName,
           CurrencyDesc: currencyDesc,
           BuyRate: parseFloat(currencyBuyRate) || 1,
           SellRate: parseFloat(currencySellRate) || 1,
+          RateLastModified: moment(Date()).format("YYYY-MM-DD"),
         },
       };
     }
@@ -1128,19 +908,22 @@ Template.newcurrencypop.events({
           .getCurrencies()
           .then(function (dataReload) {
             $("#sltCurrency").val(currencyCode);
-            addVS1Data("TCurrency", JSON.stringify(dataReload))
+            addVS1Data("TCurrencyList", JSON.stringify(dataReload))
               .then(function (datareturn) {
-                $("#newCurrencyModal").modal("toggle");
-                $(".fullScreenSpin").css("display", "none");
+                //$("#newCurrencyModal").modal("toggle");
+                //$(".fullScreenSpin").css("display", "none");
+                window.location.reload();
               })
               .catch(function (err) {
-                $("#newCurrencyModal").modal("toggle");
-                $(".fullScreenSpin").css("display", "none");
+                //$("#newCurrencyModal").modal("toggle");
+                //$(".fullScreenSpin").css("display", "none");
+                window.location.reload();
               });
           })
           .catch(function (err) {
-            $("#newCurrencyModal").modal("toggle");
-            $(".fullScreenSpin").css("display", "none");
+            //$("#newCurrencyModal").modal("toggle");
+            //$(".fullScreenSpin").css("display", "none");
+            window.location.reload();
           });
       })
       .catch(function (err) {
