@@ -240,8 +240,8 @@ Template.reimbursementSettings.onRendered(function() {
 
 // templateObject.getReimbursement();
 
-$('.reimbursementDropDown').editableSelect();
-$('.reimbursementDropDown').editableSelect()
+$('#obReimbursementType').editableSelect();
+$('#obReimbursementType').editableSelect()
     .on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
