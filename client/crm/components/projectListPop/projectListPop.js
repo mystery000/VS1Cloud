@@ -50,12 +50,12 @@ Template.projectListPop.onCreated(function() {
     }
 
     let headerStructure = [
-        { index: 5, label: 'ID', class: 'colProjectID', active: false, display: false, width: "10" },
-        { index: 0, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "110" },
-        { index: 1, label: 'Project', class: 'colProjectName', active: true, display: true, width: "100" },
-        { index: 2, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "300" },
-        { index: 3, label: 'Tasks', class: 'colProjectTasks', active: true, display: true, width: "100" },
-        { index: 4, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "120" },
+        { index: 0, label: 'ID', class: 'colProjectID', active: false, display: false, width: "10" },
+        { index: 1, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "110" },
+        { index: 2, label: 'Project', class: 'colProjectName', active: true, display: true, width: "100" },
+        { index: 3, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "300" },
+        { index: 4, label: 'Tasks', class: 'colProjectTasks', active: true, display: true, width: "100" },
+        { index: 5, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
