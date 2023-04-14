@@ -256,6 +256,7 @@ const erpObject = {
     TCustomerPaymentLine: "TCustomerPaymentLine",
     TSupplierPaymentLine: "TSupplierPaymentLine",
     Tprojectlist: "Tprojectlist",
+    TprojectlistReport: "TprojectlistReport",
     Tprojecttasks: "Tprojecttasks",
     Tprojecttask_subtasks: "Tprojecttask_subtasks",
     Tprojecttask_activity: "Tprojecttask_activity",

@@ -2805,7 +2805,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 
-  getAllAppointmentList(limitcount, limitfrom) {
+  getAllAppointmentList(limitcount, limitfrom, deletefilter) {
     let options = "";
     let checkOwnAppointment = localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly");
     let selectedEmployeeName = localStorage.getItem("mySessionEmployee");
@@ -2813,20 +2813,22 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        //select: "[Active]=true",
+        Search: "Active=true",
       };
     } else {
       options = {
         // orderby: '"AppointID desc"',
         OrderBy: "CreationDate desc",
         ListType: "Detail",
-        select: "[Active]=true",
+        //select: "[Active]=true",
+        Search: "Active=true",
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
     }
-
-    return this.getList(this.ERPObjects.TAppointment, options);
+    if(deletefilter) options.Search = "";
+    return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
   getAllCorrespondenceList(limitcount, limitfrom) {
@@ -4697,4 +4699,51 @@ export class SideBarService extends BaseService {
         });
         return promise;
     }
+
+  getCombinedContacts() {
+    return this.getManualCombinedContacts();
+
+  }
+  getManualCombinedContacts() {
+    return this.getWowCombinedContacts();
+  }
+  getWowCombinedContacts() {
+    var that = this;
+    var promise = new Promise(function(resolve, reject) {
+      var splashArrayTitleList = [
+        ["Armidale Building Society Limited",""],
+        ["Adelaide Bank Limited",""],
+        ["Test",""],
+      ];
+      resolve({"terpcombinedcontacts" : splashArrayTitleList});
+    });
+    return promise;
+  }
+
+  getBankCode() {
+    return this.getManualBankCode();
+
+  }
+  getManualBankCode() {
+    return this.WowBankCode();
+  }
+  WowBankCode() {
+    var that = this;
+    var promise = new Promise(function(resolve, reject) {
+      var splashArrayTitleList = [
+          ['CBA', 'Commonwealth Bank'],
+          ['NAB', 'National Australian Bank'],
+          ['WBC', 'Westpac Bank'],
+          ['MQG', 'Macquarie Bank'],
+          ['ANZ', 'Australia and New Zealand Banking Group'],
+          ['BEN', 'Bendigo Bank'],
+          ['BOQ', 'Bank of Queensland'],
+          ['VUK', 'Virgin Money'],
+          ['BFL', 'BSP Financial Group'],
+          ['JDO', 'Judo Bank']
+      ]
+      resolve({"tbankcode" : splashArrayTitleList});
+    });
+    return promise;
+  }
 }

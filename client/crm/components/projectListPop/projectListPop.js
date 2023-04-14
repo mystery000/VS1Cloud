@@ -22,40 +22,40 @@ Template.projectListPop.onCreated(function() {
         let projectStatus = "";
         let taskCount = "";
 
-            if (data.fields.Active) {
+            if (data.Active) {
                 projectStatus = "";
             } else {
                 projectStatus = "In-Active";
             }
-            if (data.fields.projecttasks == null) {
+            if (data.projecttasks == null) {
                 taskCount = "";
-            } else if (Array.isArray(data.fields.projecttasks) == true) {
-                taskCount = data.fields.projecttasks.filter(
-                    (tk) => tk.fields.Active == true && tk.fields.Completed == false
+            } else if (Array.isArray(data.projecttasks) == true) {
+                taskCount = data.projecttasks.filter(
+                    (tk) => tk.Active == true && tk.Completed == false
                 ).length;
             } else {
-                taskCount = data.fields.projecttasks.fields.Active == true ? 1 : 0;
+                taskCount = data.projecttasks.Active == true ? 1 : 0;
             }
 
             let dataList = [
-                `<span style="display: none;">${data.fields.MsTimeStamp}</span>` + moment(data.fields.MsTimeStamp).format("DD/MM/YYYY"),
-                data.fields.ProjectName,
-                data.fields.Description,
+                data.ID,
+                `<span style="display: none;">${data.MsTimeStamp}</span>` + moment(data.MsTimeStamp).format("DD/MM/YYYY"),
+                data.ProjectName,
+                data.Description,
                 taskCount,
                 projectStatus,
-                data.fields.ID,
-                // data.fields.Active,
+                // data.Active,
             ];
         return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "100" },
+        { index: 5, label: 'ID', class: 'colProjectID', active: false, display: false, width: "10" },
+        { index: 0, label: 'Date', class: 'colPrjectDate', active: true, display: true, width: "110" },
         { index: 1, label: 'Project', class: 'colProjectName', active: true, display: true, width: "100" },
-        { index: 2, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "200" },
+        { index: 2, label: 'Description', class: 'colProjectDesc', active: true, display: true, width: "300" },
         { index: 3, label: 'Tasks', class: 'colProjectTasks', active: true, display: true, width: "100" },
-        { index: 4, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "60" },
-        { index: 5, label: '#ID', class: 'colProjectID', active: false, display: false, width: "0" },
+        { index: 4, label: 'Status', class: 'colProjectStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -334,11 +334,11 @@ Template.projectListPop.helpers({
     },
     apiFunction:function() {
         let crmService = new CRMService();
-        return crmService.getTProjectList;
+        return crmService.getTProjectListReport;
     },
 
     searchAPI: function() {
-        return crmService.getProjectsByNameOrID;
+        return crmService.getTProjectListReport;
     },
 
     service: ()=>{

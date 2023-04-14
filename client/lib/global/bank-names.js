@@ -6,5 +6,7 @@ export class BankNameService extends BaseService {
             select: "[Active]=true & [Region]='"+localStorage.getItem('ERPLoggedCountry')+"'",            
         };
         return this.getList(this.ERPObjects.TBankCode, options);        
-    }    
+    }
+
+
 }
