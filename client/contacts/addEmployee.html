@@ -604,6 +604,9 @@
                                 exIndexDBName = 'tprojecttaskslist'
                                 exdatahandler = customerExDataHandler
                                 searchAPI = customerSearchAPI
+                                showPlusButton = true
+                                showPlusButtonDataTarget = "newProjectTasksModal"
+                                showPlusButtonClass = "btnAddProjectTask"
                               }}
                             </div>
                             <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4"
@@ -4373,6 +4376,9 @@
               exIndexDBName='tpayrollcalendars'
               exdatahandler=payExDataHandler
               searchAPI=searchAPI
+              showPlusButton = true
+              showPlusButtonDataTarget = "newPayCalendarModal"
+              showPlusButtonClass = "btnAddNewPayCalender"
           }}
         </div>
         <div class="modal-footer">
@@ -4412,8 +4418,13 @@
               }
               #tblHolidays .colStatus{
                   width: 10%!important;
-              }              
+              }
           </style> -->
+            <style>
+                div.dataTables_wrapper .JCLRFlex {
+                    width: 100%!important;
+                }
+            </style>
           <!-- {{> non_transactional_list tablename="tblHolidays"}} -->
           {{>datatablelist
             tablename="tblHoilidays"
@@ -4430,6 +4441,9 @@
             exIndexDBName = 'tpayrollholidays'
             exdatahandler = holidayExDataHandler
             searchAPI = holidaySearchAPI
+            showPlusButton = true
+            showPlusButtonDataTarget = "newHolidayModal"
+            showPlusButtonClass = "btnAddHoliday"
           }}
 
         </div>

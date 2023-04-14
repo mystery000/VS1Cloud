@@ -1154,7 +1154,7 @@ Template.customerscard.onCreated(function () {
         { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
         { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
         { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
-        { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
+        { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "200" },
         { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
         { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
         { index: 6, label: 'Completed', class: 'colCompleteTask', active: true, display: true, width: "120" },
@@ -1169,7 +1169,7 @@ Template.customerscard.onCreated(function () {
                 return [];
         }
         let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
-        let creditBalance = utilityService.modifynegativeCurrencyFormat(data.CreditBalance) || 0.00;
+        // let creditBalance = utilityService.modifynegativeCurrencyFormat(data.CreditBalance) || 0.00;
         let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
         let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit) || 0.00;
         let salesOrderBalance = utilityService.modifynegativeCurrencyFormat(data.SalesOrderBalance) || 0.00;
@@ -1179,7 +1179,7 @@ Template.customerscard.onCreated(function () {
             data.Company || '',
             data.Phone || '',
             arBalance || 0.00,
-            creditBalance || 0.00,
+            // creditBalance || 0.00,
             balance || 0.00,
             creditLimit || 0.00,
             salesOrderBalance || 0.00,
@@ -1198,17 +1198,17 @@ Template.customerscard.onCreated(function () {
         { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
         { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
         { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "100" },
-        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "100" },
-        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
-        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "105" },
-        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
-        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
-        { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "70" },
-        { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "105" },
-        { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "90" },
-        { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "90" },
-        { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
-        { index: 14, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        // { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "100" },
+        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "105" },
+        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
+        { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "70" },
+        { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "105" },
+        { index: 10, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "90" },
+        { index: 11, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "90" },
+        { index: 12, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
+        { index: 13, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords_JobDetailsList.set(headerStructure_JobDetailsList);
 
@@ -1249,15 +1249,15 @@ Template.customerscard.onCreated(function () {
         return dataList;
     }
     let headerStructure_AppointmentsByCustomer = [
-        { index: 0, label: 'Appt ID', class: 'colID', active: true, display: true, width: "50" },
-        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "150" },
-        { index: 2, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
+        { index: 0, label: 'Appt ID', class: 'colID', active: true, display: true, width: "10" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
+        { index: 2, label: 'Rep', class: 'colReq', active: true, display: true, width: "110" },
         { index: 3, label: 'From', class: 'colFromDate', active: true, display: true, width: "80" },
         { index: 4, label: 'To', class: 'colToDate', active: true, display: true, width: "80" },
-        { index: 5, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "80" },
+        { index: 5, label: 'Confirmed', class: 'colconfirm', active: true, display: true, width: "110" },
         { index: 6, label: 'Notes', class: 'colNotes', active: false, display: true, width: "300" },
-        { index: 7, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
-        { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 7, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "110" },
+        { index: 8, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ]
     templateObject.tableheaderrecords_AppointmentsByCustomer.set(headerStructure_AppointmentsByCustomer);
 
@@ -4100,7 +4100,7 @@ Template.customerscard.helpers({
     },
 
     apiParams_AppointmentsByCustomer: function () {
-        return ['limitCount', 'limitFrom', 'deleteFilter'];
+        return ['dateFrom', 'dateTo', 'ignoreDate', 'limitcount', 'limitfrom'];
     },
 
     salesTableHeaderRecords: () => {

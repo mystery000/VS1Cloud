@@ -463,6 +463,9 @@
                                                                                 width: 12% !important;
                                                                             }
                                                                         </style>
+                                                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                                                            {{> export_import_print_display_button tablename="tblCustomerCrmListWithDate"}}
+                                                                        </div>
                                                                         <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
                                                                         {{>datatablelist
                                                                                 tablename="tblCustomerCrmListWithDate"
@@ -1157,6 +1160,9 @@
                                                                             }
                                                                         </style>
                                                                         <!-- {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}} -->
+                                                                        <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                                                            {{> export_import_print_display_button  Import="hiddenButton" tablename="tblCustomerCrmListWithDate"}}
+                                                                        </div>
                                                                         {{>datatablelist
                                                                                 tablename="tblCustomerCrmListWithDate"
                                                                                 apiName= apiFunction_CrmListWithDate
@@ -1171,6 +1177,11 @@
                                                                                 exIndexDBName = 'tprojecttaskslist'
                                                                                 exdatahandler = exDataHandler_CrmListWithDate
                                                                                 searchAPI = searchAPI_CrmListWithDate
+                                                                                showtableheaderrecords = tableheaderrecords_CrmListWithDate
+                                                                                exportfilename = 'Customer CRM List With Date'
+                                                                                showPlusButton = true
+                                                                                showPlusButtonDataTarget = "customerListCrmModal"
+                                                                                showPlusButtonClass = "btnAddNewCustomer"
                                                                         }}
                                                                     </div>
                                                                     <div class="tab-pane border rounded-0" role="tabpanel" id="tab-4"
@@ -2773,15 +2784,18 @@
                                                                                                                                  style="background-color: #00A3D3; border-color: #00A3D3;"></i>Refresh</button>
                                                         </div>
                                                     </div>
-                                                    <div class="col">
-                                                        <button class="btn btn-primary float-right printConfirmTransaction" type="button"
-                                                                style="margin:14px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"
-                                                                                                                                          style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>
-                                                        <button class="btn btn-primary export float-right" type="button"
-                                                                style="margin: 14px; background-color: #00A3D3; border-color: #00A3D3;"
-                                                                id="exportbtnTransaction" name="exportbtn"><i class="fas fa-file-export"
-                                                                                                              style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
+                                                    <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                                        {{> export_import_print_display_button tablename="tblAppointmentsByCustomer"}}
                                                     </div>
+<!--                                                    <div class="col">-->
+<!--                                                        <button class="btn btn-primary float-right printConfirmTransaction" type="button"-->
+<!--                                                                style="margin:14px; background-color: #00A3D3; border-color: #00A3D3;"><i class="fa fa-print"-->
+<!--                                                                                                                                          style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Print</button>-->
+<!--                                                        <button class="btn btn-primary export float-right" type="button"-->
+<!--                                                                style="margin: 14px; background-color: #00A3D3; border-color: #00A3D3;"-->
+<!--                                                                id="exportbtnTransaction" name="exportbtn"><i class="fas fa-file-export"-->
+<!--                                                                                                              style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>-->
+<!--                                                    </div>-->
                                                 </div>
                                                 <div class="d-flex justify-content-left" style="margin-left: 14px;">
                                                     <div style="width: 164px;">
@@ -2804,7 +2818,7 @@
                                                                     indexeddbname = 'TAppointmentList'
                                                                     tableheaderrecords = tableheaderrecords_AppointmentsByCustomer
                                                                     exportfilename = 'Appointments By Customer List'
-                                                                    istransaction = false
+                                                                    istransaction = true
                                                                     apiParams= apiParams_AppointmentsByCustomer
                                                                     datahandler = datahandler_AppointmentsByCustomer
                                                                     service=service_AppointmentsByCustomer

@@ -283,7 +283,7 @@ templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
   }
   let holidayHeaderStructure = [
     { index: 0, label: 'ID', class: 'colHolidayID', active: false, display: true, width: "10" },
-    { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "120" },
+    { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "200" },
     { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "80" },
     { index: 3, label: 'Holiday group', class: 'colHolidaygroup', active: false, display: true, width: "110" },
     { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
@@ -2342,7 +2342,7 @@ Template.employeescard.onRendered(function () {
       $('#edtPayrollCalendar').val($(this).find(".colPayCalendarName").text());
       $('#payrollCalendarPopModal').modal('toggle');
     });
-    $(document).on("click", "#tblHolidays tbody tr", function (e) {
+    $(document).on("click", "#tblHolidayas tbody tr", function (e) {
       $('#edtHolidays').val($(this).find(".colHolidayName").text());
       $('#holidaysPopModal').modal('toggle');
     });

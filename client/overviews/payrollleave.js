@@ -47,19 +47,19 @@ Template.payrollleave.onCreated(()=>{
       data.fields.Description || '',
       data.fields.PayPeriod || '',
       data.fields.LeaveMethod || '',
+      (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
       data.fields.Status || '',
-      (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
     ];
     return dataList;
   }
 
   let headerStructure = [
-    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
+    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "10" },
     { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "500" },
-    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
-    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
-    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
-    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "110" },
+    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "110" },
+    { index: 4, label: 'Action', class: 'colLRAction', active: true, display: true, width: "110" },
+    { index: 5, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
   templateObject.saveLeaveRequestLocalDB = async ()=> {
