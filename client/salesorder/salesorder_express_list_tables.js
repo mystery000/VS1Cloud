@@ -22,7 +22,6 @@ Template.salesorderslist.onCreated(function(){
     templateObject.convertedStatus = new ReactiveVar();
 
     templateObject.getDataTableList = function(data){
-
       let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data.TotalAmount)|| 0.00;
       let totalTax = utilityService.modifynegativeCurrencyFormat(data.TotalTax) || 0.00;
       // Currency+''+data.tinvoice[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
@@ -38,7 +37,7 @@ Template.salesorderslist.onCreated(function(){
       let dataList = [
           '<span style="display:none;">'+data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate+'</span>'+data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate,
           data.SaleID || '',
-          data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate,
+          '<span style="display:none;">'+data.DueDate !=''? moment(data.DueDate).format("YYYY/MM/DD"): data.DueDate+'</span>'+data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate,
           data.CustomerName || '',
           totalAmountEx || 0.00,
           totalTax || 0.00,
@@ -1539,37 +1538,21 @@ Template.salesorderslist.events({
   // },
   'click .btnRefresh': function () {
       $('.fullScreenSpin').css('display','inline-block');
-      let currentDate = new Date();
-      let hours = currentDate.getHours(); //returns 0-23
-      let minutes = currentDate.getMinutes(); //returns 0-59
-      let seconds = currentDate.getSeconds(); //returns 0-59
-      let month = (currentDate.getMonth()+1);
-      let days = currentDate.getDate();
-
-      if((currentDate.getMonth()+1) < 10){
-          month = "0" + (currentDate.getMonth()+1);
-      }
-
-      if(currentDate.getDate() < 10){
-          days = "0" + currentDate.getDate();
-      }
-
       var currentBeginDate = new Date();
-      var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
-      let fromDateMonth = (currentBeginDate.getMonth() + 1);
-      let fromDateDay = currentBeginDate.getDate();
-      if((currentBeginDate.getMonth()+1) < 10){
-          fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
-      }else{
-        fromDateMonth = (currentBeginDate.getMonth()+1);
-      }
+     var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
+     let fromDateMonth = (currentBeginDate.getMonth() + 1);
+     let fromDateDay = currentBeginDate.getDate();
+     if((currentBeginDate.getMonth()+1) < 10){
+         fromDateMonth = "0" + (currentBeginDate.getMonth()+1);
+     }else{
+       fromDateMonth = (currentBeginDate.getMonth()+1);
+     }
 
-      if(currentBeginDate.getDate() < 10){
-          fromDateDay = "0" + currentBeginDate.getDate();
-      }
-      var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
-      let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-
+     if(currentBeginDate.getDate() < 10){
+         fromDateDay = "0" + currentBeginDate.getDate();
+     }
+     var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
+     let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
       let templateObject = Template.instance();
 
       sideBarService.getAllSalesOrderList(initialDataLoad,0).then(function(data) {
@@ -1584,7 +1567,7 @@ Template.salesorderslist.events({
 
       sideBarService.getAllTSalesOrderListData(prevMonth11Date,toDate, true,initialReportLoad,0).then(function(dataSaleOrder) {
           addVS1Data('TSalesOrderList',JSON.stringify(dataSaleOrder)).then(function (datareturn) {
-            sideBarService.getSalesListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (dataSales) {
+            sideBarService.getSalesListData(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (dataSales) {
                 addVS1Data("TSalesList", JSON.stringify(dataSales)).then(function (datareturn) {
                   window.open('/salesorderslist','_self');
                   }).catch(function (err) {

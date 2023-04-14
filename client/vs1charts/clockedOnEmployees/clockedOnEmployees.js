@@ -31,15 +31,20 @@ Template.clockedOnEmployees.onRendered(function () {
               let dataListClockedOnEmployeeObj = {};
               for (let t = 0; t < data.ttimesheet.length; t++) {
                 if (data.ttimesheet[t].fields.Logs != null) {
-                  if (
-                    data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" ||
-                    data.ttimesheet[t].fields.InvoiceNotes == "paused"
-                  ) {
-                    dataListClockedOnEmployeeObj = {
-                      employeename:
-                        data.ttimesheet[t].fields.EmployeeName || "",
-                    };
-                    clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+                  if ( data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" || data.ttimesheet[t].fields.InvoiceNotes == "paused") {
+                    let duplicateCheck = false;
+                    for(let j = 0; j < clockedOnEmpList.length; j++) {
+                      if(clockedOnEmpList[j].employeename == data.ttimesheet[t].fields.EmployeeName ) {
+                        duplicateCheck = true;
+                      }
+                    }
+                    if(!duplicateCheck) {
+                      dataListClockedOnEmployeeObj = {
+                        employeename: data.ttimesheet[t].fields.EmployeeName || "",
+                      };
+                      clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+    
+                    }                 
                   }
                 }
               }
@@ -59,16 +64,24 @@ Template.clockedOnEmployees.onRendered(function () {
           for (let t = 0; t < data.ttimesheet.length; t++) {
             if (data.ttimesheet[t].fields.Logs != null) {
               if ( data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" || data.ttimesheet[t].fields.InvoiceNotes == "paused") {
-                dataListClockedOnEmployeeObj = {
-                  employeename: data.ttimesheet[t].fields.EmployeeName || "",
-                };
-                clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+                let duplicateCheck = false;
+                for(let j = 0; j < clockedOnEmpList.length; j++) {
+                  if(clockedOnEmpList[j].employeename == data.ttimesheet[t].fields.EmployeeName ) {
+                    duplicateCheck = true;
+                  }
+                }
+                if(!duplicateCheck) {
+                  dataListClockedOnEmployeeObj = {
+                    employeename: data.ttimesheet[t].fields.EmployeeName || "",
+                  };
+                  clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+
+                }                 
               }
             }
           }
+          
           templateObject.clockedOnEmpData.set(clockedOnEmpList);
-          // let url = window.location.href;
-          // $(".fullScreenSpin").css("display", "none");
         }
       })
       .catch(function (err) {
@@ -80,15 +93,21 @@ Template.clockedOnEmployees.onRendered(function () {
             let dataListClockedOnEmployeeObj = {};
             for (let t = 0; t < data.ttimesheet.length; t++) {
               if (data.ttimesheet[t].fields.Logs != null) {
-                if (
-                  data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" ||
-                  data.ttimesheet[t].fields.InvoiceNotes == "paused"
-                ) {
+                if ( data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" || data.ttimesheet[t].fields.InvoiceNotes == "paused") {
+                let duplicateCheck = false;
+                for(let j = 0; j < clockedOnEmpList.length; j++) {
+                  if(clockedOnEmpList[j].employeename == data.ttimesheet[t].fields.EmployeeName ) {
+                    duplicateCheck = true;
+                  }
+                }
+                if(!duplicateCheck) {
                   dataListClockedOnEmployeeObj = {
                     employeename: data.ttimesheet[t].fields.EmployeeName || "",
                   };
                   clockedOnEmpList.push(dataListClockedOnEmployeeObj);
-                }
+
+                }                 
+              }
               }
             }
             templateObject.clockedOnEmpData.set(clockedOnEmpList); 
