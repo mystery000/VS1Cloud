@@ -67,7 +67,7 @@ Template.process_clock_template.onRendered(function() {
         { index: 7, label: 'Product', class: 'colProduct', active: true, display: true, width: "100" },
         { index: 8, label: 'Clocked Time', class: 'colClockedTime', active: true, display: true, width: "120" },
         { index: 9, label: 'Note', class: 'colNote', active: true, display: true, width: "180" },
-        { index: 10, label: 'Clock Status', class: 'colStatus', active: true, display: true, width: "150" },
+        { index: 10, label: 'Clock Status', class: 'colClockStatus', active: true, display: true, width: "150" },
         { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "110" },
         
     ];

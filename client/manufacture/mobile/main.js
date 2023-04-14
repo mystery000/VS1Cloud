@@ -336,8 +336,7 @@ Template.mobileapp.events({
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                     
                         $(".mobile-left-jobprocess-list").css('display', 'block');
-                        let processData = JSON.stringify(data);
-                        
+                        let processData = JSON.stringify(data);                        
                         let table_data = JSON.parse(processData);
 
                         if(!isMobile) {
@@ -1349,10 +1348,8 @@ Template.mobileapp.events({
                 }else {
                     change_to_detail = parseFloat(change_to_detail).toFixed(2);
                 }
-                   
-
+                
                 wastage_qty_detail = change_to_detail - total_qty_detail;               
-
 
                 tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total: total_qty_detail, changeTo: change_to_detail , wastage: wastage_qty_detail };
                 BomDataList.push(tempBomData);  
