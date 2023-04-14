@@ -414,7 +414,7 @@ Template.calender.onRendered(function() {
                 }
             }
 
-            if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
+            if (JSON.parse(seeOwnAppointments) == true) {
                 if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
                     var dataList = {
                         id: data.temployee[i].fields.ID || "",
@@ -2086,6 +2086,7 @@ Template.calender.onRendered(function() {
         });
         let currentDay = moment().format("dddd");
         let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+        $('#here_table table').remove();
         $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
         $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
         $('#here_table thead tr').append('<th class="employeeName"></th>');
@@ -2644,13 +2645,25 @@ Template.calender.onRendered(function() {
             let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
             // if (resourceChat.length > 0) {
             if (date >= startWeek && date <= endWeek) {
-                jobs = {
-                    id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
-                    employeeName: leaveemployeerecords[i].EmployeeName,
-                    job: leaveemployeerecords[i].Description,
-                    day: weekDay,
-                };
-                resourceJob.push(jobs)
+                if (JSON.parse(seeOwnAppointments) == true) {
+                    if(leaveemployeerecords[i].EmployeeName === mySessionEmployee){
+                        jobs = {
+                            id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                            employeeName: leaveemployeerecords[i].EmployeeName,
+                            job: leaveemployeerecords[i].Description,
+                            day: weekDay,
+                        };
+                        resourceJob.push(jobs)
+                    }
+                }else{
+                    jobs = {
+                        id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                        employeeName: leaveemployeerecords[i].EmployeeName,
+                        job: leaveemployeerecords[i].Description,
+                        day: weekDay,
+                    };
+                    resourceJob.push(jobs)
+                }
             } 
             // }else{
             // }
@@ -4537,6 +4550,8 @@ Template.calender.onRendered(function() {
         allEmployees = [];
         eventData = [];
         appointmentList = [];
+        resourceChat = [];
+        resourceJob = [];
         templateObject.eventdata.set([])
         templateObject.getEmployeesList();
         setTimeout(() => {
