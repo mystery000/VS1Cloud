@@ -320,8 +320,7 @@ Template.clockOnOff.events({
 
   'change #startTime': function () {
     const templateObject = Template.instance();
-    let date = new Date();
-    let date1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2);
+    let date1 = moment().format('YYYY-MM-DD');  
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
 
@@ -333,8 +332,8 @@ Template.clockOnOff.events({
 
   'change #endTime': function () {
     const templateObject = Template.instance();
-    let date = new Date();
-    let date1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2);
+    // let date1 = date.getFullYear() + "-" + ("0" + (date.getMonth() + 1)).slice(-2) + "-" + ("0" + (date.getDate())).slice(-2);
+    let date1 = moment().format('YYYY-MM-DD');    
     var endTime = new Date(date1 + ' ' + document.getElementById("endTime").value + ':00');
     var startTime = new Date(date1 + ' ' + document.getElementById("startTime").value + ':00');
    

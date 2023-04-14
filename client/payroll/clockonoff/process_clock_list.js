@@ -329,7 +329,7 @@ Template.process_clock_template.events({
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
         let rows = [];
-        const filename = 'SampleCustomer' + '.csv';
+        const filename = 'SampleProcessClockList' + '.csv';
         rows[0] = ['Company', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'Street2', 'State', 'Post Code', 'Country'];
         rows[1] = ['ABC Company', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Main Street', 'New York', '1234', 'United States'];
         utilityService.exportToCsv(rows, filename, 'csv');
@@ -343,7 +343,7 @@ Template.process_clock_template.events({
     },
     'click .templateDownloadXLSX': function (e) {
         e.preventDefault();  //stop the browser from following
-      //  window.location.href = 'sample_imports/SampleCustomer.xlsx';
+        window.location.href = 'sample_imports/SampleProcessClockList.xlsx';
     },
     'change #attachment-upload': function (e) {
         let templateObj = Template.instance();

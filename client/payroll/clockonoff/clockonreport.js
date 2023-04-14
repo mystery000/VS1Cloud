@@ -231,7 +231,7 @@ Template.clockonreport_template.events({
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
         let rows = [];
-        const filename = 'ClockOnReport' + '.csv';
+        const filename = 'SampleClockOnReport' + '.csv';
         rows[0] = ['EmpID', 'Employee Name', 'Total Clocked Hours', 'Total Process Clocked Hours', 'Variance in Hours', 'Status'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
@@ -245,7 +245,7 @@ Template.clockonreport_template.events({
     'click .templateDownloadXLSX': function (e) {
 
         e.preventDefault();  //stop the browser from following
-        window.location.href = 'clockonreport/ClockOnReport.xlsx';
+        window.location.href = 'sample_imports/SampleClockOnReport.xlsx';
     },
     'change #attachment-upload': function (e) {
         let templateObj = Template.instance();

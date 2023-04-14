@@ -234,7 +234,7 @@ Template.employee_clock_status_template.events({
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
         let rows = [];
-        const filename = 'Employee Clocked Status' + '.csv';
+        const filename = 'SampleEmployeeClockStatus' + '.csv';
         rows[0] = ['EmpID', 'EmployeeName', 'Date', 'WorkorderNumber', 'Clock On/Off', 'Process Clocked On/Off', 'On a Break/Lunch', 'State'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
@@ -246,9 +246,8 @@ Template.employee_clock_status_template.events({
 
     },
     'click .templateDownloadXLSX': function (e) {
-
         e.preventDefault();  //stop the browser from following
-        window.location.href = 'sample_imports/SampleCustomer.xlsx';
+        window.location.href = 'sample_imports/SampleEmployeeClockStatus.xlsx';
     },
     'change #attachment-upload': function (e) {
         let templateObj = Template.instance();
