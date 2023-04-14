@@ -245,7 +245,7 @@ Template.clockonreport_template.events({
     'click .templateDownloadXLSX': function (e) {
 
         e.preventDefault();  //stop the browser from following
-        window.location.href = 'sample_imports/SampleCustomer.xlsx';
+        window.location.href = 'clockonreport/ClockOnReport.xlsx';
     },
     'change #attachment-upload': function (e) {
         let templateObj = Template.instance();
