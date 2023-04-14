@@ -98,9 +98,8 @@ Template.process_clock_template.onRendered(function() {
                         if(bomdetails[i].process != '' ){
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
-                                EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
-                             //   ProcessDate: workorderdata[t].fields.DueDate != '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate ,
-                                ProcessDate:format_date,
+                                EmpName: workorderdata[t].fields.EmployeeName || ' ',
+                                ProcessDate: workorderdata[t].fields.DueDate = '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate ,
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
                                 Product: workorderdata[t].fields.ProductName || '',
@@ -188,7 +187,7 @@ Template.process_clock_template.onRendered(function() {
                         if(bomdetails[i].process != '' ){
                             tempData = {
                                 EmpId : workorderdata[t].fields.EmployeeId || i,
-                                EmpName: workorderdata[t].fields.EmployeeName || 'Dene Mill',
+                                EmpName: workorderdata[t].fields.EmployeeName || '',
                                 ProcessDate: workorderdata[t].fields.DueDate = '' ? moment(workorderdata[t].fields.DueDate).format("DD/MM/YYYY") : workorderdata[t].fields.DueDate || '',
                                 WorkorderID: workorderdata[t].fields.ID || '',
                                 Process: bomdetails[i].process || '',
