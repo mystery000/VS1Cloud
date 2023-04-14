@@ -16,7 +16,8 @@ Template.combinedContactsModal.onCreated(function () {
   templateObject.getDataTableList = function(data) {
     let dataList = [
       data[0] || "",
-      data[1] || ""
+      data[1] || "",
+        "",
     ];
     return dataList;
   }
@@ -24,6 +25,7 @@ Template.combinedContactsModal.onCreated(function () {
   let headerStructure = [
     {index: 0, label: "Account Name", class: "colBankName", width: "200", active: true, display: true},
     {index: 1, label: "Description", class: "colBankDescription", width: "300", active: true, display: true},
+    {index: 2, label: "Status", class: "colStatus", width: "120", active: true, display: true},
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });

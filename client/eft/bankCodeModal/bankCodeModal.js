@@ -17,6 +17,7 @@ Template.bankCodeModal.onCreated(function () {
     let dataList = [
       data[0],
       data[1],
+        "",
     ];
     return dataList;
   }
@@ -24,6 +25,7 @@ Template.bankCodeModal.onCreated(function () {
   let headerStructure = [
     { index: 0, label: 'Code Name', class: 'colAccountName', active: true, display: true, width: "150" },
     { index: 1, label: 'Description', class: 'colDescription', active: true, display: true, width: "300" },
+    { index: 2, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
 
   templateObject.tableheaderrecords.set(headerStructure);
