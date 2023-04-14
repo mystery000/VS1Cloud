@@ -2013,10 +2013,12 @@ Template.calender.onRendered(function() {
             if (data.tleavrequest.length > 0) {
                 data.tleavrequest.forEach((item) => {
                     const fields = item.fields;
-                    const parsedDate = utilityService.getStartDateWithSpecificFormat(fields.StartDate);
-                    const appointmentDate = document.getElementById("dtSODate").value;
-                    if (parsedDate === appointmentDate) {
-                        result = true;
+                    if(fields.Status !== "Deleted" && fields.Active){
+                        const parsedDate = utilityService.getStartDateWithSpecificFormat(fields.StartDate);
+                        const appointmentDate = document.getElementById("dtSODate").value;
+                        if (parsedDate === appointmentDate) {
+                            result = true;
+                        }
                     }
                 });
             }
