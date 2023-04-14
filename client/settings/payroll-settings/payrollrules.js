@@ -4572,7 +4572,7 @@ Template.payrollrules.onRendered(function() {
 
 
     $('#tblAlowances tbody').on('click', 'td:not(.colDeleteAllowances)', function () {
-        var listData = $(this).closest('tr').find('.colAlowancesID').text();
+        var listData = $(this).closest('tr').attr('id');
         if (listData) {
             let allowanceType = $(this).closest('tr').find('.colAllowancesType').text()||'';
             let earningName = $(this).closest('tr').find('.colAlowancesNames').text()||'';
@@ -4644,7 +4644,7 @@ Template.payrollrules.onRendered(function() {
     });
 
     $('#tblDeductions tbody').on( 'click', 'td:not(.colDeleteDeductions)', function () {
-        var listData = $(this).closest('tr').find('.colDeductionsID').text();
+        var listData = $(this).closest('tr').attr('id');
         if(listData){
             let deductionType = $(this).closest('tr').find('.colDeductionsType').text()||'';
             let deductionName = $(this).closest('tr').find('.colDeductionsNames').text()||'';
@@ -5055,13 +5055,13 @@ Template.payrollrules.onRendered(function() {
       $('#edtLeaveType').editableSelect('add','Paid Leave');
       $('#edtLeaveType').editableSelect('add','Unpaid Leave');
 
-      $('#payperiod').add('<option value="">How often will you pay your employees?</option>');
-      $('#payperiod').add('<option value="Weekly">Weekly</option>');
-      $('#payperiod').add('<option value="Fortnightly">Fortnightly</option>');
-      $('#payperiod').add('<option value="Twice Monthly">Twice Monthly</option>');
-      $('#payperiod').add('<option value="Four Weekly">Four Weekly</option>');
-      $('#payperiod').add('<option value="Monthly">Monthly</option>');
-      $('#payperiod').add('<option value="Quarterly">Quarterly</option>');
+      $('#payperiod').editableSelect('add', 'How often will you pay your employees?');
+      $('#payperiod').editableSelect('add', 'Weekly');
+      $('#payperiod').editableSelect('add', 'Fortnightly');
+      $('#payperiod').editableSelect('add', 'Twice Monthly');
+      $('#payperiod').editableSelect('add', 'Four Weekly');
+      $('#payperiod').editableSelect('add', 'Monthly');
+      $('#payperiod').editableSelect('add', 'Quarterly');
 
       $('#edtTypeOfUnits').editableSelect('add','Hours');
       $('#edtTypeOfUnits').editableSelect('add','Days');
@@ -11641,7 +11641,7 @@ Template.payrollrules.onRendered(function() {
             }
         });
 
-        $('#addexistgroup').editableSelect().on('click.editable-select', function (e, li) {
+        $('.addexistgroup').editableSelect().on('click.editable-select', function (e, li) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -11838,6 +11838,7 @@ Template.payrollrules.onRendered(function() {
             const ratetypelist = [];
             var  Description = e.target.value || '';
 
+            console.log(Description);
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
                 $('#selectGroupLineID').val('edtGroupType');
                 $('#groupTypeListModel').modal('toggle');
@@ -13406,7 +13407,6 @@ Template.payrollrules.onRendered(function() {
            $('#add-fundype-title').text('Edit Fund Type Details');
 
           }
-          console.log(description);
 
         //   if(description == "Self-Managed Superannuation Fund") {
             if(description == "Employee Optional") {
@@ -15557,6 +15557,10 @@ Template.payrollrules.events({
         let deductionName = $('.edtDeductionName').val()||'';
         let deductionID = $('#edtDeductionID').val()||'';
 
+        if($('#edtdeductionIO').val() || '') {
+            
+        }
+
         let deductionType = $('#edtDeductionType').val();
         let isTaxexempt = false;
         let isIsWorkPlacegiving = false;
@@ -17501,7 +17505,6 @@ Template.payrollrules.events({
             LoadingOverlay.show();
             getVS1Data('TLeave').then(function(dataObject) {
                 if(dataObject.length == 0) {
-                    console.log(dataObject);
                     var golarray = [];
                     var  objDetails = {
                         type: "TLeave",
@@ -17545,7 +17548,6 @@ Template.payrollrules.events({
                         });
                     });
                 } else {
-                    console.log(dataObject);
                     let data = JSON.parse(dataObject[0].data);
                     var golarray = [];
 

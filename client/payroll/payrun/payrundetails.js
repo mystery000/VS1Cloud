@@ -409,8 +409,6 @@ Template.payrundetails.onRendered(function () {
     });
 
     data = data.response;
-
-    console.log("load pay run data : " + data);
     
     let payRunsHistory = PayRun.fromList(data); // list of all payruns
 

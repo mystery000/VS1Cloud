@@ -2148,17 +2148,17 @@ Template.employeescard.onRendered(function () {
       
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
+      $('#obEarningsRate').editableSelect();
       
-      $('#edtPayrollCalendar').editableSelect()
-        .on('click.editable-select', async function (e, li) {
-          let $search = $(this);
-          let offset = $search.offset();
-          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+      $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
+          // let $search = $(this);
+          // let offset = $search.offset();
+          // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#payrollCalendarPopModal').modal("toggle");
-          } else {
-            $('#payrollCalendarPopModal').modal("toggle");
-          }
-        });
+          // } else {
+          //   $('#payrollCalendarPopModal').modal("toggle");
+          // }
+      });
 
       $('#edtHolidays').editableSelect()
         .on('click.editable-select', async function (e, li) {
@@ -3973,8 +3973,8 @@ Template.employeescard.onRendered(function () {
 
   templateObject.setReiumbursementDropDown = function () {
     setTimeout(function () {
-      $('.reimbursementDropDown').editableSelect();
-      $('.reimbursementDropDown').editableSelect()
+      $('#reimbursementTypeSelect').editableSelect();
+      $('#reimbursementTypeSelect').editableSelect()
         .on('click.editable-select', async function (e, li) {
           let $search = $(this);
           let dropDownID = $search.attr('id')
