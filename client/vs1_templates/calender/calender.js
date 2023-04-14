@@ -5948,7 +5948,7 @@ Template.calender.events({
             }
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
+            $('#here_table table').remove();
             $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
             $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
             $('#here_table thead tr').append('<th class="employeeName"></th>');
@@ -6351,7 +6351,7 @@ Template.calender.events({
             }
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
+            $('#here_table table').remove();
             $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
             $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
             $('#here_table thead tr').append('<th class="employeeName"></th>');
