@@ -106,7 +106,8 @@
         </div>
         <div class="card-body px-0 py-2 rounded">
           <!-- {{> non_transactional_list tablename="tblcontactoverview"}} -->
-          {{>datatablelist 
+          {{>datatablelist
+            tableclass="tblcontactoverview"
             tablename="tblcontactoverview"
             apiName= apiFunction
             service = service
@@ -120,7 +121,8 @@
             exIndexDBName = 'terpcombinedcontactsvs1ex'
             exdatahandler = exDataHandler
             searchAPI = searchAPI
-            order = '[[ 2, "asc" ]]'
+            order = '[[ 1, "asc" ]]'
+            attRowID = 0
         }}
         </div>
     </div>
