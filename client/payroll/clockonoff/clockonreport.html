@@ -1,4 +1,4 @@
-<template name="buildcostreport">
+<template name="clockonreport_template">
     <div class="container-fluid" style="padding-left: 0px; padding-right: 0px;">
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
@@ -8,7 +8,7 @@
             <header style="padding: 16px; padding-bottom: 0px; background-color: #ededed;">
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <h1 style="margin: 16px; margin-bottom: 0px;">Build Cost Report
+                        <h1 style="margin: 16px; margin-bottom: 0px;">Employee Clock On Report
                             {{> helpbutton}}
 
                             <!-- Start Help View Modal -->
@@ -53,7 +53,7 @@
 
 
                 <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                    {{> export_import_print_display_button tablename="tblBuildCostReport"}}
+                    {{> export_import_print_display_button tablename="tblClockOnReport"}}
                 </div>
             </div>
 
@@ -61,20 +61,20 @@
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
 
                     {{>datatablelist
-                            tablename="tblBuildCostReport"
+                            tablename="tblClockOnReport"
                             apiName= apiFunction
-                            indexeddbname = 'TVS1BuildCostReport'
+                            indexeddbname = 'TVS1ClockOnReport'
                             tableheaderrecords = tableheaderrecords
                             exportfilename = 'Process Clocked OnOff List'
-                            istransaction = false
+                            istransaction = true
                             apiParams= apiParams
                             datahandler = datahandler
                             service=service
-                            lowercaseDataName='tvs1buildcostreport'
-                            exIndexDBName = 'tvs1buildcostreport'
+                            lowercaseDataName='tvs1clockonreport'
+                            exIndexDBName = 'tvs1clockonreport'
                             exdatahandler = exDataHandler
                             searchAPI = searchAPI
-                            orderby = '[]'
+                            orderby = '[[ 0, "asc" ]]'
                     }}
 
                          

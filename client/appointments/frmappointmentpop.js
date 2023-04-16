@@ -3961,7 +3961,7 @@ Template.frmappointmentpop.onRendered(function() {
         }, 100);
     });
 
-    $(document).on("click", ".appointmentCustomer #tblCustomerlist tbody tr", function(e) {
+    $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
         //$("#updateID").val("");
         let checkIncludeAllProducts = templateObject.includeAllProducts.get();
         let getAllEmployeeData = templateObject.employeerecords.get() || "";

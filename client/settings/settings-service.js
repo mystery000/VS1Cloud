@@ -374,16 +374,17 @@ export class TaxRateService extends BaseService {
     checkCurrency(Country) {
         let options = {
             PropertyList: "Code,CurrencyDesc,Currency,BuyRate,SellRate,Active,CurrencySymbol,ID",
-            select: "[Country]=" + Country
+            //select: "[Country]=" + Country
+            Search: "Country='" + Country + "'",
         };
         return this.getList(this.ERPObjects.TCurrencyList, options);
     }
     saveCurrency(data) {
-        return this.POST(this.ERPObjects.TCurrencyList, data);
+        return this.POST(this.ERPObjects.TCurrency, data);
     }
 
     saveCurrencies(data) {
-        return this.POST(this.ERPObjects.TCurrencyList, data);
+        return this.POST(this.ERPObjects.TCurrency, data);
     }
 
     getDepartment() {
