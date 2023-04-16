@@ -6,7 +6,6 @@
         <div class="row">
             <div class="col-12 col-md-4">
                 <h3 class="text-dark mb-4">Payroll Settings
-                    <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
                     {{> helpbutton}}
                     <!-- Start Help View Modal -->
                     <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -71,14 +70,6 @@
                                                 <input type="hidden" class="form-control"  name='payrollsettingor' id="payrollsettingor" />
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        <!-- {{> default_input 
-                                                            label="Bank Account" 
-                                                            classes="editbankaccount" 
-                                                            id="editbankaccount" 
-                                                            name="editbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
-                                                        }} -->
                                                         {{> vs1___dropdown
                                                             data=item.item
                                                             type='search'
@@ -96,21 +87,11 @@
                                                             is_editable=true
                                                             noBorder=false
                                                         }}
-                                                        <!-- <label for="editbankaccount">Bank Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editbankaccount" name="editbankaccount"> -->
                                                         <input type="hidden" class="form-control" style="cursor: pointer;" id="payorgnization_id" value="0">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        <!-- {{> default_input 
-                                                            label="PAYG Liability Account" 
-                                                            classes="editpaygbankaccount" 
-                                                            id="editpaygbankaccount" 
-                                                            name="editpaygbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
-                                                        }} -->
                                                         {{> vs1___dropdown
                                                             data=item.item
                                                             type='search'
@@ -128,20 +109,10 @@
                                                             is_editable=true
                                                             noBorder=false
                                                         }}
-                                                        <!-- <label for="editpaygbankaccount">PAYG Liability Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editpaygbankaccount" name="editpaygbankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        <!-- {{> default_input 
-                                                            label="Wages Expense Account" 
-                                                            classes="editwagesexpbankaccount" 
-                                                            id="editwagesexpbankaccount" 
-                                                            name="editwagesexpbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
-                                                        }} -->
                                                         {{> vs1___dropdown
                                                             data=item.item
                                                             type='search'
@@ -159,20 +130,10 @@
                                                             is_editable=true
                                                             noBorder=false
                                                         }}
-                                                        <!-- <label for="editwagesexpbankaccount">Wages Expense Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editwagesexpbankaccount" name="editwagesexpbankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        <!-- {{> default_input 
-                                                            label="Wages Payable Account" 
-                                                            classes="editwagespaybankaccount" 
-                                                            id="editwagespaybankaccount" 
-                                                            name="editwagespaybankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
-                                                        }} -->
                                                         {{> vs1___dropdown
                                                             data=item.item
                                                             type='search'
@@ -190,20 +151,10 @@
                                                             is_editable=true
                                                             noBorder=false
                                                         }}
-                                                        <!-- <label for="editwagespaybankaccount">Wages Payable Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editwagespaybankaccount" name="editwagespaybankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        <!-- {{> default_input 
-                                                            label="Superannuation Liability Account" 
-                                                            classes="editsuperliabbankaccount" 
-                                                            id="editsuperliabbankaccount" 
-                                                            name="editsuperliabbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
-                                                        }} -->
                                                         {{> vs1___dropdown
                                                             data=item.item
                                                             type='search'
@@ -221,20 +172,10 @@
                                                             is_editable=true
                                                             noBorder=false
                                                         }}
-                                                        <!-- <label for="editsuperliabbankaccount">Superannuation Liability Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editsuperliabbankaccount" name="editsuperliabbankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        <!-- {{> default_input 
-                                                            label="Superannuation Expense Account" 
-                                                            classes="editsuperexpbankaccount" 
-                                                            id="editsuperexpbankaccount" 
-                                                            name="editsuperexpbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
-                                                        }} -->
                                                         {{> vs1___dropdown
                                                             data=item.item
                                                             type='search'
@@ -252,8 +193,6 @@
                                                             is_editable=true
                                                             noBorder=false
                                                         }}
-                                                        <!-- <label for="editsuperexpbankaccount">Superannuation Expense Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editsuperexpbankaccount" name="editsuperexpbankaccount"> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -767,8 +706,8 @@
                                                                         name='holidaygroup2'
                                                                         modalId='groupTypeListModel'
                                                                         list_template_name='grouptypelistpop'
-                                                                        modal_title='Account List'
-                                                                        label=''
+                                                                        modal_title=''
+                                                                        label='Add to Group'
                                                                         innerModal=true
                                                                         colNameForValue='thgroupDescription'
                                                                         target_modal_id='edtAccountModal'
@@ -866,7 +805,7 @@
                                                                                             modalId='groupTypeListModel'
                                                                                             list_template_name='grouptypelistpop'
                                                                                             modal_title=''
-                                                                                            label='Add to Group'
+                                                                                            label='Add existing holidays from group'
                                                                                             innerModal=true
                                                                                             colNameForValue='thgroupDescription'
                                                                                             target_modal_id='edtAccountModal'
@@ -1173,7 +1112,7 @@
                                                                                 modalId=''
                                                                                 list_template_name=''
                                                                                 modal_title='Earning Rate List'
-                                                                                label='Residency Status'
+                                                                                label='Type'
                                                                                 innerModal=true
                                                                                 colNameForValue=''
                                                                                 target_modal_id=''
@@ -1251,8 +1190,8 @@
                                                                                 label='Expense Account'
                                                                                 innerModal=true
                                                                                 colNameForValue='colAccountName'
-                                                                                target_modal_id=''
-                                                                                target_template_id=''
+                                                                                target_modal_id='edtAccountModal'
+                                                                                target_template_id='addaccountpop'
                                                                                 custid=item.lineID
                                                                                 is_editable=true
                                                                                 noBorder=false
@@ -2758,7 +2697,7 @@
                                                                                 modalId='deductionSettingsModal'
                                                                                 list_template_name=''
                                                                                 modal_title=''
-                                                                                label='Deduction Type'
+                                                                                label='Account'
                                                                                 innerModal=true
                                                                                 colNameForValue='colDeductionsNames'
                                                                                 target_modal_id='addReimbursementAccount'
@@ -3605,7 +3544,7 @@
 
     <!-- End Help Video Modal -->
 
-   <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
     </div>
 
@@ -3635,7 +3574,7 @@
         {{> grouptypelistpop}}
     </div>
 
-    <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel2">
+    <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel1">
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
             <div class="modal-content">
                 <div class="modal-header">
@@ -3670,6 +3609,41 @@
         </div>
     </div>
 
+    <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel2">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Group List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectGroupLineID2" name="selectGroupLineID1"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <style>                         
+                                .thgroupDescription {
+                                    width: 40% !important;
+                                }                        
+                           </style>
+    
+                            <table id="tblgrouptypelist2" style="width:100%" class="table table-striped table-bordered tblratetypelist">
+                                 <thead>
+                                     <tr class="dnd-moved">
+                                          <th class="thgroupDescription">Name</th>
+                                          <th class="thgroupID hiddenColumn">Group Type ID</th>
+                                     </tr>
+                                 </thead>
+                                <tbody>
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+
      <div class="modal fade" role="dialog" tabindex="-1" id="addGroupModel">
         {{> grouptypepop}}
     </div>
@@ -3678,9 +3652,49 @@
         {{> addratetypepop}}
     </div>
 
-
-
-
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" class="selectAccountLineID" id="selectLineID1" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded tbl" id="tblAccount1" >
+                        <style>
+                            td.colBalance, td.colTaxCode{
+                                text-align: right !important;
+                            }
+                        </style>
+                        {{>datatablelist
+                                tableclass="tblAccountList1"
+                                tablename=tablename
+                                apiName= apiFunction
+                                indexeddbname = 'TAccountVS1List'
+                                tableheaderrecords = tableheaderrecords
+                                exportfilename = 'Account List'
+                                istransaction = false
+                                apiParams= apiParams
+                                datahandler = datahandler
+                                service=service
+                                lowercaseDataName='taccountvs1list'
+                                exIndexDBName = 'taccountvs1list'
+                                exdatahandler = exDataHandler
+                                searchAPI = searchAPI
+                                orderby = '[[ 1, "asc" ]]'
+                                showPlusButton = true
+                                showPlusButtonDataTarget = "addAccountModal"
+                                showPlusButtonClass = "btnAddNewAccount"
+                                typefilter = typefilter
+                        }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="fundTypeListModel">
         {{> fundtypelistpop}}

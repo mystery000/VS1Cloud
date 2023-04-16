@@ -42,6 +42,7 @@ Template.payrollrules.onCreated(function() {
     templateObject.tableheaderrecords7 = new ReactiveVar([]);
     templateObject.tableheaderrecords8 = new ReactiveVar([]);
     templateObject.datatableallowancerecords = new ReactiveVar([]);
+    templateObject.tableGrouplistheaderrecord = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
     // templateObject.Ratetypes = new ReactiveVar([]);
     templateObject.imageFileData=new ReactiveVar();
@@ -75,6 +76,20 @@ Template.payrollrules.onCreated(function() {
         { index: 6, label: '', class: 'colAction', active: true, display: true, width: '50' }
     ];
     templateObject.tableheaderrecords.set(headerStructure);
+
+    templateObject.getDataTableList1 = function (data)  {
+        let dataList = [
+            data.files.ID || '',
+            data.files.Groupdesc || ''
+        ];
+        return dataList;
+    }
+
+    let GroupListHeaderStructure = [
+        { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
+        { index: 1, label: 'Name', class: 'thgroupDescription', active: true, display: true, width: "" },
+    ];
+    templateObject.tableGrouplistheaderrecord.set(GroupListHeaderStructure);
 
     templateObject.getDataTableList2 = function(data){
         let dataList = [
@@ -7817,10 +7832,10 @@ Template.payrollrules.onRendered(function() {
 
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
                 $('#selectLineID').val('edtExpenseAccountAllowance');
-                $('#accountListModal').modal('toggle');
+                $('#accountListModal1').modal("toggle");
                 setTimeout(function () {
                     $('#tblAccount_filter .form-control-sm').focus();
-                    $('#tblAccount_filter .form-control-sm').val('EXP');
+                    $('#tblAccount_filter .form-control-sm').val('BANK');
                     $('#tblAccount_filter .form-control-sm').trigger("input");
                     var datatable = $('#tblAccountlist').DataTable();
                     datatable.draw();
@@ -7828,181 +7843,8 @@ Template.payrollrules.onRendered(function() {
                 }, 500);
             }else{
                 if(accountDataName.replace(/\s/g, '') != ''){
-                getVS1Data('TAccountVS1').then(function (dataObject) {
-                    if (dataObject.length == 0) {
-                        accountService.getOneAccountByName(accountDataName).then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullAccountTypeName = '';
-                        let accBalance = '';
-                        $('#add-account-title').text('Edit Account Details');
-                        $('#edtAccountName').attr('readonly', true);
-                        $('#sltAccountType').attr('readonly', true);
-                        $('#sltAccountType').attr('disabled', 'disabled');
-                        if (accountTypeList) {
-                            for (var h = 0; h < accountTypeList.length; h++) {
-
-                                if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
-
-                                    fullAccountTypeName = accountTypeList[h].description || '';
-
-                                }
-                            }
-
-                        }
-
-                            var accountid = data.taccountvs1[0].fields.ID || '';
-                            var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
-                            var accountname = data.taccountvs1[0].fields.AccountName || '';
-                            var accountno = data.taccountvs1[0].fields.AccountNumber || '';
-                            var taxcode = data.taccountvs1[0].fields.TaxCode || '';
-                            var accountdesc = data.taccountvs1[0].fields.Description || '';
-                            var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
-                            var bankbsb = data.taccountvs1[0].fields.BSB || '';
-                            var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
-
-                            var swiftCode = data.taccountvs1[0].fields.Extra || '';
-                            var routingNo = data.taccountvs1[0].fields.BankCode || '';
-
-                            var showTrans = data.taccountvs1[0].fields.IsHeader || false;
-
-                            var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
-                        var cardcvc = data.taccountvs1[0].fields.CVC || '';
-                        var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
-
-                            if ((accounttype === "BANK")) {
-                                $('.isBankAccount').removeClass('isNotBankAccount');
-                                $('.isCreditAccount').addClass('isNotCreditAccount');
-                            }else if ((accounttype === "CCARD")) {
-                                $('.isCreditAccount').removeClass('isNotCreditAccount');
-                                $('.isBankAccount').addClass('isNotBankAccount');
-                            } else {
-                                $('.isBankAccount').addClass('isNotBankAccount');
-                                $('.isCreditAccount').addClass('isNotCreditAccount');
-                            }
-
-                            $('#edtAccountID').val(accountid);
-                            $('#sltAccountType').val(accounttype);
-                            $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
-                            $('#edtAccountName').val(accountname);
-                            $('#edtAccountNo').val(accountno);
-                            $('#sltTaxCode').val(taxcode);
-                            $('#txaAccountDescription').val(accountdesc);
-                            $('#edtBankAccountName').val(bankaccountname);
-                            $('#edtBSB').val(bankbsb);
-                            $('#edtBankAccountNo').val(bankacountno);
-                            $('#swiftCode').val(swiftCode);
-                            $('#routingNo').val(routingNo);
-                            $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
-
-                            $('#edtCardNumber').val(cardnumber);
-                            $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
-                            $('#edtCvc').val(cardcvc);
-
-                            if(showTrans == 'true'){
-                                $('.showOnTransactions').prop('checked', true);
-                            }else{
-                            $('.showOnTransactions').prop('checked', false);
-                            }
-
-                            setTimeout(function () {
-                                $('#addNewAccount').modal('show');
-                            }, 500);
-
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.taccountvs1;
-                            var added=false;
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullAccountTypeName = '';
-                        let accBalance = '';
-                        $('#add-account-title').text('Edit Account Details');
-                        $('#edtAccountName').attr('readonly', true);
-                        $('#sltAccountType').attr('readonly', true);
-                        $('#sltAccountType').attr('disabled', 'disabled');
-                        for (let a = 0; a < data.taccountvs1.length; a++) {
-
-                            if((data.taccountvs1[a].fields.AccountName) === accountDataName){
-                            added = true;
-                            if (accountTypeList) {
-                                for (var h = 0; h < accountTypeList.length; h++) {
-
-                                    if (data.taccountvs1[a].fields.AccountTypeName === accountTypeList[h].accounttypename) {
-
-                                        fullAccountTypeName = accountTypeList[h].description || '';
-
-                                    }
-                                }
-
-                            }
-
-
-
-                        var accountid = data.taccountvs1[a].fields.ID || '';
-                        var accounttype = fullAccountTypeName || data.taccountvs1[a].fields.AccountTypeName;
-                        var accountname = data.taccountvs1[a].fields.AccountName || '';
-                        var accountno = data.taccountvs1[a].fields.AccountNumber || '';
-                        var taxcode = data.taccountvs1[a].fields.TaxCode || '';
-                        var accountdesc = data.taccountvs1[a].fields.Description || '';
-                        var bankaccountname = data.taccountvs1[a].fields.BankAccountName || '';
-                        var bankbsb = data.taccountvs1[a].fields.BSB || '';
-                        var bankacountno = data.taccountvs1[a].fields.BankAccountNumber || '';
-
-                        var swiftCode = data.taccountvs1[a].fields.Extra || '';
-                        var routingNo = data.taccountvs1[a].BankCode || '';
-
-                        var showTrans = data.taccountvs1[a].fields.IsHeader || false;
-
-                        var cardnumber = data.taccountvs1[a].fields.CarNumber || '';
-                        var cardcvc = data.taccountvs1[a].fields.CVC || '';
-                        var cardexpiry = data.taccountvs1[a].fields.ExpiryDate || '';
-
-                        if ((accounttype === "BANK")) {
-                            $('.isBankAccount').removeClass('isNotBankAccount');
-                            $('.isCreditAccount').addClass('isNotCreditAccount');
-                        }else if ((accounttype === "CCARD")) {
-                            $('.isCreditAccount').removeClass('isNotCreditAccount');
-                            $('.isBankAccount').addClass('isNotBankAccount');
-                        } else {
-                            $('.isBankAccount').addClass('isNotBankAccount');
-                            $('.isCreditAccount').addClass('isNotCreditAccount');
-                        }
-
-                        $('#edtAccountID').val(accountid);
-                        $('#sltAccountType').val(accounttype);
-                        $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
-                        $('#edtAccountName').val(accountname);
-                        $('#edtAccountNo').val(accountno);
-                        $('#sltTaxCode').val(taxcode);
-                        $('#txaAccountDescription').val(accountdesc);
-                        $('#edtBankAccountName').val(bankaccountname);
-                        $('#edtBSB').val(bankbsb);
-                        $('#edtBankAccountNo').val(bankacountno);
-                        $('#swiftCode').val(swiftCode);
-                        $('#routingNo').val(routingNo);
-                        $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
-
-                        $('#edtCardNumber').val(cardnumber);
-                        $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
-                        $('#edtCvc').val(cardcvc);
-
-                        if(showTrans == 'true'){
-                            $('.showOnTransactions').prop('checked', true);
-                        }else{
-                        $('.showOnTransactions').prop('checked', false);
-                        }
-
-                        setTimeout(function () {
-                            $('#addNewAccount').modal('show');
-                        }, 500);
-
-                            }
-                        }
-                        if(!added) {
+                    getVS1Data('TAccountVS1').then(function (dataObject) {
+                        if (dataObject.length == 0) {
                             accountService.getOneAccountByName(accountDataName).then(function (data) {
                             let lineItems = [];
                             let lineItemObj = {};
@@ -8085,31 +7927,204 @@ Template.payrollrules.onRendered(function() {
                             }).catch(function (err) {
                                 LoadingOverlay.hide();
                             });
-                        }
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.taccountvs1;
+                                var added=false;
+                            let lineItems = [];
+                            let lineItemObj = {};
+                            let fullAccountTypeName = '';
+                            let accBalance = '';
+                            $('#add-account-title').text('Edit Account Details');
+                            $('#edtAccountName').attr('readonly', true);
+                            $('#sltAccountType').attr('readonly', true);
+                            $('#sltAccountType').attr('disabled', 'disabled');
+                            for (let a = 0; a < data.taccountvs1.length; a++) {
 
-                    }
-                }).catch(function (err) {
-                    accountService.getOneAccountByName(accountDataName).then(function (data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let fullAccountTypeName = '';
-                    let accBalance = '';
-                    $('#add-account-title').text('Edit Account Details');
-                    $('#edtAccountName').attr('readonly', true);
-                    $('#sltAccountType').attr('readonly', true);
-                    $('#sltAccountType').attr('disabled', 'disabled');
-                    if (accountTypeList) {
-                        for (var h = 0; h < accountTypeList.length; h++) {
+                                if((data.taccountvs1[a].fields.AccountName) === accountDataName){
+                                added = true;
+                                if (accountTypeList) {
+                                    for (var h = 0; h < accountTypeList.length; h++) {
 
-                            if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+                                        if (data.taccountvs1[a].fields.AccountTypeName === accountTypeList[h].accounttypename) {
 
-                                fullAccountTypeName = accountTypeList[h].description || '';
+                                            fullAccountTypeName = accountTypeList[h].description || '';
 
+                                        }
+                                    }
+
+                                }
+
+
+
+                            var accountid = data.taccountvs1[a].fields.ID || '';
+                            var accounttype = fullAccountTypeName || data.taccountvs1[a].fields.AccountTypeName;
+                            var accountname = data.taccountvs1[a].fields.AccountName || '';
+                            var accountno = data.taccountvs1[a].fields.AccountNumber || '';
+                            var taxcode = data.taccountvs1[a].fields.TaxCode || '';
+                            var accountdesc = data.taccountvs1[a].fields.Description || '';
+                            var bankaccountname = data.taccountvs1[a].fields.BankAccountName || '';
+                            var bankbsb = data.taccountvs1[a].fields.BSB || '';
+                            var bankacountno = data.taccountvs1[a].fields.BankAccountNumber || '';
+
+                            var swiftCode = data.taccountvs1[a].fields.Extra || '';
+                            var routingNo = data.taccountvs1[a].BankCode || '';
+
+                            var showTrans = data.taccountvs1[a].fields.IsHeader || false;
+
+                            var cardnumber = data.taccountvs1[a].fields.CarNumber || '';
+                            var cardcvc = data.taccountvs1[a].fields.CVC || '';
+                            var cardexpiry = data.taccountvs1[a].fields.ExpiryDate || '';
+
+                            if ((accounttype === "BANK")) {
+                                $('.isBankAccount').removeClass('isNotBankAccount');
+                                $('.isCreditAccount').addClass('isNotCreditAccount');
+                            }else if ((accounttype === "CCARD")) {
+                                $('.isCreditAccount').removeClass('isNotCreditAccount');
+                                $('.isBankAccount').addClass('isNotBankAccount');
+                            } else {
+                                $('.isBankAccount').addClass('isNotBankAccount');
+                                $('.isCreditAccount').addClass('isNotCreditAccount');
                             }
+
+                            $('#edtAccountID').val(accountid);
+                            $('#sltAccountType').val(accounttype);
+                            $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
+                            $('#edtAccountName').val(accountname);
+                            $('#edtAccountNo').val(accountno);
+                            $('#sltTaxCode').val(taxcode);
+                            $('#txaAccountDescription').val(accountdesc);
+                            $('#edtBankAccountName').val(bankaccountname);
+                            $('#edtBSB').val(bankbsb);
+                            $('#edtBankAccountNo').val(bankacountno);
+                            $('#swiftCode').val(swiftCode);
+                            $('#routingNo').val(routingNo);
+                            $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+                            $('#edtCardNumber').val(cardnumber);
+                            $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+                            $('#edtCvc').val(cardcvc);
+
+                            if(showTrans == 'true'){
+                                $('.showOnTransactions').prop('checked', true);
+                            }else{
+                            $('.showOnTransactions').prop('checked', false);
+                            }
+
+                            setTimeout(function () {
+                                $('#addNewAccount').modal('show');
+                            }, 500);
+
+                                }
+                            }
+                            if(!added) {
+                                accountService.getOneAccountByName(accountDataName).then(function (data) {
+                                let lineItems = [];
+                                let lineItemObj = {};
+                                let fullAccountTypeName = '';
+                                let accBalance = '';
+                                $('#add-account-title').text('Edit Account Details');
+                                $('#edtAccountName').attr('readonly', true);
+                                $('#sltAccountType').attr('readonly', true);
+                                $('#sltAccountType').attr('disabled', 'disabled');
+                                if (accountTypeList) {
+                                    for (var h = 0; h < accountTypeList.length; h++) {
+
+                                        if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
+
+                                            fullAccountTypeName = accountTypeList[h].description || '';
+
+                                        }
+                                    }
+
+                                }
+
+                                    var accountid = data.taccountvs1[0].fields.ID || '';
+                                    var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
+                                    var accountname = data.taccountvs1[0].fields.AccountName || '';
+                                    var accountno = data.taccountvs1[0].fields.AccountNumber || '';
+                                    var taxcode = data.taccountvs1[0].fields.TaxCode || '';
+                                    var accountdesc = data.taccountvs1[0].fields.Description || '';
+                                    var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
+                                    var bankbsb = data.taccountvs1[0].fields.BSB || '';
+                                    var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
+
+                                    var swiftCode = data.taccountvs1[0].fields.Extra || '';
+                                    var routingNo = data.taccountvs1[0].fields.BankCode || '';
+
+                                    var showTrans = data.taccountvs1[0].fields.IsHeader || false;
+
+                                    var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
+                                var cardcvc = data.taccountvs1[0].fields.CVC || '';
+                                var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
+
+                                    if ((accounttype === "BANK")) {
+                                        $('.isBankAccount').removeClass('isNotBankAccount');
+                                        $('.isCreditAccount').addClass('isNotCreditAccount');
+                                    }else if ((accounttype === "CCARD")) {
+                                        $('.isCreditAccount').removeClass('isNotCreditAccount');
+                                        $('.isBankAccount').addClass('isNotBankAccount');
+                                    } else {
+                                        $('.isBankAccount').addClass('isNotBankAccount');
+                                        $('.isCreditAccount').addClass('isNotCreditAccount');
+                                    }
+
+                                    $('#edtAccountID').val(accountid);
+                                    $('#sltAccountType').val(accounttype);
+                                    $('#sltAccountType').append('<option value="'+accounttype+'" selected="selected">'+accounttype+'</option>');
+                                    $('#edtAccountName').val(accountname);
+                                    $('#edtAccountNo').val(accountno);
+                                    $('#sltTaxCode').val(taxcode);
+                                    $('#txaAccountDescription').val(accountdesc);
+                                    $('#edtBankAccountName').val(bankaccountname);
+                                    $('#edtBSB').val(bankbsb);
+                                    $('#edtBankAccountNo').val(bankacountno);
+                                    $('#swiftCode').val(swiftCode);
+                                    $('#routingNo').val(routingNo);
+                                    $('#edtBankName').val(localStorage.getItem('vs1companyBankName') || '');
+
+                                    $('#edtCardNumber').val(cardnumber);
+                                    $('#edtExpiryDate').val(cardexpiry ? moment(cardexpiry).format('DD/MM/YYYY') : "");
+                                    $('#edtCvc').val(cardcvc);
+
+                                    if(showTrans == 'true'){
+                                        $('.showOnTransactions').prop('checked', true);
+                                    }else{
+                                    $('.showOnTransactions').prop('checked', false);
+                                    }
+
+                                    setTimeout(function () {
+                                        $('#addNewAccount').modal('show');
+                                    }, 500);
+
+                                }).catch(function (err) {
+                                    LoadingOverlay.hide();
+                                });
+                            }
+
                         }
+                    }).catch(function (err) {
+                        accountService.getOneAccountByName(accountDataName).then(function (data) {
+                        let lineItems = [];
+                        let lineItemObj = {};
+                        let fullAccountTypeName = '';
+                        let accBalance = '';
+                        $('#add-account-title').text('Edit Account Details');
+                        $('#edtAccountName').attr('readonly', true);
+                        $('#sltAccountType').attr('readonly', true);
+                        $('#sltAccountType').attr('disabled', 'disabled');
+                        
+                        if (accountTypeList) {
+                            for (var h = 0; h < accountTypeList.length; h++) {
 
-                    }
+                                if (data.taccountvs1[0].fields.AccountTypeName === accountTypeList[h].accounttypename) {
 
+                                    fullAccountTypeName = accountTypeList[h].description || '';
+
+                                }
+                            }
+
+                        }
                         var accountid = data.taccountvs1[0].fields.ID || '';
                         var accounttype = fullAccountTypeName || data.taccountvs1[0].fields.AccountTypeName;
                         var accountname = data.taccountvs1[0].fields.AccountName || '';
@@ -8118,16 +8133,13 @@ Template.payrollrules.onRendered(function() {
                         var accountdesc = data.taccountvs1[0].fields.Description || '';
                         var bankaccountname = data.taccountvs1[0].fields.BankAccountName || '';
                         var bankbsb = data.taccountvs1[0].fields.BSB || '';
-                        var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || '';
-
+                        var bankacountno = data.taccountvs1[0].fields.BankAccountNumber || ''
                         var swiftCode = data.taccountvs1[0].fields.Extra || '';
                         var routingNo = data.taccountvs1[0].fields.BankCode || '';
-
                         var showTrans = data.taccountvs1[0].fields.IsHeader || false;
-
                         var cardnumber = data.taccountvs1[0].fields.CarNumber || '';
-                    var cardcvc = data.taccountvs1[0].fields.CVC || '';
-                    var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
+                        var cardcvc = data.taccountvs1[0].fields.CVC || '';
+                        var cardexpiry = data.taccountvs1[0].fields.ExpiryDate || '';
 
                         if ((accounttype === "BANK")) {
                             $('.isBankAccount').removeClass('isNotBankAccount');
@@ -8172,11 +8184,11 @@ Template.payrollrules.onRendered(function() {
                         LoadingOverlay.hide();
                     });
 
-                });
-                $('#addAccountModal').modal('toggle');
+                    });
+                    $('#addAccountModal').modal('toggle');
                 }else{
                     $('#selectLineID').val('edtExpenseAccountAllowance');
-                    $('#accountListModal').modal('toggle');
+                    $('#accountListModal1').modal();
                     setTimeout(function () {
                         $('#tblAccount_filter .form-control-sm').focus();
                         $('#tblAccount_filter .form-control-sm').val('EXP');
@@ -11652,179 +11664,157 @@ Template.payrollrules.onRendered(function() {
             var  Description = e.target.value ||'';
 
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            $('#selectGroupLineID').val('edtGroupType');
-            $('#groupTypeListModel').modal('toggle');
-            $('#tblgrouptypelist_filter .form-control-sm').focus();
-            $('#tblgrouptypelist_filter .form-control-sm').val();
-            $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
-            setTimeout(function () {
-                var datatable = $('#tblgrouptypelist').DataTable();
-                datatable.draw();
-                $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
-            }, 500);
-            }else{
-            if(Description.replace(/\s/g, '') != ''){
-                getVS1Data('TPayrollHolidayGroup').then(function (dataObject) {
-                if (dataObject.length == 0) {
-                        ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullDescriptionname = '';
-                        $('#add-grouptype-title').text('Edit Group Type Details');
+                $('#selectGroupLineID').val('edtGroupType');
+                $('#groupTypeListModel1').modal('toggle');
+                $('#tblgrouptypelist1_filter .form-control-sm').focus();
+                $('#tblgrouptypelist1_filter .form-control-sm').val();
+                $('#tblgrouptypelist1_filter .form-control-sm').trigger("input");
+                setTimeout(function () {
+                    var datatable = $('#tblgrouptypelist1').DataTable();
+                    datatable.draw();
+                    $('#tblgrouptypelist1_filter .form-control-sm').trigger("input");
+                }, 500);
+            } else {
+                if(Description.replace(/\s/g, '') != ''){
+                    getVS1Data('TPayrollHolidayGroup').then(function (dataObject) {
+                        if (dataObject.length == 0) {
+                            ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                                let lineItems = [];
+                                let lineItemObj = {};
+                                let fullDescriptionname = '';
+                                $('#add-grouptype-title').text('Edit Group Type Details');
 
-                        if (ratetypelist) {
-                            for (var h = 0; h < ratetypelist.length; h++) {
-
-                                if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
-
-                                    fullDescriptionname = ratetypelist[h].Groupdesc || '';
-
-                                }
-                            }
-
-                        }
-
-                        var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
-                        var description = fullDescriptionname || data.tpayrollholidaygroup[0].fields.Groupdesc;
-
-
-                        $('#edtgroupID').val(ratetypeid);
-                        $('#edtGroupDescription').val(description);
-
-
-                        setTimeout(function () {
-                            $('#addGroupModel').modal('show');
-                        }, 500);
-
-                    }).catch(function (err) {
-                        LoadingOverlay.hide();
-                    });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tpayrollholidaygroup;
-                        var added=false;
-                        let lineItems = [];
-                        let lineItemObj = {};
-                        let fullDescriptionname = '';
-
-                        $('#add-grouptype-title').text('Edit Group Type Details');
-                        $('#edtgroupID').attr('readonly', true);
-
-
-                        for (let a = 0; a < data.tpayrollholidaygroup.length; a++) {
-
-                        if((data.tpayrollholidaygroup[a].fields.Groupdesc) === Description){
-                            added = true;
-                            if (ratetypelist) {
-                                for (var h = 0; h < ratetypelist.length; h++) {
-
-                                    if (data.tpayrollholidaygroup[a].fields.Groupdesc === ratetypelist[h].Groupdesc) {
-
-                                        fullDescriptionname = ratetypelist[h].Groupdesc || '';
-
+                                if (ratetypelist) {
+                                    for (var h = 0; h < ratetypelist.length; h++) {
+                                        if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+                                            fullDescriptionname = ratetypelist[h].Groupdesc || '';
+                                        }
                                     }
                                 }
+                                var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                                var description = fullDescriptionname || data.tpayrollholidaygroup[0].fields.Groupdesc;
 
-                            }
+                                $('#edtgroupID').val(ratetypeid);
+                                $('#edtGroupDescription').val(description);
 
-
-
-                    var ratetypeid = data.tpayrollholidaygroup[a].fields.ID || '';
-                    var ratetypedescription = fullDescriptionname || data.tpayrollholidaygroup[a].fields.Groupdesc;
-
-                    $('#edtgroupID').val(ratetypeid);
-                    $('#edtGroupDescription').val(ratetypedescription);
-
-                    setTimeout(function () {
-                        $('#addGroupModel').modal('show');
-                        }, 500); } }
-
-                        if(!added) {
-                            ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                                setTimeout(function () {
+                                    $('#addGroupModel').modal('show');
+                                }, 500);
+                            }).catch(function (err) {
+                                LoadingOverlay.hide();
+                            });
+                        } else {
+                            let data = JSON.parse(dataObject[0].data);
+                            let useData = data.tpayrollholidaygroup;
+                            var added=false;
                             let lineItems = [];
                             let lineItemObj = {};
-                            let fullAccountTypeName = '';
+                            let fullDescriptionname = '';
 
                             $('#add-grouptype-title').text('Edit Group Type Details');
                             $('#edtgroupID').attr('readonly', true);
 
-                            if (ratetypelist) {
-                                for (var h = 0; h < ratetypelist.length; h++) {
+                            for (let a = 0; a < data.tpayrollholidaygroup.length; a++) {
+                                if((data.tpayrollholidaygroup[a].fields.Groupdesc) === Description){
+                                    added = true;
+                                    if (ratetypelist) {
+                                        for (var h = 0; h < ratetypelist.length; h++) {
+                                            if (data.tpayrollholidaygroup[a].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+                                                fullDescriptionname = ratetypelist[h].Groupdesc || '';
+                                            }
+                                        }
+                                    }
 
-                                    if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+                                    var ratetypeid = data.tpayrollholidaygroup[a].fields.ID || '';
+                                    var ratetypedescription = fullDescriptionname || data.tpayrollholidaygroup[a].fields.Groupdesc;
 
-                                        fullAccountTypeName = ratetypelist[h].Groupdesc || '';
+                                    $('#edtgroupID').val(ratetypeid);
+                                    $('#edtGroupDescription').val(ratetypedescription);
 
+                                    setTimeout(function () {
+                                        $('#addGroupModel').modal('show');
+                                    }, 500); } }
+
+                                    if(!added) {
+                                        ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                                        let lineItems = [];
+                                        let lineItemObj = {};
+                                        let fullAccountTypeName = '';
+
+                                        $('#add-grouptype-title').text('Edit Group Type Details');
+                                        $('#edtgroupID').attr('readonly', true);
+
+                                        if (ratetypelist) {
+                                            for (var h = 0; h < ratetypelist.length; h++) {
+                                                if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+                                                    fullAccountTypeName = ratetypelist[h].Groupdesc || '';
+                                                }
+                                            }
+                                        }
+
+                                        var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                                        var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
+
+                                        $('#edtgroupID').val(ratetypeid);
+                                        $('#edtGroupDescription').val(ratetypedescription);
+
+                                        setTimeout(function () {
+                                            $('#addGroupModel').modal('show');
+                                        }, 500);
+
+                                    }).catch(function (err) {
+                                        LoadingOverlay.hide();
+                                    });
                                     }
                                 }
+                            }).catch(function (err) {
+                                ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
+                                let lineItems = [];
+                                let lineItemObj = {};
+                                let fullAccountTypeName = '';
 
-                            }
-
-                            var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
-                            var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
-
-                            $('#edtgroupID').val(ratetypeid);
-                            $('#edtGroupDescription').val(ratetypedescription);
-
-                            setTimeout(function () {
-                                $('#addGroupModel').modal('show');
-                            }, 500);
-
-                        }).catch(function (err) {
-                            LoadingOverlay.hide();
-                        });
-                        }
-
-                    }
-                }).catch(function (err) {
-                    ratetypeService.getOneGroupTypeByName(Description).then(function (data) {
-                    let lineItems = [];
-                    let lineItemObj = {};
-                    let fullAccountTypeName = '';
-
-                    $('#add-grouptype-title').text('Edit Group Type Details');
-                    $('#edtgroupID').attr('readonly', true);
+                                $('#add-grouptype-title').text('Edit Group Type Details');
+                                $('#edtgroupID').attr('readonly', true);
 
 
-                    if (ratetypelist) {
-                        for (var h = 0; h < ratetypelist.length; h++) {
+                                if (ratetypelist) {
+                                    for (var h = 0; h < ratetypelist.length; h++) {
 
-                            if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
+                                        if (data.tpayrollholidaygroup[0].fields.Groupdesc === ratetypelist[h].Groupdesc) {
 
-                                fullAccountTypeName = ratetypelist[h].Groupdesc || '';
+                                            fullAccountTypeName = ratetypelist[h].Groupdesc || '';
 
-                            }
-                        }
+                                        }
+                                    }
 
-                    }
-                    var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
-                    var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
-
-
-                    $('#edtgroupID').val(ratetypeid);
-                    $('#edtGroupDescription').val(ratetypedescription);
+                                }
+                                var ratetypeid = data.tpayrollholidaygroup[0].fields.ID || '';
+                                var ratetypedescription = fullAccountTypeName || data.tpayrollholidaygroup[0].fields.Groupdesc;
 
 
+                                $('#edtgroupID').val(ratetypeid);
+                                $('#edtGroupDescription').val(ratetypedescription);
+
+
+                                setTimeout(function () {
+                                            $('#addGroupModel').modal('show');
+                                }, 500);
+
+
+                            }).catch(function (err) {
+                                LoadingOverlay.hide();
+                            });
+
+                            });
+                            $('#addGroupModel').modal('toggle');
+                } else {
+                    $('#selectGroupLineID').val('edtGroupType');
+                    $('#groupTypeListModel1').modal('toggle');
                     setTimeout(function () {
-                                $('#addGroupModel').modal('show');
+                        var datatable = $('#tblgrouptypelist1').DataTable();
+                        datatable.draw();
                     }, 500);
-
-
-                }).catch(function (err) {
-                    LoadingOverlay.hide();
-                });
-
-                });
-                $('#addGroupModel').modal('toggle');
-            }else{
-                $('#selectGroupLineID').val('edtGroupType');
-                $('#groupTypeListModel').modal('toggle');
-                setTimeout(function () {
-                    var datatable = $('#tblgrouptypelist').DataTable();
-                    datatable.draw();
-
-                }, 500);
-            }
+                }
             }
         });
 
@@ -11838,10 +11828,9 @@ Template.payrollrules.onRendered(function() {
             const ratetypelist = [];
             var  Description = e.target.value || '';
 
-            console.log(Description);
             if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
                 $('#selectGroupLineID').val('edtGroupType');
-                $('#groupTypeListModel').modal('toggle');
+                $('#groupTypeListModel2').modal('toggle');
                 $('#tblgrouptypelist_filter .form-control-sm').focus();
                 $('#tblgrouptypelist_filter .form-control-sm').val();
                 $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
@@ -11977,7 +11966,7 @@ Template.payrollrules.onRendered(function() {
                     $('#addGroupModel').modal('toggle');
                 }else{
                     setTimeout(function () {
-                        var datatable = $('#tblgrouptypelist').DataTable();
+                        var datatable = $('#tblgrouptypelist2').DataTable();
                         datatable.draw();
                         $('#tblgrouptypelist_filter .form-control-sm').trigger("input");
                     }, 500);
@@ -12138,9 +12127,9 @@ Template.payrollrules.onRendered(function() {
                     $('#addGroupModel').modal('toggle');
                 }else{
                     $('#selectGroupLineID').val('edtGroupType');
-                    $('#groupTypeListModel').modal('toggle');
+                    $('#groupTypeListModel2').modal('toggle');
                     setTimeout(function () {
-                        var datatable = $('#tblgrouptypelist').DataTable();
+                        var datatable = $('#tblgrouptypelist2').DataTable();
                         datatable.draw();
                     }, 500);
                 }
@@ -13390,6 +13379,62 @@ Template.payrollrules.onRendered(function() {
         }, 1000);
     });
 
+    $(document).on("click", "#tblgrouptypelist1 tbody tr", function(e) {
+
+        let selectLineID = $('#selectGroupLineID1').val()||'edtGroupType';
+
+        var table = $(this);
+        let description = table.find(".thgroupDescription").text();
+        let ratetypeid = table.find(".thgroupID").text()||0;
+        $('#groupTypeListModel1').modal('toggle');
+
+          if(selectLineID == 'edtGroupType'){
+        //    $('#edtGroupDescription').val(description);
+
+           $('.edtGroupID').val(ratetypeid);
+           $('#holidaygroup').val(description);
+           $('#holidaygroup2').val(description);
+           $('#addexistgroup').val(description);
+
+           $('#add-grouptype-title').text('Edit Group Type Details');
+
+          }
+
+        $('#ttblgrouptypelist_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshGroupType').trigger('click');
+            LoadingOverlay.hide();
+        }, 1000);
+    });
+
+    $(document).on("click", "#tblgrouptypelist2 tbody tr", function(e) {
+
+        let selectLineID = $('#selectGroupLineID2').val()||'edtGroupType';
+
+        var table = $(this);
+        let description = table.find(".thgroupDescription").text();
+        let ratetypeid = table.find(".thgroupID").text()||0;
+        $('#groupTypeListModel2').modal('toggle');
+
+          if(selectLineID == 'edtGroupType'){
+        //    $('#edtGroupDescription').val(description);
+
+           $('.edtGroupID').val(ratetypeid);
+           $('#holidaygroup').val(description);
+           $('#holidaygroup2').val(description);
+           $('#addexistgroup').val(description);
+
+           $('#add-grouptype-title').text('Edit Group Type Details');
+
+          }
+
+        $('#ttblgrouptypelist_filter .form-control-sm').val('');
+        setTimeout(function () {
+            $('.btnRefreshGroupType').trigger('click');
+            LoadingOverlay.hide();
+        }, 1000);
+    });
+
     $(document).on("click", "#tblfundtypelist tbody tr", function(e) {
 
         let selectLineID = $('#selectFundLineID').val()||'edtFundType';
@@ -13994,6 +14039,9 @@ Template.payrollrules.onRendered(function() {
 
 Template.payrollrules.events({
     'click .btnAddNewPayCalender':function(){
+        if(!$('.body-panel').hasClass('d-none')) {
+            $('.body-panel').addClass('d-none');
+        }
         let id = $('#paycalendarId').val();
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
@@ -15558,7 +15606,7 @@ Template.payrollrules.events({
         let deductionID = $('#edtDeductionID').val()||'';
 
         if($('#edtdeductionIO').val() || '') {
-            
+
         }
 
         let deductionType = $('#edtDeductionType').val();
@@ -20730,6 +20778,36 @@ Template.payrollrules.helpers({
         }
     },
     apiParams: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableGrouplistheaderrecord: () => {
+        return Template.instance().tableGrouplistheaderrecord.get();
+    },
+    apiFunction1:function() {
+        return ratetypeService.getOneGroupTypeByName;
+    },
+    searchAPI1: function() {
+        // return sideBarService.getNewCalenderByNameOrPayPeriod;
+    },
+    service1: ()=>{
+        return ratetypeService;
+    },
+    datahandler1: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList1(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler1: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList1(data);
+            return dataReturn;
+        }
+    },
+    apiParams1: ()=>{
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 
