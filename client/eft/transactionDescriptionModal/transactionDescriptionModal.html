@@ -8,6 +8,17 @@
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectBankNameID" name="selectBankNameID" readonly>
         <div class="card-body p-1 rounded">
+          <style>
+            .tblTransactionDescription {
+              width: 100%!important;
+            }
+           .colTransactionDescription {
+           width: 100% !important;
+           }
+           .colStatus {
+           width: 120px !important;
+           }
+           </style>
             {{>datatablelist
                     tableclass="tblTransactionDescription"
                     tablename="tblTransactionDescription"

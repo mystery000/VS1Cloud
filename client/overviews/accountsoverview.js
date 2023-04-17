@@ -35,6 +35,8 @@ Template.accountsoverview.onCreated(function () {
 //   templateObject.transactiondatatablerecords = new ReactiveVar([]);
   templateObject.treeColumnHeader = new ReactiveVar([]);
   templateObject.treerecords = new ReactiveVar([]);
+  let usedCategories = [];
+
 
   templateObject.getDataTableList = function (data) {
     if (!isNaN(data.Balance)) {
@@ -72,10 +74,10 @@ Template.accountsoverview.onCreated(function () {
       data.IsHeader || false,
       data.AllowExpenseClaim || false,
       data.ReceiptCategory || "",
-      linestatus,
       data.Level1 || "",
       data.Level2 || "",
       data.Level3 || "",
+      linestatus,
     ];
     // let dataList = [];
     return dataList;
@@ -104,7 +106,7 @@ Template.accountsoverview.onCreated(function () {
       class: "colDescription",
       active: true,
       display: true,
-      width: "",
+      width: "400",
     },
     {
       index: 3,
@@ -152,7 +154,7 @@ Template.accountsoverview.onCreated(function () {
       class: "colBankAccountName",
       active: true,
       display: true,
-      width: "120",
+      width: "200",
     },
     {
       index: 9,
@@ -184,7 +186,7 @@ Template.accountsoverview.onCreated(function () {
       class: "colExpiryDate",
       active: false,
       display: true,
-      width: "60",
+      width: "80",
     },
     {
       index: 13,
@@ -236,14 +238,6 @@ Template.accountsoverview.onCreated(function () {
     },
     {
       index: 19,
-      label: "Status",
-      class: "colStatus",
-      active: true,
-      display: true,
-      width: "120",
-    },
-    {
-      index: 20,
       label: "Level1",
       class: "colLevel1",
       active: false,
@@ -251,7 +245,7 @@ Template.accountsoverview.onCreated(function () {
       width: "80",
     },
     {
-      index: 21,
+      index: 20,
       label: "Level2",
       class: "colLevel2",
       active: false,
@@ -259,13 +253,21 @@ Template.accountsoverview.onCreated(function () {
       width: "80",
     },
     {
-      index: 22,
+      index: 21,
       label: "Level3",
       class: "colLevel3",
       active: false,
       display: true,
       width: "80",
     },
+    {
+        index: 22,
+        label: "Status",
+        class: "colStatus",
+        active: true,
+        display: true,
+        width: "120",
+      },
   ];
 
   templateObject.tableheaderrecords.set(headerStructure);
@@ -292,29 +294,190 @@ Template.accountsoverview.onRendered(function() {
     const templateObject = Template.instance();
     const currenttablename = 'tblAccountOverview';
     let reset_data = [
-        { index: 0, label: '#ID', class: 'colAccountId', active: false, display: true, width: "10" },
-        { index: 1, label: 'Account Name', class: 'colAccountName', active: true, display: true, width: "200" },
-        { index: 2, label: 'Description', class: 'colDescription', active: true, display: true, width: "" },
-        { index: 3, label: 'Account No', class: 'colAccountNo', active: true, display: true, width: "90" },
-        { index: 4, label: 'Type', class: 'colType', active: true, display: true, width: "60" },
-        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-        { index: 6, label: 'Tax Code', class: 'colTaxCode', active: true, display: true, width: "80" },
-        { index: 7, label: 'Bank Name', class: 'colBankName', active: false, display: true, width: "120" },
-        { index: 8, label: 'Bank Acc Name', class: 'colBankAccountName', active: true, display: true, width: "120" },
-        { index: 9, label: 'BSB', class: 'colBSB', active: true, display: true, width: "95" },
-        { index: 10, label: 'Bank Acc No', class: 'colBankAccountNo', active: true, display: true, width: "120" },
-        { index: 11, label: 'Card Number', class: 'colCardNumber', active: false, display: true, width: "120" },
-        { index: 12, label: 'Expiry Date', class: 'colExpiryDate', active: false, display: true, width: "60" },
-        { index: 13, label: 'CVC', class: 'colCVC', active: false, display: true, width: "60" },
-        { index: 14, label: 'Swift Code', class: 'colExtra', active: false, display: true, width: "80" },
-        { index: 15, label: 'Routing Number', class: 'colAPCANumber', active: false, display: true, width: "120" },
-        { index: 16, label: 'Header', class: 'colIsHeader', active: false, display: true, width: "60" },
-        { index: 17, label: 'Use Receipt Claim', class: 'colUseReceiptClaim', active: false, display: true, width: "60" },
-        { index: 18, label: 'Category', class: 'colExpenseCategory', active: false, display: true, width: "80" },
-        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        { index: 20, label: 'Level1', class: 'colLevel1', active: false, display: true, width: "80" },
-        { index: 21, label: 'Level2', class: 'colLevel2', active: false, display: true, width: "80" },
-        { index: 22, label: 'Level3', class: 'colLevel3', active: false, display: true, width: "80" },
+        {
+            index: 0,
+            label: "ID",
+            class: "colAccountId",
+            active: false,
+            display: true,
+            width: "10",
+          },
+          {
+            index: 1,
+            label: "Account Name",
+            class: "colAccountName",
+            active: true,
+            display: true,
+            width: "200",
+          },
+          {
+            index: 2,
+            label: "Description",
+            class: "colDescription",
+            active: true,
+            display: true,
+            width: "400",
+          },
+          {
+            index: 3,
+            label: "Account No",
+            class: "colAccountNo",
+            active: true,
+            display: true,
+            width: "90",
+          },
+          {
+            index: 4,
+            label: "Type",
+            class: "colType",
+            active: true,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 5,
+            label: "Balance",
+            class: "colBalance",
+            active: true,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 6,
+            label: "Tax Code",
+            class: "colTaxCode",
+            active: true,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 7,
+            label: "Bank Name",
+            class: "colBankName",
+            active: false,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 8,
+            label: "Bank Acc Name",
+            class: "colBankAccountName",
+            active: true,
+            display: true,
+            width: "200",
+          },
+          {
+            index: 9,
+            label: "BSB",
+            class: "colBSB",
+            active: true,
+            display: true,
+            width: "95",
+          },
+          {
+            index: 10,
+            label: "Bank Acc No",
+            class: "colBankAccountNo",
+            active: true,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 11,
+            label: "Card Number",
+            class: "colCardNumber",
+            active: false,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 12,
+            label: "Expiry Date",
+            class: "colExpiryDate",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 13,
+            label: "CVC",
+            class: "colCVC",
+            active: false,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 14,
+            label: "Swift Code",
+            class: "colExtra",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 15,
+            label: "Routing Number",
+            class: "colAPCANumber",
+            active: false,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 16,
+            label: "Header",
+            class: "colIsHeader",
+            active: false,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 17,
+            label: "Use Receipt Claim",
+            class: "colUseReceiptClaim",
+            active: false,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 18,
+            label: "Category",
+            class: "colExpenseCategory",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 19,
+            label: "Level1",
+            class: "colLevel1",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 20,
+            label: "Level2",
+            class: "colLevel2",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 21,
+            label: "Level3",
+            class: "colLevel3",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+              index: 22,
+              label: "Status",
+              class: "colStatus",
+              active: true,
+              display: true,
+              width: "120",
+            },
     ]
     templateObject.treeColumnHeader.set(reset_data)
     let columnDefs = [
@@ -2131,189 +2294,189 @@ Template.accountsoverview.onRendered(function() {
     checkSetupFinished();
     let headerStructure = [
         {
-          index: 0,
-          label: "ID",
-          class: "colAccountId hiddenColumn",
-          active: false,
-          display: true,
-          width: "10",
-        },
-        {
-          index: 1,
-          label: "Account Name",
-          class: "colAccountName",
-          active: true,
-          display: true,
-          width: "200",
-        },
-        {
-          index: 2,
-          label: "Description",
-          class: "colDescription",
-          active: true,
-          display: true,
-          width: "",
-        },
-        {
-          index: 3,
-          label: "Account No",
-          class: "colAccountNo",
-          active: true,
-          display: true,
-          width: "90",
-        },
-        {
-          index: 4,
-          label: "Type",
-          class: "colType",
-          active: true,
-          display: true,
-          width: "60",
-        },
-        {
-          index: 5,
-          label: "Balance",
-          class: "colBalance",
-          active: true,
-          display: true,
-          width: "80",
-        },
-        {
-          index: 6,
-          label: "Tax Code",
-          class: "colTaxCode",
-          active: true,
-          display: true,
-          width: "80",
-        },
-        {
-          index: 7,
-          label: "Bank Name",
-          class: "colBankName",
-          active: false,
-          display: true,
-          width: "120",
-        },
-        {
-          index: 8,
-          label: "Bank Acc Name",
-          class: "colBankAccountName",
-          active: true,
-          display: true,
-          width: "120",
-        },
-        {
-          index: 9,
-          label: "BSB",
-          class: "colBSB",
-          active: true,
-          display: true,
-          width: "95",
-        },
-        {
-          index: 10,
-          label: "Bank Acc No",
-          class: "colBankAccountNo",
-          active: true,
-          display: true,
-          width: "120",
-        },
-        {
-          index: 11,
-          label: "Card Number",
-          class: "colCardNumber",
-          active: false,
-          display: true,
-          width: "120",
-        },
-        {
-          index: 12,
-          label: "Expiry Date",
-          class: "colExpiryDate",
-          active: false,
-          display: true,
-          width: "60",
-        },
-        {
-          index: 13,
-          label: "CVC",
-          class: "colCVC",
-          active: false,
-          display: true,
-          width: "60",
-        },
-        {
-          index: 14,
-          label: "Swift Code",
-          class: "colExtra",
-          active: false,
-          display: true,
-          width: "80",
-        },
-        {
-          index: 15,
-          label: "Routing Number",
-          class: "colAPCANumber",
-          active: false,
-          display: true,
-          width: "120",
-        },
-        {
-          index: 16,
-          label: "Header",
-          class: "colIsHeader",
-          active: false,
-          display: true,
-          width: "60",
-        },
-        {
-          index: 17,
-          label: "Use Receipt Claim",
-          class: "colUseReceiptClaim",
-          active: false,
-          display: true,
-          width: "60",
-        },
-        {
-          index: 18,
-          label: "Category",
-          class: "colExpenseCategory",
-          active: false,
-          display: true,
-          width: "80",
-        },
-        {
-          index: 19,
-          label: "Status",
-          class: "colStatus",
-          active: true,
-          display: true,
-          width: "120",
-        },
-        {
-          index: 20,
-          label: "Level1",
-          class: "colLevel1",
-          active: false,
-          display: true,
-          width: "80",
-        },
-        {
-          index: 21,
-          label: "Level2",
-          class: "colLevel2",
-          active: false,
-          display: true,
-          width: "80",
-        },
-        {
-          index: 22,
-          label: "Level3",
-          class: "colLevel3",
-          active: false,
-          display: true,
-          width: "80",
-        },
+            index: 0,
+            label: "ID",
+            class: "colAccountId",
+            active: false,
+            display: true,
+            width: "10",
+          },
+          {
+            index: 1,
+            label: "Account Name",
+            class: "colAccountName",
+            active: true,
+            display: true,
+            width: "200",
+          },
+          {
+            index: 2,
+            label: "Description",
+            class: "colDescription",
+            active: true,
+            display: true,
+            width: "500",
+          },
+          {
+            index: 3,
+            label: "Account No",
+            class: "colAccountNo",
+            active: true,
+            display: true,
+            width: "150",
+          },
+          {
+            index: 4,
+            label: "Type",
+            class: "colType",
+            active: true,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 5,
+            label: "Balance",
+            class: "colBalance",
+            active: true,
+            display: true,
+            width: "110",
+          },
+          {
+            index: 6,
+            label: "Tax Code",
+            class: "colTaxCode",
+            active: true,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 7,
+            label: "Bank Name",
+            class: "colBankName",
+            active: false,
+            display: true,
+            width: "200",
+          },
+          {
+            index: 8,
+            label: "Bank Acc Name",
+            class: "colBankAccountName",
+            active: true,
+            display: true,
+            width: "200",
+          },
+          {
+            index: 9,
+            label: "BSB",
+            class: "colBSB",
+            active: true,
+            display: true,
+            width: "95",
+          },
+          {
+            index: 10,
+            label: "Bank Acc No",
+            class: "colBankAccountNo",
+            active: true,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 11,
+            label: "Card Number",
+            class: "colCardNumber",
+            active: false,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 12,
+            label: "Expiry Date",
+            class: "colExpiryDate",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 13,
+            label: "CVC",
+            class: "colCVC",
+            active: false,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 14,
+            label: "Swift Code",
+            class: "colExtra",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 15,
+            label: "Routing Number",
+            class: "colAPCANumber",
+            active: false,
+            display: true,
+            width: "120",
+          },
+          {
+            index: 16,
+            label: "Header",
+            class: "colIsHeader",
+            active: false,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 17,
+            label: "Use Receipt Claim",
+            class: "colUseReceiptClaim",
+            active: false,
+            display: true,
+            width: "60",
+          },
+          {
+            index: 18,
+            label: "Category",
+            class: "colExpenseCategory",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 19,
+            label: "Level1",
+            class: "colLevel1",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 20,
+            label: "Level2",
+            class: "colLevel2",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+            index: 21,
+            label: "Level3",
+            class: "colLevel3",
+            active: false,
+            display: true,
+            width: "80",
+          },
+          {
+              index: 22,
+              label: "Status",
+              class: "colStatus",
+              active: true,
+              display: true,
+              width: "120",
+            },
       ];
     
       templateObject.tableheaderrecords.set(headerStructure);
@@ -2360,16 +2523,16 @@ Template.accountsoverview.events({
     //     const filename = "Accountslist report result" + ".xlsx";
     //     utilityService.exportReportToSpreadSheet("tableExport", filename, "xlsx");
     // },
-    "keyup #tblAccountOverview_filter input": function (event) {
-      if ($(event.target).val() != "") {
-        $(".btnRefreshList").addClass("btnSearchAlert");
-      } else {
-        $(".btnRefreshList").removeClass("btnSearchAlert");
-      }
-      if (event.keyCode == 13) {
-        $(".btnRefreshList").trigger("click");
-      }
-    },
+    // "keyup #tblAccountOverview_filter input": function (event) {
+    //   if ($(event.target).val() != "") {
+    //     $(".btnRefreshList").addClass("btnSearchAlert");
+    //   } else {
+    //     $(".btnRefreshList").removeClass("btnSearchAlert");
+    //   }
+    //   if (event.keyCode == 13) {
+    //     $(".btnRefreshList").trigger("click");
+    //   }
+    // },
     "click .btnRefreshList": function () {
         $(".btnRefresh").trigger("click");
     },
@@ -3143,7 +3306,59 @@ Template.accountsoverview.events({
             $('.tblAccountOverview').closest('.table-responsive').removeClass('d-none')
             $('#tblAccountTreeOverview').closest('.table-responsive').addClass('d-none')
         }
-    }
+    },
+    'blur .divcolumn': function(event) {
+        let columData = $(event.target).html();
+        let columHeaderUpdate = $(event.target).attr("valueupdate");
+        $("th." + columHeaderUpdate + "").html(columData);
+    
+    },
+    
+      'change .rngRange': function(event) {
+            let range = $(event.target).val();
+            let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+            var datable = $('#tblAccountOverview th');
+            $.each(datable, function(i, v) {
+                if (v.innerText == columnDataValue) {
+                    let className = v.className;
+                    let replaceClass = className.replace(/ /g, ".");
+                    $("." + replaceClass + "").css('width', range + 'px');
+    
+                }
+            });
+    
+        },
+        'click .btnOpenSettings': function(event) {
+            let templateObject = Template.instance();
+            var columns = $('#tblAccountOverview th');
+            const tableHeaderList = [];
+            let sTible = "";
+            let sWidth = "";
+            let sIndex = "";
+            let sVisible = "";
+            let columVisible = false;
+            let sClass = "";
+            $.each(columns, function(i, v) {
+                if (v.hidden == false) {
+                    columVisible = true;
+                }
+                if ((v.className.includes("hiddenColumn"))) {
+                    columVisible = false;
+                }
+                sWidth = v.style.width.replace('px', "");
+    
+                let datatablerecordObj = {
+                    sTitle: v.innerText || '',
+                    sWidth: sWidth || '',
+                    sIndex: v.cellIndex || 0,
+                    sVisible: columVisible || false,
+                    sClass: v.className || ''
+                };
+                tableHeaderList.push(datatablerecordObj);
+            });
+    
+            templateObject.tableheaderrecords.set(tableHeaderList);
+        },
 });
 
 Template.accountsoverview.helpers({
@@ -3237,7 +3452,7 @@ Template.accountsoverview.helpers({
     },
 
     searchAPI: function() {
-        return sideBarService.getAllTAccountVS1List;
+        return sideBarService.getAllAccountDataVS1ByName;
     },
 
     service: ()=>{

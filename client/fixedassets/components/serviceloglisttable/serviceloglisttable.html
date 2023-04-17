@@ -21,6 +21,9 @@
             td.colAmountEx, td.colTax, td.colAmount{
                   text-align: right !important;
               }
+              .tblServiceLogList {
+                width: 100%!important;
+              }
           </style>
           {{>datatablelist
               tableclass="tblServiceLogList"
@@ -35,10 +38,10 @@
               service=service
               lowercaseDataName='tserviceloglist'
               exportfilename='Service Log List'
-              exIndexDBName = 'tserviceloglistex'
+              exIndexDBName = 'tserviceloglist'
               exdatahandler = exDataHandler
               searchAPI = searchAPI
-              orderby = '[[ 0, "asc" ]]'
+              orderby = '[[ 1, "asc" ]]'
           }}
         </div>
       </div>

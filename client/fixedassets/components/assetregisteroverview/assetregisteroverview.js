@@ -2,9 +2,10 @@ import { ReactiveVar } from "meteor/reactive-var";
 import { FlowRouter } from "meteor/ostrio:flow-router-extra";
 import "../../../lib/global/indexdbstorage.js";
 import { FixedAssetService } from "../../fixedasset-service.js";
+import { UtilityService } from "../../../utility-service";
 // let sideBarService = new SideBarService();
 let fixedAssetService = new FixedAssetService();
-
+let utilityService = new UtilityService();
 Template.assetregisteroverview.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -36,7 +37,7 @@ Template.assetregisteroverview.onCreated(function () {
       data.CUSTFLD4 || "",
       data.CUSTFLD5 || "",
       data.PurchDate ? moment(data.PurchDate).format("DD/MM/YYYY") : "",
-      data.PurchCost || "",
+      utilityService.modifynegativeCurrencyFormat(data.PurchCost) || 0.0,
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
@@ -69,7 +70,7 @@ Template.assetregisteroverview.onCreated(function () {
       data.CUSTFLD4 || "",
       data.CUSTFLD5 || "",
       data.PurchDate ? moment(data.PurchDate).format("DD/MM/YYYY") : "",
-      data.PurchCost || "",
+      utilityService.modifynegativeCurrencyFormat(data.PurchCost) || 0.0,
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
@@ -103,7 +104,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "colRegisterAssetName",
       active: true,
       display: true,
-      width: "150",
+      width: "200",
     },
     {
       index: 3,
@@ -111,7 +112,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "colRegisterAssetDescription",
       active: true,
       display: true,
-      width: "170",
+      width: "250",
     },
     {
       index: 4,
@@ -183,7 +184,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "colRegisterAssetPurchasedDate",
       active: true,
       display: true,
-      width: "160",
+      width: "80",
     },
     {
       index: 13,
@@ -191,7 +192,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "colRegisterAssetCost",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 14,
@@ -207,7 +208,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "colRegisterAssetRegisterRenewDate",
       active: true,
       display: true,
-      width: "250",
+      width: "80",
     },
     {
       index: 16,
@@ -223,7 +224,7 @@ Template.assetregisteroverview.onCreated(function () {
       class: "colRegisterAssetRenewDate",
       active: true,
       display: true,
-      width: "250",
+      width: "80",
     },
     {
       index: 18,
@@ -266,6 +267,58 @@ Template.assetregisteroverview.events({
         window.open("/assetregisteroverview", "_self");
       });
   },
+  'blur .divcolumn': function(event) {
+    let columData = $(event.target).html();
+    let columHeaderUpdate = $(event.target).attr("valueupdate");
+    $("th." + columHeaderUpdate + "").html(columData);
+
+},
+
+  'change .rngRange': function(event) {
+        let range = $(event.target).val();
+        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+        var datable = $('#tblAssetRegisterList th');
+        $.each(datable, function(i, v) {
+            if (v.innerText == columnDataValue) {
+                let className = v.className;
+                let replaceClass = className.replace(/ /g, ".");
+                $("." + replaceClass + "").css('width', range + 'px');
+
+            }
+        });
+
+    },
+    'click .btnOpenSettings': function(event) {
+        let templateObject = Template.instance();
+        var columns = $('#tblAssetRegisterList th');
+        const tableHeaderList = [];
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function(i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+
+        templateObject.tableheaderrecords.set(tableHeaderList);
+    },
 });
 
 Template.assetregisteroverview.helpers({

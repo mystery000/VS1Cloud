@@ -9,10 +9,36 @@
     <div class="modal-dialog modal-xl modal-dialog-scrollable modal-inner-bomlist" role="document" style="max-width: 90%">
         <div class="modal-content">
             <div class="modal-header">
-                <h4>BOM List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">�</span></button>
+                <h4>BOM List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
             </div>
             <div class="modal-body">
                 <div class="card-body p-1 rounded">
+                    <style>
+                        th.colStatus {
+                            width: 120px!important;
+                        }
+                        th.colName {
+                            width: 200px!important;
+                        }
+                        th.colStockCount , th.colAttachments, th.colProcess {
+                            width: 110px!important;
+                        }
+                        th.colStatus {
+                            width: 120px!important;
+                        }
+                        th.colDescription {
+                            width: auto!important;
+                        }
+                        td.colStockCount {
+                            text-align: right;
+                        }
+                        th.colRaws {
+                            width: 150px!important;
+                        }
+                        .tblBOMList {
+                            width: 100%!important;
+                        }
+                    </style>
                     {{>datatablelist
                         tableclass="tblBOMList"
                         tablename=tablename

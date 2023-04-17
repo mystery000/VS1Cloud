@@ -17,8 +17,24 @@
               <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID"  readonly>
               <div class="card-body p-1 rounded">
                 <style>
-                    td.colAmountEx, td.colTax, td.colAmount{
+                    td.colsalePriceInc, td.colExtraSellPrice ,td.colprdqty, td.colsalePrice ,td.colcostPrice{
                         text-align: right !important;
+                    }
+                    th.colsalePriceInc, th.colExtraSellPrice ,th.colprdqty, th.colsalePrice ,th.colcostPrice{
+                        width: 110px!important;
+                    }
+                    
+                    th.colStatus {
+                        width: 120px!important;
+                    }
+                    th.colproductName {
+                        width: 500px!important;
+                    }
+                    th.colchkBox {
+                        width: 50px!important;
+                    }
+                    th.colproductDesc {
+                        width: 300px!important;
                     }
                 </style>
                 {{>datatablelist
@@ -33,7 +49,7 @@
                     datahandler = datahandler
                     service=service
                     lowercaseDataName='tproductvs1'
-                    exIndexDBName = 'tproductwebex'
+                    exIndexDBName = 'tproductvs1'
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
                     orderby = '[[ 0, "desc" ],[ 1, "asc" ]]'

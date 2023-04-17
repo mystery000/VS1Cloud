@@ -50,9 +50,33 @@
               <div class="card mb-3">
                 <div class="card-body p-1 rounded tbl">
                   <style>
-                    td.colAmountEx, td.colTax, td.colAmount{
+                    td.colRegisterAssetCost {
                           text-align: right !important;
                       }
+                    .tblFixedAssetList {
+                      width: 100%!important;
+                    }
+                    th.colRegisterAssetCode {
+                      width: 130px;
+                    }
+                    th.colRegisterAssetName ,th.colRegisterAssetSupplier{
+                      width: 200px;
+                    }
+                    th.colRegisterAssetDescription {
+                      width: auto;
+                    }
+                    th.colRegisterAssetCost {
+                      width: 110px;
+                    }
+                    th.colRegisterAssetRegisterRenewDate , th.colRegisterAssetRenewDate , th.colRegisterAssetPurchasedDate {
+                      width: 80px!important;
+                    }
+                    th.colAssetStatus {
+                      width: 120px!important;
+                    }
+                    th.colRegisterAssetModel {
+                      width: 90px;
+                    }
                   </style>
                   {{>datatablelist
                     tableclass="tblFixedAssetList"
@@ -67,7 +91,7 @@
                     service=service
                     lowercaseDataName='tfixedassetslist'
                     exportfilename='Fixed Assets List'
-                    exIndexDBName = 'tfixedassetslistex'
+                    exIndexDBName = 'tfixedassetslist'
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
                     orderby = '[[ 0, "asc" ]]'

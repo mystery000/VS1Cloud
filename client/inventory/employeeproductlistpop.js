@@ -135,7 +135,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Cost Price",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 6,
@@ -143,7 +143,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Sale Price",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 7,
@@ -167,7 +167,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Prouct ID",
       active: false,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 10,
@@ -175,7 +175,7 @@ Template.employeeproductlistpop.onCreated(() => {
       label: "Sale Price Inc",
       active: false,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 11,

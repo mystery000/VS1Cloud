@@ -384,9 +384,12 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
             <div class="card-body p-1 rounded">
                 
                 <style>
-                    td.colAmountEx, td.colTax, td.colAmount{
+                    td.colCostPrice, td.colSalePrice, td.colQuantity{
                           text-align: right !important;
                       }
+                    .tblInventory {
+                        width: 100%!important;
+                    }
                   </style>
                   {{>datatablelist
                       tableclass="tblInventory"
@@ -401,7 +404,7 @@ for="formCheck-{{item.id}}">{{item.department}}</label></div>
                       service=service
                       lowercaseDataName='tproductvs1'
                       exportfilename='Product List'
-                      exIndexDBName = 'tproductvs1ex'
+                      exIndexDBName = 'tproductvs1'
                       exdatahandler = exDataHandler
                       searchAPI = searchAPI
                       orderby = '[[ 0, "asc" ]]'

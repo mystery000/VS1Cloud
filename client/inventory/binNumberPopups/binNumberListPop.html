@@ -17,7 +17,38 @@
           readonly
         />
         <div class="card-body p-1 rounded tbl" id="tblBinNumber">
-          {{> non_transactional_list tablename = "tblBinNumberOverview"}}
+          <style>
+            th.colName {
+              width: 200px!important;
+            }
+            th.colStatus {
+              width: 120px!important;
+            }
+            .tblBinLocations {
+              width: 100%!important;
+            }
+          </style>
+          <!-- {{> non_transactional_list tablename = "tblBinNumberOverview"}} -->
+          {{>datatablelist
+            tableclass="tblBinLocations"
+            tablename=tablename
+            apiName= apiFunction
+            indexeddbname = 'TProductBin'
+            tableheaderrecords = tableheaderrecords
+            exportfilename = 'Bin Location List'
+            istransaction = false
+            apiParams= apiParams
+            datahandler = datahandler
+            service=service
+            lowercaseDataName='tproductbin'
+            exIndexDBName = 'tproductbin'
+            exdatahandler = exDataHandler
+            searchAPI = searchAPI
+            orderby = '[[ 1, "asc" ]]'
+            showPlusButton = true
+            showPlusButtonDataTarget = "addBinNumberPop"
+            showPlusButtonClass = "btnAddNewBin"
+        }}
         </div>
       </div>
       <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>

@@ -20,9 +20,30 @@
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
                     <style>
-                        td.colAmountEx, td.colTax, td.colAmount{
+                        td.colcostPrice, td.colsalePrice, td.colprdqty , td.colExtraSellPrice{
                               text-align: right !important;
                           }
+                        th.colcostPrice, th.colsalePrice, th.colprdqty , th.colExtraSellPrice{
+                              width: 100px!important;
+                          }  
+                        th.colproductName {
+                            width: 200px!important;
+                        }
+                        th.colproductDesc {
+                            width: 400px!important;
+                        }
+                        th.colStatus {
+                            width: 120px!important;
+                        }
+                        th.colBarcode {
+                            width: 300px!important;
+                        }
+                        th.coltaxrate {
+                            width: 100px!important;
+                        }
+                        .tblInventory {
+                            width: 100%!important;
+                        }
                       </style>
                       {{>datatablelist
                           tableclass="tblInventory"
@@ -36,7 +57,7 @@
                           datahandler = datahandler
                           service=service
                           lowercaseDataName='tproductvs1'
-                          exIndexDBName = 'tproductvs1ex'
+                          exIndexDBName = 'tproductvs1'
                           exdatahandler = exDataHandler
                           searchAPI = searchAPI
                           orderby = '[[ 1, "asc" ]]'

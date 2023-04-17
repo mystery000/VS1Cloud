@@ -43,10 +43,10 @@ Template.bomlistpop.onCreated(function(){
     let headerStructure = [
       { index: 0, label: 'ID', class: 'colPayMethodID', active: false, display: true , width : "30"},
       { index: 1, label: 'Product Name', class: 'colName', active: true, display: true , width : "200"},
-      { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true , width : "200"},
+      { index: 2, label: 'Product Description', class: 'colDescription', active: true, display: true , width : "400"},
       { index: 3, label: 'Process', class: 'colProcess', active: true, display: true , width : "100"},
-      { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true , width : "70"},
-      { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true , width : "70"},
+      { index: 4, label: 'Stock Count', class: 'colStockCount', active: true, display: true , width : "110"},
+      { index: 5, label: 'Raws', class: 'colRaws', active: true, display: true , width : "150"},
       { index: 6, label: 'Attachments', class: 'colAttachments', active: true, display: true , width : "150"},
       { index: 7, label: 'Status', class: 'colStatus', active: true, display: true , width : "120"}
     ];
@@ -286,7 +286,7 @@ Template.bomlistpop.events({
     });
 },
 'click .btnNewBOMModal' : function () {
-  $('div#BOMSetupModal').modal('show');
+  $('div#BOMSetupModal').modal('toggle');
 }
   
 })

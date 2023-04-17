@@ -77,6 +77,20 @@
             </div>
           </div>
           <div class="card-body">
+            <style>
+              .tblAssetCostReportList {
+                width: 100%!important;
+              }
+              .colStatus {
+                width: 120px!important;
+              }
+              .colTypeName {
+                width: 200px!important;
+              }
+              .colDescription {
+                width: auto;
+              }
+            </style>
             {{>datatablelist
               tableclass="tblAssetCostReportList"
               tablename="tblAssetCostReportList"
@@ -89,7 +103,7 @@
               datahandler = datahandler
               service=service
               lowercaseDataName='tcosttypes'
-              exIndexDBName = 'tcosttypesex'
+              exIndexDBName = 'tcosttypes'
               exdatahandler = exDataHandler
               searchAPI = searchAPI
       }}

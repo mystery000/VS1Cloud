@@ -70,7 +70,6 @@ Template.productlistpop.onCreated(() => {
   templateObject.getDataTableList = function (data) {
     var currentLoc = FlowRouter.current().route.path;
     let linestatus = '';
-    if(!data.fields) data.fields = data;
     if(data.fields.Active == true){
       linestatus = "";
     }
@@ -157,6 +156,9 @@ Template.productlistpop.onCreated(() => {
       if (data.fields.ProductType == "INV") {
         return dataList;
       }
+      else{
+        return [];
+      }
     } else {
       return dataList;
     }
@@ -178,7 +180,7 @@ Template.productlistpop.onCreated(() => {
       class: "colproductName",
       active: true,
       display: true,
-      width: "150",
+      width: "200",
     },
     {
       index: 2,
@@ -186,39 +188,39 @@ Template.productlistpop.onCreated(() => {
       class: "colproductDesc",
       active: true,
       display: true,
-      width: "100",
+      width: "500",
     },
     {
       index: 3,
       label: "Barcoder",
-      class: "colcolBarcode",
+      class: "colBarcode",
       active: true,
       display: true,
-      width: "100",
+      width: "300",
     },
     {
       index: 4,
       label: "Cost Price",
-      class: "colcostPrice text-right",
+      class: "colcostPrice",
       active: true,
       display: true,
-      width: "80",
+      width: "110",
     },
     {
       index: 5,
       label: "Sale Price",
-      class: "colsalePrice text-right",
+      class: "colsalePrice",
       active: true,
       display: true,
-      width: "80",
+      width: "110",
     },
     {
       index: 6,
       label: "Quantity",
-      class: "colprdqty text-right",
+      class: "colprdqty",
       active: true,
       display: true,
-      width: "80",
+      width: "110",
     },
     {
       index: 7,
@@ -234,7 +236,7 @@ Template.productlistpop.onCreated(() => {
       class: "colExtraSellPrice",
       active: false,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
         index: 9,
