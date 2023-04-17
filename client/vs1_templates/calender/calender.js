@@ -1408,6 +1408,7 @@ Template.calender.onRendered(function() {
     }
 
     function renderEventContent(event){
+        const pattern = /leave/;
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                 let eventLeave  = [];
                 let eventStatus = [];
