@@ -26,6 +26,7 @@ Template.employeeproductlistpop.onCreated(() => {
 
   templateObject.getDataTableList = function (data) {
     let linestatus = '';
+    if(!data.fields) data.fields = data;
     if(data.fields.Active == true){
       linestatus = "";
     }
