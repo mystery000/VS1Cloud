@@ -161,7 +161,6 @@ Template.salesoverview.onRendered(function () {
   $("#tblSalesOverview tbody").on("click", "tr", function () {
     var listData = $(this).closest("tr").find(".colSalesNo").text();
     var transactiontype = $(event.target).closest("tr").find(".colType").text();
-    console.log(listData, transactiontype);
     var checkDeleted = $(this).closest('tr').find('.colStatus').text() || '';
     if (listData && transactiontype) {
       if(checkDeleted == "Deleted"){

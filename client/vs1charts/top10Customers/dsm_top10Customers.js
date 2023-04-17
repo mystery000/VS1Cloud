@@ -26,7 +26,8 @@ Template.dsmTop10Customers.onRendered(function() {
     function chartClickEvent() {
         FlowRouter.go("/customerdetailsreport?daterange=ignore");
     }
-    getInvSales(function(data) {
+
+    function callback(data) {        
         setTimeout(function() {
             let customerList = [];
             topTenData1 = _.take(data, 10);
@@ -146,9 +147,9 @@ Template.dsmTop10Customers.onRendered(function() {
                 },
             });
         }, 1000)
-    });
+    }
 
-    function getInvSales(callback) {
+    function getInvSales() {
         return new Promise((res, rej) => {
             var salesBoardService = new SalesBoardService();
 
@@ -299,6 +300,12 @@ Template.dsmTop10Customers.onRendered(function() {
             });
         });
     }
+
+    getInvSales();
+
+    $(document).on("change", "#dateFrom, #dateTo", () => {
+        getInvSales();
+    })
 });
 
 Template.dsmTop10Customers.events({});
