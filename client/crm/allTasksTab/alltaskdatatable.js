@@ -4832,3 +4832,76 @@ function openEditTaskModal(id, type) {
         // })
     });
 }
+
+
+Template.projectTasksModal.onCreated(function () {
+    let templateObject_projectTaskModal = Template.instance();
+    templateObject_projectTaskModal.tableheaderrecords_projectTaskModal = new ReactiveVar([]);
+
+    templateObject_projectTaskModal.getDataTableList_projectTaskModal = function (data) {
+        let dataList = [
+            data.ID,
+            data.due_date,
+            data.priority,
+            data.ContactName,
+            data.TaskName,
+            data.TaskDescription,
+            data.ProjectID,
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+    let headerStructure_projectTaskModal = [
+        {index: 0, label: 'ID', class: 'colCompleteTask', active: false, display: true, width: "10"},
+        {index: 1, label: 'Date', class: 'colTaskDate', active: true, display: true, width: "110"},
+        {index: 2, label: 'Priority', class: 'colPriority', active: true, display: true, width: "150"},
+        {index: 3, label: 'Contact', class: 'colContact', active: true, display: true, width: "200"},
+        {index: 4, label: 'Task', class: 'colTaskName', active: true, display: true, width: "150"},
+        {index: 5, label: 'Description', class: 'colProjectTaskDesc', active: true, display: true, width: "300"},
+        {index: 6, label: 'Projects', class: 'colProjects', active: true, display: true, width: "120"},
+        {index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
+    ]
+    templateObject_projectTaskModal.tableheaderrecords_projectTaskModal.set(headerStructure_projectTaskModal);
+});
+
+Template.projectTasksModal.onRendered(function () {
+
+});
+
+Template.projectTasksModal.helpers({
+    tableheaderrecords_projectTaskModal: () => {
+        return Template.instance().tableheaderrecords_projectTaskModal.get();
+    },
+
+    apiFunction_projectTaskModal: function () {
+        return crmService.getAllTasksList;
+    },
+
+    searchAPI_projectTaskModal: function () {
+        return crmService.getAllTasksByName;
+    },
+
+    service_projectTaskModal: () => {
+        return crmService;
+    },
+
+    datahandler_projectTaskModal: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_projectTaskModal(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler_projectTaskModal: function () {
+        let templateObject = Template.instance();
+        return function (data) {
+            let dataReturn = templateObject.getDataTableList_projectTaskModal(data)
+            return dataReturn
+        }
+    },
+
+    apiParams_projectTaskModal: function () {
+        return ["dateFrom", "dateTo", "ignoreDate", 'deleteFilter'];
+    },
+});

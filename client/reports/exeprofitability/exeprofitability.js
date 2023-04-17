@@ -133,8 +133,8 @@ Template.exeprofitabilityreport.onRendered(() => {
         templateObject.setDateAs( dateAsOf );
         try {
             let data = await reportService.getCardDataReport(dateAsOf);
-            if (data.tcarddatareport) {
-                let resData = data.tcarddatareport[0];
+            if (data.tdashboardexecdata1) {
+                let resData = data.tdashboardexecdata1[0];
                 totalSales[0] = parseFloat(resData.Prof_Income1);
                 totalSales[1] = parseFloat(resData.Prof_Income2);
                 grossProfit[0] = parseFloat(resData.Prof_Gross1);
