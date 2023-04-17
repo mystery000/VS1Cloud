@@ -127,7 +127,7 @@ Template.appointmentlist.onCreated(function() {
         { index: 0, label: '', class: 'colCheckBox', active: true, display: true, width: "10" },
         { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "200" },
-        { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "" },
+        { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
         { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
         { index: 5, label: 'From Date', class: 'colFromDate', active: true, display: true, width: "250" },
         { index: 6, label: 'To Date', class: 'colToDate', active: true, display: true, width: "100" },
