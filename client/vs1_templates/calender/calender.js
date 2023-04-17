@@ -401,21 +401,21 @@ Template.calender.onRendered(function() {
         let totalUser = 0;
         let totAmount = 0;
         let totAmountOverDue = 0;
-
+        let mySessionEmployee = localStorage.getItem("mySessionEmployee")
         for (let i = 0; i < data.temployee.length; i++) {
             let randomColor = Math.floor(Math.random() * 16777215).toString(16);
             if (randomColor.length < 6) {
                 randomColor = randomColor + "6";
             }
             let selectedColor = "#" + randomColor;
-            if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
+            if (mySessionEmployee == data.temployee[i].fields.EmployeeName) {
                 if (data.temployee[i].fields.CustFld8 == "false") {
                     templateObject.includeAllProducts.set(false);
                 }
             }
 
             if (JSON.parse(seeOwnAppointments) == true) {
-                if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
+                if (data.temployee[i].fields.EmployeeName == mySessionEmployee) {
                     var dataList = {
                         id: data.temployee[i].fields.ID || "",
                         employeeName: data.temployee[i].fields.EmployeeName || "",
@@ -2323,7 +2323,7 @@ Template.calender.onRendered(function() {
                 color: appColor
             };
             if (JSON.parse(seeOwnAppointments) == true) {
-                if (data.tappointmentex[i].fields.TrainerName == localStorage.getItem("mySessionEmployee")) {
+                if (data.tappointmentex[i].fields.TrainerName == mySessionEmployee) {
                     eventData.push(dataList);
                     appointmentList.push(appointment)
                 }
@@ -2355,7 +2355,13 @@ Template.calender.onRendered(function() {
                 description: leaveemployeerecords[i].Description || "",
                 color: appColor,
             };
-            eventData.push(dataList);
+            if (JSON.parse(seeOwnAppointments) == true) {
+                if (leaveemployeerecords[i].EmployeeName == mySessionEmployee) {
+                    eventData.push(dataList);
+                } 
+            }else{
+                eventData.push(dataList);
+            }
         }
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);
