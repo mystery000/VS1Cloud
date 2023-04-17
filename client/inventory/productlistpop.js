@@ -70,6 +70,7 @@ Template.productlistpop.onCreated(() => {
   templateObject.getDataTableList = function (data) {
     var currentLoc = FlowRouter.current().route.path;
     let linestatus = '';
+    if(!data.fields) data.fields = data;
     if(data.fields.Active == true){
       linestatus = "";
     }

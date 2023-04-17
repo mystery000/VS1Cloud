@@ -45,6 +45,7 @@
             <div class="col-12 col-md-4">
                 <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3"
                    style="margin-right: 4px;"><i class="icon ion-android-more-horizontal"></i></a>
+                {{> datesforcardchart}}
             </div>
             <!-- Start Help View Modal -->
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -74,6 +75,7 @@
                 display: block !important;
             }
         </style>
+        {{> editCardChartButtons}}
         <div class="production_planner_chart">
             <div class="productionplannercard">
                 {{> allChartLists  tabGroupID="8" chartGroup="Manufacturing" currentTemplate="Manufacturing_Overview"}}

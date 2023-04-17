@@ -11,6 +11,7 @@ import GlobalFunctions from '../../GlobalFunctions';
 import LoadingOverlay from '../../LoadingOverlay';
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import { cloneDeep } from 'lodash';
 
 
 let sideBarService = new SideBarService();
@@ -22,7 +23,7 @@ let defaultCurrencyCode = CountryAbbr;
 
 Template.reportcard.onCreated(function(){
     let templateObject = Template.instance();
-    templateObject.reportrecords = new ReactiveVar();
+    templateObject.reportrecords = new ReactiveVar([]);
     templateObject.transactiondatatablerecords = new ReactiveVar([]);
     templateObject.grandrecords = new ReactiveVar();
     templateObject.dateAsAt = new ReactiveVar();
@@ -30,7 +31,18 @@ Template.reportcard.onCreated(function(){
     templateObject.reset_data = new ReactiveVar([]);
     templateObject.reportdata = new ReactiveVar([]);
     templateObject.apiParams = new ReactiveVar([]);
+    templateObject.currencyList = new ReactiveVar([]);
+    templateObject.recordCount = new ReactiveVar(0);
+    templateObject.ignoreDate = new ReactiveVar(false);
+    templateObject.fxCurrencies = new ReactiveVar([]);
+
+    let tempData = localStorage.getItem('fx_'+templateObject.data.tablename);
+    if(tempData) {
+      let _fxCurrencies = JSON.parse(tempData)?JSON.parse(tempData): [];
+      templateObject.fxCurrencies.set(_fxCurrencies)
+    }
   
+    
     FxGlobalFunctions.initVars(templateObject);
     templateObject.reportOptions = new ReactiveVar();
     templateObject.init_reset_data = function () {
@@ -46,8 +58,9 @@ Template.reportcard.onCreated(function(){
 
 })
 
-Template.reportcard.onRendered(function() {
+Template.reportcard.onRendered(async function() {
   let templateObject = Template.instance();
+  let tablename = templateObject.data.tablename
     LoadingOverlay.show();
   
   
@@ -63,7 +76,7 @@ Template.reportcard.onRendered(function() {
     };
     templateObject.initDate();
   
-    templateObject.getReportData = async function (dateFrom, dateTo, ignoreDate, contactID=null) {
+    templateObject.getReportData = async function (limitCount, limitFrom,  dateFrom, dateTo, ignoreDate, contactID=null) {
       templateObject.setDateAs(dateFrom);
       let indexdbname = templateObject.data.indexDBName
       getVS1Data(indexdbname).then(function (dataObject) {
@@ -78,7 +91,7 @@ Template.reportcard.onRendered(function() {
                   } else if (params[i] == 'dateTo') {
                       params[i] = dateTo
                   } else if (params[i] == 'limitFrom') {
-                      params[i] = 0
+                      params[i] = templateObject.recordCount.get();
                   } else if (params[i] == 'limitCount') {
                       params[i] = initialReportLoad
                   } else if (params[i] == 'deleteFilter') {
@@ -87,6 +100,7 @@ Template.reportcard.onRendered(function() {
               }
           let that = templateObject.data.service;
           templateObject.data.apiName.apply(that, params).then(async function(data) {
+            templateObject.reportrecords.set(data[templateObject.data.lowercasename])
             await addVS1Data(indexdbname, JSON.stringify(data));
             templateObject.displayReportData(data)
           }).catch(function(err) {
@@ -107,7 +121,7 @@ Template.reportcard.onRendered(function() {
                   } else if (params[i] == 'dateTo') {
                       params[i] = dateTo
                   } else if (params[i] == 'limitFrom') {
-                      params[i] = 0
+                      params[i] = templateObject.recordCount.get()
                   } else if (params[i] == 'limitCount') {
                       params[i] = initialReportLoad
                   } else if (params[i] == 'deleteFilter') {
@@ -120,6 +134,54 @@ Template.reportcard.onRendered(function() {
             templateObject.displayReportData(data)
           }).catch(function(err) {})
       });
+
+      templateObject.recordCount.set(initialReportLoad)
+    }
+
+    templateObject.getFilteredReportData = async function (dateFrom, dateTo, ignoreDate, limitCount=initialReportLoad, limitFrom=0) {
+      $('#'+tablename).DataTable().destroy();
+      $('#tablePrint').DataTable().destroy();
+      setTimeout(function(){
+        let params = cloneDeep(templateObject.apiParams.get());
+            for (let i = 0; i < params.length; i++) {
+                if (params[i] == 'ignoreDate') {
+                    params[i] = ignoreDate;
+                } else if (params[i] == 'dateFrom') {
+                    params[i] = dateFrom
+                } else if (params[i] == 'dateTo') {
+                    params[i] = dateTo
+                } else if (params[i] == 'limitFrom') {
+                    params[i] = limitFrom
+                } else if (params[i] == 'limitCount') {
+                    params[i] = limitCount
+                } else if (params[i] == 'deleteFilter') {
+                    params[i] = false
+                }
+            }
+        let that = templateObject.data.service;
+        templateObject.data.apiName.apply(that, params).then(async function(data) {
+          // if($('#myInputSearch').val()!='') {
+          //   addVS1Data(templateObject.data.indexDBName, JSON.stringify(data)).then(function(){})
+          // }
+          if(templateObject.recordCount.get() != 0 ) {
+            let tempRecords = templateObject.reportrecords.get();
+
+            for(let i = 0; i< data[templateObject.data.lowercasename].length; i++) {
+              tempRecords.push(data[templateObject.data.lowercasename][i]);
+            }
+            let keyname = templateObject.data.lowercasename;
+            let objData = {};
+
+            objData[keyname]= tempRecords
+            templateObject.reportrecords.set(tempRecords)
+            templateObject.displayReportData(objData)
+          } else {
+            templateObject.reportrecords.set(data[templateObject.data.lowercasename])
+            templateObject.displayReportData(data)
+          }
+          templateObject.recordCount.set(templateObject.recordCount.get() + initialReportLoad)
+        }).catch(function(err) {})
+      }, 1000)
     }
     let url = FlowRouter.current().path;
     if (url.indexOf("?dateFrom") > 0) {
@@ -136,11 +198,13 @@ Template.reportcard.onRendered(function() {
     }
   
     templateObject.getReportData(
+      initialReportLoad, 0,
       GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
       GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
+      false,
     );
     templateObject.displayReportData = async function (data) {
+    
       let lowercasename = templateObject.data.lowercasename || templateObject.data.indexDBName.toLowerCase();
       if(data[lowercasename] && data[lowercasename].length > 0) {
         function groupBy(xs, prop) {
@@ -162,7 +226,6 @@ Template.reportcard.onRendered(function() {
             sumFieldsIndex.push(index)
           }
         });
-
         for(let i = 0; i< keys.length; i ++) {
           let subArr = [];
           if(groupedData[keys[i]].length > 0) {
@@ -176,7 +239,7 @@ Template.reportcard.onRendered(function() {
               calcedValues.push(0)
             }
             for(let k = 0 ; k< sumFieldsIndex.length; k++) {
-              let index = sumFieldsIndex[k];
+              let index = sumFieldsIndex[k] - 1;
               if(index != undefined) {
                 for(n = 0; n< subArr.length; n++) {
                   calcedValues[k] = calcedValues[k] + subArr[n][index];
@@ -184,15 +247,15 @@ Template.reportcard.onRendered(function() {
               }
             }
             let newLine = templateObject.data.datahandler('');
-            newLine[0] = keys[i] + ' Total';
+            newLine[0] = ' Total ' + keys[i] ;
             for(let o = 0; o<sumFieldsIndex.length; o++) {
-              newLine[sumFieldsIndex[o]] = calcedValues[o]
+              newLine[sumFieldsIndex[o]-1] = calcedValues[o]
             }
             subArr.push(newLine)
 
             subArr.forEach((item, index)=> {
               for(let p=0; p<sumFieldsIndex.length; p++) {
-                item[sumFieldsIndex[p]] = GlobalFunctions.showCurrency(item[sumFieldsIndex[p]])
+                item[sumFieldsIndex[p] - 1] = GlobalFunctions.showCurrency(item[sumFieldsIndex[p]-1])
               }
             })
           }
@@ -209,7 +272,7 @@ Template.reportcard.onRendered(function() {
               totalValues.push(0)
             }
             for(let k = 0 ; k< sumFieldsIndex.length; k++) {
-              let index = sumFieldsIndex[k];
+              let index = sumFieldsIndex[k] - 1;
               if(index != undefined) {
                 for(n = 0; n< datatableArr.length; n++) {
                   let subArray = datatableArr[n].subArr;
@@ -217,20 +280,21 @@ Template.reportcard.onRendered(function() {
                 }
               }
             }
-
             function removeCurrencySymbol (data) {
               let retVal = Number(data.replace(/[^0-9.-]+/g,""));
               return retVal
             }
             for(let o = 0; o<sumFieldsIndex.length; o++) {
             
-              totalLine[sumFieldsIndex[o]] = GlobalFunctions.showCurrency(totalValues[o])
+              totalLine[sumFieldsIndex[o] -1 ] = GlobalFunctions.showCurrency(totalValues[o])
             }
-
-            datatableArr.push({type:'Total', subArr: [totalLine]})
+            totalLine[0]='Grand Total';
+            datatableArr.push({type:'', subArr: [totalLine]})
 
         // }        
-        templateObject.reportdata.set(datatableArr)
+        templateObject.reportdata.set(datatableArr);
+      } else {
+        templateObject.reportdata.set('')
       }
       getColumnDef = function () {
         if(templateObject.reset_data.get()) {
@@ -246,9 +310,9 @@ Template.reportcard.onRendered(function() {
           for(let j = 0; j< items.length ;  j ++) {
             let item = {
                 targets:j,
-                className: items[i].active?items[i].class + " hiddenColumn": items[i].class,
-                title:items[i].label,
-                width:items[i].width+"px"
+                className: !items[j].active?items[j].class + " hiddenColumn": items[j].class,
+                title:items[j].label,
+                width:items[j].width+"px"
             };
             colDefs.push(item)
           }
@@ -257,28 +321,194 @@ Template.reportcard.onRendered(function() {
         }
       }
 
-        setTimeout(function () {
-        $('#tableExport').DataTable({
+      setTimeout(function () {
+        $('#'+tablename).DataTable({
           searching: false,
           "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-          columnDefs: getColumnDef(),
+          // columnDefs: getColumnDef(),
+          order: [[0, 'asc']], // default order by first column (type)
+          
+          buttons: [{
+              extend: 'print',
+              download: 'open',
+              className: "btntabletopdf hiddenColumn",
+              text: '',
+              title: templateObject.data.exportfilename,
+              filename: templateObject.data.exportfilename,
+              exportOptions: {
+                  columns: ':visible',
+                  stripHtml: false
+              },
+              page: 'all'
+          },
+          {
+            extend: 'csvHtml5',
+            text: '',
+            download: 'open',
+            className: "btntabletocsv hiddenColumn",
+            filename: templateObject.data.exportfilename,
+            orientation: 'portrait',
+            exportOptions: {
+                columns: ':visible'
+            }
+          },
+          {
+            extend: 'excelHtml5',
+            title: '',
+            download: 'open',
+            className: "btntabletoexcel hiddenColumn",
+            filename: templateObject.data.exportfilename,
+            orientation: 'portrait',
+            exportOptions: {
+                columns: ':visible'
+            }
+          }],
           select: true,
           destroy: true,
           colReorder: true,
           pageLength: initialDatatableLoad,
           lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
           info: true,
-          responsive: true,
-          "order": [],
-          "bsort": false,
+          responsive: false,
+          // "order": [],
+          "bsort": true,
           action: function () {
-            $('#tableExport').DataTable().ajax.reload();
+            $('#'+tablename).DataTable().ajax.reload();
           },
           "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
-                if(aData[0] == GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold'))
-                    $(nRow).addClass("grandtotal");
-                else if(nRow != 0 && aData[6] == "")
-                    $(nRow).addClass("totalhr");
+                // if(aData[0] == GlobalFunctions.generateSpan(`Grand Total`, 'table-cells text-bold'))
+                //     $(nRow).addClass("grandtotal");
+                // else if(nRow != 0 && aData[6] == "")
+                //     $(nRow).addClass("totalhr");
+                if(nRow !=0 && aData[3] == '' && aData[2] == "") {
+                  $(nRow).addClass("totalline")
+                  if(aData[aData.length -1] == '' && aData[aData.length-2]=='') {
+                    $(nRow).addClass('titleLine');
+                  } else {
+                    $(nRow).addClass("listhr");
+                  }
+                }
+          },
+          "fnDrawCallback": function (oSettings) {
+            $('.paginate_button.page-item').removeClass('disabled');
+            $('#' + tablename + '_ellipsis').addClass('disabled');
+            if (oSettings._iDisplayLength == -1) {
+                if (oSettings.fnRecordsDisplay() > 150) {
+
+                }
+            } else {
+
+            }
+            if (oSettings.fnRecordsDisplay() < initialReportLoad) {
+                $('.paginate_button.page-item.next').addClass('disabled');
+            }
+
+            $('.paginate_button.next:not(.disabled)', this.api().table().container()).on('click', function () {
+                $('.fullScreenSpin').css('display', 'inline-block');
+                //var splashArrayCustomerListDupp = new Array();
+                // let dataLenght = oSettings._iDisplayLength;
+                // let customerSearch = $('#' + currenttablename + '_filter input').val();
+
+                var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
+                var dateTo = new Date($("#dateTo").datepicker("getDate"));
+
+                let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+                let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+
+                let params = cloneDeep(templateObject.apiParams.get());
+                for (let i = 0; i < params.length; i++) {
+                    if (params[i] == 'ignoredate') {
+                        params[i] = templateObject.ignoreDate.get();
+                    } else if (params[i] == 'dateFrom') {
+                        params[i] = formatDateFrom
+                    } else if (params[i] == 'dateTo') {
+                        params[i] = formatDateTo
+                    } else if (params[i] == 'limitFrom') {
+                        params[i] = templateObject.recordCount.get();
+                    } else if (params[i] == 'limitCount') {
+                        params[i] = initialReportLoad
+                    } else if (params[i] == 'deleteFilter') {
+                        params[i] = deleteFilter
+                    }
+                }
+
+                templateObject.getFilteredReportData(
+                  GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+                  GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+                  templateObject.ignoreDate.get(),
+                  initialReportLoad,
+                  templateObject.recordCount.get()
+                )
+
+                
+                
+                let that = templateObject.data.service;
+                // templateObject.data.apiName.apply(that, params).then(function (dataObjectnew) {
+                //     for (let j = 0; j < dataObjectnew[indexDBLowercase].length; j++) {
+                //         var dataList = templateObject.data.datahandler(dataObjectnew[indexDBLowercase][j])
+                //         splashDataArray.push(dataList);
+                //     }
+                //     let uniqueChars = [...new Set(splashDataArray)];
+                //     templateObject.transactiondatatablerecords.set(uniqueChars);
+                //     var datatable = $('#' + tablename).DataTable();
+                //     datatable.clear();
+                //     datatable.rows.add(uniqueChars);
+                //     templateObject.recordCount.set(templateObject.recordCount.get() + initialReportLoad)
+                //     datatable.draw(false);
+                //     setTimeout(function () {
+                //         $('#' + tablename).dataTable().fnPageChange('last');
+                //     }, 400);
+
+                //     $('.fullScreenSpin').css('display', 'none');
+                // }).catch(function (err) {
+                //     $('.fullScreenSpin').css('display', 'none');
+                // })
+            });
+            
+        },
+        }).on('column-reorder', function () {
+  
+        }).on('length.dt', function (e, settings, len) {
+  
+          $(".fullScreenSpin").css("display", "inline-block");
+          let dataLenght = settings._iDisplayLength;
+          if (dataLenght == -1) {
+            if (settings.fnRecordsDisplay() > initialDatatableLoad) {
+              $(".fullScreenSpin").css("display", "none");
+            } else {
+              $(".fullScreenSpin").css("display", "none");
+            }
+          } else {
+            $(".fullScreenSpin").css("display", "none");
+          }
+        });
+
+        $('#tablePrint').DataTable({
+          searching: false,
+          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+          // columnDefs: getColumnDef(),
+          order: [[0, 'asc']], // default order by first column (type)
+          select: true,
+          destroy: true,
+          colReorder: true,
+          lengthMenu: [[initialDatatableLoad, -1], [initialDatatableLoad, "All"]],
+          info: true,
+          responsive: true,
+          // "order": [],
+          "bsort": true,
+          action: function () {
+            $('#tablePrint').DataTable().ajax.reload();
+          },
+          "fnRowCallback": function( nRow, aData, iDisplayIndex ) {
+                if(nRow !=0 && aData[3] == '' && aData[2] == "") {
+                  $(nRow).addClass("totalline")
+                  if(aData[aData.length -1] == '' && aData[aData.length-2]=='') {
+                    $(nRow).addClass('titleLine');
+                  } else {
+                    $(nRow).addClass("listhr");
+                  }
+                }
           },
         }).on('column-reorder', function () {
   
@@ -297,13 +527,69 @@ Template.reportcard.onRendered(function() {
           }
         });
         $(".fullScreenSpin").css("display", "none");
+        LoadingOverlay.hide();
       }, 0);
   
       $('div.dataTables_filter input').addClass('form-control form-control-sm');
     }
+
+    templateObject.getCurrencyList = function() {
+      return new Promise((resolve, reject)=>{
+        getVS1Data('TCurrencyList').then(function(dataObject){
+          if(dataObject.length == 0) {
+            taxRateService.getCurrencies().then(function(data){
+              resolve(data.tcurrencylist)
+            }).catch(function(e){resolve([])})
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tcurrencylist;
+            resolve(useData)
+          }
+        }).catch(function(error){
+          taxRateService.getCurrencies().then(function(data){
+            resolve(data.tcurrencylist)
+          }).catch(function(e){resolve([])})
+        })
+      })
+    }
+
+    let currencies = await templateObject.getCurrencyList();
+    let currencyList = []
+    for (let i = 0; i <currencies.length; i++) {
+      // let taxRate = (data.tcurrency[i].fields.Rate * 100).toFixed(2) + '%';
+      var dataList = {
+        active: false,
+        id:currencies[i].CurrencyID || "",
+        code:currencies[i].Code || "-",
+        currency:currencies[i].Currency || "-",
+        symbol:currencies[i].CurrencySymbol || "-",
+        buyrate:currencies[i].BuyRate || "-",
+        sellrate:currencies[i].SellRate || "-",
+        country:currencies[i].Country || "-",
+        description:currencies[i].CurrencyDesc || "-",
+        ratelastmodified:currencies[i].RateLastModified || "-"
+      };
+
+      currencyList.push(dataList);
+    }
+
+    templateObject.currencyList.set(currencyList)
   
+    $(document).on('change', '#dateTo, #dateFrom', function () {
+    // $(document).on('change', '#dateTo, #dateFrom', function () {
+      LoadingOverlay.show();
+      templateObject.recordCount.set(0);
+      templateObject.reportrecords.set([]);
+      templateObject.ignoreDate.set(false)
+      templateObject.getFilteredReportData(
+        GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+        GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+        false,
+        initialReportLoad,
+        0
+      )
+    })
     LoadingOverlay.hide();
-    
 })
 
 Template.reportcard.helpers({
@@ -315,10 +601,48 @@ Template.reportcard.helpers({
   },
   dateAsAt: () => {
     return Template.instance().dateAsAt.get();
+  },
+
+  currencyList: ()=>{
+    return Template.instance().currencyList.get()
+  },
+
+  fxCurrencies: () => {
+    return Template.instance().fxCurrencies.get();
+  },
+  filterfunction: function() {
+    return function(param1, param2, param3, param4, param5) {
+      return Template.instance().getFilteredReportData(param1, param2, param3, param4, param5)
+    }
+  },
+  currencythlength: function(){
+    return Template.instance().fxCurrencies.get().length + 1
+  },
+
+  currentCurrenySymbol: function() {
+    return localStorage.getItem("ERPCountryAbbr");
   }
 })
 
 Template.reportcard.events({
+  'change .currency-selector-js': function(event) {
+    let templateObject = Template.instance();
+    let currencyId = $(event.target).attr('currency-id');
+    let currency = templateObject.currencyList.get().find(item=>{return item.id == currencyId})
+    let currencies = cloneDeep(templateObject.fxCurrencies.get());
+    if($(event.target).prop('checked') == true) {
+      let index = currencies.findIndex(item => {return item.id.toString() == currencyId.toString()});
+      if(index == -1) {
+        currencies.push(currency)
+      }
+    } else {
+      let index = currencies.findIndex(item => {return item.id.toString() == currencyId.toString()});
+      if(index > -1) {
+        currencies = currencies.splice(index, 1)
+      }
+    }
+    templateObject.fxCurrencies.set(currencies)
+  },
   'click .chkDatatable': function (event) {
     let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
     if ($(event.target).is(':checked')) {
@@ -353,224 +677,322 @@ Template.reportcard.events({
 
   'click .btnRefresh': function () {
     $('.fullScreenSpin').css('display', 'inline-block');
-    Meteor._reload.reload();
+    // Meteor._reload.reload();
+    location.reload();
   },
 
   'click td a': function (event) {
-        let redirectid = $(event.target).closest('tr').attr('id');
+      let redirectid = $(event.target).closest('tr').attr('id');
 
-        let transactiontype = $(event.target).closest('tr').attr('class'); ;
+      let transactiontype = $(event.target).closest('tr').attr('class'); ;
 
-        if (redirectid && transactiontype) {
-            if (transactiontype === 'Bill') {
-                window.open('/billcard?id=' + redirectid, '_self');
-            } else if (transactiontype === 'PO') {
-                window.open('/purchaseordercard?id=' + redirectid, '_self');
-            } else if (transactiontype === 'Credit') {
-                window.open('/creditcard?id=' + redirectid, '_self');
-            } else if (transactiontype === 'Supplier Payment') {
-                window.open('/supplierpaymentcard?id=' + redirectid, '_self');
-            }
+      if (redirectid && transactiontype) {
+          if (transactiontype === 'Bill') {
+              window.open('/billcard?id=' + redirectid, '_self');
+          } else if (transactiontype === 'PO') {
+              window.open('/purchaseordercard?id=' + redirectid, '_self');
+          } else if (transactiontype === 'Credit') {
+              window.open('/creditcard?id=' + redirectid, '_self');
+          } else if (transactiontype === 'Supplier Payment') {
+              window.open('/supplierpaymentcard?id=' + redirectid, '_self');
+          }
+      }
+      // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
+  },
+
+  'click .btnPrintReport': async function (event) {
+    let templateObject = Template.instance();
+    let docTitle = templateObject.data.printDocTitle;
+    let tableId = templateObject.data.tablename
+    let targetElement = document.getElementById(tableId);
+    var opt = {
+        margin: 0,
+        filename: docTitle,
+        image: {
+            type: 'jpeg',
+            quality: 0.98
+        },
+        html2canvas: {
+            scale: 2
+        },
+        jsPDF: {
+            unit: 'in',
+            format: 'a4',
+            orientation: 'portrait'
         }
-        // window.open('/balancetransactionlist?accountName=' + accountName+ '&toDate=' + toDate + '&fromDate=' + fromDate + '&isTabItem='+false,'_self');
-    },
-
-    'click .btnPrintReport': function (event) {
-      let templateObject = Template.instance();
-      $('.fullScreenSpin').css('display', 'inline-block')
-      playPrintAudio();
-      setTimeout(async function(){
-        let targetElement = document.getElementsByClassName('printReport')[0];
-        targetElement.style.width = "210mm";
-        targetElement.style.backgroundColor = "#ffffff";
-        targetElement.style.padding = "20px";
-        targetElement.style.height = "fit-content";
-        targetElement.style.fontSize = "13.33px";
-        targetElement.style.color = "#000000";
-        targetElement.style.overflowX = "visible";
-        let targetTds = $(targetElement).find('.table-responsive #tableExport.table td');
-        let targetThs = $(targetElement).find('.table-responsive #tableExport.table th');
-        for (let k = 0; k< targetTds.length; k++) {
-            $(targetTds[k]).attr('style', 'min-width: 0px !important')
-        }
-        for (let j = 0; j< targetThs.length; j++) {
-            $(targetThs[j]).attr('style', 'min-width: 0px !important')
-        }
-
-        let docTitle = templateObject.data.printDocTitle;
-
-
-        var opt = {
-            margin: 0,
+    };
+    let source = targetElement;
+    async function getAttachments () {
+      return new Promise(async(resolve, reject)=> {
+        html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
+          let pdfObject = "";
+          let base64data = dataObject.split(',')[1];
+          pdfObject = {
             filename: docTitle,
-            image: {
-                type: 'jpeg',
-                quality: 0.98
-            },
-            html2canvas: {
-                scale: 2
-            },
-            jsPDF: {
-                unit: 'in',
-                format: 'a4',
-                orientation: 'portrait'
-            }
-        };
-        let source = targetElement;
-
-        async function getAttachments () {
-          return new Promise(async(resolve, reject)=> {
-            html2pdf().set(opt).from(source).toPdf().output('datauristring').then(function(dataObject){
-              let pdfObject = "";
-              let base64data = dataObject.split(',')[1];
-              pdfObject = {
-                filename: docTitle,
-                content: base64data,
-                encoding: 'base64'
-              }
-              let attachments = [];
-              attachments.push(pdfObject);
-              resolve(attachments)
-            })
-          })
-        }
-
-
-        async function checkBasedOnType() {
-          return new Promise(async(resolve, reject)=>{
-            let values = [];
-            let typeIndex = templateObject.data.typeIndex;
-            let basedOnTypeStorages = Object.keys(localStorage);
-            basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
-                let employeeId = storage.split('_')[2];
-                return storage.includes('BasedOnType_');
-                // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
-            });
-            let i = basedOnTypeStorages.length;
-            if (i > 0) {
-                while (i--) {
-                    values.push(localStorage.getItem(basedOnTypeStorages[i]));
-                }
-            }
-            for (let j =0; j<values.length; j++) {
-              let value = values[j]
-              let reportData = JSON.parse(value);
-              reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
-              if (reportData.BasedOnType.includes("P")) {
-                  if (reportData.FormID == 1) {
-                      let formIds = reportData.FormIDs.split(',');
-                      if (formIds.includes(typeIndex.toString())) {
-                          reportData.FormID = typeIndex;
-                          reportData.attachments = await getAttachments()
-                          Meteor.call('sendNormalEmail', reportData);
-                          resolve();
-                      }
-                  } else {
-                      if (reportData.FormID == typeIndex) {
-                        reportData.attachments = await getAttachments();
-                        Meteor.call('sendNormalEmail', reportData);
-                        resolve();
-                      }
-                  }
-              }
-              if(j == values.length -1) {resolve()}
-            }
-
-          })
-        }
-
-        await checkBasedOnType()
-
-        $('.fullScreenSpin').css('display', 'none');
-        document.title = templateObject.data.tabledisplayname + ' Report';
-        // document.title = 'Aged Payables Report';
-        $(".printReport").print({
-            title: document.title + " | "+templateObject.data.tabledisplayname+" | " + loggedCompany,
-            noPrintSelector: ".addSummaryEditor",
+            content: base64data,
+            encoding: 'base64'
+          }
+          let attachments = [];
+          attachments.push(pdfObject);
+          resolve(attachments)
+        })
+      })
+    }
+    async function checkBasedOnType() {
+      return new Promise(async(resolve, reject)=>{
+        let values = [];
+        let typeIndex = templateObject.data.typeIndex;
+        let basedOnTypeStorages = Object.keys(localStorage);
+        basedOnTypeStorages = basedOnTypeStorages.filter((storage) => {
+            let employeeId = storage.split('_')[2];
+            return storage.includes('BasedOnType_');
+            // return storage.includes('BasedOnType_') && employeeId == localStorage.getItem('mySessionEmployeeLoggedID')
         });
-
-        targetElement.style.width = "100%";
-        targetElement.style.backgroundColor = "#ffffff";
-        targetElement.style.padding = "0px";
-        targetElement.style.fontSize = "1rem";
-      }, delayTimeAfterSound);
-    },
-
-    'click .btnExportReport': function () {
-      $('.fullScreenSpin').css('display', 'inline-block');
-
-      let templateObject = Template.instance();
-
-      const filename = loggedCompany + ' - '+templateObject.data.tabledisplayname+'' + '.csv';
-      utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
-    },
-    'keyup #myInputSearch': function (event) {
-      $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if (searchItem != '') {
-          var value = searchItem.toLowerCase();
-          $('.table tbody tr').each(function () {
-              var found = 'false';
-              $(this).each(function () {
-                  if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                      found = 'true';
+        let i = basedOnTypeStorages.length;
+        if (i > 0) {
+            while (i--) {
+                values.push(localStorage.getItem(basedOnTypeStorages[i]));
+            }
+        }
+        for (let j =0; j<values.length; j++) {
+          let value = values[j]
+          let reportData = JSON.parse(value);
+          reportData.HostURL = $(location).attr('protocal') ? $(location).attr('protocal') + "://" + $(location).attr('hostname') : 'http://' + $(location).attr('hostname');
+          if (reportData.BasedOnType.includes("P")) {
+              if (reportData.FormID == 1) {
+                  let formIds = reportData.FormIDs.split(',');
+                  if (formIds.includes(typeIndex.toString())) {
+                      reportData.FormID = typeIndex;
+                      reportData.attachments = await getAttachments()
+                      Meteor.call('sendNormalEmail', reportData);
+                      resolve();
                   }
-              });
-              if (found == 'true') {
-                  $(this).show();
               } else {
-                  $(this).hide();
-              }
-          });
-      } else {
-          $('.table tbody tr').show();
-      }
-  },
-  'blur #myInputSearch': function (event) {
-      $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if (searchItem != '') {
-          var value = searchItem.toLowerCase();
-          $('.table tbody tr').each(function () {
-              var found = 'false';
-              $(this).each(function () {
-                  if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                      found = 'true';
+                  if (reportData.FormID == typeIndex) {
+                    reportData.attachments = await getAttachments();
+                    Meteor.call('sendNormalEmail', reportData);
+                    resolve();
                   }
-              });
-              if (found == 'true') {
-                  $(this).show();
-              } else {
-                  $(this).hide();
               }
-          });
-      } else {
-          $('.table tbody tr').show();
-      }
+          }
+          if(j == values.length -1) {resolve()}
+        }
+
+      })
+    }
+    await checkBasedOnType()
   },
-  "click #ignoreDate": function () {
+
+  // 'click .btnExportReport': function () {
+  //   $('.fullScreenSpin').css('display', 'inline-block');
+
+  //   let templateObject = Template.instance();
+
+  //   const filename = loggedCompany + ' - '+templateObject.data.tabledisplayname+'' + '.csv';
+  //   utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
+  // },
+  // 'keyup #myInputSearch': function (event) {
+  //   $('.table tbody tr').show();
+  //   let searchItem = $(event.target).val();
+  //   if (searchItem != '') {
+  //       var value = searchItem.toLowerCase();
+  //       $('.table tbody tr').each(function () {
+  //           var found = 'false';
+  //           $(this).each(function () {
+  //               if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+  //                   found = 'true';
+  //               }
+  //           });
+  //           if (found == 'true') {
+  //               $(this).show();
+  //           } else {
+  //               $(this).hide();
+  //           }
+  //       });
+  //   } else {
+  //       $('.table tbody tr').show();
+  //   }
+  // },
+
+
+  'keyup #myInputSearch': function (event) {
+    let templateObject = Template.instance();
+    let tablename = templateObject.data.tablename;
+    let keyword = $(event.target).val();
+    if(event.keyCode == 13) {
+      LoadingOverlay.show()
+      $('#'+tablename).DataTable().destroy();
+      $('#tablePrint').DataTable().destroy();
+      setTimeout(function(){
+
+        let dateFrom = GlobalFunctions.convertYearMonthDay($('#dateFrom').val());
+        let dateTo = GlobalFunctions.convertYearMonthDay($('#dateTo').val());
+        let ignoreDate =  templateObject.ignoreDate.get();
+        
+
+        let params = cloneDeep(templateObject.apiParams.get());
+        for (let i = 0; i < params.length; i++) {
+            if (params[i] == 'ignoreDate') {
+                params[i] = ignoreDate;
+            } else if (params[i] == 'dateFrom') {
+                params[i] = dateFrom
+            } else if (params[i] == 'dateTo') {
+                params[i] = dateTo
+            } else if (params[i] == 'limitFrom') {
+                params[i] = 0
+            } else if (params[i] == 'limitCount') {
+                params[i] = initialReportLoad
+            } else if (params[i] == 'deleteFilter') {
+                params[i] = false
+            }
+        }
+
+        params.push(keyword)
+        let that = templateObject.data.service;
+        templateObject.data.searchFunction.apply(that, params).then(async function(data) {
+            templateObject.displayReportData(data)
+        }).catch(function(e){
+          let objData = {};
+          objData[templateObject.data.lowercasename] = []
+          templateObject.displayReportData({objData})
+        })
+      }, 1000)
+    }
+  },
+  // 'blur #myInputSearch': function (event) {
+  //     $('.table tbody tr').show();
+  //     let searchItem = $(event.target).val();
+  //     if (searchItem != '') {
+  //         var value = searchItem.toLowerCase();
+  //         $('.table tbody tr').each(function () {
+  //             var found = 'false';
+  //             $(this).each(function () {
+  //                 if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+  //                     found = 'true';
+  //                 }
+  //             });
+  //             if (found == 'true') {
+  //                 $(this).show();
+  //             } else {
+  //                 $(this).hide();
+  //             }
+  //         });
+  //     } else {
+  //         $('.table tbody tr').show();
+  //     }
+  // },
+  "click #ignoreDate": async function () {
     let templateObject = Template.instance();
     LoadingOverlay.show();
+    templateObject.ignoreDate.set(true)
+    templateObject.recordCount.set(0)
     localStorage.setItem(templateObject.data.localStorageKeyName, "");
     $("#dateFrom").attr("readonly", true);
     $("#dateTo").attr("readonly", true);
-    templateObject.getReportData(null, null, true);
+    templateObject.getFilteredReportData(null, null, true, initialReportLoad, 0);
   },
-  "change #dateTo, change #dateFrom": (e) => {
-    let templateObject = Template.instance();
+
+  "click .currency-modal-save": (e) => {
+    //$(e.currentTarget).parentsUntil(".modal").modal("hide");
     LoadingOverlay.show();
-    localStorage.setItem(templateObject.data.localStorageKeyName, "");
-    templateObject.getReportData(
-      GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
-      GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
-      false
-    )
+
+    let templateObject = Template.instance();
+
+    // Get all currency list
+    let _currencyList = templateObject.currencyList.get();
+    let _fxCurrencies = templateObject.fxCurrencies.get();
+
+    let strFxCurrencies = _fxCurrencies.length == 0? "": JSON.stringify(_fxCurrencies);
+    localStorage.setItem('fx_'+ templateObject.data.tablename, strFxCurrencies);
+    LoadingOverlay.hide();
+
+
+
+    // Get all selected currencies
+    // const currencySelected = $(".currency-selector-js:checked");
+    // let _currencySelectedList = [];
+    // if (currencySelected.length > 0) {
+    // $.each(currencySelected, (index, e) => {
+    //     const sellRate = $(e).attr("sell-rate");
+    //     const buyRate = $(e).attr("buy-rate");
+    //     const currencyCode = $(e).attr("currency");
+    //     const currencyId = $(e).attr("currency-id");
+    //     console
+    //     let _currency = _currencyList.find((c) => c.id == currencyId);
+    //     _currency.active = true;
+    //     _currencySelectedList.push(_currency);
+    // });
+    // } else {
+    // let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
+    // _currency.active = true;
+    // _currencySelectedList.push(_currency);
+    // }
+
+    // _currencyList.forEach((value, index) => {
+    // if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
+    //     _currencyList[index].active = _currencySelectedList.find(
+    //     (c) => c.id == _currencyList[index].id
+    //     ).active;
+    // } else {
+    //     _currencyList[index].active = false;
+    // }
+    // });
+
+    // _currencyList = _currencyList.sort((a, b) => {
+    // if (a.code == defaultCurrencyCode) {
+    //     return -1;
+    // }
+    // return 1;
+    // });
+
+    // // templateObject.activeCurrencyList.set(_activeCurrencyList);
+    // templateObject.currencyList.set(_currencyList);
+
+    // LoadingOverlay.hide();
   },
-  ...Datehandler.getDateRangeEvents(),
+
+  'click .btnRefreshTable': async function (event) {
+    let templateObject = Template.instance();
+    let utilityService = new UtilityService();
+    const dataTableList = [];
+    $('.fullScreenSpin').css('display', 'inline-block');
+    let tablename = templateObject.data.tablename;
+    let dataSearchName = $('#' + tablename + '_filter input').val();
+    if (dataSearchName.replace(/\s/g, '') != '') {
+        let that = templateObject.data.service;
+        if (that == undefined) {
+            $('.fullScreenSpin').css('display', 'none');
+            $('.btnRefreshTable').removeClass('btnSearchAlert');
+            return;
+        }
+        let paramArray = [dataSearchName]
+        templateObject.data.searchAPI.apply(that, paramArray).then(function (data) {
+            $('.btnRefreshTable').removeClass('btnSearchAlert');
+            templateObject.displayTableData(data, true)
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    } else {
+        $(".btnRefresh").trigger("click");
+    }
+},
+  // ...Datehandler.getDateRangeEvents(),
 
   ...FxGlobalFunctions.getEvents(),
 })
 
 Template.registerHelper('lookup', function (obj, key) {
-  return obj[key];
+  return obj[key-1];
 });
+
+Template.registerHelper('convert2foreign', function(item, index, fx) {
+  let templateObject = Template.instance();
+  if(templateObject.data.transType == 'purchase') {
+    return FxGlobalFunctions.convertToForeignAmount(item[index-1], fx.buyrate, fx.symbol)
+  }else {
+    return FxGlobalFunctions.convertToForeignAmount(item[index-1], fx.sellrate, fx.symbol)
+  }
+})
+Template.registerHelper('concat', function(param1, param2) {
+  return parseFloat(param1.toString() + '.'+ param2.toString())
+})

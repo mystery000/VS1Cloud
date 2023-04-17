@@ -25,20 +25,10 @@
     position="{{position}}"
     card-active="{{cardActive}}"
     card-key="{{cardKey}}">
-        <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
+        <div class="card shadow border-left-{{highlightColor}}" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
             <div class="hideShowDiv d-flex justify-content-end">
-                <div class="cardEditOptions cardShowBtn d-flex justify-content-end hideelement">
-                    <div class="custom-control custom-switch pointer nowrap" data-toggle="tooltip" data-bs-tooltip=""
-                title="Turn this on as a default chart when reset is selected" style="padding-right: 65px;">
-                        <input class="custom-control-input cardDefaultOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Default</label>
-                    </div> 
-                    <div class="custom-control custom-switch pointer nowrap" style="padding-right: 55px;">
-                        <input class="custom-control-input cardShowOption pointer" type="checkbox">
-                        <label class="custom-control-label pointer">Show</label>
-                    </div>  
-                </div>                              
+                {{> editCardChartOptions}}                              
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body {{actionClass}}" style="cursor: pointer;">
@@ -55,7 +45,7 @@
         }
         .customCardMainDiv {
             position: relative;
-            padding-top: 15px !important;
+            /* padding-top: 15px !important; */
         }
         a.cardSettingBtn {
             display: inline-flex;

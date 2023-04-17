@@ -1203,7 +1203,7 @@ Template.sidenav.onRendered(function() {
       }
       var toDate = currentBeginDate.getFullYear()+ "-" +(fromDateMonth) + "-"+(fromDateDay);
       let prevMonth11Date = (moment().subtract(reportsloadMonths, 'months')).format("YYYY-MM-DD");
-        sideBarService.getTAPReport(prevMonth11Date,toDate, false).then(function(data) {
+        sideBarService.getTAPReport(prevMonth11Date,toDate, false, initialReportLoad, 0).then(function(data) {
             addVS1Data('TAPReport',JSON.stringify(data));
         }).catch(function(err) {
 

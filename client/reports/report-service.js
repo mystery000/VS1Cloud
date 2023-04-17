@@ -8,7 +8,7 @@ export class ReportService extends BaseService {
             SelDate: '"' + dateAsOf + '"',
         };
 
-        return this.getList(this.ERPObjects.TCardDataReport, options);
+        return this.getList(this.ERPObjects.TDashboardExecData1, options);
     }
 
     getCashReceivedData(dateFrom, dateTo) {

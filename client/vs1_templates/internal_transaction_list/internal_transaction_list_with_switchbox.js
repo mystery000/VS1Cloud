@@ -2220,7 +2220,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 language: { search: "", searchPlaceholder: "Search List..." },
                 // searching: true,
                 "fnInitComplete": function(oSettings) {
-                    $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                    // $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newDepartmentModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                     if (data?.Params?.Search?.replace(/\s/g, "") == "") {
                         $("<button class='btn btn-danger btnHideDeleted' type='button' id='btnHideDeleted' style='padding: 4px 10px; font-size: 16px; margin-left: 14px !important;'><i class='far fa-check-circle' style='margin-right: 5px'></i>Hide In-Active</button>").insertAfter('#' + currenttablename + '_filter');
                     } else {
@@ -2358,8 +2358,15 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItems = [];
         let lineItemObj = {};
         let chkBox;
+        let data_length;
+        if(data.length > 25 ) {
+            data_length = 25;
+        } else {
+            data_length = data.length;
+        }
 
-        for (let t = 0; t < data.length; t++) {
+
+        for (let t = 0; t < data_length; t++) {
             chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data[t].fields.ID +
                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data[t].fields.ID +
                 '"></label></div>'; //switchbox
@@ -2863,7 +2870,13 @@ Template.internal_transaction_list_with_switchbox.events({
             let targetRow = currentTableData[checkedRowIndex];
             let chk = Array.isArray(targetRow) ? targetRow[0] : "";
             if(chk != ""){
-                chk = chk.replace('type="checkbox" checked', 'type="checkbox"');
+
+                if(chk.indexOf('type="checkbox" checked') >= 0) {
+                    chk = chk.replace('type="checkbox" checked', 'type="checkbox"');
+                } else {
+                    chk = chk.replace('checked="true"', '');
+                }
+
                 targetRow.splice(0, 1, chk);
                 currentTableData.splice(checkedRowIndex, 1);
                 let newTableData = [...currentTableData, targetRow];

@@ -12,6 +12,7 @@ import Datehandler from "../../DateHandler";
 import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './newagedpayables.html';
+import '../reportcardtemp/reportcard.js'
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 
@@ -36,7 +37,8 @@ Template.newagedpayables.onCreated(() => {
     templateObject.reportOptions = new ReactiveVar();
     templateObject.displaysettings = new ReactiveVar();
     let reset_data = [
-        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "100" },
+        { index: 0, label: '#', class:'colLineId', active: false, display: true, width: '0'},
+        { index: 1, label: 'Name', class: 'colName', active: true, display: true, width: "300" },
         { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "100" },
         { index: 3, label: 'PO Number', class: 'colPONumber', active: true, display: true, width: "100" },
         { index: 4, label: 'Due Date', class: 'colDueDate', active: true, display: true, width: "100" },
@@ -364,11 +366,30 @@ Template.newagedpayables.onRendered(() => {
 
   // LoadingOverlay.hide();
 });
-
+                                                                                                                                                                                                                                                                                                           
 Template.newagedpayables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedpayablessummary');
     },
+
+    'click #tblAgedPayables tbody tr': function(event) {
+      let targetCard = '';
+      let type=$(event.target).closest('tr').find('.colType').text();
+      type=type.toLowerCase().replace(/[^a-z]/g,'');
+      if(type != '') {
+        if(type == 'bill') {
+          targetCard='billcard'
+        } else if (type == 'supplierpayment') {
+          targetCard='supplierpaymentcard'
+        } else if (type == 'po') {
+          targetCard='purchaseordercard'
+        } else if (type == 'credit') {
+          targetCard= 'creditcard'
+        } 
+        let id = $(event.target).closest('tr').find('.colPONumber').text();
+        FlowRouter.go('/'+targetCard+'?id='+id);
+      }
+    }
     // 'click .chkDatatable': function (event) {
     //   let columnDataValue = $(event.target).closest("div").find(".divcolumn").attr('valueupdate');
     //   if ($(event.target).is(':checked')) {
@@ -398,6 +419,10 @@ Template.newagedpayables.events({
     //   //   await $('.colAccountTree').css('width', range);
     //   $('.dataTable').resizable();
     // },
+
+      // Template.reportcard.filteredfunction(GlobalFunctions.convertYearMonthDay($('#dateFrom').val()),
+      // GlobalFunctions.convertYearMonthDay($('#dateTo').val()),
+      // false)
     // 'change #dateTo': function () {
     //     let templateObject = Template.instance();
     //     $('.fullScreenSpin').css('display', 'inline-block');
@@ -748,56 +773,8 @@ Template.newagedpayables.events({
     // ...Datehandler.getDateRangeEvents(),
     //  // CURRENCY MODULE
     // ...FxGlobalFunctions.getEvents(),
-    "click .currency-modal-save": (e) => {
-        //$(e.currentTarget).parentsUntil(".modal").modal("hide");
-        LoadingOverlay.show();
-
-        let templateObject = Template.instance();
-
-        // Get all currency list
-        let _currencyList = templateObject.currencyList.get();
-
-        // Get all selected currencies
-        const currencySelected = $(".currency-selector-js:checked");
-        let _currencySelectedList = [];
-        if (currencySelected.length > 0) {
-        $.each(currencySelected, (index, e) => {
-            const sellRate = $(e).attr("sell-rate");
-            const buyRate = $(e).attr("buy-rate");
-            const currencyCode = $(e).attr("currency");
-            const currencyId = $(e).attr("currency-id");
-            let _currency = _currencyList.find((c) => c.id == currencyId);
-            _currency.active = true;
-            _currencySelectedList.push(_currency);
-        });
-        } else {
-        let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
-        _currency.active = true;
-        _currencySelectedList.push(_currency);
-        }
-
-        _currencyList.forEach((value, index) => {
-        if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
-            _currencyList[index].active = _currencySelectedList.find(
-            (c) => c.id == _currencyList[index].id
-            ).active;
-        } else {
-            _currencyList[index].active = false;
-        }
-        });
-
-        _currencyList = _currencyList.sort((a, b) => {
-        if (a.code == defaultCurrencyCode) {
-            return -1;
-        }
-        return 1;
-        });
-
-        // templateObject.activeCurrencyList.set(_activeCurrencyList);
-        templateObject.currencyList.set(_currencyList);
-
-        LoadingOverlay.hide();
-    },
+    ,
+    
 
     "click [href='#noInfoFound']": function () {
         swal({
@@ -1043,13 +1020,21 @@ Template.newagedpayables.helpers({
     }
   },
 
-  apifunction: function() {
+  apiFunction: function() {
     return sideBarService.getTAPReportPage;
   },
 
   listParams: function() {
-    return ['dateFrom', 'dateTo', 'ignoreDate']
-  }
+    return ['limitCount', 'limitFrom', 'dateFrom', 'dateTo', 'ignoreDate']
+  },
+  service: function () {
+    return sideBarService
+  },
+
+  searchFunction: function () {
+    return sideBarService.getTAPReportByKeyword;
+  },
+ 
 });
 Template.registerHelper('equals', function (a, b) {
     return a === b;
