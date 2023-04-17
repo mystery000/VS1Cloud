@@ -1163,10 +1163,7 @@ Template.appointmentlist.onRendered(async function() {
                 document.getElementById("appID").value = result[0].id;
                 document.getElementById("customer").value = result[0].accountname;
                 document.getElementById("phone").value = result[0].phone;
-                document.getElementById("mobile").value =
-                    result[0].mobile.replace("+", "") ||
-                    result[0].phone.replace("+", "") ||
-                    "";
+                document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
                 document.getElementById("state").value = result[0].state;
                 document.getElementById("address").value = result[0].street;
                 if (localStorage.getItem("CloudAppointmentNotes") == true) {
@@ -1177,28 +1174,17 @@ Template.appointmentlist.onRendered(async function() {
                 document.getElementById("zip").value = result[0].zip;
                 document.getElementById("country").value = result[0].country;
 
-                document.getElementById("product-list").value =
-                    result[0].product || "";
-                document.getElementById("product-list-1").value =
-                    result[0].product || "";
-                document.getElementById("employee_name").value =
-                    result[0].employeename;
-                document.getElementById("dtSODate").value = moment(
-                    result[0].startDate.split(" ")[0]
-                ).format("DD/MM/YYYY");
-                document.getElementById("dtSODate2").value = moment(
-                    result[0].endDate.split(" ")[0]
-                ).format("DD/MM/YYYY");
+                document.getElementById("product-list").value = result[0].product || "";
+                document.getElementById("product-list-1").value = result[0].product || "";
+                document.getElementById("employee_name").value = result[0].employeename;
+                document.getElementById("dtSODate").value = moment(result[0].startDate.split(" ")[0]).format("DD/MM/YYYY");
+                document.getElementById("dtSODate2").value = moment(result[0].endDate.split(" ")[0]).format("DD/MM/YYYY");
                 document.getElementById("startTime").value = result[0].startTime;
                 document.getElementById("endTime").value = result[0].endTime;
-                document.getElementById("txtBookedHoursSpent").value =
-                    result[0].totalHours;
-                document.getElementById("tActualStartTime").value =
-                    result[0].aStartTime;
-                document.getElementById("tActualEndTime").value =
-                    result[0].aEndTime;
-                document.getElementById("txtActualHoursSpent").value =
-                    parseFloat(hours).toFixed(2) || "";
+                document.getElementById("txtBookedHoursSpent").value = result[0].totalHours;
+                document.getElementById("tActualStartTime").value = result[0].aStartTime;
+                document.getElementById("tActualEndTime").value = result[0].aEndTime;
+                document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || "";
 
                 if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none"))
                     $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
@@ -1210,9 +1196,7 @@ Template.appointmentlist.onRendered(async function() {
                     $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
                 if (result[0].custFld13 === "Yes") {
                     if (result[0].custFld11 === "Yes") {
-                        $("#smsConfirmedFlag i.fa-check-circle").removeClass(
-                            "d-none"
-                        );
+                        $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
                     } else {
                         if (result[0].custFld11 === "No") {
                             $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
@@ -1233,22 +1217,20 @@ Template.appointmentlist.onRendered(async function() {
                 if (result[0].extraProducts != "") {
                     let extraProducts = result[0].extraProducts.split(":");
                     let extraProductFees = [];
-                    productService.getNewProductServiceListVS1()
-                        .then(function(products) {
-                            extraProducts.forEach((item) => {
+                    productService.getNewProductServiceListVS1().then(function(products) {
+                        extraProducts.forEach((item) => {
+                            $("#productCheck-" + item).prop("checked", true);
+                            products.tproductvs1.forEach((product) => {
+                                if (product.Id == item) {
+                                    extraProductFees.push(product);
+                                }
                                 $("#productCheck-" + item).prop("checked", true);
-                                products.tproductvs1.forEach((product) => {
-                                    if (product.Id == item) {
-                                        extraProductFees.push(product);
-                                    }
-                                    $("#productCheck-" + item).prop("checked", true);
-                                });
                             });
-                            templateObject.extraProductFees.set(extraProductFees);
-                            $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
-                        })
-                        .catch(function(err) {
                         });
+                        templateObject.extraProductFees.set(extraProductFees);
+                        $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+                    }).catch(function(err) {
+                    });
                 }
 
                 setTimeout(() => {
