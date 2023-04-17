@@ -2105,8 +2105,8 @@ Template.employeescard.onRendered(function () {
         const offset = $earch.offset();
         const dashboardoptions = e.target.value || '';
         const dashboardDefaultoptions = $("#edtDashboardOptions").attr("defaultlogin") || 'Accounts';
-        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-          $('#edtDashboardOptions').modal('toggle');
+        if (e.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+          $('#dashboardOptionListModal').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
             // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');

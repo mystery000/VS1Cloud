@@ -151,6 +151,7 @@
         <div class="{{#if isModal}}{{else}}col-10{{/if}} displayInfo" id="displayInfo" style="width: 100%;">
           {{#unless isModal}}
           <!-- All Cards List -->
+          {{> editCardChartButtons}}
           {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
           {{/unless}}
           <div class="card shadow mb-4 cardSizing">
