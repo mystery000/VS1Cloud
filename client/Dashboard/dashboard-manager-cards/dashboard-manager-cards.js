@@ -5,7 +5,7 @@ import './dashboard-manager-cards.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 
 let sideBarService = new SideBarService();
-
+let loadedCount = 0
 Template.dashboardManagerCards.onRendered(() => {
     let templateObject = Template.instance();
 
@@ -18,6 +18,8 @@ Template.dashboardManagerCards.onRendered(() => {
     templateObject.getDashboardData = async function() {
         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         const toDate = new Date($("#dateTo").datepicker("getDate"));
+        $(".fullScreenSpin").css("display", "inline-block");
+        loadedCount = 0
         getVS1Data('TProspectEx').then(function(dataObject) {
             if (dataObject.length) {
                 let { tprospect = [] } = JSON.parse(dataObject[0].data);
@@ -32,8 +34,10 @@ Template.dashboardManagerCards.onRendered(() => {
 
                 $('#new-leads-month').text(leadsThisMonthCount);
             } else {
-                $('#new-leads-month').text("No Data in Range");
+                $('#new-leads-month').text(0);
             }
+            loadedCount++
+            if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
         }).catch(function(err) {});
 
         // getVS1Data('TQuoteList').then(function(dataObject) {
@@ -92,7 +96,7 @@ Template.dashboardManagerCards.onRendered(() => {
         // }).catch(function(err) {});
 
 
-        sideBarService.getAllTQuoteListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), true, 10000, 0).then(function(data) {
+        sideBarService.getAllTQuoteListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), false, 10000, 0).then(function(data) {
             if (data.tquotelist.length > 0) {
                 let tquotelist = data.tquotelist;
                 let dealsThisMonthCount = 0;
@@ -114,19 +118,22 @@ Template.dashboardManagerCards.onRendered(() => {
                 const winRate = convertedQuotesCount ? parseInt((convertedQuotesCount / (convertedQuotesCount + nonConvertedQuotesCount)) * 100) : 0;
                 const avgSalesCycle = convertedQuotesAmount ? convertedQuotesAmount / days(toDate, fromDate) : convertedQuotesAmount;
 
-                $('#sales-winrate').text(winRate.toFixed(2));
+                $('#sales-winrate').text(`$${winRate.toFixed(2)}`);
                 $('#new-deals-month').text(dealsThisMonthCount);
-                $('#avg-sales-cycle').text(avgSalesCycle.toFixed(2));
+                $('#avg-sales-cycle').text(`$${avgSalesCycle.toFixed(2)}`);
             } else {
-                $('#sales-winrate').text("No Data in Range");
-                $('#new-deals-month').text("No Data in Range");
-                $('#avg-sales-cycle').text("No Data in Range");
+                $('#sales-winrate').text("$0.00");
+                $('#new-deals-month').text("0");
+                $('#avg-sales-cycle').text("$0.00");
             }
         }).catch(function(err) {
 
+        }).finally(() => {
+            loadedCount++
+            if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
         });
 
-        sideBarService.getAllTInvoiceListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), true, 10000, 0).then(function(dataInvoice) {
+        sideBarService.getAllTInvoiceListData(moment(fromDate).format("YYYY-MM-DD"), moment(toDate).format("YYYY-MM-DD"), false, 10000, 0).then(function(dataInvoice) {
             if (dataInvoice.tinvoicelist.length > 0) {
                 let tinvoicelist = dataInvoice.tinvoicelist;
                 let closedDealsThisMonth = 0;
@@ -147,14 +154,22 @@ Template.dashboardManagerCards.onRendered(() => {
                 $('#closed-deals-month').text(closedDealsThisMonth);
                 $('#closed-deals-year').text(`$${closedDealsThisYear.toFixed(2)}`);
             } else {
-                $('#closed-deals-month').text("No Data in Range");
-                $('#closed-deals-year').text("No Data in Range");
+                $('#closed-deals-month').text("0");
+                $('#closed-deals-year').text("$0.00");
             }
-        }).catch(function(err) {});
+        }).catch(function(err) {
+
+        }).finally(() => {
+            loadedCount++
+            if (loadedCount === 3) $(".fullScreenSpin").css("display", "none");
+        });
     };
-    setTimeout(function() {
-        templateObject.getDashboardData();
-    }, 100);
+    
+    templateObject.getDashboardData();
+    
+    $(document).on("change", "#dateFrom, #dateTo", async () => {        
+        await templateObject.getDashboardData();        
+    })
 });
 
 Template.dashboardManagerCards.events({

@@ -18,7 +18,7 @@
             text-align: right;
             padding: 0 8px;
             margin: 0;
-            position: absolute;
+            position: relative;
             top: 5px;
             left: 0;
         }
@@ -92,7 +92,11 @@
             <div class="col-12 col-md-4">
                 {{> loggedcompanyoverview}}
             </div>
+            <div class="col-12 col-md-4">
+                {{> datesforcardchart}}
+            </div>
         </header>
+        {{> editCardChartButtons}}
         <!-- All Cards List -->
         {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
         <!-- All Cards List -->

@@ -256,6 +256,7 @@ const erpObject = {
     TCustomerPaymentLine: "TCustomerPaymentLine",
     TSupplierPaymentLine: "TSupplierPaymentLine",
     Tprojectlist: "Tprojectlist",
+    TprojectlistReport: "TprojectlistReport",
     Tprojecttasks: "Tprojecttasks",
     Tprojecttask_subtasks: "Tprojecttask_subtasks",
     Tprojecttask_activity: "Tprojecttask_activity",
@@ -288,7 +289,7 @@ const erpObject = {
     VS1_Customize: "VS1_Customize",
     TProductQtyList: "TProductQtyList",
     TProductMovementList: "TProductMovementList",
-    TCardDataReport: "TCardDataReport",
+    TDashboardExecData1: "TDashboardExecData1",
     TProcTree: "TProcTree",
     TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
     TRateTypes: "TRateTypes",
@@ -317,6 +318,13 @@ const erpObject = {
     TABADescriptiveRecord: "TABADescriptiveRecord",
     TProjectTasksList: "TProjectTasksList",
     TVS1Workorder: "TVS1Workorder",
+    
+    TVS1ProcessClockList: "TVS1ProcessClockList", // Danila add
+    TVS1ClockOnReport: "TVS1ClockOnReport",
+    TVS1EmployeeClockStatus: "TVS1EmployeeClockStatus",
+    TVS1BuildCostReport : "TVS1BuildCostReport", 
+
+
     TCostTypes: "TCostTypes",
     TProductBatches: "TProductBatches",
     TStockMovement:"TStockMovement",

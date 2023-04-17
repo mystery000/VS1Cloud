@@ -116,8 +116,8 @@ Template.exeperformancereport.onRendered(() => {
         templateObject.setDateAs( dateAsOf );
         try {
             let data = await reportService.getCardDataReport(dateAsOf);
-            if (data.tcarddatareport) {
-                let resData = data.tcarddatareport[0];
+            if (data.tdashboardexecdata1) {
+                let resData = data.tdashboardexecdata1[0];
                 grossProfitMargin[0] = parseFloat(resData.Perf_GrossMargin1);
                 grossProfitMargin[1] = parseFloat(resData.Perf_GrossMargin2);
                 netProfitMargin[0] = parseFloat(resData.Perf_NetMargin1);

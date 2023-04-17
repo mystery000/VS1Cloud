@@ -157,8 +157,10 @@
             <div class="col-12 col-md-4">
                 <a class="btn btnOpenSettings float-right ml-auto" role="button" data-toggle="modal" href="#myModal3"
                    style="margin-right: 4px;"><i class="icon ion-android-more-horizontal"></i></a>
+                {{> datesforcardchart}}
             </div>
         </header>
+        {{> editCardChartButtons}}
         <!-- All Cards List -->
         {{> allCardsLists tabGroupID="9" chartGroup="PaymentOverviewCustomer"}}
         <!-- All charts list -->
