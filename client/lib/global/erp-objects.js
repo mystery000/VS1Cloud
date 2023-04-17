@@ -288,7 +288,7 @@ const erpObject = {
     VS1_Customize: "VS1_Customize",
     TProductQtyList: "TProductQtyList",
     TProductMovementList: "TProductMovementList",
-    TCardDataReport: "TCardDataReport",
+    TDashboardExecData1: "TDashboardExecData1",
     TProcTree: "TProcTree",
     TPayrollSettingOvertimes: "TPayrollSettingOvertimes",
     TRateTypes: "TRateTypes",
