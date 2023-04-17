@@ -1539,7 +1539,7 @@ Template.calender.onRendered(function() {
                 renderEventDidMount(info)
             },
             eventContent: function(event) {
-                renderEventContent(event)
+                return renderEventContent(event)
             },
             eventResize: function(info) {
                renderEventDropAndResize(info)
@@ -2344,16 +2344,29 @@ Template.calender.onRendered(function() {
                 appColor = "#00a3d3";
                 leaveEmpName = "";
             }
-
-            dataList = {
-                id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
-                title: leaveEmpName,
-                start: leaveemployeerecords[i].StartDate || "",
-                end: leaveemployeerecords[i].EndDate || "",
-                description: leaveemployeerecords[i].Description || "",
-                color: appColor,
-            };
-            eventData.push(dataList);
+            if (JSON.parse(seeOwnAppointments) == true) {
+                if (leaveemployeerecords[i].EmployeeName == mySessionEmployee) {
+                    dataList = {
+                        id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                        title: leaveEmpName,
+                        start: leaveemployeerecords[i].StartDate || "",
+                        end: leaveemployeerecords[i].EndDate || "",
+                        description: leaveemployeerecords[i].Description || "",
+                        color: appColor,
+                    };
+                    eventData.push(dataList);
+                }
+            }else{
+                dataList = {
+                    id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                    title: leaveEmpName,
+                    start: leaveemployeerecords[i].StartDate || "",
+                    end: leaveemployeerecords[i].EndDate || "",
+                    description: leaveemployeerecords[i].Description || "",
+                    color: appColor,
+                };
+                eventData.push(dataList);
+            }
         }
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);
