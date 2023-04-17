@@ -20,6 +20,8 @@ Template.process_clock_template.onCreated(function() {
     templateObject.selectedFile = new ReactiveVar();
 
     templateObject.getDataTableList = function(data) {    
+
+        let linestatus;
      
         if (data.Active  == false) {
             linestatus = "";
