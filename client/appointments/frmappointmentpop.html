@@ -131,23 +131,29 @@
                                         class="form-control employee_name" readonly>
                                 </div>
                             </div>
-                            <div class="col-md-3 colStartDate" id="colStartDate" style="margin: 8px 0px;">
-                                {{> single_date_picker
-                                    label="Start Date"
-                                    id="dtSODate"
-                                    name="dtSODate"
-                                    defaultValue=""
-                                    classes="formClassDate statementDate"
-                                }}
+                            <div class="col-md-3 colStartDate" id="colStartDate">
+                                <div class="form-group" style="margin: 8px 0px;">
+                                    <label>Start Date</label>
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control formClassDate statementDate"
+                                            id="dtSODate" name="dtSODate">
+                                        <div class="input-group-addon" style="">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-3 colEndDate" id="colEndDate" style="margin: 8px 0px;">
-                                {{> single_date_picker
-                                    label="End Date"
-                                    id="dtSODate2"
-                                    name="dtSODate2"
-                                    defaultValue=""
-                                    classes="formClassDate statementDate"
-                                }}
+                            <div class="col-md-3 colEndDate" id="colEndDate">
+                                <div class="form-group" style="margin: 8px 0px;">
+                                    <label>End Date</label>
+                                    <div class="input-group date" style="cursor: pointer;">
+                                        <input type="text" class="form-control formClassDate statementDate"
+                                            id="dtSODate2" name="dtSODate2">
+                                        <div class="input-group-addon" style="">
+                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-4 colNotesParent" id="colNotesParent">
                                 <div class="row" style="padding: 0px 8px;">

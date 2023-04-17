@@ -105,6 +105,7 @@ Template.appointmentlist.onCreated(function() {
         }
         let dataList = [
             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + data.id + '" name="' + data.id + '"> <label class="custom-control-label" for="f-' + data.id + '"></label></div>' || '',
+            dataList_origin.sortdate || '',
             dataList_origin.id || '',
             '<span style="display:none;">' + dataList_origin.sortdate + '</span> ' + dataList_origin.appointmentdate || '',
             dataList_origin.accountname || '',
@@ -116,6 +117,7 @@ Template.appointmentlist.onCreated(function() {
             dataList_origin.actual_start_time || '',
             dataList_origin.actual_end_time || '',
             dataList_origin.finished || '',
+            dataList_origin.status || '',
             confirmedColumn,
             dataList_origin.notes || '',
             dataList_origin.product || '',
@@ -125,20 +127,22 @@ Template.appointmentlist.onCreated(function() {
 
     let headerStructure = [
         { index: 0, label: '', class: 'colCheckBox', active: true, display: true, width: "10" },
-        { index: 1, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
+        { index: 1, label: '#id', class: 'colSortDate', active: false, display: true, width: "200" },
+        { index: 2, label: 'Appt ID', class: 'colID', active: true, display: true, width: "200" },
         { index: 2, label: 'Date', class: 'colDate', active: true, display: true, width: "200" },
-        { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "235" },
-        { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "125" },
+        { index: 3, label: 'Company', class: 'colCompany', active: true, display: true, width: "" },
+        { index: 4, label: 'Rep', class: 'colReq', active: true, display: true, width: "100" },
         { index: 5, label: 'From Date', class: 'colFromDate', active: true, display: true, width: "250" },
         { index: 6, label: 'To Date', class: 'colToDate', active: true, display: true, width: "100" },
         { index: 7, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "100" },
         { index: 8, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
         { index: 9, label: 'From Actual Time', class: 'colFromActualTime', active: true, display: true, width: "100" },
         { index: 10, label: 'To Actual Time', class: 'colToActualTime', active: true, display: true, width: "100" },
-        { index: 11, label: 'Converted', class: 'colStatus', active: true, display: true, width: "150" },
-        { index: 12, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
-        { index: 13, label: 'Notes', class: 'colNotes', active: false, display: true, width: "100" },
-        { index: 14, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
+        { index: 11, label: 'Converted', class: 'colConverted', active: true, display: true, width: "100" },
+        { index: 12, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 13, label: 'Confirm', class: 'colconfirm', active: true, display: true, width: "100" },
+        { index: 14, label: '#Notes', class: 'colNotes', active: false, display: true, width: "100" },
+        { index: 15, label: 'Product/Service', class: 'colProduct', active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -298,13 +302,21 @@ Template.appointmentlist.onRendered(async function() {
                     $('.fullScreenSpin').css('display', 'none');
                     getVS1Data('TAppointment').then(async function(dataObject2) {
                         if (dataObject2.length == 0) {
-                            sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data_) {
+                            sideBarService
+                            .getAllAppointmentList(initialDataLoad, 0)
+                            .then(function(data_) {
                                 addVS1Data("TAppointment", JSON.stringify(data_));
                                 for (let i = 0; i < data_.tappointmentex.length; i++) {
                                     var appointment = {
                                         id: data_.tappointmentex[i].fields.ID || "",
-                                        sortdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
-                                        appointmentdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
+                                        sortdate: data_.tappointmentex[i].fields.CreationDate ?
+                                            moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                                "YYYY/MM/DD"
+                                            ) : "",
+                                        appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
+                                            moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                                "DD/MM/YYYY"
+                                            ) : "",
                                         accountname: data_.tappointmentex[i].fields.ClientName || "",
                                         statementno: data_.tappointmentex[i].fields.TrainerName || "",
                                         employeename: data_.tappointmentex[i].fields.TrainerName || "",
@@ -322,12 +334,23 @@ Template.appointmentlist.onRendered(async function() {
                                         endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
                                         startDate: data_.tappointmentex[i].fields.StartTime || "",
                                         endDate: data_.tappointmentex[i].fields.EndTime || "",
-                                        fromDate: data_.tappointmentex[i].fields.Actual_EndTime ? moment(data_.tappointmentex[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                        fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
+                                            moment(
+                                                data_.tappointmentex[i].fields.Actual_EndTime
+                                            ).format("DD/MM/YYYY") : "",
                                         openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
-                                        aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[1] || "",
-                                        aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[1] || "",
-                                        aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[0] || "",
-                                        aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[0] || "",
+                                        aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                            " "
+                                        )[1] || "",
+                                        aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                            " "
+                                        )[1] || "",
+                                        aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                            " "
+                                        )[0] || "",
+                                        aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                            " "
+                                        )[0] || "",
                                         actualHours: "",
                                         closebalance: "",
                                         rate: data_.tappointmentex[i].fields.Rate || 1,
@@ -342,8 +365,10 @@ Template.appointmentlist.onRendered(async function() {
                                         custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                         custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                     };
+
                                     appointmentList.push(appointment);
                                 }
+
                                 for (let i = 0; i < data.tappointmentlist.length; i++) {
                                     appStatus = data.tappointmentlist[i].Status || '';
                                     var apmt__ = appointmentList.filter((apmt) => {
@@ -479,7 +504,8 @@ Template.appointmentlist.onRendered(async function() {
                                     dataTableList.push(dataList);
                                 }
                                 templateObject.datatablerecords.set(dataTableList);
-                            }).catch(function(err) {
+                            })
+                            .catch(function(err) {
                                 $(".fullScreenSpin").css("display", "none");
                             });
                         }else{
@@ -487,8 +513,14 @@ Template.appointmentlist.onRendered(async function() {
                             for (let i = 0; i < data_.tappointmentex.length; i++) {
                                 var appointment = {
                                     id: data_.tappointmentex[i].fields.ID || "",
-                                    sortdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
-                                    appointmentdate: data_.tappointmentex[i].fields.CreationDate ? moment(data_.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
+                                    sortdate: data_.tappointmentex[i].fields.CreationDate ?
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "YYYY/MM/DD"
+                                        ) : "",
+                                    appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "DD/MM/YYYY"
+                                        ) : "",
                                     accountname: data_.tappointmentex[i].fields.ClientName || "",
                                     statementno: data_.tappointmentex[i].fields.TrainerName || "",
                                     employeename: data_.tappointmentex[i].fields.TrainerName || "",
@@ -506,12 +538,23 @@ Template.appointmentlist.onRendered(async function() {
                                     endTime: data_.tappointmentex[i].fields.EndTime.split(" ")[1] || "",
                                     startDate: data_.tappointmentex[i].fields.StartTime || "",
                                     endDate: data_.tappointmentex[i].fields.EndTime || "",
-                                    fromDate: data_.tappointmentex[i].fields.Actual_EndTime ? moment(data_.tappointmentex[i].fields.Actual_EndTime).format("DD/MM/YYYY") : "",
+                                    fromDate: data_.tappointmentex[i].fields.Actual_EndTime ?
+                                        moment(
+                                            data_.tappointmentex[i].fields.Actual_EndTime
+                                        ).format("DD/MM/YYYY") : "",
                                     openbalance: data_.tappointmentex[i].fields.Actual_EndTime || "",
-                                    aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[1] || "",
-                                    aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[1] || "",
-                                    aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(" ")[0] || "",
-                                    aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(" ")[0] || "",
+                                    aStartTime: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                        " "
+                                    )[1] || "",
+                                    aEndTime: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                        " "
+                                    )[1] || "",
+                                    aStartDate: data_.tappointmentex[i].fields.Actual_StartTime.split(
+                                        " "
+                                    )[0] || "",
+                                    aEndDate: data_.tappointmentex[i].fields.Actual_EndTime.split(
+                                        " "
+                                    )[0] || "",
                                     actualHours: "",
                                     closebalance: "",
                                     rate: data_.tappointmentex[i].fields.Rate || 1,
@@ -526,6 +569,7 @@ Template.appointmentlist.onRendered(async function() {
                                     custFld13: data_.tappointmentex[i].fields.CUSTFLD13 || "",
                                     custFld11: data_.tappointmentex[i].fields.CUSTFLD11 || "",
                                 };
+
                                 appointmentList.push(appointment);
                             }
 
@@ -666,6 +710,7 @@ Template.appointmentlist.onRendered(async function() {
                             templateObject.datatablerecords.set(dataTableList);
                         }
                     })
+
                 }).catch(function(err) {
                     $('.fullScreenSpin').css('display', 'none');
                 });
@@ -688,15 +733,21 @@ Template.appointmentlist.onRendered(async function() {
                 $('.fullScreenSpin').css('display', 'none');
                 getVS1Data('TAppointment').then(async function(dataObject2) {
                     if (dataObject2.length == 0) {
-                        sideBarService.getAllAppointmentList(initialDataLoad, 0).then(function(data_) {
+                        sideBarService
+                        .getAllAppointmentList(initialDataLoad, 0)
+                        .then(function(data_) {
                             addVS1Data("TAppointment", JSON.stringify(data_));
                             for (let i = 0; i < data_.tappointmentex.length; i++) {
                                 var appointment = {
                                     id: data_.tappointmentex[i].fields.ID || "",
                                     sortdate: data_.tappointmentex[i].fields.CreationDate ?
-                                        moment(data_.tappointmentex[i].fields.CreationDate).format("YYYY/MM/DD") : "",
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "YYYY/MM/DD"
+                                        ) : "",
                                     appointmentdate: data_.tappointmentex[i].fields.CreationDate ?
-                                        moment(data_.tappointmentex[i].fields.CreationDate).format("DD/MM/YYYY") : "",
+                                        moment(data_.tappointmentex[i].fields.CreationDate).format(
+                                            "DD/MM/YYYY"
+                                        ) : "",
                                     accountname: data_.tappointmentex[i].fields.ClientName || "",
                                     statementno: data_.tappointmentex[i].fields.TrainerName || "",
                                     employeename: data_.tappointmentex[i].fields.TrainerName || "",
@@ -1163,7 +1214,10 @@ Template.appointmentlist.onRendered(async function() {
                 document.getElementById("appID").value = result[0].id;
                 document.getElementById("customer").value = result[0].accountname;
                 document.getElementById("phone").value = result[0].phone;
-                document.getElementById("mobile").value = result[0].mobile.replace("+", "") || result[0].phone.replace("+", "") || "";
+                document.getElementById("mobile").value =
+                    result[0].mobile.replace("+", "") ||
+                    result[0].phone.replace("+", "") ||
+                    "";
                 document.getElementById("state").value = result[0].state;
                 document.getElementById("address").value = result[0].street;
                 if (localStorage.getItem("CloudAppointmentNotes") == true) {
@@ -1174,17 +1228,28 @@ Template.appointmentlist.onRendered(async function() {
                 document.getElementById("zip").value = result[0].zip;
                 document.getElementById("country").value = result[0].country;
 
-                document.getElementById("product-list").value = result[0].product || "";
-                document.getElementById("product-list-1").value = result[0].product || "";
-                document.getElementById("employee_name").value = result[0].employeename;
-                document.getElementById("dtSODate").value = moment(result[0].startDate.split(" ")[0]).format("DD/MM/YYYY");
-                document.getElementById("dtSODate2").value = moment(result[0].endDate.split(" ")[0]).format("DD/MM/YYYY");
+                document.getElementById("product-list").value =
+                    result[0].product || "";
+                document.getElementById("product-list-1").value =
+                    result[0].product || "";
+                document.getElementById("employee_name").value =
+                    result[0].employeename;
+                document.getElementById("dtSODate").value = moment(
+                    result[0].startDate.split(" ")[0]
+                ).format("DD/MM/YYYY");
+                document.getElementById("dtSODate2").value = moment(
+                    result[0].endDate.split(" ")[0]
+                ).format("DD/MM/YYYY");
                 document.getElementById("startTime").value = result[0].startTime;
                 document.getElementById("endTime").value = result[0].endTime;
-                document.getElementById("txtBookedHoursSpent").value = result[0].totalHours;
-                document.getElementById("tActualStartTime").value = result[0].aStartTime;
-                document.getElementById("tActualEndTime").value = result[0].aEndTime;
-                document.getElementById("txtActualHoursSpent").value = parseFloat(hours).toFixed(2) || "";
+                document.getElementById("txtBookedHoursSpent").value =
+                    result[0].totalHours;
+                document.getElementById("tActualStartTime").value =
+                    result[0].aStartTime;
+                document.getElementById("tActualEndTime").value =
+                    result[0].aEndTime;
+                document.getElementById("txtActualHoursSpent").value =
+                    parseFloat(hours).toFixed(2) || "";
 
                 if (!$("#smsConfirmedFlag i.fa-check-circle").hasClass("d-none"))
                     $("#smsConfirmedFlag i.fa-check-circle").addClass("d-none");
@@ -1196,7 +1261,9 @@ Template.appointmentlist.onRendered(async function() {
                     $("#smsConfirmedFlag i.fa-minus-circle").addClass("d-none");
                 if (result[0].custFld13 === "Yes") {
                     if (result[0].custFld11 === "Yes") {
-                        $("#smsConfirmedFlag i.fa-check-circle").removeClass("d-none");
+                        $("#smsConfirmedFlag i.fa-check-circle").removeClass(
+                            "d-none"
+                        );
                     } else {
                         if (result[0].custFld11 === "No") {
                             $("#smsConfirmedFlag i.fa-close").removeClass("d-none");
@@ -1217,20 +1284,22 @@ Template.appointmentlist.onRendered(async function() {
                 if (result[0].extraProducts != "") {
                     let extraProducts = result[0].extraProducts.split(":");
                     let extraProductFees = [];
-                    productService.getNewProductServiceListVS1().then(function(products) {
-                        extraProducts.forEach((item) => {
-                            $("#productCheck-" + item).prop("checked", true);
-                            products.tproductvs1.forEach((product) => {
-                                if (product.Id == item) {
-                                    extraProductFees.push(product);
-                                }
+                    productService.getNewProductServiceListVS1()
+                        .then(function(products) {
+                            extraProducts.forEach((item) => {
                                 $("#productCheck-" + item).prop("checked", true);
+                                products.tproductvs1.forEach((product) => {
+                                    if (product.Id == item) {
+                                        extraProductFees.push(product);
+                                    }
+                                    $("#productCheck-" + item).prop("checked", true);
+                                });
                             });
+                            templateObject.extraProductFees.set(extraProductFees);
+                            $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
+                        })
+                        .catch(function(err) {
                         });
-                        templateObject.extraProductFees.set(extraProductFees);
-                        $(".addExtraProduct").removeClass("btn-primary").addClass("btn-success");
-                    }).catch(function(err) {
-                    });
                 }
 
                 setTimeout(() => {
@@ -1336,7 +1405,7 @@ Template.appointmentlist.events({
                         }
                         var dataListAppointmentList = [
                             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + useData[i].id + '" name="' + useData[i].id + '"> <label class="custom-control-label" for="f-' + useData[i].id + '"></label></div>' || '',
-                            // useData[i].sortdate || '',
+                            useData[i].sortdate || '',
                             useData[i].id || '',
                             '<span style="display:none;">' + useData[i].sortdate + '</span> ' + useData[i].appointmentdate || '',
                             useData[i].accountname || '',
@@ -1417,7 +1486,7 @@ Template.appointmentlist.events({
                 }
                 var dataListAppointmentList = [
                     '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + useData[i].id + '" name="' + useData[i].id + '"> <label class="custom-control-label" for="f-' + useData[i].id + '"></label></div>' || '',
-                    // useData[i].sortdate || '',
+                    useData[i].sortdate || '',
                     useData[i].id || '',
                     '<span style="display:none;">' + useData[i].sortdate + '</span> ' + useData[i].appointmentdate || '',
                     useData[i].accountname || '',
@@ -1964,7 +2033,7 @@ Template.appointmentlist.events({
                         }
                         var dataListAppointmentList = [
                             '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + dataTableList[p].id + '" name="' + dataTableList[p].id + '"> <label class="custom-control-label" for="f-' + dataTableList[p].id + '"></label></div>' || '',
-                            // dataTableList[p].sortdate || '',
+                            dataTableList[p].sortdate || '',
                             dataTableList[p].id || '',
                             '<span style="display:none;">' + dataTableList[p].sortdate + '</span> ' + dataTableList[p].appointmentdate || '',
                             dataTableList[p].accountname || '',
@@ -2152,7 +2221,7 @@ Template.appointmentlist.events({
                     }
                     var dataListAppointmentList = [
                         '<div class="custom-control custom-checkbox pointer" style="width:15px;"><input class="custom-control-input chkBox notevent pointer" type="checkbox" id="f-' + dataTableList[p].id + '" name="' + dataTableList[p].id + '"> <label class="custom-control-label" for="f-' + dataTableList[p].id + '"></label></div>' || '',
-                        // dataTableList[p].sortdate || '',
+                        dataTableList[p].sortdate || '',
                         dataTableList[p].id || '',
                         '<span style="display:none;">' + dataTableList[p].sortdate + '</span> ' + dataTableList[p].appointmentdate || '',
                         dataTableList[p].accountname || '',
@@ -2260,6 +2329,7 @@ Template.appointmentlist.events({
             };
             tableHeaderList.push(datatablerecordObj);
         });
+
         templateObject.tableheaderrecords.set(tableHeaderList);
     },
     'click #exportbtn': function() {
