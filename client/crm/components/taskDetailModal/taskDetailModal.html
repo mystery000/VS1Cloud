@@ -48,32 +48,32 @@
     }
 
     .colProjectTaskDesc {
-      width: 50% !important;
+      /*width: 50% !important;*/
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
 
     }
 
-    .colProjectTaskLabels {
-      width: 50% !important;
-    }
+    /*.colProjectTaskLabels {*/
+    /*  width: 50% !important;*/
+    /*}*/
 
-    .colSubComplete {
-      width: 30px !important;
-    }
+    /*.colSubComplete {*/
+    /*  width: 30px !important;*/
+    /*}*/
 
-    .colSubDate {
-      width: 120px !important;
-    }
+    /*.colSubDate {*/
+    /*  width: 120px !important;*/
+    /*}*/
 
-    .colSubTaskActions {
-      width: 220px !important;
-    }
+    /*.colSubTaskActions {*/
+    /*  width: 220px !important;*/
+    /*}*/
 
-    .colSubTaskName {
-      width: 50% !important;
-    }
+    /*.colSubTaskName {*/
+    /*  width: 50% !important;*/
+    /*}*/
 
     .btnTaskTableAction {
       height: 38px !important;
@@ -221,9 +221,9 @@
       border: solid 1px #e3e3e3;
     }
 
-    .crmtaskdrop {
-      min-width: 15rem !important;
-    }
+    /*.crmtaskdrop {*/
+    /*  min-width: 15rem !important;*/
+    /*}*/
 
     .dropdown-menu a {
       cursor: pointer;
@@ -547,25 +547,25 @@
       color: #8f8f8f;
     }
 
-    .colPrjectDate {
-      width: 5%;
-    }
+    /*.colPrjectDate {*/
+    /*  width: 5%;*/
+    /*}*/
 
-    .colProjectName {
-      width: 35%;
-    }
+    /*.colProjectName {*/
+    /*  width: 35%;*/
+    /*}*/
 
     .colProjectDesc {
-      width: 60%;
-      max-width: 500px;
+      /*width: 60%;*/
+      /*max-width: 500px;*/
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
     }
 
-    .colProjectActions {
-      width: 10%;
-    }
+    /*.colProjectActions {*/
+    /*  width: 10%;*/
+    /*}*/
 
     .btnProjectOptions:after {
       display: none;
@@ -994,24 +994,39 @@
                             </tbody>
                           </table>
                         </div> -->
-                        <style>
-                            #tblSubtaskDatatable{
-                                width:100% !important;
-                            }
-                            #tblSubtaskDatatable .colCompleteTask{
-                                width:2% !important;
-                            }
-                            #tblSubtaskDatatable .colSubDate{
-                                width:15% !important;
-                            }
-                            #tblSubtaskDatatable .colSubTaskName{
-                                width:50% !important;
-                            }
-                            #tblSubtaskDatatable .colTaskActions{
-                                width:15% !important;
-                            }
-                        </style>
-                        {{> non_transactional_list tablename="tblSubtaskDatatable"}}
+<!--                        <style>-->
+<!--                            #tblSubtaskDatatable{-->
+<!--                                width:100% !important;-->
+<!--                            }-->
+<!--                            #tblSubtaskDatatable .colCompleteTask{-->
+<!--                                width:2% !important;-->
+<!--                            }-->
+<!--                            #tblSubtaskDatatable .colSubDate{-->
+<!--                                width:15% !important;-->
+<!--                            }-->
+<!--                            #tblSubtaskDatatable .colSubTaskName{-->
+<!--                                width:50% !important;-->
+<!--                            }-->
+<!--                            #tblSubtaskDatatable .colTaskActions{-->
+<!--                                width:15% !important;-->
+<!--                            }-->
+<!--                        </style>-->
+<!--                        {{> non_transactional_list tablename="tblSubtaskDatatable"}}-->
+                          {{>datatablelist
+                                  tablename="tblSubtaskDatatable"
+                                  apiName= apiFunction
+                                  indexeddbname = 'TCRMTaskList'
+                                  tableheaderrecords = tableheaderrecords
+                                  exportfilename = 'Label List'
+                                  istransaction = false
+                                  apiParams= apiParams
+                                  datahandler = datahandler
+                                  service=service
+                                  lowercaseDataName='tprojecttaskslist'
+                                  exIndexDBName = 'tprojecttaskslist'
+                                  exdatahandler = exDataHandler
+                                  searchAPI = searchAPI
+                          }}
                       </div>
   
                       <div class="col-12">

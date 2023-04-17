@@ -462,6 +462,15 @@ openDb = function (dbName) {
       db.createObjectStore("TProductionPlanData", { keyPath: "EmployeeEmail" });
       db.createObjectStore("VS1_BankRule", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1Workorder", {keyPath: "EmployeeEmail" });
+      
+      db.createObjectStore("TVS1ProcessClockList", {keyPath: "EmployeeEmail" }); //Danila add
+      db.createObjectStore("TVS1ClockOnReport", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1EmployeeClockStatus", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1BuildCostReport", {keyPath: "EmployeeEmail" });
+
+
+
+
 
       db.createObjectStore("TVS1DashboardStatus", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1DashboardOptions", {keyPath: "EmployeeEmail" });
@@ -561,6 +570,7 @@ openDb = function (dbName) {
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAppointmentsTimeLog", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TNewLeaveRequest", { keyPath: "EmployeeEmail" });
 
 
       // For accountant favorite reports state

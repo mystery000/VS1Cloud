@@ -465,6 +465,7 @@
                               </style>
 <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
                                 {{>datatablelist
+                                        tableclass="tblCustomerCrmListWithDate"
                                         tablename="tblCustomerCrmListWithDate"
                                         apiName= apiFunction
                                         indexeddbname = 'TCRMTaskList'
@@ -1158,6 +1159,7 @@
                               </style>
 <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
                                 {{>datatablelist
+                                        tableclass="tblCustomerCrmListWithDate"
                                         tablename="tblCustomerCrmListWithDate"
                                         apiName= apiFunction
                                         indexeddbname = 'TCRMTaskList'
@@ -2931,7 +2933,7 @@
   </div>
 
   {{> taskDetailModal}}
-  <!-- {{> frmappointmentpop}} temp commented out because of using all_transaction_modal-->  
+  <!-- {{> frmappointmentpop}} temp commented out because of using all_transaction_modal-->
   {{> newTaskModal}}
 
 

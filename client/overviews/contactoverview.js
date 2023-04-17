@@ -90,7 +90,7 @@ Template.contactoverview.onCreated(function() {
 
 
         var dataList = [
-            '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.ID + '-' + clienttype + '"></label></div>',
+            // '<div class="custom-control custom-checkbox chkBox chkBoxContact pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-' + data.ID + '-' + clienttype + '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.ID + '-' + clienttype + '"></label></div>',
             data.ID || "",
             data.name || "",
             clienttype || "",
@@ -111,32 +111,32 @@ Template.contactoverview.onCreated(function() {
             "",
             linestatus,
         ];
-  
+
         return dataList;
       }
-  
-  
+
+
     let headerStructure = [
-        { index: 0, label: '', class: 'colchkBox', active: false, display: true, width: "10" },
-        { index: 1, label: 'ID', class: 'colContactID', active: false, display: true, width: "10" },
-        { index: 2, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200" },
-        { index: 3, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
-        { index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-        { index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "95" },
-        { index: 6, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
-        { index: 7, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
-        { index: 8, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
-        { index: 9, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "90" },
-        { index: 10, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
-        { index: 11, label: 'Email', class: 'colEmail', active: false, display: true, width: "200" },
-        { index: 12, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120" },
-        { index: 13, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120" },
-        { index: 14, label: 'Address', class: 'colAddress', active: true, display: true, width: "" },
-        { index: 15, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
-        { index: 16, label: 'State', class: 'colState', active: false, display: true, width: "120" },
-        { index: 17, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
-        { index: 18, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
-        { index: 19, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+        // { index: 0, label: '', class: 'colchkBox', active: false, display: true, width: "10" },
+        { index: 0, label: 'ID', class: 'colContactID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Contact Name', class: 'colClientName', active: true, display: true, width: "200" },
+        { index: 2, label: 'Type', class: 'colType', active: true, display: true, width: "130" },
+        { index: 3, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
+        { index: 4, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "95" },
+        { index: 5, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "90" },
+        { index: 6, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 7, label: 'Balance', class: 'colBalance', active: true, display: true, width: "80" },
+        { index: 8, label: 'Credit Limit', class: 'colCreditLimit', active: false, display: true, width: "90" },
+        { index: 9, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "120" },
+        { index: 10, label: 'Email', class: 'colEmail', active: false, display: true, width: "200" },
+        { index: 11, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "120" },
+        { index: 12, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "120" },
+        { index: 13, label: 'Address', class: 'colAddress', active: true, display: true, width: "" },
+        { index: 14, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "120" },
+        { index: 15, label: 'State', class: 'colState', active: false, display: true, width: "120" },
+        { index: 16, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "80" },
+        { index: 17, label: 'Country', class: 'colCountry', active: false, display: true, width: "200" },
+        { index: 18, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 
@@ -900,9 +900,9 @@ Template.contactoverview.onRendered(function () {
   //   }
   //   templateObject.getContactOverviewData();
   $("#tblcontactoverview tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").find(".colContactID").html();
-    var transactiontype =
-      $(event.target).closest("tr").find(".colType").text() || "";
+    var listData = $(this).closest('tr').attr("id");
+    //$(this).closest("tr").find(".colContactID").html();
+    var transactiontype = $(event.target).closest("tr").find(".colType").text() || "";
     if (listData && transactiontype) {
       if (transactiontype === "Customer / Employee / Supplier") {
         FlowRouter.go("/customerscard?id=" + listData);
@@ -923,7 +923,6 @@ Template.contactoverview.onRendered(function () {
       }
     }
   });
-  //tableResize();
 });
 
 Template.contactoverview.events({
@@ -1725,7 +1724,7 @@ Template.contactoverview.helpers({
         let sideBarService = new SideBarService();
         return sideBarService;
       },
-    
+
       datahandler: function () {
         let templateObject = Template.instance();
         return function(data) {
@@ -1733,7 +1732,7 @@ Template.contactoverview.helpers({
             return dataReturn
         }
       },
-      
+
       exDataHandler: function() {
         let templateObject = Template.instance();
         return function(data) {
@@ -1741,11 +1740,11 @@ Template.contactoverview.helpers({
             return dataReturn
         }
       },
-    
+
       apiParams: ()=>{
         return ['limitCount', 'limitFrom','deleteFilter']
       },
-    
+
       searchAPI: function() {
         let sideBarService = new SideBarService();
         return sideBarService.getAllContactCombineVS1ByName;

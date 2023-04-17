@@ -428,6 +428,7 @@
                         </div>
                         <div class="modal-body mainCustomerModalBody appointmentCustomer" style="padding: 20px; overflow-x: hidden;">
                             {{>datatablelist
+                                    tableclass="tblCustomerlist_frmj"
                                     tablename="tblCustomerlist_frmj"
                                     apiName= apiFunction
                                     indexeddbname = 'TCustomerVS1List'
@@ -504,6 +505,7 @@
                                 #tblDepartmentList_frmj{width: 100% !important;}
                             </style>
                             {{>datatablelist
+                                    tableclass="tblDepartmentList_frmj"
                                     tablename="tblDepartmentList_frmj"
                                     apiName= apiFunction_d
                                     indexeddbname = 'TDeptClassList'

@@ -317,6 +317,13 @@ const erpObject = {
     TABADescriptiveRecord: "TABADescriptiveRecord",
     TProjectTasksList: "TProjectTasksList",
     TVS1Workorder: "TVS1Workorder",
+    
+    TVS1ProcessClockList: "TVS1ProcessClockList", // Danila add
+    TVS1ClockOnReport: "TVS1ClockOnReport",
+    TVS1EmployeeClockStatus: "TVS1EmployeeClockStatus",
+    TVS1BuildCostReport : "TVS1BuildCostReport", 
+
+
     TCostTypes: "TCostTypes",
     TProductBatches: "TProductBatches",
     TStockMovement:"TStockMovement",
@@ -325,8 +332,9 @@ const erpObject = {
     ProductionWorksheetReport: "ProductionWorksheetReport",
     WorkOrderReport: "WorkOrderReport",
     //TProductQtyList:"TProductQtyList",
-    TNewAppointment:"TNewAppointment ", 
+    TNewAppointment:"TNewAppointment", 
     TAppointmentsTimeLog:"TAppointmentsTimeLog ", 
+    TNewLeaveRequest:"TNewLeaveRequest",
 };
 
 export default erpObject;

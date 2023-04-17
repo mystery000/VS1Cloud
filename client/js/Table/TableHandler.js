@@ -26,6 +26,15 @@ export default class TableHandler {
     $(".dataTable tbody tr td").on("mouseover", () => {
       this.refreshDatatableResizable();
     });
+
+    $(".transactionLines tbody").on("mouseup", () => {
+      this.disableTransDatatableResizable();
+    });
+
+    $(".transactionLines tbody").on("mouseover", () => {
+      this.disableTransDatatableResizable();
+    });
+
   }
 
   /**
@@ -76,8 +85,12 @@ export default class TableHandler {
   /**
      * We first need to disable all previous events listeners related
      */
-  disableDatatableResizable() {
+  async disableDatatableResizable() {
     $(".dataTable").colResizable({disable: true});
+  }
+
+  async disableTransDatatableResizable() {
+    $(".transactionLines").colResizable({disable: true});
   }
 
   async saveTableColumnsDatatableList(tableName) {

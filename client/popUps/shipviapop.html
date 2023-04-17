@@ -8,8 +8,17 @@
             <div class="modal-body">
                 <input type="hidden" style="width: 100%; display:none;" id="selectLineID" name="selectLineID" readonly>
                 <div class="card-body p-1 rounded">
-                        <style>
-                        </style>
+                        <!-- <style>
+                            #tblShipViaPopList{
+                                width: 100%!important;
+                            }
+                            #tblShipViaPopList .colShipName{
+                                width: 80%!important;
+                        }
+                        #tblShipViaPopList .colStatus{
+                                width: 20%!important;
+                        }
+                        </style> -->
                         <!-- <table id="tblShipViaPopList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblShipViaPopList">
                             <thead>
                                 <tr class="dnd-moved">
@@ -19,7 +28,8 @@
                             <tbody>
                             </tbody>
                         </table> -->
-                        {{>datatablelist 
+                        {{>datatablelist
+                            tableclass="tblShipViaPopList"
                             tablename="tblShipViaPopList"
                             apiName= apiFunction
                             service = service

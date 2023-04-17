@@ -218,8 +218,8 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6 col-md-5 col-lg-4">
-                <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#displaySettingsModal2"
+            <div class="col-6 col-md-5 col-lg-4 d-xl-flex justify-content-xl-end align-items-xl-start">
+                <!-- <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#displaySettingsModal2"
                     style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                 <button class="btn btn-primary printConfirm float-right btnNav" type="button" style="margin: 12px;"><i
                         class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
@@ -228,11 +228,12 @@
                         style="padding-right: 5px;"></i>Export</button>
                 <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal"
                     href="#displaySettingsModal2" style="margin: 12px; display: none;"><i
-                        class="icon ion-android-more-horizontal"></i></a>
+                        class="icon ion-android-more-horizontal"></i></a> -->
+                {{> export_import_print_display_button Import="hiddenButton" tablename="tblSalesOverview"}}
             </div>
         </div>
             <div class="card-body px-0 py-3 rounded">
-                <div class="d-xl-flex justify-content-xl-end">
+                <!-- <div class="d-xl-flex justify-content-xl-end">
                     <div>
                         <div class="modal fade" role="dialog" tabindex="-1" id="displaySettingsModal2">
                             <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
@@ -277,29 +278,31 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
                 <!-- End -->
                 <div class="table-responsive">
-                    <div class="row no-gutters d-xl-flex align-items-xl-end">
-                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-
-                        </div>
-                        <div
-                            class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                            <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
-                                <style>
-                                    .btn-daterange::after {
-                                        display: none;
-                                    }
-                                </style>
-                                <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown"
-                                    aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                    {{> daterangedropdownoption}}
-                            </div>
-                            {{> daterangefromto_trans}}
-                        </div>
-                    </div>
-                    <table id="tblSalesOverview" class="dataTable table table-striped table-bordered tblSalesOverview">
+                    <style>
+                        td.colAmountEx, td.colTax, td.colAmount, td.colBalanceOutstanding, td.colPaid{
+                            text-align: right !important;
+                        }
+                    </style>
+                    {{>datatablelist
+                        tablename="tblSalesOverview"
+                        apiName= apiFunction
+                        indexeddbname = 'TSalesList'
+                        tableheaderrecords = tableheaderrecords
+                        exportfilename = 'Sales Overview'
+                        istransaction = true
+                        apiParams= apiParams
+                        datahandler = datahandler
+                        service=service
+                        lowercaseDataName='tsaleslist'
+                        exIndexDBName = 'tsaleslist'
+                        exdatahandler = exDataHandler
+                        searchAPI = searchAPI
+                        orderby = '[[ 0, "desc" ],[ 1, "desc" ]]'
+                    }}
+                    <!-- <table id="tblSalesOverview" class="dataTable table table-striped table-bordered tblSalesOverview">
                         <thead>
                           <tr class="dnd-moved">
                             <th class="th colSortDate hiddenColumn">id</th>
@@ -339,7 +342,7 @@
                             {{/each}}
                             {{/if}}
                         </tbody>
-                    </table>
+                    </table> -->
                 </div>
             </div>
     </div>

@@ -322,13 +322,13 @@ export class UtilityService {
         $('.fullScreenSpin').css('display', 'none');
     }
 
-    exportReportToSpreadSheet = function (tableName, filename, type) {
-        $("#" + tableName).tableToSpreadSheet({
-            type: 'xlsx',
-            filename: filename,
-        });
-        $('.fullScreenSpin').css('display', 'none');
-    }
+    // exportReportToSpreadSheet = function (tableName, filename, type) {
+    //     $("#" + tableName).tableToSpreadSheet({
+    //         type: 'xlsx',
+    //         filename: filename,
+    //     });
+    //     $('.fullScreenSpin').css('display', 'none');
+    // }
 
     exportReportToCsv = function(rows, filename, type) {
         let processRow = function(row) {
