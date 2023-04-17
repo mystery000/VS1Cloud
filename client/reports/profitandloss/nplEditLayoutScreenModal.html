@@ -56,345 +56,413 @@
                         <script type="text/javascript" src="jquery-calx-1.1.8.min.js"></script>
 
                         <div class="row" style="flex: 1;">
-                            <div class="edtInfo">
-                                <h5 class="" style="margin-bottom: 0px;">{{companyname}}&nbsp;</h5>
-                                <h5 class="" style="margin-bottom: 8px;">For the month ended {{shortDate
-                                        dateAsAt}}</h5>
-                            </div>
-                            <hr class="periodSelectorLine"/>
-                            <!-- <div class="accdate">
-                                <label class="col-9 dragVal" style=""></label>
-                                <label class="col-3 dragAcc" style="text-align: right;" id="">Jan 2022</label>
-                            </div> -->
-
-                            <!-- <div class="sortableAccount">
-                                <div class=" avoid">
-                                    <label class="col-9 dragAcc" style="">Trading Income</label>
-                                    <label class="col-3 dragVal" style="" id="">11000.00</label>
+                            <div style="width: 100%;">
+                                <div class="edtInfo">
+                                    <h5 class="" style="margin-bottom: 0px;">{{companyname}}&nbsp;</h5>
+                                    <h5 class="" style="margin-bottom: 8px;">For the month ended {{shortDate
+                                            dateAsAt}}</h5>
                                 </div>
-                                <div class="draggable">
-                                    <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                    <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Interest Income</label>
-                                    <label class="col-3 dragVal" style="">11000.00</label>
-                                </div>
-                                <div class="draggable">
-                                    <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                    <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Other Revenue</label>
-                                    <label class="col-3 dragVal" style="">11000.00</label>
-                                </div>
-                                <div class="draggable">
-                                    <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                    <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Sales</label>
-                                    <label class="col-3 dragVal" style="">11000.00</label>
-                                </div>
-                                <div class="draggable" id="tot">
-                                    <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                    <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Total Trading Income</label>
-                                    <label class="col-3 dragVal" style="">11000.00</label>
-                                </div>
-                            </div> -->
-                            <style>
-                                ol {
-                                    list-style: none !important;
-                                }
+                                <hr class="periodSelectorLine"/>
+                                <!-- <div class="accdate">
+                                    <label class="col-9 dragVal" style=""></label>
+                                    <label class="col-3 dragAcc" style="text-align: right;" id="">Jan 2022</label>
+                                </div> -->
 
-                                ol.vertical {
-                                    display: inline-block;
-                                    width: 100%;
-                                    padding: 0;
-                                    background: transparent;
-                                }
+                                <!-- <div class="sortableAccount">
+                                    <div class=" avoid">
+                                        <label class="col-9 dragAcc" style="">Trading Income</label>
+                                        <label class="col-3 dragVal" style="" id="">11000.00</label>
+                                    </div>
+                                    <div class="draggable">
+                                        <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                        <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Interest Income</label>
+                                        <label class="col-3 dragVal" style="">11000.00</label>
+                                    </div>
+                                    <div class="draggable">
+                                        <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                        <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Other Revenue</label>
+                                        <label class="col-3 dragVal" style="">11000.00</label>
+                                    </div>
+                                    <div class="draggable">
+                                        <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                        <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Sales</label>
+                                        <label class="col-3 dragVal" style="">11000.00</label>
+                                    </div>
+                                    <div class="draggable" id="tot">
+                                        <div class="col-1" style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                        <label class="col-8 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">Total Trading Income</label>
+                                        <label class="col-3 dragVal" style="">11000.00</label>
+                                    </div>
+                                </div> -->
+<!--                                <style>-->
+<!--                                    ol {-->
+<!--                                        list-style: none !important;-->
+<!--                                    }-->
 
-                                ol.vertical li {
-                                    margin: 0;
-                                    color: #202020;
-                                    font-size: 1rem;
-                                    width: 100% !important;
-                                    height: unset !important;
-                                    float: left;
-                                }
+<!--                                    ol.vertical {-->
+<!--                                        display: inline-block;-->
+<!--                                        width: 100%;-->
+<!--                                        padding: 0;-->
+<!--                                        background: transparent;-->
+<!--                                    }-->
 
-                                .mainHeadingDiv {
-                                    float: left;
-                                    width: 100%;
-                                    /* position: relative; */
-                                }
+<!--                                    ol.vertical li {-->
+<!--                                        margin: 0;-->
+<!--                                        color: #202020;-->
+<!--                                        font-size: 1rem;-->
+<!--                                        width: 100% !important;-->
+<!--                                        height: unset !important;-->
+<!--                                        float: left;-->
+<!--                                    }-->
 
-                                ol.vertical li h1 {
-                                    padding: 0;
-                                    border: 1px solid #e7e7e7;
-                                    background: #f3f3f3;
-                                    font-size: 1rem;
-                                    font-weight: 800;
-                                    color: #858796;
-                                    border-radius: 2px;
-                                    display: inline-flex;
-                                    width: 100%;
-                                    align-items: center;
-                                    float: left;
-                                    cursor: pointer;
-                                }
+<!--                                    .mainHeadingDiv {-->
+<!--                                        float: left;-->
+<!--                                        width: 100%;-->
+<!--                                        /* position: relative; */-->
+<!--                                    }-->
 
-                                .selectedEffect {
-                                    position: absolute;
-                                    top: 0;
-                                    left: 0;
-                                    width: 100%;
-                                    height: 100%;
-                                    opacity: 0;
-                                    z-index: 1;
-                                }
+<!--                                    ol.vertical li h1 {-->
+<!--                                        padding: 0;-->
+<!--                                        border: 1px solid #e7e7e7;-->
+<!--                                        background: #f3f3f3;-->
+<!--                                        font-size: 1rem;-->
+<!--                                        font-weight: 800;-->
+<!--                                        color: #858796;-->
+<!--                                        border-radius: 2px;-->
+<!--                                        display: inline-flex;-->
+<!--                                        width: 100%;-->
+<!--                                        align-items: center;-->
+<!--                                        float: left;-->
+<!--                                        cursor: pointer;-->
+<!--                                    }-->
 
-                                ol.vertical .subChild {
-                                    width: 100% !important;
-                                    height: unset !important;
-                                    float: left;
-                                    /* position: relative; */
-                                    cursor: pointer;
-                                }
+<!--                                    .selectedEffect {-->
+<!--                                        position: absolute;-->
+<!--                                        top: 0;-->
+<!--                                        left: 0;-->
+<!--                                        width: 100%;-->
+<!--                                        height: 100%;-->
+<!--                                        opacity: 0;-->
+<!--                                        z-index: 1;-->
+<!--                                    }-->
 
-                                .subChild .childInner {
-                                    padding: 0;
-                                    border: 1px solid #e7e7e7;
-                                    background: #f3f3f3;
-                                    font-size: 1rem;
-                                    font-weight: 400;
-                                    color: #00a3d3;
-                                    border-radius: 2px;
-                                    display: inline-flex;
-                                    width: 100%;
-                                    align-items: center;
-                                    float: left;
-                                }
+<!--                                    ol.vertical .subChild {-->
+<!--                                        width: 100% !important;-->
+<!--                                        height: unset !important;-->
+<!--                                        float: left;-->
+<!--                                        /* position: relative; */-->
+<!--                                        cursor: pointer;-->
+<!--                                    }-->
 
-                                .subChild .childInner strong {
-                                    color: #858796;
-                                }
+<!--                                    .subChild .childInner {-->
+<!--                                        padding: 0;-->
+<!--                                        border: 1px solid #e7e7e7;-->
+<!--                                        background: #f3f3f3;-->
+<!--                                        font-size: 1rem;-->
+<!--                                        font-weight: 400;-->
+<!--                                        color: #00a3d3;-->
+<!--                                        border-radius: 2px;-->
+<!--                                        display: inline-flex;-->
+<!--                                        width: 100%;-->
+<!--                                        align-items: center;-->
+<!--                                        float: left;-->
+<!--                                    }-->
 
-                                .subChild.selected.noDrag .childInner {
-                                    cursor: not-allowed !important;
-                                }
+<!--                                    .subChild .childInner strong {-->
+<!--                                        color: #858796;-->
+<!--                                    }-->
 
-                                .subChild.selected .childInner strong {
-                                    color: #fff;
-                                }
+<!--                                    .subChild.selected.noDrag .childInner {-->
+<!--                                        cursor: not-allowed !important;-->
+<!--                                    }-->
 
-                                ol.vertical li.placeholder {
-                                    position: relative;
-                                    margin: 0;
-                                    padding: 0;
-                                    border: none;
-                                    width: 100%;
-                                    display: inline-block;
-                                    height: 2px !important;
-                                    float: left;
-                                    background: #028dde;
-                                }
+<!--                                    .subChild.selected .childInner strong {-->
+<!--                                        color: #fff;-->
+<!--                                    }-->
 
-                                .selected > .childInner,
-                                .selected > .mainHeadingDiv h1 {
-                                    background: #028dde !important;
-                                    border: 1px solid #028dde !important;
-                                    color: #fff !important;
-                                    cursor: grab !important;
-                                }
+<!--                                    ol.vertical li.placeholder {-->
+<!--                                        position: relative;-->
+<!--                                        margin: 0;-->
+<!--                                        padding: 0;-->
+<!--                                        border: none;-->
+<!--                                        width: 100%;-->
+<!--                                        display: inline-block;-->
+<!--                                        height: 2px !important;-->
+<!--                                        float: left;-->
+<!--                                        background: #028dde;-->
+<!--                                    }-->
 
-                                .subChild.dragged .childInner,
-                                    /* .dragged, */
-                                ol.vertical li.dragged .childInner,
-                                ol.vertical li.dragged h1 {
-                                    cursor: grab !important;
-                                    opacity: 0.55 !important;
-                                    background: #028dde !important;
-                                    border: 1px solid #028dde !important;
-                                    color: #fff !important;
-                                    /* position: absolute; */
-                                }
+<!--                                    .selected > .childInner,-->
+<!--                                    .selected > .mainHeadingDiv h1 {-->
+<!--                                        background: #028dde !important;-->
+<!--                                        border: 1px solid #028dde !important;-->
+<!--                                        color: #fff !important;-->
+<!--                                        cursor: grab !important;-->
+<!--                                    }-->
 
-                                .dragged .childInner strong {
-                                    color: #fff !important;
-                                }
+<!--                                    .subChild.dragged .childInner,-->
+<!--                                        /* .dragged, */-->
+<!--                                    ol.vertical li.dragged .childInner,-->
+<!--                                    ol.vertical li.dragged h1 {-->
+<!--                                        cursor: grab !important;-->
+<!--                                        opacity: 0.55 !important;-->
+<!--                                        background: #028dde !important;-->
+<!--                                        border: 1px solid #028dde !important;-->
+<!--                                        color: #fff !important;-->
+<!--                                        /* position: absolute; */-->
+<!--                                    }-->
 
-                                .collepsDiv {
-                                    display: inline-flex;
-                                    width: 32px;
-                                    height: 30px;
-                                    position: relative;
-                                    justify-content: center;
-                                    align-items: center;
-                                    font-size: 18px;
-                                    pointer-events: none !important;
-                                    opacity: 0;
-                                }
+<!--                                    .dragged .childInner strong {-->
+<!--                                        color: #fff !important;-->
+<!--                                    }-->
 
-                                .collepsDiv::after {
-                                    content: "";
-                                }
+<!--                                    .collepsDiv {-->
+<!--                                        display: inline-flex;-->
+<!--                                        width: 32px;-->
+<!--                                        height: 30px;-->
+<!--                                        position: relative;-->
+<!--                                        justify-content: center;-->
+<!--                                        align-items: center;-->
+<!--                                        font-size: 18px;-->
+<!--                                        pointer-events: none !important;-->
+<!--                                        opacity: 0;-->
+<!--                                    }-->
 
-                                .collapsTogls > h1 .collepsDiv::after {
-                                    content: "";
-                                }
+<!--                                    .collepsDiv::after {-->
+<!--                                        content: "";-->
+<!--                                    }-->
 
-                                .collapsTogls ~ ol.groupedListNew {
-                                    display: none;
-                                }
+<!--                                    .collapsTogls > h1 .collepsDiv::after {-->
+<!--                                        content: "";-->
+<!--                                    }-->
 
-                                /* .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv { */
-                                li .mainHeadingDiv > .mainHeading > .collepsDiv {
-                                    pointer-events: unset !important;
-                                    cursor: pointer;
-                                    opacity: 1;
-                                }
-                            </style>
-                            {{#if profitlosslayoutrecords}}
-                                <div class="customSortableDiv">
-                                    <form action="" name="" method="POST">
+<!--                                    .collapsTogls ~ ol.groupedListNew {-->
+<!--                                        display: none;-->
+<!--                                    }-->
 
-                                        <ol class='nested_with_switch vertical'>
-                                            {{#each item in profitlosslayoutrecords }}
-                                                <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}"
-                                                    data-group="{{ item.AccountName }}"
-                                                    position="{{ item.Level0Order }}" class="mainList pSortItems">
-                                                    <div class="mainHeadingDiv">
-                                                        <h1 class="mainHeading"><span
-                                                                class="collepsDiv fas"></span>{{ item.AccountName }}
-                                                        </h1>
-                                                    </div>
-                                                    <ol class="groupedListNew" parent="{{ item.Level0Order }}">
-                                                        {{#each acItem in item.subAccounts }}
-                                                            {{#if isAccount acItem }}
-                                                                <li class="subChild cSortItems"
-                                                                    data-group="{{ acItem.AccountName }}"
-                                                                    plid="{{ acItem.ID }}"
-                                                                    key="layoutFields-{{ acItem.ID }}"
-                                                                    position="{{ acItem.Level1Order }}">
+<!--                                    /* .vertical > li > ol > li .mainHeadingDiv > .mainHeading > .collepsDiv { */-->
+<!--                                    li .mainHeadingDiv > .mainHeading > .collepsDiv {-->
+<!--                                        pointer-events: unset !important;-->
+<!--                                        cursor: pointer;-->
+<!--                                        opacity: 1;-->
+<!--                                    }-->
+<!--                                </style>-->
+                                <style>
+                                    div.jqtree_common{
+                                        border : 1px #dddddd solid !important;
+                                        background-color: #f5f5f5;
+                                        padding-top: 3px;
+                                        padding-bottom: 3px;
+                                        padding-left: 30px;
+                                    }
+                                    a.jqtree-toggler {
+                                        display: none;
+                                    }
+                                    .jqtree_common{
+                                        list-style: none;
+                                        color: black;
+                                        font-family: Arial, sans-serif;
+                                        font-size: 16px;
+                                    }
+                                    .jqtree_common[aria-selected="true"]>div, .jqtree_common[aria-selected="true"]>div span{
+                                        background-color: dodgerblue;
+                                        color: white;
+                                    }
+
+                                    #tree1>ul>li>div {
+                                        font-weight: bold;
+                                    }
+                                </style>
+                                <div id="tree1"></div>
+                                <script type="text/javascript">
+                                    var data = [
+                                        {
+                                            label: 'Tranding Income',
+                                            children: [
+                                                { label: 'Sales',
+                                                },
+                                                { label: 'Total Trending Income' }
+                                            ]
+                                        },
+                                        {
+                                            label: 'Cost of Sales',
+                                            children: [
+                                                { label: 'Cost of Goods Sold' },
+                                                { label: 'Purchases'},
+                                                { label: 'Total Cost of Sales'}
+                                            ]
+                                        },
+                                        {
+                                            label: "Gross Profit",
+                                        },
+                                        {
+                                            label: "Other Income",
+                                            children: [
+                                                { label: 'Interest Income',},
+                                                { label: 'Other Revenue'},
+                                                { label: 'Total Other Income'}
+                                            ]
+                                        },
+                                        {
+                                            label: "Net Profit",
+                                        }
+                                    ];
+                                    $('#tree1').tree({
+                                        data: data,
+                                        autoOpen: true,
+                                        dragAndDrop: true
+                                    });
+                                </script>
+
+                                {{#if profitlosslayoutrecords}}
+                                    <div class="customSortableDiv">
+                                        <form action="" name="" method="POST">
+
+                                            <ol class='nested_with_switch vertical'>
+                                                {{#each item in profitlosslayoutrecords }}
+                                                    <li key="layoutFields-{{ item.ID }}" plid="{{ item.ID }}"
+                                                        data-group="{{ item.AccountName }}"
+                                                        position="{{ item.Level0Order }}" class="mainList pSortItems">
+                                                        <div class="mainHeadingDiv">
+                                                            <h1 class="mainHeading"><span
+                                                                    class="collepsDiv fas"></span>{{ item.AccountName }}
+                                                            </h1>
+                                                        </div>
+                                                        <ol class="groupedListNew" parent="{{ item.Level0Order }}">
+                                                            {{#each acItem in item.subAccounts }}
+                                                                {{#if isAccount acItem }}
+                                                                    <li class="subChild cSortItems"
+                                                                        data-group="{{ acItem.AccountName }}"
+                                                                        plid="{{ acItem.ID }}"
+                                                                        key="layoutFields-{{ acItem.ID }}"
+                                                                        position="{{ acItem.Level1Order }}">
                                                                         <span class="childInner">
                                                                             <span class="collepsDiv fas"></span>{{ acItem.AccountName }}
                                                                         </span>
-                                                                </li>
-                                                            {{else}}
-                                                                <li class="subChild noDrag cSortItems"
-                                                                    plid="{{ acItem.ID }}"
-                                                                    data-group="{{ acItem.AccountName }}"
-                                                                    key="layoutFields-{{ acItem.ID }}"
-                                                                    position="{{ acItem.Level1Order }}">
-                                                                    <ol class="ddllkk"
-                                                                        parent="{{ acItem.Level1Order }}">
-                                                                        {{#each subacItem in acItem.subAccounts }}
-                                                                            {{#if isAccount subacItem }}
-                                                                                <li class="subChild scSortItems"
-                                                                                    plid="{{ subacItem.ID }}"
-                                                                                    data-group="{{ subacItem.AccountName }}"
-                                                                                    key="layoutFields-{{ subacItem.ID }}"
-                                                                                    position="{{ subacItem.Level2Order }}">
+                                                                    </li>
+                                                                {{else}}
+                                                                    <li class="subChild noDrag cSortItems"
+                                                                        plid="{{ acItem.ID }}"
+                                                                        data-group="{{ acItem.AccountName }}"
+                                                                        key="layoutFields-{{ acItem.ID }}"
+                                                                        position="{{ acItem.Level1Order }}">
+                                                                        <ol class="ddllkk"
+                                                                            parent="{{ acItem.Level1Order }}">
+                                                                            {{#each subacItem in acItem.subAccounts }}
+                                                                                {{#if isAccount subacItem }}
+                                                                                    <li class="subChild scSortItems"
+                                                                                        plid="{{ subacItem.ID }}"
+                                                                                        data-group="{{ subacItem.AccountName }}"
+                                                                                        key="layoutFields-{{ subacItem.ID }}"
+                                                                                        position="{{ subacItem.Level2Order }}">
                                                                                     <span class="childInner">
                                                                                         <span class="collepsDiv fas"></span>{{ subacItem.AccountName }}
                                                                                     </span>
-                                                                                </li>
-                                                                            {{else}}
-                                                                                <li class="subChild noDrag scSortItems"
-                                                                                    plid="{{ subacItem.ID }}"
-                                                                                    data-group="{{ subacItem.AccountName }}"
-                                                                                    key="layoutFields-{{ subacItem.ID }}"
-                                                                                    position="{{ subacItem.Level2Order }}">
-                                                                                    <ol class="ddllkk"></ol>
-                                                                                    <span class="childInner">
+                                                                                    </li>
+                                                                                {{else}}
+                                                                                    <li class="subChild noDrag scSortItems"
+                                                                                        plid="{{ subacItem.ID }}"
+                                                                                        data-group="{{ subacItem.AccountName }}"
+                                                                                        key="layoutFields-{{ subacItem.ID }}"
+                                                                                        position="{{ subacItem.Level2Order }}">
+                                                                                        <ol class="ddllkk"></ol>
+                                                                                        <span class="childInner">
                                                                                             <span class="collepsDiv fas"></span><strong>{{ subacItem.AccountName }}</strong>
                                                                                         </span>
-                                                                                </li>
-                                                                            {{/if}}
-                                                                        {{/each}}
-                                                                    </ol>
-                                                                    <span class="childInner">
+                                                                                    </li>
+                                                                                {{/if}}
+                                                                            {{/each}}
+                                                                        </ol>
+                                                                        <span class="childInner">
                                                                             <span class="collepsDiv fas"></span><strong>{{ acItem.AccountName }}</strong>
                                                                         </span>
-                                                                </li>
-                                                            {{/if}}
-                                                        {{/each}}
-                                                    </ol>
-                                                </li>
-                                            {{/each}}
-                                        </ol>
+                                                                    </li>
+                                                                {{/if}}
+                                                            {{/each}}
+                                                        </ol>
+                                                    </li>
+                                                {{/each}}
+                                            </ol>
 
-                                    </form>
+                                        </form>
 
 
-                                    <!-- <div class="sortableAccount">
+                                        <!-- <div class="sortableAccount">
                                             {{#each item in profitlosslayoutrecords }}
                                                 <div class="group-caption setParentPosition" data-acg0level="{{ item.AccountLevel0GroupName }}" data-acg1level="{{ item.AccountLevel1GroupName }}" data-acg2level="{{ item.AccountLevel2GroupName }}" parent="{{ item.ID }}" >
                                                     <h1 class="handel sortItem draggable" data-id="{{ item.ID }}" position="{{ item.Position }}" key="layoutFields-{{ item.ID }}">{{ item.AccountName }}</h1>
                                                     <div class="group-items">
                                                         {{#each acItem in item.subAccounts }}
-                                        {{#if acItem.AccountID }}
+                                            {{#if acItem.AccountID }}
                                                                 <p class="group-item sortItem g0" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</p>
                                                             {{else}}
                                                                 <h2 class="handel sortItem disableCursor" data-id="{{ acItem.ID }}" position="{{ acItem.Position }}" key="layoutFields-{{ acItem.ID }}">{{ acItem.AccountName }}</h2>
                                                             {{/if}}
-                                    {{/each}}
+                                        {{/each}}
                                                     </div>
                                                 </div>
                                             {{/each}}
                                         </div>  -->
-                                </div>
-                            {{/if}}
-                            {{#if recordslayout}}
-                                {{#each arrayify recordslayout}}
-                                    <div class="sortableAccount">
-                                        <i account-type="{{ value.item.accounttype }}"></i>
-                                        {{#each item in value}}
-                                            {{#if notEquals item.accounttype ""}}
+                                    </div>
+                                {{/if}}
+                                {{#if recordslayout}}
+                                    {{#each arrayify recordslayout}}
+                                        <div class="sortableAccount">
+                                            <i account-type="{{ value.item.accounttype }}"></i>
+                                            {{#each item in value}}
+                                                {{#if notEquals item.accounttype ""}}
 
-                                                {{#if containsequals item.accounttype "Total"}}
-                                                    <div class="draggable tot" style="font-weight: 600;"
-                                                         account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                                    {{#if containsequals item.accounttype "Total"}}
+                                                        <div class="draggable tot" style="font-weight: 600;"
+                                                             account-id="{{item.id}}" account-type="{{ item.accounttype }}">
+                                                            <div class="col-1"
+                                                                 style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
+                                                            <label class="col-11 dragAcc"
+                                                                   style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
+                                                            <!-- <label class="col-3 dragVal" style="">0.00</label> -->
+                                                        </div>
+                                                    {{else if containsequals item.accounttype "Gross Profit"}}
+                                                        <div class=" avoid gP" id="gP" account-id="{{item.id}}"
+                                                             account-type="{{ item.accounttype }}">
+                                                            <label class="col-12 dragAcc" style="">
+                                                                <!-- <span class="formula-icon">ƒ</span>  -->
+                                                                {{item.accounttype}}
+                                                            </label>
+                                                            <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
+                                                        </div>
+                                                    {{else if containsequals item.accounttype "Net Income"}}
+                                                        <div class=" avoid nP" id="nP" account-id="{{item.id}}"
+                                                             account-type="{{ item.accounttype }}">
+                                                            <label class="col-12 dragAcc" style="">
+                                                                <!-- <span class="formula-icon">ƒ</span> -->
+                                                                {{item.accounttype}}
+                                                            </label>
+                                                            <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
+                                                        </div>
+                                                    {{else}}
+                                                        <div class=" avoid" account-id="{{item.id}}"
+                                                             account-type="{{ item.accounttype }}">
+                                                            <label class="col-12 dragAcc"
+                                                                   style="">{{item.accounttype}}</label>
+                                                            <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
+                                                        </div>
+                                                    {{/if}}
+                                                {{else}}
+                                                    <div class="draggable" account-id="{{item.id}}"
+                                                         account-type="{{ item.accounttype }}">
                                                         <div class="col-1"
                                                              style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
                                                         <label class="col-11 dragAcc"
-                                                               style="flex:0 0 97%;max-width:95.67%;">{{item.accounttype}}</label>
+                                                               style="flex:0 0 97%;max-width:95.67%;">{{item.accountname}}</label>
+                                                        <!-- <label class="col-11 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">{{item.accountname}}</label> -->
                                                         <!-- <label class="col-3 dragVal" style="">0.00</label> -->
                                                     </div>
-                                                {{else if containsequals item.accounttype "Gross Profit"}}
-                                                    <div class=" avoid gP" id="gP" account-id="{{item.id}}"
-                                                         account-type="{{ item.accounttype }}">
-                                                        <label class="col-12 dragAcc" style="">
-                                                            <!-- <span class="formula-icon">ƒ</span>  -->
-                                                            {{item.accounttype}}
-                                                        </label>
-                                                        <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
-                                                    </div>
-                                                {{else if containsequals item.accounttype "Net Income"}}
-                                                    <div class=" avoid nP" id="nP" account-id="{{item.id}}"
-                                                         account-type="{{ item.accounttype }}">
-                                                        <label class="col-12 dragAcc" style="">
-                                                            <!-- <span class="formula-icon">ƒ</span> -->
-                                                            {{item.accounttype}}
-                                                        </label>
-                                                        <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
-                                                    </div>
-                                                {{else}}
-                                                    <div class=" avoid" account-id="{{item.id}}"
-                                                         account-type="{{ item.accounttype }}">
-                                                        <label class="col-12 dragAcc"
-                                                               style="">{{item.accounttype}}</label>
-                                                        <!-- <label class="col-3 dragVal" style="" id="">0.00</label> -->
-                                                    </div>
                                                 {{/if}}
-                                            {{else}}
-                                                <div class="draggable" account-id="{{item.id}}"
-                                                     account-type="{{ item.accounttype }}">
-                                                    <div class="col-1"
-                                                         style="flex:0 0 4.33333%;max-width:4.33333%;"></div>
-                                                    <label class="col-11 dragAcc"
-                                                           style="flex:0 0 97%;max-width:95.67%;">{{item.accountname}}</label>
-                                                    <!-- <label class="col-11 dragAcc" style="flex:0 0 70.66667%;max-width:70.66667%;">{{item.accountname}}</label> -->
-                                                    <!-- <label class="col-3 dragVal" style="">0.00</label> -->
-                                                </div>
-                                            {{/if}}
-                                        {{/each}}
-                                    </div>
-                                {{/each}}
-                            {{/if}}
-
+                                            {{/each}}
+                                        </div>
+                                    {{/each}}
+                                {{/if}}
+                            </div>
 
                         </div>
                         <!--                        <nav class="nav formCreateLayout" style="display: none">-->
