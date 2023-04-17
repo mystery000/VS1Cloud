@@ -306,7 +306,7 @@ Template.daterangedropdownoption.events({
       $(".dateFrom").val(lastQuarterStartDateFormat).trigger('change');
       $(".dateTo").val(lastQuarterEndDateFormat).trigger('change');
   },
-  'click .previousfinancialyear': function() {alert();
+  'click .previousfinancialyear': function() {
     let templateObject = Template.instance();
 
     $('.dateFrom').attr('readonly', false);

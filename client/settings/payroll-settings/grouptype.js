@@ -79,6 +79,44 @@ Template.grouptypelistpop.onRendered(function() {
                             }
 
                         });
+                        $('#tblgrouptypelist1').dataTable({
+                            data: splashArrayGroupTypeList,
+                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            columnDefs: [
+                                { className: "thgroupDescription", "targets": [0] },
+                                { className: "thgroupID hiddenColumn", "targets": [1]}
+                            ],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            pageLength: initialDatatableLoad,
+                            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                            info: true,
+                            responsive: true,
+                            "fnInitComplete": function () {
+                              $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist1_filter");
+                              $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist1_filter");
+                            }
+                        });
+                        $('#tblgrouptypelist2').dataTable({
+                            data: splashArrayGroupTypeList,
+                            "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                            columnDefs: [
+                                { className: "thgroupDescription", "targets": [0] },
+                                { className: "thgroupID hiddenColumn", "targets": [1]}
+                            ],
+                            select: true,
+                            destroy: true,
+                            colReorder: true,
+                            pageLength: initialDatatableLoad,
+                            lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                            info: true,
+                            responsive: true,
+                            "fnInitComplete": function () {
+                              $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist2_filter");
+                              $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist2_filter");
+                            }
+                        });
                         $('div.dataTables_filter input').addClass('form-control form-control-sm');
 
                     }
@@ -125,9 +163,45 @@ Template.grouptypelistpop.onRendered(function() {
                         }
 
                     });
-
+                    $('#tblgrouptypelist1').dataTable({
+                        data: splashArrayGroupTypeList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1]}
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "fnInitComplete": function () {
+                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist1_filter");
+                          $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist1_filter");
+                        }
+                    });
+                    $('#tblgrouptypelist2').dataTable({
+                        data: splashArrayGroupTypeList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1]}
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "fnInitComplete": function () {
+                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist2_filter");
+                          $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist2_filter");
+                        }
+                    });
                     $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
                 }
             }
         }).catch(function(err) {
@@ -168,6 +242,45 @@ Template.grouptypelistpop.onRendered(function() {
                         "fnInitComplete": function () {
                           $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist_filter");
                           $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist_filter");
+                        }
+
+                    });
+                    $('#tblgrouptypelist1').dataTable({
+                        data: splashArrayGroupTypeList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1]}
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "fnInitComplete": function () {
+                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist1_filter");
+                          $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist1_filter");
+                        }
+                    });
+                    $('#tblgrouptypelist2').dataTable({
+                        data: splashArrayGroupTypeList,
+                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
+                        columnDefs: [
+                            { className: "thgroupDescription", "targets": [0] },
+                            { className: "thgroupID hiddenColumn", "targets": [1]}
+                        ],
+                        select: true,
+                        destroy: true,
+                        colReorder: true,
+                        pageLength: initialDatatableLoad,
+                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
+                        info: true,
+                        responsive: true,
+                        "fnInitComplete": function () {
+                          $("<button class='btn btn-primary btnAddGroupType' data-dismiss='modal' data-toggle='modal' data-target='#newGroupModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblgrouptypelist2_filter");
+                          $("<button class='btn btn-primary btnRefreshGroupType' type='button' id='btnRefreshGroupType' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblgrouptypelist2_filter");
                         }
 
                     });
@@ -304,11 +417,13 @@ Template.grouptypelistpop.events({
                         });
                     }
     },
+
     'keyup #tblgrouptypelist_filter input': function (event) {
       if (event.keyCode == 13) {
          $(".btnRefreshGroupType").trigger("click");
       }
     },
+
     'change #sltStatus': function () {
         let status = $('#sltStatus').find(":selected").val();
         if (status == "newstatus") {
@@ -325,6 +440,24 @@ Template.grouptypelistpop.events({
         setTimeout(function() {
             $('#tblgrouptypelist_filter .form-control-sm').focus();
         }, 500);
+
+        $('#tblgrouptypelist1 tbody tr .lineDescription').attr("data-toggle", "modal");
+        $('#tblgrouptypelist1 tbody tr .lineDescription').attr("data-target", "#groupTypeListModel");
+        var targetID = $(event.target).closest('tr').attr('id');
+        $('#selectGroupLineID1').val(targetID);
+
+        setTimeout(function() {
+            $('#tblgrouptypelist1_filter .form-control-sm').focus();
+        }, 500);
+
+        $('#tblgrouptypelist2 tbody tr .lineDescription').attr("data-toggle", "modal");
+        $('#tblgrouptypelist2 tbody tr .lineDescription').attr("data-target", "#groupTypeListModel");
+        var targetID = $(event.target).closest('tr').attr('id');
+        $('#selectGroupLineID1').val(targetID);
+
+        setTimeout(function() {
+            $('#tblgrouptypelist2_filter .form-control-sm').focus();
+        }, 500);
     },
     'click #groupTypeListModel #refreshpagelist': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -332,118 +465,7 @@ Template.grouptypelistpop.events({
         Meteor._reload.reload();
         templateObject.getAllGroupType();
 
-    },
-
-
-    // 'click .btnRemove': function(event) {
-    //     let templateObject = Template.instance();
-    //     let taxcodeList = templateObject.taxraterecords.get();
-    //     let utilityService = new UtilityService();
-
-    //     var clicktimes = 0;
-    //     var targetID = $(event.target).closest('tr').attr('id');
-    //     $('#selectDeleteLineID').val(targetID);
-
-    //     times++;
-
-    //     if (times == 1) {
-    //         $('#deleteLineModal').modal('toggle');
-    //     } else {
-    //         if ($('#tblCreditLine tbody>tr').length > 1) {
-    //             this.click;
-    //             $(event.target).closest('tr').remove();
-    //             $(".credit_print #"+targetID).remove();
-    //             event.preventDefault();
-    //             let $tblrows = $("#tblCreditLine tbody tr");
-    //             let $printrows = $(".credit_print tbody tr");
-    //             let lineAmount = 0;
-    //             let subGrandTotal = 0;
-    //             let taxGrandTotal = 0;
-    //             let taxGrandTotalPrint = 0;
-
-    //             $tblrows.each(function(index) {
-    //                 var $tblrow = $(this);
-    //                 var amount = $tblrow.find(".colAmount").val() || 0;
-    //                 var taxcode = $tblrow.find(".lineTaxCode").text() || 0;
-
-    //                 var taxrateamount = 0;
-    //                 if (taxcodeList) {
-    //                     for (var i = 0; i < taxcodeList.length; i++) {
-    //                         if (taxcodeList[i].codename == taxcode) {
-    //                             taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100;
-    //                         }
-    //                     }
-    //                 }
-
-
-    //                 var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-    //                 var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-    //                 $tblrow.find('.lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal));
-    //                 if (!isNaN(subTotal)) {
-    //                     subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-    //                     document.getElementById("subtotal_total").innerHTML = utilityService.modifynegativeCurrencyFormat(subGrandTotal);
-    //                 }
-
-    //                 if (!isNaN(taxTotal)) {
-    //                     taxGrandTotal += isNaN(taxTotal) ? 0 : taxTotal;
-    //                     document.getElementById("subtotal_tax").innerHTML = utilityService.modifynegativeCurrencyFormat(taxGrandTotal);
-    //                 }
-
-    //                 if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-    //                     let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-    //                     document.getElementById("grandTotal").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-    //                     document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-    //                     document.getElementById("totalBalanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-
-    //                 }
-    //             });
-
-    //             if ($('.printID').attr('id') != undefined || $('.printID').attr('id') != "") {
-    //                 $printrows.each(function(index) {
-    //                     var $printrows = $(this);
-    //                     var amount = $printrows.find("#lineAmount").text() || "0";
-    //                     var taxcode = $printrows.find("#lineTaxCode").text() || 0;
-
-    //                     var taxrateamount = 0;
-    //                     if (taxcodeList) {
-    //                         for (var i = 0; i < taxcodeList.length; i++) {
-    //                             if (taxcodeList[i].codename == taxcode) {
-    //                                 taxrateamount = taxcodeList[i].coderate.replace('%', "") / 100 || 0;
-    //                             }
-    //                         }
-    //                     }
-
-
-    //                     var subTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) || 0;
-    //                     var taxTotal = parseFloat(amount.replace(/[^0-9.-]+/g, "")) * parseFloat(taxrateamount);
-    //                     $printrows.find('#lineTaxAmount').text(utilityService.modifynegativeCurrencyFormat(taxTotal))
-
-    //                     if (!isNaN(subTotal)) {
-    //                         $printrows.find('#lineAmt').text(utilityService.modifynegativeCurrencyFormat(subTotal));
-    //                         subGrandTotal += isNaN(subTotal) ? 0 : subTotal;
-    //                         document.getElementById("subtotal_totalPrint").innerHTML = $('#subtotal_total').text();
-    //                     }
-
-    //                     if (!isNaN(taxTotal)) {
-    //                         taxGrandTotalPrint += isNaN(taxTotal) ? 0 : taxTotal;
-    //                     }
-    //                     if (!isNaN(subGrandTotal) && (!isNaN(taxGrandTotal))) {
-    //                         let GrandTotal = (parseFloat(subGrandTotal)) + (parseFloat(taxGrandTotal));
-    //                         document.getElementById("grandTotalPrint").innerHTML = $('#grandTotal').text();
-    //                         //document.getElementById("balanceDue").innerHTML = utilityService.modifynegativeCurrencyFormat(GrandTotal);
-    //                         document.getElementById("totalBalanceDuePrint").innerHTML = $('#totalBalanceDue').text();
-
-    //                     }
-    //                 });
-    //             }
-    //             return false;
-
-    //         } else {
-    //             $('#deleteLineModal').modal('toggle');
-    //         }
-    //     }
-    // },
-
+    }
 });
 
 Template.registerHelper('equals', function(a, b) {
