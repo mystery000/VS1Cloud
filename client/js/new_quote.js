@@ -5028,10 +5028,133 @@ Template.new_quote.onRendered(() => {
     }, 500);
   }
 
+  templateObject.getPayUrl = function () {
+    let stripe_id = templateObject.accountID.get() || '';
+    let stripe_fee_method = templateObject.stripe_fee_method.get();
+    let url = FlowRouter.current().path;
+    const id_available = url.includes("?id=");
+    if (id_available == true) {
+      let quoteData = templateObject.quoterecord.get();
+      let lineItems = [];
+      let total = $('#grandTotal').html() || 0;
+      let tax = $('#subtotal_tax').html() || 0;
+      let customer = $('#edtCustomerName').val();
+      let name = $('#firstname').val();
+      let surname = $('#lastname').val();
+      $('#tblQuoteLine > tbody > tr').each(function () {
+        const lineID = this.id;
+        let tddescription = $('#' + lineID + " .lineProductDesc").text();
+        let tdQty = $('#' + lineID + " .lineQty").val();
+        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+
+        let lineItemObj = {
+          description: tddescription || '',
+          quantity: tdQty || 0,
+          unitPrice: tdunitprice.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+          }) || 0
+        }
+        lineItems.push(lineItemObj);
+      });
+      const erpGet = erpDb();
+      let company = localStorage.getItem('vs1companyName');
+      let vs1User = localStorage.getItem('mySession');
+      let customerEmail = $('#edtCustomerEmail').val();
+      let currencyname = (CountryAbbr).toLowerCase();
+      let stringQuery = "?";
+      for (let l = 0; l < lineItems.length; l++) {
+        stringQuery = stringQuery + "product" + l + "=" + lineItems[l].description + "&price" + l + "=" + lineItems[l].unitPrice + "&qty" + l + "=" + lineItems[l].quantity + "&";
+      }
+      stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
+      return stripeGlobalURL + stringQuery;
+    } else {
+      let quoteData = templateObject.quoterecord.get();
+      let lineItems = [];
+      let name = $('#edtCustomerEmail').attr('customerfirstname');
+      let surname = $('#edtCustomerEmail').attr('customerlastname');
+      let company = localStorage.getItem('vs1companyName');
+      let vs1User = localStorage.getItem('mySession');
+      let currencyname = (CountryAbbr).toLowerCase();
+      let status = $('#sltStatus').val();
+      status = "Quoted";
+
+      const splashLineArray = [];
+      let lineItemsForm = [];
+      let lineItemObjForm = {};
+      const saledateTime = new Date($("#dtSODate").datepicker("getDate"));
+      let saleDate = saledateTime.getFullYear() + "-" + (saledateTime.getMonth() + 1) + "-" + saledateTime.getDate();
+
+      $('#tblQuoteLine > tbody > tr').each(function () {
+        const lineID = this.id;
+        let tdproduct = $('#' + lineID + " .lineProductName").val();
+        let tddescription = $('#' + lineID + " .lineProductDesc").text();
+        let tdQty = $('#' + lineID + " .lineQty").val();
+        let tdunitprice = $('#' + lineID + " .colUnitPriceExChange").val();
+        let tdtaxrate = $('#' + lineID + " .lineTaxRate").text();
+        let tdtaxCode = $('#' + lineID + " .lineTaxCode").val() || loggedTaxCodeSalesInc;
+        let tdlineamt = $('#' + lineID + " .lineAmt").text();
+
+        let lineItemObj = {
+          description: tddescription || '',
+          quantity: tdQty || 0,
+          unitPrice: tdunitprice.toLocaleString(undefined, {
+            minimumFractionDigits: 2
+          }) || 0
+        }
+        lineItems.push(lineItemObj);
+        if (tdproduct != "") {
+          lineItemObjForm = {
+            type: "TQuoteLine",
+            fields: {
+              ProductName: tdproduct || '',
+              ProductDescription: tddescription || '',
+              UOMQtySold: parseFloat(tdQty) || 0,
+              UOMQtyShipped: parseFloat(tdQty) || 0,
+              LinePrice: Number(tdunitprice.replace(/[^0-9.-]+/g, "")) || 0,
+              Headershipdate: saleDate,
+              LineTaxCode: tdtaxCode || '',
+              DiscountPercent: parseFloat($('#' + lineID + " .lineDiscount").val()) || 0
+            }
+          };
+          lineItemsForm.push(lineItemObjForm);
+          splashLineArray.push(lineItemObjForm);
+        }
+      });
+      let customer = $('#edtCustomerName').val();
+      let customerEmail = $('#edtCustomerEmail').val();
+      let total = $('#grandTotal').html() || 0;
+      let tax = $('#subtotal_tax').html() || 0;
+      url = FlowRouter.current().path;
+      const getso_id = url.split('?id=');
+      const currencyCode = $("#sltCurrency").val() || CountryAbbr;
+      let ForeignExchangeRate = $('#exchange_rate').val() || 0;
+      let foreignCurrencyFields = {}
+      if (FxGlobalFunctions.isCurrencyEnabled()) {
+        foreignCurrencyFields = {
+          ForeignExchangeCode: currencyCode,
+          ForeignExchangeRate: parseFloat(ForeignExchangeRate),
+        }
+      }
+
+      const erpGet = erpDb();
+      let stringQuery = "?";
+      for (let l = 0; l < lineItems.length; l++) {
+        stringQuery = stringQuery + "product" + l + "=" + lineItemsForm[l].fields.ProductName + "&price" + l + "=" + lineItemsForm[l].fields.LinePrice + "&qty" + l + "=" + lineItemsForm[l].fields.UOMQtySold + "&";
+      }
+      stringQuery = stringQuery + "tax=" + tax + "&total=" + total + "&customer=" + customer + "&name=" + name + "&surname=" + surname + "&quoteid=" + quoteData.id + "&transid=" + stripe_id + "&feemethod=" + stripe_fee_method + "&company=" + company + "&vs1email=" + vs1User + "&customeremail=" + customerEmail + "&type=Quote&url=" + window.location.href + "&server=" + erpGet.ERPIPAddress + "&username=" + erpGet.ERPUsername + "&token=" + erpGet.ERPPassword + "&session=" + erpGet.ERPDatabase + "&port=" + erpGet.ERPPort + "&currency=" + currencyname;
+      return stripeGlobalURL + stringQuery;
+    }
+    return '';
+  }
+
   templateObject.exportSalesToPdf = async function (template_title, number) {
     if (template_title == 'Quotes') {
       await showQuotes1(template_title, number, true);
     }
+
+    let payLink = templateObject.getPayUrl();
+    $('.linkText').attr('href', payLink);
+
     let margins = {
       top: 0,
       bottom: 0,
@@ -5137,6 +5260,68 @@ Template.new_quote.onRendered(() => {
     });
     return true;
     // }
+  }
+
+  templateObject.print = async (_template = '') => {
+    LoadingOverlay.show();
+    setTimeout(async function () {
+      var printTemplate = [];
+      $("#html-2-pdfwrapper").css("display", "block");
+
+      if(_template !== ''){
+        const _templateNumber = $(`input[name="${_template}"]:checked`).val();
+        await templateObject.exportSalesToPdf(_template, _templateNumber);
+        return;
+      }
+
+      $(".pdfCustomerName").html($("#edtCustomerName").val());
+      $(".pdfCustomerAddress").html(
+          $("#txabillingAddress")
+              .val()
+              .replace(/[\r\n]/g, "<br />")
+      );
+      $("#printcomment").html(
+          $("#txaComment")
+              .val()
+              .replace(/[\r\n]/g, "<br />")
+      );
+      var ponumber = $("#ponumber").val() || ".";
+      $(".po").text(ponumber);
+
+      printTemplate.push("Quotes");
+
+      var template_number = 1;
+      if (printTemplate.length > 0) {
+        for (var i = 0; i < printTemplate.length; i++) {
+          template_number = $("input[name=Quotes]:checked").val();
+
+          let result = await templateObject.exportSalesToPdf(
+              printTemplate[i],
+              template_number
+          );
+          if (result == true) { }
+        }
+      }
+      const isCheckedEmail = $("#printModal").find("#emailSend").is(":checked");
+      if(isCheckedEmail){
+        if ($("#edtCustomerEmail").val() != "") {
+          await templateObject.sendEmail();
+        } else {
+          swal({
+            title: "Customer Email Required",
+            text: "Please enter customer email",
+            type: "error",
+            showCancelButton: false,
+            confirmButtonText: "OK",
+          }).then((result) => {
+            if (result.value) { } else if (result.dismiss === "cancel") { }
+          });
+        }
+      }
+      $("#printModal").modal('hide');
+      LoadingOverlay.hide();
+
+    }, delayTimeAfterSound);
   }
 
   setTimeout(function () {
@@ -6987,6 +7172,11 @@ Template.new_quote.events({
 
     }
 
+  },
+  "click #printModal .btn-check-template": function (event) {
+    const template = $(event.target).data('template');
+    const templateObject = Template.instance()
+    templateObject.print(template)
   },
   'click .printConfirm': async function (event) {
     const templateObject = Template.instance();
