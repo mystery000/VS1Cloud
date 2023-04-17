@@ -401,21 +401,21 @@ Template.calender.onRendered(function() {
         let totalUser = 0;
         let totAmount = 0;
         let totAmountOverDue = 0;
-
+        let mySessionEmployee = localStorage.getItem("mySessionEmployee")
         for (let i = 0; i < data.temployee.length; i++) {
             let randomColor = Math.floor(Math.random() * 16777215).toString(16);
             if (randomColor.length < 6) {
                 randomColor = randomColor + "6";
             }
             let selectedColor = "#" + randomColor;
-            if (localStorage.getItem("mySessionEmployee") == data.temployee[i].fields.EmployeeName) {
+            if (mySessionEmployee == data.temployee[i].fields.EmployeeName) {
                 if (data.temployee[i].fields.CustFld8 == "false") {
                     templateObject.includeAllProducts.set(false);
                 }
             }
 
-            if (JSON.parse(JSON.parse(seeOwnAppointments)) == true) {
-                if (data.temployee[i].fields.EmployeeName == localStorage.getItem("mySessionEmployee")) {
+            if (JSON.parse(seeOwnAppointments) == true) {
+                if (data.temployee[i].fields.EmployeeName == mySessionEmployee) {
                     var dataList = {
                         id: data.temployee[i].fields.ID || "",
                         employeeName: data.temployee[i].fields.EmployeeName || "",
@@ -1408,32 +1408,35 @@ Template.calender.onRendered(function() {
     }
 
     function renderEventContent(event){
+        const pattern = /leave/;
+ 
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                let eventLeave  = [];
-                let eventStatus = [];
+        let eventLeave  = [];
+        let eventStatus = [];
 
-                leaveemployeerecords.forEach((item) => {
-                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
-                    eventStatus[item.EmployeeID] = item.Status;
-                });
+        leaveemployeerecords.forEach((item) => {
+            eventLeave[item.EmployeeID]  = item.LeaveMethod;
+            eventStatus[item.EmployeeID] = item.Status;
+        });
 
-                let title = document.createElement("p");
-                if (event.timeText != '') {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                    title.style.backgroundColor = event.backgroundColor;
-                    title.style.color = "#ffffff";
-                } else {
-                    var empid = event.event._def.publicId.split(':')[1];
-                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-                        title.style.color = "#dddddd";
-                    }
-                }
+        let title = document.createElement("p");
+        if(pattern.test(event.event._def.publicId)){
+            var empid = event.event._def.publicId.split(':')[1];
+            if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                let newTitle = "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
+                $(title).append(newTitle);
+                title.style.color = "#ff0000";
+            }
+        } else {
+            title.innerHTML = event.timeText + " " + event.event.title;
+            title.style.backgroundColor = event.backgroundColor;
+            title.style.color = "#ffffff";
+        }
 
-                let arrayOfDomNodes = [title];
-                return {
-                    domNodes: arrayOfDomNodes,
-                };
+        let arrayOfDomNodes = [title];
+        return {
+            domNodes: arrayOfDomNodes,
+        };
     }
 
     templateObject.renderNormalCalendar = function(slotMin, slotMax, hideDays) {
@@ -1537,7 +1540,7 @@ Template.calender.onRendered(function() {
                 renderEventDidMount(info)
             },
             eventContent: function(event) {
-                renderEventContent(event)
+                return renderEventContent(event)
             },
             eventResize: function(info) {
                renderEventDropAndResize(info)
@@ -2013,10 +2016,12 @@ Template.calender.onRendered(function() {
             if (data.tleavrequest.length > 0) {
                 data.tleavrequest.forEach((item) => {
                     const fields = item.fields;
-                    const parsedDate = utilityService.getStartDateWithSpecificFormat(fields.StartDate);
-                    const appointmentDate = document.getElementById("dtSODate").value;
-                    if (parsedDate === appointmentDate) {
-                        result = true;
+                    if(fields.Status !== "Deleted" && fields.Active){
+                        const parsedDate = utilityService.getStartDateWithSpecificFormat(fields.StartDate);
+                        const appointmentDate = document.getElementById("dtSODate").value;
+                        if (parsedDate === appointmentDate) {
+                            result = true;
+                        }
                     }
                 });
             }
@@ -2083,30 +2088,32 @@ Template.calender.onRendered(function() {
             return week.dates.includes(parseInt(moment(weekStart).format('DD')));
         });
         let currentDay = moment().format("dddd");
-        let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
-        $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
-        $('#here_table thead tr').append('<th class="employeeName"></th>');
-
-        for (let w = 0; w < daysOfTheWeek.length; w++) {
-            if (daysOfTheWeek[w] === "Sunday") {
-                if ($('#showSunday').is(":checked")) {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+        if($('#here_table').children().length === 0){
+            let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            $('#here_table').append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
+            $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+            $('#here_table thead tr').append('<th class="employeeName"></th>');
+    
+            for (let w = 0; w < daysOfTheWeek.length; w++) {
+                if (daysOfTheWeek[w] === "Sunday") {
+                    if ($('#showSunday').is(":checked")) {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    }
+                } else if (daysOfTheWeek[w] === "Saturday") {
+                    if ($('#showSaturday').is(":checked")) {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                    }
                 } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
                 }
-            } else if (daysOfTheWeek[w] === "Saturday") {
-                if ($('#showSaturday').is(":checked")) {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                } else {
-                    $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
-                }
-            } else {
-                $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
             }
+    
+            $('#here_table').append('</tr ></thead >');
         }
-
-        $('#here_table').append('</tr ></thead >');
 
         for (let i = 0; i <= weekResults[0].dates.length; i++) {
             days.push(moment(weekStart).add(i, 'days').format("YYYY-MM-DD"));
@@ -2319,7 +2326,7 @@ Template.calender.onRendered(function() {
                 color: appColor
             };
             if (JSON.parse(seeOwnAppointments) == true) {
-                if (data.tappointmentex[i].fields.TrainerName == localStorage.getItem("mySessionEmployee")) {
+                if (data.tappointmentex[i].fields.TrainerName == mySessionEmployee) {
                     eventData.push(dataList);
                     appointmentList.push(appointment)
                 }
@@ -2351,7 +2358,13 @@ Template.calender.onRendered(function() {
                 description: leaveemployeerecords[i].Description || "",
                 color: appColor,
             };
-            eventData.push(dataList);
+            if (JSON.parse(seeOwnAppointments) == true) {
+                if (leaveemployeerecords[i].EmployeeName == mySessionEmployee) {
+                    eventData.push(dataList);
+                } 
+            }else{
+                eventData.push(dataList);
+            }
         }
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);
@@ -2642,13 +2655,25 @@ Template.calender.onRendered(function() {
             let weekDay = moment(leaveemployeerecords[i].StartDate.split(" ")[0]).format("dddd");
             // if (resourceChat.length > 0) {
             if (date >= startWeek && date <= endWeek) {
-                jobs = {
-                    id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
-                    employeeName: leaveemployeerecords[i].EmployeeName,
-                    job: leaveemployeerecords[i].Description,
-                    day: weekDay,
-                };
-                resourceJob.push(jobs)
+                if (JSON.parse(seeOwnAppointments) == true) {
+                    if(leaveemployeerecords[i].EmployeeName === mySessionEmployee){
+                        jobs = {
+                            id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                            employeeName: leaveemployeerecords[i].EmployeeName,
+                            job: leaveemployeerecords[i].Description,
+                            day: weekDay,
+                        };
+                        resourceJob.push(jobs)
+                    }
+                }else{
+                    jobs = {
+                        id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                        employeeName: leaveemployeerecords[i].EmployeeName,
+                        job: leaveemployeerecords[i].Description,
+                        day: weekDay,
+                    };
+                    resourceJob.push(jobs)
+                }
             } 
             // }else{
             // }
@@ -2779,6 +2804,29 @@ Template.calender.onRendered(function() {
 
             }
             setTimeout(function () {
+                $('#here_table table tr').remove();
+                let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
+                $('#here_table thead tr').append('<th class="employeeName"></th>');
+                for (let w = 0; w < daysOfTheWeek.length; w++) {
+                    if (daysOfTheWeek[w] === "Sunday") {
+                        if ($('#showSunday').is(":checked")) {
+                            $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                        } else {
+                            $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesunday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSun"></span></th>');
+                        }
+                    } else if (daysOfTheWeek[w] === "Saturday") {
+                        if ($('#showSaturday').is(":checked")) {
+                            $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                        } else {
+                            $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + ' hidesaturday">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="dateSat"></span></th>');
+                        }
+                    } else {
+                        $('#here_table thead tr').append('<th style="padding: 6px;" id="" class="fullWeek ' + daysOfTheWeek[w].toLowerCase() + '">' + daysOfTheWeek[w].substring(0, 3) + ' <span class="date' + daysOfTheWeek[w].substring(0, 3) + '"></span></th>');
+                    }
+                }
+        
+                $('#here_table').append('</tr ></thead >');
                 $('#here_table table').append(tableRowData);
             }, 500);
             templateObject.employeerecords.set(allEmp);
@@ -4535,6 +4583,8 @@ Template.calender.onRendered(function() {
         allEmployees = [];
         eventData = [];
         appointmentList = [];
+        resourceChat = [];
+        resourceJob = [];
         templateObject.eventdata.set([])
         templateObject.getEmployeesList();
         setTimeout(() => {
@@ -5931,7 +5981,6 @@ Template.calender.events({
             }
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
             $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
             $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
             $('#here_table thead tr').append('<th class="employeeName"></th>');
@@ -6080,6 +6129,7 @@ Template.calender.events({
                     '</tr>';
                 tableRowData.push(tableRow);
             }
+            
             $('#here_table table').append(tableRowData);
 
             $('.sunday').attr("id", dayPrev[0]);
@@ -6334,7 +6384,6 @@ Template.calender.events({
             }
 
             let daysOfTheWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
             $('#here_table').empty().append('<div class="table-responsive table-bordered"><table id="allocationTable" class="table table-bordered allocationTable">');
             $('#here_table table').append('<thead> <tr style="background-color: #EDEDED;">');
             $('#here_table thead tr').append('<th class="employeeName"></th>');

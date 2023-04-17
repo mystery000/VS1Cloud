@@ -2105,7 +2105,8 @@
                             </div>
                             <div class="col-md-2 colCountry" id="colCountry">
                                 <div class="form-group flex-grow-1 my-2">
-                                    <label>Country</label><input type="text" id="country" name="country" class="form-control">
+                                    <label>Country</label>
+                                    <input type="text" id="country" name="country" class="form-control">
                                 </div>
                             </div>
                             <div class="col-md-2 colZip" id="colZip">
@@ -2190,18 +2191,18 @@
                             <div class="col-md-8" id="colBookedTimeParent">
                                 <div class="row" style="padding: 0px 8px;">
                                     <div class="col-md-3 colBookedTime" id="colBookedTime">
-                                        <h5 class="float-right bookedTimeHeader" id="bookedTimeHeader" style="margin: 8px 0px; margin-top: 2.5em;">
-                                            Booked Time</h5>
+                                        <h5 class="float-right bookedTimeHeader" id="bookedTimeHeader" style="margin: 8px 0px; margin-top: 2.5em;">Booked Time</h5>
                                     </div>
                                     <div class="col-md-3 colBookedStartTime" id="colBookedStartTime" style="padding-left: .5rem;">
                                         <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                            <label>Start
-                                                Time</label><input class="form-control" id="startTime" name="startTime" type="time">
+                                            <label>Start Time</label><input class="form-control" id="startTime" name="startTime" type="time">
                                         </div>
                                     </div>
                                     <div class="col-md-3 colBookedEndTime" id="colBookedEndTime">
-                                        <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
-                                                Time</label><input class="form-control" id="endTime" name="endTime" type="time"></div>
+                                        <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                            <label>End Time</label>
+                                            <input class="form-control" id="endTime" name="endTime" type="time">
+                                        </div>
                                     </div>
                                     <div class="col-md-2 colBookedHours" id="colBookedHours" style="padding-right: .3rem;">
                                         <div class="form-group flex-grow-1" style="margin: 8px 0px;">
@@ -2217,19 +2218,18 @@
                                 </div>
                                 <div class="row" style="padding: 0px 8px;">
                                     <div class="col-md-3 colActualTime" id="colActualTime">
-                                        <h5 class="float-right timeHeader" id="timeHeader" style="margin: 8px 0px; margin-top: 2.5em;">
-                                            Actual Time</h5>
+                                        <h5 class="float-right timeHeader" id="timeHeader" style="margin: 8px 0px; margin-top: 2.5em;"> Actual Time</h5>
                                     </div>
                                     <div class="col-md-3 colActualStartTime" id="colActualStartTime" style="padding-left: .5rem;">
                                         <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-                                            <label>Start
-                                                Time</label><input class="form-control" type="time" id="tActualStartTime" name="tActualStartTime">
+                                            <label>Start Time</label>
+                                            <input class="form-control" type="time" id="tActualStartTime" name="tActualStartTime">
                                         </div>
                                     </div>
                                     <div class="col-md-3 colActualEndTime" id="colActualEndTime">
-                                        <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>End
-                                                Time</label><input class="form-control" type="time" id="tActualEndTime" name="tActualEndTime">
-
+                                        <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                            <label>End Time</label>
+                                            <input class="form-control" type="time" id="tActualEndTime" name="tActualEndTime">
                                             <span class="btn btn-warning paused" style="margin: 8px 0px; width: 100%; margin-top: -56px; background-color: rgba(246, 194, 62, 0.4); cursor: default;">Paused</span>
                                         </div>
                                     </div>
@@ -2237,7 +2237,6 @@
                                         <div class="form-group flex-grow-1" style="margin: 8px 0px;">
                                             <label>Hours</label><input type="text" id="txtActualHoursSpent" name="txtActualHoursSpent" class="form-control" readonly>
                                             <input id="aStartDate" name="aStartDate" type="hidden" class="form-control employee_name">
-
                                         </div>
                                     </div>
                                     <div class="col-md-1 colAppointmentList" id="colAppointmentList" style="padding-right: .3rem; padding-top: 24px;">
@@ -2249,12 +2248,9 @@
                             <div class="col-md-12 p-0">
                                 <hr class="m-2">
                             </div>
-
-
                             <div class="col-xl-4 col-12 colProductService2" id="colProductService2">
-                                <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Product /
-                                        Service for Appointment</label>
-
+                                <div class="form-group flex-grow-1" style="margin: 8px 0px;">
+                                    <label>Product / Service for Appointment</label>
                                     <select type="search" id="product-list" name="product-list" class="form-control product-list" style="background-color:rgb(255, 255, 255); cursor: pointer;">
                                         <!-- {{#if datatablerecords}}
                                             {{#each item in datatablerecords}}
@@ -2267,11 +2263,13 @@
 
                             {{#if equals addAttachment true}}
                                 <div class="col-xl-2 col-12 colProductService1" id="colProductService1" style="padding-top: 2em;">
-                                    <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" autocomplete="off"> {{attachmentCount}} <i
-                                            class="fa fa-paperclip"></i></button>
+                                    <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment" autocomplete="off">
+                                        {{attachmentCount}} <i class="fa fa-paperclip"></i>
+                                    </button>
 
-                                    <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera" autocomplete="off"><i class="fa fa-camera"
-                                            aria-hidden="true"></i></button>
+                                    <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera" autocomplete="off">
+                                        <i class="fa fa-camera" aria-hidden="true"></i>
+                                    </button>
                                 </div>
                             {{/if}}
                             <div class="col-xl-2 col-4 colStart" id="colStart" style="padding-top: 2em;">
@@ -2322,7 +2320,10 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="mb-0">Start Appointment SMS Message</h4><button type="button" class="close" id="btnCloseStartAppointmentModal" aria-label="Close"><span aria-hidden="true" style="font-size: 32px;">×</span></button>
+                                        <h4 class="mb-0">Start Appointment SMS Message</h4>
+                                        <button type="button" class="close" id="btnCloseStartAppointmentModal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-size: 32px;">×</span>
+                                        </button>
                                     </div>
                                     <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
                                         <div class="row m-0">
@@ -2332,7 +2333,6 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-
                                             <button class="btn btn-primary btnStartAppointmentConfirm" id="btnStartAppointmentConfirm" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
                                             <button class="btn btn-warning btnStartIgnoreSMS" id="btnStartIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseStartAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
@@ -2357,7 +2357,6 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-
                                             <button class="btn btn-primary btnEndActualTime" id="btnEndActualTime" type="button"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
                                             <button class="btn btn-warning btnStopIgnoreSMS" id="btnStopIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseStopAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
@@ -2372,7 +2371,10 @@
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h4 class="mb-0">Save Appointment SMS Message</h4><button type="button" class="close" id="btnCloseSaveAppointmentModal" aria-label="Close"><span aria-hidden="true" style="font-size: 32px;">×</span></button>
+                                        <h4 class="mb-0">Save Appointment SMS Message</h4>
+                                        <button type="button" class="close" id="btnCloseSaveAppointmentModal" aria-label="Close">
+                                            <span aria-hidden="true" style="font-size: 32px;">×</span>
+                                        </button>
                                     </div>
                                     <div class="modal-body" style="padding: 0px; overflow-x: hidden;">
                                         <div class="row m-0">
@@ -2382,7 +2384,6 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-
                                             <button class="btn btn-primary btnSaveAppointmentSubmit" id="btnSaveAppointmentSubmit" type="submit"><i class="fa fa-check" style="margin-right: 5px;"></i>Confirm</button>
                                             <button class="btn btn-warning btnSaveIgnoreSMS" id="btnSaveIgnoreSMS" type="button"><i class="fas fa-forward" style="margin-right: 5px;"></i>Skip SMS</button>
                                             <button class="btn btn-secondary" id="btnCloseSaveAppointmentModal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
@@ -2432,7 +2433,10 @@
         <div class="modal-dialog modal-sm" role="document" style="max-width: 800px;">
             <div class="modal-content">
                 <div class="modal-header" style="padding-bottom: 8px;">
-                    <h4>Stop Appointment</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" style="font-size: 32px;">×</span></button>
+                    <h4>Stop Appointment</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 32px;">×</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="swal2-icon swal2-warning" style="display: block;">!</div>
@@ -2449,10 +2453,12 @@
                             </div>
                         </div>
                         <div class="col-12 col-md-4 colProductService1" id="colProductService1" style="padding-top: 44px;">
-                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off"> {{attachmentCount}} <i
-                                    class="fa fa-paperclip"></i></button>
-                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off"><i class="fa fa-camera"
-                                    aria-hidden="true"></i></button>
+                            <button class="btn btn-primary btn_Attachment float-left" type="button" style="margin: 8px 0px;" data-toggle="modal" href="#myModalAttachment" id="btn_Attachment-1" autocomplete="off">
+                                {{attachmentCount}} <i class="fa fa-paperclip"></i>
+                            </button>
+                            <button class="btn btn-primary float-left" type="button" style="margin: 8px; margin-left: 16px;" data-toggle="modal" href="#myModalAttachment" id="triggerCamera-1" autocomplete="off">
+                                <i class="fa fa-camera" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
                     <div class="row">
@@ -2468,7 +2474,6 @@
                                         <th class="thSalesPrice" style="width: 13% !important;text-align: left!important;">Sale Price</th>
                                         <th class="thQty hiddenColumn" style="width: 8% !important;">Quantity</th>
                                         <th class="thTax hiddenColumn" style="width: 8% !important;text-align: left!important;">Tax Rate</th>
-
                                         <th style="width: 25px !important;"></th>
                                         <th class="thExtraSellPrice hiddenColumn">Prouct ID</th>
                                     </tr>
@@ -2486,8 +2491,11 @@
                                         <td class="thQty hiddenColumn">Quantity</td>
                                         <td class="thTax hiddenColumn" style="text-align: left!important;">Tax Rate</td>
                                         <td>
-                                            <span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i
-                                            class="fa fa-remove"></i></button></span>
+                                            <span class="table-remove btnRemove">
+                                                <button type="button" class="btn btn-danger btn-rounded btn-sm my-0 ">
+                                                    <i class="fa fa-remove"></i>
+                                                </button>
+                                            </span>
                                         </td>
                                         <td class="thExtraSellPrice hiddenColumn">Prouct ID</td>
                                     </tr>
