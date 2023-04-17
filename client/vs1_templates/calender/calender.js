@@ -1425,7 +1425,7 @@ Template.calender.onRendered(function() {
             if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
                 let newTitle = "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
                 $(title).append(newTitle);
-                title.style.color = "#ff0000";
+                title.style.color = "#dddddd";
             }
         } else {
             title.innerHTML = event.timeText + " " + event.event.title;
