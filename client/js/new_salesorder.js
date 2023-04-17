@@ -2988,7 +2988,6 @@ Template.new_salesorder.onRendered(function () {
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                 templateObject.CleintName.set(useData[d].fields.CustomerName);
                 //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
-                console.log(useData[d].fields.ForeignExchangeRate);
                 $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
                 $('#exchange_rate').val(templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 1));
                 $('#sltStatus').val(useData[d].fields.SalesStatus);

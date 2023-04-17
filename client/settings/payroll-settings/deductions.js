@@ -302,8 +302,8 @@ Template.deductionSettings.onRendered(function() {
 
     // templateObject.getDeductions();
 
-    $('.deductionLineDropDown').editableSelect();
-    $('.deductionLineDropDown').editableSelect()
+    $('#obDeductionType').editableSelect();
+    $('#obDeductionType').editableSelect()
         .on('click.editable-select', async function (e, li) {
             let $search = $(this);
             let offset = $search.offset();

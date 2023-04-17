@@ -267,6 +267,9 @@ import './settings/service-checker/serviceChecker.js';
 
 /* Riley*/
 import './accounts/addApcaModal/addApcaModal.html';
+import './vs1charts/editCardChartButtons/editCardChartButtons.js';
+import './vs1charts/datesForCardChart/datesForCardChart.js';
+import './vs1charts/editCardChartOptions/editCardChartOptions.html';
 /* Riley*/
 
 /* Tinyiko */
@@ -544,7 +547,9 @@ import './payroll/clockonoff/employeeclockonoff.js';
 import './reports/buildcost/buildcostreport';
 import './reports/worksheet/worksheetreport.js';
 import './payroll/clockonoff/process_clock_list.js';
-/* Roverto */
+import './payroll/clockonoff/employee_clock_status.js';
+import './payroll/clockonoff/clockonreport.js';
+/* Roverto / David */
 
 /* Kelvin More */
 import './js/new_bill.js';
