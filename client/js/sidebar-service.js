@@ -2667,12 +2667,10 @@ export class SideBarService extends BaseService {
       if (ignoreDate == true) {
         options = {
           IgnoreDates: true,
-          select: "[deleted]=false",
         };
       } else {
         options = {
           IgnoreDates: false,
-          select: "[deleted]=false",
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
           LimitCount: parseInt(initialReportLoad),
@@ -2682,14 +2680,12 @@ export class SideBarService extends BaseService {
       if (ignoreDate == true) {
         options = {
           IgnoreDates: true,
-          select: "[deleted]=false",
           LimitCount: limitCount,
           LimitFrom:limitFrom
         };
       } else {
         options = {
           IgnoreDates: false,
-          select: "[deleted]=false",
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
           LimitCount: limitCount,
