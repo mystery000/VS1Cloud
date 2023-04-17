@@ -1424,9 +1424,6 @@ Template.calender.onRendered(function() {
         if(pattern.test(event.event._def.publicId)){
             var empid = event.event._def.publicId.split(':')[1];
             if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                console.log('event.event.title:',event.event.title)
-                console.log('eventLeave[empid]:',eventLeave[empid])
-                console.log('eventStatus[empid]:',eventStatus[empid])
                 $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
                 title.style.color = "#dddddd";
             }
@@ -1437,7 +1434,6 @@ Template.calender.onRendered(function() {
         }
 
         let arrayOfDomNodes = [title];
-        console.log('arrayOfDomNodes:',arrayOfDomNodes)
         return {
             domNodes: arrayOfDomNodes,
         };
