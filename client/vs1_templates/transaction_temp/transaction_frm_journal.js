@@ -486,7 +486,10 @@ Template.transaction_frm_journal.helpers({
     },
     convertToForeignAmount: (amount) => {
         return FxGlobalFunctions.convertToForeignAmount(amount, $('#exchange_rate').val(), FxGlobalFunctions.getCurrentCurrencySymbol());
-    }
+    },
+    addString: (str1, str2) => {
+        return `${str1}${str2}`
+    },
 });
 
 Template.registerHelper("equals", function (a, b) {

@@ -2671,7 +2671,7 @@ Template.frmappointmentpop.onRendered(function() {
     //             }
     //         }
     // });
-    
+ /*
     $(document).on('click', '#customer', function(e, li) {
     var $earch = $(this);
             var offset = $earch.offset();
@@ -3778,7 +3778,7 @@ Template.frmappointmentpop.onRendered(function() {
                 }
             }
         });
-
+*/
     $(document).on("click", "#employeeListModal #tblEmployeelist tbody tr", function(e) {
 
         // for taskDetailModal

@@ -38,7 +38,6 @@ Template.taxratelistpop.onCreated(function () {
         {index: 2, label: "Description", class: "colDescription", width: "", active: true, display: true},
         {index: 3, label: "Rate", class: "taxRate", width: "100", active: true, display: true},
     ];
-    console.log(headerStructure);
     templateObject.tableheaderrecords.set(headerStructure);
 });
 
@@ -194,10 +193,10 @@ Template.taxratelistpop.helpers({
     apiParams: function() {
         return [];
     },
-    tablename: () => {
+    tablename : function () {
         let templateObject = Template.instance();
-        return 'tblTaxRate'+templateObject.data.custid;
-      },
+        return templateObject.data.custid ? "taxRateList-" + templateObject.data.custid : "taxRateList";
+    }
 });
 
 Template.registerHelper('equals', function (a, b) {

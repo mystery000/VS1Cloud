@@ -43,7 +43,7 @@
                                     innerModal=true
                                     modal_title='Tax Code List'
                                     label = 'Tax Code'
-                                    colNameForValue = 'colName'
+                                    colNameForValue = 'taxName'
                                     target_modal_id= 'newTaxRateModal'
                                     target_template_id='newtaxratepop'
                                     is_editable=true
@@ -57,7 +57,7 @@
                                     type='search'
                                     id='edtSubAccount1'
                                     name='edtSubAccount1'
-                                    usedModal=false
+                                    usedModal=true
                                     modalId= 'accountListModal'
                                     list_template_name='accountlistpop'
                                     innerModal=true
@@ -78,7 +78,7 @@
                                     type='search'
                                     id='edtSubAccount2'
                                     name='edtSubAccount2'
-                                    usedModal=false
+                                    usedModal=true
                                     modalId= 'accountListModal'
                                     list_template_name='accountlistpop'
                                     innerModal=true
@@ -99,7 +99,7 @@
                                     type='search'
                                     id='edtSubAccount3'
                                     name='edtSubAccount3'
-                                    usedModal=false
+                                    usedModal=true
                                     modalId= 'accountListModal'
                                     list_template_name='accountlistpop'
                                     innerModal=true
@@ -382,6 +382,9 @@
 
     <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
       {{> bankNameModal}}
+    </div>
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+        {{> addAccountModal}}
     </div>
     {{> eftOptionsModal}}
     <div class="modal fade" role="dialog" tabindex="-1" id="eftBankCodesModal">

@@ -182,12 +182,17 @@
                 <!-- <td contenteditable="false" class="lineAccountName colAccountName" taxCode="{{item.taxCode}}" lineid="{{item.id}}">{{item.accountname}}</td> -->
                 <td contenteditable="false" class="colAccountName">
 <!--                    <input class="es-input highlightSelect lineAccountName" type="search" value="{{item.accountname}}" taxCode="{{item.taxCode}}" lineid="{{item.id}}">-->
+                    {{#let
+                            accountID = (addString 'select-account-' item.lineID)
+                            accountName = (addString 'account-' item.lineID)
+                            accountModalID = (addString 'accountModal-' item.lineID)
+                    }}
                     {{> vs1___dropdown
                             type='search'
                             classes='lineAccountName'
-                            id=item.lineID
-                            name=item.lineID
-                            modalId= 'accountListModal'
+                            id=accountID
+                            name=accountName
+                            modalId= accountModalID
                             usedModal=false
                             list_template_name='accountlistpop'
                             innerModal=true
@@ -196,10 +201,11 @@
                             colNameForValue = 'colAccountName'
                             target_modal_id= 'addAccountModal'
                             target_template_id='addaccountpop'
-                            custid='rcq7ZWZnptT6TzBwP'
+                            custid=item.lineID
                             is_editable=true
                             noBorder=true
                     }}
+                    {{/let}}
                 </td>
                 <!-- <td contenteditable="true" class="lineAccountNo colAccountNo">{{item.accountno}}</td> -->
                 <td contenteditable="true" class="lineMemo colMemo">{{item.memo}}</td>
@@ -207,21 +213,29 @@
                 <!-- <td contenteditable="false" class="lineTaxCode colTaxCode" style="text-align: right!important;cursor: pointer;">{{item.taxCode}}</td> -->
                 <td contenteditable="false" class="colTaxCode">
 <!--                    <input class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">-->
+                    {{#let
+                            taxID = (addString 'select-tax-' item.lineID)
+                            taxName = (addString 'tax-' item.lineID)
+                            taxModalID = (addString 'taxModal-' item.lineID)
+                    }}
                     {{> vs1___dropdown
                             type='search'
-                            id=item.lineID
-                            name=item.lineID
-                            modalId= 'taxratelistModal'
+                            classes='lineTaxCode'
+                            id=taxID
+                            name=taxName
+                            modalId= taxModalID
                             list_template_name='taxratelistpop'
                             innerModal=true
                             modal_title='Tax Code List'
                             label = ''
-                            colNameForValue = 'colAccountName'
+                            colNameForValue = 'taxName'
                             target_modal_id= 'taxratelistModal'
                             target_template_id='taxratelistpop'
+                            custid=item.lineID
                             is_editable=true
                             noBorder=true
                     }}
+                    {{/let}}
                 </td>
 
 
@@ -256,38 +270,54 @@
 <!--                                style="background-color:rgb(255, 255, 255); cursor: pointer;" onloadeddata={{onloadDepartmentSelect item.lineID item.department}} value="{{item.department}}">-->
 <!--                            <option value="{{item.department}}" selected>{{item.department}}</option>-->
 <!--                        </select>-->
+                        {{#let
+                                departmentID = (addString 'select-department-' item.lineID)
+                                departmentName = (addString 'department-' item.lineID)
+                                departmentModalID = (addString 'departmentModal-' item.lineID)
+                        }}
                         {{> vs1___dropdown
                                 type='search'
                                 classes='select-department'
-                                id=item.lineID
-                                name=item.lineID
-                                modalId= 'departmentModal'
+                                id=departmentID
+                                name=departmentName
+                                modalId=departmentModalID
                                 list_template_name='departmentpop'
                                 innerModal=true
                                 modal_title='Department List'
                                 colNameForValue = 'colDeptName'
-                                target_modal_id= 'addAccountModal'
-                                target_template_id='addaccountpop'
+                                target_modal_id= 'newDepartModal'
+                                target_template_id='newDepartmentPop'
+                                custid=item.lineID
                                 is_editable=true
                                 noBorder=true
                         }}
+                        {{/let}}
                     </div>
                 </td>
                 <td contenteditable="false" class="colCustomerJob" id="td-customer-{{item.lineID}}">
 <!--                    {{> vs1_dropdown name='lineCustomerJob' type='search' classes='es-input lineCustomerJob' value=item.customerJob onloadeddata=onloadedLineCustomerJob}}-->
-
+                    {{#let
+                            customerID = (addString 'select-customer-' item.lineID)
+                            customerName = (addString 'customer-' item.lineID)
+                            customerModalID = (addString 'customerModal-' item.lineID)
+                    }}
                     {{> vs1___dropdown
                             type='search'
-                            id=item.lineID
-                            name=item.lineID
-                            modalId= 'customerModal'
-                            list_template_name='customerlistpop'
+                            classes='lineCustomerJob'
+                            id=customerID
+                            name=customerName
+                            modalId=customerModalID
+                            list_template_name='customerlistpopup'
                             innerModal=true
                             modal_title='Customer List'
-                            colNameForValue = 'colDeptName'
+                            colNameForValue = 'colCompany'
+                            target_modal_id='addAccountModal'
+                            target_template_id='addaccountpop'
+                            custid=item.lineID
                             is_editable=true
                             noBorder=true
                     }}
+                    {{/let}}
                 </td>
                 <td class="th colFixedAsset" assetID="{{item.fixedAssetID}}" assetname="{{item.fixedAssetName}}"
                     costTypeID="{{item.costTypeID}}" costtypename="{{item.costTypeName}}" id="td-fixedasset-{{item.lineID}}">

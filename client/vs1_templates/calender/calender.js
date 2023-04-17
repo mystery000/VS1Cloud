@@ -4992,7 +4992,7 @@ Template.calender.onRendered(function() {
             //$('#tblCustomerlist').dataTable().fnFilter(" ").draw(false);
         }, 500);
     }
-
+/*
     $('#product-list').editableSelect().on('click.editable-select', function(event, li) {
         const $each = $(this);
         const offset = $each.offset();
@@ -5092,7 +5092,7 @@ Template.calender.onRendered(function() {
                     $(".ui-datepicker .ui-state-hihglight").removeClass("ui-state-highlight");
                 }, 1000);
                 //}
-                /*
+
                 templateObject.getProductClassQtyData = function () {
                     productService.getOneProductClassQtyData(currentProductID).then(function (data) {
                         $('.fullScreenSpin').css('display', 'none');
@@ -5119,7 +5119,6 @@ Template.calender.onRendered(function() {
                     });
 
                 }
-                */
                 //templateObject.getProductClassQtyData();
                 //templateObject.getProductData();
             } else {
@@ -5135,7 +5134,7 @@ Template.calender.onRendered(function() {
             }
         }
     });
-
+*/
     function setOneProductData(data) {
         $('.fullScreenSpin').css('display', 'none');
         let lineItems = [];

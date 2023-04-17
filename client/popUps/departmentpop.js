@@ -673,4 +673,8 @@ Template.departmentpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
+    tablename : function () {
+        let templateObject = Template.instance();
+        return templateObject.data.custid ? "departmentList-" + templateObject.data.custid : "departmentList";
+    }
 });

@@ -731,4 +731,9 @@ Template.customerlistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom'];
     },
+
+    tablename : function () {
+        let templateObject = Template.instance();
+        return templateObject.data.custid ? "tblCustomerlist-" + templateObject.data.custid : "tblCustomerlist";
+    }
 });
