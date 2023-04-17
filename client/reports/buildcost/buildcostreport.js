@@ -1,471 +1,584 @@
 import { ReactiveVar } from 'meteor/reactive-var';
 import { UtilityService } from "../../utility-service";
+import { ContactService } from "../../contacts/contact-service";
 import { SideBarService } from '../../js/sidebar-service';
-import { ReportService } from "../../reports/report-service";
-import '../../lib/global/indexdbstorage.js';
-import LoadingOverlay from '../../LoadingOverlay';
-import GlobalFunctions from '../../GlobalFunctions';
-import { TaxRateService } from '../../settings/settings-service';
-import FxGlobalFunctions from '../../packages/currency/FxGlobalFunctions';
-
-
+import 'jquery-editable-select';
 import { Template } from 'meteor/templating';
-import './buildcostreport.html';
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import "./buildcostreport.html";
+import { cloneDeep, template } from 'lodash';
+import { ManufacturingService } from "../../manufacture/manufacturing-service";
 
+
+let manufacturingService = new ManufacturingService();
 let utilityService = new UtilityService();
-let reportService = new ReportService();
+let sideBarService = new SideBarService();
+Template.buildcostreport.onCreated(function() {
 
-let defaultCurrencyCode = CountryAbbr;
-
-
-Template.vatreturnlist.onCreated(function() {
     const templateObject = Template.instance();
+    templateObject.workOrderRecords = new ReactiveVar([]);
+    templateObject.employeeList = new ReactiveVar([]);
+    templateObject.timesheetList = new ReactiveVar([]);
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.selectedFile = new ReactiveVar();
 
-    // Currency related vars //
-    FxGlobalFunctions.initVars(templateObject);
+    templateObject.getDataTableList = function(data) {  
+        
+        let clocked_hrs = data.TotalClockedTime;
+        let variance ;
+        let wastage_value;
+             
+        let labour_cost = (data.HourlyLabourCost * clocked_hrs).toFixed(2);
+        let changed_qty;
+
+        if(data.ChangedQty == 0) { 
+            changed_qty = data.BOMQty ;
+        } else {
+            changed_qty = data.ChangedQty;
+        }
+
+        variance = changed_qty - data.BOMQty;
+        wastage_value = variance;
+
+        if(isNaN(labour_cost)) {
+            labour_cost = "";
+        }
+
+        let over_head_cost = (data.HourlyOverHeadCost * clocked_hrs).toFixed(2);
+        if(isNaN(over_head_cost)) {
+            over_head_cost = "";
+        }
+
+        let RawMaterialcost = parseFloat(data.UnitCost) * (parseFloat(data.BOMQty) + parseFloat(wastage_value));
+        let wastage_cost = parseFloat(wastage_value * data.UnitCost);
+        let total_bom_cost; 
+
+        let clocked_times ;
+        if(clocked_hrs == "") {
+            clocked_times = "";
+        } else {
+          clocked_times = templateObject.timeFormat(clocked_hrs);
+          //clocked_times = parseFloat(clocked_hrs).toFixed(4);
+        }
+      
+        
+        if(labour_cost == "" || over_head_cost == "" ) {
+             total_bom_cost =  RawMaterialcost + wastage_cost;
+        } else {
+             total_bom_cost = (parseFloat(labour_cost) + parseFloat(over_head_cost) + parseFloat(RawMaterialcost) + parseFloat(wastage_cost)).toFixed(2); 
+        }
+        
+        let linestatus = "";
+
+        if (data.Active  == false) {
+            linestatus = "";
+        } else if (data.Active  == true) {
+            linestatus = "In-Active";
+        }                   
+
+        var dataList = [ data.WorkorderID,
+                        data.ProductID,
+                        data.ProcessBOM || ' ',
+                        data.BOMChanged || ' ',
+                        data.BOMProducts|| ' ',
+                        data.ProductsChanged || ' ',
+                        data.UnitCost || 0,
+                        parseFloat(data.BOMQty).toFixed(0) || 0,
+                        parseFloat(changed_qty).toFixed(0) || 0,
+                        variance,
+                        wastage_value,
+                        clocked_times || ' ' ,
+                        labour_cost,
+                        over_head_cost,
+                        RawMaterialcost || 0,
+                        wastage_cost ,
+                        total_bom_cost || 0, 
+                        linestatus,   ];
+        return dataList;
+    }
+
+       
+    let headerStructure = [
+        { index: 0, label: 'Work Order', class: 'colWorkorder', active: true, display: true, width: "100" },
+        { index: 1, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
+        { index: 2, label: 'Process BOM', class: 'colProcessBOM', active: true, display: true, width: "120" },
+        { index: 3, label: 'Process BOM Changed', class: 'colProcessBOMChanged', active: true, display: true, width: "150" },
+        { index: 4, label: 'BOM Products', class: 'colBOMProduct', active: true, display: true, width: "100" },
+        { index: 5, label: 'Product Changed', class: 'colProductChanged', active: true, display: true, width: "100" },
+        { index: 6, label: 'Unit Cost', class: 'colUnitCost', active: true, display: true, width: "80" },
+        { index: 7, label: 'BOM Qty', class: 'colBOMQty', active: true, display: true, width: "70" },
+        { index: 8, label: 'Changed Qty', class: 'colChangedQty', active: true, display: true, width: "100" },
+        { index: 9, label: 'Variance', class: 'colVariance', active: true, display: true, width: "80" },
+        { index: 10, label: 'Wastage', class: 'colWastage', active: true, display: true, width: "70" },
+        { index: 11, label: 'Total Clocked Hours', class: 'colTotalClockedHours', active: true, display: true, width: "150" },
+        { index: 12, label: 'Labour Cost', class: 'colLabourCost', active: true, display: true, width: "100" },
+        { index: 13, label: 'Overhead Cost', class: 'colOverheadCost', active: true, display: true, width: "100" },
+        { index: 14, label: 'Raw Material Cost', class: 'colRawMaterialCost', active: true, display: true, width: "110" },
+        { index: 15, label: 'Wastage Cost', class: 'colWastageCost', active: true, display: true, width: "120" },
+        { index: 16, label: 'Total BOM Cost', class: 'colTotalBOMCost', active: true, display: true, width: "120" },  
+        { index: 17, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },     
+    ];
+
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.buildcostreport.onRendered(function() {
-    // $('.fullScreenSpin').css('display', 'inline-block');
+
+    $('.fullScreenSpin').css('display', 'inline-block');
+ 
     let templateObject = Template.instance();
-    const dataTableList = [];
-    const tableHeaderList = [];
-    if (FlowRouter.current().queryParams.success) {
-        $('.btnRefresh').addClass('btnRefreshAlert');
-    }
 
-    function MakeNegative() {
-
-        $('td').each(function() {
-            if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
-        });
-        $('td.colStatus').each(function() {
-            if ($(this).text() == "Deleted") $(this).addClass('text-deleted');
-            if ($(this).text() == "Full") $(this).addClass('text-fullyPaid');
-            if ($(this).text() == "Part") $(this).addClass('text-partialPaid');
-            if ($(this).text() == "Rec") $(this).addClass('text-reconciled');
-        });
-    };
 
     
+    templateObject.makeIndexedDBdata = function () {
+       
+        let buildcostreport_data = [];
+        getVS1Data('TVS1Workorder').then(function(workorderDataObject) {
+            let workorder;
+            let templateObject = Template.instance();
+
+            if(workorderDataObject.length == 0) {
+                workorder = manufacturingService.getWorkOrderList();
+
+                addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorder})).then(function(datareturn){
+                    
+                }).catch(function(err){
+                });
+
+            }else {
+                workorder = JSON.parse(workorderDataObject[0].data).tvs1workorder;
+            }
+            getVS1Data('TProcessStep').then(function(dataObject) {
+                let process_data;
+                if (dataObject.length == 0) {
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then( function(data) {                            
+                        process_data = data;
+                        addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                        })
+                    })
+                } else {
+                    process_data = JSON.parse(dataObject[0].data).tprocessstep;
+                }
+                
+                
+                let bomData;
+                let hourly_labour_cost;
+                let hourly_overhead_cost;
+                let unit_cost = 10;
+                
+             
+                let startedTimes ;
+                let stoppedTimes;
+
+                for (let i = 0; i < workorder.length; i++) {
+                    bomData = JSON.parse(workorder[i].fields.BOMStructure);
+                    for(let k =0 ; k < process_data.length; k++) {
+                        if (bomData.Info == process_data[k].fields.Description) {
+                            hourly_labour_cost = parseFloat(process_data[k].fields.HourlyLabourCost);
+                            hourly_overhead_cost = parseFloat(process_data[k].fields.OHourlyCost);
+                        }
+                    }
+                  
+                    startedTimes = workorder[i].fields.StartedTimes;
+                    stoppedTimes = workorder[i].fields.StoppedTimes;
+                    let clocked_hrs = 0;  
+
+                                        
+                    for(let k=0; k < startedTimes.length; k++) {
+
+                        const startTimeString = startedTimes[k];
+                        const endTimeString = stoppedTimes[k];
+
+                        // Convert the time strings to Date objects
+                        const startTime = new Date(`04/07/2023 ${startTimeString}`);
+                        const endTime = new Date(`04/07/2023 ${endTimeString}`);
+
+                    // Calculate the difference in hours
+                       const hoursDiff = Math.abs(endTime - startTime) / 36e5; // 36e5 is the number of milliseconds in an hour
+                       clocked_hrs = clocked_hrs + hoursDiff;
+                    }
+
+                                                 
+                                      
+
+                    let details = JSON.parse(bomData.Details);
+
+                    let temp = {
+                        WorkorderID: workorder[i].fields.ID || ' ',
+                        ProductID: workorder[i].fields.ProductName || ' ',
+                        ProcessBOM: bomData.Info || ' ',
+                        BOMChanged: " ",
+                        BOMProducts: bomData.Caption || ' ',
+                        ProductsChanged: " ",
+                        UnitCost: unit_cost || 0,
+                        BOMQty: bomData.TotalQtyOriginal || 0,
+                        ChangedQty : bomData.TotalChangeQty || 0,
+                        TotalClockedTime: clocked_hrs || '0' ,
+                        HourlyLabourCost: hourly_labour_cost || 0,
+                        HourlyOverHeadCost : hourly_overhead_cost || 0,
+                        RawMaterialcost : 0,
+                        WastageCost : 0,
+                        TotalBOMCost: 0,    
+                        Active: false,               
+                        
+
+                    };
+
+
+                    buildcostreport_data.push(temp);
+
+                    for(let j=0; j<details.length;j++) {
+
+                        temp = {
+                            WorkorderID: ' ',
+                            ProductID: ' ',
+                            ProcessBOM: ' ',
+                            BOMChanged: ' ',
+                            BOMProducts: details[j].productName || ' ',
+                            ProductsChanged: " ",
+                            UnitCost: unit_cost || 0,
+                            BOMQty: details[j].qty  || 0,
+                            ChangedQty : details[j].changed_qty  || 0,
+                            TotalClockedTime: "" ,
+                            HourlyLabourCost: hourly_labour_cost || 0,
+                            HourlyOverHeadCost : hourly_overhead_cost || 0,
+                            RawMaterialcost : unit_cost * parseFloat(bomData.TotalQtyOriginal),
+                            WastageCost : 0,
+                            TotalBOMCost: 0,     
+                            Active: false,
+                        }  
+
+                        buildcostreport_data.push(temp);
+                    }
+                    
+
+                }     
+                
+
+                addVS1Data('TVS1BuildCostReport', JSON.stringify({tvs1buildcostreport: buildcostreport_data})).then(function(datareturn){
+                }).catch(function(err){
+                    
+                });
+                
+                    
+            }).catch(function(e) {
+                manufacturingService.getAllProcessData(initialBaseDataLoad, 0).then(function(data) {
+                    addVS1Data('TProcessStep', JSON.stringify(data)).then(function(datareturn) {
+                                                                            })
+                })
+            })           
+
+                                
+        })       
+
+    }
+    
+    templateObject.makeIndexedDBdata();       
+       
+   
+    templateObject.timeToHours = function (time) {
+        const parts = time.split(":");
+        const hours = parseInt(parts[0]);
+        const minutes = parseInt(parts[1]);
+        const seconds = parseInt(parts[2]);
+        const totalHours = hours + minutes / 60 + seconds / 3600;
+        return totalHours;
+    } ;
+
+    
+
+    templateObject.timeFormat = function(hours) {
+        var decimalTime = parseFloat(hours).toFixed(2);
+        decimalTime = decimalTime * 60 * 60;
+        var hours = Math.floor((decimalTime / (60 * 60)));
+        decimalTime = decimalTime - (hours * 60 * 60);
+        var minutes = Math.abs(decimalTime / 60);
+        decimalTime = decimalTime - (minutes * 60);
+        hours = ("0" + hours).slice(-2);
+        minutes = ("0" + Math.round(minutes)).slice(-2);
+        let time = hours + ":" + minutes;
+        return time;
+    }  
+   
+    templateObject.timeToDecimal = function(time) {
+        var hoursMinutes = time.split(/[.:]/);
+        var hours = parseInt(hoursMinutes[0], 10);
+        var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
+        return hours + minutes / 60;
+    }
+    
+      
+
 });
 
 Template.buildcostreport.events({
-    'click .btnRefresh': function() {
-      $(".fullScreenSpin").css("display", "inline-block");
-      let templateObject = Template.instance();
-      window.open("/buildcostreport", "_self");
-      // sideBarService.getAllSuppliersDataVS1List(initialDataLoad, 0).then(function (data) {
-      //     addVS1Data("TSupplierVS1List", JSON.stringify(data)).then(function (datareturn) {
-      //       sideBarService.getAllSuppliersDataVS1List(initialDataLoad, 0, false).then(function (dataUsers) {
-      //         addVS1Data('TSupplierVS1List', JSON.stringify(dataUsers)).then(function (datareturn) {
-      //             window.open("/supplierlist", "_self");
-      //           }).catch(function (err) {
-      //             window.open("/supplierlist", "_self");
-      //           });
-      //       });
-      //       }).catch(function (err) {
-      //         window.open("/supplierlist", "_self");
-      //       });
-      //   }).catch(function (err) {
-      //     sideBarService.getAllSuppliersDataVS1List().then(function (dataUsers) {
-      //       addVS1Data('TSupplierVS1List', JSON.stringify(dataUsers)).then(function (datareturn) {
-      //           window.open("/supplierlist", "_self");
-      //         }).catch(function (err) {
-      //           window.open("/supplierlist", "_self");
-      //         });
-      //     });
-      //   });
+   
+    'click .exportbtn': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblBuildCostReport_wrapper .dt-buttons .btntabletocsv').click();
+        $('.fullScreenSpin').css('display', 'none');
+    },
+    'click .exportbtnExcel': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblBuildCostReport_wrapper .dt-buttons .btntabletoexcel').click();
+        $('.fullScreenSpin').css('display', 'none');
+    },
+    'click .printConfirm': function (event) {
+        playPrintAudio();
+        setTimeout(function(){
+        $('.fullScreenSpin').css('display', 'inline-block');
+        jQuery('#tblBuildCostReport_wrapper .dt-buttons .btntabletopdf').click();
+        $('.fullScreenSpin').css('display', 'none');
+    }, delayTimeAfterSound);
+    },
+    'click .btnRefresh': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+       // templateObject.getProcessClockedList();
+        setTimeout(function () {
+            window.open('/buildcostreport','_self');
+            
+        }, 2000);
+
+    },
+    'click .templateDownload': function () {
+        let utilityService = new UtilityService();
+        let rows = [];
+        const filename = 'SampleCustomer' + '.csv';
+        rows[0] = ['Company', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'Street2', 'State', 'Post Code', 'Country'];
+        rows[1] = ['ABC Company', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Main Street', 'New York', '1234', 'United States'];
+        utilityService.exportToCsv(rows, filename, 'csv');
+    },
+    'click .btnUploadFile': function (event) {
+        $('#attachment-upload').val('');
+        $('.file-name').text('');
+        //$(".btnImport").removeAttr("disabled");
+        $('#attachment-upload').trigger('click');
+
+    },
+    'click .templateDownloadXLSX': function (e) {
+
+        e.preventDefault();  //stop the browser from following
+        window.location.href = 'sample_imports/SampleCustomer.xlsx';
+    },
+    'change #attachment-upload': function (e) {
+        let templateObj = Template.instance();
+        var filename = $('#attachment-upload')[0].files[0]['name'];
+        var fileExtension = filename.split('.').pop().toLowerCase();
+        var validExtensions = ["csv", "txt", "xlsx"];
+        var validCSVExtensions = ["csv", "txt"];
+        var validExcelExtensions = ["xlsx", "xls"];
+
+        if (validExtensions.indexOf(fileExtension) == -1) {
+            // Bert.alert('<strong>formats allowed are : '+ validExtensions.join(', ')+'</strong>!', 'danger');
+            swal('Invalid Format', 'formats allowed are :' + validExtensions.join(', '), 'error');
+            $('.file-name').text('');
+            $(".btnImport").Attr("disabled");
+        } else if (validCSVExtensions.indexOf(fileExtension) != -1) {
+
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+
+            templateObj.selectedFile.set(selectedFile);
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+        } else if (fileExtension == 'xlsx') {
+            $('.file-name').text(filename);
+            let selectedFile = event.target.files[0];
+            var oFileIn;
+            var oFile = selectedFile;
+            var sFilename = oFile.name;
+            // Create A File Reader HTML5
+            var reader = new FileReader();
+
+            // Ready The Event For When A File Gets Selected
+            reader.onload = function (e) {
+                var data = e.target.result;
+                data = new Uint8Array(data);
+                var workbook = XLSX.read(data, { type: 'array' });
+
+                var result = {};
+                workbook.SheetNames.forEach(function (sheetName) {
+                    var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+                    var sCSV = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                    templateObj.selectedFile.set(sCSV);
+
+                    if (roa.length) result[sheetName] = roa;
+                });
+                // see the result, caution: it works after reader event is done.
+
+            };
+            reader.readAsArrayBuffer(oFile);
+
+            if ($('.file-name').text() != "") {
+                $(".btnImport").removeAttr("disabled");
+            } else {
+                $(".btnImport").Attr("disabled");
+            }
+
+        }
+
+
+
+    },
+    'click .btnImport': function () {
+        $('.fullScreenSpin').css('display', 'inline-block');
+        let templateObject = Template.instance();
+        let contactService = new ContactService();
+        let objDetails;
+        Papa.parse(templateObject.selectedFile.get(), {
+            complete: function (results) {
+
+                if (results.data.length > 0) {
+                    if ((results.data[0][0] == "Company") && (results.data[0][1] == "First Name")
+                        && (results.data[0][2] == "Last Name") && (results.data[0][3] == "Phone")
+                        && (results.data[0][4] == "Mobile") && (results.data[0][5] == "Email")
+                        && (results.data[0][6] == "Skype") && (results.data[0][7] == "Street")
+                        && (results.data[0][8] == "Street2") && (results.data[0][9] == "State")
+                        && (results.data[0][10] == "Post Code") && (results.data[0][11] == "Country")) {
+
+                        let dataLength = results.data.length * 500;
+                        setTimeout(function () {
+                            // $('#importModal').modal('toggle');
+                            Meteor._reload.reload();
+                        }, parseInt(dataLength));
+
+                        for (let i = 0; i < results.data.length - 1; i++) {
+                            objDetails = {
+                                type: "TCustomer",
+                                fields:
+                                {
+                                    ClientName: results.data[i + 1][0],
+                                    FirstName: results.data[i + 1][1],
+                                    LastName: results.data[i + 1][2],
+                                    Phone: results.data[i + 1][3],
+                                    Mobile: results.data[i + 1][4],
+                                    Email: results.data[i + 1][5],
+                                    SkypeName: results.data[i + 1][6],
+                                    Street: results.data[i + 1][7],
+                                    Street2: results.data[i + 1][8],
+                                    State: results.data[i + 1][9],
+                                    PostCode: results.data[i + 1][10],
+                                    Country: results.data[i + 1][11],
+
+                                    BillStreet: results.data[i + 1][7],
+                                    BillStreet2: results.data[i + 1][8],
+                                    BillState: results.data[i + 1][9],
+                                    BillPostCode: results.data[i + 1][10],
+                                    Billcountry: results.data[i + 1][11],
+                                    PublishOnVS1: true
+                                }
+                            };
+                            if (results.data[i + 1][1]) {
+                                if (results.data[i + 1][1] !== "") {
+                                    contactService.saveCustomer(objDetails).then(function (data) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        //Meteor._reload.reload();
+                                    }).catch(function (err) {
+                                        //$('.fullScreenSpin').css('display','none');
+                                        swal({
+                                            title: 'Oooops...',
+                                            text: err,
+                                            type: 'error',
+                                            showCancelButton: false,
+                                            confirmButtonText: 'Try Again'
+                                        }).then((result) => {
+                                            if (result.value) {
+                                                Meteor._reload.reload();
+                                            } else if (result.dismiss === 'cancel') {
+
+                                            }
+                                        });
+                                    });
+                                }
+                            }
+                        }
+
+                    } else {
+                        $('.fullScreenSpin').css('display', 'none');
+                        // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
+                        swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                    }
+                } else {
+                    $('.fullScreenSpin').css('display', 'none');
+                    // Bert.alert('<strong> Data Mapping fields invalid. </strong> Please check that you are importing the correct file with the correct column headers.', 'danger');
+                    swal('Invalid Data Mapping fields ', 'Please check that you are importing the correct file with the correct column headers.', 'error');
+                }
+
+            }
+        });
     },
     
-    "click .chkDatatable": function(event) {
-        var columns = $("#tblBuildCostReport th");
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(":checked")) {
-                    $("." + replaceClass + "").css("display", "table-cell");
-                    $("." + replaceClass + "").css("padding", ".75rem");
-                    $("." + replaceClass + "").css("vertical-align", "top");
-                } else {
-                    $("." + replaceClass + "").css("display", "none");
-                }
-            }
-        });
-    },
-    "click .btnRefreshBasReturn": function(event) {
-        $(".btnRefresh").trigger("click");
-    },
-    "click .resetTable": function(event) {
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID") });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: "tblJournalList" });
-                if (checkPrefDetails) {
-                    CloudPreference.remove({
-                        _id: checkPrefDetails._id
-                    }, function(err, idTag) {
-                        if (err) {} else {
-                            Meteor._reload.reload();
-                        }
-                    });
-                }
-            }
-        }
-    },
-    "click .saveTable": function(event) {
-        let lineItems = [];
-        //let datatable =$('#tblJournalList').DataTable();
-        $(".columnSettings").each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || "";
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || "";
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(":checked")) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            };
-
-            lineItems.push(lineItemObj);
-        });
-        //datatable.state.save();
-        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem("mycloudLogonID"), clouddatabaseID: localStorage.getItem("mycloudLogonDBID") });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: "tblJournalList" });
-                if (checkPrefDetails) {
-                    CloudPreference.update({
-                        _id: checkPrefDetails._id
-                    }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: "salesform",
-                            PrefName: "tblJournalList",
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $("#myModal2").modal("toggle");
-                        } else {
-                            $("#myModal2").modal("toggle");
-                        }
-                    });
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: "salesform",
-                        PrefName: "tblJournalList",
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $("#myModal2").modal("toggle");
-                        } else {
-                            $("#myModal2").modal("toggle");
-                        }
-                    });
-                }
-            }
-        }
-        $("#myModal2").modal("toggle");
-        //Meteor._reload.reload();
-    },
-    "click .btnOpenSettings": function(event) {
-        let templateObject = Template.instance();
-        var columns = $("#tblBuildCostReport th");
-
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if (v.className.includes("hiddenColumn")) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace("px", "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || "",
-                sWidth: sWidth || "",
-                sIndex: v.id || "",
-                sVisible: columVisible || false,
-                sClass: v.className || ""
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
-    "click #exportbtn": function() {
-        $(".fullScreenSpin").css("display", "inline-block");
-        jQuery("#tblBuildCostReport_wrapper .dt-buttons .btntabletocsv").click();
-        $(".fullScreenSpin").css("display", "none");
-    },
-    "click .printConfirm": function(event) {
-        playPrintAudio();
-        setTimeout(function() {
-            $(".fullScreenSpin").css("display", "inline-block");
-            jQuery("#tblBuildCostReport_wrapper .dt-buttons .btntabletopdf").click();
-            $(".fullScreenSpin").css("display", "none");
-            // $('#html-2-pdfwrapper').css('display','block');
-            // var pdf =  new jsPDF('portrait','mm','a4');
-            // new jsPDF('p', 'pt', 'a4');
-            //   pdf.setFontSize(18);
-            //   var source = document.getElementById('html-2-pdfwrapper');
-            //   pdf.addHTML(source, function () {
-            //      pdf.save('journalentrylist.pdf');
-            //      $('#html-2-pdfwrapper').css('display','none');
-            //  });
-        }, delayTimeAfterSound);
-    },
-    // CURRENCY MODULE //
-    ...FxGlobalFunctions.getEvents(),
-    "click .currency-modal-save": (e) => {
-        //$(e.currentTarget).parentsUntil(".modal").modal("hide");
-        LoadingOverlay.show();
-
-        let templateObject = Template.instance();
-
-        // Get all currency list
-        let _currencyList = templateObject.currencyList.get();
-
-        // Get all selected currencies
-        const currencySelected = $(".currency-selector-js:checked");
-        let _currencySelectedList = [];
-        if (currencySelected.length > 0) {
-            $.each(currencySelected, (index, e) => {
-                const sellRate = $(e).attr("sell-rate");
-                const buyRate = $(e).attr("buy-rate");
-                const currencyCode = $(e).attr("currency");
-                const currencyId = $(e).attr("currency-id");
-                let _currency = _currencyList.find((c) => c.id == currencyId);
-                _currency.active = true;
-                _currencySelectedList.push(_currency);
-            });
+    'click #check-all': function(event) {
+        if ($(event.target).is(':checked')) {
+            $(".chkBox").prop("checked", true);
         } else {
-            let _currency = _currencyList.find((c) => c.code == defaultCurrencyCode);
-            _currency.active = true;
-            _currencySelectedList.push(_currency);
+            $(".chkBox").prop("checked", false);
         }
+    },      
 
-        _currencyList.forEach((value, index) => {
-            if (_currencySelectedList.some((c) => c.id == _currencyList[index].id)) {
-                _currencyList[index].active = _currencySelectedList.find(
-                    (c) => c.id == _currencyList[index].id
-                ).active;
-            } else {
-                _currencyList[index].active = false;
-            }
-        });
+    
 
-        _currencyList = _currencyList.sort((a, b) => {
-            if (a.code == defaultCurrencyCode) {
-                return -1;
-            }
-            return 1;
-        });
 
-        // templateObject.activeCurrencyList.set(_activeCurrencyList);
-        templateObject.currencyList.set(_currencyList);
 
-        LoadingOverlay.hide();
-    },
+
 });
+
 
 Template.buildcostreport.helpers({
     datatablerecords: () => {
-        return Template.instance().datatablerecords.get()
-            // .sort(function(a, b) {
-            //     if (a.transactiondate == "NA") {
-            //         return 1;
-            //     } else if (b.transactiondate == "NA") {
-            //         return -1;
-            //     }
-            //     return a.transactiondate.toUpperCase() > b.transactiondate.toUpperCase() ?
-            //         1 :
-            //         -1;
-            // });
+        return Template.instance().datatablerecords.get().sort(function (a, b) {
+            if (a.company == 'NA') {
+                return 1;
+            }
+            else if (b.company == 'NA') {
+                return -1;
+            }
+            return (a.company.toUpperCase() > b.company.toUpperCase()) ? 1 : -1;
+        });
     },
     tableheaderrecords: () => {
         return Template.instance().tableheaderrecords.get();
     },
     salesCloudPreferenceRec: () => {
-        return CloudPreference.findOne({ userid: localStorage.getItem("mycloudLogonID"), PrefName: "tblJournalList" });
-    },
-    currentdate: () => {
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-        return begunDate;
+        return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblJoblist' });
     },
 
-
-    // FX Module
-    convertAmount: (amount, currencyData) => {
-        let currencyList = Template.instance().tcurrencyratehistory.get(); // Get tCurrencyHistory
-
-        if (isNaN(amount)) {
-            if (!amount || amount.trim() == "") {
-                return "";
-            }
-            amount = utilityService.convertSubstringParseFloat(amount); // This will remove all currency symbol
-        }
-        // if (currencyData.code == defaultCurrencyCode) {
-        //    default currency
-        //   return amount;
-        // }
-
-        // Lets remove the minus character
-        const isMinus = amount < 0;
-        if (isMinus == true)
-            amount = amount * -1; // make it positive for now
-
-        //  get default currency symbol
-        // let _defaultCurrency = currencyList.filter(
-        //   (a) => a.Code == defaultCurrencyCode
-        // )[0];
-
-        // amount = amount.replace(_defaultCurrency.symbol, "");
-
-        // amount =
-        //   isNaN(amount) == true
-        //     ? parseFloat(amount.substring(1))
-        //     : parseFloat(amount);
-
-        // Get the selected date
-        let dateTo = $("#dateTo").val();
-        const day = dateTo.split("/")[0];
-        const m = dateTo.split("/")[1];
-        const y = dateTo.split("/")[2];
-        dateTo = new Date(y, m, day);
-        dateTo.setMonth(dateTo.getMonth() - 1); // remove one month (because we added one before)
-
-        // Filter by currency code
-        currencyList = currencyList.filter(a => a.Code == currencyData.code);
-
-        // Sort by the closest date
-        currencyList = currencyList.sort((a, b) => {
-            a = GlobalFunctions.timestampToDate(a.MsTimeStamp);
-            a.setHours(0);
-            a.setMinutes(0);
-            a.setSeconds(0);
-
-            b = GlobalFunctions.timestampToDate(b.MsTimeStamp);
-            b.setHours(0);
-            b.setMinutes(0);
-            b.setSeconds(0);
-
-            var distancea = Math.abs(dateTo - a);
-            var distanceb = Math.abs(dateTo - b);
-            return distancea - distanceb; // sort a before b when the distance is smaller
-
-            // const adate= new Date(a.MsTimeStamp);
-            // const bdate = new Date(b.MsTimeStamp);
-
-            // if(adate < bdate) {
-            //   return 1;
-            // }
-            // return -1;
-        });
-
-        const [firstElem] = currencyList; // Get the firest element of the array which is the closest to that date
-
-        let rate = currencyData.code == defaultCurrencyCode ?
-            1 :
-            firstElem.BuyRate; // Must used from tcurrecyhistory
-
-        amount = parseFloat(amount * rate); // Multiply by the rate
-        amount = Number(amount).toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }); // Add commas
-
-        let convertedAmount = isMinus == true ?
-            `- ${currencyData.symbol} ${amount}` :
-            `${currencyData.symbol} ${amount}`;
-
-        return convertedAmount;
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllClockOnReport;
     },
-    count: array => {
-        return array.length;
-    },
-    countActive: array => {
-        if (array.length == 0) {
-            return 0;
-        }
-        let activeArray = array.filter(c => c.active == true);
-        return activeArray.length;
-    },
-    currencyList: () => {
-        return Template.instance().currencyList.get();
-    },
-    isNegativeAmount(amount) {
-        if (Math.sign(amount) === -1) {
-            return true;
-        }
-        return false;
-    },
-    isOnlyDefaultActive() {
-        const array = Template.instance().currencyList.get();
-        if (array.length == 0) {
-            return false;
-        }
-        let activeArray = array.filter(c => c.active == true);
 
-        if (activeArray.length == 1) {
-            if (activeArray[0].code == defaultCurrencyCode) {
-                return !true;
-            } else {
-                return !false;
-            }
-        } else {
-            return !false;
+    searchAPI: function() {
+        return sideBarService.getAllJobssDataVS1;
+    },
+
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
+
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
         }
     },
-    isCurrencyListActive() {
-        const array = Template.instance().currencyList.get();
-        let activeArray = array.filter(c => c.active == true);
 
-        return activeArray.length > 0;
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
     },
-    isObject(variable) {
-        return typeof variable === "object" && variable !== null;
+
+    apiParams: function() {
+        return ["ignoredate", "limitCount", "limitFrom", "deleteFilter"];
     },
-    currency: () => {
-        return Currency;
-    }
 });

@@ -158,6 +158,8 @@ Template.new_workorder.onRendered(async function(){
 
     templateObject.getWorkorderRecord = async function() {
         if(FlowRouter.current().queryParams.id) {
+
+
             $('.fullScreenSpin').css('display', 'inline-block')
             let orderid = FlowRouter.current().queryParams.id
             let workorderIndex = templateObject.workOrderRecords.get().findIndex(order => {
@@ -178,11 +180,13 @@ Template.new_workorder.onRendered(async function(){
 
             }
 
-            templateObject.salesOrderId.set(workorder.fields.SaleID)
+          //  templateObject.salesOrderId.set(workorder.fields.SaleID)
+            templateObject.salesOrderId.set(orderid);
             let customerData = await templateObject.getCustomerData(workorder.fields.Customer);
             let record = {
                 id: orderid,
-                salesorderid: workorder.fields.SaleID,
+             //   salesorderid: workorder.fields.SaleID,
+                salesorderid: orderid,
                 lid: 'Edit Work Order ' + orderid,
                 customer: workorder.fields.Customer || '',
                 ClientName: workorder.fields.Customer || '',
@@ -211,13 +215,14 @@ Template.new_workorder.onRendered(async function(){
                 showQAResume: isCompleted == false &&  workorder.fields.Status == 'QAPaused'? true : false,
                 showQAStop: isCompleted == false &&  (workorder.fields.Status == 'QAStarted' || workorder.fields.Status == 'QAResumed' || workorder.fields.Status == 'QAPaused')? true: false,
                 trackedTime: workorder.fields.TrackedTime || 0,
-                startedTimes: JSON.parse(workorder.fields.StartedTimes),
-                pausedTimes: JSON.parse(workorder.fields.PausedTimes),
+                startedTimes: workorder.fields.StartedTimes,
+                pausedTimes: workorder.fields.PausedTimes,
                 stoppedTime: workorder.fields.StoppedTime,
                 startTime: workorder.fields.StartTime,
                 showCompleteProcess: isCompleted == false &&  workorder.fields.Status == 'QAStopped'  ? true: false,
                 isCompleted: isCompleted
             }
+
             templateObject.updateFromPO.set(workorder.fields.UpdateFromPO)
             templateObject.workorderrecord.set(record);
             templateObject.bomStructure.set(JSON.parse(workorder.fields.BOMStructure));
@@ -861,7 +866,6 @@ Template.new_workorder.events({
                                             TrackedTime: 0,
                                             StartedTimes: JSON.stringify([]),
                                             PausedTimes: JSON.stringify([]),
-                                            StartTime: '',
                                             StoppedTime: ''
                                         }
 
