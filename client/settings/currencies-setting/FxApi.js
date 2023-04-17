@@ -80,21 +80,22 @@ class FxApi {
     amount = 1,
     callback = result => {}
   }) {
-    const credentials = await this.getEmployeeFxCurrencyCredentials();
-    if(!credentials) {
-      return false;
-    }
+    // const credentials = await this.getEmployeeFxCurrencyCredentials();
+    // if(!credentials) {
+    //   return false;
+    // }
 
-    const response = await fetch(`https://xecdapi.xe.com/v1/convert_from.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Basic " + credentials
-      }
-    });
+    // const response = await fetch(`https://xecdapi.xe.com/v1/convert_from.json/?to=${to}&from=${from}&amount=${amount}&inverse=true`, {
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //     Authorization: "Basic " + credentials
+    //   }
+    // });
+    let response = await fetch("https://financialmodelingprep.com/api/v3/forex?apikey=c3c094133372c97076a1bb6f418020ab");
 
     if (response.status == 200) {
       const data = await response.json();
-      callback(data);
+      callback(data.forexList);
       return data;
     } else {
       callback(null);

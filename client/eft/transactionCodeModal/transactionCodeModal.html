@@ -9,6 +9,7 @@
         <input type="hidden" style="width: 100%; display:none;" id="selectTransactionCodeID" name="selectTransactionCodeID" readonly>
         <div class="card-body p-1 rounded">
             {{>datatablelist
+                    tableclass="tblTransactionCode"
                     tablename="tblTransactionCode"
                     apiName= apiFunction
                     indexeddbname = 'TTransactionCode'

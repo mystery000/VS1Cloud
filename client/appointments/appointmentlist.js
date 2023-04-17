@@ -148,6 +148,7 @@ Template.appointmentlist.onCreated(function() {
 });
 
 Template.appointmentlist.onRendered(async function() {
+    let productService = new ProductService();
     const templateObject = Template.instance();
     const dataTableList = [];
     // Get SMS settings

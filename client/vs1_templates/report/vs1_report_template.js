@@ -10,6 +10,8 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './vs1_report_template.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import GlobalFunctions from '../../GlobalFunctions';
+
 let sideBarService = new SideBarService();
 let reportService = new ReportService();
 let utilityService = new UtilityService();

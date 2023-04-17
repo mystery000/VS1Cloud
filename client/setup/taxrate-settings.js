@@ -638,7 +638,6 @@ Template.wizard_taxrate.events({
           });
       })
       .catch(function (err) {
-        console.error("err", err);
       });
   },
   'click .btnDeleteTaxRate': function () {

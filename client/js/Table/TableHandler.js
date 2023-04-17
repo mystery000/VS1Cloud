@@ -26,6 +26,15 @@ export default class TableHandler {
     $(".dataTable tbody tr td").on("mouseover", () => {
       this.refreshDatatableResizable();
     });
+
+    $(".transactionLines tbody").on("mouseup", () => {
+      this.disableTransDatatableResizable();
+    });
+
+    $(".transactionLines tbody").on("mouseover", () => {
+      this.disableTransDatatableResizable();
+    });
+
   }
 
   /**
@@ -55,7 +64,7 @@ export default class TableHandler {
         let tableClassName = $(e.currentTarget.className)?$(e.currentTarget)[0].className:'';
         if(tableClassName.includes("transactionLines")){
             //this.saveTableColumns(tableName);
-        }if (tableClassName.includes("dtTemplate")){
+        }else if (tableClassName.includes("dtTemplate")){
           this.saveTableColumnsDatatableList(tableName);
         }else{
           if ((tableName != "tblBasReturnList")) {
@@ -76,8 +85,12 @@ export default class TableHandler {
   /**
      * We first need to disable all previous events listeners related
      */
-  disableDatatableResizable() {
+  async disableDatatableResizable() {
     $(".dataTable").colResizable({disable: true});
+  }
+
+  async disableTransDatatableResizable() {
+    $(".transactionLines").colResizable({disable: true});
   }
 
   async saveTableColumnsDatatableList(tableName) {

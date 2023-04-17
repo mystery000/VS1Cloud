@@ -10,6 +10,7 @@ import { cloneDeep, template } from 'lodash';
 
 
 const contactService = new ContactService();
+const manufacturingService = new ManufacturingService();
 
 
 var html5QrcodeScannerProdModal = null;
@@ -103,19 +104,21 @@ Template.mobileapp.onRendered(async function() {
             })
         })
     }
-    let temp = await templateObject.getAllWorkorders()
+    let temp = await templateObject.getAllWorkorders();
     templateObject.workOrderRecords.set(temp);
-
-
     templateObject.inputStatus.set("enterJobNumber");  // enterProcess, enterEmployee,  
-
-      
-
-
-
 });
 
 Template.mobileapp.events({
+    
+    // Press Enter keyboard
+    'keydown': function(e, instance) {
+        if (e.keyCode === 13) {
+            e.preventDefault();
+            $('#mobileBtnEnter').click();            
+        }
+    },
+
     // table tr click
     'click #tblWorkOrderList tbody tr' : function(e, instance) {
         let SaleID = $(e.target).closest('tr').find('td.sorting_1').text();
@@ -218,7 +221,7 @@ Template.mobileapp.events({
 
                     $(".mobile-left-workorder-list").css('display', 'block');
                     let workOrderData = JSON.parse(dataObject[0].data);
-                    
+                   
                     if(!isMobile) {
 
                         let table = $("#tblWorkOrderList").DataTable({
@@ -327,16 +330,13 @@ Template.mobileapp.events({
             $(".mobile-left-employee-list").css('display', 'none');
             $(".mobile-left-workorder-list").css('display', 'none');
 
-
             getVS1Data('TProcessStep').then(function (dataObject) {
                 if(dataObject.length == 0) {
 
                     manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
                     
-
                         $(".mobile-left-jobprocess-list").css('display', 'block');
-                        let processData = JSON.stringify(data);
-                        
+                        let processData = JSON.stringify(data);                        
                         let table_data = JSON.parse(processData);
 
                         if(!isMobile) {
@@ -373,9 +373,7 @@ Template.mobileapp.events({
                                 ]
                             })
 
-                        }
-
-                       
+                        }                    
 
 
                         $("#startBreakContainer").css('display', 'none');
@@ -653,13 +651,14 @@ Template.mobileapp.events({
             Template.instance().isSelectEmployeeNumber.set(true);
         }
 
-
         // html5QrcodeScannerProdModal.html5Qrcode.stop().then((ignore) => {
         // }).catch((err) => console.log(err));
 
     },
 
-    'click #btnClockIn': function(e, instance) {
+    'click #btnClockIn': async function(e, instance) {
+        
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(true);
         
        // Template.instance().inputStatus.set("enterEmployee");
@@ -676,10 +675,36 @@ Template.mobileapp.events({
         $("#btnClockOut").removeAttr('disabled');
         $("#btnStartBreak").removeAttr('disabled');
         $("#btnStartJob").removeAttr('disabled');
-        $(".mobile-header-status-text").text("Select Employee");
+        $(".mobile-header-status-text").text("Clock In");
+
+        let jobNumber = templateObject.jobNumber.get();
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let startedTimes = currentworkorder.fields.StartedTimes;
+            startedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
-    'click #btnClockIn_phone': function(e, instance) {
+    'click #btnClockIn_phone': async function(e, instance) {
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(true);
         // Template.instance().isEnterJobNumber.set(false);
         // Template.instance().isEnterJobProcess.set(false);
@@ -699,13 +724,39 @@ Template.mobileapp.events({
         $("#btnClockOut_phone").removeAttr('disabled');
         $("#btnStartBreak_phone").removeAttr('disabled');
         $("#btnStartJob_phone").removeAttr('disabled');
-        $(".mobile-header-status-text").text("Select Employee");
+        $(".mobile-header-status-text").text("Clock In");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let startedTimes = currentworkorder.fields.StartedTimes;
+            startedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
-    'click #btnClockOut': function (e, instance) {
-
+    'click #btnClockOut': async function (e, instance) {
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(false);
-        Template.instance().inputStatus.set("enterJobNumber");
+     //   Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut').prop('disabled', true);
         $("#btnClockOut").css('background', '#0084D1');
@@ -719,14 +770,41 @@ Template.mobileapp.events({
         $('#btnStopJob').prop('disabled', true);
         $("#btnStopBreak").css('background', '#0084D1');
         $('#btnStopBreak').prop('disabled', true);
-        $(".mobile-header-status-text").text("Enter Job Number");
+        $(".mobile-header-status-text").text("Clock Out");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let stoppedTimes = currentworkorder.fields.StoppedTimes;
+            stoppedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
-    'click #btnClockOut_phone': function (e, instance) {
+    'click #btnClockOut_phone': async function (e, instance) {
 
+        let templateObject = Template.instance();
         Template.instance().isClockin.set(false);
 
-        Template.instance().inputStatus.set("enterJobNumber");
+       // Template.instance().inputStatus.set("enterJobNumber");
 
         $('#btnClockOut_phone').prop('disabled', true);
         $("#btnClockOut_phone").css('background', '#0084D1');
@@ -740,7 +818,33 @@ Template.mobileapp.events({
         $('#btnStopJob_phone').prop('disabled', true);
         $("#btnStopBreak_phone").css('background', '#0084D1');
         $('#btnStopBreak_phone').prop('disabled', true);
-        $(".mobile-header-status-text").text("Enter Job Number");
+        $(".mobile-header-status-text").text("Clock Out");
+
+        let jobNumber = templateObject.jobNumber.get();
+
+       
+        let workorders = await templateObject.getAllWorkorders();
+        let currentworkorder;
+
+        let workorderindex = workorders.findIndex(order => {
+            return order.fields.ID == jobNumber;
+        })
+
+        let currentime = new Date().toLocaleTimeString();
+       
+        if(workorderindex > -1) {
+            currentworkorder = workorders[workorderindex];
+
+            let stoppedTimes = currentworkorder.fields.StoppedTimes;
+            stoppedTimes.push(currentime);
+
+            let tempworkorder = cloneDeep(currentworkorder);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes}
+            workorders.splice(workorderindex, 1, tempworkorder);
+            addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
+
+            })
+        }
     },
 
 
@@ -867,7 +971,8 @@ Template.mobileapp.events({
     },
 
     'click #mobileBtnEnter': function(e, instance) {  // Click enter button
-
+        
+        let templateObject = Template.instance();
         let inputValue  = $(".mobile-main-input").val();
         let isClockin = Template.instance().isClockin.get();
         
@@ -882,33 +987,72 @@ Template.mobileapp.events({
 
         if (inputStatus == "enterJobNumber") {
 
-            let temp_id = 0;
+            
             let templateObject = Template.instance();
 
             getVS1Data('TVS1Workorder').then(function (dataObject) {
-            
-                let workOrderData = JSON.parse(dataObject[0].data);
-             
-                for(var i = 0; i < workOrderData.tvs1workorder.length; i ++) {
-                    if (workOrderData.tvs1workorder[i].fields.ID == inputValue) {
-                        temp_id = inputValue;
+                let checkWorkorder = false ;
+
+                if(dataObject.length == 0) {
+                    let workOrderData = manufacturingService.getWorkOrderList();
+
+                    for(var i = 0; i < workOrderData.length; i ++) {
+                        if (workOrderData[i].fields.ID == inputValue) {
+                            checkWorkorder = true
+                        }
                     }
+
+                    if (!checkWorkorder) {
+                        $('.mobile-header-status-text').text('The Workorder Number is not correct. Please type correct workorder number');
+                        $(".mobile-main-input").val("");
+                    }
+
+                    else {
+
+                        $('.mobile-header-status-text').text('Please set Job Process');
+                        templateObject.jobNumber.set(inputValue);
+
+                        $(".mobile-main-input").val("");
+                        templateObject.inputStatus.set("enterProcess");                           
+            
+                    }                  
+                    
+                    
+                    addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workOrderData})).then(function(datareturn){
+                        
+                    }).catch(function(err){
+
+                    });
+
+                } else {
+                    
+                    let workOrderData = JSON.parse(dataObject[0].data).tvs1workorder;
+
+                    for(var i = 0; i < workOrderData.length; i ++) {
+                        if (workOrderData[i].fields.ID == inputValue) {
+                            checkWorkorder = true
+                        }
+                    }
+
+                    if (!checkWorkorder) {
+                        $('.mobile-header-status-text').text('The Workorder Number is not correct. Please type correct workorder number');
+                        $(".mobile-main-input").val("");
+                    }
+
+                    else {
+
+                        $('.mobile-header-status-text').text('Please set Job Process');
+                        templateObject.jobNumber.set(inputValue);
+
+                        $(".mobile-main-input").val("");
+                        templateObject.inputStatus.set("enterProcess");                           
+            
+                    }
+
                 }
 
-                if (temp_id == 0 ) {
-                    $('.mobile-header-status-text').text('Job Number is not correct.');
-                    $(".mobile-main-input").val("");
-                }
-
-                else {
-
-                    $('.mobile-header-status-text').text('Please set Job Process');
-                    templateObject.jobNumber.set(inputValue);
-
-                    $(".mobile-main-input").val("");
-                    templateObject.inputStatus.set("enterProcess");                           
-        
-                }
+                            
+                
                 
             });           
                      
@@ -916,18 +1060,119 @@ Template.mobileapp.events({
 
         }
 
-        if (inputStatus == "enterProcess") {
-            $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Click Clock in');
+        if (inputStatus == "enterProcess") {     
+           
+            getVS1Data('TProcessStep').then(function (dataObject) {
+               
+                let checkProcessData = false;
+               
+                if(dataObject.length == 0) {
+
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {                    
+                                                
+
+                        let processData = data.tprocessstep; 
+                        for(var i = 0; i < processData.length; i ++) {
+                            if (processData[i].fields.Description == inputValue) {
+                                
+                                checkProcessData = true;                            
+                                
+                            }
+                        }
+    
+                        if(checkProcessData) {
+    
+                            $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Select Employee');
+                            $(".mobile-main-input").val("");
+                            // $("#btnClockIn").removeAttr('disabled');
+                            // $("#btnClockIn").css('background', '#00AE00');
+                
+                            // $("#btnClockIn_phone").removeAttr('disabled');
+                            // $("#btnClockIn_phone").css('background', '#00AE00');
+                
+                            templateObject.jobProcess.set(inputValue);
+                            templateObject.inputStatus.set("enterEmployee");
+    
+                        }else {
+                            $('.mobile-header-status-text').text('The process name is not correct. Please type correct process');
+                            $(".mobile-main-input").val("");
+    
+                        }
+
+                    })
+
+
+                } else {
+                    
+                    let processData = JSON.parse(dataObject[0].data).tprocessstep;
+
+                    for(var i = 0; i < processData.length; i ++) {
+                        if (processData[i].fields.Description == inputValue) {
+                            
+                            checkProcessData = true;                            
+                            
+                        }
+                    }
+
+                    if(checkProcessData) {
+
+                        $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Select Employee');
+                        $(".mobile-main-input").val("");
+                        // $("#btnClockIn").removeAttr('disabled');
+                        // $("#btnClockIn").css('background', '#00AE00');
             
-            $(".mobile-main-input").val("");
-            $("#btnClockIn").removeAttr('disabled');
-            $("#btnClockIn").css('background', '#00AE00');
+                        // $("#btnClockIn_phone").removeAttr('disabled');
+                        // $("#btnClockIn_phone").css('background', '#00AE00');
+            
+                        templateObject.jobProcess.set(inputValue);
+                        templateObject.inputStatus.set("enterEmployee");
 
-            $("#btnClockIn_phone").removeAttr('disabled');
-            $("#btnClockIn_phone").css('background', '#00AE00');
+                    }else {
+                        $('.mobile-header-status-text').text('The process name is not correct. Please type correct process');
+                        $(".mobile-main-input").val("");
 
-            Template.instance().jobProcess.set(inputValue);
-            Template.instance().inputStatus.set("enterEmployee");
+                    }
+
+                    
+                }
+
+
+            }).catch(function(error) {
+
+                    manufacturingService.getAllProcessData(initialBaseDataLoad, 0, false).then(function(data) {
+                        let processData = data.tprocessstep; 
+
+                        for(var i = 0; i < processData.length; i ++) {
+                            if (processData[i].fields.Description == inputValue) {
+                                
+                                checkProcessData = true;                            
+                                
+                            }
+                        }
+    
+                        if(checkProcessData) {
+    
+                            $('.mobile-header-status-text').text('Successfully added JobProcess information. Please Select Employee');
+                            $(".mobile-main-input").val("");
+                            // $("#btnClockIn").removeAttr('disabled');
+                            // $("#btnClockIn").css('background', '#00AE00');
+                
+                            // $("#btnClockIn_phone").removeAttr('disabled');
+                            // $("#btnClockIn_phone").css('background', '#00AE00');
+                
+                            templateObject.jobProcess.set(inputValue);
+                            templateObject.inputStatus.set("enterEmployee");
+    
+                        }else {
+                            $('.mobile-header-status-text').text('The process name is not correct. Please type correct process');
+                            $(".mobile-main-input").val("");
+    
+                        }                                      
+
+
+                        
+                    })
+            })         
             
 
         }
@@ -935,9 +1180,7 @@ Template.mobileapp.events({
         if(inputStatus == "enterEmployee") {
 
             let empId = $('.mobile-main-input').val();
-            let temp_id;
-            let templateObject = Template.instance();
-            
+            let checkEmpId = false;
             
             
             getVS1Data('TEmployee').then(function (dataObject) {
@@ -946,11 +1189,11 @@ Template.mobileapp.events({
                              
                 for(var i = 0; i < employData.temployee.length; i ++) {
                     if (employData.temployee[i].fields.ID == empId) {
-                        temp_id = empId;
+                        checkEmpId = true;
                     }
                 }
 
-                if (temp_id == 0 ) {
+                if (!checkEmpId) {
                     $('.mobile-header-status-text').text('Employee Number is not correct. Please select correct Number');
                     $(".mobile-main-input").val("");
                 }
@@ -959,13 +1202,17 @@ Template.mobileapp.events({
 
                     $('.mobile-header-status-text').text('Clock Starting');
                     $(".mobile-main-input").val("");
+                    
+                    $("#btnClockIn").removeAttr('disabled');
+                    $("#btnClockIn").css('background', '#00AE00');
+        
+                    $("#btnClockIn_phone").removeAttr('disabled');
+                    $("#btnClockIn_phone").css('background', '#00AE00');
+
                     templateObject.inputStatus.set("Clockin");
 
-                    $('.mobile-header-status-text').text('Successfully Set Employee Number');
-
-          
-                 
-        
+                    $('.mobile-header-status-text').text('Successfully Set Employee Number');         
+                        
                 }
                 
             }); 
@@ -978,6 +1225,7 @@ Template.mobileapp.events({
     'click #btnSaveClose': function(e, instance) {
         $('.mobile-stop-job-container').css('display', 'none');
         $('.mobile-right-btn-containner').css('display', 'flex');
+        $('.mobile-stop-job-input').val(0);
     },
 
     'click #btnCompleteProcess': async function(e, instance) {
@@ -1014,6 +1262,7 @@ Template.mobileapp.events({
 
         let workorders = await templateObject.getAllWorkorders();
         let currentworkorder;
+        let currentime = new Date().toLocaleTimeString();
 
         let workorderindex = workorders.findIndex(order => {
             return order.fields.ID == jobNumber;
@@ -1025,33 +1274,84 @@ Template.mobileapp.events({
             // Set bom Structure for current workorder
             templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
 
+            let stoppedTimes = currentworkorder.fields.StoppedTimes;
 
+            stoppedTimes.push(currentime);
+
+                         
 
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed'}
+            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed', StoppedTimes: stoppedTimes}
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
              //   $('.fullScreenSpin').css('display', 'none')
              //   swal('Work Order state is updated', '', 'success');
             })
+             
+          
 
+            
             let BomDataList = [];
 
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
 
 
             let change_to = bomStructureData.TotalChangeQty;
+            let total_qty_original = bomStructureData.TotalQtyOriginal;
+            let wastage_qty_temp; 
+         
 
-            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : bomStructureData.TotalQtyOriginal, changeTo: change_to, wastage: parseFloat(bomStructureData.TotalQtyOriginal) - parseFloat(change_to) };
+            if(isNaN(total_qty_original) || total_qty_original == "") {
+                total_qty_original = 0;
+            } else {
+                total_qty_original = parseFloat(total_qty_original).toFixed(2);
+            } 
+
+            if(isNaN(change_to) || change_to == "") {
+                change_to = total_qty_original;
+            }else {
+                change_to = parseFloat(change_to).toFixed(2);
+            }
+
+         
+
+            wastage_qty_temp = change_to - total_qty_original;
+
+            let tempBomData = {item: bomStructureData.Caption , uom: "Units(1)", total : total_qty_original, changeTo: change_to, wastage: wastage_qty_temp };
+
+
 
             BomDataList.push(tempBomData);
 
             let bomDetailData = JSON.parse(bomStructureData.Details);
+            let change_to_detail;
+            let total_qty_detail;
+            let wastage_qty_detail;
 
 
             for (let i = 0; i < bomDetailData.length; i++) {
-                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total:bomDetailData[i].qty, changeTo: bomDetailData[i].changed_qty, wastage: parseFloat(bomDetailData[i].qty) - parseFloat(bomDetailData[i].changed_qty) };
+               
+                total_qty_detail = bomDetailData[i].qty;
+                change_to_detail = bomDetailData[i].changed_qty;
+
+                
+                if(isNaN(total_qty_detail) || total_qty_detail == "") {
+                    total_qty_detail = 0;
+                } else {
+                    total_qty_detail = parseFloat(total_qty_detail).toFixed(2);
+                }
+
+                    
+                if(isNaN(change_to_detail) || change_to_detail == "" || change_to_detail == 0) {
+                    change_to_detail = total_qty_detail;
+                }else {
+                    change_to_detail = parseFloat(change_to_detail).toFixed(2);
+                }
+                
+                wastage_qty_detail = change_to_detail - total_qty_detail;               
+
+                tempBomData = {item: '<span style = "margin-left:20px;"> '+ bomDetailData[i].productName + '</span>', uom:"Units(1)",  total: total_qty_detail, changeTo: change_to_detail , wastage: wastage_qty_detail };
                 BomDataList.push(tempBomData);  
             }
 
@@ -1098,7 +1398,16 @@ Template.mobileapp.events({
                 
                 var total_qty = parseFloat($(this).parent().find("td:eq(2)").text());
                 var change_to_qty = parseFloat($(this).parent().find("td:eq(3)").text());
-                var wastage_qty = total_qty - change_to_qty;
+                var wastage_qty = 0;
+
+                               
+                if(isNaN(change_to_qty)){
+                    wastage_qty = 0;
+                }else {
+                    wastage_qty = change_to_qty - total_qty;
+                }
+
+                
                 $(this).parent().find("td:eq(4)").text(wastage_qty);
                            
             } );
@@ -1131,12 +1440,9 @@ Template.mobileapp.events({
                        $('.fullScreenSpin').css('display', 'none')
                        swal('The wastage is saved', '', 'success');
                        $('#WastageModal').modal('toggle');
-                }) 
-        
-                
-        
-            });
-            
+                })       
+                        
+            });           
 
         }
 
@@ -1186,6 +1492,7 @@ Template.mobileapp.events({
  
         $(".mobile-header-status-text").text("Enter Job Number");
         $(".mobile-main-input").val(" ");
+
 
     },
 
@@ -1253,6 +1560,7 @@ Template.mobileapp.events({
         } else {
             $(".mobile-left-btn-containner").css('display', 'block');
         }
+        $('#txtpause-notes').val("");
     }
     ,
     'click #breakClose': function(e,instance) {

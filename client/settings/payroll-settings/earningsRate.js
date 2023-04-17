@@ -831,8 +831,8 @@ Template.earningRateSettings.onRendered(function() {
         }
     });
 
-    $('.edtExpenseAccountDropDown').editableSelect();
-    $('.edtExpenseAccountDropDown').editableSelect().on('click.editable-select', async function (e, li) {
+    $('#controlExpenseAccount').editableSelect();
+    $('#controlExpenseAccount').editableSelect().on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
         $('#accSelected').val(dropDownID);
@@ -921,8 +921,8 @@ Template.earningRateSettings.onRendered(function() {
         }
     });
     // Standard drop down
-    $('.earningLineDropDown').editableSelect();
-    $('.earningLineDropDown').editableSelect().on('click.editable-select', async function (e, li) {
+    $('#obEarningsRate').editableSelect();
+    $('#obEarningsRate').editableSelect().on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let offset = $search.offset();
         let dropDownID = $search.attr('id')

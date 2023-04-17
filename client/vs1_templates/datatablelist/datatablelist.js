@@ -287,8 +287,8 @@ Template.datatablelist.onRendered(async function () {
                 //     }
                 // }
                 getVS1Data(indexDBName).then(function (dataObject) {
-                    $('#dateFrom').attr('readonly', false);
-                    $('#dateTo').attr('readonly', false);
+                    $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+                    $('.' + currenttablename+" #dateTo").attr('readonly', false);
                     if (dataObject.length == 0) {
                         if (templateObject.data.apiParams == undefined) { $('.fullScreenSpin').css('display', 'none'); resolve([]); }
                         let params = cloneDeep(templateObject.apiParams.get());
@@ -396,6 +396,17 @@ Template.datatablelist.onRendered(async function () {
                     deleteFilter = false
                 } else {
                     deleteFilter = true
+                }
+
+                if (data.Params.IgnoreDates == true) {
+                  $('.' + currenttablename+" #dateFrom").attr("readonly", true);
+                  $('.' + currenttablename+" #dateTo").attr("readonly", true);
+                }else{
+                  $('.' + currenttablename+" #dateFrom").attr("readonly", false);
+                  $('.' + currenttablename+" #dateTo").attr("readonly", false);
+                  $('.' + currenttablename+" #dateFrom").val(data.Params.DateFrom != '' ? moment(data.Params.DateFrom).format("DD/MM/YYYY") : data.Params.DateFrom);
+                  $('.' + currenttablename+" #dateTo").val(data.Params.DateTo != '' ? moment(data.Params.DateTo).format("DD/MM/YYYY") : data.Params.DateTo);
+
                 }
             }
             if (isEx == false) {
@@ -543,7 +554,7 @@ Template.datatablelist.onRendered(async function () {
                     $('#' + currenttablename).DataTable().ajax.reload();
                 },
                 "fnCreatedRow": function( nRow, aData, iDataIndex ) {
-                    $(nRow).attr('id', templateObject.data.attRowID ? templateObject.data.attRowID:aData[0]);
+                    $(nRow).attr('id', templateObject.data.attRowID ? aData[templateObject.data.attRowID]:aData[0]);
                 },
                 "fnDrawCallback": function (oSettings) {
                     $('.paginate_button.page-item').removeClass('disabled');
@@ -565,8 +576,8 @@ Template.datatablelist.onRendered(async function () {
                         let dataLenght = oSettings._iDisplayLength;
                         let customerSearch = $('#' + currenttablename + '_filter input').val();
 
-                        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-                        var dateTo = new Date($("#dateTo").datepicker("getDate"));
+                        var dateFrom = new Date($('.' + currenttablename+" #dateFrom").datepicker("getDate"));
+                        var dateTo = new Date($('.' + currenttablename+" #dateTo").datepicker("getDate"));
 
                         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
                         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
@@ -637,7 +648,7 @@ Template.datatablelist.onRendered(async function () {
                         </div>`).insertAfter('#' + currenttablename + '_filter');
                       }
                       if(templateObject.data.showPlusButton == true){
-                        $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='.edtCustomer_modal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
+                        $("<button class='btn btn-primary "+templateObject.data.showPlusButtonClass+"' id='"+templateObject.data.showPlusButtonClass+"' name='"+templateObject.data.showPlusButtonClass+"' data-dismiss='modal' data-toggle='modal' data-target='"+templateObject.data.showModalID+"' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter('#' + currenttablename + '_filter');
                       };
 
                       if (data.Params) {
@@ -820,6 +831,48 @@ Template.datatablelist.onRendered(async function () {
         // }, 500);
         // your function after closing modal goes here
     })
+    $(document).ready(function () {
+    $('.' + currenttablename+" #dateTo").on("change paste keyup", function() {
+         $('.fullScreenSpin').css('display', 'inline-block');
+         $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+         $('.' + currenttablename+" #dateTo").attr('readonly', false);
+         var dateFrom = new Date($('.' + currenttablename+" #dateFrom").datepicker("getDate"));
+         var dateTo = new Date($('.' + currenttablename+" #dateTo").datepicker("getDate"));
+
+         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+         if (($('.' + currenttablename+" #dateFrom").val().replace(/\s/g, '') == "") && ($('.' + currenttablename+" #dateFrom").val().replace(/\s/g, '') == "")) {
+
+         } else {
+             let params = [formatDateFrom, formatDateTo, false];
+             templateObject.getFilteredData(params)
+         }
+    });
+
+    $('.' + currenttablename+" #dateFrom").on("change paste keyup", function() {
+         $('.fullScreenSpin').css('display', 'inline-block');
+         $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+         $('.' + currenttablename+" #dateTo").attr('readonly', false);
+         var dateFrom = new Date($('.' + currenttablename+" #dateFrom").datepicker("getDate"));
+         var dateTo = new Date($('.' + currenttablename+" #dateTo").datepicker("getDate"));
+
+         let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
+         let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
+
+         var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
+         if (($('.' + currenttablename+" #dateFrom").val().replace(/\s/g, '') == "") && ($('.' + currenttablename+" #dateFrom").val().replace(/\s/g, '') == "")) {
+
+         } else {
+             let params = [formatDateFrom, formatDateTo, false];
+             templateObject.getFilteredData(params)
+         }
+    });
+
+
+    });
+
 })
 
 Template.datatablelist.events({
@@ -918,17 +971,18 @@ Template.datatablelist.events({
     'click #ignoreDate': async function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', true);
-        $('#dateTo').attr('readonly', true);
         let currenttablename = templateObject.data.tablename || '';
+        $('.' + currenttablename+" #dateFrom").attr('readonly', true);
+        $('.' + currenttablename+" #dateTo").attr('readonly', true);
+
         let params = ['', '', true]
         templateObject.getFilteredData(params);
     },
     'click .thisweek': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
         var currentBeginDate = new Date();
         let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
         let thisWeekFirstDay = new Date(utc - currentBeginDate.getDay() * 1000 * 3600 * 24);
@@ -964,8 +1018,8 @@ Template.datatablelist.events({
         var toDateDisplayFrom = thisWeekFromDate + "/" + thisWeekFromMonth + "/" + thisWeekFirstDay.getFullYear();
         var toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
 
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
+        $('.' + currenttablename+" #dateFrom").val(toDateDisplayFrom);
+        $('.' + currenttablename+" #dateTo").val(toDateDisplayTo);
 
         let params = [toDateERPFrom, toDateERPTo, false];
         templateObject.getFilteredData(params)
@@ -977,13 +1031,11 @@ Template.datatablelist.events({
     'click .thisMonth': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
         var currentDate = new Date();
-
-        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
-        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), (currentDate.getMonth() - 1 + 12) % 12, 1);
-
+        var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth()+1, 0);
+        var prevMonthFirstDate = new Date(currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1), ((currentDate.getMonth() - 1 + 12) % 12)+1, 1);
         var formatDateComponent = function (dateComponent) {
             return (dateComponent < 10 ? '0' : '') + dateComponent;
         };
@@ -1003,94 +1055,67 @@ Template.datatablelist.events({
         let getDateFrom = formatDateERP(prevMonthFirstDate);
         let getToDate = formatDateERP(prevMonthLastDate);
 
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(toDate);
+        $('.' + currenttablename+" #dateFrom").val(fromDate);
+        $('.' + currenttablename+" #dateTo").val(toDate);
 
         let params = [getDateFrom, getToDate, false]
         templateObject.getFilteredData(params)
-        // if (currenttablename == "tblBankingOverview") {
-        //     templateObject.getAllFilterbankingData(fromDate,toDate, false);
-        // }
     },
     'click .thisQuarter': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
-
-        function getQuarter(d) {
-            d = d || new Date();
-            var m = Math.floor(d.getMonth() / 3) + 2;
-            return m > 4 ? m - 4 : m;
-        }
-
-        var quarterAdjustment = (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment().subtract({
-            months: quarterAdjustment
-        }).endOf('month');
-        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
-            months: 2
-        }).startOf('month');
-
-        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
 
 
-        $("#dateFrom").val(lastQuarterStartDateFormat);
-        $("#dateTo").val(lastQuarterEndDateFormat);
+        var thisQuarterStartDateFormat =  moment().startOf("Q").format("DD/MM/YYYY");
+        var thisQuarterEndDateFormat = moment().endOf("Q").format("DD/MM/YYYY");
+
+        let fromDate = moment().startOf("Q").format("YYYY-MM-DD");
+        let toDate = moment().endOf("Q").format("YYYY-MM-DD");
 
 
-        let params = [lastQuarterStartDateFormat, lastQuarterEndDateFormat, false]
-        templateObject.getFilteredData(params)
-        // if (currenttablename == "tblBankingOverview") {
-        //     templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
-        // }
+        $('.' + currenttablename+" #dateFrom").val(thisQuarterStartDateFormat);
+        $('.' + currenttablename+" #dateTo").val(thisQuarterEndDateFormat);
+
+
+        let params = [fromDate, toDate, false];
+        templateObject.getFilteredData(params);
     },
     'click .thisfinancialyear': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
 
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        $('.' + currenttablename+" dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" dateTo").attr('readonly', false);
 
-        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-        let fromDateDay = currentDate.getDate();
-        if ((currentDate.getMonth() + 1) < 10) {
-            fromDateMonth = "0" + (currentDate.getMonth() + 1);
-        }
-        if (currentDate.getDate() < 10) {
-            fromDateDay = "0" + currentDate.getDate();
-        }
+          let current_fiscal_year_start  = null;
+          let current_fiscal_year_end  = null;
 
-        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+          let currentERP_fiscal_year_start  = null;
+          let currentERP_fiscal_year_end  = null;
+
+          const startMonthName = "July";
+          const endMonthName = "June";
+          if (moment().quarter() == 4) {
+            currentERP_fiscal_year_start = moment().month(startMonthName).startOf("month").format("YYYY-MM-DD");
+            currentERP_fiscal_year_end = moment().add(1, "year").month(endMonthName).endOf("month").format("YYYY-MM-DD");
+
+            current_fiscal_year_start = moment().month(startMonthName).startOf("month").format("DD/MM/YYYY");
+            current_fiscal_year_end = moment().add(1, "year").month(endMonthName).endOf("month").format("DD/MM/YYYY");
+          } else {
+            currentERP_fiscal_year_start = moment().subtract(1, "year").month(startMonthName).startOf("month").format("YYYY-MM-DD");
+            currentERP_fiscal_year_end = moment().month(endMonthName).endOf("month").format("YYYY-MM-DD");
+
+            current_fiscal_year_start = moment().subtract(1, "year").month(startMonthName).startOf("month").format("DD/MM/YYYY");
+            current_fiscal_year_end = moment().month(endMonthName).endOf("month").format("DD/MM/YYYY");
+          };
+
+        $('.' + currenttablename+" #dateFrom").val(current_fiscal_year_start);
+        $('.' + currenttablename+" #dateTo").val(current_fiscal_year_end);
 
 
-
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(begunDate);
-
-        var formatDateComponent = function(dateComponent) {
-            return (dateComponent < 10 ? '0' : '') + dateComponent;
-        };
-
-        var formatDate = function(date) {
-            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
-        };
-
-        var formatDateERP = function(date) {
-            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
-        };
-
-        let getDateFrom = formatDateERP(fromDate);
-        let getToDate = formatDateERP(begunDate);
-
-        let params = [getDateFrom, getToDate, false];
+        let params = [currentERP_fiscal_year_start, currentERP_fiscal_year_end, false];
         templateObject.getFilteredData(params);
         // if (currenttablename == "tblBankingOverview") {
         //     templateObject.getAllFilterbankingData(fromDate,begunDate, false);
@@ -1099,8 +1124,8 @@ Template.datatablelist.events({
     'click .previousweek': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
         var currentBeginDate = new Date();
         let utc = Date.UTC(currentBeginDate.getFullYear(), currentBeginDate.getMonth(), currentBeginDate.getDate());
         let previousWeekFirstDay = new Date(utc - (currentBeginDate.getDay() + 7) * 1000 * 3600 * 24);
@@ -1137,8 +1162,8 @@ Template.datatablelist.events({
         var toDateDisplayFrom = previousWeekFromDay + "/" + previousWeekFromMonth + "/" + previousWeekFirstDay.getFullYear();
         var toDateDisplayTo = (previousWeekToDate) + "/" + (previousWeekToMonth) + "/" + previousWeekLastDay.getFullYear();
 
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
+        $('.' + currenttablename+" #dateFrom").val(toDateDisplayFrom);
+        $('.' + currenttablename+" #dateTo").val(toDateDisplayTo);
 
         let params = [toDateERPFrom, toDateERPTo, false]
         templateObject.getFilteredData(params)
@@ -1150,8 +1175,8 @@ Template.datatablelist.events({
     'click .previousmonth': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
         var currentDate = new Date();
 
         var prevMonthLastDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 0);
@@ -1176,8 +1201,8 @@ Template.datatablelist.events({
         let getDateFrom = formatDateERP(prevMonthFirstDate);
         let getToDate = formatDateERP(prevMonthLastDate);
 
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(toDate);
+        $('.' + currenttablename+" #dateFrom").val(fromDate);
+        $('.' + currenttablename+" #dateTo").val(toDate);
 
         let params = [getDateFrom, getToDate, false]
         templateObject.getFilteredData(params);
@@ -1190,106 +1215,66 @@ Template.datatablelist.events({
     'click .previousquarter': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
 
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        var lastQuarterStartDateFormat =  moment().subtract(1, "Q").startOf("Q").format("DD/MM/YYYY");
+        var lastQuarterEndDateFormat = moment().subtract(1, "Q").endOf("Q").format("DD/MM/YYYY");
 
-        function getQuarter(d) {
-            d = d || new Date();
-            var m = Math.floor(d.getMonth() / 3) + 2;
-            return m > 4 ? m - 4 : m;
-        }
-
-        var quarterAdjustment = (moment().month() % 3) + 1;
-        var lastQuarterEndDate = moment().subtract({
-            months: quarterAdjustment
-        }).endOf('month');
-        var lastQuarterStartDate = lastQuarterEndDate.clone().subtract({
-            months: 2
-        }).startOf('month');
-
-        var lastQuarterStartDateFormat = moment(lastQuarterStartDate).format("DD/MM/YYYY");
-        var lastQuarterEndDateFormat = moment(lastQuarterEndDate).format("DD/MM/YYYY");
+        let fromDate = moment().subtract(1, "Q").startOf("Q").format("YYYY-MM-DD");
+        let toDate = moment().subtract(1, "Q").endOf("Q").format("YYYY-MM-DD");
 
 
-        $("#dateFrom").val(lastQuarterStartDateFormat);
-        $("#dateTo").val(lastQuarterEndDateFormat);
+        $('.' + currenttablename+" #dateFrom").val(lastQuarterStartDateFormat);
+        $('.' + currenttablename+" #dateTo").val(lastQuarterEndDateFormat);
 
-        var formatDateComponent = function(dateComponent) {
-            return (dateComponent < 10 ? '0' : '') + dateComponent;
-        };
+        let params = [fromDate, toDate, false];
+        templateObject.getFilteredData(params);
 
-        var formatDate = function(date) {
-            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
-        };
-
-        var formatDateERP = function(date) {
-            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
-        };
-
-        let getDateFrom = formatDateERP(lastQuarterStartDateFormat);
-        let getToDate = formatDateERP(lastQuarterEndDateFormat);
-
-        let params = [getDateFrom, getToDate, false];
-        templateObject.getFilteredData(params)
-
-        // if (currenttablename == "tblBankingOverview") {
-        //     templateObject.getAllFilterbankingData(lastQuarterStartDateFormat,lastQuarterEndDateFormat, false);
-        // }
     },
     'click .previousfinancialyear': function () {
         let templateObject = Template.instance();
         let currenttablename = templateObject.data.tablename || '';
 
-        $('.dateFrom').attr('readonly', false);
-        $('.dateTo').attr('readonly', false);
-        var currentDate = new Date();
-        var begunDate = moment(currentDate).format("DD/MM/YYYY");
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
 
-        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-        let fromDateDay = currentDate.getDate();
-        if ((currentDate.getMonth() + 1) < 10) {
-            fromDateMonth = "0" + (currentDate.getMonth() + 1);
-        }
-        if (currentDate.getDate() < 10) {
-            fromDateDay = "0" + currentDate.getDate();
-        }
+        let previous_fiscal_year_start  = null;
+        let previous_fiscal_year_end  = null;
 
-        var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-        $("#dateFrom").val(fromDate);
-        $("#dateTo").val(begunDate);
+        let previousERP_fiscal_year_start  = null;
+        let previousERP_fiscal_year_end  = null;
 
-        var formatDateComponent = function(dateComponent) {
-            return (dateComponent < 10 ? '0' : '') + dateComponent;
+        const startMonthName = "July";
+        const endMonthName = "June";
+        if (moment().quarter() == 4) {
+          previousERP_fiscal_year_start = moment().subtract(1, 'year').month(startMonthName).startOf("month").format("YYYY-MM-DD");
+          previousERP_fiscal_year_end = moment().month(endMonthName).endOf("month").format("YYYY-MM-DD");
+
+          previous_fiscal_year_start = moment().subtract(1, 'year').month(startMonthName).startOf("month").format("DD/MM/YYYY");
+          previous_fiscal_year_end = moment().month(endMonthName).endOf("month").format("DD/MM/YYYY");
+        } else {
+          previousERP_fiscal_year_start = moment().subtract(2, 'year').month(startMonthName).startOf("month").format("YYYY-MM-DD");
+          previousERP_fiscal_year_end = moment().subtract(1, 'year').month(endMonthName).endOf("month").format("YYYY-MM-DD");
+
+          previous_fiscal_year_start = moment().subtract(2, 'year').month(startMonthName).startOf("month").format("DD/MM/YYYY");
+          previous_fiscal_year_end = moment().subtract(1, 'year').month(endMonthName).endOf("month").format("DD/MM/YYYY");
         };
 
-        var formatDate = function(date) {
-            return  formatDateComponent(date.getDate()) + '/' + formatDateComponent(date.getMonth() + 1) + '/' + date.getFullYear();
-        };
+      $('.' + currenttablename+" #dateFrom").val(previous_fiscal_year_start);
+      $('.' + currenttablename+" #dateTo").val(previous_fiscal_year_end);
 
-        var formatDateERP = function(date) {
-            return  date.getFullYear() + '-' + formatDateComponent(date.getMonth() + 1) + '-' + formatDateComponent(date.getDate());
-        };
 
-        let getDateFrom = formatDateERP(fromDate);
-        let getToDate = formatDateERP(begunDate);
-
-        let params = [getDateFrom, getToDate, false];
-        templateObject.getFilteredData(params)
-
-        // if (currenttablename == "tblBankingOverview") {
-        //     templateObject.getAllFilterbankingData(fromDate,begunDate, false);
-        // }
+      let params = [previousERP_fiscal_year_start, previousERP_fiscal_year_end, false];
+        templateObject.getFilteredData(params);
     },
 
     'click #today': function () {
         let templateObject = Template.instance();
         $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
+        let currenttablename = templateObject.data.tablename || '';
+        $('.' + currenttablename+" #dateFrom").attr('readonly', false);
+        $('.' + currenttablename+" #dateTo").attr('readonly', false);
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -1309,59 +1294,11 @@ Template.datatablelist.events({
         var toDateDisplayFrom = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
         var toDateDisplayTo = (fromDateDay) + "/" + (fromDateMonth) + "/" + currentBeginDate.getFullYear();
 
-        $("#dateFrom").val(toDateDisplayFrom);
-        $("#dateTo").val(toDateDisplayTo);
+        $('.' + currenttablename+" #dateFrom").val(toDateDisplayFrom);
+        $('.' + currenttablename+" #dateTo").val(toDateDisplayTo);
         let params = [toDateERPFrom, toDateERPTo, false];
         templateObject.getFilteredData(params)
         // templateObject.getAllFilterSalesOrderData(toDateERPFrom,toDateERPTo, false);
-    },
-    'change .dateTo': function (event) {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        //setTimeout(function () {
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-
-        } else {
-            let params = [formatDateFrom, formatDateTo, false];
-            templateObject.getFilteredData(params)
-            // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
-        }
-        //}, 500);
-    },
-    'change .dateFrom': function (event) {
-        let templateObject = Template.instance();
-        $('.fullScreenSpin').css('display', 'inline-block');
-        $('#dateFrom').attr('readonly', false);
-        $('#dateTo').attr('readonly', false);
-        //setTimeout(function () {
-        var dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        var dateTo = new Date($("#dateTo").datepicker("getDate"));
-
-        let formatDateFrom = dateFrom.getFullYear() + "-" + (dateFrom.getMonth() + 1) + "-" + dateFrom.getDate();
-        let formatDateTo = dateTo.getFullYear() + "-" + (dateTo.getMonth() + 1) + "-" + dateTo.getDate();
-
-        //  templateObject.getAgedPayableReports(formatDateFrom,formatDateTo,false);
-        var formatDate = dateTo.getDate() + "/" + (dateTo.getMonth() + 1) + "/" + dateTo.getFullYear();
-        //templateObject.dateAsAt.set(formatDate);
-        if (($("#dateFrom").val().replace(/\s/g, '') == "") && ($("#dateFrom").val().replace(/\s/g, '') == "")) {
-
-        } else {
-            let params = [formatDateFrom, formatDateTo, false];
-            templateObject.getFilteredData(params);
-            // templateObject.getAllFilterSalesOrderData(formatDateFrom, formatDateTo, false);
-        }
-        //}, 500);
     },
 
     'change .custom-range': async function (event) {
@@ -1542,6 +1479,7 @@ Template.datatablelist.events({
                 label: colTitle,
                 active: colHidden,
                 width: parseFloat(colWidth),
+                sWidth: parseFloat(colWidth),
                 sWidthOrig: parseFloat(colWidth),
                 class: colthClass,
                 display: true
