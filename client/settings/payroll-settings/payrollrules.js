@@ -60,10 +60,7 @@ Template.payrollrules.onCreated(function() {
             moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
             moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
             data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
-            // '<div class="dropdown"><button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button><div class="dropdown-menu"><a class="dropdown-item on colRemove" href="#">Remove</a><a class="dropdown-item col' + status + '" href="#">' + status +'</a></div></div>'
-            ''
         ];
-        // let dataList = [];
         return dataList;
     }
     let headerStructure  = [
@@ -72,8 +69,7 @@ Template.payrollrules.onCreated(function() {
         { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
         { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "100" },
         { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "100" },
-        { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
-        { index: 6, label: '', class: 'colAction', active: true, display: true, width: '50' }
+        { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 
@@ -98,9 +94,7 @@ Template.payrollrules.onCreated(function() {
             moment(data.fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
             data.fields.PayrollHolidaysGroupName || "",
             data.fields.PayrollHolidaysActive == true ? '' : 'In-Active',
-            // '<td><span><i class="fa fa-close"></i></span></td>'
         ];
-        // let dataList = [];
         return dataList;
     }
     let headerStructure2  = [
@@ -108,7 +102,7 @@ Template.payrollrules.onCreated(function() {
         { index: 1, label: 'Holiday Name', class: 'colHolidayName', active: true, display: true, width: "200" },
         { index: 2, label: 'Holiday Date', class: 'colHolidayDate', active: true, display: true, width: "150" },
         { index: 3, label: 'Holdiday group', class: 'colHolidaygroup', active: false, display: true, width: "" },
-        { index: 4, label: 'State', class: 'colStatus', active: true, display: true, width: "10" }
+        { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" }
     ];
     templateObject.tableheaderrecords2.set(headerStructure2);
 
@@ -126,8 +120,6 @@ Template.payrollrules.onCreated(function() {
             data.fields.Superinc || false,
             data.fields.Workcoverexempt || false,
             data.fields.Active == true ? '' : 'In-Active',
-            // '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ''
         ];
         return dataList;
     }
@@ -142,8 +134,7 @@ Template.payrollrules.onCreated(function() {
         { index: 7, label: 'PAYG withholding', class: 'colAllowancesPAYG', active: false, display: true, width: "" },
         { index: 8, label: 'Superannuation Guarantee Contribution', class: 'colAllowancesSuperannuation', active: false, display: true, width: "" },
         { index: 9, label: 'Reportable as W1', class: 'colAllowancesReportableasW1', active: false, display: true, width: "" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        // { index: 11, label: '', class: 'colDeleteAllowances', active: true, display: true, width: "20" }
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords3.set(headerStructure3);
 
@@ -161,8 +152,6 @@ Template.payrollrules.onCreated(function() {
             data.fields.EarningsExemptSuperannuationGuaranteeCont || '',
             data.fields.EarningsReportableW1onActivityStatement || '',
             data.fields.Active == true ? '' : 'In-Active',
-        //    '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-           ''
         ];
         return dataList;
     }
@@ -178,8 +167,7 @@ Template.payrollrules.onCreated(function() {
         { index: 8, label: 'PAYG withholding', class: 'colEarningsPAYG', active: false, display: true, width: "" },
         { index: 9, label: 'Superannuation Guarantee Contribution', class: 'colEarningsSuperannuation', active: false, display: true, width: "" },
         { index: 10, label: 'Reportable as W1', class: 'colEarningsReportableasW1', active: false, display: true, width: "" },
-        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        // { index: 12, label: '', class: 'colDeleteEarnings', active: true, display: true, width: "20" }
+        { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords4.set(headerStructure4);
 
@@ -197,8 +185,6 @@ Template.payrollrules.onCreated(function() {
             data.fields.SuperInc || false,
             data.fields.WorkCoverExempt || false,
             data.fields.Active == true ? '' : 'In-Active',
-            // '<td contenteditable="false" class="colDeleteDeductions"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ''
         ];
         return dataList;
     }
@@ -213,8 +199,7 @@ Template.payrollrules.onCreated(function() {
         { index: 7, label: 'Reduces PAYG Withholding', class: 'colDeductionsPAYG', active: false, display: true, width: "" },
         { index: 8, label: 'Reduces Superannuation Guarantee Contribution', class: 'colDeductionsSuperannuation', active: false, display: true, width: "" },
         { index: 9, label: 'Excluded from W1 on Activity Statement', class: 'colDeductionsReportableasW1', active: false, display: true, width: "" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        // { index: 11, label: '', class: 'colDeleteDeductions', active: true, display: true, width: "20" }
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords5.set(headerStructure5);
 
@@ -224,8 +209,6 @@ Template.payrollrules.onCreated(function() {
             data.fields.ReimbursementName || 0,
             data.fields.ReimbursementAccount || 0,
             data.fields.Active == true ? '' : 'In-Active',
-        //    '<td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ''
         ];
         return dataList;
     }
@@ -233,8 +216,7 @@ Template.payrollrules.onCreated(function() {
         { index: 0, label: 'ID', class: 'colReimbursementID', active: false, display: true, width: "" },
         { index: 1, label: 'Reimbursement Name', class: 'colReimbursementName', active: true, display: true, width: "200" },
         { index: 2, label: 'Account', class: 'colReimbursementAccount', active: true, display: true, width: "100" },
-        { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        // { index: 4, label: '', class: 'colDeleterei', active: true, display: true, width: "20" }
+        { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords6.set(headerStructure6);
 
@@ -248,10 +230,7 @@ Template.payrollrules.onCreated(function() {
             'Paid Leave',
             data.fields.LeavePaidShowBalanceOnPayslip == true ? 'show': 'hide',
             data.fields.LeavePaidActive == true ? '' : 'In-Active',
-        //    '<td contenteditable="false" class="colDeletepaidrem"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-           ''
         ];
-        // let dataList = [];
         return dataList;
     }
     let headerStructure7  = [
@@ -262,8 +241,7 @@ Template.payrollrules.onCreated(function() {
         { index: 4, label: 'Leave Loading Rate', class: 'colLeaveLeaveLoadingRate', active: true, display: true, width: "100" },
         { index: 5, label: 'Leave Type', class: 'colLeavePaidLeave', active: true, display: true, width: "100" },
         { index: 6, label: 'Shown On Payslip', class: 'colLeaveShownOnPayslip', active: true, display: true, width: "100" },
-        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        // { index: 8, label: '', class: 'colDeletepaidrem', active: true, display: true, width: "20" }
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords7.set(headerStructure7);
 
@@ -280,8 +258,6 @@ Template.payrollrules.onCreated(function() {
             data.fields.AccountName || '',
             data.fields.Supertypeid || '',
             data.fields.Active == true ? '' : 'In-Active',
-            // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-            ''
         ];
         return dataList;
     }
@@ -296,8 +272,7 @@ Template.payrollrules.onCreated(function() {
         { index: 7, label: 'Account Number', class: 'colaccountnumber', active: false, display: true, width: "" },
         { index: 8, label: 'Account Name', class: 'colaccountname', active: true, display: true, width: "100" },
         { index: 9, label: 'fundid', class: 'colSuperannuationTypeid', active: false, display: true, width: "" },
-        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
-        { index: 11, label: '', class: 'colDeletesup', active: true, display: true, width: "20" }
+        { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords8.set(headerStructure8);
 });
@@ -486,7 +461,6 @@ Template.payrollrules.onRendered(function() {
                         data.tallowance[i].fields.Workcoverexempt || false,
                         data.tallowance[i].fields.active == true ? '' : 'In-Active',
                         // '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                        ''
                     ];
 
                     splashArrayAllowanceList.push(dataListAllowance);
@@ -575,7 +549,6 @@ Template.payrollrules.onRendered(function() {
 
                             $('.paginate_button.next:not(.disabled)', this.api().table().container())
                                 .on('click', function () {
-                                    // $('.fullScreenSpin').css('display', 'inline-block');
                                     var splashArrayAllowanceListDupp = new Array();
                                     let dataLenght = oSettings._iDisplayLength;
                                     let customerSearch = $('#tblAlowances_filter input').val();
@@ -599,11 +572,8 @@ Template.payrollrules.onRendered(function() {
                                                         dataObjectnew.tallowance[i].fields.Workcoverexempt || false,
                                                         dataObjectnew.tallowance[i].fields.active == true ? '' : 'In-Active',
                                                         // '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                                                        ''
                                                     ];
-
                                                     splashArrayAllowanceList.push(dataListCustomerDupp);
-                                                    //}
                                                 }
 
                                                 let uniqueChars = [...new Set(splashArrayAllowanceList)];
@@ -611,17 +581,15 @@ Template.payrollrules.onRendered(function() {
                                                 datatable.clear();
                                                 datatable.rows.add(uniqueChars);
                                                 datatable.draw(false);
+
                                                 setTimeout(function () {
                                                     $("#tblAlowances").dataTable().fnPageChange('last');
                                                 }, 400);
 
                                                 LoadingOverlay.hide();
-
-
                                     }).catch(function (err) {
                                         LoadingOverlay.hide();
                                     });
-
                                 });
                             setTimeout(function () {
                                 MakeNegative();
@@ -630,29 +598,22 @@ Template.payrollrules.onRendered(function() {
                         "fnInitComplete": function () {
                             $("<button class='btn btn-primary btnAddNewAllowance' data-dismiss='modal' data-toggle='modal' data-target='#allowanceModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblAlowances_filter");
                             $("<button class='btn btn-primary btnRefreshAllowance' type='button' id='btnRefreshAllowance' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblAlowances_filter");
-
                         }
-
                     }).on('page', function () {
                         setTimeout(function () {
                             MakeNegative();
                         }, 100);
-
                     }).on('column-reorder', function () {
-
                     }).on('length.dt', function (e, settings, len) {
-                        //// $('.fullScreenSpin').css('display', 'inline-block');
                         let dataLenght = settings._iDisplayLength;
                         splashArrayAllowanceList = [];
                         if (dataLenght == -1) {
-                        LoadingOverlay.hide();
-
+                            LoadingOverlay.hide();
                         } else {
                             if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
                                 LoadingOverlay.hide();
                             } else {
                                 sideBarService.getAllowance(dataLenght, 0).then(function (dataNonBo) {
-
                                     addVS1Data('TAllowance', JSON.stringify(dataNonBo)).then(function (datareturn) {
                                         templateObject.resetData(dataNonBo);
                                         LoadingOverlay.hide();
@@ -668,12 +629,8 @@ Template.payrollrules.onRendered(function() {
                             MakeNegative();
                         }, 100);
                     });
-
-
                 }, 0);
-
                 $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
                 LoadingOverlay.hide();
             }).catch(function (err) {
                 LoadingOverlay.hide();
@@ -681,13 +638,12 @@ Template.payrollrules.onRendered(function() {
             }else{
 
             let data = JSON.parse(dataObject[0].data);
-
             let useData = data;
             let lineItems = [];
             let lineItemObj = {};
+
             for (let i = 0; i < data.tallowance.length; i++) {
                 let allowanceAmount = utilityService.modifynegativeCurrencyFormat(data.tallowance[i].fields.Amount) || 0.00;
-
                 var dataListAllowance = [
                     data.tallowance[i].fields.ID || 0,
                     data.tallowance[i].fields.Description || '-',
@@ -700,9 +656,7 @@ Template.payrollrules.onRendered(function() {
                     data.tallowance[i].fields.Superinc || false,
                     data.tallowance[i].fields.Workcoverexempt || false,
                     // '<td contenteditable="false" class="colDeleteAllowances"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
-                    ''
                 ];
-
                 splashArrayAllowanceList.push(dataListAllowance);
             }
 
@@ -711,7 +665,6 @@ Template.payrollrules.onRendered(function() {
                     if ($(this).text().indexOf('-' + Currency) >= 0) $(this).addClass('text-danger')
                 });
             };
-
 
             setTimeout(function () {
                 MakeNegative();

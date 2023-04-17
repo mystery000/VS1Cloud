@@ -628,7 +628,10 @@ Template.payrolloverview.onRendered(function () {
 
 }
 
-
+$('#tblDraftPayRun').on('click', 'tr', function () {
+  const timesheetId = $(this).attr('id');
+  window.location.href = `/payrundetails?cid=${timesheetId}`;
+});
 
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");
