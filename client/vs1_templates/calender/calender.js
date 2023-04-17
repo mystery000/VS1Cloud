@@ -1540,7 +1540,7 @@ Template.calender.onRendered(function() {
                 renderEventDidMount(info)
             },
             eventContent: function(event) {
-                renderEventContent(event)
+                return renderEventContent(event)
             },
             eventResize: function(info) {
                renderEventDropAndResize(info)
