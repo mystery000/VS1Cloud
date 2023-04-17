@@ -1409,8 +1409,7 @@ Template.calender.onRendered(function() {
 
     function renderEventContent(event){
         const pattern = /leave/;
-        if(pattern.test(event.event._def.publicId)){
-        }
+ 
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
         let eventLeave  = [];
         let eventStatus = [];
@@ -1424,8 +1423,9 @@ Template.calender.onRendered(function() {
         if(pattern.test(event.event._def.publicId)){
             var empid = event.event._def.publicId.split(':')[1];
             if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-                title.style.color = "#dddddd";
+                let newTitle = "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
+                $(title).append(newTitle);
+                title.style.color = "#ff0000";
             }
         } else {
             title.innerHTML = event.timeText + " " + event.event.title;
