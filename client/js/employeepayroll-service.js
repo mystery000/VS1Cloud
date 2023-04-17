@@ -66,7 +66,7 @@ export class EmployeePayrollService extends BaseService {
     return this.POST(this.ERPObjects.TLeavRequest, data);
   }
 
-  getAssignLeaveType(limitcount, limitfrom) {
+  getAssignLeaveType(limitcount, limitfrom, deleteFilter) {
       let options = '';
       if(limitcount == 'All'){
           options = {
@@ -81,7 +81,9 @@ export class EmployeePayrollService extends BaseService {
               LimitFrom: parseInt(limitfrom),
           };
       };
-      return this.getList('TAssignLeaveType', options);
+      if(deleteFilter) options.Search = "";
+      else options.Search = "Active=true";
+      return this.getList('TAssignLeaveTypeList', options);
     }
 
   getAssignLeaveTypeByName(dataSearchName) {
