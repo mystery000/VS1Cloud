@@ -5,9 +5,9 @@
         data-default-position="{{ @index }}" position="{{ @index }}" card-active="true" card-id="0"
         card-key={{itembank.cardAccountID}} id={{itembank.name}}>
         <div
-            class="card shadow customCardMainDiv {{#if equals @index 0 }} border-left-success{{/if}} {{#if equals @index 1 }} border-left-primary{{/if}} {{#if equals @index 2 }} shadow border-left-danger{{/if}}  {{#if equals @index 3 }} border-left-warning{{/if}} {{#if equals @index 4 }} border-left-info{{/if}} {{#if equals @index 5 }} border-left-secondary {{/if}} py-2">
+            class="card shadow customCardMainDiv {{#if equals @index 0 }} border-left-success{{/if}} {{#if equals @index 1 }} border-left-primary{{/if}} {{#if equals @index 2 }} shadow border-left-danger{{/if}}  {{#if equals @index 3 }} border-left-warning{{/if}} {{#if equals @index 4 }} border-left-info{{/if}} {{#if equals @index 5 }} border-left-secondary {{/if}}">
             <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+                {{> editCardChartOptions}} 
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body" style="cursor: pointer;">

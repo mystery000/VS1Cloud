@@ -160,7 +160,11 @@ export default class FxGlobalFunctions {
     //convert = convert.toFixed(2);
 
     if (withSymbol) {
-      return `${withSymbol}${convert}`;
+      if(convert > 0) {
+        return `${withSymbol}${convert}`;
+      } else {
+        return `-${withSymbol}${convert * -1}`
+      }
     }
     return convert;
   }
