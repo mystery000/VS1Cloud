@@ -1029,7 +1029,12 @@ Template.newagedpayables.helpers({
   },
   service: function () {
     return sideBarService
-  }
+  },
+
+  searchFunction: function () {
+    return sideBarService.getTAPReportByKeyword;
+  },
+ 
 });
 Template.registerHelper('equals', function (a, b) {
     return a === b;

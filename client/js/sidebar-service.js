@@ -2667,10 +2667,12 @@ export class SideBarService extends BaseService {
       if (ignoreDate == true) {
         options = {
           IgnoreDates: true,
+          select: "[deleted]=false",
         };
       } else {
         options = {
           IgnoreDates: false,
+          select: "[deleted]=false",
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
           LimitCount: parseInt(initialReportLoad),
@@ -2680,12 +2682,14 @@ export class SideBarService extends BaseService {
       if (ignoreDate == true) {
         options = {
           IgnoreDates: true,
+          select: "[deleted]=false",
           LimitCount: limitCount,
           LimitFrom:limitFrom
         };
       } else {
         options = {
           IgnoreDates: false,
+          select: "[deleted]=false",
           DateFrom: '"' + dateFrom + '"',
           DateTo: '"' + dateTo + '"',
           LimitCount: limitCount,
@@ -2749,6 +2753,37 @@ export class SideBarService extends BaseService {
           };
         }
       }
+    }
+    return this.getList(this.ERPObjects.TAPReport, options);
+  }
+
+  getTAPReportByKeyword(limitCount, limitFrom, dateFrom, dateTo, ignoreDate, name) {
+    let options = "";
+    if(limitCount == undefined || limitCount == 'All') {
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true,
+            Search:"Name='"+name+"'"
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(initialReportLoad),
+            AgeByTransactionDate:true,
+            Search:"Name='"+name+"'"
+          };
+        }
+    } else {
+        options = {
+          IgnoreDates: true,
+          Search:"Name='"+name+"'",
+          AgeByTransactionDate:true,
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
     }
     return this.getList(this.ERPObjects.TAPReport, options);
   }

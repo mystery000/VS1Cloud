@@ -791,50 +791,96 @@ Template.reportcard.events({
   //   const filename = loggedCompany + ' - '+templateObject.data.tabledisplayname+'' + '.csv';
   //   utilityService.exportReportToCsvTable('tableExport', filename, 'csv');
   // },
+  // 'keyup #myInputSearch': function (event) {
+  //   $('.table tbody tr').show();
+  //   let searchItem = $(event.target).val();
+  //   if (searchItem != '') {
+  //       var value = searchItem.toLowerCase();
+  //       $('.table tbody tr').each(function () {
+  //           var found = 'false';
+  //           $(this).each(function () {
+  //               if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+  //                   found = 'true';
+  //               }
+  //           });
+  //           if (found == 'true') {
+  //               $(this).show();
+  //           } else {
+  //               $(this).hide();
+  //           }
+  //       });
+  //   } else {
+  //       $('.table tbody tr').show();
+  //   }
+  // },
+
+
   'keyup #myInputSearch': function (event) {
-    $('.table tbody tr').show();
-    let searchItem = $(event.target).val();
-    if (searchItem != '') {
-        var value = searchItem.toLowerCase();
-        $('.table tbody tr').each(function () {
-            var found = 'false';
-            $(this).each(function () {
-                if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                    found = 'true';
-                }
-            });
-            if (found == 'true') {
-                $(this).show();
-            } else {
-                $(this).hide();
+    let templateObject = Template.instance();
+    let tablename = templateObject.data.tablename;
+    let keyword = $(event.target).val();
+    if(event.keyCode == 13) {
+      LoadingOverlay.show()
+      $('#'+tablename).DataTable().destroy();
+      $('#tablePrint').DataTable().destroy();
+      setTimeout(function(){
+
+        let dateFrom = GlobalFunctions.convertYearMonthDay($('#dateFrom').val());
+        let dateTo = GlobalFunctions.convertYearMonthDay($('#dateTo').val());
+        let ignoreDate =  templateObject.ignoreDate.get();
+        
+
+        let params = cloneDeep(templateObject.apiParams.get());
+        for (let i = 0; i < params.length; i++) {
+            if (params[i] == 'ignoreDate') {
+                params[i] = ignoreDate;
+            } else if (params[i] == 'dateFrom') {
+                params[i] = dateFrom
+            } else if (params[i] == 'dateTo') {
+                params[i] = dateTo
+            } else if (params[i] == 'limitFrom') {
+                params[i] = 0
+            } else if (params[i] == 'limitCount') {
+                params[i] = initialReportLoad
+            } else if (params[i] == 'deleteFilter') {
+                params[i] = false
             }
-        });
-    } else {
-        $('.table tbody tr').show();
+        }
+
+        params.push(keyword)
+        let that = templateObject.data.service;
+        templateObject.data.searchFunction.apply(that, params).then(async function(data) {
+            templateObject.displayReportData(data)
+        }).catch(function(e){
+          let objData = {};
+          objData[templateObject.data.lowercasename] = []
+          templateObject.displayReportData({objData})
+        })
+      }, 1000)
     }
   },
-  'blur #myInputSearch': function (event) {
-      $('.table tbody tr').show();
-      let searchItem = $(event.target).val();
-      if (searchItem != '') {
-          var value = searchItem.toLowerCase();
-          $('.table tbody tr').each(function () {
-              var found = 'false';
-              $(this).each(function () {
-                  if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
-                      found = 'true';
-                  }
-              });
-              if (found == 'true') {
-                  $(this).show();
-              } else {
-                  $(this).hide();
-              }
-          });
-      } else {
-          $('.table tbody tr').show();
-      }
-  },
+  // 'blur #myInputSearch': function (event) {
+  //     $('.table tbody tr').show();
+  //     let searchItem = $(event.target).val();
+  //     if (searchItem != '') {
+  //         var value = searchItem.toLowerCase();
+  //         $('.table tbody tr').each(function () {
+  //             var found = 'false';
+  //             $(this).each(function () {
+  //                 if ($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0) {
+  //                     found = 'true';
+  //                 }
+  //             });
+  //             if (found == 'true') {
+  //                 $(this).show();
+  //             } else {
+  //                 $(this).hide();
+  //             }
+  //         });
+  //     } else {
+  //         $('.table tbody tr').show();
+  //     }
+  // },
   "click #ignoreDate": async function () {
     let templateObject = Template.instance();
     LoadingOverlay.show();
@@ -904,6 +950,32 @@ Template.reportcard.events({
 
     // LoadingOverlay.hide();
   },
+
+  'click .btnRefreshTable': async function (event) {
+    let templateObject = Template.instance();
+    let utilityService = new UtilityService();
+    const dataTableList = [];
+    $('.fullScreenSpin').css('display', 'inline-block');
+    let tablename = templateObject.data.tablename;
+    let dataSearchName = $('#' + tablename + '_filter input').val();
+    if (dataSearchName.replace(/\s/g, '') != '') {
+        let that = templateObject.data.service;
+        if (that == undefined) {
+            $('.fullScreenSpin').css('display', 'none');
+            $('.btnRefreshTable').removeClass('btnSearchAlert');
+            return;
+        }
+        let paramArray = [dataSearchName]
+        templateObject.data.searchAPI.apply(that, paramArray).then(function (data) {
+            $('.btnRefreshTable').removeClass('btnSearchAlert');
+            templateObject.displayTableData(data, true)
+        }).catch(function (err) {
+            $('.fullScreenSpin').css('display', 'none');
+        });
+    } else {
+        $(".btnRefresh").trigger("click");
+    }
+},
   // ...Datehandler.getDateRangeEvents(),
 
   ...FxGlobalFunctions.getEvents(),
