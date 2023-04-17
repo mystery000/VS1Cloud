@@ -366,13 +366,13 @@ Template.newagedpayables.onRendered(() => {
 
   // LoadingOverlay.hide();
 });
-
+                                                                                                                                                                                                                                                                                                           
 Template.newagedpayables.events({
     'click #btnSummary': function() {
         FlowRouter.go('/agedpayablessummary');
     },
 
-    'click #tableExport tbody tr': function(event) {
+    'click #tblAgedPayables tbody tr': function(event) {
       let targetCard = '';
       let type=$(event.target).closest('tr').find('.colType').text();
       type=type.toLowerCase().replace(/[^a-z]/g,'');
@@ -1025,11 +1025,16 @@ Template.newagedpayables.helpers({
   },
 
   listParams: function() {
-    return ['dateFrom', 'dateTo', 'ignoreDate']
+    return ['limitCount', 'limitFrom', 'dateFrom', 'dateTo', 'ignoreDate']
   },
   service: function () {
     return sideBarService
-  }
+  },
+
+  searchFunction: function () {
+    return sideBarService.getTAPReportByKeyword;
+  },
+ 
 });
 Template.registerHelper('equals', function (a, b) {
     return a === b;
