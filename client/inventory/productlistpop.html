@@ -23,27 +23,6 @@
                         td.colcostPrice, td.colsalePrice, td.colprdqty , td.colExtraSellPrice{
                               text-align: right !important;
                           }
-                        th.colcostPrice, th.colsalePrice, th.colprdqty , th.colExtraSellPrice{
-                              width: 100px!important;
-                          }  
-                        th.colproductName {
-                            width: 200px!important;
-                        }
-                        th.colproductDesc {
-                            width: 400px!important;
-                        }
-                        th.colStatus {
-                            width: 120px!important;
-                        }
-                        th.colBarcode {
-                            width: 300px!important;
-                        }
-                        th.coltaxrate {
-                            width: 100px!important;
-                        }
-                        .tblInventory {
-                            width: 100%!important;
-                        }
                       </style>
                       {{>datatablelist
                           tableclass="tblInventory"
@@ -65,6 +44,7 @@
                           showPlusButtonDataTarget = "newProductModal"
                           showPlusButtonClass = "btnNewProduct"
                           showCameraButton = true
+                          showModalID="#newProductModal"
                       }}
                     <!-- <div class="table-responsive">
                         <style>
