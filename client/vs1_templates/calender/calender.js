@@ -1408,32 +1408,39 @@ Template.calender.onRendered(function() {
     }
 
     function renderEventContent(event){
+        const pattern = /leave/;
+        if(pattern.test(event.event._def.publicId)){
+        }
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
-                let eventLeave  = [];
-                let eventStatus = [];
+        let eventLeave  = [];
+        let eventStatus = [];
 
-                leaveemployeerecords.forEach((item) => {
-                    eventLeave[item.EmployeeID]  = item.LeaveMethod;
-                    eventStatus[item.EmployeeID] = item.Status;
-                });
+        leaveemployeerecords.forEach((item) => {
+            eventLeave[item.EmployeeID]  = item.LeaveMethod;
+            eventStatus[item.EmployeeID] = item.Status;
+        });
 
-                let title = document.createElement("p");
-                if (event.timeText != '') {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                    title.style.backgroundColor = event.backgroundColor;
-                    title.style.color = "#ffffff";
-                } else {
-                    var empid = event.event._def.publicId.split(':')[1];
-                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-                        title.style.color = "#dddddd";
-                    }
-                }
+        let title = document.createElement("p");
+        if(pattern.test(event.event._def.publicId)){
+            var empid = event.event._def.publicId.split(':')[1];
+            if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                console.log('event.event.title:',event.event.title)
+                console.log('eventLeave[empid]:',eventLeave[empid])
+                console.log('eventStatus[empid]:',eventStatus[empid])
+                $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
+                title.style.color = "#dddddd";
+            }
+        } else {
+            title.innerHTML = event.timeText + " " + event.event.title;
+            title.style.backgroundColor = event.backgroundColor;
+            title.style.color = "#ffffff";
+        }
 
-                let arrayOfDomNodes = [title];
-                return {
-                    domNodes: arrayOfDomNodes,
-                };
+        let arrayOfDomNodes = [title];
+        console.log('arrayOfDomNodes:',arrayOfDomNodes)
+        return {
+            domNodes: arrayOfDomNodes,
+        };
     }
 
     templateObject.renderNormalCalendar = function(slotMin, slotMax, hideDays) {
