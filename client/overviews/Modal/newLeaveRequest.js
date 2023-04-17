@@ -1,6 +1,7 @@
 import { ReactiveVar } from "meteor/reactive-var";
 import moment from "moment";
 import { SideBarService } from "../../js/sidebar-service";
+import { AppointmentService } from "../../appointments/appointment-service";
 import LoadingOverlay from "../../LoadingOverlay";
 import EmployeePayrollApi from "../../js/Api/EmployeePayrollApi";
 import AssignLeaveType from "../../js/Api/Model/AssignLeaveType";
@@ -476,10 +477,9 @@ Template.newLeaveRequestModal.onRendered(() => {
             yearRange: "-90:+10",
         });
         let edate0 = new Date();
-        let edate1 = new Date();
+        edate0.setDate(edate0.getDate() + 1);
         $("#edtLeaveStartDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
-        edate1.setDate(edate1.getDate() + 7);
-        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate1);
+        $("#edtLeaveEndDate").datepicker({ dateFormat: 'dd/mm/yy',  }).datepicker("setDate", edate0);
         $("#edtLeaveTypeofRequest").val('Annual Leave');
         $("#edtLeaveTypeofRequest").editableSelect('add', 'Annual Leave');
         $('#edtLeavePayPeriod').editableSelect('add', 'Weekly');
@@ -514,8 +514,47 @@ Template.newLeaveRequestModal.events({
     'click #btnSaveLeaveRequest': async function(event) {
         playSaveAudio();
         let templateObject = Template.instance();
+        let appointmentService = new AppointmentService();
+        let apptStartTime = "00:00"
+        let apptEndTime = "00:00"
+        getVS1Data("TERPPreference").then(function(dataObject) {
+            if (dataObject.length == 0) {
+                appointmentService.getGlobalSettings().then(function(data) {
+                    for (let g = 0; g < data.terppreference.length; g++) {
+                        if (data.terppreference[g].PrefName == "ApptStartTime") {
+                            apptStartTime = data.terppreference[g].Fieldvalue.split(" ")[0] || "08:00";
+                        } 
+                        else if (data.terppreference[g].PrefName == "ApptEndtime") {
+                            apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
+                        }
+                    }
+                }).catch(function(err) {});
+            } else {
+                let data = JSON.parse(dataObject[0].data);
+                for (let g = 0; g < data.terppreference.length; g++) {
+                    if (data.terppreference[g].PrefName == "ApptStartTime") {
+                        apptStartTime = data.terppreference[g].Fieldvalue.split(" ")[0] || "08:00";
+                    } 
+                    else if (data.terppreference[g].PrefName == "ApptEndtime") {
+                        apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
+                    }
+                }
+            }
+        }).catch(function(err) {
+            appointmentService.getGlobalSettings().then(function(data) {
+                for (let g = 0; g < data.terppreference.length; g++) {
+                    if (data.terppreference[g].PrefName == "ApptStartTime") {
+                        apptStartTime = data.terppreference[g].Fieldvalue.split(" ")[0] || "08:00";
+                    } 
+                    else if (data.terppreference[g].PrefName == "ApptEndtime") {
+                        apptEndTime = data.terppreference[g].Fieldvalue || "17:00";
+                    }
+                }
+            }).catch(function(err) {});
+        });
         setTimeout(async function() {
             let currentId     = $("#edtEmpID").val();
+            let employeeName     = $("#edtEmployeeName").val();
             let employeeID    = (!isNaN(currentId) && parseInt(currentId) !== 0) ? currentId : localStorage.getItem("mySessionEmployeeLoggedID")? localStorage.getItem("mySessionEmployeeLoggedID"):0;
             let ID            = $('#edtLeaveRequestID').val();
             let TypeofRequest = $('#edtLeaveTypeofRequestID').val();
@@ -530,9 +569,7 @@ Template.newLeaveRequestModal.events({
             const leaveRequests = [];
             const employeePayrolApis = new EmployeePayrollApi();
 
-            const apiEndpoint = employeePayrolApis.collection.findByName(
-                employeePayrolApis.collectionNames.TLeavRequest
-            );
+            const apiEndpoint = employeePayrolApis.collection.findByName(employeePayrolApis.collectionNames.TLeavRequest);
 
             if (isNaN(TypeofRequest)) {
                 handleValidationError('Request type must be a number!', 'edtLeaveTypeofRequestID');
@@ -554,13 +591,16 @@ Template.newLeaveRequestModal.events({
                 return false;
             } else {
                 $('.fullScreenSpin').css('display', 'block');
-                let dbStartDate = moment(StartDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
-                let dbEndDate   = moment(EndDate, "DD/MM/YYYY").format('YYYY-MM-DD HH:mm:ss')
+                let formattedStartDate = StartDate +' '+ apptStartTime;
+                let formattedEndDate = EndDate +' '+ apptEndTime;
+                let dbStartDate = moment(formattedStartDate, "DD/MM/YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss')
+                let dbEndDate   = moment(formattedEndDate, "DD/MM/YYYY HH:mm").format('YYYY-MM-DD HH:mm:ss')
                 let leaveRequestSettings = new LeaveRequest({
                         type: "TLeavRequest",
                         fields: new LeaveRequestFields({
                             ID: parseInt(ID),
                             EmployeeID: parseInt(employeeID),
+                            EmployeeName:employeeName,
                             TypeOfRequest: parseInt(TypeofRequest),
                             LeaveMethod: Leave,
                             Description: Description,

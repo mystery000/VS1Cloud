@@ -32,7 +32,7 @@ export class ManufacturingService extends BaseService {
         }
       }
         return this.getList(this.ERPObjects.TProcessStep, options);
-    }  
+    }
     
     getProcessByName = (dataSearchName) => {
       let options = "";
@@ -57,9 +57,8 @@ export class ManufacturingService extends BaseService {
     getWorkOrderList() {
 
        const now = new Date();
-       const isoStr = now.toISOString();
-       const localeDateStr = now.toLocaleDateString();
-
+       const isoStr = now.toISOString();     
+       const cur_date = moment().format('DD/MM/YYYY');       
         let workorders = [
           {
               "type": "TVS1Workorder",
@@ -68,24 +67,24 @@ export class ManufacturingService extends BaseService {
                   "Customer": "Workshop",
                   "OrderTo": "Workshop\n \n\n ",
                   "PONumber": "",
-                  "SaleDate": localeDateStr,
-                  "DueDate": localeDateStr,
-                  "BOMStructure": "{\"Id\":8077,\"MsTimeStamp\":\"2023-02-23 13:10:21\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8077\",\"Caption\":\"Wagon\",\"CustomInputClass\":\"\",\"Description\":\"Childs Red Wagon\",\"Details\":\"[{\\\"productName\\\":\\\"Handle\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Tray\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Welding\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Hub\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Purple\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Painting\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]},{\\\"productName\\\":\\\"Wheel Assembly\\\",\\\"qty\\\":\\\"4.00000\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Assembly\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":5,\"TotalQtyOriginal\":636,\"TotalChangeQty\":0,\"Value\":\"\"}",
+                  "SaleDate": cur_date,
+                  "DueDate": cur_date,
+                  "BOMStructure": "{\"Id\":8077,\"MsTimeStamp\":\"2023-02-23 13:10:21\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8077\",\"Caption\":\"Wagon\",\"CustomInputClass\":\"\",\"Description\":\"Childs Red Wagon\",\"Details\":\"[{\\\"productName\\\":\\\"Handle\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[],\\\"ClockedTime\\\": 0,\\\"StartedTime\\\":[],\\\"StoppedTime\\\":[],\\\"Status\\\":\\\"\\\"},{\\\"productName\\\":\\\"Tray\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Welding\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[],\\\"ClockedTime\\\": 0},{\\\"productName\\\":\\\"Hub\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[],\\\"ClockedTime\\\": 0 ,\\\"StartedTime\\\":[],\\\"StoppedTime\\\":[],\\\"Status\\\":\\\"\\\"},{\\\"productName\\\":\\\"Purple\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Painting\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[],\\\"ClockedTime\\\": 0,\\\"StartedTime\\\":[],\\\"StoppedTime\\\":[],\\\"Status\\\":\\\"\\\"},{\\\"productName\\\":\\\"Wheel Assembly\\\",\\\"qty\\\":\\\"4\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"Assembly\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[],\\\"ClockedTime\\\": 0 ,\\\"StartedTime\\\":[],\\\"StoppedTime\\\":[],\\\"Status\\\":\\\"\\\"}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":5,\"TotalQtyOriginal\":636,\"TotalChangeQty\":0,\"Value\":\"\"}",
                   "OrderDate": isoStr,
                   "StartTime": "",
                   "ProductName": "Wagon",
-                  "ShipDate": localeDateStr,
+                  "ShipDate": cur_date,
                   "Quantity": 1,
                   "ID": "1000",
                   "UpdateFromPO": false,
                   "POStatus": "not created",
                   "Status": "unscheduled",
                   "TrackedTime": 0,
-                  "StartedTimes": "[]",
-                  "PausedTimes": "[]",
-                  "StoppedTime": "",
+                  "StartedTimes": [],
+                  "PausedTimes": [],
+                  "StoppedTimes": [],
                   "EmployeeId"  : "",
-                  "EmployeeName" : "",
+                  "EmployeeName" : "Dene Mills",
               }
           },
           {
@@ -95,24 +94,24 @@ export class ManufacturingService extends BaseService {
                   "Customer": "Workshop",
                   "OrderTo": "Workshop\n \n\n ",
                   "PONumber": "",
-                  "SaleDate": localeDateStr,
-                  "DueDate": localeDateStr,
-                  "BOMStructure": "{\"Id\":8076,\"MsTimeStamp\":\"2023-02-23 13:05:06\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8076\",\"Caption\":\"Wheel Assembly\",\"CustomInputClass\":\"\",\"Description\":\"\",\"Details\":\"[{\\\"productName\\\":\\\"Bridgestone Wheels\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[]}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":1,\"TotalQtyOriginal\":-34,\"TotalChangeQty\":0,\"Value\":\"\"}",
+                  "SaleDate": cur_date,
+                  "DueDate": cur_date,
+                  "BOMStructure": "{\"Id\":8076,\"MsTimeStamp\":\"2023-02-23 13:05:06\",\"MsUpdateSiteCode\":\"DEF\",\"GlobalRef\":\"DEF8076\",\"Caption\":\"Wheel Assembly\",\"CustomInputClass\":\"\",\"Description\":\"\",\"Details\":\"[{\\\"productName\\\":\\\"Bridgestone Wheels\\\",\\\"qty\\\":\\\"1\\\",\\\"changed_qty\\\":\\\"0\\\",\\\"process\\\":\\\"\\\",\\\"processNote\\\":\\\"\\\",\\\"attachments\\\":[],\\\"subs\\\":[],\\\"ClockedTime\\\": 0 ,\\\"StartedTime\\\":[],\\\"StoppedTime\\\":[],\\\"Status\\\":\\\"\\\"}]\",\"Info\":\"Assembly\",\"ProcStepItemRef\":\"vs1BOM\",\"QtyVariation\":1,\"TotalQtyOriginal\":34,\"TotalChangeQty\":0,\"Value\":\"\"}",
                   "OrderDate": isoStr,
                   "StartTime": "",
                   "ProductName": "Wheel Assembly",
-                  "ShipDate": localeDateStr,
+                  "ShipDate": cur_date,
                   "Quantity": 1,
                   "ID": "1001",
                   "UpdateFromPO": false,
                   "POStatus": "not created",
                   "Status": "unscheduled",
                   "TrackedTime": 0,
-                  "StartedTimes": "[]",
-                  "PausedTimes": "[]",
-                  "StoppedTime": "",
+                  "StartedTimes": [],
+                  "PausedTimes": [],
+                  "StoppedTimes": [],
                   "EmployeeId"  : "",
-                  "EmployeeName" : ""
+                  "EmployeeName" : "Dene Mills"
               }
           }
         ];

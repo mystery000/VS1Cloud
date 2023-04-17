@@ -59,10 +59,11 @@
                     <button class="btn btn-primary btnClosingDates float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#ModalClosingDate" type="button" style="margin-right: 14px;"><i class="fa fa-calendar" style="padding-right: 5px;"></i>Closing Dates</button>
                     <span class="text-gray-600 small trans_lastupdate float-right" id="trans_lastupdate" style="width:100%;text-align: end!important;"><a href="#">Last Updated: </a>{{lastBatchUpdate}}</span>
                  </div>
+                 {{> datesforcardchart}}
             </div>
 
         </div>
-
+        {{> editCardChartButtons}}
         <div class="d-sm-flex justify-content-between align-items-center mb-4" style="padding: 0 1.5rem 0 1.5rem;">
         </div>
         <!-- All charts list -->
@@ -144,7 +145,7 @@
                   class="col d-xl-flex justify-content-xl-end align-items-xl-start"
                   style="padding: 0px !important">
                     {{> spreadsheet_link templateName="Accounts List Report Result"}}
-                    {{> export_import_print_display_button   tablename="tblAccountOverview"}}
+                    {{> export_import_print_display_button Import="hiddenButton"  tablename="tblAccountOverview"}}
                 </div>
                 <div>
 
@@ -227,40 +228,7 @@
             </div>
         </div>
         <div class="card-body p-0 rounded">
-            <!-- {{> non_transactional_list tablename="tblAccountOverview"}} -->
-            {{>datatablelist 
-                tablename="tblAccountOverview"
-                apiName= apiFunction
-                service = service
-                indexeddbname = 'TAccountVS1List'
-                datahandler = datahandler
-                tableheaderrecords = tableheaderrecords
-                exportfilename = 'Account List'
-                istransaction = false
-                apiParams=apiParams
-                lowercaseDataName='taccountvs1list'
-                exIndexDBName = 'taccountvs1listex'
-                exdatahandler = exDataHandler
-                searchAPI = searchAPI
-                order = '[[ 1, "asc" ]]'
-            }}
-
-            <!-- {{>datatablelist 
-                tablename="tblAccountTreeOverview"
-                apiName= apiFunction
-                service = service
-                indexeddbname = 'TAccountVS1List'
-                datahandler = datahandler
-                tableheaderrecords = tableheaderrecords
-                exportfilename = 'Account List'
-                istransaction = false
-                apiParams=apiParams
-                lowercaseDataName='taccountvs1list'
-                exIndexDBName = 'taccountvs1listex'
-                exdatahandler = exDataHandler
-                searchAPI = searchAPI
-                order = '[[ 1, "asc" ]]'
-            }} -->
+            {{> non_transactional_list tablename="tblAccountOverview"}}
             <div class="table-responsive d-none">
                 <table id="tblAccountTreeOverview" class="dataTable table table-bordered tblAccountTreeOverview">
                     <thead>
@@ -416,11 +384,11 @@
         </div>
       </div>
     </div>
-
-    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+<!-- 
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
     </div> -->
-    {{> import_template}}
+
     <script>
         modalDraggable();
     </script>

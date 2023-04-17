@@ -27,6 +27,16 @@ Template.assignLeaveTypePop.onCreated(function () {
             data.fields.OpeningBalance || 0,
             data.fields.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
             ""
+            // data.ID || "",
+            // data.LeaveType || "",
+            // data.LeaveCalcMethod || "",
+            // data.HoursAccruedAnnually || 0,
+            // data.HoursAccruedAnnuallyFullTimeEmp || 0,
+            // data.HoursFullTimeEmpFortnightlyPay || 0,
+            // data.HoursLeave || 0,
+            // data.OpeningBalance || 0,
+            // data.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
+            // data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
@@ -305,7 +315,7 @@ Template.assignLeaveTypePop.helpers({
     },
 
     apiParams: function() {
-        return ['limitCount', 'limitFrom'];
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
     tablename: () => {
       let templateObject = Template.instance();

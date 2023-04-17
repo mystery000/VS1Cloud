@@ -6,7 +6,6 @@
         <div class="row">
             <div class="col-12 col-md-4">
                 <h3 class="text-dark mb-4">Payroll Settings
-                    <!-- <a role="button" data-toggle="modal" href="#helpModal" class="helpModal"><label class="lblplay">PLAY</label><i class="far fa-play-circle"  style="font-size: 20px;"></i></a> -->
                     {{> helpbutton}}
                     <!-- Start Help View Modal -->
                     <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
@@ -58,7 +57,9 @@
                     <div class="card-body">
                         <div class="card-body p-3 rounded">
                             <div class="tab-content" id="myTabContent">
-
+                                <style>
+                                    div.dataTables_wrapper .JCLRFlex { width:100% !important; }
+                                </style>
                                 <div class="tab-pane fade show active" id="organisation" role="tabpanel" aria-labelledby="organisation-tab">
                                     <div class="row">
                                         <div class="col-8">
@@ -69,87 +70,129 @@
                                                 <input type="hidden" class="form-control"  name='payrollsettingor' id="payrollsettingor" />
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        {{> default_input 
-                                                            label="Bank Account" 
-                                                            classes="editbankaccount" 
-                                                            id="editbankaccount" 
-                                                            name="editbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
+                                                        {{> vs1___dropdown
+                                                            data=item.item
+                                                            type='search'
+                                                            id='editbankaccount'
+                                                            name='editbankaccount'
+                                                            modalId='accountListModal'
+                                                            list_template_name='accountlistpop'
+                                                            modal_title='Account List'
+                                                            label='Bank Account'
+                                                            innerModal=true
+                                                            colNameForValue='colAccountName'
+                                                            target_modal_id='edtAccountModal'
+                                                            target_template_id='addaccountpop'
+                                                            custid=item.lineID
+                                                            is_editable=true
+                                                            noBorder=false
                                                         }}
-                                                        <!-- <label for="editbankaccount">Bank Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editbankaccount" name="editbankaccount"> -->
                                                         <input type="hidden" class="form-control" style="cursor: pointer;" id="payorgnization_id" value="0">
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        {{> default_input 
-                                                            label="PAYG Liability Account" 
-                                                            classes="editpaygbankaccount" 
-                                                            id="editpaygbankaccount" 
-                                                            name="editpaygbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
+                                                        {{> vs1___dropdown
+                                                            data=item.item
+                                                            type='search'
+                                                            id='editpaygbankaccount'
+                                                            name='editpaygbankaccount'
+                                                            modalId='accountListModal'
+                                                            list_template_name='accountlistpop'
+                                                            modal_title='Account List'
+                                                            label='PAYG Liability Account'
+                                                            innerModal=true
+                                                            colNameForValue='colAccountName'
+                                                            target_modal_id='edtAccountModal'
+                                                            target_template_id='addaccountpop'
+                                                            custid=item.lineID
+                                                            is_editable=true
+                                                            noBorder=false
                                                         }}
-                                                        <!-- <label for="editpaygbankaccount">PAYG Liability Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editpaygbankaccount" name="editpaygbankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        {{> default_input 
-                                                            label="Wages Expense Account" 
-                                                            classes="editwagesexpbankaccount" 
-                                                            id="editwagesexpbankaccount" 
-                                                            name="editwagesexpbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
+                                                        {{> vs1___dropdown
+                                                            data=item.item
+                                                            type='search'
+                                                            id='editwagesexpbankaccount'
+                                                            name='editwagesexpbankaccount'
+                                                            modalId='accountListModal'
+                                                            list_template_name='accountlistpop'
+                                                            modal_title='Account List'
+                                                            label='Wages Expense Account'
+                                                            innerModal=true
+                                                            colNameForValue='colAccountName'
+                                                            target_modal_id='edtAccountModal'
+                                                            target_template_id='addaccountpop'
+                                                            custid=item.lineID
+                                                            is_editable=true
+                                                            noBorder=false
                                                         }}
-                                                        <!-- <label for="editwagesexpbankaccount">Wages Expense Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editwagesexpbankaccount" name="editwagesexpbankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        {{> default_input 
-                                                            label="Wages Expense Account" 
-                                                            classes="editwagespaybankaccount" 
-                                                            id="editwagespaybankaccount" 
-                                                            name="editwagespaybankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
+                                                        {{> vs1___dropdown
+                                                            data=item.item
+                                                            type='search'
+                                                            id='editwagespaybankaccount'
+                                                            name='editwagespaybankaccount'
+                                                            modalId='accountListModal'
+                                                            list_template_name='accountlistpop'
+                                                            modal_title='Account List'
+                                                            label='Wages Payable Account'
+                                                            innerModal=true
+                                                            colNameForValue='colAccountName'
+                                                            target_modal_id='edtAccountModal'
+                                                            target_template_id='addaccountpop'
+                                                            custid=item.lineID
+                                                            is_editable=true
+                                                            noBorder=false
                                                         }}
-                                                        <!-- <label for="editwagespaybankaccount">Wages Payable Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editwagespaybankaccount" name="editwagespaybankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        {{> default_input 
-                                                            label="Superannuation Liability Account" 
-                                                            classes="editsuperliabbankaccount" 
-                                                            id="editsuperliabbankaccount" 
-                                                            name="editsuperliabbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
+                                                        {{> vs1___dropdown
+                                                            data=item.item
+                                                            type='search'
+                                                            id='editsuperliabbankaccount'
+                                                            name='editsuperliabbankaccount'
+                                                            modalId='accountListModal'
+                                                            list_template_name='accountlistpop'
+                                                            modal_title='Account List'
+                                                            label='Superannuation Liability Account'
+                                                            innerModal=true
+                                                            colNameForValue='colAccountName'
+                                                            target_modal_id='edtAccountModal'
+                                                            target_template_id='addaccountpop'
+                                                            custid=item.lineID
+                                                            is_editable=true
+                                                            noBorder=false
                                                         }}
-                                                        <!-- <label for="editsuperliabbankaccount">Superannuation Liability Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editsuperliabbankaccount" name="editsuperliabbankaccount"> -->
                                                     </div>
                                                 </div>
                                                 <div class="col-12 col-md-6">
                                                     <div class="form-group" style="height: 94px; display: flex; flex-direction: column; justify-content: flex-end;">
-                                                        {{> default_input 
-                                                            label="Superannuation Expense Account" 
-                                                            classes="editsuperexpbankaccount" 
-                                                            id="editsuperexpbankaccount" 
-                                                            name="editsuperexpbankaccount" 
-                                                            defaultValue="" 
-                                                            type="search"
+                                                        {{> vs1___dropdown
+                                                            data=item.item
+                                                            type='search'
+                                                            id='editsuperexpbankaccount'
+                                                            name='editsuperexpbankaccount'
+                                                            modalId='accountListModal'
+                                                            list_template_name='accountlistpop'
+                                                            modal_title='Account List'
+                                                            label='Superannuation Expense Account'
+                                                            innerModal=true
+                                                            colNameForValue='colAccountName'
+                                                            target_modal_id='edtAccountModal'
+                                                            target_template_id='addaccountpop'
+                                                            custid=item.lineID
+                                                            is_editable=true
+                                                            noBorder=false
                                                         }}
-                                                        <!-- <label for="editsuperexpbankaccount">Superannuation Expense Account</label>
-                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="editsuperexpbankaccount" name="editsuperexpbankaccount"> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -315,54 +358,6 @@
                                             <hr />
                                         </div>
                                     </div>
-                                    <!-- <div class="row">
-                                        <div class="col-12 mb-4">
-                                            <h4>Payroll Tracking</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label for="edtRateName">Employee Group <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                <input type="text" class="form-control" id="">
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <div class="form-group">
-                                                <label for="edtRateName">Timesheet Categories <span><span style="font-weight: 200;">(optional)</span></span></label>
-                                                <input type="text" class="form-control" id="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-3">
-                                            <hr />
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-4">
-                                            <h4>Payslip Options</h4>
-                                        </div>
-                                    </div>
-                                    <div class="row mb-3">
-                                        <div class="col-12 col-md-4">
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input" type="checkbox" value="swtShowAnnualSalary" id="swtShowAnnualSalary" name="swtShowAnnualSalary" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="swtShowAnnualSalary" style="cursor: pointer;">Show Annual Salary</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-4">
-                                            <div class="custom-control custom-switch">
-                                                <input class="custom-control-input" type="checkbox" value="swtShowEmploymentBasis" id="swtShowEmploymentBasis" name="swtShowEmploymentBasis" style="cursor: pointer;">
-                                                <label class="custom-control-label" for="swtShowEmploymentBasis" style="cursor: pointer;">Show Employment Basis</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-12 mb-3">
-                                            <hr />
-                                        </div>
-                                    </div> -->
                                 </div>
 
                                 <div class="tab-pane fade" id="calendars" role="tabpanel" aria-labelledby="calendars-tab">
@@ -371,18 +366,6 @@
                                             <h4>Pay Calendars</h4>
                                         </div>
                                         <div class="col-12 col-md-8 mb-3">
-                                            <a href="#newPayCalendarModal" data-toggle="modal">
-                                                {{> vs1_button
-                                                    color='primary'
-                                                    classes='float-right btnAddNewPayCalender'
-                                                    type='button'
-                                                    id="btnAddNewPayCalender"
-                                                    iconName='plus'
-                                                    title='New Pay Calendar'
-                                                }}
-                                            </a>
-                                            <!-- <button type="button" class="btn btn-primary btnAddNewPayCalender float-right" data-toggle="modal" data-target="#newPayCalendarModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Pay Calendar</button> -->
-
                                             <div class="modal fade" id="newPayCalendarModal" tabindex="-1" role="dialog" aria-labelledby="newPayCalendarLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -396,56 +379,69 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        {{> default_input 
-                                                                            label="Pay Period" 
-                                                                            classes="payperiod" 
-                                                                            id="payperiod" 
-                                                                            name="payperiod" 
-                                                                            defaultValue="" 
-                                                                            type="search"
-                                                                            placeholder="How often will you pay your employees?"
+                                                                        {{> vs1___dropdown
+                                                                            data=item.item
+                                                                            type='search'
+                                                                            id='payperiod'
+                                                                            name='payperiod'
+                                                                            modalId=''
+                                                                            list_template_name=''
+                                                                            modal_title=''
+                                                                            label=''
+                                                                            innerModal=true
+                                                                            colNameForValue=''
+                                                                            target_modal_id=''
+                                                                            target_template_id=''
+                                                                            custid=item.lineID
+                                                                            is_editable=true
+                                                                            noBorder=false
                                                                         }}
                                                                         <input type="hidden" id="paycalendarId" name="paycalendarId" value="0" />
-                                                                        <!-- <label for="edtRateName">Pay Period</label>
-                                                                        <input type="search" class="form-control"  style="cursor: pointer;" id="payperiod" name="payperiod" placeholder="How often will you pay your employees?"> -->
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        {{> default_input 
-                                                                            label="Name" 
-                                                                            classes="" 
-                                                                            id="calender_name" 
-                                                                            name="calender_name" 
-                                                                            defaultValue="" 
-                                                                            type="text"
-                                                                        }}
-                                                                        <!-- <label for="edtRateName">Name</label>
-                                                                        <input type="text" class="form-control" id="calender_name"> -->
+                                                                <div class="body-panel d-none">
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            {{> default_input 
+                                                                                label="Name" 
+                                                                                classes="calender_name" 
+                                                                                id="calender_name" 
+                                                                                name="calender_name" 
+                                                                                defaultValue="" 
+                                                                                type="text"
+                                                                            }}
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <div class="form-group">
-                                                                        <label>Start Date</label>
-                                                                        <div class="input-group date" style="cursor: pointer;">
-                                                                            <input type="text" class="form-control formClassDate edtStartDate" id="edtStartDate" name="edtStartDate" value="">
-                                                                            <div class="input-group-addon" >
-                                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            <label>Start Date</label>
+                                                                            <div class="input-group date" style="cursor: pointer;">
+                                                                                <input type="text" class="form-control formClassDate edtStartDate" id="edtStartDate" name="edtStartDate" value="">
+                                                                                <div class="input-group-addon" >
+                                                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-6">
-                                                                    <div class="form-group">
-                                                                        <label>First Payment Date</label>
-                                                                        <div class="input-group date" style="cursor: pointer;">
-                                                                            <input type="text" class="form-control formClassDate edtFirstPaymentDate" id="edtFirstPaymentDate" name="edtFirstPaymentDate" value="">
-                                                                            <div class="input-group-addon" >
-                                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                    <div class="col-12">
+                                                                        <div class="form-group">
+                                                                            <label>First Payment Date</label>
+                                                                            <div class="input-group date" style="cursor: pointer;">
+                                                                                <input type="text" class="form-control formClassDate edtFirstPaymentDate" id="edtFirstPaymentDate" name="edtFirstPaymentDate" value="">
+                                                                                <div class="input-group-addon" >
+                                                                                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="col-12">
+                                                                        <label class="checkbox ml-2 mr-2 mt-1 mb-4">
+                                                                            <input type="checkbox" id="defaultcalendar" > 
+                                                                            Make this my default pay calendar for new employees
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
+                                                                <div class="col-12 footer-label"></div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -458,6 +454,22 @@
                                                                 title='Save'
                                                             }}
                                                             <!-- <button type="button" class="btn btn-success savenewcalender"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button> -->
+                                                            {{> vs1_button
+                                                                color='danger'
+                                                                classes='updateCalendarInActive d-none'
+                                                                type='button'
+                                                                id=''
+                                                                iconName='trash'
+                                                                title='Make In-Active'
+                                                            }}
+                                                            {{> vs1_button
+                                                                color='danger'
+                                                                classes='updateCalendarActive d-none'
+                                                                type='button'
+                                                                id=''
+                                                                iconName='trash'
+                                                                title='Make Active'
+                                                            }}
                                                             <a data-dismiss="modal">
                                                                 {{> vs1_button
                                                                     color='secondary'
@@ -476,20 +488,65 @@
                                         </div>
                                         <div class="col-12">
                                             <style>
+                                                .body-panel {
+                                                    width: 100%;
+                                                }
+                                                .table-responsive {
+                                                    overflow-x: visible !important;
+                                                }
                                                 #tblPayCalendars .colPayCalendarName{
-                                                    width: 30%!important;
+                                                    width: 25%!important;
                                                 }
                                                 #tblPayCalendars .colPayPeriod{
                                                     width: 20%!important;
                                                 }
                                                 #tblPayCalendars .colNextPayPeriod{
-                                                    width: 20%!important;
+                                                    width: 10%!important;
                                                 }
                                                 #tblPayCalendars .colNextPaymentDate{
-                                                    width: 20%!important;
+                                                    width: 10%!important;
                                                 }
                                                 #tblPayCalendars .colStatus{
-                                                    width: 10%!important;
+                                                    width: 120px !important;
+                                                }
+                                                #tblPayCalendars .colAction{
+                                                    width: 1%!important;
+                                                    overflow: unset !important;
+                                                }
+                                                #tblPayCalendars .dropdown-menu {
+                                                    left: -40px !important;
+                                                    top: 90% !important;
+                                                    transform: translate3d(45px, 0px, 0px) !important;
+                                                }
+                                                #tblPayCalendars .dropdown button {
+                                                    display: flex;
+                                                    justify-content: center;
+                                                    align-items: center;
+                                                    background: none !important;
+                                                    border: none !important;
+                                                    border-radius: 50%;
+                                                    outline: none !important;
+                                                    color: #e3e6f0 !important;
+                                                }
+                                                #tblPayCalendars .dropdown button:hover {
+                                                    background-color: #ccc !important;
+                                                    border-color: black !important;
+                                                    color: black !important;
+                                                }
+                                                #tblPayCalendars .dropdown button:focus {
+                                                    box-shadow: none !important;
+                                                }
+                                                #tblPayCalendars .dropdown-toggle:after {
+                                                    display: none !important;
+                                                }
+                                                #tblPayCalendars .dropdown-item {
+                                                    font-size: 20px;
+                                                }
+                                                #tblPayCalendars .dropdown-item:hover {
+                                                    border: 1px solid #ccc;
+                                                }
+                                                #tblPayCalendars .dropdown-menu {
+                                                    border: 1px solid #e3e6f0 ;
                                                 }
                                             </style>
                                             {{> datatablelist
@@ -506,101 +563,10 @@
                                                 exIndexDBName='tpayrollcalendars'
                                                 exdatahandler=exDataHandler
                                                 searchAPI=searchAPI
+                                                showPlusButton=true
+                                                showPlusButtonClass='btnAddNewPayCalender'
+                                                showModalID='#newPayCalendarModal'
                                             }}
-                                            <!-- <div class="table-responsive">
-                                                <style>
-                                                    th {
-                                                      background-color: #ededed;
-                                                    }
-                                                    .table-striped tbody tr:nth-of-type(odd) {
-                                                      background-color: white !important;
-                                                    }
-
-                                                    .table-striped tbody tr:nth-of-type(even) {
-                                                      background-color: #0000000d !important;
-                                                    }
-
-                                                   .JColResizer > tbody > tr > td, .JColResizer > tbody > tr > th {
-                                                      padding: .75rem!important;
-                                                    }
-
-                                                   .hiddenColumn {
-                                                        display: none;
-                                                    }
-
-                                                   .showColumn {
-                                                        display: table-cell;
-                                                        padding: .75rem;
-                                                        vertical-align: top;
-                                                    }
-                                                    .colNextPayPeriod{
-                                                        width: 80px;
-                                                    }
-                                                    .colNextPaymentDate{
-                                                        width: 80px;
-                                                    }
-
-                                                    .colDeleteCalenders{
-                                                        width: 3% !important;
-                                                    }
-                                                    .colHolidayDelete{
-                                                        width: 3% !important;
-                                                    }
-                                                    .colDeletesup{
-                                                        width: 3% !important;
-                                                    }
-                                                    .colDeletepaidrem{
-                                                        width: 3% !important;
-                                                    }
-                                                    .colDeleterei{
-                                                        width: 3% !important;
-                                                    }
-
-                                                </style>
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                                            <div class="modal-header">
-                                                                <h4 style="margin-bottom: 0px;">Delete Rule</h4>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p style="text-align: center;">Are you sure you want to delete this rule?</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-danger float-right btnDeleteTaxRate" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                <button class="btn btn-secondary float-right btnBack" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <table id="tblPayCalendars" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayCalendars">
-                                                    <thead>
-                                                        <tr class="dnd-moved">
-                                                            <th class="th colCalenderID hiddenColumn" >ID</th>
-                                                            <th class="th colPayCalendarName" >Name</th>
-                                                            <th class="th colPayPeriod" >Pay Period</th>
-                                                            <th class="th colNextPayPeriod" >Next Pay Period</th>
-                                                            <th class="th colNextPaymentDate" >Next Payment Date</th>
-                                                            <th class="th colDelete" style="width: 3% !important;"></th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                            <td contenteditable="false" class="colCalenderID hiddenColumn" ></td>
-                                                            <td contenteditable="false" class="colPayCalendarName"></td>
-                                                            <td contenteditable="false"  class="colPayPeriod"></td>
-                                                            <td contenteditable="false"  class="colNextPayPeriod"></td>
-                                                            <td contenteditable="false"  class="colNextPaymentDate"></td>
-                                                            <td contenteditable="false" style="width: 3% !important;" class="colDeleteCalenders"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -612,17 +578,6 @@
                                             <p>Holidays help us to be more accurate when calculating leave for your employees.</p>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-                                            <a href="#newHolidayModal" data-toggle="modal">
-                                                {{> vs1_button
-                                                    color='primary'
-                                                    classes='float-right btnAddNewHoliday'
-                                                    type='button'
-                                                    id="btnAddNewHoliday"
-                                                    iconName='plus'
-                                                    title='New Holiday'
-                                                }}
-                                            </a>
-                                            <!-- <button type="button" class="btn btn-primary btnAddNewHoliday float-right" data-toggle="modal" data-target="#newHolidayModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Holiday</button> -->
                                             <div class="modal fade" id="newHolidayModal" tabindex="-1" role="dialog" aria-labelledby="newHolidayLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
@@ -638,14 +593,12 @@
                                                                     <div class="form-group">
                                                                         {{> default_input 
                                                                             label="Name" 
-                                                                            classes="" 
+                                                                            classes="holidayname" 
                                                                             id="holidayname" 
                                                                             name="holidayname" 
                                                                             defaultValue="" 
                                                                             type="text"
                                                                         }}
-                                                                        <!-- <label for="">Name</label>
-                                                                        <input type="text" class="form-control" id="holidayname"> -->
                                                                         <input type="hidden" id="holidayid" name="holidayid" value="0"/>
                                                                     </div>
                                                                 </div>
@@ -661,14 +614,32 @@
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        {{> default_input 
+                                                                    <div class="form-group holiday-group">
+                                                                        <!-- {{> default_input 
                                                                             label="Add to Group" 
-                                                                            classes="" 
+                                                                            classes="holidaygroup" 
+                                                                            divClass="divClass"
                                                                             id="holidaygroup" 
                                                                             name="holidaygroup" 
                                                                             defaultValue="" 
                                                                             type="search"
+                                                                        }} -->
+                                                                        {{> vs1___dropdown
+                                                                            data=item.item
+                                                                            type='search'
+                                                                            id='holidaygroup'
+                                                                            name='holidaygroup'
+                                                                            modalId='groupTypeListModel'
+                                                                            list_template_name='grouptypelistpop'
+                                                                            modal_title=''
+                                                                            label='Add to Group'
+                                                                            innerModal=true
+                                                                            colNameForValue='thgroupDescription'
+                                                                            target_modal_id='edtAccountModal'
+                                                                            target_template_id='addaccountpop'
+                                                                            custid=item.lineID
+                                                                            is_editable=true
+                                                                            noBorder=false
                                                                         }}
                                                                         <!-- <label for="">Add to Group</label>
                                                                         <input type="text" style="cursor: pointer;" class="form-control" id="holidaygroup"> -->
@@ -684,6 +655,22 @@
                                                                 id="addholiday"
                                                                 iconName='save'
                                                                 title='Save'
+                                                            }}
+                                                            {{> vs1_button
+                                                                color='danger'
+                                                                classes='updateHolidayInActive d-none'
+                                                                type='button'
+                                                                id=''
+                                                                iconName='trash'
+                                                                title='Make In-Active'
+                                                            }}
+                                                            {{> vs1_button
+                                                                color='danger'
+                                                                classes='updateHolidayActive d-none'
+                                                                type='button'
+                                                                id=''
+                                                                iconName='trash'
+                                                                title='Make Active'
                                                             }}
                                                             <a data-dismiss="modal">
                                                                 {{> vs1_button
@@ -712,7 +699,23 @@
                                                         <div class="card-body text-nowrap cardB customerListCard" id="customerListCard">
                                                             <div class="sideSearch">
                                                                 <div class="form-group">
-                                                                    {{> vs1_dropdown id='holidaygroup2' name='holidaygroup2' value='' type='search' classes='' placeholder="Filter by group"}}
+                                                                    {{> vs1___dropdown
+                                                                        data=item.item
+                                                                        type='search'
+                                                                        id='holidaygroup2'
+                                                                        name='holidaygroup2'
+                                                                        modalId='groupTypeListModel'
+                                                                        list_template_name='grouptypelistpop'
+                                                                        modal_title=''
+                                                                        label='Add to Group'
+                                                                        innerModal=true
+                                                                        colNameForValue='thgroupDescription'
+                                                                        target_modal_id='edtAccountModal'
+                                                                        target_template_id='addaccountpop'
+                                                                        custid=item.lineID
+                                                                        is_editable=true
+                                                                        noBorder=false
+                                                                    }}
                                                                 </div>
                                                                 <span class="counter pull-right"></span>
                                                                 <table id="tblHolidayCategories" name="tblCustomerSideList" class="table table-hover table-bordered results tblHolidayCategories">
@@ -734,26 +737,30 @@
                                                                     </tbody>
                                                                 </table>
                                                             </div>
-                                                            {{> vs1_button
-                                                                color='primary'
-                                                                classes='float-right filterHoliday mb-2'
-                                                                type='button'
-                                                                id="filterHoliday"
-                                                                iconName='filter'
-                                                                title='Filter'
-                                                            }}
-                                                            <!-- <button class="btn btn-primary filterHoliday float-left" >Filter</button> -->
-                                                            <a href="#newGroupModal" data-toggle="modal">
+                                                            <div class="float-right">
+
+                                                                <a href="#newGroupModal" data-toggle="modal">
+                                                                    {{> vs1_button
+                                                                        color='primary'
+                                                                        classes='btnNewGroup'
+                                                                        type='button'
+                                                                        id="btnNewGroup"
+                                                                        iconName='plus'
+                                                                        title='New Group'
+                                                                    }}
+                                                                </a>
+                                                                <!-- <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button> -->
+
                                                                 {{> vs1_button
                                                                     color='primary'
-                                                                    classes='float-right btnNewGroup'
+                                                                    classes='filterHoliday'
                                                                     type='button'
-                                                                    id="btnNewGroup"
-                                                                    iconName='plus'
-                                                                    title='New Group'
+                                                                    id="filterHoliday"
+                                                                    iconName='filter'
+                                                                    title='Filter'
                                                                 }}
-                                                            </a>
-                                                            <!-- <button class="btn btn-primary btnNewGroup float-right" data-toggle="modal" data-target="#newGroupModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Group</button> -->
+                                                                <!-- <button class="btn btn-primary filterHoliday float-left" >Filter</button> -->
+                                                            </div>
 
                                                             <div class="modal fade" id="newGroupModal" tabindex="-1" role="dialog" aria-labelledby="newGroupLabel" aria-hidden="true">
                                                                 <div class="modal-dialog modal-dialog-centered" role="document">
@@ -770,10 +777,10 @@
                                                                                     <div class="form-group">
                                                                                         {{> default_input 
                                                                                             label="Name" 
-                                                                                            classes="" 
-                                                                                            id="edtGroupDescription" 
-                                                                                            name="edtGroupDescription" 
-                                                                                            defaultValue="" 
+                                                                                            classes="edtGroupName" 
+                                                                                            id="edtGroupName" 
+                                                                                            name="edtGroupName" 
+                                                                                            defaultValue=""
                                                                                             type="text"
                                                                                         }}
                                                                                         <!-- <label for="edtRateName">Name</label>
@@ -782,18 +789,36 @@
                                                                                 </div>
                                                                                 <div class="col-12">
                                                                                     <div class="form-group">
-                                                                                        {{> default_input 
+                                                                                        <!-- {{> default_input 
                                                                                             label="Add existing holidays from group" 
                                                                                             classes="" 
                                                                                             id="addexistgroup" 
                                                                                             name="addexistgroup" 
                                                                                             defaultValue="" 
                                                                                             type="search"
+                                                                                        }} -->
+                                                                                        {{> vs1___dropdown
+                                                                                            data=item.item
+                                                                                            type='search'
+                                                                                            id='addexistgroup'
+                                                                                            name='addexistgroup'
+                                                                                            modalId='groupTypeListModel'
+                                                                                            list_template_name='grouptypelistpop'
+                                                                                            modal_title=''
+                                                                                            label='Add existing holidays from group'
+                                                                                            innerModal=true
+                                                                                            colNameForValue='thgroupDescription'
+                                                                                            target_modal_id='edtAccountModal'
+                                                                                            target_template_id='addaccountpop'
+                                                                                            custid=item.lineID
+                                                                                            is_editable=true
+                                                                                            noBorder=false
                                                                                         }}
                                                                                         <!-- <label for="edtRateName">Add existing holidays from group</label>
                                                                                         <input type="text" style="cursor: pointer;" class="form-control" id="addexistgroup"> -->
                                                                                     </div>
                                                                                 </div>
+                                                                                <input type="hidden" class="edtGroupID" value="2" />
                                                                             </div>
                                                                         </div>
                                                                         <div class="modal-footer">
@@ -825,6 +850,83 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-9">
+                                                    <style>
+                                                        .table-responsive {
+                                                            overflow-x: visible !important;
+                                                        }
+
+                                                        .col-holiday-remove {
+                                                            display: flex;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                        }
+
+                                                        #tblHolidays {
+                                                            width: 100% !important;
+                                                        }
+
+                                                        #tblHolidays .colHolidayId {
+                                                            width: 0% !important;
+                                                        }
+
+                                                        #tblHolidays .colHolidayName {
+                                                            /* display: none !important; */
+                                                            width: 35% !important;
+                                                        }
+
+                                                        #tblHolidays .colHolidayDate {
+                                                            width: 30% !important;
+                                                        }
+
+                                                        #tblHolidays .colStatus {
+                                                            width: 120px !important;
+                                                        }
+
+                                                        #tblHolidays .colHolidaygroup {
+                                                            width: 35% !important;
+                                                        }
+
+                                                        #tblHolidays .colHolidayDelete {
+                                                            width: 5% !important;
+                                                            text-align: center;
+                                                        }
+
+                                                        #tblHolidays .dropdown-menu {
+                                                            left: -40px !important;
+                                                            top: 90% !important;
+                                                            transform: translate3d(45px, 0px, 0px) !important;
+                                                        }
+                                                        #tblHolidays .dropdown button {
+                                                            display: flex;
+                                                            justify-content: center;
+                                                            align-items: center;
+                                                            background: none !important;
+                                                            border: none !important;
+                                                            border-radius: 50%;
+                                                            outline: none !important;
+                                                            color: #e3e6f0 !important;
+                                                        }
+                                                        #tblHolidays .dropdown button:hover {
+                                                            background-color: #ccc !important;
+                                                            border-color: black !important;
+                                                            color: black !important;
+                                                        }
+                                                        #tblHolidays .dropdown button:focus {
+                                                            box-shadow: none !important;
+                                                        }
+                                                        #tblHolidays .dropdown-toggle:after {
+                                                            display: none !important;
+                                                        }
+                                                        #tblHolidays .dropdown-item {
+                                                            font-size: 20px;
+                                                        }
+                                                        #tblHolidays .dropdown-item:first-child:hover {
+                                                            border: 1px solid #ccc;
+                                                        }
+                                                        #tblHolidays .dropdown-menu {
+                                                            border: 1px solid #e3e6f0 ;
+                                                        }
+                                                    </style>
                                                     {{> datatablelist
                                                         tablename="tblHolidays"
                                                         apiName=apiFunction2
@@ -838,61 +940,10 @@
                                                         exIndexDBName='tpayrollholidays'
                                                         exdatahandler=exDataHandler2
                                                         searchAPI=searchAPI2
+                                                        showPlusButton=true
+                                                        showPlusButtonClass='btnAddNewHoliday'
+                                                        showModalID='#newHolidayModal'
                                                     }}
-                                                    <!-- <div class="table-responsive">
-                                                        <style>
-                                                            .hiddenColumn {
-                                                                display: none;
-                                                            }
-                                                            .showColumn {
-                                                                display: table-cell;
-                                                                padding: .75rem;
-                                                                vertical-align: top;
-                                                            }
-                                                        </style>
-                                                        <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <div class="modal-content">
-                                                                    <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                                                    <div class="modal-header">
-                                                                        <h4 style="margin-bottom: 0px;">Delete Holiday</h4>
-                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                            <span aria-hidden="true">×</span>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div class="modal-body">
-                                                                        <p style="text-align: center;">Are you sure you want to delete this holiday?</p>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button class="btn btn-danger float-right btnDeleteHoliday" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <table id="tblHolidays" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblHolidays">
-                                                            <thead>
-                                                                <tr class="dnd-moved">
-                                                                    <th class="th colHolidayID hiddenColumn" >ID</th>
-                                                                    <th class="th colHolidayName" >Name</th>
-                                                                    <th class="th colHolidayDate" >Date</th>
-                                                                    <th class="th colHolidaygroup hiddenColumn">holdiday group</th>
-                                                                    <th class="th colHolidayDelete" style="width: 3% !important;"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                    <td contenteditable="false" class="colHolidayID hiddenColumn" ></td>
-                                                                    <td contenteditable="false" class="colPayCalendarName"></td>
-                                                                    <td contenteditable="false" class="colNextPaymentDate"></td>
-                                                                    <td contenteditable="false" class="colHolidaygroup hiddenColumn"></td>
-                                                                    <td contenteditable="false" class="colHolidayDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i
-                                                                                    class="fa fa-remove"></i></button></span>
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div> -->
                                                 </div>
                                             </div>
                                         </div>
@@ -1020,7 +1071,7 @@
                                                         <h5 style="font-weight: 600;">Allowance</h5>
                                                     </div>
                                                     <div class="col-12 col-md-4">
-                                                        <a href="#allowanceModal" data-toggle="modal">
+                                                        <!-- <a href="#allowanceModal" data-toggle="modal">
                                                             {{> vs1_button
                                                                 color='primary'
                                                                 classes='float-right btnAddNewAllowance'
@@ -1029,7 +1080,7 @@
                                                                 iconName='plus'
                                                                 title='New Allowance'
                                                             }}
-                                                        </a>
+                                                        </a> -->
                                                     </div>
                                                 </div>
                                                 <div class="modal fade" id="allowanceModal" tabindex="-1" role="dialog" aria-labelledby="allowanceLabel" aria-hidden="true">
@@ -1042,20 +1093,37 @@
                                                                 </button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <input type="hidden" class="form-control" id="edtAllowanceID" name="edtAllowanceID">
+                                                                <input type="hidden" class="form-control edtAllowanceID" id="edtAllowanceID" name="edtAllowanceID">
                                                                 <div class="row">
                                                                     <div class="col-12 mb-1">
                                                                         <span style="font-size: 14px;">Allowances are reported to the ATO seperately from gross payments</span>
                                                                     </div>
                                                                     <div class="col-12 mb-1">
                                                                         <div class="form-group mb-0">
-                                                                            {{> default_input 
+                                                                            <!-- {{> default_input 
                                                                                 label="Type" 
                                                                                 classes="edtAllowanceType" 
                                                                                 id="edtAllowanceType" 
                                                                                 name="edtAllowanceType" 
                                                                                 defaultValue="" 
                                                                                 type="search"
+                                                                            }} -->
+                                                                            {{> vs1___dropdown
+                                                                                data=item.item
+                                                                                type='search'
+                                                                                id='edtAllowanceType'
+                                                                                name='edtAllowanceType'
+                                                                                modalId=''
+                                                                                list_template_name=''
+                                                                                modal_title='Earning Rate List'
+                                                                                label='Type'
+                                                                                innerModal=true
+                                                                                colNameForValue=''
+                                                                                target_modal_id=''
+                                                                                target_template_id=''
+                                                                                custid=item.lineID
+                                                                                is_editable=true
+                                                                                noBorder=false
                                                                             }}
                                                                             <!-- <label for="edtAllowanceType">Type</label>
                                                                             <input type="search" style="cursor: pointer;" class="form-control" id="edtAllowanceType" name="edtAllowanceType"> -->
@@ -1074,7 +1142,7 @@
                                                                             }}
                                                                             <!-- <label for="edtEarningsNameAllowance">Allowance Name</label>
                                                                             <input type="text" class="form-control" id="edtEarningsNameAllowance" name="edtEarningsNameAllowance"> -->
-                                                                            <input type="hidden" class="form-control" id="edtExpenseAccountID" name="edtExpenseAccountID">
+                                                                            <input type="hidden" class="form-control edtExpenseAccountID" id="edtExpenseAccountID" name="edtExpenseAccountID">
                                                                         </div>
                                                                     </div>
                                                                     <div class="col-12">
@@ -1107,13 +1175,30 @@
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            {{> default_input 
+                                                                            <!-- {{> default_input 
                                                                                 label="Expense Account" 
                                                                                 classes="edtExpenseAccountAllowance" 
                                                                                 id="edtExpenseAccountAllowance" 
                                                                                 name="edtExpenseAccountAllowance" 
                                                                                 defaultValue="" 
                                                                                 type="search"
+                                                                            }} -->
+                                                                            {{> vs1___dropdown
+                                                                                data=item.item
+                                                                                type='search'
+                                                                                id='edtExpenseAccountAllowance'
+                                                                                name='edtExpenseAccountAllowance'
+                                                                                modalId='accountListModal'
+                                                                                list_template_name='accountlistpop'
+                                                                                modal_title='Account List'
+                                                                                label='Expense Account'
+                                                                                innerModal=true
+                                                                                colNameForValue='colAccountName'
+                                                                                target_modal_id='edtAccountModal'
+                                                                                target_template_id='addaccountpop'
+                                                                                custid=item.lineID
+                                                                                is_editable=true
+                                                                                noBorder=false
                                                                             }}
                                                                             <!-- <label for="edtExpenseAccountAllowance">Expense Account</label>
                                                                             <input type="search"  style="cursor: pointer;" class="form-control" id="edtExpenseAccountAllowance" name="edtExpenseAccountAllowance"> -->
@@ -1162,6 +1247,22 @@
                                                                     iconName='save'
                                                                     title='Save'
                                                                 }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateAlowanceInActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
+                                                                }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateAlowanceActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make Active'
+                                                                }}
                                                                 <a data-dismiss="modal">
                                                                     {{> vs1_button
                                                                         color='secondary'
@@ -1195,7 +1296,7 @@
                                                         width: 20%!important;
                                                     }
                                                     #tblAlowances .colStatus{
-                                                        width: 9%!important;
+                                                        width: 120px !important;
                                                     }
                                                     #tblAlowances .colDeleteAllowances{
                                                         width: 3%!important;
@@ -1214,6 +1315,9 @@
                                                     exIndexDBName='tallowance'
                                                     exdatahandler=exDataHandler3
                                                     searchAPI=searchAPI3
+                                                    showPlusButton=true
+                                                    showPlusButtonClass='btnAddNewAllowance'
+                                                    showModalID='#allowanceModal'
                                                     }}
                                                 <!-- <div class="table-responsive">
                                                     <table id="tblAlowances" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAlowances">
@@ -1483,9 +1587,9 @@
                                                             <div class="modal-footer">
                                                                 {{> vs1_button
                                                                     color='success'
-                                                                    classes='saveExemptReportableOvertime'
+                                                                    classes='saveExemptReportable'
                                                                     type='button'
-                                                                    id="saveExemptReportableOvertime"
+                                                                    id="saveExemptReportable"
                                                                     iconName='save'
                                                                     title='Save'
                                                                 }}
@@ -2048,6 +2152,14 @@
                                                                     iconName='save'
                                                                     title='Save'
                                                                 }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateInActive'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
+                                                                }}
                                                                 <a data-dismiss="modal">
                                                                     {{> vs1_button
                                                                         color='secondary'
@@ -2084,7 +2196,7 @@
                                                         width: 16%!important;
                                                     }
                                                     #tblEarnings .colStatus{
-                                                        width: 9%!important;
+                                                        width: 120px !important;
                                                     }
                                                     #tblEarnings .colDeleteEarnings{
                                                         width: 3%!important;
@@ -2181,7 +2293,7 @@
                                                         <h5 style="font-weight: 600;">Deductions</h5>
                                                     </div>
                                                     <div class="col-12 col-md-4">
-                                                        <a href="#deductionModal" data-toggle="modal">
+                                                        <!-- <a href="#deductionModal" data-toggle="modal">
                                                             {{> vs1_button
                                                                 color='primary'
                                                                 classes='float-right btnAddNewDeduction'
@@ -2190,7 +2302,7 @@
                                                                 iconName='plus'
                                                                 title='New Deduction'
                                                             }}
-                                                        </a>
+                                                        </a> -->
                                                     </div>
                                                 </div>
 
@@ -2290,6 +2402,22 @@
                                                                     id="btnSaveDeduction"
                                                                     iconName='save'
                                                                     title='Save'
+                                                                }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateDeductionInActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
+                                                                }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateDeductionActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make Active'
                                                                 }}
                                                                 <a data-dismiss="modal">
                                                                     {{> vs1_button
@@ -2486,7 +2614,7 @@
                                                         width: 20%!important;
                                                     }
                                                     #tblDeductions .colStatus{
-                                                        width: 9%!important;
+                                                        width: 120px !important;
                                                     }
                                                     #tblDeductions .colDeleteDeductions{
                                                         width: 3%!important;
@@ -2505,49 +2633,10 @@
                                                     exIndexDBName='tdeduction'
                                                     exdatahandler=exDataHandler5
                                                     searchAPI=searchAPI5
+                                                    showPlusButton=true
+                                                    showPlusButtonClass='btnAddNewDeduction'
+                                                    showModalID='#deductionModal'
                                                 }}
-                                                <!-- <div class="table-responsive">
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="deleteDeductionModal">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                            <div class="modal-content">
-                                                                <input type="hidden" style="width: 100%; display:none;" id="" name="" readonly>
-                                                                <div class="modal-header">
-                                                                    <h4 style="margin-bottom: 0px;">Delete Deduction</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p style="text-align: center;">Are you sure you want to delete this deduction?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-danger float-right btnDeleteDeduction" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <table id="tblDeductions" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblDeductions">
-                                                        <thead>
-                                                            <tr class="dnd-moved">
-                                                                <th class="th colDeductionsID hiddenColumn" >Deduction ID</th>
-                                                                <th class="th colDeductions" style="width: 200px;">Deduction Name</th>
-                                                                <th class="th colDeductionsType" style="width: 80px;">Deduction Type</th>
-                                                                <th class="th colDeductionsDisplayName" >Display Name</th>
-                                                                <th class="th colDeductionsAmount" style="width: 80px;">Amount</th>
-                                                                <th class="th colDeductionsAccounts" >Account</th>
-                                                                <th class="th colDeductionsAccountsID hiddenColumn" >Account ID</th>
-                                                                <th class="th colDeductionsPAYG hiddenColumn" >Reduces PAYG Withholding</th>
-                                                                <th class="th colDeductionsSuperannuation hiddenColumn" >Reduces Superannuation Guarantee Contribution</th>
-                                                                <th class="th colDeductionsReportableasW1 hiddenColumn" >Excluded from W1 on Activity Statement</th>
-                                                                <th class="th colDeleteDeductions" style="width: 20px!important;"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                        </tbody>
-                                                    </table>
-                                                </div> -->
                                             </div>
                                             <div class="" id="reimbursements" style="display: none;">
                                                 <div class="row mb-2">
@@ -2555,7 +2644,7 @@
                                                         <h5 style="font-weight: 600;">Reimbursements</h5>
                                                     </div>
                                                     <div class="col-12 col-md-4">
-                                                        <a href="#newReimbursementModal" data-toggle="modal">
+                                                        <!-- <a href="#newReimbursementModal" data-toggle="modal">
                                                             {{> vs1_button
                                                                 color='primary'
                                                                 classes='float-right btnAddNewReimbursement'
@@ -2564,7 +2653,7 @@
                                                                 iconName='plus'
                                                                 title='New Reimbursement'
                                                             }}
-                                                        </a>
+                                                        </a> -->
                                                     </div>
                                                 </div>
 
@@ -2596,13 +2685,30 @@
                                                                     </div>
                                                                     <div class="col-12">
                                                                         <div class="form-group">
-                                                                            {{> default_input 
+                                                                            <!-- {{> default_input 
                                                                                 label="Account" 
                                                                                 classes="edtReimbursementAccount" 
                                                                                 id="edtReimbursementAccount" 
                                                                                 name="edtReimbursementAccount" 
                                                                                 defaultValue="" 
                                                                                 type="search"
+                                                                            }} -->
+                                                                            {{> vs1___dropdown
+                                                                                data=item.item
+                                                                                type='search'
+                                                                                id='edtReimbursementAccount'
+                                                                                name='edtReimbursementAccount'
+                                                                                modalId='deductionSettingsModal'
+                                                                                list_template_name=''
+                                                                                modal_title=''
+                                                                                label='Account'
+                                                                                innerModal=true
+                                                                                colNameForValue='colDeductionsNames'
+                                                                                target_modal_id='addReimbursementAccount'
+                                                                                target_template_id=''
+                                                                                custid=item.lineID
+                                                                                is_editable=true
+                                                                                noBorder=false
                                                                             }}
                                                                             <!-- <label for="edtReimbursementAccount">Account</label>
                                                                             <input type="search"  style="cursor: pointer;" class="form-control" id="edtReimbursementAccount"> -->
@@ -2619,6 +2725,22 @@
                                                                     id="btnSaveReimbursement"
                                                                     iconName='save'
                                                                     title='Save'
+                                                                }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateReimbursementInActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
+                                                                }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateReimbursementActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
                                                                 }}
                                                                 <a data-dismiss="modal">
                                                                     {{> vs1_button
@@ -2644,7 +2766,7 @@
                                                         width: 40%!important;
                                                     }
                                                     #tblReimbursements .colStatus{
-                                                        width: 9%!important;
+                                                        width: 120px !important;
                                                     }
                                                     #tblReimbursements .colDeleterei{
                                                         width: 3%!important;
@@ -2663,49 +2785,10 @@
                                                     exIndexDBName='treimbursement'
                                                     exdatahandler=exDataHandler6
                                                     searchAPI=searchAPI6
+                                                    showPlusButton=true
+                                                    showPlusButtonClass='btnAddNewReimbursement'
+                                                    showModalID='#newReimbursementModal'
                                                 }}
-
-                                                <!-- <div class="table-responsive">
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="deleteReiumbursementModal">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                            <div class="modal-content">
-                                                                <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                                                <div class="modal-header">
-                                                                    <h4 style="margin-bottom: 0px;">Delete Reimbursement</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p style="text-align: center;">Are you sure you want to delete this reimbursement?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-danger float-right btnDeleteReiumbursement" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <table id="tblReimbursements" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblReimbursements">
-                                                        <thead>
-                                                            <tr class="dnd-moved">
-                                                                <th class="th colReimbursementID hiddenColumn" >Reimbursement Name</th>
-                                                                <th class="th colReimbursementName" >Reimbursement Name</th>
-                                                                <th class="th colReimbursementAccount" >Account</th>
-                                                                <th class="th colDeleterei" style="width: 3% !important;"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                <td contenteditable="false" class="th colReimbursementID hiddenColumn" >Reimbursement Name</td>
-                                                                <td contenteditable="false" class="colReimbursementName"></td>
-                                                                <td contenteditable="false" class="colReimbursementAccount"></td>
-                                                                <td contenteditable="false" class="colDeleterei"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div> -->
                                             </div>
                                             <div class="" id="leave" style="display: none;">
                                                 <div class="row mb-2">
@@ -2713,7 +2796,7 @@
                                                         <h5 style="font-weight: 600;">Leave</h5>
                                                     </div>
                                                     <div class="col-12 col-md-4">
-                                                        <div class="dropdown float-right">
+                                                        <!-- <div class="dropdown float-right">
                                                             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                 Add
                                                             </button>
@@ -2721,7 +2804,7 @@
                                                                 <a class="dropdown-item pointer addpaidleave" data-toggle="modal" data-target="#paidLeaveModal">Paid Leave</a>
                                                                 <a class="dropdown-item pointer addunpaidleave" data-toggle="modal" data-target="#unpaidLeaveModal">Unpaid Leave</a>
                                                             </div>
-                                                        </div>
+                                                        </div> -->
                                                     </div>
                                                 </div>
 
@@ -2828,6 +2911,22 @@
                                                                     iconName='save'
                                                                     title='Save'
                                                                 }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateLeaveInActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
+                                                                }}
+                                                                {{> vs1_button
+                                                                    color='danger'
+                                                                    classes='updateLeaveActive d-none'
+                                                                    type='button'
+                                                                    id=''
+                                                                    iconName='trash'
+                                                                    title='Make In-Active'
+                                                                }}
                                                                 <a data-dismiss="modal">
                                                                     {{> vs1_button
                                                                         color='secondary'
@@ -2845,109 +2944,6 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="modal fade" id="unpaidLeaveModal" tabindex="-1" role="dialog" aria-labelledby="unpaidLeaveLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title" id="unpaidLeaveLabel">Unpaid Leave</h5>
-                                                                <button type="button" class="close" id="closeunpaid" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">&times;</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col-12">
-                                                                        <div class="form-group">
-                                                                            {{> default_input 
-                                                                                label="Leave Name" 
-                                                                                classes="edtUnpaidLeaveName" 
-                                                                                id="edtUnpaidLeaveName" 
-                                                                                name="edtUnpaidLeaveName" 
-                                                                                defaultValue="" 
-                                                                                type="text"
-                                                                            }}
-                                                                            <!-- <label for="edtUnpaidLeaveName">Leave Name</label>
-                                                                            <input type="text" class="form-control" id="edtUnpaidLeaveName"> -->
-                                                                            <input type="hidden" id="unpaidleaveid" value="0"/>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12 mb-1">
-                                                                        <div class="form-group mb-0">
-                                                                            {{> default_input 
-                                                                                label="Typers of Units" 
-                                                                                classes="edtUnpaidTypeOfUnits" 
-                                                                                id="edtUnpaidTypeOfUnits" 
-                                                                                name="edtUnpaidTypeOfUnits" 
-                                                                                defaultValue="" 
-                                                                                type="search"
-                                                                            }}
-                                                                            <!-- <label for="edtUnpaidTypeOfUnits">Typers of Units</label>
-                                                                            <input type="search"  style="cursor: pointer;" class="form-control" id="edtUnpaidTypeOfUnits" name="edtUnpaidTypeOfUnits" placeholder="Typers of Units"> -->
-                                                                        </div>
-                                                                        <span style="font-size: 12px;white-space: normal;line-height: 12px !important;display: inline-block;margin-top: 9px;">The type of units by which leave entitlements are normally tracked. These are typically the same as the type of units used for the employee's ordinary earnings rate.</span>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="form-group">
-                                                                            {{> default_input 
-                                                                                label="Leave Loading Rate (optional)" 
-                                                                                classes="edtUnpaidLeaveLoadingRate" 
-                                                                                id="edtUnpaidLeaveLoadingRate" 
-                                                                                name="edtUnpaidLeaveLoadingRate" 
-                                                                                defaultValue="" 
-                                                                                type="search"
-                                                                            }}
-                                                                            <!-- <label for="edtUnpaidLeaveLoadingRate">Leave Loading Rate <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtUnpaidLeaveLoadingRate"> -->
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="form-group">
-                                                                            {{> default_input 
-                                                                                label="Normal Entitlement (optional)" 
-                                                                                classes="edtUnpaidNormalEntitlement" 
-                                                                                id="edtUnpaidNormalEntitlement" 
-                                                                                name="edtUnpaidNormalEntitlement" 
-                                                                                defaultValue="" 
-                                                                                type="search"
-                                                                            }}
-                                                                            <!-- <label for="edtUnpaidNormalEntitlement">Normal Entitlement <span style="font-weight: 200;">(optional)</span></label>
-                                                                            <input type="text" class="form-control" id="edtUnpaidNormalEntitlement"> -->
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-12">
-                                                                        <div class="custom-control custom-switch pointer">
-                                                                            <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-UnpaidShowBalance" value="UnpaidShowbalance">
-                                                                            <label class="custom-control-label chkBox pointer" for="formCheck-UnpaidShowBalance">Show Balance on Payslip</label>
-                                                                        </div>
-                                                                        <span style="font-size: 12px;">Check this box if you want a balance for this leave type to be shown on your employee's payslips.</span>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                {{> vs1_button
-                                                                    color='success'
-                                                                    classes='saveUnpaidLeave'
-                                                                    type='button'
-                                                                    id="saveUnpaidLeave"
-                                                                    iconName='save'
-                                                                    title='Save'
-                                                                }}
-                                                                <a data-dismiss="modal">
-                                                                    {{> vs1_button
-                                                                        color='secondary'
-                                                                        classes=''
-                                                                        type='button'
-                                                                        id="btnCancel"
-                                                                        iconName='close'
-                                                                        title='Close'
-                                                                    }}
-                                                                </a>
-                                                                <!-- <button type="button" class="btn btn-success saveUnpaidLeave"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
                                                 <style>
                                                     #tblLeave .colLeaveName{
                                                         width: 18%!important;
@@ -2968,7 +2964,7 @@
                                                         width: 14%!important;
                                                     }                                                    
                                                     #tblLeave .colStatus{
-                                                        width: 9%!important;
+                                                        width: 120px !important;
                                                     }
                                                     #tblLeave .colDeleterei{
                                                         width: 3%!important;
@@ -2987,6 +2983,9 @@
                                                     exIndexDBName='tpaidleave'
                                                     exdatahandler=exDataHandler7
                                                     searchAPI=searchAPI7
+                                                    showPlusButton=true
+                                                    showPlusButtonClass='addpaidleave'
+                                                    showModalID='#paidLeaveModal'
                                                 }}
                                                 <!-- <div class="table-responsive">
                                                     <div class="modal fade" role="dialog" tabindex="-1" id="deleteLeaveoModal">
@@ -3048,7 +3047,7 @@
                                             <h4>Superannuation</h4>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-                                            <a href="#newSuperannuationFundModal" data-toggle="modal">
+                                            <!-- <a href="#newSuperannuationFundModal" data-toggle="modal">
                                                 {{> vs1_button
                                                     color='primary'
                                                     classes='float-right btnAddNewSuperannuation'
@@ -3057,7 +3056,7 @@
                                                     iconName='plus'
                                                     title='New Superannuation Fund'
                                                 }}
-                                            </a>
+                                            </a> -->
                                         </div>
                                         <div class="col-12">
                                             <div class="modal fade" id="newSuperannuationFundModal" tabindex="-1" role="dialog" aria-labelledby="newSuperannuationFundLabel" aria-hidden="true">
@@ -3074,9 +3073,27 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
+                                                                        <input type="hidden" id="superannuationactive" value="0"/>
                                                                         <input type="hidden" id="newSuperannuationFundId"  value="0"/>
-                                                                        <label for="edtFundType">Type</label>
-                                                                        {{> vs1_dropdown id='edtFundType' name='edtFundType' value='' type='search' classes=''}}
+                                                                        <!-- <label for="edtFundType">Type</label> -->
+                                                                        <!-- {{> vs1_dropdown id='edtFundType' name='edtFundType' value='' type='search' classes=''}} -->
+                                                                        {{> vs1___dropdown
+                                                                            data=item.item
+                                                                            type='search'
+                                                                            id='edtFundType'
+                                                                            name='edtFundType'
+                                                                            modalId='fundTypeListModel'
+                                                                            list_template_name='fundtypelistpop'
+                                                                            modal_title='Group List'
+                                                                            label='Type'
+                                                                            innerModal=true
+                                                                            colNameForValue='thgroupDescription'
+                                                                            target_modal_id='fundTypeListModel'
+                                                                            target_template_id='fundtypelistpop'
+                                                                            custid=item.lineID
+                                                                            is_editable=true
+                                                                            noBorder=false
+                                                                        }}
                                                                         <!-- <select class="form-control edtFundType"   style="cursor: pointer;" id="edtFundType" >
                                                                         </select> -->
                                                                         <input type="hidden" name="fundtypeid" id="fundtypeid" value="0"/>
@@ -3193,6 +3210,22 @@
                                                                 iconName='save'
                                                                 title='Save'
                                                             }}
+                                                            {{> vs1_button
+                                                                color='danger'
+                                                                classes='updateSuperannuationInActive d-none'
+                                                                type='button'
+                                                                id=''
+                                                                iconName='trash'
+                                                                title='Make In-Active'
+                                                            }}
+                                                            {{> vs1_button
+                                                                color='danger'
+                                                                classes='updateSuperannuationActive d-none'
+                                                                type='button'
+                                                                id=''
+                                                                iconName='trash'
+                                                                title='Make Active'
+                                                            }}
                                                             <a data-dismiss="modal">
                                                                 {{> vs1_button
                                                                     color='secondary'
@@ -3210,26 +3243,67 @@
                                                 </div>
                                             </div>
                                             <style>
+                                                #tblSuperannuation{
+                                                    width: 100%!important;
+                                                    overflow: visible !important;
+                                                }
                                                 #tblSuperannuation .colSuperannuationName{
-                                                    width: 25%!important;
+                                                    width: 20%!important;
                                                 }
                                                 #tblSuperannuation .colSuperannuationType{
-                                                    width: 15%!important;
+                                                    width: 17%!important;
                                                 }
                                                 #tblSuperannuation .colEmployerNum{
-                                                    width: 15%!important;
+                                                    width: 5%!important;
                                                 }
                                                 #tblSuperannuation .colbsb{
                                                     width: 15%!important;
                                                 }
-                                                #tblSuperannuation .colaccountname{
-                                                    width: 15%!important;
-                                                }
                                                 #tblSuperannuation .colStatus{
-                                                    width: 10%!important;
+                                                    width: 120px !important;
+                                                    display: table-cell !important;
                                                 }
                                                 #tblSuperannuation .colDeletesup{
                                                     width: 5%!important;
+                                                    display: table-cell !important;
+                                                }
+                                                .table-responsive {
+                                                    overflow-x: visible !important;
+                                                }
+                                                #tblSuperannuation .dropdown-menu {
+                                                    left: -40px !important;
+                                                    top: 90% !important;
+                                                    transform: translate3d(45px, 0px, 0px) !important;
+                                                }
+                                                #tblSuperannuation .dropdown button {
+                                                    display: flex;
+                                                    justify-content: center;
+                                                    align-items: center;
+                                                    background: none !important;
+                                                    border: none !important;
+                                                    border-radius: 50%;
+                                                    outline: none !important;
+                                                    color: #e3e6f0 !important;
+                                                }
+                                                #tblSuperannuation .dropdown button:hover {
+                                                    background-color: #ccc !important;
+                                                    border-color: black !important;
+                                                    color: black !important;
+                                                }
+                                                #tblSuperannuation .dropdown button:focus {
+                                                    box-shadow: none !important;
+                                                }
+                                                #tblSuperannuation .dropdown-toggle:after {
+                                                    display: none !important;
+                                                }
+                                                #tblSuperannuation .dropdown-item {
+                                                    font-size: 20px;
+                                                }
+                                                #tblSuperannuation .dropdown-item:first-child:hover {
+                                                    border: 1px solid #ccc;
+                                                }
+                                                #tblSuperannuation .dropdown-menu {
+                                                    border: 1px solid #e3e6f0 ;
                                                 }
                                             </style>
                                             {{> datatablelist
@@ -3245,90 +3319,10 @@
                                                 exIndexDBName='tsuperannuation'
                                                 exdatahandler=exDataHandler8
                                                 searchAPI=searchAPI8
+                                                showPlusButton=true
+                                                showPlusButtonClass='btnAddNewSuperannuation'
+                                                showModalID='#newSuperannuationFundModal'
                                             }}
-                                            <!-- <div class="table-responsive">
-                                                <style>
-                                                    .hiddenColumn {
-                                                        display: none;
-                                                    }
-
-                                                    .showColumn {
-                                                        display: table-cell;
-                                                        padding: .75rem;
-                                                        vertical-align: top;
-                                                    }
-
-                                                    .colDeleteAllowances,.colDeleteEarnings,.colDeleteDeductions{
-                                                        width: 3%!important;
-                                                    }
-                                                    .colAllowancesAmount,.colEarningsAmount,.colDeductionsAmount{
-                                                        width:12%!important;
-                                                    }
-                                                    .colAllowancesType, .colDeductionsType{
-                                                        width:16%!important;
-                                                    }
-                                                    .colEarningsType{
-                                                        width:14%!important;
-                                                    }
-                                                </style>
-
-                                                <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                                        <div class="modal-content">
-                                                            <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                                            <div class="modal-header">
-                                                                <h4 style="margin-bottom: 0px;">Delete Rule</h4>
-                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                    <span aria-hidden="true">×</span>
-                                                                </button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <p style="text-align: center;">Are you sure you want to delete this rule?</p>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button class="btn btn-danger float-right btnDeleteTaxRate" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                <button class="btn btn-secondary float-right btnBack" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <table id="tblSuperannuation" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSuperannuation">
-                                                    <thead>
-                                                        <tr class="dnd-moved">
-                                                            <th class="th colSuperannuationID hiddenColumn" >ID</th>
-                                                            <th class="th colSuperannuationName" >Name</th>
-                                                            <th class="th colSuperannuationType" >Type</th>        
-                                                                                                    
-                                                            <th class="th colEmployerNum">Employer Number</th>
-                                                            <th class="th colabn">ABN</th>
-                                                            <th class="th colservicealias">Electronics Service Address Alias</th>
-                                                            <th class="th colbsb">BSB</th>
-                                                            <th class="th colaccountnumber">Account Number</th>
-                                                            <th class="th colaccountname">Account Name</th>
-                                                            <th class="th colSuperannuationTypeid hiddenColumn" >fundid</th>  
-                                                            <th class="th colDeletesup" style="width: 3% !important;"></th>
-                                                        
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                            <td contenteditable="false" class="colSuperannuationID hiddenColumn"></td>
-                                                            <td contenteditable="false" class="colSuperannuationName"></td>
-                                                            <td contenteditable="false" class="colSuperannuationType"></td>
-                                                            <td contenteditable="false" class="colEmployerNum"></td>
-                                                            <td contenteditable="false" class="colabn"></td>
-                                                            <td contenteditable="false" class="colservicealias"></td>
-                                                            <td contenteditable="false" class="colbsb"></td>
-                                                            <td contenteditable="false" class="colaccountnumber"></td>
-                                                            <td contenteditable="false" class="colaccountname"></td>
-                                                            <td class="th colSuperannuationTypeid hiddenColumn" >fundid</td>
-                                                            <td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
-                                                            </td>
-                                                        </tr>
-                                                    </tbody>
-
-                                                </table>
-                                            </div> -->
                                         </div>
                                     </div>
                                 </div>
@@ -3354,7 +3348,7 @@
                                                     padding: 5px 65px 5px 15px;
                                                 }
                                             </style>
-                                            <a href="#newOvertimeModal" data-toggle="modal">
+                                            <!-- <a href="#newOvertimeModal" data-toggle="modal">
                                                 {{> vs1_button
                                                     color='primary'
                                                     classes='float-right btnAddNewOvertime'
@@ -3363,7 +3357,7 @@
                                                     iconName='plus'
                                                     title='New Overtime'
                                                 }}
-                                            </a>
+                                            </a> -->
                                             <!-- <button type="button" class="btn btn-primary btnAddNewOvertime float-right" data-toggle="modal" data-target="#newOvertimeModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>Add New Overtime</button> -->
                                         </div>
                                         <div class="col-12">
@@ -3494,44 +3488,11 @@
                                                         width: 30%!important;
                                                     }
                                                     #tblOverTimeSheet .colStatus{
-                                                        width: 10%!important;
+                                                        width: 120px !important;
                                                     }                                                    
                                                 </style>
                                                 
                                                 {{> non_transactional_list tablename="tblOverTimeSheet"}}
-                                                <!-- <table id="OvertimeTable" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblSuperannuation">
-                                                    <thead>
-                                                        <tr class="dnd-moved">
-                                                            <th class="th">Rate</th>
-                                                            <th class="th">Rule</th>
-                                                            <th class="th">hourly Multiplier</th>        
-                                                            <th style="width: 54px;" class="th">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {{#if overtimes}}
-                                                            {{#each overtime in overtimes}}
-                                                                <tr overtime-id="{{overtime.id}}">
-                                                                    <td class="td">{{ overtime.rate }}</td>
-                                                                    <td class="td">{{ overtime.rule }}</td>
-                                                                    <td class="td">{{ overtime.hourlyMultiplier }}</td>        
-                                                                    <td contenteditable="false" class="colDelete">
-                                                                        <span class="table-remove">
-                                                                            <button overtime-id="{{overtime.id}}" type="button" class="btn btn-danger btn-rounded btn-sm my-0 delete-overtime" autocomplete="off">
-                                                                            <i class="fa fa-remove"></i>
-                                                                            </button>
-                                                                        </span>
-                                                                        <span class="table-edit">
-                                                                            <button overtime-id="{{overtime.id}}" type="button" class="btn btn-rounded btn-success btn-sm my-0 edit-overtime">
-                                                                                <i class="fa fa-edit"></i>
-                                                                            </button>
-                                                                        </span>
-                                                                    </td>
-                                                                </tr>
-                                                            {{/each}}
-                                                        {{/if}}
-                                                    </tbody>
-                                                </table> -->
                                             </div>
                                         </div>
                                     </div>
@@ -3563,195 +3524,6 @@
                 </div>
             </div>
         </div>
-        <!-- <div class="row">
-            <div class="col-12">
-                <div class="card shadow mb-3">
-                    <div class="card-header py-3">
-                        <p class="text-primary m-0 font-weight-bold">Payroll Rules</p>
-                    </div>
-                    <div class="card-body">
-                        <div class="card-body p-3 rounded">
-                            <div class="row">
-                                <div class="col-12" style="padding: 0px;">
-                                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newPayrollRule"><i class="fa fa-plus" style="margin-right: 8px;"></i>Add New Rule</button>
-                                </div>
-                            </div>
-                            <div class="modal fade" id="newPayrollRule" tabindex="-1" role="dialog" aria-labelledby="newPayrollRuleLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="newPayrollRuleLabel">New Payroll Rule</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="row">
-                                                <div class="col-12 col-md-10">
-                                                    <div class="form-group">
-                                                        <label for="edtRateName">Rule Name</label>
-                                                        <input type="text" class="form-control" id="edtRateName">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12 col-md-2">
-                                                    <div class="form-group">
-                                                        <label for="edtMultiplier">Multiplier</label>
-                                                        <input type="text" class="form-control" id="edtMultiplier" pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');">
-                                                    </div>
-                                                </div>
-                                                <div class="col-12">
-                                                    <style>
-                                                        .noradiusleft {
-                                                            border-top-left-radius: 0px;
-                                                            border-bottom-left-radius: 0px;
-                                                        }
-
-                                                        .noradiusright {
-                                                            border-top-right-radius: 0px;
-                                                            border-bottom-right-radius: 0px;
-                                                        }
-                                                    </style>
-                                                    <div class="form-group">
-                                                        <label for="edtRule">Rule</label>
-                                                        <div class="input-group mb-3">
-                                                            <div class="form-group" id="initialRuleGroup" style="margin-bottom: 0px !important;">
-                                                                <select class="form-control" id="ruleModifierInitial" >
-                                                                    <option>Select An Starting Option...</option>
-                                                                    <option id="ruleGreaterThan" value="greaterthan">Greater Than</option>
-                                                                    <option id="ruleLessThan" value="lessthan">Less Than</option>
-                                                                    <option id="ruleDayOfTheWeek" value="dayoftheweek">Day of the Week</option>
-                                                                </select>
-                                                            </div>
-
-                                                            <div id="ruleModifierTimeDiv" style="display: none;">
-                                                                <input type="text" class="form-control noradiusright noradiusleft" style="border-left: 0px; border-right: 0px;">
-                                                                <div class="form-group" style="margin-bottom: 0px !important;">
-                                                                    <select class="form-control noradiusleft" id="ruleModifierTime" style="width: 110px;">
-                                                                        <option id="ruleTimeHours" value="hours">Hours</option>
-                                                                        <option id="ruleTimeDays" value="days">Days</option>
-                                                                        <option id="ruleTimeWeeks" value="weeks">Weeks</option>
-                                                                        <option id="ruleTimeMonths" value="months">Months</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-
-                                                            <div id="ruleModifierDayDiv" style="display: none;">
-                                                                <div class="form-group" style="margin-bottom: 0px !important;">
-                                                                    <select class="form-control noradiusleft" id="ruleModifierDay" style="border-left: 0px;">
-                                                                        <option id="ruleDayMonday" value="monday">Monday</option>
-                                                                        <option id="ruleDayTuesday" value="tuesday">Tuesday</option>
-                                                                        <option id="ruleDayWednesday" value="wednesday">Wednesday</option>
-                                                                        <option id="ruleDayThursday" value="thursday">Thursday</option>
-                                                                        <option id="ruleDayFriday" value="friday">Friday</option>
-                                                                        <option id="ruleDaySaturday" value="saturday">Saturday</option>
-                                                                        <option id="ruleDaySunday" value="sunday">Sunday</option>
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <style>
-                                    .hiddenColumn {
-                                        display: none;
-                                    }
-
-                                    .showColumn {
-                                        display: table-cell;
-                                        padding: .75rem;
-                                        vertical-align: top;
-                                    }
-                                </style>
-
-                                <div class="modal fade" role="dialog" tabindex="-1" id="deleteLineModal">
-                                    <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content">
-                                            <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                            <div class="modal-header">
-                                                <h4 style="margin-bottom: 0px;">Delete Rule</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">×</span>
-                                                </button>
-                                            </div>
-                                            <div class="modal-body">
-                                                <p style="text-align: center;">Are you sure you want to delete this rule?</p>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button class="btn btn-danger float-right btnDeleteTaxRate" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                <button class="btn btn-secondary float-right btnBack" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <style>
-                                    .colMultiplier {
-                                        width: 6% !important;
-                                    }
-
-                                    .colIsActive {
-                                        width: 7% !important;
-                                    }
-
-                                    .colDelete {
-                                        width: 3% !important;
-                                    }
-                                </style>
-                                <table id="tblPayRollRulesList" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblPayRollRulesList">
-                                    <thead>
-                                        <tr class="dnd-moved">
-                                            <th class="th colRateName" >Rate Name</th>
-                                            <th class="th colRule" >Rule</th>
-                                            <th class="th colMultiplier" style="width: 6% !important;">Multiplier</th>
-                                            <th class="th colIsActive" style="width: 7% !important;">Is Active</th>
-                                            <th class="th colDelete" style="width: 3% !important;"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                            <td contenteditable="false" class="colRateName"></td>
-                                            <td contenteditable="false" class="colRule"></td>
-                                            <td contenteditable="false" class="colMultiplier"></td>
-                                            <td contenteditable="false" class="colIsActive chkBox text-center">
-                                                <div class="custom-control custom-radio">
-                                                    {{#if equals defaultpurchasetaxcode item.codename}}
-                                                        <input type="radio" class="custom-control-input optradioP" name="optradioP" id="formCheckP-{{item.id}}" value="{{item.codename}}" checked><label class="custom-control-label"
-                                                            for="formCheckP-{{item.id}}"></label>
-                                                    {{else}}
-                                                        <input type="radio" class="custom-control-input optradioP" name="optradioP" id="formCheckP-{{item.id}}" value="{{item.codename}}"><label class="custom-control-label"
-                                                            for="formCheckP-{{item.id}}"></label>
-                                                    {{/if}}
-                                                </div>
-                                            </td>
-                                            <td contenteditable="false" class="colDelete"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-
-                                </table>
-                            </div>
-                        </div>
-                        <div class="row no-gutters">
-                            <div class="col">
-                                <button class="btn btn-secondary float-right btnBack" type="button" style="margin: 12px;"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                <button class="btn btn-success float-right btnSaveDefaultTax" type="button" style="margin: 12px;"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
     </div>
     <input type="hidden" name="account_id_for_select" id="account_id_for_select" />
     <!-- Start Help Video Modal -->
@@ -3776,7 +3548,7 @@
 
     <!-- End Help Video Modal -->
 
-   <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
         {{> accountlistpop}}
     </div>
 
@@ -3806,6 +3578,76 @@
         {{> grouptypelistpop}}
     </div>
 
+    <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Group List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectGroupLineID1" name="selectGroupLineID1"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <style>                         
+                                .thgroupDescription {
+                                    width: 40% !important;
+                                }                        
+                           </style>
+    
+                            <table id="tblgrouptypelist1" style="width:100%" class="table table-striped table-bordered tblratetypelist">
+                                 <thead>
+                                     <tr class="dnd-moved">
+                                          <th class="thgroupDescription">Name</th>
+                                          <th class="thgroupID hiddenColumn">Group Type ID</th>
+                                     </tr>
+                                 </thead>
+                                <tbody>
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" role="dialog" tabindex="-1" id="groupTypeListModel2">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Group List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" id="selectGroupLineID2" name="selectGroupLineID1"  readonly>
+                    <div class="card-body p-1 rounded" >
+                        <div class="table-responsive">
+                            <style>                         
+                                .thgroupDescription {
+                                    width: 40% !important;
+                                }                        
+                           </style>
+    
+                            <table id="tblgrouptypelist2" style="width:100%" class="table table-striped table-bordered tblratetypelist">
+                                 <thead>
+                                     <tr class="dnd-moved">
+                                          <th class="thgroupDescription">Name</th>
+                                          <th class="thgroupID hiddenColumn">Group Type ID</th>
+                                     </tr>
+                                 </thead>
+                                <tbody>
+    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"><button class="btn btn-light" data-dismiss="modal" type="button">Close</button></div>
+            </div>
+        </div>
+    </div>
+
      <div class="modal fade" role="dialog" tabindex="-1" id="addGroupModel">
         {{> grouptypepop}}
     </div>
@@ -3814,9 +3656,49 @@
         {{> addratetypepop}}
     </div>
 
-
-
-
+    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" style="width: 100%; display:none;" class="selectAccountLineID" id="selectLineID1" name="selectLineID"  readonly>
+                    <div class="card-body p-1 rounded tbl" id="tblAccount1" >
+                        <style>
+                            td.colBalance, td.colTaxCode{
+                                text-align: right !important;
+                            }
+                        </style>
+                        {{>datatablelist
+                                tableclass="tblAccountList1"
+                                tablename=tablename
+                                apiName= apiFunction
+                                indexeddbname = 'TAccountVS1List'
+                                tableheaderrecords = tableheaderrecords
+                                exportfilename = 'Account List'
+                                istransaction = false
+                                apiParams= apiParams
+                                datahandler = datahandler
+                                service=service
+                                lowercaseDataName='taccountvs1list'
+                                exIndexDBName = 'taccountvs1list'
+                                exdatahandler = exDataHandler
+                                searchAPI = searchAPI
+                                orderby = '[[ 1, "asc" ]]'
+                                showPlusButton = true
+                                showPlusButtonDataTarget = "addAccountModal"
+                                showPlusButtonClass = "btnAddNewAccount"
+                                typefilter = typefilter
+                        }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>  -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="fundTypeListModel">
         {{> fundtypelistpop}}
@@ -4000,8 +3882,6 @@
 
                 <input type="hidden" style="width: 100%; display:none;" id="selectSuperannuationDeleteLineID" name="selectSuperannuationDeleteLineID" readonly>
                 <input type="hidden" style="width: 100%; display:none;" id="selectSuperannuationName" name="selectSuperannuationName" readonly>
-
-
 
                 <div class="modal-header">
                     <h4 style="margin-bottom: 0px;">Delete Superannuation</h4>

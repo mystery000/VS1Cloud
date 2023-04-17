@@ -117,8 +117,8 @@ Template.exeincomereport.onRendered(() => {
         templateObject.setDateAs( dateAsOf );
         try {
             let data = await reportService.getCardDataReport(dateAsOf);
-            if (data.tcarddatareport) {
-                let resData = data.tcarddatareport[0];
+            if (data.tdashboardexecdata1) {
+                let resData = data.tdashboardexecdata1[0];
                 totalInvoiceCount[0] = parseInt(resData.Income_Invoices1);
                 totalInvoiceCount[1] = parseInt(resData.Income_Invoices2);
                 totalInvoiceValue[0] = parseFloat(resData.Income_Total1);
