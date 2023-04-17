@@ -233,7 +233,7 @@ Template.clockOnOff.events({
     $("#btnClockOn").prop("disabled", true);
     $(".btnClockOff").removeAttr("disabled");
 
-    swal($("#employee_name").val() + ' is Clocked On now', '', 'success');        
+    swal($("#employee_name").val() + ' is Clocked On now', '', 'success');      
 
 
 
@@ -472,8 +472,7 @@ Template.clockOnOff.events({
             WhoEntered: localStorage.getItem("mySessionEmployee") || "",
           },
         };
-
-
+        
         contactService
         .saveTimeSheet(data)
         .then(function (dataReturnRes) {
@@ -497,9 +496,6 @@ Template.clockOnOff.events({
             $("#employeeClockonoffModal").modal("hide");
              
             $(".fullScreenSpin").css("display", "none");
-
-            // FlowRouter.go('/');
-
 
           });
         })
