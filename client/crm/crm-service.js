@@ -138,6 +138,17 @@ export class CRMService extends BaseService {
         return this.getOneById(this.ERPObjects.Tprojectlist, id);
     }
 
+    getTProjectListReport(limitcount, limitfrom, deletefilter) {
+        let options = {
+            ListType: "Detail",
+            Search: "Active = true",
+            LimitCount: parseInt(limitcount)||initialReportLoad,
+            LimitFrom: parseInt(limitfrom)||0,
+        }
+        if(deletefilter) options.Search = "";
+        return this.getOneById(this.ERPObjects.TprojectlistReport, options);
+    }
+
     updateProject(data) {
         return this.POST(this.ERPObjects.Tprojectlist, data);
     }

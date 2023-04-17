@@ -113,6 +113,7 @@
                     {{> export_import_print_display_button Import="hiddenButton" Export="hiddenButton" tablename = "tblTodayTaskDatatable"}}
                 </div>
                   {{>datatablelist
+                          tableclass="tblTodayTaskDatatable"
                           tablename="tblTodayTaskDatatable"
                           apiName= apiFunction_TodayTask
                           indexeddbname = 'TCRMTaskList'
@@ -154,6 +155,7 @@
                     {{> export_import_print_display_button Import="hiddenButton" Export="hiddenButton" tablename = "tblUpcomingTaskDatatable"}}
                 </div>
                 {{>datatablelist
+                        tableclass="tblUpcomingTaskDatatable"
                         tablename="tblUpcomingTaskDatatable"
                         apiName= apiFunction_TodayTask
                         indexeddbname = 'TCRMTaskList'
@@ -198,6 +200,7 @@
                     {{> export_import_print_display_button tablename = "tblNewProjectsDatatable"}}
                 </div>
                 {{>datatablelist
+                        tableclass="tblNewProjectsDatatable"
                         tablename="tblNewProjectsDatatable"
                         apiName= apiFunction_NewProjects
                         indexeddbname = 'TCRMTaskList'
@@ -238,6 +241,7 @@
               <div class="row">
                 <div class="col-12 pb-4">
                     {{>datatablelist
+                            tableclass="tblLabels"
                             tablename="tblLabels"
                             apiName= apiFunction_Labels
                             indexeddbname = 'TCRMLabelList'

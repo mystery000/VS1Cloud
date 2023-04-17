@@ -3055,7 +3055,6 @@ Template.newsidenav.events({
   },
 
 
-
   'click #sidenavtimeclock': function (event) {
     // if (FlowRouter.current().path == "/payrolloverview") {
     //   $("#btnClockOnOff").trigger("click");
@@ -3063,7 +3062,11 @@ Template.newsidenav.events({
     //   window.open('/payrolloverview#clockOnOff', '_self');
     // }
     event.preventDefault();
-    FlowRouter.go('/payrolloverview?modalId=clockonoff');
+    if (FlowRouter.current().path == "/payrolloverview") {
+      FlowRouter.go('/clockonoff');
+    } else {
+      FlowRouter.go('/payrolloverview?modalId=clockonoff');
+    }    
     let templateObject = Template.instance();
     templateObject.getSetSideNavFocus();
   },
