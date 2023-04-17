@@ -4700,8 +4700,8 @@ export class SideBarService extends BaseService {
         return promise;
     }
 
-  getCombinedContacts() {
-    return this.getManualCombinedContacts();
+  getCombinedContacts(limitCount, limitFrom, deleteFilter) {
+    return this.getManualCombinedContacts(deleteFilter);
 
   }
   getManualCombinedContacts() {
@@ -4720,30 +4720,14 @@ export class SideBarService extends BaseService {
     return promise;
   }
 
-  getBankCode() {
-    return this.getManualBankCode();
-
-  }
-  getManualBankCode() {
-    return this.WowBankCode();
-  }
-  WowBankCode() {
-    var that = this;
-    var promise = new Promise(function(resolve, reject) {
-      var splashArrayTitleList = [
-          ['CBA', 'Commonwealth Bank'],
-          ['NAB', 'National Australian Bank'],
-          ['WBC', 'Westpac Bank'],
-          ['MQG', 'Macquarie Bank'],
-          ['ANZ', 'Australia and New Zealand Banking Group'],
-          ['BEN', 'Bendigo Bank'],
-          ['BOQ', 'Bank of Queensland'],
-          ['VUK', 'Virgin Money'],
-          ['BFL', 'BSP Financial Group'],
-          ['JDO', 'Judo Bank']
-      ]
-      resolve({"tbankcode" : splashArrayTitleList});
-    });
-    return promise;
+  getBankCode(limitCount, limitFrom, deleteFilter) {
+    let options = {
+      ListType:"Detail",
+      select: "[Active]=true",
+      LimitCount: parseInt(limitCount)||initialReportLoad,
+      LimitFrom: parseInt(limitFrom)||0,
+    };
+    if(deleteFilter) options.select = "";
+    return this.getList(this.ERPObjects.TBankCode, options);
   }
 }

@@ -7,12 +7,9 @@
       </div>
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectBankNameID" name="selectBankNameID" readonly>
+          {{> export_import_print_display_button tablename="tblBankName"}}
         <div class="card-body p-1 rounded">
-            <style>
-                .colBankName{
-                    width: 10% !important;
-                }
-            </style>
+
             {{>datatablelist
                 tableclass="tblBankName"
                 tablename="tblBankName"
