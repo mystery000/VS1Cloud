@@ -207,8 +207,8 @@ Template.executivesummaryreport.onRendered(() => {
     templateObject.setDateAs( dateAsOf );
     try {
       let data = await reportService.getCardDataReport(dateAsOf);
-      if (data.tcarddatareport) {
-        let resData = data.tcarddatareport[0];
+      if (data.tdashboardexecdata1) {
+        let resData = data.tdashboardexecdata1[0];
 
         cashReceived[0] = parseFloat(resData.Cash_Received1);
         cashReceived[1] = parseFloat(resData.Cash_Received2);

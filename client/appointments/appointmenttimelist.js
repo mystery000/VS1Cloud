@@ -25,222 +25,35 @@ Template.appointmenttimelist.onCreated(function() {
 
     templateObject.getDataTableList = function(data) {
         let dataList = [];
-        if (data.fields.AppointmentsTimeLog != null) {
-            let url = new URL(window.location.href);
-            let searchID = parseInt(url.searchParams.get("id")) || 0;
-            if (Array.isArray(data.fields.AppointmentsTimeLog)) {
-                for (let a = 0; a < data.fields.AppointmentsTimeLog.length; a++) {
-                    const appointmentdate = data.fields.StartTime != '' ? moment(data.fields.StartTime).format("DD/MM/YYYY") : data.fields.StartTime;
-                    if (searchID != 0) {
-                        if (searchID == data.fields.AppointmentsTimeLog[a].fields.AppointID) {
-                            if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
-                                data.fields.AppointmentsTimeLog[a].fields.StartDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.StartDatetime).format('h:mm a')
-                            }
+        let url = new URL(window.location.href);
+        let searchID = parseInt(url.searchParams.get("id")) || 0;
 
-                            if (data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
-                                data.fields.AppointmentsTimeLog[a].fields.EndDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.EndDatetime).format('h:mm a')
-                            }
-
-                            let time = new Date();
-                            let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.StartDatetime.split(' ')[0]);
-                            let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.EndDatetime.split(' ')[0]);
-                            if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "" && data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
-                                Hours = templateObject.diff_hours1(dt2, dt1);
-                            } else {
-                                Hours = 0;
-                            }
-                            let tempDataList = [
-                                data.fields.AppointmentsTimeLog[a].fields.AppointID || '',
-                                appointmentdate,
-                                data.fields.ClientName || '',
-                                data.fields.TrainerName || '',
-                                data.fields.TrainerName || '',
-                                data.fields.DeptClassName || '',
-                                data.fields.Phone || '',
-                                data.fields.ClientMobile || '',
-                                data.fields.Suburb || '',
-                                data.fields.Street || '',
-                                data.fields.State || '',
-                                data.fields.Country || '',
-                                data.fields.Postcode || '',
-                                data.fields.AppointmentsTimeLog || '',
-                                data.fields.StartTime.split(' ')[1] || '',
-                                data.fields.AppointmentsTimeLog[a].fields.StartDatetime || '',
-                                data.fields.AppointmentsTimeLog[a].fields.EndDatetime || '',
-                                data.fields.TotalHours || 0,
-                                Hours,
-                                data.fields.EndTime.split(' ')[1] || '',
-                                data.fields.StartTime || '',
-                                data.fields.EndTime || '',
-                                moment(data.fields.StartTime).format('dddd') + ', ' + moment(data.fields.StartTime).format('DD'),
-                                moment(data.fields.endTime).format('dddd') + ', ' + moment(data.fields.endTime).format('DD'),
-                                data.fields.Actual_EndTime != '' ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : data.fields.Actual_EndTime,
-                                data.fields.Actual_EndTime || '',
-                                data.fields.Actual_StartTime.split(' ')[1] || '',
-                                data.fields.Actual_EndTime.split(' ')[1] || '',
-                                '',
-                                '',
-                                data.fields.AppointmentsTimeLog[a].fields.ID,
-                                data.fields.ProductDesc || '',
-                                data.fields.Status || '',
-                                data.fields.EndTime != '' ? moment(data.fields.EndTime).format("DD/MM/YYYY") : data.fields.EndTime,
-                                data.fields.AppointmentsTimeLog[a].fields.Description || ''
-                            ];
-                            dataList.push(tempDataList);
-                        }
-                    } else {
-                        if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "") {
-                            data.fields.AppointmentsTimeLog[a].fields.StartDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.StartDatetime).format('h:mm a')
-                        }
-
-                        if (data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
-                            data.fields.AppointmentsTimeLog[a].fields.EndDatetime = moment(data.fields.AppointmentsTimeLog[a].fields.EndDatetime).format('h:mm a')
-                        }
-
-                        let time = new Date();
-                        let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.StartDatetime.split(' ')[0]);
-                        let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog[a].fields.EndDatetime.split(' ')[0]);
-                        if (data.fields.AppointmentsTimeLog[a].fields.StartDatetime != "" && data.fields.AppointmentsTimeLog[a].fields.EndDatetime != "") {
-                            Hours = templateObject.diff_hours1(dt2, dt1);
-                        } else {
-                            Hours = 0;
-                        }
-                        let tempDataList = [
-                            data.fields.AppointmentsTimeLog[a].fields.AppointID || '',
-                            appointmentdate,
-                            data.fields.ClientName || '',
-                            data.fields.TrainerName || '',
-                            data.fields.AppointmentsTimeLog[a].fields.StartDatetime || '',
-                            data.fields.AppointmentsTimeLog[a].fields.EndDatetime || '',
-                            Hours,
-                            data.fields.AppointmentsTimeLog[a].fields.Description || '',
-                            data.fields.AppointmentsTimeLog[a].fields.ID
-                        ];
-                        dataList.push(tempDataList)
-                    }
-                }
-                return dataList;
-            } else {
-                if (searchID != 0) {
-                    if (data.fields.AppointmentsTimeLog.fields.StartDatetime != "") {
-                        data.fields.AppointmentsTimeLog.fields.StartDatetime = moment(data.fields.AppointmentsTimeLog.fields.StartDatetime).format('h:mm a');
-                    }
-                    if (data.fields.AppointmentsTimeLog.fields.EndDatetime != "") {
-                        data.fields.AppointmentsTimeLog.fields.EndDatetime = moment(data.fields.AppointmentsTimeLog.fields.EndDatetime).format('h:mm a');
-                    }
-
-                    if (searchID == data.fields.AppointmentsTimeLog.fields.AppointID) {
-
-                        let time = new Date();
-                        let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.StartDatetime.split(' ')[0]);
-                        let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.EndDatetime.split(' ')[0]);
-                        if (data.fields.AppointmentsTimeLog.fields.StartDatetime != "" && data.fields.AppointmentsTimeLog.fields.EndDatetime != "") {
-                            Hours = templateObject.diff_hours1(dt2, dt1);
-                        } else {
-                            Hours = 0;
-                        }
-                        dataList = [
-                            data.fields.AppointmentsTimeLog.fields.AppointID || '',
-                            appointmentdate,
-                            data.fields.ClientName || '',
-                            data.fields.TrainerName || '',
-                            data.fields.TrainerName || '',
-                            data.fields.DeptClassName || '',
-                            data.fields.Phone || '',
-                            data.fields.ClientMobile || '',
-                            data.fields.Suburb || '',
-                            data.fields.Street || '',
-                            data.fields.State || '',
-                            data.fields.Country || '',
-                            data.fields.Postcode || '',
-                            new Array(data.fields.AppointmentsTimeLog) || '',
-                            data.fields.StartTime.split(' ')[1] || '',
-                            data.fields.AppointmentsTimeLog.fields.StartDatetime || '',
-                            data.fields.AppointmentsTimeLog.fields.EndDatetime || '',
-                            data.fields.TotalHours || 0,
-                            Hours,
-                            data.fields.EndTime.split(' ')[1] || '',
-                            data.fields.StartTime || '',
-                            data.fields.EndTime || '',
-                            moment(data.fields.StartTime).format('dddd') + ', ' + moment(data.fields.StartTime).format('DD') || '',
-                            moment(data.fields.endTime).format('dddd') + ', ' + moment(data.fields.endTime).format('DD') || '',
-                            data.fields.Actual_EndTime != '' ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : data.fields.Actual_EndTime,
-                            data.fields.Actual_EndTime || '',
-                            data.fields.Actual_StartTime.split(' ')[1] || '',
-                            data.fields.Actual_EndTime.split(' ')[1] || '',
-                            Hours,
-                            '',
-                            '',
-                            data.fields.ProductDesc || '',
-                            data.fields.Status || '',
-                            data.fields.EndTime != '' ? moment(data.fields.EndTime).format("DD/MM/YYYY") : data.fields.EndTime,
-                            data.fields.AppointmentsTimeLog.fields.Description || ''
-                        ];
-                    }
-                } else {
-                    let time = new Date();
-                    let dt1 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.StartDatetime.split(' ')[0]);
-                    let dt2 = new Date(time.getFullYear() + '-' + ("0" + (time.getMonth() + 1)).slice(-2) + '-' + ("0" + (time.getDate())).slice(-2) + ' ' + data.fields.AppointmentsTimeLog.fields.EndDatetime.split(' ')[0]);
-                    if (data.fields.AppointmentsTimeLog.fields.StartDatetime != "" && data.fields.AppointmentsTimeLog.fields.EndDatetime != "") {
-                        Hours = templateObject.diff_hours1(dt2, dt1);
-
-                    } else {
-                        Hours = 0;
-                    }
-                    dataList = [
-                        data.fields.AppointmentsTimeLog.fields.AppointID || '',
-                        appointmentdate,
-                        data.fields.ClientName || '',
-                        data.fields.TrainerName || '',
-                        data.fields.TrainerName || '',
-                        data.fields.DeptClassName || '',
-                        data.fields.Phone || '',
-                        data.fields.ClientMobile || '',
-                        data.fields.Suburb || '',
-                        data.fields.Street || '',
-                        data.fields.State || '',
-                        data.fields.Country || '',
-                        data.fields.Postcode || '',
-                        new Array(data.fields.AppointmentsTimeLog) || '',
-                        data.fields.StartTime.split(' ')[1] || '',
-                        data.fields.AppointmentsTimeLog.fields.StartDatetime || '',
-                        data.fields.AppointmentsTimeLog.fields.EndDatetime || '',
-                        data.fields.TotalHours || 0,
-                        Hours,
-                        data.fields.EndTime.split(' ')[1] || '',
-                        data.fields.StartTime || '',
-                        data.fields.EndTime || '',
-                        moment(data.fields.StartTime).format('dddd') + ', ' + moment(data.fields.StartTime).format('DD'),
-                        moment(data.fields.endTime).format('dddd') + ', ' + moment(data.fields.endTime).format('DD'),
-                        data.fields.Actual_EndTime != '' ? moment(data.fields.Actual_EndTime).format("DD/MM/YYYY") : data.fields.Actual_EndTime,
-                        data.fields.Actual_EndTime || '',
-                        data.fields.Actual_StartTime.split(' ')[1] || '',
-                        data.fields.Actual_EndTime.split(' ')[1] || '',
-                        '',
-                        '',
-                        data.fields.ProductDesc || '',
-                        data.fields.Status || '',
-                        data.fields.EndTime != '' ? moment(data.fields.EndTime).format("DD/MM/YYYY") : data.fields.EndTime,
-                        data.fields.AppointmentsTimeLog.fields.Description || ''
-                    ];
-                }
-                return dataList;
-            }
-        }else{
-            return dataList;
-        }
+        dataList = [[
+            data.AppointID || '',
+            moment(data.AppDate).format("DD/MM/YYYY"),
+            data.ClientName || '',
+            data.EnteredByEmployeeName || '',
+            moment(data.Actual_Starttime).format('h:mm a') || '',
+            moment(data.Actual_Endtime).format('h:mm a') || '',
+            templateObject.diff_hours1(new Date(data.Actual_Endtime), new Date(data.Actual_Starttime)),
+            data.Notes,
+            data.TimesheetID,
+            data.Active ? "" : "In-Active",
+        ]];
+        return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: 'ID', class: 'colSortDate', active: true, display: true, width: "150" },
+        { index: 0, label: 'ID', class: 'colSortDate', active: false, display: true, width: "10" },
         { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "150" },
         { index: 2, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
         { index: 3, label: 'Rep', class: 'colReq', active: true, display: true, width: "150" },
         { index: 4, label: 'From Time', class: 'colFromTime', active: true, display: true, width: "150" },
         { index: 5, label: 'To Time', class: 'colToTime', active: true, display: true, width: "100" },
         { index: 6, label: 'Hours', class: 'colHours', active: true, display: true, width: "100" },
-        { index: 7, label: 'Break', class: 'colNotes', active: true, display: true, width: "100" },
+        { index: 7, label: 'Break', class: 'colNotes', active: true, display: true, width: "300" },
         { index: 8, label: 'TimeLog ID', class: 'colTimeLog', active: false, display: true, width: "100" },
+        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 
@@ -262,27 +75,27 @@ Template.appointmenttimelist.onRendered(function() {
     const tableHeaderList = [];
     const clientList = [];
 
-    Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblappointmenttimelist', function(error, result) {
-        if (error) {
-
-        } else {
-            if (result) {
-                for (let i = 0; i < result.customFields.length; i++) {
-                    let customcolumn = result.customFields;
-                    let columData = customcolumn[i].label;
-                    let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-                    let hiddenColumn = customcolumn[i].hidden;
-                    let columnClass = columHeaderUpdate.split('.')[1];
-                    let columnWidth = customcolumn[i].width;
-
-                    $("th." + columnClass + "").html(columData);
-                    $("th." + columnClass + "").css('width', "" + columnWidth + "px");
-
-                }
-            }
-
-        }
-    });
+    // Meteor.call('readPrefMethod', localStorage.getItem('mycloudLogonID'), 'tblappointmenttimelist', function(error, result) {
+    //     if (error) {
+    //
+    //     } else {
+    //         if (result) {
+    //             for (let i = 0; i < result.customFields.length; i++) {
+    //                 let customcolumn = result.customFields;
+    //                 let columData = customcolumn[i].label;
+    //                 let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+    //                 let hiddenColumn = customcolumn[i].hidden;
+    //                 let columnClass = columHeaderUpdate.split('.')[1];
+    //                 let columnWidth = customcolumn[i].width;
+    //
+    //                 $("th." + columnClass + "").html(columData);
+    //                 $("th." + columnClass + "").css('width', "" + columnWidth + "px");
+    //
+    //             }
+    //         }
+    //
+    //     }
+    // });
 
     function MakeNegative() {
         $('td').each(function() {
@@ -1450,12 +1263,13 @@ Template.appointmenttimelist.onRendered(function() {
 
     }
 
-    templateObject.getAllReconData();
+    //templateObject.getAllReconData();
 
     $('#tblappointmenttimelist tbody').on('click', 'tr', function() {
-    // $('#tblappointmenttimelist tbody').on('click', 'tr td:not(:first-child)', function() {
+        // $('#tblappointmenttimelist tbody').on('click', 'tr td:not(:first-child)', function() {
         document.getElementById("frmAppointment").reset();
-        var id = $(this).find(".colSortDate").text();
+        //var id = $(this).find(".colSortDate").text();
+        var id = $(this).attr("id");
         var logid = $(this).find(".colTimeLog").text();
         // var id = $(this).closest('tr').attr('id');
         // var logid = $(this).closest('tr').attr('logid');
@@ -1467,7 +1281,7 @@ Template.appointmenttimelist.onRendered(function() {
             window.open('appointments?id=' + id, '_self');
         }
     });
-    tableResize();
+    //tableResize();
 });
 
 Template.appointmenttimelist.events({
@@ -1498,28 +1312,28 @@ Template.appointmenttimelist.events({
         });
 
     },
-    'click .chkDatatable': function(event) {
-        var columns = $('#tblappointmenttimelist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function(event) {
-        Meteor._reload.reload();
-    },
+    // 'click .chkDatatable': function(event) {
+    //     var columns = $('#tblappointmenttimelist th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //
+    //     $.each(columns, function(i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .resetTable': function(event) {
+    //     Meteor._reload.reload();
+    // },
     'submit #frmAppointment': function(event) {
         $('.fullScreenSpin').css('display', 'inline-block');
         let appointmentService = new AppointmentService();
@@ -1728,85 +1542,85 @@ Template.appointmenttimelist.events({
 
         }
     },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        $('.columnSettings').each(function(index) {
-            var $tblrow = $(this);
-            var colTitle = $tblrow.find(".divcolumn").text() || '';
-            var colWidth = $tblrow.find(".custom-range").val() || 0;
-            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            var colHidden = false;
-            if ($tblrow.find(".custom-control-input").is(':checked')) {
-                colHidden = false;
-            } else {
-                colHidden = true;
-            }
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            }
-
-            lineItems.push(lineItemObj);
-        });
-
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        var datable = $('#tblappointmenttimelist').DataTable();
-        var title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-
-    },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        var datable = $('#tblappointmenttimelist th');
-        $.each(datable, function(i, v) {
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-
-            }
-        });
-
-    },
-    'click .btnOpenSettings': function(event) {
-        let templateObject = Template.instance();
-        var columns = $('#tblappointmenttimelist th');
-        const tableHeaderList = [];
-        let sTible = "";
-        let sWidth = "";
-        let sIndex = "";
-        let sVisible = "";
-        let columVisible = false;
-        let sClass = "";
-        $.each(columns, function(i, v) {
-            if (v.hidden == false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-
-        templateObject.tableheaderrecords.set(tableHeaderList);
-    },
+    // 'click .saveTable': function(event) {
+    //     let lineItems = [];
+    //     $('.columnSettings').each(function(index) {
+    //         var $tblrow = $(this);
+    //         var colTitle = $tblrow.find(".divcolumn").text() || '';
+    //         var colWidth = $tblrow.find(".custom-range").val() || 0;
+    //         var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+    //         var colHidden = false;
+    //         if ($tblrow.find(".custom-control-input").is(':checked')) {
+    //             colHidden = false;
+    //         } else {
+    //             colHidden = true;
+    //         }
+    //         let lineItemObj = {
+    //             index: index,
+    //             label: colTitle,
+    //             hidden: colHidden,
+    //             width: colWidth,
+    //             thclass: colthClass
+    //         }
+    //
+    //         lineItems.push(lineItemObj);
+    //     });
+    //
+    //     $('#myModal2').modal('toggle');
+    // },
+    // 'blur .divcolumn': function(event) {
+    //     let columData = $(event.target).text();
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+    //     var datable = $('#tblappointmenttimelist').DataTable();
+    //     var title = datable.column(columnDatanIndex).header();
+    //     $(title).html(columData);
+    //
+    // },
+    // 'change .rngRange': function(event) {
+    //     let range = $(event.target).val();
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     var datable = $('#tblappointmenttimelist th');
+    //     $.each(datable, function(i, v) {
+    //         if (v.innerText == columnDataValue) {
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("." + replaceClass + "").css('width', range + 'px');
+    //
+    //         }
+    //     });
+    //
+    // },
+    // 'click .btnOpenSettings': function(event) {
+    //     let templateObject = Template.instance();
+    //     var columns = $('#tblappointmenttimelist th');
+    //     const tableHeaderList = [];
+    //     let sTible = "";
+    //     let sWidth = "";
+    //     let sIndex = "";
+    //     let sVisible = "";
+    //     let columVisible = false;
+    //     let sClass = "";
+    //     $.each(columns, function(i, v) {
+    //         if (v.hidden == false) {
+    //             columVisible = true;
+    //         }
+    //         if ((v.className.includes("hiddenColumn"))) {
+    //             columVisible = false;
+    //         }
+    //         sWidth = v.style.width.replace('px', "");
+    //
+    //         let datatablerecordObj = {
+    //             sTitle: v.innerText || '',
+    //             sWidth: sWidth || '',
+    //             sIndex: v.cellIndex || 0,
+    //             sVisible: columVisible || false,
+    //             sClass: v.className || ''
+    //         };
+    //         tableHeaderList.push(datatablerecordObj);
+    //     });
+    //
+    //     templateObject.tableheaderrecords.set(tableHeaderList);
+    // },
     'click #exportbtn': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
         jQuery('#tblappointmenttimelist_wrapper .dt-buttons .btntabletocsv').click();
@@ -2031,8 +1845,16 @@ Template.appointmenttimelist.helpers({
     purchasesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblappointmenttimelist' });
     },
-    apiParams: function() {
-        return ['ignoredate', 'limitCount', 'limitFrom'];
+    apiFunction:function() {
+        let sideBarService = new SideBarService();
+        return sideBarService.getAllAppointmentList;
+    },
+    searchAPI: function() {
+        return sideBarService.getAllAppointmentList;
+    },
+    service: ()=>{
+        let sideBarService = new SideBarService();
+        return sideBarService;
     },
     datahandler: function () {
         let templateObject = Template.instance();
@@ -2041,10 +1863,6 @@ Template.appointmenttimelist.helpers({
             return dataReturn
         }
     },
-    apiFunction:function() {
-        let sideBarService = new SideBarService();
-        return sideBarService.getAllAppointmentList;
-    },
     exDataHandler: function() {
         let templateObject = Template.instance();
         return function(data) {
@@ -2052,8 +1870,7 @@ Template.appointmenttimelist.helpers({
             return dataReturn
         }
     },
-    service: ()=>{
-        let sideBarService = new SideBarService();
-        return sideBarService;
+    apiParams: function() {
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 });

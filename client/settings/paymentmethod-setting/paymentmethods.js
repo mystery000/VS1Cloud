@@ -7,12 +7,13 @@ import "../../lib/global/indexdbstorage.js";
 import XLSX from "xlsx";
 import { Template } from "meteor/templating";
 import "./paymentmethods.html";
+import { E } from "@fullcalendar/resource/internal-common";
 
 let taxRateService = new TaxRateService();
 let sideBarService = new SideBarService();
 let organisationService = new OrganisationService();
 
-Template.paymentmethodSettings.inheritsHooksFrom("non_transactional_list");
+// Template.paymentmethodSettings.inheritsHooksFrom("non_transactional_list");
 
 Template.paymentmethodSettings.onCreated(function () {
   const templateObject = Template.instance();
@@ -50,62 +51,62 @@ Template.paymentmethodSettings.onCreated(function () {
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
+    { index: 0, label: 'ID', class: 'colPayMethodID', active: false, display: true, width: "50" },
     { index: 1, label: 'Payment Method Name', class: 'colName', active: true, display: true, width: "150" },
     { index: 2, label: 'Is Credit Card', class: 'colIsCreditCard', active: true, display: true, width: "100" },
-    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
+    { index: 3, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.paymentmethodSettings.onRendered(function () {
   let templateObject = Template.instance();
-  Meteor.call(
-    "readPrefMethod",
-    localStorage.getItem("mycloudLogonID"),
-    "tblPaymentMethodList",
-    function (error, result) {
-      if (error) {
-      } else {
-        if (result) {
-          for (let i = 0; i < result.customFields.length; i++) {
-            let customcolumn = result.customFields;
-            let columData = customcolumn[i].label;
-            let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
-            let columnClass = columHeaderUpdate.split(".")[1];
-            let columnWidth = customcolumn[i].width;
+  // Meteor.call(
+  //   "readPrefMethod",
+  //   localStorage.getItem("mycloudLogonID"),
+  //   "tblPaymentMethodList",
+  //   function (error, result) {
+  //     if (error) {
+  //     } else {
+  //       if (result) {
+  //         for (let i = 0; i < result.customFields.length; i++) {
+  //           let customcolumn = result.customFields;
+  //           let columData = customcolumn[i].label;
+  //           let columHeaderUpdate = customcolumn[i].thclass.replace(/ /g, ".");
+  //           let columnClass = columHeaderUpdate.split(".")[1];
+  //           let columnWidth = customcolumn[i].width;
 
-            $("th." + columnClass + "").html(columData);
-            $("th." + columnClass + "").css("width", "" + columnWidth + "px");
-          }
-        }
-      }
-    }
-  );
-  templateObject.getOrganisationDetails = function () {
-    organisationService.getOrganisationDetail().then((dataListRet) => {
-      let account_id = dataListRet.tcompanyinfo[0].Apcano || "";
-      let feeMethod = dataListRet.tcompanyinfo[0].DvaABN || "";
-      if (feeMethod == "apply") {
-        $("#feeOnTopInput").prop("checked", true);
-        $("#feeInPriceInput").prop("checked", false);
-      } else if (feeMethod == "include") {
-        $("#feeOnTopInput").prop("checked", false);
-        $("#feeInPriceInput").prop("checked", true);
-      } else {
-        $("#feeOnTopInput").prop("checked", true);
-        $("#feeInPriceInput").prop("checked", false);
-      }
-      if (dataListRet.tcompanyinfo[0].Apcano == "") {
-        templateObject.includeAccountID.set(false);
-      } else {
-        templateObject.includeAccountID.set(true);
-      }
+  //           $("th." + columnClass + "").html(columData);
+  //           $("th." + columnClass + "").css("width", "" + columnWidth + "px");
+  //         }
+  //       }
+  //     }
+  //   }
+  // );
+  // templateObject.getOrganisationDetails = function () {
+  //   organisationService.getOrganisationDetail().then((dataListRet) => {
+  //     let account_id = dataListRet.tcompanyinfo[0].Apcano || "";
+  //     let feeMethod = dataListRet.tcompanyinfo[0].DvaABN || "";
+  //     if (feeMethod == "apply") {
+  //       $("#feeOnTopInput").prop("checked", true);
+  //       $("#feeInPriceInput").prop("checked", false);
+  //     } else if (feeMethod == "include") {
+  //       $("#feeOnTopInput").prop("checked", false);
+  //       $("#feeInPriceInput").prop("checked", true);
+  //     } else {
+  //       $("#feeOnTopInput").prop("checked", true);
+  //       $("#feeInPriceInput").prop("checked", false);
+  //     }
+  //     if (dataListRet.tcompanyinfo[0].Apcano == "") {
+  //       templateObject.includeAccountID.set(false);
+  //     } else {
+  //       templateObject.includeAccountID.set(true);
+  //     }
 
-      templateObject.accountID.set(account_id);
-    });
-  };
-  templateObject.getOrganisationDetails();
+  //     templateObject.accountID.set(account_id);
+  //   });
+  // };
+  // templateObject.getOrganisationDetails();
 
   $(document).ready(function () {
     let url = window.location.href;
@@ -218,8 +219,8 @@ Template.paymentmethodSettings.onRendered(function () {
     });
   });
 
-  $("#tblPaymentMethodList tbody").on("click", "tr", function () {
-    var listData = $(this).closest("tr").find('.colPayMethodID').text();
+  $("#tblPaymentMethodList tbody").on("click", "tr", function (e) {
+    var listData = $(e.target).closest("tr").find('td.colPayMethodID').text();
     var isCreditcard = false;
     if (listData) {
       $("#add-paymentmethod-title").text("Edit Payment Method");
@@ -228,8 +229,8 @@ Template.paymentmethodSettings.onRendered(function () {
 
         var paymentMethodID = listData || "";
         var paymentMethodName =
-          $(event.target).closest("tr").find(".colName").text() || "";
-        var isCheckBoxChched = $(event.target)
+          $(e.target).closest("tr").find("td.colName").text() || "";
+        var isCheckBoxChched = $(e.target)
           .closest("tr")
           .find(".chkBox")
           .is(":checked");
@@ -274,18 +275,18 @@ Template.paymentmethodSettings.events({
       $(".feeOnTopInput").attr("checked", false);
     }
   },
-  "click #exportbtn": function () {
-    $(".fullScreenSpin").css("display", "inline-block");
-    jQuery(
-      "#tblPaymentMethodList_wrapper .dt-buttons .btntabletoexcel"
-    ).click();
-    $(".fullScreenSpin").css("display", "none");
-  },
-  "click .printConfirm": function (event) {
-    $(".fullScreenSpin").css("display", "inline-block");
-    jQuery("#tblPaymentMethodList_wrapper .dt-buttons .btntabletopdf").click();
-    $(".fullScreenSpin").css("display", "none");
-  },
+  // "click #exportbtn": function () {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   jQuery(
+  //     "#tblPaymentMethodList_wrapper .dt-buttons .btntabletoexcel"
+  //   ).click();
+  //   $(".fullScreenSpin").css("display", "none");
+  // },
+  // "click .printConfirm": function (event) {
+  //   $(".fullScreenSpin").css("display", "inline-block");
+  //   jQuery("#tblPaymentMethodList_wrapper .dt-buttons .btntabletopdf").click();
+  //   $(".fullScreenSpin").css("display", "none");
+  // },
   "click .btnRefresh": function () {
     sideBarService
       .getPaymentMethodDataList(initialBaseDataLoad, 0, false)
@@ -319,6 +320,7 @@ Template.paymentmethodSettings.events({
     playDeleteAudio();
     setTimeout(function () {
       let paymentMethodId = $("#edtPaymentMethodID").val();
+     
       let objDetails = {
         type: "TPaymentMethod",
         fields: {

@@ -2886,7 +2886,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 
-  getAllAppointmentList(limitcount, limitfrom) {
+  getAllAppointmentList(limitcount, limitfrom, deletefilter) {
     let options = "";
     let checkOwnAppointment = localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly");
     let selectedEmployeeName = localStorage.getItem("mySessionEmployee");
@@ -2894,20 +2894,22 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        select: "[Active]=true",
+        //select: "[Active]=true",
+        Search: "Active=true",
       };
     } else {
       options = {
         // orderby: '"AppointID desc"',
         OrderBy: "CreationDate desc",
         ListType: "Detail",
-        select: "[Active]=true",
+        //select: "[Active]=true",
+        Search: "Active=true",
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
     }
-
-    return this.getList(this.ERPObjects.TAppointment, options);
+    if(deletefilter) options.Search = "";
+    return this.getList(this.ERPObjects.TAppointmentList, options);
   }
 
   getAllCorrespondenceList(limitcount, limitfrom) {
@@ -4778,4 +4780,35 @@ export class SideBarService extends BaseService {
         });
         return promise;
     }
+
+  getCombinedContacts(limitCount, limitFrom, deleteFilter) {
+    return this.getManualCombinedContacts(deleteFilter);
+
+  }
+  getManualCombinedContacts() {
+    return this.getWowCombinedContacts();
+  }
+  getWowCombinedContacts() {
+    var that = this;
+    var promise = new Promise(function(resolve, reject) {
+      var splashArrayTitleList = [
+        ["Armidale Building Society Limited",""],
+        ["Adelaide Bank Limited",""],
+        ["Test",""],
+      ];
+      resolve({"terpcombinedcontacts" : splashArrayTitleList});
+    });
+    return promise;
+  }
+
+  getBankCode(limitCount, limitFrom, deleteFilter) {
+    let options = {
+      ListType:"Detail",
+      select: "[Active]=true",
+      LimitCount: parseInt(limitCount)||initialReportLoad,
+      LimitFrom: parseInt(limitFrom)||0,
+    };
+    if(deleteFilter) options.select = "";
+    return this.getList(this.ERPObjects.TBankCode, options);
+  }
 }
