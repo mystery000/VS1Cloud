@@ -34,8 +34,12 @@
 
                 /* .dataTables_filter { display: none; } */
             </style>
+            <div class="col-12 col-md-4">
+                {{> datesforcardchart}}
+            </div>
         </header>
         <!-- All charts list -->
+        {{> editCardChartButtons}}
         {{#if isStockonHandDemandChart}} {{> allChartLists tabGroupID="5" chartGroup="Inventory"
                 currentTemplate="Inventory_Overview"}} {{/if}}
         <style>

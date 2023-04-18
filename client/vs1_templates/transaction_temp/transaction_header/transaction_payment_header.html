@@ -73,9 +73,11 @@ data
                                           id="edtPaymentAmount"
                                           defaultValue=data.paymentAmount
                                           readonly=true
+                                          divClass="form"
+                                          isjobelement=false
                                   }}
                               </div>
-                              <div class="col-6 col-md-12 col-lg-12">
+                              <div class="col-6 col-md-12 col-lg-12 currency-js" type="sell">
                                   {{> currencydropdown}}
                               </div>
                           </div>
@@ -97,6 +99,8 @@ data
                                           name="foreignAmount"
                                           id="edtForeignAmount"
                                           defaultValue=data.ForeignCurrencyAmount
+                                          divClass="form"
+                                          isjobelement=false
                                   }}
                               </div>
                           </div>
@@ -114,6 +118,8 @@ data
                                           id="edtReference"
                                           name="edtReference"
                                           defaultValue=data.reference
+                                          divClass="form"
+                                          isjobelement=false
                                   }}
                               </div>
                               <div class="col-6 col-md-12 col-lg-12">
@@ -138,6 +144,8 @@ data
                                           name="edtPaymentAmount"
                                           id="edtPaymentAmount"
                                           defaultValue=data.paymentAmount
+                                          divClass="form"
+                                          isjobelement=false
                                   }}
                               </div>
                           </div>
@@ -163,6 +171,8 @@ data
                                           name="variation"
                                           id="edtVariation"
                                           defaultValue=data.ForeignVariationAmount
+                                          divClass="form"
+                                          isjobelement=false
                                   }}
                               </div>
                           </div>
@@ -184,6 +194,8 @@ data
                                           name="applied"
                                           id="edtApplied"
                                           defaultValue=data.ForeignApplied
+                                          divClass="form"
+                                          isjobelement=false
                                   }}
                               </div>
                           </div>

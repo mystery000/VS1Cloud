@@ -80,21 +80,37 @@ $('.list_search').click(function() {
   <div id = "content1">
     <div class="list_search_container"><a href="#" class="list_search">Search</a>
     </div>
-    <table id="creditnotelist" style="width: 100%" class="table table-hover table-bordered">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>Number</th>
-                    <th>Ref</th>
-                    <th>Supplier</th>
-                    <th>Date</th>
-                    <th>Due Date</th>
-                    <th>Paid</th>
-                    <th>Due</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-        </table>
+      {{>datatablelist
+              tableclass="creditnotelist"
+              tablename="creditnotelist"
+              apiName= apiFunction
+              indexeddbname = 'TcreditList'
+              tableheaderrecords = tableheaderrecords
+              exportfilename = 'Credit Note List'
+              istransaction = false
+              apiParams= apiParams
+              datahandler = datahandler
+              service=service
+              lowercaseDataName='tcreditlist'
+              exIndexDBName = 'tcreditlist'
+              exdatahandler = exDataHandler
+              searchAPI = searchAPI
+      }}
+<!--    <table id="creditnotelist" style="width: 100%" class="table table-hover table-bordered">-->
+<!--            <thead>-->
+<!--                <tr>-->
+<!--                    <th></th>-->
+<!--                    <th>Number</th>-->
+<!--                    <th>Ref</th>-->
+<!--                    <th>Supplier</th>-->
+<!--                    <th>Date</th>-->
+<!--                    <th>Due Date</th>-->
+<!--                    <th>Paid</th>-->
+<!--                    <th>Due</th>-->
+<!--                    <th>Status</th>-->
+<!--                </tr>-->
+<!--            </thead>-->
+<!--        </table>-->
   </div>
 <!--  <div id = "content2">
     <p>Donec mattis laoreet suscipit. Donec blandit quam sed justo mattis, et hendrerit leo sodales. Donec elit leo, sollicitudin sed purus vitae, iaculis iaculis lacus. Proin quis leo a purus gravida ultricies. Nam molestie a nisi sed scelerisque. Proin in suscipit sem, in viverra libero. Proin quam diam, consequat vitae arcu eget, egestas ultrices eros. Donec sed fermentum lorem. Nam dolor sem, aliquam dapibus rutrum id, tempor ac leo. Vestibulum in neque id eros tristique lacinia. Duis a bibendum dolor, nec cursus eros. Morbi quis enim eu quam gravida lacinia. Etiam tincidunt venenatis felis quis pellentesque. Sed sagittis elit vitae arcu malesuada, quis dapibus libero porttitor.

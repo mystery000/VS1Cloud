@@ -125,8 +125,8 @@ Template.exepositionreport.onRendered(() => {
         templateObject.setDateAs( dateAsOf );
         try {
             let data = await reportService.getCardDataReport(dateAsOf);
-            if (data.tcarddatareport) {
-                let resData = data.tcarddatareport[0];
+            if (data.tdashboardexecdata1) {
+                let resData = data.tdashboardexecdata1[0];
                 avgDebtors[0] = parseInt(resData.Pos_AvgDebtDays1);
                 avgDebtors[1] = parseInt(resData.Pos_AvgDebtDays2);
                 avgCreditors[0] = parseInt(resData.Pos_AvgCredDays1);

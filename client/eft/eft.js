@@ -12,11 +12,11 @@ let selectLineId
 
 Template.eft_export.onCreated(function () {
     let templateObject = Template.instance();
-    templateObject.eftOptionsList = new ReactiveVar([]);    
+    templateObject.eftOptionsList = new ReactiveVar([]);
     templateObject.transactionDescriptions = new ReactiveVar([]);
     templateObject.eftRowId = new ReactiveVar(null);
     templateObject.tabadescriptiverecordList = new ReactiveVar([]);
-    templateObject.tabadetailrecordList = new ReactiveVar([]);    
+    templateObject.tabadetailrecordList = new ReactiveVar([]);
 });
 
 Template.eft_export.onRendered(function () {
@@ -43,7 +43,7 @@ Template.eft_export.onRendered(function () {
             },
         });
         $(".eftProcessingDate").val(currentDate);
-        $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))                
+        $("#eftUserName").val(localStorage.getItem('vs1LoggedEmployeeName'))
     })
 
     templateObject.loadTabaDescriptiveRecord = () => {
@@ -123,11 +123,6 @@ Template.eft_export.onRendered(function () {
                 }
                 $('.fullScreenSpin').css('display', 'none');
 
-                /* Damien */
-                // For Focus into search field
-                setTimeout(function() {
-                    $("#tblEftExportCheckbox_filter .form-control-sm").get(0).focus();
-                }, 500);
             });
         } catch (error) {
             $('.fullScreenSpin').css('display', 'none');
@@ -229,21 +224,21 @@ Template.eft_export.onRendered(function () {
         let colAccountID = table.attr("ID");
         let lineProductName = table.find('.colAccountName').text();
         if (selectLineId === undefined) {
-            $('.colAccount').removeClass('boldtablealertsborder');            
+            $('.colAccount').removeClass('boldtablealertsborder');
             if (colAccountID) {
                 $('.fullScreenSpin').css('display', 'inline-block');
                 $('#eftaccountid').val(colAccountID).trigger('change')
                 // templateObject.loadTABADetailRecordById(colAccountID);
                 templateObject.loadTabaDescriptiveRecordById(colAccountID);
-            }        
+            }
             let lineProductDesc = table.find('.colDescription').text();
             let lineAccoutNo = table.find('.colAccountNo').text();
-            let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";            
+            let lineBankName = localStorage.getItem("vs1companyBankName") || table.find('.colAccountNo').text() || "";
             $('#sltBankAccountName').val(lineProductName);
             $('#sltBankName').val(lineBankName)
         } else {
             $(`tr#${selectLineId} .sltEftTblAccountName`).val(lineProductName);
-        }        
+        }
         $('#accountListModal').modal('toggle');
     });
 
@@ -308,7 +303,7 @@ Template.eft_export.onRendered(function () {
 
     $(document).on('click', '#tblTransactionCode tbody tr', function (e) {
         var table = $(this);
-        let transactionDescription = table.find('.colTransactionCode').text();        
+        let transactionDescription = table.find('.colTransactionCode').text();
         $(`tr#${selectLineId} .sltTransactionCode`).val(transactionDescription);
         $('#transactionCodeModal').modal('toggle');
     });
@@ -319,6 +314,8 @@ Template.eft_export.onRendered(function () {
     })
 
     setTimeout(() => $('#accountListModal').modal(), 3000)
+
+
 });
 
 Template.eft_export.events({
@@ -443,10 +440,10 @@ Template.eft_export.events({
             if (currentEftFilesCreatedData && currentEftFilesCreatedData.length) {
                 let saveEftFilesCreateData = JSON.parse(currentEftFilesCreatedData[0].data)
                 let newId = Random.id()
-                saveEftFilesCreateData = {teftfilescreated: [...saveEftFilesCreateData.teftfilescreated, 
+                saveEftFilesCreateData = {teftfilescreated: [...saveEftFilesCreateData.teftfilescreated,
                     [newId, sltAccountType, sltBankName, eftProcessingDate, eftUserName, sltTransactionDescription]]}
                 await addVS1Data('TEftFilesCreated', JSON.stringify(saveEftFilesCreateData))
-            }            
+            }
             eftNumberUser =
                 eftNumberUser.length >= 6 ? eftNumberUser : '0'.repeat(6 - eftNumberUser.length) + eftNumberUser;
             var arrData = [];

@@ -2240,8 +2240,8 @@ Template.employeescard.onRendered(function () {
         const offset = $earch.offset();
         const dashboardoptions = e.target.value || '';
         const dashboardDefaultoptions = $("#edtDashboardOptions").attr("defaultlogin") || 'Accounts';
-        if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-          $('#edtDashboardOptions').modal('toggle');
+        if (e.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
+          $('#dashboardOptionListModal').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
             // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
@@ -2283,17 +2283,17 @@ Template.employeescard.onRendered(function () {
       
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
+      $('#obEarningsRate').editableSelect();
       
-      $('#edtPayrollCalendar').editableSelect()
-        .on('click.editable-select', async function (e, li) {
-          let $search = $(this);
-          let offset = $search.offset();
-          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+      $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
+          // let $search = $(this);
+          // let offset = $search.offset();
+          // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#payrollCalendarPopModal').modal("toggle");
-          } else {
-            $('#payrollCalendarPopModal').modal("toggle");
-          }
-        });
+          // } else {
+          //   $('#payrollCalendarPopModal').modal("toggle");
+          // }
+      });
 
       $('#edtHolidays').editableSelect()
         .on('click.editable-select', async function (e, li) {
@@ -4108,8 +4108,8 @@ Template.employeescard.onRendered(function () {
 
   templateObject.setReiumbursementDropDown = function () {
     setTimeout(function () {
-      $('.reimbursementDropDown').editableSelect();
-      $('.reimbursementDropDown').editableSelect()
+      $('#reimbursementTypeSelect').editableSelect();
+      $('#reimbursementTypeSelect').editableSelect()
         .on('click.editable-select', async function (e, li) {
           let $search = $(this);
           let dropDownID = $search.attr('id')
@@ -5945,6 +5945,9 @@ Template.employeescard.events({
       });
     }
   },
+  'click #make-in-active': async function (event) {
+    let Status = $('#edtLeavePayStatus').val("Deleted");
+  },
   // Save LeaveRequest Popup
   'click #btnSaveLeaveRequest': async function (event) {
     playSaveAudio();
@@ -5959,7 +5962,7 @@ Template.employeescard.events({
       let StartDate = $('#edtLeaveStartDate').val();
       let EndDate = $('#edtLeaveEndDate').val();
       let PayPeriod = $('#edtLeavePayPeriod').val();
-      let Hours = $('#edtLeaveHours').val();
+      let Hours = $('.edtLeaveHours').val();
       let Status = $('#edtLeavePayStatus').val();
       const leaveRequests = [];
       const employeePayrolApis = new EmployeePayrollApi();
@@ -6071,10 +6074,10 @@ Template.employeescard.events({
   'click #btnSaveAssignLeaveType': async function (event) {
     playSaveAudio();
     let templateObject = Template.instance();
+
     setTimeout(async function () {
       let currentId = FlowRouter.current().queryParams;
       let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
-
       const employeePayrolApis = new EmployeePayrollApi();
       // now we have to make the post request to save the data in database
       const apiEndpoint = employeePayrolApis.collection.findByName(
@@ -6084,11 +6087,11 @@ Template.employeescard.events({
       let LeaveType = $('#leaveTypeSelect').val();
       let LeaveCalcMethod = $('#leaveCalcMethodSelect').val();
       let OpeningBalance = $('#openingBalance').val();
-
       let HoursLeave = 0;
       let HoursAccruedAnnuallyFullTimeEmp = 0;
       let HoursFullTimeEmpFortnightlyPay = 0;
       let HoursAccruedAnnually = 0;
+    
       if (LeaveType == "") {
         handleValidationError('Please select a Leave!', 'leaveTypeSelect');
         return false;
@@ -6117,7 +6120,7 @@ Template.employeescard.events({
           }
           break;
         default:
-          HoursAccruedAnnually = $('#hoursAccruedAnnually').val();
+          HoursAccruedAnnually = $('hoursAccruedAnnually').val();
           if (HoursAccruedAnnually == "") {
             handleValidationError('Hours Accrued Annually is required!', 'hoursAccruedAnnually');
             return false;
@@ -6303,15 +6306,17 @@ Template.employeescard.events({
     $('#newLeaveRequestLabel').text('New Leave Request');
     let today = new Date();
     const dd = String(today.getDate()).padStart(2, '0');
+    const dd_t = String(today.getDate() + 7).padStart(2, '0');
     const mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
     const yyyy = today.getFullYear();
     today = dd + '/' + mm + '/' + yyyy;
+    next_day = dd_t + '/' + mm + '/' + yyyy;
 
     let nextWeek = new Date()
     $('#leaveRequestForm')[0].reset();
     $('#edtLeavePayStatus').val('Awaiting');
     $('#edtLeaveStartDate').val(today);
-    $('#edtLeaveEndDate').val(new Date(nextWeek.setDate(new Date().getDate() + 7)).toLocaleDateString());
+    $('#edtLeaveEndDate').val(next_day);
     $('#removeLeaveRequestBtn').hide();
     $(`#edtLeavePayPeriod`).val();
     await templateObject.getEmployeePaySettings(true);

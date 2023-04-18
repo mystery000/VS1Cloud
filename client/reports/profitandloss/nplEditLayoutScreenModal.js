@@ -284,7 +284,7 @@ Template.npleditlayoutscreen.events({
     let description = $("#nplLayoutDescr").val();
     let isdefault = $("#npldefaultSettting").is(":checked") ? true : false;
     if(name != "" || description != ""){
-      $('.fullScreenSpin').css('display', 'block');    
+      $('.fullScreenSpin').css('display', 'block');
       let jsonObj = {
         type: "TPNLLayout",
         fields: {
@@ -302,7 +302,7 @@ Template.npleditlayoutscreen.events({
             $("#layoutModal #btnViewDeleted").click();
           });
           $('.fullScreenSpin').css('display', 'none');
-        });        
+        });
       }).catch(function(err) {
           swal({
               title: 'Oooops...',
@@ -318,6 +318,10 @@ Template.npleditlayoutscreen.events({
           $('.fullScreenSpin').css('display', 'none');
       });
     }
+  },
+
+  "click #nplShowCreateLayoutForm" : function (event) {
+    $(".formCreateLayout").removeClass('hidden');
   },
 });
 

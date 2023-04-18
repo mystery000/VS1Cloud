@@ -137,7 +137,6 @@ Template.deletepop.helpers({
   // itemName1: () => {
   //   const templateInstance = Template.instance();
   //   const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item1;
-  //   console.log('formName:',formName)
   //   return formName;
   // },
   // itemName2: () => {

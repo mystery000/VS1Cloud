@@ -29,13 +29,17 @@ Template.workorderlist.onCreated(function() {
 
     templateObject.getDataTableList = function(data){
 
+        let cur_date = new Date()
+
         let dataList = [
             data.fields.ID ,
             data.fields.SaleID || '',
             data.fields.Customer || '',
             data.fields.PONumber || '',
-            moment(data.fields.SaleDate).format("DD/MM/YYYY") || '',
-            moment(data.fields.DueDate).format("DD/MM/YYYY") || '',
+            // moment(data.fields.SaleDate).format("DD/MM/YYYY") || '',
+            // moment(data.fields.DueDate).format("DD/MM/YYYY") || '',
+            moment(cur_date).format("DD/MM/YYYY") || '',
+            moment(cur_date).format("DD/MM/YYYY") || '',
             data.fields.ProductName || '',
             data.fields.Quantity || '',
             data.fields.Comment || '',

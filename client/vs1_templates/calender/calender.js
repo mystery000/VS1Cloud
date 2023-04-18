@@ -675,7 +675,9 @@ Template.calender.onRendered(function() {
             click: async function() {
                 $(".fullScreenSpin").css("display", "inline-block");
                 await templateObject.saveUpdatedEvents();
-                templateObject.fetchAppointments();
+                setTimeout(() => {
+                    templateObject.fetchAppointments();
+                }, 1000);
             },
         },
     };
@@ -1406,6 +1408,7 @@ Template.calender.onRendered(function() {
     }
 
     function renderEventContent(event){
+        const pattern = /leave/;
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                 let eventLeave  = [];
                 let eventStatus = [];
@@ -1415,18 +1418,19 @@ Template.calender.onRendered(function() {
                     eventStatus[item.EmployeeID] = item.Status;
                 });
 
-                let title = document.createElement("p");
-                if (event.timeText != '') {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                    title.style.backgroundColor = event.backgroundColor;
-                    title.style.color = "#ffffff";
-                } else {
-                    var empid = event.event._def.publicId.split(':')[1];
-                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-                        title.style.color = "#dddddd";
-                    }
-                }
+        let title = document.createElement("p");
+        if(pattern.test(event.event._def.publicId)){
+            var empid = event.event._def.publicId.split(':')[1];
+            if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                let newTitle = "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
+                $(title).append(newTitle);
+                title.style.color = "#dddddd";
+            }
+        } else {
+            title.innerHTML = event.timeText + " " + event.event.title;
+            title.style.backgroundColor = event.backgroundColor;
+            title.style.color = "#ffffff";
+        }
 
                 let arrayOfDomNodes = [title];
                 return {
