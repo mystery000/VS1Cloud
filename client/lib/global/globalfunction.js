@@ -1597,7 +1597,6 @@ getPrintSettings = async function (type, template) {
         printSettings[key] = gridSettings[type][key];
     }
 
-    console.log('getPrintSettings', printSettings);
     return printSettings;
 };
 

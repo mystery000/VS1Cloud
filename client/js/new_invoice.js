@@ -2343,8 +2343,7 @@ Template.new_invoice.onCreated(function () {
   }
 
   templateObject.generateInvoiceData = async function (template_title, number) {
-    let printSettings = await getPrintSettings(template_title, number);
-    console.log('generateTemplateData', template_title, number, printSettings);
+    let printSettings = await getPrintSettings(template_title, number);;
     templateObject.print_displayfields.set(printSettings);
 
     object_invoce = [];

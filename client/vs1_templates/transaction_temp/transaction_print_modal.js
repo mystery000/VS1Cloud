@@ -19,15 +19,15 @@ const TransactionTypeData = {
   sales: {
     templates: [
       {
-        name: "Delivery Docket",
-        title: "Delivery Docket",
-        key: "delivery_docket",
-        active: true,
-      },
-      {
         name: "Sales Orders",
         title: "Sales Orders",
         key: "sales_order",
+        active: true,
+      },
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
         active: true,
       },
     ],
@@ -97,15 +97,15 @@ const TransactionTypeData = {
   workorders: {
     templates: [
       {
-        name: "Delivery Docket",
-        title: "Delivery Docket",
-        key: "delivery_docket",
-        active: true,
-      },
-      {
         name: "Sales Orders",
         title: "Sales Orders",
         key: "sales_order",
+        active: true,
+      },
+      {
+        name: "Delivery Docket",
+        title: "Delivery Docket",
+        key: "delivery_docket",
         active: true,
       },
     ],
