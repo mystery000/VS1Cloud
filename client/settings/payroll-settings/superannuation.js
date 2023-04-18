@@ -36,7 +36,7 @@ Template.superannuationSettings.onCreated(function() {
         data.fields.AccountName || '',
         data.fields.Supertypeid || '',
         data.fields.Active == true ? '' : 'In-Active',
-        '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+        // '<td contenteditable="false" class="colDeletesup"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
     ];
     return dataList;
   }
@@ -52,7 +52,7 @@ Template.superannuationSettings.onCreated(function() {
     { index: 8, label: 'Account Name', class: 'colaccountname', active: true, display: true, width: "50" },
     { index: 9, label: 'fundid', class: 'colSuperannuationTypeid', active: false, display: true, width: "" },
     { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
-    { index: 11, label: '', class: 'colDeletesup', active: true, display: true, width: "20" }
+    // { index: 11, label: '', class: 'colDeletesup', active: true, display: true, width: "20" }
   ];
   templateObject.tableheaderrecords8.set(headerStructure8);
 });
