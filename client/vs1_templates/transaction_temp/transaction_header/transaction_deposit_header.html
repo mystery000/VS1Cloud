@@ -104,22 +104,25 @@
         name="sltAccountName"
       }}
     </div> -->
-    <div class="col-6 col-lg-2 col-md-3">
-      {{> vs1___dropdown
-        type='search'
-        id='sltAccountName'
-        name='sltAccountName'
-        modalId= 'accountListModal'
-        list_template_name='accountlistpop'
-        innerModal=true
-        modal_title='Account List'
-        label = 'Account'
-        colNameForValue = 'colAccountName'
-        target_modal_id= 'addAccountModal'
-        target_template_id='addaccountpop'
-        is_editable=true
-      }}
-    </div>
+      <div class="col-6 col-lg-2 col-md-3">
+          {{> vs1___dropdown
+                  type='search'
+                  id='sltAccountName2'
+                  name='sltAccountName2'
+                  usedModal=false
+                  modalId= 'accountListModal'
+                  list_template_name='accountlistpop'
+                  innerModal=true
+                  modal_title='Account List'
+                  label = 'Account'
+                  colNameForValue = 'colAccountName'
+                  target_modal_id= 'addAccountModal'
+                  target_template_id='addaccountpop'
+                  is_editable=true
+                  custid='rcq7ZWZnptT6TzBwP'
+                  noBorder=false
+          }}
+      </div>
     <div class="col-6 col-lg-2 col-md-2">
       {{> default_input
         type="text"
