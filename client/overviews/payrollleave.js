@@ -47,19 +47,19 @@ Template.payrollleave.onCreated(()=>{
       data.fields.Description || '',
       data.fields.PayPeriod || '',
       data.fields.LeaveMethod || '',
-      (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
       data.fields.Status || '',
+      (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
     ];
     return dataList;
   }
 
   let headerStructure = [
-    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "10" },
+    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
     { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "500" },
-    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "110" },
-    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "110" },
-    { index: 4, label: 'Action', class: 'colLRAction', active: true, display: true, width: "110" },
-    { index: 5, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "120" },
+    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
+    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
+    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
+    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
   ];
   templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
   templateObject.saveLeaveRequestLocalDB = async ()=> {
@@ -742,7 +742,7 @@ Template.payrollleave.events({
   },
   "click #tblPayleaveToReview tbody tr": (e, ui) => {
     if ($(e.target).closest("td").hasClass("clickable")) {
-      ui.pasteLeaveToModal($(e.currentTarget).attr("id"));
+      ui.pasteLeaveToModal($(e.currentTarget).attr("leave-id"));
       $("#newLeaveRequestModal").modal("show");
       // $('#newLeaveRequestModal').find('.modal-title.new-leave-title').addClass('hide');
       // $('#newLeaveRequestModal').find('.modal-title.edit-leave-title').removeClass('hide');
@@ -791,55 +791,55 @@ Template.payrollleave.events({
   "click .btnRefresh": (e, ui) => {
     ui.initPage(true);
   },
-  // 'click .btnOpenSettings': function(event) {
-  //   let templateObject = Template.instance();
-  //   var columns = $('#tblPayleaveToReview th');
-  //   const tableHeaderList = [];
-  //   let sTible = "";
-  //   let sWidth = "";
-  //   let sIndex = "";
-  //   let sVisible = "";
-  //   let columVisible = false;
-  //   let sClass = "";
-  //   $.each(columns, function(i, v) {
-  //       if (v.hidden == false) {
-  //           columVisible = true;
-  //       }
-  //       if ((v.className.includes("hiddenColumn"))) {
-  //           columVisible = false;
-  //       }
-  //       sWidth = v.style.width.replace('px', "");
+  'click .btnOpenSettings': function(event) {
+    let templateObject = Template.instance();
+    var columns = $('#tblPayleaveToReview th');
+    const tableHeaderList = [];
+    let sTible = "";
+    let sWidth = "";
+    let sIndex = "";
+    let sVisible = "";
+    let columVisible = false;
+    let sClass = "";
+    $.each(columns, function(i, v) {
+        if (v.hidden == false) {
+            columVisible = true;
+        }
+        if ((v.className.includes("hiddenColumn"))) {
+            columVisible = false;
+        }
+        sWidth = v.style.width.replace('px', "");
 
-  //       let datatablerecordObj = {
-  //           sTitle: v.innerText || '',
-  //           sWidth: sWidth || '',
-  //           sIndex: v.cellIndex || 0,
-  //           sVisible: columVisible || false,
-  //           sClass: v.className || ''
-  //       };
-  //       tableHeaderList.push(datatablerecordObj);
-  //   });
+        let datatablerecordObj = {
+            sTitle: v.innerText || '',
+            sWidth: sWidth || '',
+            sIndex: v.cellIndex || 0,
+            sVisible: columVisible || false,
+            sClass: v.className || ''
+        };
+        tableHeaderList.push(datatablerecordObj);
+    });
 
-  //   templateObject.tableLeaveRequestheaderrecords.set(tableHeaderList);
-  // },
-  // 'click .chkDatatable': function(event) {
-  //   var columns = $('#tblPayleaveToReview th');
-  //   let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-  //   $.each(columns, function(i, v) {
-  //       let className = v.classList;
-  //       let replaceClass = className[1];
+    templateObject.tableLeaveRequestheaderrecords.set(tableHeaderList);
+  },
+  'click .chkDatatable': function(event) {
+    var columns = $('#tblPayleaveToReview th');
+    let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    $.each(columns, function(i, v) {
+        let className = v.classList;
+        let replaceClass = className[1];
 
-  //       if (v.innerText == columnDataValue) {
-  //           if ($(event.target).is(':checked')) {
-  //               $("." + replaceClass + "").css('display', 'table-cell');
-  //               $("." + replaceClass + "").css('padding', '.75rem');
-  //               $("." + replaceClass + "").css('vertical-align', 'top');
-  //           } else {
-  //               $("." + replaceClass + "").css('display', 'none');
-  //           }
-  //       }
-  //   });
-  // },
+        if (v.innerText == columnDataValue) {
+            if ($(event.target).is(':checked')) {
+                $("." + replaceClass + "").css('display', 'table-cell');
+                $("." + replaceClass + "").css('padding', '.75rem');
+                $("." + replaceClass + "").css('vertical-align', 'top');
+            } else {
+                $("." + replaceClass + "").css('display', 'none');
+            }
+        }
+    });
+  },
 });
 
 Template.payrollleave.helpers({
@@ -855,13 +855,12 @@ Template.payrollleave.helpers({
   formatDate: date => moment(date).format("Do MMM YYYY"),
   leaveTypes: () => Template.instance().leaveTypes.get(),
   apiFunction:async()=> {
-//    let templateObject = Template.instance();
-    //let data = await templateObject.saveLeaveRequestLocalDB();
-    let sideBarService = new SideBarService();
-    return sideBarService.getAllLeavRequest;
+    let templateObject = Template.instance();
+    let data = await templateObject.saveLeaveRequestLocalDB();
+    return data;
   },
   apiParams: function() {
-    return ['limitCount', 'limitFrom', 'deleteFilter'];
+    return ['ignoredate', 'limitCount', 'limitFrom'];
   },
   datahandler: function () {
     let templateObject = Template.instance();
@@ -880,9 +879,5 @@ Template.payrollleave.helpers({
   service: ()=>{
     let sideBarService = new SideBarService();
     return sideBarService;
-  },
-  leaveSearchAPI: function() {
-    let sideBarService = new SideBarService();
-    return sideBarService.getOneLeaveRequestByName;
   },
 });

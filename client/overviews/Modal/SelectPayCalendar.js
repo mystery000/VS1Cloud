@@ -17,30 +17,6 @@ let sideBarService = new SideBarService();
 Template.SelectPayCalendar.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.calendarPeriods = new ReactiveVar([]);
-
-  templateObject.tableheaderrecords = new ReactiveVar([]);
-  templateObject.getDataTableList = function(data) {
-    let ID = data.fields.ID || '';
-    var dataList = [
-        ID,
-        data.fields.PayrollCalendarName || '',
-        data.fields.PayrollCalendarPayPeriod || '',
-        moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || '',
-        moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || '',
-        data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
-      ];
-    return dataList;
-  }
-
-  let headerStructure = [
-    { index: 0, label: 'ID', class: 'colCalenderID', active: false, display: true, width: "10" },
-    { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "200" },
-    { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "110" },
-    { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "110" },
-    { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "80" },
-    { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
-  ];
-  templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.SelectPayCalendar.onRendered(() => {
@@ -62,13 +38,13 @@ Template.SelectPayCalendar.onRendered(() => {
     await templateObject.calendarPeriods.set(calendars);
 
     setTimeout(() => {
-      // $("#SelectPayRunModal #tblPayCalendars").DataTable({
-      //   ...TableHandler.getDefaultTableConfiguration('tblPayCalendars', {
-      //     showPlusButton: false,
-      //     showSearchButton: false
+      $("#SelectPayRunModal #tblPayCalendars").DataTable({
+        ...TableHandler.getDefaultTableConfiguration('tblPayCalendars', {
+          showPlusButton: false,
+          showSearchButton: false
           
-      //   })
-      // });
+        })
+      });
     }, 300)
 
 
@@ -365,42 +341,5 @@ Template.SelectPayCalendar.helpers({
   calendarPeriods: () => {
     return Template.instance().calendarPeriods.get();
   },
-  formatDate: date => GlobalFunctions.formatDate(date),
-  tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
-  },
-
-  apiFunction:function() {
-      let sideBarService = new SideBarService();
-      return sideBarService.getCalender;
-  },
-
-  searchAPI: function() {
-      return sideBarService.getNewCalenderByNameOrPayPeriod;
-  },
-
-  service: ()=>{
-      let sideBarService = new SideBarService();
-      return sideBarService;
-  },
-
-  datahandler: function () {
-      let templateObject = Template.instance();
-      return function(data) {
-          let dataReturn =  templateObject.getDataTableList(data)
-          return dataReturn
-      }
-  },
-
-  exDataHandler: function() {
-      let templateObject = Template.instance();
-      return function(data) {
-          let dataReturn =  templateObject.getDataTableList(data)
-          return dataReturn
-      }
-  },
-
-  apiParams: function() {
-      return ['limitCount', 'limitFrom', 'deleteFilter'];
-  },
+  formatDate: date => GlobalFunctions.formatDate(date)
 });

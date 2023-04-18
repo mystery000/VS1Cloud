@@ -547,8 +547,8 @@
                                         apiParams= apiParams
                                         datahandler = datahandler
                                         service=service
-                                        lowercaseDataName='tprojecttaskslist'
-                                        exIndexDBName = 'tprojecttaskslist'
+                                        lowercaseDataName='tprojecttasks'
+                                        exIndexDBName = 'tprojecttasks'
                                         exdatahandler = exDataHandler
                                         searchAPI = searchAPI
                                 }}
@@ -1305,7 +1305,7 @@
                   </div>
                   <div class="tab-pane border rounded-0 tab-1" role="tabpanel" id="tab-1"
                     style="border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
-                    <!-- <div class="row d-xl-flex flex-row justify-content-xl-center">
+                    <div class="row d-xl-flex flex-row justify-content-xl-center">
                       <div class="col float-left flex-grow-1 mb-4" style="margin-bottom: 0px!important;">
                         <div class="btn-group float-left" style="margin: 16px;margin-bottom: 0px;">
                           <button class="btn btn-primary btnRefresh" type="button"
@@ -1322,10 +1322,10 @@
                           name="exportbtn"><i class="fas fa-file-export"
                             style="padding-right: 5px; background-color: #00A3D3; border-color: #00A3D3;"></i>Export</button>
                       </div>
-                    </div> -->
+                    </div>
                     <div class="row rowB" style="margin: 16px; margin-top: 0px">
                       <div class="card-body rounded" style="padding: 0px;">
-                        <!-- <div class="d-xl-flex justify-content-xl-end">
+                        <div class="d-xl-flex justify-content-xl-end">
                           <div><a class="btn btnOpenSettings" role="button" data-toggle="modal" href="#myModal2"><i
                                 class="icon ion-android-more-horizontal"></i></a>
                             <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
@@ -1430,7 +1430,7 @@
                               </div>
                             </div>
                           </div>
-                        </div> -->
+                        </div>
                         <!-- End -->
 
                         <div class="table-responsive" style="overflow-x: scroll;">
@@ -1467,26 +1467,7 @@
                               opacity: 1;
                             }
                           </style>
-                          <!-- {{> non_transactional_list tablename="tblSupplierTransactionList"}} -->
-                          <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                            {{> export_import_print_display_button  Import="hiddenButton" tablename="tblSupplierTransactionList"}}
-                          </div>
-                          {{>datatablelist
-                            tablename="tblSupplierTransactionList"
-                            tableclass="tblSupplierTransactionList"
-                            apiName= transactionApiFunction
-                            indexeddbname = 'TbillReport'
-                            tableheaderrecords = transactionTableheaderRecords
-                            exportfilename = 'Supplier Transaction List'
-                            istransaction = false
-                            apiParams= transactionApiParams
-                            datahandler = transactionDatahandler
-                            service = transactionService
-                            lowercaseDataName='tbillreport'
-                            exIndexDBName = 'tbillreport'
-                            exdatahandler = transactionExDataHandler
-                            searchAPI = transactionSearchAPI
-                          }}
+                          {{> non_transactional_list tablename="tblSupplierTransactionList"}}
                         </div>
                       </div>
                     </div>
