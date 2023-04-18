@@ -35,9 +35,9 @@ Template.salesorderslist.onCreated(function(){
         salestatus = "Deleted";
       };
       let dataList = [
-          '<span style="display:none;">'+data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate+'</span>'+data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate,
+          '<span style="display:none;">'+(data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate)+'</span>'+(data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate),
           data.SaleID || '',
-          '<span style="display:none;">'+data.DueDate !=''? moment(data.DueDate).format("YYYY/MM/DD"): data.DueDate+'</span>'+data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate,
+          '<span style="display:none;">'+(data.DueDate !=''? moment(data.DueDate).format("YYYY/MM/DD"): data.DueDate)+'</span>'+(data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate),
           data.CustomerName || '',
           totalAmountEx || 0.00,
           totalTax || 0.00,

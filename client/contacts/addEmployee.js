@@ -94,6 +94,7 @@ Template.employeescard.onCreated(function () {
   templateObject.datatablerecords = new ReactiveVar([]);
   templateObject.tableheaderrecords = new ReactiveVar([]);
   templateObject.tableLeaveRequestheaderrecords = new ReactiveVar([]);
+  templateObject.tablepayheaderrecords = new ReactiveVar([]);
   templateObject.isCloudUserPass = new ReactiveVar();
   templateObject.isCloudUserPass.set(false);
   templateObject.selectedproducts = new ReactiveVar([]);
@@ -138,10 +139,23 @@ Template.employeescard.onCreated(function () {
         data.fields.Description || '',
         data.fields.PayPeriod || '',
         data.fields.LeaveMethod || '',
+        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`,
         data.fields.Status || '',
-        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
       ];
     }
+    return dataList;
+  }
+
+  templateObject.getPayDataTableList = function(data) {
+    let dataList = [
+      data.fields.ID || "",
+      data.fields.PayrollCalendarName || "",
+      data.fields.PayrollCalendarPayPeriod || "",
+      moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
+      moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
+      data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
+    ];
+    // let dataList = [];
     return dataList;
   }
 
@@ -150,10 +164,131 @@ Template.employeescard.onCreated(function () {
     { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
     { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
     { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
-    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
-    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+    { index: 4, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+    { index: 5, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
 ];
 templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
+
+
+
+  let payHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colCalenderID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "110" },
+    { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "110" },
+    { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "110" },
+    { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "80" },
+    { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.tablepayheaderrecords.set(payHeaderStructure);
+
+  templateObject.customerTableHeaderRecords = new ReactiveVar([]);
+  templateObject.getCustomerDataTableList = function(data) {
+        
+    let sort_date = data.MsTimeStamp == "" ? "1770-01-01" : data.MsTimeStamp;
+    sort_date = new Date(sort_date);
+    
+    // let taskLabel = data.TaskLabel;
+    let taskLabelArray = [];
+    // if (taskLabel !== null) {
+    //     if (taskLabel.length === undefined || taskLabel.length === 0) {
+    //         taskLabelArray.push(taskLabel.fields);
+    //     } else {
+    //         for (let j = 0; j < taskLabel.length; j++) {
+    //             taskLabelArray.push(taskLabel[j].fields);
+    //         }
+    //     }
+    // }
+    let taskDescription = data.TaskDescription || '';
+    taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+    const dataList = [
+        data.ID || 0,
+        data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+        data.Position,
+        data.TaskName || '',
+        taskDescription,
+        data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+        data.Completed ? "Completed" : "",
+        data.Active ? "" : "In-Active",
+        // priority: data.priority || 0,                
+        // projectID: data.ProjectID || '',
+        // projectName: data.ProjectName || '',
+        // labels: taskLabelArray,
+        // category: 'Task',                
+        
+    ];
+    
+    return dataList;
+  }
+  let customerHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
+    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+    { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
+    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
+    { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
+    { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
+    { index: 6, label: 'Completed', class: 'colCompleteTask', active: true, display: true, width: "120" },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.customerTableHeaderRecords.set(customerHeaderStructure);
+
+  templateObject.transactionTableHeaderRecords = new ReactiveVar([]);
+  templateObject.getTransactionDataTableList = function(data) {
+    var dataList = [
+      data.fields.ID || "",
+      data.fields.SaleDate || "",
+      data.fields.ID || "",
+      data.fields.CustomerName || "",
+      data.fields.TotalAmountInc || "",
+      data.fields.TotalTax || "",
+      data.fields.TotalAmount || "",
+      data.fields.TotalPaid || "",
+      data.fields.TotalBalance || "",
+      data.fields.SaleCustField1 || "",
+      data.fields.SaleCustField2 || "",
+      data.fields.Employee || "",
+      data.fields.Comments || "",
+      data.fields.SalesStatus || "",
+    ];
+    return dataList;
+  }
+  let transactionHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colSortDate', active: false, display: true, width: "10" },
+    { index: 1, label: 'Sale Date', class: 'colSaleDate', active: true, display: true, width: "80" },
+    { index: 2, label: 'Sales No.', class: 'colSalesNo', active: true, display: true, width: "80" },
+    { index: 3, label: 'Customer', class: 'colCustomer', active: true, display: true, width: "200" },
+    { index: 4, label: 'Amount (Ex)', class: 'colAmountEx', active: true, display: true, width: "110" },
+    { index: 5, label: 'Tax', class: 'colTax', active: true, display: true, width: "110" },
+    { index: 6, label: 'Amount', class: 'colAmount', active: true, display: true, width: "110" },
+    { index: 7, label: 'Paid', class: 'colPaid', active: true, display: true, width: "110" },
+    { index: 8, label: 'Balance Outstanding', class: 'colBalanceOutstanding', active: true, display: true, width: "110" },
+    { index: 9, label: 'Custom Field 1', class: 'colSaleCustField1', active: false, display: true, width: "110" },
+    { index: 10, label: 'Custom Field 2', class: 'colSaleCustField2', active: false, display: true, width: "110" },
+    { index: 11, label: 'Employee', class: 'colEmployee', active: false, display: true, width: "110" },
+    { index: 12, label: 'Comments', class: 'colComments', active: false, display: true, width: "300" },
+    { index: 13, label: 'Status', class: 'colStatus', active: false, display: true, width: "120" },
+  ];
+  templateObject.transactionTableHeaderRecords.set(transactionHeaderStructure);
+
+  templateObject.holidayTableHeaderRecords = new ReactiveVar([]);
+  templateObject.getHolidayDataTableList = function(data) {
+    var dataList = [
+      data.fields.ID || "",
+      data.fields.PayrollHolidaysName || "",
+      moment(data.fields.PayrollHolidaysDate).format("DD/MM/YYYY") || "",
+      data.fields.PayrollHolidaysGroupName || "",
+      data.fields.PayrollHolidaysActive == true ? '' : 'In-Active',                
+    ];
+    return dataList;
+  }
+  let holidayHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colHolidayID', active: false, display: true, width: "10" },
+    { index: 1, label: 'Name', class: 'colHolidayName', active: true, display: true, width: "200" },
+    { index: 2, label: 'Date', class: 'colHolidayDate', active: true, display: true, width: "80" },
+    { index: 3, label: 'Holiday group', class: 'colHolidaygroup', active: false, display: true, width: "110" },
+    { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.holidayTableHeaderRecords.set(holidayHeaderStructure);
 
 });
 
@@ -2207,7 +2342,7 @@ $('#obEarningsRate').editableSelect();
       $('#edtPayrollCalendar').val($(this).find(".colPayCalendarName").text());
       $('#payrollCalendarPopModal').modal('toggle');
     });
-    $(document).on("click", "#tblHolidays tbody tr", function (e) {
+    $(document).on("click", "#tblHolidayas tbody tr", function (e) {
       $('#edtHolidays').val($(this).find(".colHolidayName").text());
       $('#holidaysPopModal').modal('toggle');
     });
@@ -10392,6 +10527,9 @@ Template.employeescard.helpers({
   tableLeaveRequestheaderrecords: () => {
     return Template.instance().tableLeaveRequestheaderrecords.get();
   },
+  tablepayheaderrecords: () => {
+    return Template.instance().tablepayheaderrecords.get();
+  },
   salesCloudPreferenceRec: () => {
     return CloudPreference.findOne({
       userid: localStorage.getItem('mycloudLogonID'),
@@ -10494,9 +10632,153 @@ Template.employeescard.helpers({
         return dataReturn
     }
   },
+
+  payDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getPayDataTableList(data)
+        return dataReturn
+    }
+  },
+  payExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getPayDataTableList(data)
+        return dataReturn
+    }
+  },
   service: ()=>{
     let sideBarService = new SideBarService();
     return sideBarService;
+  },
+
+  payApiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getCalender;
+  },
+
+  searchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getNewCalenderByNameOrPayPeriod;
+  },
+
+  payApiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+  },
+
+  customerTableHeaderRecords: () => {
+    return Template.instance().customerTableHeaderRecords.get();
+  },
+  customerApiFunction:function() {
+    const crmService = new CRMService();
+    return crmService.getAllProjectTasksList;
+  },
+
+  customerSearchAPI: function() {
+    const crmService = new CRMService();
+    return crmService.getAllProjectTasksByTaskName;
+  },
+
+  customerService: ()=>{
+    const crmService = new CRMService();
+    return crmService;
+  },
+
+  customerDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getCustomerDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  customerExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getCustomerDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  customerApiParams: function() {
+    return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+  },
+
+  transactionTableHeaderRecords: () => {
+    return Template.instance().transactionTableHeaderRecords.get();
+  },
+  transactionApiFunction:function() {
+    const contactService = new ContactService();
+    return contactService.getAllInvoiceList;
+  },
+
+  transactionSearchAPI: function() {
+    const contactService = new ContactService();
+    return contactService.getInvoiceListsByEmployeeName;
+  },
+
+  transactionService: ()=>{
+    const contactService = new ContactService();
+    return contactService;
+  },
+
+  transactionDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getTransactionDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  transactionExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getTransactionDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  transactionApiParams: function() {
+    return ['limitcount', 'limitfrom', 'deleteFilter'];
+  },
+
+  holidayTableHeaderRecords: () => {
+    return Template.instance().holidayTableHeaderRecords.get();
+  },
+  holidayApiFunction:function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getHolidayData;
+  },
+
+  holidaySearchAPI: function() {
+    let sideBarService = new SideBarService();
+    return sideBarService.getHolidayData;
+  },
+
+  holidayService: ()=>{
+    let sideBarService = new SideBarService();
+    return sideBarService;
+
+  },
+
+  holidayDataHandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getHolidayDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  holidayExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getHolidayDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  holidayApiParams: function() {
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
   },
 });
 

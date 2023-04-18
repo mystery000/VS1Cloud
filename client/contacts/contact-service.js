@@ -360,12 +360,55 @@ export class ContactService extends BaseService {
         //LastName='"+customerName+"' and
         return this.getList(this.ERPObjects.TJob, options);
     }
+    getAllJobList(limitCount, limitFrom, deleteFilter) {
+        let options = {
+            listType: "Detail",
+            Search: "Active = true",
+        };
+        //LastName='"+customerName+"' and
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TJobVS1List, options);
+    }
+    getAllJobListByName(customerName) {
+        let options = {
+            listType: "Detail",
+            Search: `Active = true and Company = "${customerName}"`,
+        };
+        //LastName='"+customerName+"' and
+        //if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TJobVS1List, options);
+    }
 
     getAllInvoiceListByEmployee(employeeName) {
         let options = {
             PropertyList: "ID,EmployeeName,SaleClassName,SaleDate,CustomerName,TotalAmount,SalesStatus,ShipDate,SalesDescription,CustPONumber,TermsName,TotalTax,TotalAmountInc,TotalPaid,TotalBalance,Comments",
             select: "EmployeeName='" + employeeName + "' and [Deleted]=false",
         };
+        return this.getList(this.ERPObjects.TInvoice, options);
+    }
+
+    getAllInvoiceList(limitcount, limitfrom, deleteFilter) {
+        let options = {
+            ListType: "Detail",
+            Search:"Active=true",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TInvoice, options);
+    }
+
+    getInvoiceListsByEmployeeName(EmployeeName = '') {
+        var options = {
+            ListType: "Detail",
+            select: "[Deleted]=false"
+        };
+        if (EmployeeName) {
+            options = {
+                ListType: "Detail",
+                select: "EmployeeName='" + EmployeeName + "' and [Deleted]=false",
+            };
+        }
         return this.getList(this.ERPObjects.TInvoice, options);
     }
 
@@ -382,7 +425,7 @@ export class ContactService extends BaseService {
             IgnoreDates: true,
             IncludePOs: true,
             IncludeBills: true,
-            select: "SupplierName='" + supplierName + "' and [Deleted]=false",
+            //select: "SupplierName='" + supplierName + "' and [Deleted]=false",
         };
         return this.getList(this.ERPObjects.TbillReport, options);
 
@@ -391,6 +434,17 @@ export class ContactService extends BaseService {
         //   select: "SupplierName='"+supplierName+"' and [Deleted]=false",
         // };
         // return this.getList(this.ERPObjects.tbillreport, options);
+    }
+
+    getAllTransList(limitcount, limitfrom, deleteFilter) {
+        let options = {
+            // Search:"pt.Deleted=false",
+            IgnoreDates: true,
+            IncludePOs: true,
+            IncludeBills: true,
+        };
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TbillReport, options);
     }
 
     getDetailAccountTransactions() {
@@ -668,5 +722,15 @@ export class ContactService extends BaseService {
             }
         }
         return mobileResult;
+    }
+
+    getAllLeavRequest(limitcount, limitfrom, deleteFilter) {
+        let options = {
+            Search:"Active=true",
+            LimitCount: parseInt(limitcount),
+            LimitFrom: parseInt(limitfrom),
+        };
+        if(deleteFilter) options.Search = "";
+        return this.getList(this.ERPObjects.TLeavRequest, options);
     }
 }

@@ -650,23 +650,86 @@ Template.supplierscard.onCreated(function () {
       //JSON.stringify(taskLabelArray),
       //category: 'Task',
       data.Completed ? "Completed" : "In-Completed",
-        data.Active ? "" : "In-Active",
       data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+      data.Active ? "" : "In-Active",
     ];
     return dataList;
   }
 
   let headerStructure = [
-    { index: 0, label: '#ID', class: 'colTaskId', active: false, display: true, width: "" },
-    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "100" },
-    { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "100" },
-    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "150" },
-    { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "250" },
-    { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "100" },
-    { index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "60" },
-    { index: 7, label: '', class: 'colCompleteTask', active: true, display: true, width: "100" },
+    { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
+    { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+    { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
+    { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "200" },
+    { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
+    { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
+    { index: 6, label: '', class: 'colCompleteTask', active: true, display: true, width: "110" },
+    { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
   templateObject.tableheaderrecords.set(headerStructure);
+
+  templateObject.transactionTableheaderRecords = new ReactiveVar([]);
+  templateObject.getTransactionDataTableList = function(data) {
+    let totalAmountEx = utilityService.modifynegativeCurrencyFormat(data['Total Amount (Ex)']) || 0.00;
+    let totalTax = utilityService.modifynegativeCurrencyFormat(data['Total Tax']) || 0.00;
+    let totalAmount = utilityService.modifynegativeCurrencyFormat(data['Total Amount (Inc)']) || 0.00;
+    let amountPaidCalc = data['Total Amount (Inc)'] - data.Balance;
+    let totalPaid = utilityService.modifynegativeCurrencyFormat(amountPaidCalc) || 0.00;
+    let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
+    const dataList_Object = {
+        id: data.PurchaseOrderID || '',
+        employee: data.Contact || '',
+        sortdate: data.OrderDate !== '' ? moment(data.OrderDate).format("YYYY/MM/DD") : data.OrderDate,
+        orderdate: data.OrderDate !== '' ? moment(data.OrderDate).format("DD/MM/YYYY") : data.OrderDate,
+        suppliername: data.Company || '',
+        totalamountex: totalAmountEx || 0.00,
+        totaltax: totalTax || 0.00,
+        totalamount: totalAmount || 0.00,
+        totalpaid: totalPaid || 0.00,
+        totaloustanding: totalOutstanding || 0.00,
+        orderstatus: '',
+        type: data.Type || '',
+        custfield1: data.Phone || '',
+        custfield2: data.InvoiceNumber || '',
+        comments: data.Comments || '',
+    };
+    var dataList = [
+      dataList_Object.id,
+      dataList_Object.orderdate,
+      dataList_Object.id,
+      dataList_Object.suppliername,
+      dataList_Object.totalamountex,
+      dataList_Object.totaltax,
+      dataList_Object.totalamount,
+      dataList_Object.totalpaid,
+      dataList_Object.totaloustanding,
+      dataList_Object.type,
+      dataList_Object.custfield1,
+      dataList_Object.custfield2,
+      dataList_Object.employee,
+      dataList_Object.comments,
+
+  ];
+    return dataList;
+  }
+  let transactionHeaderStructure = [
+    { index: 0, label: 'ID', class: 'colSortDate', active: false, display: true, width: "10" },
+    { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "110" },
+    { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+    { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+    { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+    { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+    { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+    { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+    { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "110" },
+    { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "110" },
+    { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "110" },
+    { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "110" },
+    { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "110" },
+    { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "110" },
+    { index: 14, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+  ];
+  templateObject.transactionTableheaderRecords.set(transactionHeaderStructure);
 
 });
 
@@ -2528,7 +2591,7 @@ Template.supplierscard.helpers({
   },
   apiFunction:function() {
     let crmService = new CRMService();
-    return crmService.getAllTasksList;
+    return crmService.getAllTasksByContactName;
   },
 
   searchAPI: function() {
@@ -2558,7 +2621,45 @@ Template.supplierscard.helpers({
   },
 
   apiParams: function() {
-    return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+    return ['LimitCount', 'LimitFrom', 'deleteFilter'];
+  },
+
+  transactionTableheaderRecords: () => {
+    return Template.instance().transactionTableheaderRecords.get();
+  },
+  transactionApiFunction:function() {
+    const contactService = new ContactService();
+    return contactService.getAllTransList;
+  },
+
+  transactionSearchAPI: function() {
+    const contactService = new ContactService();
+    return contactService.getAllTransListBySupplier;
+  },
+
+  transactionDatahandler: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getTransactionDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  transactionExDataHandler: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+      let dataReturn =  templateObject.getTransactionDataTableList(data)
+      return dataReturn
+    }
+  },
+
+  transactionApiParams: function() {
+    return ['limitcount', 'limitfrom', 'deleteFilter'];
+  },
+
+  transactionService: ()=>{
+    const contactService = new ContactService();
+    return contactService;
   },
 });
 
