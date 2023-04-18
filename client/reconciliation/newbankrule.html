@@ -148,8 +148,23 @@
                                     <label>Bank Account Name</label>
                                     <input type="hidden" id="bankAccountID" value="">
 <!--                                    <select type="search" class="form-control" id="bankAccountName" value="" style="display:inline-block; width: 300px; cursor: pointer;"></select>-->
-                                    {{> vs1_dropdown id='bankAccountName' name='bankAccountName' type='search' classes='es-input w-300'}}
-
+<!--                                    {{> vs1_dropdown id='bankAccountName' name='bankAccountName' type='search' classes='es-input w-300'}}-->
+                                    {{> vs1___dropdown
+                                            data=''
+                                            classes='w-50'
+                                            type='search'
+                                            id='bankAccountName'
+                                            name='bankAccountName'
+                                            modalId= 'bankNameModal'
+                                            list_template_name='bankNameModal'
+                                            modal_title='Bank Name List'
+                                            innerModal=true
+                                            colNameForValue ='colBankName'
+                                            target_modal_id='editCustomerModal'
+                                            target_template_id='addcustomerpop'
+                                            is_editable=false
+                                            noBorder=false
+                                    }}
                                 </div>
                             </div>
                         </div>
@@ -160,7 +175,7 @@
                                 </div>
                             </div>
                             <div class="col-12">
-                                <div class="col-12 col-md-12" style="padding: 0 20px;">
+                                <div class="col-12 col-md-12 w-50 m-auto" style="padding: 0 20px;">
                                     <div>
                                         <p>Add columns</p>
                                     </div>
@@ -280,9 +295,9 @@
 <!--    <div class="modal fade" role="dialog" tabindex="-1" id="addAccountModal">-->
 <!--        {{> addaccountpop name="Bank"}}-->
 <!--    </div>-->
-    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
-        {{> bankNameModal}}
-    </div>
+<!--    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">-->
+<!--        {{> bankNameModal}}-->
+<!--    </div>-->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="fieldModal">
         <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 40vw;">

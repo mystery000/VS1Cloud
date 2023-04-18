@@ -41,10 +41,10 @@
 <!--                            ></select>-->
                             {{> vs1___dropdown
                                     type='search'
-                                    id='sltBankName1'
-                                    name='sltBankName1'
+                                    id='sltBankName'
+                                    name='sltBankName'
                                     usedModal=false
-                                    modalId= 'bankNameModal1'
+                                    modalId= 'bankListModal'
                                     list_template_name='bankNameModal'
                                     innerModal=true
                                     modal_title='Bank Account Name'
@@ -62,19 +62,13 @@
                         data-toggle="tooltip"
                         data-placement="bottom"
                         title="Date format: YYYY-MM-DD">
-                        <div class="form-group">
-                            <label>Processing Date</label>
-                            <div class="input-group date">
-                                <input
-                                    type="text"
-                                    class="form-control eftProcessingDate"
-                                    id="eftProcessingDate"
-                                    autocomplete="off"/>
-                                <div class="input-group-addon">
-                                    <span class="glyphicon glyphicon-th" style="cursor: pointer"></span>
-                                </div>
-                            </div>
-                        </div>
+                        {{>single_date_picker
+                                id="eftProcessingDate"
+                                classes="eftProcessingDate"
+                                name="eftProcessingDate"
+                                label="Processing Date"
+                                defaultValue=""
+                        }}
                     </div>                
                     <div class="col-4">
                         <div class="form-group">
@@ -102,8 +96,8 @@
 
                             {{> vs1___dropdown
                                     type='search'
-                                    id='sltTransactionDescription1'
-                                    name='sltTransactionDescription1'
+                                    id='sltTransactionDescription'
+                                    name='sltTransactionDescription'
                                     usedModal=false
                                     modalId= 'transactionDescriptionModal'
                                     list_template_name='transactionDescriptionModal'
@@ -165,7 +159,7 @@
     </div>
 
     <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">{{> accountlistpop typefilter="BANK"}}</div>
-    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">{{> bankNameModal}}</div>
+<!--    <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">{{> bankNameModal}}</div>-->
     <div class="modal fade" role="dialog" tabindex="-1" id="transactionDescriptionModal">
         {{> transactionDescriptionModal}}
     </div>

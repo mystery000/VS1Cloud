@@ -156,16 +156,16 @@ Template.newbankrule.onRendered(function () {
   //       }
   //     }
   //   });
-  //   $(document).on("click", "#tblBankName tbody tr", function (e) {
-  //     var table = $(this);
-  //     let BankName = table.find(".colBankName").text();
-  //     let BankDescription = table.find(".colDescription").text();
-  //     let BankID = $('#tblBankName tr').index(this);
-  //     templateObject.bankDescription.set(BankDescription);
-  //     $('#bankNameModal').modal('hide');
-  //     // $('#bankAccountName').val(BankName);
-  //     $('#bankAccountID').val(BankID);
-  //   });
+    $(document).on("click", "#tblBankName tbody tr", function (e) {
+      var table = $(this);
+      let BankName = table.find(".colBankName").text();
+      let BankDescription = table.find(".colDescription").text();
+      let BankID = $('#tblBankName tr').index(this);
+      templateObject.bankDescription.set(BankDescription);
+      $('#bankNameModal').modal('hide');
+      // $('#bankAccountName').val(BankName);
+      $('#bankAccountID').val(BankID);
+    });
 
   if (FlowRouter.current().queryParams.bankaccountname) {
     let accountname = FlowRouter.current().queryParams.bankaccountname;

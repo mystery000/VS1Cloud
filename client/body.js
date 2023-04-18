@@ -671,7 +671,6 @@ import './reports/exeposition/exeposition.js';
 import './reports/exeprofitability/exeprofitability.js';
 import './reconciliation/newstatementrule.js';
 import './vs1_templates/template_buttons/report_export_import_print_display_button.js';
-import './contacts/customerlistpopup.html';
 /* Scott */
 
 /* Mainstar */

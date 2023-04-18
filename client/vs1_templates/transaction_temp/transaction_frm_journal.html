@@ -146,13 +146,13 @@
             <th class="th colAccountName" style="width: 300px;">Account Name</th>
             <!-- <th class="th colAccountNo" style="width: 300px;">Account No</th> -->
             <th class="th colMemo">Memo</th>
+            <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
             <th colspan="{{displayFieldColspan }}" class="th colCreditEx colCreditExCheck" style="width: 130px; text-align: left!important;">Credit (Ex) <i class="fas fa-random"></i></th>
             <th colspan="{{displayFieldColspan }}" class="th colCreditInc colCreditIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Credit (Inc) <i class="fas fa-random fa-trans"></i></th>
             <th colspan="{{displayFieldColspan }}" class="th colDebitEx colDebitExCheck" style="width: 130px; text-align: left!important;">Debit (Ex) <i class="fas fa-random"></i></th>
             <th colspan="{{displayFieldColspan }}" class="th colDebitInc colDebitIncCheck hiddenColumn" style="width: 130px; text-align: left!important;">Debit (Inc) <i class="fas fa-random fa-trans"></i></th>
             <th class="th colTaxRate hiddenColumn" style="width: 91px; text-align: left!important;">Tax Rate</th>
             <th colspan="{{displayFieldColspan }}" class="th colTaxAmount hiddenColumn" style="width: 95px; text-align: left!important;">Tax Amt</th>
-            <th class="th colTaxCode " style="width: 95px; text-align: left!important;">Tax Code</th>
             <!-- <th class="th">Tax Price</th> -->
             <th class="th colDepartment" style="width: 95px; text-align: left!important;">Department</th>
             <th class="th colCustomerJob" style="width: 95px; text-align: left!important;">Customer/Job</th>
@@ -202,7 +202,7 @@
                             target_modal_id= 'addAccountModal'
                             target_template_id='addaccountpop'
                             custid=item.lineID
-                            is_editable=true
+                            is_editable=false
                             noBorder=true
                     }}
                     {{/let}}
@@ -230,9 +230,9 @@
                             label = ''
                             colNameForValue = 'taxName'
                             target_modal_id= 'taxratelistModal'
-                            target_template_id='taxratelistpop'
+                            target_template_id='EditTaxRateModal'
                             custid=item.lineID
-                            is_editable=true
+                            is_editable=false
                             noBorder=true
                     }}
                     {{/let}}
@@ -288,7 +288,7 @@
                                 target_modal_id= 'newDepartModal'
                                 target_template_id='newDepartmentPop'
                                 custid=item.lineID
-                                is_editable=true
+                                is_editable=false
                                 noBorder=true
                         }}
                         {{/let}}
@@ -314,7 +314,7 @@
                             target_modal_id='addAccountModal'
                             target_template_id='addaccountpop'
                             custid=item.lineID
-                            is_editable=true
+                            is_editable=false
                             noBorder=true
                     }}
                     {{/let}}

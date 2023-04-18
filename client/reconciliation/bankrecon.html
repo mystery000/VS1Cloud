@@ -221,15 +221,6 @@
                                 <div class="col mr-2">
                                     <div class="text-uppercase text-warning font-weight-bold text-xs mb-1"><span style="font-size: 14px;">Select Bank Account</span></div>
                                     <div class="form-group">
-                                        <!-- <select class="form-control" id="bankAccountName" name="bankAccountName" style="cursor: pointer;">
-                                            <option value="" disabled selected>Please Select...</option>
-                                            {{#each item in accountnamerecords}}
-                                            <option value="{{item.accountid}}">{{item.accountname}}</option>
-                                            {{/each}}
-                                        </select> -->
-
-<!--                                        <select type="search" class="form-control" id="bankAccountName" name="bankAccountName" style="background-color:rgb(255, 255, 255); cursor: pointer;">-->
-<!--                                        </select>-->
                                         {{> vs1___dropdown
                                                 type='search'
                                                 id='bankAccountName'
@@ -347,19 +338,16 @@
                                     </div>
                                     <div class="card-body" style="padding: 0;">
                                         <div class="row no-gutters d-xl-flex justify-content-center align-items-center justify-content-xl-start" style="">
-                                            <div class="col">
-                                                <div class="form-group statenoform" style="margin: 12px;"><label>Statement No.</label><input id="statementno" name="statementno" type="text" class="form-control statementno"/></div>
+                                            <div class="col" style="margin: 12px;">
+                                                <div class="form-group statenoform"><label>Statement No.</label><input id="statementno" name="statementno" type="text" class="form-control statementno"/></div>
                                             </div>
-                                            <div class="col">
-                                                <div class="form-group statedateform" style="margin: 12px;">
-                                                    <label>Statement Date</label>
-                                                    <div class="input-group date" style="cursor: pointer;">
-                                                        <input type="text" class="form-control formClassDate statementDate" id="dtSODate2" name="dtSODate2" value="{{invoicerecord.saledate}}">
-                                                        <div class="input-group-addon" style="">
-                                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div class="col" style="margin: 12px;">
+                                                {{>single_date_picker
+                                                        id="dtSODate2"
+                                                        name="dtSODate2"
+                                                        label="Statement Date"
+                                                        defaultValue=invoicerecord.saledate
+                                                }}
                                             </div>
                                         </div>
                                     </div>

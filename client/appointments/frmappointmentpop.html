@@ -18,8 +18,6 @@
                         <div class="row m-2">
                             <div class="col-md-6 colCustJobName" id="colCustJobName">
                                 <div class="form-group flex-grow-1 my-2"><label>Customer / Job</label>
-<!--                                    <select type="search" class="form-control" id="customer" name="customer"-->
-<!--                                        style="background-color:rgb(255, 255, 255); cursor: pointer;"></select>-->
                                     {{> vs1___dropdown
                                             data=''
                                             type='search'
@@ -31,7 +29,7 @@
                                             innerModal=true
                                             colNameForValue ='colCompany'
                                             target_modal_id='editCustomerModal'
-                                            target_template_id='customerlistpopup'
+                                            target_template_id='addcustomerpop'
                                             custid="129kT9261BNu"
                                             is_editable=true
                                             noBorder=false
@@ -148,16 +146,6 @@
                                 </div>
                             </div>
                             <div class="col-md-3 colStartDate" id="colStartDate">
-<!--                                <div class="form-group" style="margin: 8px 0px;">-->
-<!--                                    <label>Start Date</label>-->
-<!--                                    <div class="input-group date" style="cursor: pointer;">-->
-<!--                                        <input type="text" class="form-control formClassDate statementDate"-->
-<!--                                            id="dtSODate" name="dtSODate">-->
-<!--                                        <div class="input-group-addon" style="">-->
-<!--                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                                 {{> single_date_picker
                                         classes="formClassDate statementDate"
                                         label="Start Date"
@@ -167,16 +155,6 @@
                                 }}
                             </div>
                             <div class="col-md-3 colEndDate" id="colEndDate">
-<!--                                <div class="form-group" style="margin: 8px 0px;">-->
-<!--                                    <label>End Date</label>-->
-<!--                                    <div class="input-group date" style="cursor: pointer;">-->
-<!--                                        <input type="text" class="form-control formClassDate statementDate"-->
-<!--                                            id="dtSODate2" name="dtSODate2">-->
-<!--                                        <div class="input-group-addon" style="">-->
-<!--                                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                                 {{> single_date_picker
                                         classes="formClassDate statementDate"
                                         label="End Date"
@@ -289,18 +267,7 @@
 
                             <div class="col-xl-4 col-12 colProductService2" id="colProductService2">
                                 <div class="form-group flex-grow-1" style="margin: 8px 0px;">
-<!--                                    <label>Product /-->
-<!--                                        Service for Appointment</label>-->
 
-<!--                                    <select type="search" id="product-list" name="product-list"-->
-<!--                                        class="form-control product-list"-->
-<!--                                        style="background-color:rgb(255, 255, 255); cursor: pointer;">-->
-<!--                                        &lt;!&ndash; {{#if datatablerecords}}-->
-<!--                                            {{#each item in datatablerecords}}-->
-<!--                                                <option value="{{item.id}}">{{item.productname}}</option>-->
-<!--                                            {{/each}}-->
-<!--                                        {{/if}} &ndash;&gt;-->
-<!--                                    </select>-->
                                     {{> vs1___dropdown
                                             type='search'
                                             id='product-list'
@@ -312,10 +279,10 @@
                                             modal_title='Product List'
                                             label = 'Product / Service for Appointment'
                                             colNameForValue = 'colProductName'
-                                            target_modal_id= 'newproductpop'
-                                            target_template_id='productlistpopwithcheckboxes'
+                                            target_modal_id= 'newproductpopup'
+                                            target_template_id='newproductpop'
                                             custid='GP4z5E8SpdZafRfLd'
-                                            is_editable=true
+                                            is_editable=false
                                             noBorder=false
                                     }}
                                 </div>
