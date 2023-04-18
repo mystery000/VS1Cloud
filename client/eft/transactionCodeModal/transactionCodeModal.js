@@ -20,7 +20,7 @@ Template.transactionCodeModal.onCreated(function () {
   }
 
   let headerStructure = [
-    {index: 0, label: "#ID", class: "colID", width: "30", active: false, display: true},
+    {index: 0, label: "#ID", class: "colID", width: "30", active: true, display: true},
     {index: 1, label: "Transaction Code", class: "colTransactionCode", width: "300", active: true, display: true},
   ];
   templateObject.tableheaderrecords.set(headerStructure);

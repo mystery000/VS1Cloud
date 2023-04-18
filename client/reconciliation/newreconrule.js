@@ -380,7 +380,7 @@ Template.newreconrule.onRendered(function() {
         // templateObject.getDefaultCustomerTerms();
         // templateObject.getDefaultSupplierTerms();
     }, 100);
-
+/*
     $('#sltCustomer').editableSelect();
     $('#sltCustomer').editableSelect().on('click.editable-select', function (e, li) {
         const $each = $(this);
@@ -482,7 +482,7 @@ Template.newreconrule.onRendered(function() {
             }
         }
     });
-
+*/
     $(document).on("click", ".newbankrule #tblAccountListPop tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         $(".colAccount").removeClass('boldtablealertsborder');
@@ -494,6 +494,7 @@ Template.newreconrule.onRendered(function() {
         $('#sltBankAccountID').val(accountId);
         $('#tblAccount_filter .form-control-sm').val('');
     });
+
     $(document).on("click", ".newbankrule #tblFullAccount tbody tr", function(e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         $(".colAccount").removeClass('boldtablealertsborder');
@@ -685,6 +686,7 @@ Template.newreconrule.events({
     'change .lineValue': function (event) {
         selectedLineID = $(event.target).closest('tr').attr('id');
     },
+
     'click .lineAccountName, keydown .lineAccountName': function (event) {
         selectedLineID = $(event.target).closest('tr').attr('id');
         const $each = $(event.currentTarget);
@@ -747,6 +749,7 @@ Template.newreconrule.events({
             }
         }
     },
+
     'keydown .lineAmount, keydown .linePercent': function (event) {
         selectedLineID = $(event.target).closest('tr').attr('id');
         if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) != -1 ||
@@ -986,6 +989,9 @@ Template.newreconrule.helpers({
     },
     transferConditionData : () => {
         return Template.instance().transferConditionData.get();
+    },
+    addString: (str1, str2) => {
+        return `${str1}${str2}`
     },
 });
 
