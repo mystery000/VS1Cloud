@@ -59,12 +59,14 @@
                         ><i class="icon ion-android-more-horizontal"></i
                         ></a>
                     </div>
+                    {{> datesforcardchart}}
                 </div>
             </header>
-            {{> allChartLists tabGroupID="12" chartGroup="CRM" currentTemplate="CRM_Overview"}}
+            {{> editCardChartButtons}}
             <div style="padding: 0 8px">
                 {{> allCardsLists tabGroupID="3" chartGroup="CRMOverview"}}
             </div>
+            {{> allChartLists tabGroupID="12" chartGroup="CRM" currentTemplate="CRM_Overview"}}            
         </div>
 
         {{> crm_top_menu}}

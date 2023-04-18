@@ -25,7 +25,7 @@ Template.dashboardSalesCharts.onRendered(function() {
     async function renderCharts(formatDateFrom, formatDateTo, ignoreDate) {
         const fromDate = new Date($("#dateFrom").datepicker("getDate"));
         const toDate = new Date($("#dateTo").datepicker("getDate"));
-
+        $(".fullScreenSpin").css("display", "inline-block");
         const dataInvoiceObject = await getVS1Data('TInvoiceList');
         let totalInvoiceValue2ndLastQuater = 0;
         let totalInvoiceValueLastQuater = 0;
@@ -115,6 +115,7 @@ Template.dashboardSalesCharts.onRendered(function() {
             sourcesValues.push(sourceCount.totalCount)
         });
         renderOpportunitiesChart({ sources, sourcesValues });
+        $(".fullScreenSpin").css("display", "none");
     }
 
     function renderComparisonChart({ categories, quotaAmount, invoiceAmount, closedAmount }) {
@@ -239,6 +240,7 @@ Template.dashboardSalesCharts.onRendered(function() {
     setTimeout(function() {
         templateObject.setDateVal();
     }, 500);
+    $(document).on("change", "#dateFrom, #dateTo", templateObject.setDateVal)
 });
 
 Template.dashboardSalesCharts.events({

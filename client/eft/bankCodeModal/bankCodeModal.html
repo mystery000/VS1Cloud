@@ -8,6 +8,21 @@
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectBankCodeID" name="selectBankCodeID" readonly>
         <div class="card-body p-1 rounded">
+            {{>datatablelist
+                    tablename="tblBankCode"
+                    apiName= apiFunction
+                    indexeddbname = 'TBankCode'
+                    tableheaderrecords = tableheaderrecords
+                    exportfilename = 'Bank Code List'
+                    istransaction = false
+                    apiParams= apiParams
+                    datahandler = datahandler
+                    service=service
+                    lowercaseDataName='tbankcode'
+                    exIndexDBName = 'tbankcode'
+                    exdatahandler = exDataHandler
+                    searchAPI = searchAPI
+            }}
           <div class="table-responsive">
             <table id="tblBankCode" style="width:100%" class="table table-striped table-bordered tblBankCode">
               <thead>

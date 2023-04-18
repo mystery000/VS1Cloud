@@ -2661,49 +2661,130 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TARReport, options);
   }
 
-  getTAPReport(dateFrom, dateTo, ignoreDate) {
+  getTAPReport(dateFrom, dateTo, ignoreDate, limitCount, limitFrom) {
     let options = "";
-    if (ignoreDate == true) {
-      options = {
-        IgnoreDates: true,
-        select: "[deleted]=false",
-      };
+    if(limitCount == undefined || limitCount == 'All') {
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          select: "[deleted]=false",
+        };
+      } else {
+        options = {
+          IgnoreDates: false,
+          select: "[deleted]=false",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: parseInt(initialReportLoad),
+        };
+      }
     } else {
-      options = {
-        IgnoreDates: false,
-        select: "[deleted]=false",
-        DateFrom: '"' + dateFrom + '"',
-        DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(initialReportLoad),
-      };
+      if (ignoreDate == true) {
+        options = {
+          IgnoreDates: true,
+          select: "[deleted]=false",
+          LimitCount: limitCount,
+          LimitFrom:limitFrom
+        };
+      } else {
+        options = {
+          IgnoreDates: false,
+          select: "[deleted]=false",
+          DateFrom: '"' + dateFrom + '"',
+          DateTo: '"' + dateTo + '"',
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
+      }
     }
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
-  getTAPReportPage(dateFrom, dateTo, ignoreDate,contactID) {
+  getTAPReportPage(limitCount, limitFrom, dateFrom, dateTo, ignoreDate,contactID) {
     let options = "";
-    if(contactID && contactID != ''){
-      options = {
-        IgnoreDates: true,
-        ClientID:contactID,
-        AgeByTransactionDate:true
-      };
-    }else{
-    if (ignoreDate == true) {
-      options = {
-        IgnoreDates: true,
-        AgeByTransactionDate:true
-      };
+    if(limitCount == undefined || limitCount == 'All') {
+      if(contactID && contactID != ''){
+        options = {
+          IgnoreDates: true,
+          ClientID:contactID,
+          AgeByTransactionDate:true
+        };
+      }else{
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(initialReportLoad),
+            AgeByTransactionDate:true
+          };
+        }
+      }
     } else {
-      options = {
-        IgnoreDates: false,
-        DateFrom: '"' + dateFrom + '"',
-        DateTo: '"' + dateTo + '"',
-        LimitCount: parseInt(initialReportLoad),
-        AgeByTransactionDate:true
-      };
+      if(contactID && contactID != ''){
+        options = {
+          IgnoreDates: true,
+          ClientID:contactID,
+          AgeByTransactionDate:true,
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
+      }else{
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true,
+            LimitCount: limitCount,
+            LimitFrom: limitFrom
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            AgeByTransactionDate:true,
+            LimitCount: limitCount,
+            LimitFrom: limitFrom
+          };
+        }
+      }
     }
+    return this.getList(this.ERPObjects.TAPReport, options);
   }
+
+  getTAPReportByKeyword(limitCount, limitFrom, dateFrom, dateTo, ignoreDate, name) {
+    let options = "";
+    if(limitCount == undefined || limitCount == 'All') {
+        if (ignoreDate == true) {
+          options = {
+            IgnoreDates: true,
+            AgeByTransactionDate:true,
+            Search:"Name='"+name+"'"
+          };
+        } else {
+          options = {
+            IgnoreDates: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(initialReportLoad),
+            AgeByTransactionDate:true,
+            Search:"Name='"+name+"'"
+          };
+        }
+    } else {
+        options = {
+          IgnoreDates: true,
+          Search:"Name='"+name+"'",
+          AgeByTransactionDate:true,
+          LimitCount: limitCount,
+          LimitFrom: limitFrom
+        };
+    }
     return this.getList(this.ERPObjects.TAPReport, options);
   }
 
@@ -2814,6 +2895,7 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
+        //Search: "Active=true",
       };
     } else {
       options = {
@@ -2821,11 +2903,13 @@ export class SideBarService extends BaseService {
         OrderBy: "CreationDate desc",
         ListType: "Detail",
         select: "[Active]=true",
+        //Search: "Active=true",
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
     }
-
+    //if(deletefilter) options.Search = "";
+    //return this.getList(this.ERPObjects.TAppointmentList, options);
     return this.getList(this.ERPObjects.TAppointment, options);
   }
 
@@ -4697,4 +4781,35 @@ export class SideBarService extends BaseService {
         });
         return promise;
     }
+
+  getCombinedContacts(limitCount, limitFrom, deleteFilter) {
+    return this.getManualCombinedContacts(deleteFilter);
+
+  }
+  getManualCombinedContacts() {
+    return this.getWowCombinedContacts();
+  }
+  getWowCombinedContacts() {
+    var that = this;
+    var promise = new Promise(function(resolve, reject) {
+      var splashArrayTitleList = [
+        ["Armidale Building Society Limited",""],
+        ["Adelaide Bank Limited",""],
+        ["Test",""],
+      ];
+      resolve({"terpcombinedcontacts" : splashArrayTitleList});
+    });
+    return promise;
+  }
+
+  getBankCode(limitCount, limitFrom, deleteFilter) {
+    let options = {
+      ListType:"Detail",
+      select: "[Active]=true",
+      LimitCount: parseInt(limitCount)||initialReportLoad,
+      LimitFrom: parseInt(limitFrom)||0,
+    };
+    if(deleteFilter) options.select = "";
+    return this.getList(this.ERPObjects.TBankCode, options);
+  }
 }

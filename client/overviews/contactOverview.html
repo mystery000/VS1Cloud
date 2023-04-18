@@ -42,7 +42,11 @@
             <div class="col-12 col-md-4 divLogged">
                 {{> loggedcompanyoverview}}
             </div>
+            <div class="col-12 col-md-4">
+                {{> datesforcardchart}}
+            </div>
         </header>
+        {{> editCardChartButtons}}
         <!-- All charts list -->
         {{> allChartLists  tabGroupID="3" chartGroup="Contacts" currentTemplate="Contacts_Overview"}}
         <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding:0  16px 0 0;">

@@ -567,7 +567,7 @@ Template.payrolloverview.onRendered(function () {
             searchPlaceholder: "Search List..."
           },
           fnInfoCallback: function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
-            let countTableData = data.Params.Count || 0; //get count from API data
+            let countTableData = data.Params ? data.Params.Count : 0; //get count from API data
 
             return "Showing " + iStart + " to " + iEnd + " of " + countTableData;
           }
@@ -628,7 +628,10 @@ Template.payrolloverview.onRendered(function () {
 
 }
 
-
+$('#tblDraftPayRun').on('click', 'tr', function () {
+  const timesheetId = $(this).attr('id');
+  window.location.href = `/payrundetails?cid=${timesheetId}`;
+});
 
   var currentDate = new Date();
   var begunDate = moment(currentDate).format("DD/MM/YYYY");

@@ -294,8 +294,8 @@ templateObject.getSuperannuationData = async function(){
 
 // templateObject.getSuperannuationData();
 
-$('.superannuationDropDown').editableSelect();
-$('.superannuationDropDown').editableSelect()
+$('#obSuperannuationFund').editableSelect();
+$('#obSuperannuationFund').editableSelect()
     .on('click.editable-select', async function (e, li) {
         let $search = $(this);
         let dropDownID = $search.attr('id')
