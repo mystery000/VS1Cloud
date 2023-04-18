@@ -2917,7 +2917,7 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.Tprojecttasks, options);
   }
 
-  getAllAppointmentList(limitcount, limitfrom, deletefilter) {
+  getAllAppointmentList(limitcount, limitfrom) {
     let options = "";
     let checkOwnAppointment = localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly");
     let selectedEmployeeName = localStorage.getItem("mySessionEmployee");
@@ -2925,22 +2925,23 @@ export class SideBarService extends BaseService {
     if (limitcount == "All") {
       options = {
         ListType: "Detail",
-        //select: "[Active]=true",
-        Search: "Active=true",
+        select: "[Active]=true",
+        //Search: "Active=true",
       };
     } else {
       options = {
         // orderby: '"AppointID desc"',
         OrderBy: "CreationDate desc",
         ListType: "Detail",
-        //select: "[Active]=true",
-        Search: "Active=true",
+        select: "[Active]=true",
+        //Search: "Active=true",
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
     }
-    if(deletefilter) options.Search = "";
-    return this.getList(this.ERPObjects.TAppointmentList, options);
+    //if(deletefilter) options.Search = "";
+    //return this.getList(this.ERPObjects.TAppointmentList, options);
+    return this.getList(this.ERPObjects.TAppointment, options);
   }
 
   getAllCorrespondenceList(limitcount, limitfrom) {
