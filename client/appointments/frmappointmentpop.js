@@ -3786,7 +3786,8 @@ Template.frmappointmentpop.onRendered(function() {
         // end
 
         let employeeName = $(this).find(".colEmployeeName").text() || '';
-        let employeeID = $(this).find(".colEmployeeNo").text() || '';
+        //let employeeID = $(this).find(".colEmployeeNo").text() || '';
+        let employeeID = $(this).closest("tr").attr("id") || '';
         templateObject.empID.set(employeeID);
         let draggedEmployeeID = templateObject.empID.get();
         let calendarData = templateObject.employeeOptions.get();
@@ -3960,7 +3961,7 @@ Template.frmappointmentpop.onRendered(function() {
         }, 100);
     });
 
-    $(document).on("click", ".appointmentCustomer #tblCustomerlist tbody tr", function(e) {
+    $(document).on("click", "#tblCustomerlist tbody tr", function(e) {
         //$("#updateID").val("");
         let checkIncludeAllProducts = templateObject.includeAllProducts.get();
         let getAllEmployeeData = templateObject.employeerecords.get() || "";

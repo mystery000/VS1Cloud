@@ -127,7 +127,7 @@
                 }
             }
         </style>
-
+        {{> editCardChartButtons}}
         <div class="row headingRow" style="padding: 0px; padding-bottom: 0px;">
             <div class="col-6">
                 <h4 style="color: rgb(90,92,105);">Customers</h4>
@@ -136,7 +136,7 @@
                 <h4 style="color: rgb(90,92,105);">Suppliers</h4>
             </div>
         </div>
-        <!-- All Cards List -->
+        <!-- All Cards List -->        
         {{> allCardsLists tabGroupID="7" chartGroup="PaymentOverview"}}
         <!-- END All Cards List -->
         <div class="row d-xl-flex flex-row justify-content-xl-center">
@@ -409,6 +409,7 @@
                         </tbody>
                     </table> -->
                     {{>datatablelist
+                        tableclass="tblPaymentOverview"
                         tablename="tblPaymentOverview"
                         apiName= apiFunction
                         indexeddbname = 'TPaymentList'

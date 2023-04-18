@@ -1,0 +1,33 @@
+<template name="datesforcardchart">
+    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm mt-3">
+        <div class="dropdown dropdownMobile" style="margin: 8px; margin-top: 0px;">
+            <button class="btn dropdown-toggle btn-daterange" data-toggle="dropdown" aria-expanded="true" type="button">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+            <style>
+                .btn-daterange::after {
+                    display: none;
+                }
+            </style>
+            {{> daterangedropdownoption}}
+        </div>
+        <div class="form-group dateSelectMobile" style="margin: 0 8px 8px;display: inline-flex;">
+            <label style="margin-top: 8px; margin-right: 16px;">From</label>
+            <div class="input-group date" style="width: 160px;">
+                <input type="text" class="form-control" id="dateFrom" name="dateFrom" value="">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group dateSelectMobile" style="margin: 0px 0px 8px 8px;display: inline-flex;">
+            <label style="margin-top: 8px; margin-right: 16px;">To</label>
+            <div class="input-group date" style="width: 160px;">
+                <input type="text" class="form-control" id="dateTo" name="dateTo" value="">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-th"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

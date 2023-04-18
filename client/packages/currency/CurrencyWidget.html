@@ -32,33 +32,8 @@
 
 
     {{else}}
-
-        <style>
-            .currency-module {
-                display: flex;
-                /* display:none!important;*/
-                flex-direction: row;
-                flex-wrap: wrap;
-                /* border: 1px solid rgb(215, 215, 215); */
-                /* padding: 0.75rem; */
-                /* border-radius: 0.5rem; */
-                /* max-width: 200px; */
-
-                display: flex;
-                flex-wrap: wrap;
-                margin-right: -.75rem;
-                margin-left: -.75rem;
-
-            }
-
-            .currency-module>div {
-                width: 100%;
-
-            }
-        </style>
-
-
         {{#if row}}
+        <div class="d-flex align-items-center col-12 col-md-12 col-lg-8 col-xl-4">
             <style>
                 .currency-module {
                     display: flex;
@@ -82,30 +57,37 @@
                     {{> CurrencyRate }}
                 </div>
             </div>
-
+        </div>
 
         {{else}}
 
 
         {{#if trans}}
+        <div class="d-flex align-items-center col-12 col-md-12 col-lg-8 col-xl-4" type="{{rate}}">
         <style>
-
+            .currency-module {
+                display: flex;
+                flex-wrap: wrap;
+                margin-right: -.75rem;
+                margin-left: -.75rem;
+            }
             .currency-module>div {
                 width: 100%;
 
             }
         </style>
-            <div class="col-12 col-md-6" type="{{rate}}">
+            <div class="col-12 col-md-6" type="{{rate}}" style="padding-left: 0;">
                 <div class="form-group">
                 {{> currencydropdown}}
                 </div>
             </div>
 
-            <div class="col-12 col-md-6" type="{{rate}}">
+            <div class="col-12 col-md-6" type="{{rate}}" style="padding-right: 0;">
                 <div class="form-group">
                 {{> CurrencyRate }}
                 </div>
             </div>
+        </div>
         {{else}}
             <style>
                 .currency-module {
@@ -125,7 +107,7 @@
 
                 }
             </style>
-            <div class="CurrencyWidget currency-module currency-js" type="{{rate}}">
+            <div class="CurrencyWidget currency-module currency-js" type="{{rate}}" >
                 <div>
                     {{> currencydropdown}}
                 </div>
@@ -135,7 +117,6 @@
             </div>
         {{/if}}
         {{/if}}
-
 
     {{/if}}
 
@@ -153,5 +134,6 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="countryModal">
         {{> CountryModal}}
     </div>
+
     {{/if}}
 </template>

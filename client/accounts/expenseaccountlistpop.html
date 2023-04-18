@@ -53,7 +53,8 @@
                         }
                     </style>
                     {{>datatablelist
-                            tablename="tblExpenseAccountList"
+                            tableclass="tblExpenseAccountList"
+                            tablename=tablename
                             apiName= apiFunction
                             indexeddbname = 'TAccountVS1List'
                             tableheaderrecords = tableheaderrecords
@@ -66,7 +67,10 @@
                             exIndexDBName = 'taccountvs1list'
                             exdatahandler = exDataHandler
                             searchAPI = searchAPI
-                            orderby = '[ 1, "asc" ]'
+                            orderby = '[[ 1, "asc" ]]'
+                            showPlusButton = true
+                            showPlusButtonDataTarget = "addAccountModal"
+                            showPlusButtonClass = "btnAddNewAccount"
                     }}
                 </div>
             </div>

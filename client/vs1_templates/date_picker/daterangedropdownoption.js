@@ -191,25 +191,34 @@ Template.daterangedropdownoption.events({
       $(".dateFrom").val(lastQuarterStartDateFormat).trigger('change');
       $(".dateTo").val(lastQuarterEndDateFormat).trigger('change');
   },
-  'click .thisQuarter': function() {
+  'click .thisfinancialyear': function() {
       let templateObject = Template.instance();
       $('.dateFrom').attr('readonly', false);
       $('.dateTo').attr('readonly', false);
-      var currentDate = new Date();
-      var begunDate = moment(currentDate).format("DD/MM/YYYY");
+      // var currentDate = new Date();
+      // var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-      let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-      let fromDateDay = currentDate.getDate();
-      if ((currentDate.getMonth() + 1) < 10) {
-          fromDateMonth = "0" + (currentDate.getMonth() + 1);
-      }
-      if (currentDate.getDate() < 10) {
-          fromDateDay = "0" + currentDate.getDate();
-      }
+      // let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+      // let fromDateDay = currentDate.getDate();
+      // if ((currentDate.getMonth() + 1) < 10) {
+      //     fromDateMonth = "0" + (currentDate.getMonth() + 1);
+      // }
+      // if (currentDate.getDate() < 10) {
+      //     fromDateDay = "0" + currentDate.getDate();
+      // }
 
-      var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-      $(".dateFrom").val(fromDate).trigger('change');
-      $(".dateTo").val(begunDate).trigger('change');
+      // var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+      // $(".dateFrom").val(fromDate).trigger('change');
+      // $(".dateTo").val(begunDate).trigger('change');
+      if (moment().quarter() == 4) {
+        dateFrom = moment().month("July").startOf("month").format("DD/MM/YYYY");
+        dateTo = moment().add(1, "year").month("June").endOf("month").format("DD/MM/YYYY");
+      } else {
+        dateFrom = moment().subtract(1, "year").month("July").startOf("month").format("DD/MM/YYYY");
+        dateTo = moment().month("June").endOf("month").format("DD/MM/YYYY");
+      }
+      $(".dateFrom").val(dateFrom).trigger('change');
+      $(".dateTo").val(dateTo).trigger('change');
 
   },
   'click .previousweek': function () {
@@ -297,27 +306,27 @@ Template.daterangedropdownoption.events({
       $(".dateFrom").val(lastQuarterStartDateFormat).trigger('change');
       $(".dateTo").val(lastQuarterEndDateFormat).trigger('change');
   },
-  'click .previousfinancialyear': function() {alert();
-      let templateObject = Template.instance();
+  'click .previousfinancialyear': function() {
+    let templateObject = Template.instance();
 
-      $('.dateFrom').attr('readonly', false);
-      $('.dateTo').attr('readonly', false);
-      var currentDate = new Date();
-      var begunDate = moment(currentDate).format("DD/MM/YYYY");
+    $('.dateFrom').attr('readonly', false);
+    $('.dateTo').attr('readonly', false);
+    var currentDate = new Date();
+    var begunDate = moment(currentDate).format("DD/MM/YYYY");
 
-      let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-      let fromDateDay = currentDate.getDate();
-      if ((currentDate.getMonth() + 1) < 10) {
-          fromDateMonth = "0" + (currentDate.getMonth() + 1);
-      }
-      if (currentDate.getDate() < 10) {
-          fromDateDay = "0" + currentDate.getDate();
-      }
+    let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
+    let fromDateDay = currentDate.getDate();
+    if ((currentDate.getMonth() + 1) < 10) {
+        fromDateMonth = "0" + (currentDate.getMonth() + 1);
+    }
+    if (currentDate.getDate() < 10) {
+        fromDateDay = "0" + currentDate.getDate();
+    }
 
-      var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
-      $(".dateFrom").val(fromDate).trigger('change');
-      $(".dateTo").val(begunDate).trigger('change');
-  },
+    var fromDate = fromDateDay + "/" + (fromDateMonth) + "/" + Math.floor(currentDate.getFullYear() - 1);
+    $(".dateFrom").val(fromDate).trigger('change');
+    $(".dateTo").val(begunDate).trigger('change');
+},
 });
 
 Template.daterangedropdownoption.helpers({

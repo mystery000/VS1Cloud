@@ -63,7 +63,41 @@ Template.payrollproductlistpop.onCreated(() => {
     templateObject.includeBOnShippedQty = new ReactiveVar();
     templateObject.includeBOnShippedQty.set(true);
     templateObject.productextrasellrecords = new ReactiveVar([]);
+    templateObject.tableheaderrecords = new ReactiveVar([]);
 
+    templateObject.getDataTableList = function(data) {
+        let dataList = [
+            '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.ID+'"></label></div>',
+            data.ProductName || '-',  
+            data.SalesDescription || '',
+            data.BARCODE || '',
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.BuyQty1Cost * 100) / 100),
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1Price * 100) / 100),
+            data.TotalQtyInStock,
+            data.TaxCodeSales || '',
+            data.ID || '',
+            JSON.stringify(data.ExtraSellPrice)||null,
+            utilityService.modifynegativeCurrencyFormat(Math.floor(data.SellQty1PriceInc * 100) / 100),
+            data.Active ? "" : "In-Active",
+        ];
+        return dataList;
+    }
+
+    let headerStructure = [
+        { index: 0, label: "", class: "colChkBox", active: false, display: true, width: "0" },
+        { index: 1, label: "Product Name", class: "colProductName", active: true, display: true, width: "50" },
+        { index: 2, label: "Sales Description", class: "colSalesDescription", active: true, display: true, width: "150" },
+        { index: 3, label: "Barcode", class: "colBarcode", active: true, display: true, width: "70" },
+        { index: 4, label: "Cost Price", class: "colCostPrice text-right", active: true, display: true, width: "100" },
+        { index: 5, label: "Sales Price", class: "colSalesPrice text-right", active: true, display: true, width: "100" },
+        { index: 6, label: "Quantity", class: "colQuantity text-right", active: true, display: true, width: "100" },
+        { index: 7, label: "Tax Rate", class: "colTaxRate", active: true, display: true, width: "100" },
+        { index: 8, label: "Product ID", class: "colProductPODID", active: false, display: true, width: "100" },
+        { index: 9, label: "Extra Sell Price", class: "colExtraSellPrice", active: false, display: true, width: "100" },
+        { index: 10, label: "Sale Price Inc", class: "colSalePriceInc", active: false, display: true, width: "100" },
+        { index: 11, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.payrollproductlistpop.onRendered(function () {
@@ -76,567 +110,7 @@ Template.payrollproductlistpop.onRendered(function () {
     const taxCodesList = [];
     const lineExtaSellItems = [];
     var currentLoc = FlowRouter.current().route.path;
-    tempObj.getAllProducts = function () {
-        getVS1Data('TProductWeb').then(function (dataObject) {
-            if (dataObject.length == 0) {
-                sideBarService.getProductServiceListVS1(initialBaseDataLoad,0).then(function (data) {
-                    addVS1Data('TProductWeb',JSON.stringify(data));
-                    let records = [];
-                    let inventoryData = [];
-                    for (let i = 0; i < data.tproductvs1.length; i++) {
-
-                      if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
-                          for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
-                              let lineExtaSellObj = {
-                                  clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ClientTypeName || '',
-                                  productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ProductName || data.tproductvs1[i].fields.ProductName,
-                                  price: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1) || 0,
-                                  qtypercent: data.tproductvs1[i].fields.QtyPercent1 ||0,
-
-                              };
-                              lineExtaSellItems.push(lineExtaSellObj);
-
-                          }
-                      }
-                        var dataList = [
-                             '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                            data.tproductvs1[i].fields.ProductName || '-',
-                            data.tproductvs1[i].fields.SalesDescription || '',
-                            data.tproductvs1[i].fields.BARCODE || '',
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                            data.tproductvs1[i].fields.TotalQtyInStock,
-                            data.tproductvs1[i].fields.TaxCodeSales || '',
-                            data.tproductvs1[i].fields.ID || '',
-                            JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-
-                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                        ];
-
-
-                        splashArrayProductList.push(dataList);
-
-                    }
-                    //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
-
-                    if (splashArrayProductList) {
-
-                      $('#tblInventoryPayrollService').dataTable({
-                          data: splashArrayProductList,
-
-                          "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                          columnDefs: [
-                              {
-                                  className: "chkBox pointer hiddenColumn",
-                                  "orderable": false,
-                                  "targets": [0]
-
-                              },
-                              {
-                                  className: "productName",
-                                  "targets": [1]
-                              }, {
-                                  className: "productDesc",
-                                  "targets": [2]
-                              }, {
-                                  className: "colBarcode",
-                                  "targets": [3]
-                              }, {
-                                  className: "costPrice text-right",
-                                  "targets": [4]
-                              }, {
-                                  className: "salePrice text-right",
-                                  "targets": [5]
-                              }, {
-                                  className: "prdqty text-right",
-                                  "targets": [6]
-                              }, {
-                                  className: "taxrate",
-                                  "targets": [7]
-                              }, {
-                                  className: "colProuctPOPID hiddenColumn",
-                                  "targets": [8]
-                              }, {
-                                  className: "colExtraSellPrice hiddenColumn",
-                                  "targets": [9]
-                              }, {
-                                  className: "salePriceInc hiddenColumn",
-                                  "targets": [10]
-                              }
-                          ],
-                          select: true,
-                          destroy: true,
-                          colReorder: true,
-                          pageLength: initialDatatableLoad,
-                          lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                          info: true,
-                          responsive: true,
-                          "order": [[ 1, "asc" ]],
-                          "fnDrawCallback": function (oSettings) {
-                              $('.paginate_button.page-item').removeClass('disabled');
-                              $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
-
-                              if (oSettings._iDisplayLength == -1) {
-                                  if (oSettings.fnRecordsDisplay() > 150) {
-
-                                  }
-                              } else {
-
-                              }
-                              if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                  $('.paginate_button.page-item.next').addClass('disabled');
-                              }
-
-                              $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                  .on('click', function () {
-                                      $('.fullScreenSpin').css('display', 'inline-block');
-                                      let dataLenght = oSettings._iDisplayLength;
-                                      let customerSearch = $('#tblInventoryPayrollService_filter input').val();
-
-                                      sideBarService.getProductServiceListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                        for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
-
-                                          var dataListDupp = [
-                                            '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                                            data.tproductvs1[i].fields.ProductName || '-',
-                                            data.tproductvs1[i].fields.SalesDescription || '',
-                                            data.tproductvs1[i].fields.BARCODE || '',
-                                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                            utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                            data.tproductvs1[i].fields.TotalQtyInStock,
-                                            data.tproductvs1[i].fields.TaxCodeSales || '',
-                                            data.tproductvs1[i].fields.ID || '',
-                                            JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-                                           utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                                        ];
-                                         splashArrayProductList.push(dataListDupp);
-
-                                        }
-
-                                                  let uniqueChars = [...new Set(splashArrayProductList)];
-                                                  var datatable = $('#tblInventoryPayrollService').DataTable();
-                                                  datatable.clear();
-                                                  datatable.rows.add(uniqueChars);
-                                                  datatable.draw(false);
-                                                  setTimeout(function () {
-                                                    $("#tblInventoryPayrollService").dataTable().fnPageChange('last');
-                                                  }, 400);
-
-                                                  $('.fullScreenSpin').css('display', 'none');
-
-
-                                      }).catch(function (err) {
-                                          $('.fullScreenSpin').css('display', 'none');
-                                      });
-
-                                  });
-                          },
-                          "fnInitComplete": function () {
-                              $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
-                              $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
-                              $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
-                          }
-
-
-                      }).on('length.dt', function (e, settings, len) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        let dataLenght = settings._iDisplayLength;
-                        // splashArrayProductList = [];
-                        if (dataLenght == -1) {
-                          $('.fullScreenSpin').css('display', 'none');
-                        }else{
-                          if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                              $('.fullScreenSpin').css('display', 'none');
-                          } else {
-
-                              $('.fullScreenSpin').css('display', 'none');
-                          }
-
-                        }
-
-                      });
-
-                        $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                    }
-                })
-            } else {
-                let data = JSON.parse(dataObject[0].data);
-                let useData = data.tproductvs1;
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < data.tproductvs1.length; i++) {
-
-                  if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
-                      for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
-                          let lineExtaSellObj = {
-                              clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ClientTypeName || '',
-                              productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ProductName || data.tproductvs1[i].fields.ProductName,
-                              price: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1) || 0,
-                              qtypercent: data.tproductvs1[i].fields.QtyPercent1 ||0,
-
-                          };
-                          lineExtaSellItems.push(lineExtaSellObj);
-
-                      }
-                  }
-                    var dataList = [
-                        '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                        data.tproductvs1[i].fields.ProductName || '-',
-                        data.tproductvs1[i].fields.SalesDescription || '',
-                        data.tproductvs1[i].fields.BARCODE || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        data.tproductvs1[i].fields.TotalQtyInStock,
-                        data.tproductvs1[i].fields.TaxCodeSales || '',
-                        data.tproductvs1[i].fields.ID || '',
-                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                    ];
-
-
-                    // splashArrayProductList.push(dataList);
-
-                      splashArrayProductList.push(dataList);
-
-                }
-
-                tempObj.productextrasellrecords.set(lineExtaSellItems);
-                //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
-                if (splashArrayProductList) {
-                    $('#tblInventoryPayrollService').dataTable({
-                        data: splashArrayProductList,
-
-                        "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                        columnDefs: [
-                            {
-                                className: "chkBox pointer hiddenColumn",
-                                "orderable": false,
-                                "targets": [0]
-
-                            },
-                            {
-                                className: "productName",
-                                "targets": [1]
-                            }, {
-                                className: "productDesc",
-                                "targets": [2]
-                            }, {
-                                className: "colBarcode",
-                                "targets": [3]
-                            }, {
-                                className: "costPrice text-right",
-                                "targets": [4]
-                            }, {
-                                className: "salePrice text-right",
-                                "targets": [5]
-                            }, {
-                                className: "prdqty text-right",
-                                "targets": [6]
-                            }, {
-                                className: "taxrate",
-                                "targets": [7]
-                            }, {
-                                className: "colProuctPOPID hiddenColumn",
-                                "targets": [8]
-                            }, {
-                                className: "colExtraSellPrice hiddenColumn",
-                                "targets": [9]
-                            }, {
-                                className: "salePriceInc hiddenColumn",
-                                "targets": [10]
-                            }
-                        ],
-                        select: true,
-                        destroy: true,
-                        colReorder: true,
-                        pageLength: initialDatatableLoad,
-                        lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                        info: true,
-                        responsive: true,
-                        "order": [[ 1, "asc" ]],
-                        "fnDrawCallback": function (oSettings) {
-                            $('.paginate_button.page-item').removeClass('disabled');
-                            $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
-
-                            if (oSettings._iDisplayLength == -1) {
-                                if (oSettings.fnRecordsDisplay() > 150) {
-
-                                }
-                            } else {
-
-                            }
-                            if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                                $('.paginate_button.page-item.next').addClass('disabled');
-                            }
-
-                            $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                                .on('click', function () {
-                                    $('.fullScreenSpin').css('display', 'inline-block');
-                                    let dataLenght = oSettings._iDisplayLength;
-                                    let customerSearch = $('#tblInventoryPayrollService_filter input').val();
-
-                                    sideBarService.getProductServiceListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                      for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
-
-                                        var dataListDupp = [
-                                          '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                                          data.tproductvs1[i].fields.ProductName || '-',
-                                          data.tproductvs1[i].fields.SalesDescription || '',
-                                          data.tproductvs1[i].fields.BARCODE || '',
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                          utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                          data.tproductvs1[i].fields.TotalQtyInStock,
-                                          data.tproductvs1[i].fields.TaxCodeSales || '',
-                                          data.tproductvs1[i].fields.ID || '',
-                                          JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-                                         utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                                      ];
-                                       splashArrayProductList.push(dataListDupp);
-
-                                      }
-
-                                                let uniqueChars = [...new Set(splashArrayProductList)];
-                                                var datatable = $('#tblInventoryPayrollService').DataTable();
-                                                datatable.clear();
-                                                datatable.rows.add(uniqueChars);
-                                                datatable.draw(false);
-                                                setTimeout(function () {
-                                                  $("#tblInventoryPayrollService").dataTable().fnPageChange('last');
-                                                }, 400);
-
-                                                $('.fullScreenSpin').css('display', 'none');
-
-
-                                    }).catch(function (err) {
-                                        $('.fullScreenSpin').css('display', 'none');
-                                    });
-
-                                });
-                        },
-                        "fnInitComplete": function () {
-                            $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
-                            $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
-                            $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
-                        }
-
-
-                    }).on('length.dt', function (e, settings, len) {
-                      $('.fullScreenSpin').css('display', 'inline-block');
-                      let dataLenght = settings._iDisplayLength;
-                      // splashArrayProductList = [];
-                      if (dataLenght == -1) {
-                        $('.fullScreenSpin').css('display', 'none');
-                      }else{
-                        if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                            $('.fullScreenSpin').css('display', 'none');
-                        } else {
-
-                            $('.fullScreenSpin').css('display', 'none');
-                        }
-
-                      }
-
-                    });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-                }
-            }
-        }).catch(function (err) {
-            sideBarService.getProductServiceListVS1(initialBaseDataLoad,0).then(function (data) {
-                addVS1Data('TProductWeb',JSON.stringify(data));
-                let records = [];
-                let inventoryData = [];
-                for (let i = 0; i < data.tproductvs1.length; i++) {
-
-                  if (data.tproductvs1[i].fields.ExtraSellPrice != null) {
-                      for (let e = 0; e < data.tproductvs1[i].fields.ExtraSellPrice.length; e++) {
-                          let lineExtaSellObj = {
-                              clienttype: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ClientTypeName || '',
-                              productname: data.tproductvs1[i].fields.ExtraSellPrice[e].fields.ProductName || data.tproductvs1[i].fields.ProductName,
-                              price: utilityService.modifynegativeCurrencyFormat(data.tproductvs1[i].fields.ExtraSellPrice[e].fields.Price1) || 0,
-                              qtypercent: data.tproductvs1[i].fields.QtyPercent1 ||0,
-
-                          };
-                          lineExtaSellItems.push(lineExtaSellObj);
-
-                      }
-                  }
-                    var dataList = [
-                        '<div class="custom-control custom-checkbox chkBox chkBoxService pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                        data.tproductvs1[i].fields.ProductName || '-',
-                        data.tproductvs1[i].fields.SalesDescription || '',
-                        data.tproductvs1[i].fields.BARCODE || '',
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                        data.tproductvs1[i].fields.TotalQtyInStock,
-                        data.tproductvs1[i].fields.TaxCodeSales || '',
-                        data.tproductvs1[i].fields.ID || '',
-                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-
-                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                    ];
-
-
-
-                      splashArrayProductList.push(dataList);
-
-                }
-                //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
-
-                if (splashArrayProductList) {
-
-                  $('#tblInventoryPayrollService').dataTable({
-                      data: splashArrayProductList,
-
-                      "sDom": "<'row'><'row'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6'l>r>t<'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>B",
-
-                      columnDefs: [
-                          {
-                              className: "chkBox pointer hiddenColumn",
-                              "orderable": false,
-                              "targets": [0]
-
-                          },
-                          {
-                              className: "productName",
-                              "targets": [1]
-                          }, {
-                              className: "productDesc",
-                              "targets": [2]
-                          }, {
-                              className: "colBarcode",
-                              "targets": [3]
-                          }, {
-                              className: "costPrice text-right",
-                              "targets": [4]
-                          }, {
-                              className: "salePrice text-right",
-                              "targets": [5]
-                          }, {
-                              className: "prdqty text-right",
-                              "targets": [6]
-                          }, {
-                              className: "taxrate",
-                              "targets": [7]
-                          }, {
-                              className: "colProuctPOPID hiddenColumn",
-                              "targets": [8]
-                          }, {
-                              className: "colExtraSellPrice hiddenColumn",
-                              "targets": [9]
-                          }, {
-                              className: "salePriceInc hiddenColumn",
-                              "targets": [10]
-                          }
-                      ],
-                      select: true,
-                      destroy: true,
-                      colReorder: true,
-                      pageLength: initialDatatableLoad,
-                      lengthMenu: [ [initialDatatableLoad, -1], [initialDatatableLoad, "All"] ],
-                      info: true,
-                      responsive: true,
-                      "order": [[ 1, "asc" ]],
-                      "fnDrawCallback": function (oSettings) {
-                          $('.paginate_button.page-item').removeClass('disabled');
-                          $('#tblInventoryPayrollService_ellipsis').addClass('disabled');
-
-                          if (oSettings._iDisplayLength == -1) {
-                              if (oSettings.fnRecordsDisplay() > 150) {
-
-                              }
-                          } else {
-
-                          }
-                          if (oSettings.fnRecordsDisplay() < initialDatatableLoad) {
-                              $('.paginate_button.page-item.next').addClass('disabled');
-                          }
-
-                          $('.paginate_button.next:not(.disabled)', this.api().table().container())
-                              .on('click', function () {
-                                  $('.fullScreenSpin').css('display', 'inline-block');
-                                  let dataLenght = oSettings._iDisplayLength;
-                                  let customerSearch = $('#tblInventoryPayrollService_filter input').val();
-
-                                  sideBarService.getProductServiceListVS1(initialDatatableLoad, oSettings.fnRecordsDisplay()).then(function (dataObjectnew) {
-
-                                    for(let i=0; i<dataObjectnew.tproductvs1.length; i++){
-
-                                      var dataListDupp = [
-                                        '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkServiceCard pointer" type="checkbox" id="formCheck-'+data.tproductvs1[i].fields.ID+'"><label class="custom-control-label chkBox pointer" for="formCheck-'+data.tproductvs1[i].fields.ID+'"></label></div>',
-                                        data.tproductvs1[i].fields.ProductName || '-',
-                                        data.tproductvs1[i].fields.SalesDescription || '',
-                                        data.tproductvs1[i].fields.BARCODE || '',
-                                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.BuyQty1Cost * 100) / 100),
-                                        utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1Price * 100) / 100),
-                                        data.tproductvs1[i].fields.TotalQtyInStock,
-                                        data.tproductvs1[i].fields.TaxCodeSales || '',
-                                        data.tproductvs1[i].fields.ID || '',
-                                        JSON.stringify(data.tproductvs1[i].fields.ExtraSellPrice)||null,
-                                       utilityService.modifynegativeCurrencyFormat(Math.floor(data.tproductvs1[i].fields.SellQty1PriceInc * 100) / 100)
-                                    ];
-                                     splashArrayProductList.push(dataListDupp);
-
-                                    }
-
-                                              let uniqueChars = [...new Set(splashArrayProductList)];
-                                              var datatable = $('#tblInventoryPayrollService').DataTable();
-                                              datatable.clear();
-                                              datatable.rows.add(uniqueChars);
-                                              datatable.draw(false);
-                                              setTimeout(function () {
-                                                $("#tblInventoryPayrollService").dataTable().fnPageChange('last');
-                                              }, 400);
-
-                                              $('.fullScreenSpin').css('display', 'none');
-
-
-                                  }).catch(function (err) {
-                                      $('.fullScreenSpin').css('display', 'none');
-                                  });
-
-                              });
-                      },
-                      "fnInitComplete": function () {
-                          $("<a class='btn btn-primary scanProdServiceBarcodePOP' href='' id='scanProdServiceBarcodePOP' role='button' style='margin-left: 8px; height:32px;padding: 4px 10px;'><i class='fas fa-camera'></i></a>").insertAfter("#tblInventoryPayrollService_filter");
-                          $("<button class='btn btn-primary' data-dismiss='modal' data-toggle='modal' data-target='#newProductModal' type='button' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-plus'></i></button>").insertAfter("#tblInventoryPayrollService_filter");
-                          $("<button class='btn btn-primary btnRefreshProduct' type='button' id='btnRefreshProduct' style='padding: 4px 10px; font-size: 16px; margin-left: 12px !important;'><i class='fas fa-search-plus' style='margin-right: 5px'></i>Search</button>").insertAfter("#tblInventoryPayrollService_filter");
-                      }
-
-
-                  }).on('length.dt', function (e, settings, len) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    let dataLenght = settings._iDisplayLength;
-                    // splashArrayProductList = [];
-                    if (dataLenght == -1) {
-                      $('.fullScreenSpin').css('display', 'none');
-                    }else{
-                      if (settings.fnRecordsDisplay() >= settings._iDisplayLength) {
-                          $('.fullScreenSpin').css('display', 'none');
-                      } else {
-
-                          $('.fullScreenSpin').css('display', 'none');
-                      }
-
-                    }
-
-                  });
-
-                    $('div.dataTables_filter input').addClass('form-control form-control-sm');
-
-                }
-            })
-        });
-
-    };
-
-    //tempObj.getAllProducts();
+    
     function onScanSuccessProdModal(decodedText, decodedResult) {
         var barcodeScannerProdModal = decodedText.toUpperCase();
         $('#scanBarcodeModalProduct').modal('toggle');
@@ -798,14 +272,7 @@ Template.payrollproductlistpop.events({
       });
   }
   },
-  'click #productListModal #refreshpagelist': function () {
-      $('.fullScreenSpin').css('display', 'inline-block');
-      localStorage.setItem('VS1SalesProductList', '');
-      let templateObject = Template.instance();
-      Meteor._reload.reload();
-      templateObject.getAllProducts();
-
-  },
+  
   'click .scanProdBarcodePOP': function(event) {
       if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
         $('#scanBarcodeModalProduct').modal('toggle');
@@ -822,4 +289,29 @@ Template.payrollproductlistpop.events({
   'click .btnCloseProdModal': function(event) {
       $('#scanBarcodeModalProduct').modal('toggle');
   }
+});
+
+Template.payrollproductlistpop.helpers({
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() { // do not use arrow function
+        return sideBarService.getProductQTYServiceListVS1
+    },
+
+    apiParams: function() {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    service: ()=>{
+        return sideBarService;
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
 });

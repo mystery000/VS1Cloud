@@ -66,21 +66,43 @@ export class EmployeePayrollService extends BaseService {
     return this.POST(this.ERPObjects.TLeavRequest, data);
   }
 
-  getAssignLeaveType(limitcount, limitfrom) {
+  // getAssignLeaveType(limitcount, limitfrom, deleteFilter) {
+  //     let options = '';
+  //     if(limitcount == 'All'){
+  //         options = {
+  //             ListType: "Detail"
+  //             //select: '[Active]=true'
+  //         };
+  //     }else{
+  //         options = {
+  //             ListType: "Detail",
+  //             //select: '[Active]=true',
+  //             LimitCount: parseInt(limitcount),
+  //             LimitFrom: parseInt(limitfrom),
+  //         };
+  //     };
+  //     if(deleteFilter) options.Search = "";
+  //     else options.Search = "Active=true";
+  //     return this.getList('TAssignLeaveTypeList', options);
+  //   }
+
+    getAssignLeaveType(limitcount, limitfrom, deleteFilter) {
       let options = '';
       if(limitcount == 'All'){
           options = {
-              ListType: "Detail"
-              //select: '[Active]=true'
+              ListType: "Detail",
+              select: '[Active]=true'
           };
       }else{
           options = {
               ListType: "Detail",
-              //select: '[Active]=true',
+              select: '[Active]=true',
               LimitCount: parseInt(limitcount),
               LimitFrom: parseInt(limitfrom),
           };
       };
+      if(deleteFilter) select: '';
+      //else options.Search = "Active=true";
       return this.getList('TAssignLeaveType', options);
     }
 

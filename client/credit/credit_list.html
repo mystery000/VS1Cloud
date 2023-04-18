@@ -95,7 +95,7 @@
                                             }
 
                                         </style>
-                                        
+
                                         {{#each displayfield in displayfields}}
                                         {{#if displayfield.display}}
                                         <div class="columnSettings displaySettings" custid="{{displayfield.id}}">
@@ -108,7 +108,7 @@
                                               <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:</label>
                                               <input class="custom-range widthElement rngRange{{displayfield.class}}" type="number" style="margin: 8px;" value="{{displayfield.width}}" min="0" max="1000">
                                           </div>
-                                        </div> 
+                                        </div>
                                         {{/if}}
                                         {{/each}}
                                     </div>
@@ -140,6 +140,7 @@
 
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
                     {{>datatablelist
+                            tableclass="tblcreditlist"
                             tablename="tblcreditlist"
                             apiName= apiFunction
                             indexeddbname = 'TCreditList'

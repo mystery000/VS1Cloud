@@ -58,7 +58,7 @@
                                     <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                         <input class="custom-control-input chkDatatable chk{{displayfield.class}}"
                                             type="checkbox" id="formCheck-0{{displayfield.id}}"
-                                            checked="{{displayfield.active}}">
+                                            checked="{{displayfield.active}}" data-column="{{displayfield.id}}">
                                         <label class="custom-control-label"
                                             for="formCheck-0{{displayfield.id}}"></label>
                                         <div contenteditable="true" class="groove divcolumn" type="text"
@@ -136,7 +136,7 @@
     <!-- End -->
     {{#if istransaction}}
     <div style ="margin-bottom: -20px;">
-    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm" style="margin-bottom: -45px; width: fit-content">
+    <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end {{tablename}} myvarFilterForm" style="margin-bottom: -45px; width: fit-content">
             {{> transaction_list_date}}
         </div>
     </div>
@@ -211,8 +211,12 @@
               white-space:nowrap;
             }
 
+            td.colAmountEx, td.colTax, td.colAmount, td.colPaid, td.colOutstanding{
+              text-align: right!important;
+            }
+
         </style>
-        <table id="{{tablename}}" name="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tablename}}">
+        <table id="{{tablename}}" name="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tableclass}}">
             <thead>
                 <!-- <tr class="dnd-moved">
                     {{#each displayfield in displayfields}}

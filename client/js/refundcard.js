@@ -4064,7 +4064,7 @@ Template.refundcard.onRendered(() => {
   });
 
   /* On clik Inventory Line */
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
+  $(document).on("click", ".tblInventory tbody tr", async function (e) {
     $(".colProductName").removeClass("boldtablealertsborder");
     let selectLineID = $("#selectLineID").val();
     let taxcodeList = await templateObject.taxraterecords.get();
@@ -7181,7 +7181,7 @@ Template.refundcard.events({
                         $("#slttaxcodepurchase").val(taxcodepurchase);
                         $("#edtbuyqty1cost").val(buyqty1cost);
 
-                        $("#newProductModal").modal("show");
+                        //$("#newProductModal").modal("show");
                       })
                       .catch(function (err) {
                         LoadingOverlay.hide();
@@ -7230,7 +7230,7 @@ Template.refundcard.events({
                       $("#sltcogsaccount").val(cogsaccount);
                       $("#slttaxcodepurchase").val(taxcodepurchase);
                       $("#edtbuyqty1cost").val(buyqty1cost);
-                      $("#newProductModal").modal("show");
+                      //$("#newProductModal").modal("show");
                       break;
                     }
                   }
@@ -7276,7 +7276,7 @@ Template.refundcard.events({
                           $("#sltcogsaccount").val(cogsaccount);
                           $("#slttaxcodepurchase").val(taxcodepurchase);
                           $("#edtbuyqty1cost").val(buyqty1cost);
-                          $("#newProductModal").modal("show");
+                          //$("#newProductModal").modal("show");
                         })
                         .catch(function (err) {
                           LoadingOverlay.hide();
@@ -7323,7 +7323,7 @@ Template.refundcard.events({
                       $("#sltcogsaccount").val(cogsaccount);
                       $("#slttaxcodepurchase").val(taxcodepurchase);
                       $("#edtbuyqty1cost").val(buyqty1cost);
-                      $("#newProductModal").modal("show");
+                      //$("#newProductModal").modal("show");
                     })
                     .catch(function (err) {
                       LoadingOverlay.hide();
@@ -10217,7 +10217,7 @@ Template.refundcard.events({
                                         Batch: "false",
                                     },
                                     };
-    
+
                                     productService.saveProductVS1(objDetails)
                                     .then(async function (objDetails) {
                                     sideBarService.getProductListVS1("All", 0)
@@ -10255,7 +10255,7 @@ Template.refundcard.events({
                                         Batch: "true",
                                     },
                                     };
-    
+
                                     productService.saveProductVS1(objDetails)
                                     .then(async function (objDetails) {
                                     sideBarService.getProductListVS1("All", 0)

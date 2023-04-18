@@ -110,6 +110,7 @@
 
     {{>datatablelist
             tablename="tblCustomerlist"
+            tableclass="tblCustomerlist"
             apiName= apiFunction
             indexeddbname = 'TCustomerVS1List'
             tableheaderrecords = tableheaderrecords
@@ -122,6 +123,7 @@
             exIndexDBName = 'tcustomervs1list'
             exdatahandler = exDataHandler
             searchAPI = searchAPI
+            orderby = '[[ 1, "asc" ]]'
     }}
 <!--                        <table id="tblCustomerlist" name="tblCustomerlist" class="dataTable table table-hover table-striped table-bordered tblCustomerlist">-->
 <!--                            <thead>-->

@@ -79,6 +79,7 @@ openDb = function (dbName) {
       });
       db.createObjectStore("TAppUser", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TJobVS1", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TJobVS1List", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TStockAdjustEntry", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TsalesOrderNonBackOrder", {
         keyPath: "EmployeeEmail",
@@ -321,6 +322,7 @@ openDb = function (dbName) {
         keyPath: "EmployeeEmail",
       });
       db.createObjectStore("TAssignLeaveType", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TAssignLeaveTypeList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("Tvs1CardPreference", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TQuoteFilterList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TSalesOrderFilterList", {
@@ -461,6 +463,15 @@ openDb = function (dbName) {
       db.createObjectStore("TProductionPlanData", { keyPath: "EmployeeEmail" });
       db.createObjectStore("VS1_BankRule", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1Workorder", {keyPath: "EmployeeEmail" });
+      
+      db.createObjectStore("TVS1ProcessClockList", {keyPath: "EmployeeEmail" }); //Danila add
+      db.createObjectStore("TVS1ClockOnReport", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1EmployeeClockStatus", {keyPath: "EmployeeEmail" });
+      db.createObjectStore("TVS1BuildCostReport", {keyPath: "EmployeeEmail" });
+
+
+
+
 
       db.createObjectStore("TVS1DashboardStatus", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1DashboardOptions", {keyPath: "EmployeeEmail" });
@@ -560,6 +571,7 @@ openDb = function (dbName) {
       db.createObjectStore("TRepServices", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TNewAppointment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TAppointmentsTimeLog", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TNewLeaveRequest", { keyPath: "EmployeeEmail" });
 
 
       // For accountant favorite reports state
@@ -585,6 +597,8 @@ openDb = function (dbName) {
       db.createObjectStore("CloudAppointmentStartStopAccessLevel", { keyPath: "EmployeeEmail" });
       db.createObjectStore("CloudAppointmentAllocationLaunch", { keyPath: "EmployeeEmail" });
       db.createObjectStore("CloudAppointmentCreateAppointment", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TFavoriteReport", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TProjectListReport", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
   });
@@ -847,7 +861,7 @@ getStoreToDelete = async function (email) {
 openDbCheckVersion = async function () {
   var promiseversion = new Promise((resolve, reject) => {
     var versionExists = false;
-    let dbReqVersion = indexedDB.open("TDatabaseVersion", 251);
+    let dbReqVersion = indexedDB.open("TDatabaseVersion", 255);
     dbReqVersion.onsuccess = function () {
       resolve(versionExists);
     };

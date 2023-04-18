@@ -8,12 +8,9 @@
       <div class="modal-body">
         <input type="hidden" style="width: 100%; display:none;" id="selectBankNameID" name="selectBankNameID" readonly>
         <div class="card-body p-1 rounded">
-            <style>
-                .colBankName{
-                    width: 10% !important;
-                }
-            </style>
+
             {{>datatablelist
+                tableclass="tblBankName"
                 tablename="tblBankName"
                 apiName= apiFunction
                 indexeddbname = 'TBankNameList'
@@ -27,6 +24,9 @@
                 exIndexDBName = 'tbankcode'
                 exdatahandler = exDataHandler
                 searchAPI = searchAPI
+                showPlusButton = true
+                showPlusButtonDataTarget = "newBankNameModal"
+                showPlusButtonClass = "newBankNameMod"
             }}
         </div>
       </div>

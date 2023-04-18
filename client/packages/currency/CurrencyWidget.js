@@ -45,7 +45,7 @@ Template.CurrencyWidget.events({
   "click #tblCurrencyPopList tbody tr": e => {
     const rateType = $(".currency-js").attr("type"); // String "buy" | "sell"
 
-    const currencySymbol = $(e.currentTarget).find(".colSymbol").text() || "N/A";
+    const currencySymbol = $(e.currentTarget).find(".colCurrencySymbol").text() || "N/A";
     setCurrentCurrencySymbol(currencySymbol);
     const currencyCode = $(e.currentTarget).find(".colCode").text();
     const currencyRate = rateType == "buy"
@@ -105,11 +105,12 @@ export const saveCurrencyHistory = async (date = null) => {
        type: "TCurrency",
        fields: {
          Active: true,
-         Country: _currencyObj.Country,
-         Code: _currencyObj.Code,
-         CurrencySymbol: _currencyObj.CurrencySymbol,
-         Currency: _currencyObj.Currency,
-         CurrencyDesc: _currencyObj.CurrencyDesc,
+         ID: _currencyObj.CurrencyID,
+         // Country: _currencyObj.Country,
+         // Code: _currencyObj.Code,
+         // CurrencySymbol: _currencyObj.CurrencySymbol,
+         // Currency: _currencyObj.Currency,
+         // CurrencyDesc: _currencyObj.CurrencyDesc,
          BuyRate: type == "buy" ? currencyRate : _currencyObj.BuyRate,
          SellRate: type == "sell" ? currencyRate : _currencyObj.SellRate,
        }

@@ -1,0 +1,71 @@
+<template name="editcurrencypop">
+
+    <div class="editcurrencypop modal-dialog modal-dialog-scrollable " role="document" id="editcurrencypop">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4><div id="edit-currency-title" name="edit-currency-title" style="float: left;">Edit Currency</div>
+                {{> helpbutton}}
+                </h4><button type="button"
+                    class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body editCurrency">
+                <input type="hidden" class="form-control" id="editCurrencyID" name="editCurrencyID" style="display:none;">
+                <div class="row no-gutters">
+                    <div class="col d-xl-flex align-items-xl-end">
+
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip"
+                                data-bs-tooltip="" data-placement="bottom"
+                                title="The name for the Tax Rate to appear in VS1 Cloud">Country</label>
+                            <input type="text" class="form-control sedtCountry" id="editCountry" name="editCountry" value="">
+                        </div>
+
+                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip"
+                                data-bs-tooltip="" data-placement="bottom"
+                                title="The name for the Tax Rate to appear in VS1 Cloud">Code</label>
+                            <input type="text" class="form-control" id="editCurrencyCode" name="editCurrencyCode"
+                                style="width: 110px;" required>
+                        </div>
+                        <div class="form-group flex-grow-0" style="margin: 8px;"><label data-toggle="tooltip"
+                                data-bs-tooltip="" data-placement="bottom"
+                                title="The name for the Tax Rate to appear in VS1 Cloud" >Symbol</label>
+                            <input type="text" class="form-control" id="editCurrencySymbol" name="editCurrencySymbol"
+                                style="width: 110px;" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters">
+                    <div class="col d-xl-flex align-items-xl-end">
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label data-toggle="tooltip"
+                                data-bs-tooltip="" data-placement="bottom">Currency Name</label>
+                            <input type="text" class="form-control" id="editCurrencyName" name="editCurrencyName" required>
+                        </div>
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label>Description</label>
+                            <input type="text" class="form-control" id="editCurrencyDesc" name="editCurrencyDesc">
+                        </div>
+                    </div>
+                </div>
+                <div class="row no-gutters">
+                    <div class="col d-xl-flex align-items-xl-end">
+                        <div class="form-group flex-grow-1" style="margin: 8px;">
+<!--                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Used in Sales</label>-->
+                            <label data-toggle="tooltip" data-bs-tooltip="" data-placement="bottom">Buy Rate</label>
+                            <input type="text" class="form-control" id="editBuyRate" name="editBuyRate" required>
+                        </div>
+<!--                        <div class="form-group flex-grow-1" style="margin: 8px;"><label>Used in Purchasing and Expenses</label>-->
+                        <div class="form-group flex-grow-1" style="margin: 8px;"><label>Sell Rate</label>
+                            <input type="text" class="form-control" id="editSellRate" name="editSellRate" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-success btnSaveEditCurrency" type="button"><i class="fa fa-save"
+                        style="padding-right: 8px;" ></i>Save</button>
+                <!-- <span id="view-in-active"></span> -->
+                <button class='btn btn-danger btnDeleteEditCurrency vs1ButtonMargin' id='view-in-active' type='button'><i class='fa fa-trash' style='padding-right: 8px;'></i>Make In-Active</button>
+                <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-close"
+                        style="margin-right: 8px;"></i>Close</button>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1345,7 +1345,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
     });
 
-    sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, 'All', 0).then(function (data) {
+    sideBarService.getTJournalEntryListData(prevMonth11Date, toDate, true, initialReportLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
@@ -2504,7 +2504,7 @@ Template.onsuccesswaterfall.onRendered(function () {
 
   templateObject.getTAPReportData = function () {
 
-    sideBarService.getTAPReport(prevMonth11Date, toDate, false).then(function (data) {
+    sideBarService.getTAPReport(prevMonth11Date, toDate, false, initialReportLoad, 0).then(function (data) {
       countObjectTimes++;
       progressPercentage = (countObjectTimes * 100) / allDataToLoad;
       $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);

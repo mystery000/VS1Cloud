@@ -176,6 +176,7 @@
           {{#if isModal}}
 
           {{else}}
+          {{> editCardChartButtons}}
           {{> allCardsLists tabGroupID="9" chartGroup="PaymentOverviewCustomer"}}
           {{/if}}
           <div class="card shadow mb-4 cardSizing">
@@ -465,6 +466,7 @@
                               </style>
 <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
                                 {{>datatablelist
+                                        tableclass="tblCustomerCrmListWithDate"
                                         tablename="tblCustomerCrmListWithDate"
                                         apiName= apiFunction
                                         indexeddbname = 'TCRMTaskList'
@@ -1158,6 +1160,7 @@
                               </style>
 <!--                              {{> non_transactional_list tablename="tblCustomerCrmListWithDate"}}-->
                                 {{>datatablelist
+                                        tableclass="tblCustomerCrmListWithDate"
                                         tablename="tblCustomerCrmListWithDate"
                                         apiName= apiFunction
                                         indexeddbname = 'TCRMTaskList'
@@ -1400,10 +1403,14 @@
                                   </div>
                                 </div>
 
-                                <div class="col-md-2 col-6" style="padding: 0; margin: 4px;margin-top: 41px;">
+                                <div class="col-md-1 col-6" style="padding: 0; margin: 4px;margin-top: 41px; margin-right: 20px;">
                                   {{> toggle_button className="chkGlobalSettings" id="customer_stop_credit_toggle"
                                   width="131px" for="customer_stop_credit_toggle" displayName="Stop Credit"}}
                                 </div>
+                                  <div class="col-6 col-md-2" style="padding: 0;" data-toggle="tooltip" title="Selection required for Foreign Customers only" data-placement="bottom">
+                                      {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode =
+                                              record.foreignExchangeCode}}
+                                  </div>
                               </div>
                             </div>
                             <!--
@@ -2868,7 +2875,7 @@
     </div>
   </div>
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
     {{> paymentmethodpop}}
   </div>
 
@@ -2878,13 +2885,13 @@
 
   <div class="modal fade" role="dialog" tabindex="-1" id="termsListModal">
     {{> termlistpop}}
-  </div>
+  </div> -->
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="newTermsModal">
     {{> newtermspop}}
-  </div>
+  </div> -->
 
-  <div class="modal fade" role="dialog" tabindex="-1" id="clienttypeListModal">
+  <!-- <div class="modal fade" role="dialog" tabindex="-1" id="clienttypeListModal">
     {{> clienttypepopup}}
   </div>
 
@@ -2903,7 +2910,7 @@
 
   <div class="modal fade" role="dialog" tabindex="-1" id="customerTitlePopModal">
     {{> title_list_pop}}
-  </div>
+  </div> -->
 
   <div class="modal fade" role="dialog" tabindex="-1" id="employeeListPOPModal">
     <div class="modal-dialog modal-xl modal-dialog-scrollable customerListModalInner" role="document"
@@ -2927,7 +2934,7 @@
   </div>
 
   {{> taskDetailModal}}
-  {{> frmappointmentpop}}
+  <!-- {{> frmappointmentpop}} temp commented out because of using all_transaction_modal-->
   {{> newTaskModal}}
 
 

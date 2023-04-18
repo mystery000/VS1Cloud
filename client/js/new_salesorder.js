@@ -91,6 +91,8 @@ Template.new_salesorder.onCreated(function () {
   templateObject.hasFollow = new ReactiveVar(false);
   templateObject.customerRecord = new ReactiveVar();
 
+  templateObject.currencyData = new ReactiveVar();
+
 
   // Methods
   templateObject.hasFollowings = async function () {
@@ -253,7 +255,7 @@ Template.new_salesorder.onCreated(function () {
     let name = $('#firstname').val();
     let surname = $('#lastname').val();
     let dept = $('#sltDept').val();
-    let fx = $('#sltCurrency').val();
+    let fx = $('.sltCurrency').val();
     var comment = $('#txaComment').val();
     var subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
     var total_paid = $('#totalPaidAmt').html() || '$' + 0;
@@ -271,7 +273,7 @@ Template.new_salesorder.onCreated(function () {
       let tddescription = $(this).find('.lineProductDesc').text();
       let tdpqa = $('#' + lineID + " .lineProductDesc").attr('data-pqa');
       if(tdpqa){
-          tddescription += " " + tdpqa;
+        tddescription += " " + tdpqa;
       }
 
       const tdQty = $(this).find('.lineQty').val();
@@ -843,16 +845,16 @@ Template.new_salesorder.onCreated(function () {
     }
 
     $("#templatePreviewModal #subtotal_totalPrint2").text(
-      object_invoce[0]["subtotal"]
+        object_invoce[0]["subtotal"]
     );
     $("#templatePreviewModal #grandTotalPrint2").text(
-      object_invoce[0]["total"]
+        object_invoce[0]["total"]
     );
     $("#templatePreviewModal #totalBalanceDuePrint2").text(
-      object_invoce[0]["bal_due"]
+        object_invoce[0]["bal_due"]
     );
     $("#templatePreviewModal #paid_amount2").text(
-      object_invoce[0]["paid_amount"]
+        object_invoce[0]["paid_amount"]
     );
 
   }
@@ -909,13 +911,13 @@ Template.new_salesorder.onCreated(function () {
     }
 
     $("#templatePreviewModal #subtotal_totalPrint3").text(
-      object_invoce[0]["subtotal"]
+        object_invoce[0]["subtotal"]
     );
     $("#templatePreviewModal #totalTax_totalPrint3").text(
-      object_invoce[0]["gst"]
+        object_invoce[0]["gst"]
     );
     $("#templatePreviewModal #totalBalanceDuePrint3").text(
-      object_invoce[0]["bal_due"]
+        object_invoce[0]["bal_due"]
     );
   }
 
@@ -1453,8 +1455,8 @@ Template.new_salesorder.onCreated(function () {
         //check if the workorder is already exists
         let workOrderIndex = workorderList.findIndex((order) => {
           return (
-            order.fields.SaleID == templateObject.SalesOrderId.get() &&
-            order.fields.ProductName == productName
+              order.fields.SaleID == templateObject.SalesOrderId.get() &&
+              order.fields.ProductName == productName
           );
         });
         if (workOrderIndex == -1) {
@@ -1468,8 +1470,36 @@ Template.new_salesorder.onCreated(function () {
   templateObject.getSubTaxCodes = function () {
     let subTaxTableList = [];
     getVS1Data("TSubTaxVS1")
-      .then(function (dataObject) {
-        if (dataObject.length == 0) {
+        .then(function (dataObject) {
+          if (dataObject.length == 0) {
+            taxRateService.getSubTaxCode().then(function (data) {
+              for (let i = 0; i < data.tsubtaxcode.length; i++) {
+                var dataList = {
+                  id: data.tsubtaxcode[i].Id || "",
+                  codename: data.tsubtaxcode[i].Code || "-",
+                  description: data.tsubtaxcode[i].Description || "-",
+                  category: data.tsubtaxcode[i].Category || "-",
+                };
+                subTaxTableList.push(dataList);
+              }
+              this.subtaxcodes.set(subTaxTableList);
+            });
+          } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tsubtaxcode;
+            for (let i = 0; i < useData.length; i++) {
+              var dataList = {
+                id: useData[i].Id || "",
+                codename: useData[i].Code || "-",
+                description: useData[i].Description || "-",
+                category: useData[i].Category || "-",
+              };
+              subTaxTableList.push(dataList);
+            }
+            templateObject.subtaxcodes.set(subTaxTableList);
+          }
+        })
+        .catch(function (err) {
           taxRateService.getSubTaxCode().then(function (data) {
             for (let i = 0; i < data.tsubtaxcode.length; i++) {
               var dataList = {
@@ -1478,41 +1508,13 @@ Template.new_salesorder.onCreated(function () {
                 description: data.tsubtaxcode[i].Description || "-",
                 category: data.tsubtaxcode[i].Category || "-",
               };
+
               subTaxTableList.push(dataList);
             }
-            this.subtaxcodes.set(subTaxTableList);
+
+            templateObject.subtaxcodes.set(subTaxTableList);
           });
-        } else {
-          let data = JSON.parse(dataObject[0].data);
-          let useData = data.tsubtaxcode;
-          for (let i = 0; i < useData.length; i++) {
-            var dataList = {
-              id: useData[i].Id || "",
-              codename: useData[i].Code || "-",
-              description: useData[i].Description || "-",
-              category: useData[i].Category || "-",
-            };
-            subTaxTableList.push(dataList);
-          }
-          templateObject.subtaxcodes.set(subTaxTableList);
-        }
-      })
-      .catch(function (err) {
-        taxRateService.getSubTaxCode().then(function (data) {
-          for (let i = 0; i < data.tsubtaxcode.length; i++) {
-            var dataList = {
-              id: data.tsubtaxcode[i].Id || "",
-              codename: data.tsubtaxcode[i].Code || "-",
-              description: data.tsubtaxcode[i].Description || "-",
-              category: data.tsubtaxcode[i].Category || "-",
-            };
-
-            subTaxTableList.push(dataList);
-          }
-
-          templateObject.subtaxcodes.set(subTaxTableList);
         });
-      });
   };
 
 
@@ -1732,166 +1734,166 @@ Template.new_salesorder.onCreated(function () {
     let stringQuery ="?"
 
     var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-      '        <tr>' +
-      '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-      '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-      '                    <table class="main">' +
-      '                        <tr>' +
-      '                            <td class="wrapper">' +
-      '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-      '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="height: 16px;"></tr>' +
-      '                                    <tr>' +
-      '                                        <td>' +
-      '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="height: 48px;"></tr>' +
-      '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-      '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-      '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-      '                                                <tbody>' +
-      '                                                    <tr>' +
-      '                                                        <td align="center" style="padding-bottom: 15px;">' +
-      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-      '                                                                <tbody>' +
-      '                                                                    <tr>' +
-      '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-      '                                                                    </tr>' +
-      '                                                                </tbody>' +
-      '                                                            </table>' +
-      '                                                        </td>' +
-      '                                                    </tr>' +
-      '                                                </tbody>' +
-      '                                            </table>' +
-      '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-      '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-      '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-      '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="background-color: #ededed;">' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <div style="width: 100%; padding: 16px 0px;">' +
-      '                                                <div style="width: 50%; float: left;">' +
-      '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-      '                                                </div>' +
-      '                                                <div style="width: 50%; float: right;">' +
-      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-      '                                                </div>' +
-      '                                            </div>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="background-color: #ededed;">' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-      '                                            <div style="width: 100%; padding: 16px 0px;">' +
-      '                                                <div style="width: 50%; float: left;">' +
-      '                                                    <p style="font-size: 18px;">Terms</p>' +
-      '                                                </div>' +
-      '                                                <div style="width: 50%; float: right;">' +
-      '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
-      '                                                </div>' +
-      '                                            </div>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-      '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-      '                                                <div style="width: 50%; float: left;">' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-      '                                                </div>' +
-      '                                                <div style="width: 50%; float: right; text-align: right;">' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-      '                                                </div>' +
-      '                                            </div>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-      '                                                <tbody>' +
-      '                                                    <tr>' +
-      '                                                        <td align="center">' +
-      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-      '                                                                <tbody>' +
-      '                                                                    <tr>' +
-      '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-      '                                                                    </tr>' +
-      '                                                                </tbody>' +
-      '                                                            </table>' +
-      '                                                        </td>' +
-      '                                                    </tr>' +
-      '                                                </tbody>' +
-      '                                            </table>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td>' +
-      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-      '                                                <tbody>' +
-      '                                                    <tr>' +
-      '                                                        <td align="center">' +
-      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-      '                                                                <tbody>' +
-      '                                                                    <tr>' +
-      '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-      '                                                                    </tr>' +
-      '                                                                </tbody>' +
-      '                                                            </table>' +
-      '                                                        </td>' +
-      '                                                    </tr>' +
-      '                                                </tbody>' +
-      '                                            </table>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                </table>' +
-      '                            </td>' +
-      '                        </tr>' +
-      '                    </table>' +
-      '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-      '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-      '                            <tr>' +
-      '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-      '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-      '                                    <br>' +
-      '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
-      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-      '                                </td>' +
-      '                            </tr>' +
-      '                        </table>' +
-      '                    </div>' +
-      '                </div>' +
-      '            </td>' +
-      '        </tr>' +
-      '    </table>';
+        '        <tr>' +
+        '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+        '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+        '                    <table class="main">' +
+        '                        <tr>' +
+        '                            <td class="wrapper">' +
+        '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+        '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="height: 16px;"></tr>' +
+        '                                    <tr>' +
+        '                                        <td>' +
+        '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="height: 48px;"></tr>' +
+        '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+        '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+        '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        '                                                <tbody>' +
+        '                                                    <tr>' +
+        '                                                        <td align="center" style="padding-bottom: 15px;">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        '                                                                <tbody>' +
+        '                                                                    <tr>' +
+        '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        '                                                                    </tr>' +
+        '                                                                </tbody>' +
+        '                                                            </table>' +
+        '                                                        </td>' +
+        '                                                    </tr>' +
+        '                                                </tbody>' +
+        '                                            </table>' +
+        '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+        '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+        '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+        '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+        '                                                </div>' +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+        '                                                </div>' +
+        '                                            </div>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Terms</p>' +
+        '                                                </div>' +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
+        '                                                </div>' +
+        '                                            </div>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+        '                                                </div>' +
+        '                                                <div style="width: 50%; float: right; text-align: right;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+        '                                                </div>' +
+        '                                            </div>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        '                                                <tbody>' +
+        '                                                    <tr>' +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        '                                                                <tbody>' +
+        '                                                                    <tr>' +
+        '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        '                                                                    </tr>' +
+        '                                                                </tbody>' +
+        '                                                            </table>' +
+        '                                                        </td>' +
+        '                                                    </tr>' +
+        '                                                </tbody>' +
+        '                                            </table>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td>' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        '                                                <tbody>' +
+        '                                                    <tr>' +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        '                                                                <tbody>' +
+        '                                                                    <tr>' +
+        '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+        '                                                                    </tr>' +
+        '                                                                </tbody>' +
+        '                                                            </table>' +
+        '                                                        </td>' +
+        '                                                    </tr>' +
+        '                                                </tbody>' +
+        '                                            </table>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                </table>' +
+        '                            </td>' +
+        '                        </tr>' +
+        '                    </table>' +
+        '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+        '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        '                            <tr>' +
+        '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+        '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+        '                                    <br>' +
+        '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+        '                                </td>' +
+        '                            </tr>' +
+        '                        </table>' +
+        '                    </div>' +
+        '                </div>' +
+        '            </td>' +
+        '        </tr>' +
+        '    </table>';
 
 
     if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
@@ -2277,7 +2279,7 @@ Template.new_salesorder.onCreated(function () {
     var getso_id = url.split('?id=');
     var currentSalesOrder = getso_id[getso_id.length - 1];
     let uploadedItems = templateObject.uploadedFiles.get();
-    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    var currencyCode = $(".sltCurrency").val() || CountryAbbr;
     let ForeignExchangeRate = $('#exchange_rate').val() || 0;
     let foreignCurrencyFields = {}
     if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -2384,11 +2386,57 @@ Template.new_salesorder.onCreated(function () {
 
     }, delayTimeAfterSound);
   }
+
+  templateObject.getCurrencies = async function () {
+    let currencyData = [];
+    let dataObject = await getVS1Data("TCurrencyList");
+    if (dataObject.length == 0) {
+      taxRateService.getCurrencies().then(function (data) {
+        for (let i in data.tcurrencylist) {
+          let currencyObj = {
+            id: data.tcurrencylist[i].CurrencyID || "",
+            currency: data.tcurrencylist[i].Currency || "",
+            currencySellRate: data.tcurrencylist[i].SellRate || "",
+            currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+            currencyCode: data.tcurrencylist[i].Code || "",
+          };
+
+          currencyData.push(currencyObj);
+        }
+        templateObject.currencyData.set(currencyData);
+      });
+    } else {
+      let data = JSON.parse(dataObject[0].data);
+      let useData = data.tcurrencylist;
+      for (let i in useData) {
+        let currencyObj = {
+          id: data.tcurrencylist[i].CurrencyID || "",
+          currency: data.tcurrencylist[i].Currency || "",
+          currencySellRate: data.tcurrencylist[i].SellRate || "",
+          currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+          currencyCode: data.tcurrencylist[i].Code || "",
+        };
+
+        currencyData.push(currencyObj)
+      }
+      templateObject.currencyData.set(currencyData);
+    }
+  }
+  templateObject.getCurrencyRate = (currency, type) => {
+    let currencyData = templateObject.currencyData.get();
+    for(let i = 0; i <currencyData.length; i++) {
+      if(currencyData[i].currencyCode == currency || currencyData[i].currency == currency) {
+        if (type == 0) return currencyData[i].currencySellRate;
+        else return currencyData[i].currencyBuyRate;
+      }
+    };
+  };
 });
 
 Template.new_salesorder.onRendered(function () {
   let templateObject = Template.instance();
 
+  templateObject.getCurrencies();
   templateObject.hasFollowings();
   templateObject.getAllClients();
   templateObject.getOrganisationDetails();
@@ -2543,16 +2591,16 @@ Template.new_salesorder.onRendered(function () {
                     let lotno = "";
                     let expirydate = "";
                     if(data.fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
-                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                          serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                        }
+                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
                     }
                     if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
-                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                          lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                          let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                        }
+                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
                     }
                     lineItemObj = {
                       lineID: Random.id(),
@@ -2597,16 +2645,16 @@ Template.new_salesorder.onRendered(function () {
                   let lotno = "";
                   let expirydate = "";
                   if(data.fields.Lines.fields?.PQA?.fields?.PQASN != null){
-                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
-                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                      }
+                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                      serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                    }
                   }
                   if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
-                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
-                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                      }
+                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                      lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                      let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                      expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                    }
                   }
                   const lineItemObj = {
                     lineID: Random.id(),
@@ -2674,8 +2722,9 @@ Template.new_salesorder.onRendered(function () {
 
               $('#edtCustomerName').val(data.fields.CustomerName);
               templateObject.CleintName.set(data.fields.CustomerName);
-              $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-              $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+              //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+              $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
               $('#sltStatus').val(data.fields.SalesStatus);
               $('#sltTerms').val(data.fields.TermsName);
               $('#sltDept').val(data.fields.SaleClassName);
@@ -2802,16 +2851,16 @@ Template.new_salesorder.onRendered(function () {
                     let lotno = "";
                     let expirydate = "";
                     if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQASN != null){
-                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
-                            serialno += (serialno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                        }
+                      for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                        serialno += (serialno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                      }
                     }
                     if(useData[d].fields.Lines[i].fields?.PQA?.fields?.PQABatch != null){
-                        for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
-                            lotno += (lotno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                            let expirydateformat = useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                            expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                        }
+                      for (let j = 0; j < useData[d].fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                        lotno += (lotno == "") ? useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                        let expirydateformat = useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                      }
                     }
 
                     const lineItemObj = {
@@ -2860,16 +2909,16 @@ Template.new_salesorder.onRendered(function () {
                   let lotno = "";
                   let expirydate = "";
                   if(useData[d].fields.Lines.fields?.PQA?.fields?.PQASN != null){
-                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQASN.length; j++) {
-                          serialno += (serialno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                      }
+                    for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                      serialno += (serialno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+useData[d].fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                    }
                   }
                   if(useData[d].fields.Lines.fields?.PQA?.fields?.PQABatch != null){
-                      for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
-                          lotno += (lotno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                          let expirydateformat = useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                          expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                      }
+                    for (let j = 0; j < useData[d].fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                      lotno += (lotno == "") ? useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                      let expirydateformat = useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): useData[d].fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                      expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                    }
                   }
 
                   const lineItemObj = {
@@ -2938,8 +2987,9 @@ Template.new_salesorder.onRendered(function () {
 
                 $('#edtCustomerName').val(useData[d].fields.CustomerName);
                 templateObject.CleintName.set(useData[d].fields.CustomerName);
-                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                $('#exchange_rate').val(templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 1));
                 $('#sltStatus').val(useData[d].fields.SalesStatus);
                 $('#sltTerms').val(useData[d].fields.TermsName);
                 $('#sltDept').val(useData[d].fields.SaleClassName);
@@ -3108,16 +3158,16 @@ Template.new_salesorder.onRendered(function () {
                   let expirydate = "";
                   if(data.fields.Lines[i].fields.PQA != null){
                     if(data.fields.Lines[i].fields.PQA.fields.PQASN != null){
-                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
+                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQASN.length; j++) {
                         serialno += (serialno == "") ? data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines[i].fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                        }
+                      }
                     }
                     if(data.fields.Lines[i].fields.PQA.fields.PQABatch != null){
-                        for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
+                      for (let j = 0; j < data.fields.Lines[i].fields.PQA.fields.PQABatch.length; j++) {
                         lotno += (lotno == "") ? data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchNo;
                         let expirydateformat = data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines[i].fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
                         expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                        }
+                      }
                     }
                   }
                   const lineItemObj = {
@@ -3165,16 +3215,16 @@ Template.new_salesorder.onRendered(function () {
                 let expirydate = "";
                 if(data.fields.Lines.fields.PQA != null){
                   if(data.fields.Lines.fields.PQA.fields.PQASN != null){
-                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
-                        serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
-                      }
+                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQASN.length; j++) {
+                      serialno += (serialno == "") ? data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber : ","+data.fields.Lines.fields.PQA.fields.PQASN[j].fields.SerialNumber;
+                    }
                   }
                   if(data.fields.Lines.fields.PQA.fields.PQABatch != null){
-                      for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
-                        lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
-                        let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
-                        expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
-                      }
+                    for (let j = 0; j < data.fields.Lines.fields.PQA.fields.PQABatch.length; j++) {
+                      lotno += (lotno == "") ? data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo : ","+data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchNo;
+                      let expirydateformat = data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate != '' ? moment(data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate).format("YYYY/MM/DD"): data.fields.Lines.fields.PQA.fields.PQABatch[j].fields.BatchExpiryDate;
+                      expirydate += (expirydate == "") ? expirydateformat : ","+expirydateformat;
+                    }
                   }
                 }
                 const lineItemObj = {
@@ -3242,8 +3292,9 @@ Template.new_salesorder.onRendered(function () {
             };
             $('#edtCustomerName').val(data.fields.CustomerName);
             templateObject.CleintName.set(data.fields.CustomerName);
-            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+            $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+            //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 1));
             $('#sltStatus').val(data.fields.SalesStatus);
             $('#sltTerms').val(data.fields.TermsName);
             $('#sltDept').val(data.fields.SaleClassName);
@@ -3445,7 +3496,7 @@ Template.new_salesorder.onRendered(function () {
     }, 1000);
   });
   // $(document).on("click", "#tblCurrencyPopList tbody tr", function (e) {
-  //   $('#sltCurrency').val($(this).find(".colCode").text());
+  //   $('.sltCurrency').val($(this).find(".colCode").text());
   //   $('#currencyModal').modal('toggle');
 
   //   $('#tblCurrencyPopList_filter .form-control-sm').val('');
@@ -3477,7 +3528,7 @@ Template.new_salesorder.onRendered(function () {
   $(document).ready(function () {
     $('#edtCustomerName').editableSelect();
     $('#sltStatus').editableSelect();
-    $('#sltCurrency').editableSelect();
+    $('.sltCurrency').editableSelect();
     $('#sltTerms').editableSelect();
     $('#sltDept').editableSelect();
     $('#addRow').on('click', function () {
@@ -3538,7 +3589,7 @@ Template.new_salesorder.onRendered(function () {
   });
 
   /* On clik Inventory Line */
-  $(document).on("click", "#tblInventory tbody tr", async function (e) {
+  $(document).on("click", ".tblInventory tbody tr", async function (e) {
     $(".colProductName").removeClass('boldtablealertsborder');
     let selectLineID = $('#selectLineID').val();
     let taxcodeList = await templateObject.taxraterecords.get();
@@ -3916,392 +3967,392 @@ Template.new_salesorder.onRendered(function () {
   });
 
   $(document).ready(function() {
-  $('#sltTerms').editableSelect()
-    .on('click.editable-select', function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      var termsDataName = e.target.value || '';
-      $('#edtTermsID').val('');
-      if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-        $('#termsListModal').modal('show');
-      } else {
-        if (termsDataName.replace(/\s/g, '') != '') {
-          $('#termModalHeader').text('Edit Terms');
-          getVS1Data('TTermsVS1').then(function (dataObject) { //edit to test indexdb
-            if (dataObject.length == 0) {
-              LoadingOverlay.show();
-              sideBarService.getTermsVS1().then(function (data) {
-                for (let i in data.ttermsvs1) {
-                  if (data.ttermsvs1[i].TermsName === termsDataName) {
-                    $('#edtTermsID').val(data.ttermsvs1[i].Id);
-                    $('#edtDays').val(data.ttermsvs1[i].Days);
-                    $('#edtName').val(data.ttermsvs1[i].TermsName);
-                    $('#edtDesc').val(data.ttermsvs1[i].Description);
-                    if (data.ttermsvs1[i].IsEOM === true) {
-                      $('#isEOM').prop('checked', true);
-                    } else {
-                      $('#isEOM').prop('checked', false);
+    $('#sltTerms').editableSelect()
+        .on('click.editable-select', function (e, li) {
+          var $earch = $(this);
+          var offset = $earch.offset();
+          var termsDataName = e.target.value || '';
+          $('#edtTermsID').val('');
+          if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#termsListModal').modal('show');
+          } else {
+            if (termsDataName.replace(/\s/g, '') != '') {
+              $('#termModalHeader').text('Edit Terms');
+              getVS1Data('TTermsVS1').then(function (dataObject) { //edit to test indexdb
+                if (dataObject.length == 0) {
+                  LoadingOverlay.show();
+                  sideBarService.getTermsVS1().then(function (data) {
+                    for (let i in data.ttermsvs1) {
+                      if (data.ttermsvs1[i].TermsName === termsDataName) {
+                        $('#edtTermsID').val(data.ttermsvs1[i].Id);
+                        $('#edtDays').val(data.ttermsvs1[i].Days);
+                        $('#edtName').val(data.ttermsvs1[i].TermsName);
+                        $('#edtDesc').val(data.ttermsvs1[i].Description);
+                        if (data.ttermsvs1[i].IsEOM === true) {
+                          $('#isEOM').prop('checked', true);
+                        } else {
+                          $('#isEOM').prop('checked', false);
+                        }
+                        if (data.ttermsvs1[i].IsEOMPlus === true) {
+                          $('#isEOMPlus').prop('checked', true);
+                        } else {
+                          $('#isEOMPlus').prop('checked', false);
+                        }
+                        if (data.ttermsvs1[i].isSalesdefault === true) {
+                          $('#chkCustomerDef').prop('checked', true);
+                        } else {
+                          $('#chkCustomerDef').prop('checked', false);
+                        }
+                        if (data.ttermsvs1[i].isPurchasedefault === true) {
+                          $('#chkSupplierDef').prop('checked', true);
+                        } else {
+                          $('#chkSupplierDef').prop('checked', false);
+                        }
+                      }
                     }
-                    if (data.ttermsvs1[i].IsEOMPlus === true) {
-                      $('#isEOMPlus').prop('checked', true);
-                    } else {
-                      $('#isEOMPlus').prop('checked', false);
-                    }
-                    if (data.ttermsvs1[i].isSalesdefault === true) {
-                      $('#chkCustomerDef').prop('checked', true);
-                    } else {
-                      $('#chkCustomerDef').prop('checked', false);
-                    }
-                    if (data.ttermsvs1[i].isPurchasedefault === true) {
-                      $('#chkSupplierDef').prop('checked', true);
-                    } else {
-                      $('#chkSupplierDef').prop('checked', false);
+                    setTimeout(function () {
+                      LoadingOverlay.hide();
+                      //$('#newTermsModal').modal('show');
+                    }, 200);
+                  });
+                } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  let useData = data.ttermsvs1;
+                  for (let i in useData) {
+                    if (useData[i].TermsName === termsDataName) {
+                      $('#edtTermsID').val(useData[i].Id);
+                      $('#edtDays').val(useData[i].Days);
+                      $('#edtName').val(useData[i].TermsName);
+                      $('#edtDesc').val(useData[i].Description);
+                      if (useData[i].IsEOM === true) {
+                        $('#isEOM').prop('checked', true);
+                      } else {
+                        $('#isEOM').prop('checked', false);
+                      }
+                      if (useData[i].IsEOMPlus === true) {
+                        $('#isEOMPlus').prop('checked', true);
+                      } else {
+                        $('#isEOMPlus').prop('checked', false);
+                      }
+                      if (useData[i].isSalesdefault === true) {
+                        $('#chkCustomerDef').prop('checked', true);
+                      } else {
+                        $('#chkCustomerDef').prop('checked', false);
+                      }
+                      if (useData[i].isPurchasedefault === true) {
+                        $('#chkSupplierDef').prop('checked', true);
+                      } else {
+                        $('#chkSupplierDef').prop('checked', false);
+                      }
                     }
                   }
+                  setTimeout(function () {
+                    LoadingOverlay.hide();
+                    //$('#newTermsModal').modal('show');
+                  }, 200);
                 }
-                setTimeout(function () {
-                  LoadingOverlay.hide();
-                  $('#newTermsModal').modal('show');
-                }, 200);
+              }).catch(function (err) {
+                LoadingOverlay.show();
+                sideBarService.getTermsVS1().then(function (data) {
+                  for (let i in data.ttermsvs1) {
+                    if (data.ttermsvs1[i].TermsName === termsDataName) {
+                      $('#edtTermsID').val(data.ttermsvs1[i].Id);
+                      $('#edtDays').val(data.ttermsvs1[i].Days);
+                      $('#edtName').val(data.ttermsvs1[i].TermsName);
+                      $('#edtDesc').val(data.ttermsvs1[i].Description);
+                      if (data.ttermsvs1[i].IsEOM === true) {
+                        $('#isEOM').prop('checked', true);
+                      } else {
+                        $('#isEOM').prop('checked', false);
+                      }
+                      if (data.ttermsvs1[i].IsEOMPlus === true) {
+                        $('#isEOMPlus').prop('checked', true);
+                      } else {
+                        $('#isEOMPlus').prop('checked', false);
+                      }
+                      if (data.ttermsvs1[i].isSalesdefault === true) {
+                        $('#chkCustomerDef').prop('checked', true);
+                      } else {
+                        $('#chkCustomerDef').prop('checked', false);
+                      }
+                      if (data.ttermsvs1[i].isPurchasedefault === true) {
+                        $('#chkSupplierDef').prop('checked', true);
+                      } else {
+                        $('#chkSupplierDef').prop('checked', false);
+                      }
+                    }
+                  }
+                  setTimeout(function () {
+                    LoadingOverlay.hide();
+                    //$('#newTermsModal').modal('show');
+                  }, 200);
+                });
               });
             } else {
-              let data = JSON.parse(dataObject[0].data);
-              let useData = data.ttermsvs1;
-              for (let i in useData) {
-                if (useData[i].TermsName === termsDataName) {
-                  $('#edtTermsID').val(useData[i].Id);
-                  $('#edtDays').val(useData[i].Days);
-                  $('#edtName').val(useData[i].TermsName);
-                  $('#edtDesc').val(useData[i].Description);
-                  if (useData[i].IsEOM === true) {
-                    $('#isEOM').prop('checked', true);
-                  } else {
-                    $('#isEOM').prop('checked', false);
-                  }
-                  if (useData[i].IsEOMPlus === true) {
-                    $('#isEOMPlus').prop('checked', true);
-                  } else {
-                    $('#isEOMPlus').prop('checked', false);
-                  }
-                  if (useData[i].isSalesdefault === true) {
-                    $('#chkCustomerDef').prop('checked', true);
-                  } else {
-                    $('#chkCustomerDef').prop('checked', false);
-                  }
-                  if (useData[i].isPurchasedefault === true) {
-                    $('#chkSupplierDef').prop('checked', true);
-                  } else {
-                    $('#chkSupplierDef').prop('checked', false);
-                  }
-                }
-              }
+              $('#termsListModal').modal('show');
               setTimeout(function () {
-                LoadingOverlay.hide();
-                $('#newTermsModal').modal('show');
-              }, 200);
+                $('#termsList_filter .form-control-sm').focus();
+                $('#termsList_filter .form-control-sm').val('');
+                $('#termsList_filter .form-control-sm').trigger("input");
+                var datatable = $('#termsList').DataTable();
+                datatable.draw();
+                $('#termsList_filter .form-control-sm').trigger("input");
+              }, 500);
             }
-          }).catch(function (err) {
-            LoadingOverlay.show();
-            sideBarService.getTermsVS1().then(function (data) {
-              for (let i in data.ttermsvs1) {
-                if (data.ttermsvs1[i].TermsName === termsDataName) {
-                  $('#edtTermsID').val(data.ttermsvs1[i].Id);
-                  $('#edtDays').val(data.ttermsvs1[i].Days);
-                  $('#edtName').val(data.ttermsvs1[i].TermsName);
-                  $('#edtDesc').val(data.ttermsvs1[i].Description);
-                  if (data.ttermsvs1[i].IsEOM === true) {
-                    $('#isEOM').prop('checked', true);
-                  } else {
-                    $('#isEOM').prop('checked', false);
-                  }
-                  if (data.ttermsvs1[i].IsEOMPlus === true) {
-                    $('#isEOMPlus').prop('checked', true);
-                  } else {
-                    $('#isEOMPlus').prop('checked', false);
-                  }
-                  if (data.ttermsvs1[i].isSalesdefault === true) {
-                    $('#chkCustomerDef').prop('checked', true);
-                  } else {
-                    $('#chkCustomerDef').prop('checked', false);
-                  }
-                  if (data.ttermsvs1[i].isPurchasedefault === true) {
-                    $('#chkSupplierDef').prop('checked', true);
-                  } else {
-                    $('#chkSupplierDef').prop('checked', false);
-                  }
-                }
-              }
-              setTimeout(function () {
-                LoadingOverlay.hide();
-                $('#newTermsModal').modal('show');
-              }, 200);
-            });
-          });
-        } else {
-          $('#termsListModal').modal('show');
-          setTimeout(function () {
-            $('#termsList_filter .form-control-sm').focus();
-            $('#termsList_filter .form-control-sm').val('');
-            $('#termsList_filter .form-control-sm').trigger("input");
-            var datatable = $('#termsList').DataTable();
-            datatable.draw();
-            $('#termsList_filter .form-control-sm').trigger("input");
-          }, 500);
-        }
-      }
-    });
+          }
+        });
 
-  $('#sltDept').editableSelect()
-    .on('click.editable-select', function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      var deptDataName = e.target.value || '';
-      $('#edtDepartmentID').val('');
-      if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-        $('#departmentModal').modal('toggle');
-      } else {
-        if (deptDataName.replace(/\s/g, '') != '') {
-          $('#newDeptHeader').text('Edit Department');
+    $('#sltDept').editableSelect()
+        .on('click.editable-select', function (e, li) {
+          var $earch = $(this);
+          var offset = $earch.offset();
+          var deptDataName = e.target.value || '';
+          $('#edtDepartmentID').val('');
+          if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#departmentModal').modal('toggle');
+          } else {
+            if (deptDataName.replace(/\s/g, '') != '') {
+              $('#newDeptHeader').text('Edit Department');
 
-          getVS1Data('TDeptClass').then(function (dataObject) {
-            if (dataObject.length == 0) {
-              LoadingOverlay.show();
-              sideBarService.getDepartment().then(function (data) {
-                for (let i = 0; i < data.tdeptclass.length; i++) {
-                  if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                    $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                    $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                    $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                    $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+              getVS1Data('TDeptClass').then(function (dataObject) {
+                if (dataObject.length == 0) {
+                  LoadingOverlay.show();
+                  sideBarService.getDepartment().then(function (data) {
+                    for (let i = 0; i < data.tdeptclass.length; i++) {
+                      if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                        $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                        $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                        $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                        $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                      }
+                    }
+                    setTimeout(function () {
+                      LoadingOverlay.hide();
+                      $('#newDepartmentModal').modal('toggle');
+                    }, 200);
+                  });
+                } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  let useData = data.tdeptclass;
+                  for (let i = 0; i < data.tdeptclass.length; i++) {
+                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                      $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                      $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                      $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                      $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                    }
                   }
+                  setTimeout(function () {
+                    LoadingOverlay.hide();
+                    $('#newDepartmentModal').modal('toggle');
+                  }, 200);
                 }
-                setTimeout(function () {
-                  LoadingOverlay.hide();
-                  $('#newDepartmentModal').modal('toggle');
-                }, 200);
+              }).catch(function (err) {
+                LoadingOverlay.show();
+                sideBarService.getDepartment().then(function (data) {
+                  for (let i = 0; i < data.tdeptclass.length; i++) {
+                    if (data.tdeptclass[i].DeptClassName === deptDataName) {
+                      $('#edtDepartmentID').val(data.tdeptclass[i].Id);
+                      $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
+                      $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
+                      $('#edtDeptDesc').val(data.tdeptclass[i].Description);
+                    }
+                  }
+                  setTimeout(function () {
+                    LoadingOverlay.hide();
+                    $('#newDepartmentModal').modal('toggle');
+                  }, 200);
+                });
               });
             } else {
-              let data = JSON.parse(dataObject[0].data);
-              let useData = data.tdeptclass;
-              for (let i = 0; i < data.tdeptclass.length; i++) {
-                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                  $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                  $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                  $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                  $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                }
-              }
+              $('#departmentModal').modal();
               setTimeout(function () {
-                LoadingOverlay.hide();
-                $('#newDepartmentModal').modal('toggle');
-              }, 200);
+                $('#departmentList_filter .form-control-sm').focus();
+                $('#departmentList_filter .form-control-sm').val('');
+                $('#departmentList_filter .form-control-sm').trigger("input");
+                var datatable = $('#departmentList').DataTable();
+                datatable.draw();
+                $('#departmentList_filter .form-control-sm').trigger("input");
+              }, 500);
             }
-          }).catch(function (err) {
-            LoadingOverlay.show();
-            sideBarService.getDepartment().then(function (data) {
-              for (let i = 0; i < data.tdeptclass.length; i++) {
-                if (data.tdeptclass[i].DeptClassName === deptDataName) {
-                  $('#edtDepartmentID').val(data.tdeptclass[i].Id);
-                  $('#edtNewDeptName').val(data.tdeptclass[i].DeptClassName);
-                  $('#edtSiteCode').val(data.tdeptclass[i].SiteCode);
-                  $('#edtDeptDesc').val(data.tdeptclass[i].Description);
-                }
-              }
-              setTimeout(function () {
-                LoadingOverlay.hide();
-                $('#newDepartmentModal').modal('toggle');
-              }, 200);
-            });
-          });
-        } else {
-          $('#departmentModal').modal();
-          setTimeout(function () {
-            $('#departmentList_filter .form-control-sm').focus();
-            $('#departmentList_filter .form-control-sm').val('');
-            $('#departmentList_filter .form-control-sm').trigger("input");
-            var datatable = $('#departmentList').DataTable();
-            datatable.draw();
-            $('#departmentList_filter .form-control-sm').trigger("input");
-          }, 500);
-        }
-      }
-    });
+          }
+        });
 
-  $('#sltStatus').editableSelect()
-    .on('click.editable-select', function (e, li) {
-      var $earch = $(this);
-      var offset = $earch.offset();
-      $('#statusId').val('');
-      var statusDataName = e.target.value || '';
-      if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-        $('#statusPopModal').modal('toggle');
-      } else {
-        if (statusDataName.replace(/\s/g, '') != '') {
-          $('#newStatusHeader').text('Edit Status');
-          $('#newStatus').val(statusDataName);
+    $('#sltStatus').editableSelect()
+        .on('click.editable-select', function (e, li) {
+          var $earch = $(this);
+          var offset = $earch.offset();
+          $('#statusId').val('');
+          var statusDataName = e.target.value || '';
+          if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#statusPopModal').modal('toggle');
+          } else {
+            if (statusDataName.replace(/\s/g, '') != '') {
+              $('#newStatusHeader').text('Edit Status');
+              $('#newStatus').val(statusDataName);
 
-          getVS1Data('TLeadStatusType').then(function (dataObject) {
-            if (dataObject.length == 0) {
-              LoadingOverlay.show();
-              sideBarService.getAllLeadStatus().then(function (data) {
-                for (let i in data.tleadstatustype) {
-                  if (data.tleadstatustype[i].TypeName === statusDataName) {
-                    $('#statusId').val(data.tleadstatustype[i].Id);
+              getVS1Data('TLeadStatusType').then(function (dataObject) {
+                if (dataObject.length == 0) {
+                  LoadingOverlay.show();
+                  sideBarService.getAllLeadStatus().then(function (data) {
+                    for (let i in data.tleadstatustype) {
+                      if (data.tleadstatustype[i].TypeName === statusDataName) {
+                        $('#statusId').val(data.tleadstatustype[i].Id);
+                      }
+                    }
+                    setTimeout(function () {
+                      LoadingOverlay.hide();
+                      $('#newStatusPopModal').modal('toggle');
+                    }, 200);
+                  });
+                } else {
+                  let data = JSON.parse(dataObject[0].data);
+                  let useData = data.tleadstatustype;
+                  for (let i in useData) {
+                    if (useData[i].TypeName === statusDataName) {
+                      $('#statusId').val(useData[i].Id);
+
+                    }
                   }
+                  setTimeout(function () {
+                    LoadingOverlay.hide();
+                    $('#newStatusPopModal').modal('toggle');
+                  }, 200);
                 }
-                setTimeout(function () {
-                  LoadingOverlay.hide();
-                  $('#newStatusPopModal').modal('toggle');
-                }, 200);
+              }).catch(function (err) {
+                LoadingOverlay.show();
+                sideBarService.getAllLeadStatus().then(function (data) {
+                  for (let i in data.tleadstatustype) {
+                    if (data.tleadstatustype[i].TypeName === statusDataName) {
+                      $('#statusId').val(data.tleadstatustype[i].Id);
+                    }
+                  }
+                  setTimeout(function () {
+                    LoadingOverlay.hide();
+                    $('#newStatusPopModal').modal('toggle');
+                  }, 200);
+                });
               });
-            } else {
-              let data = JSON.parse(dataObject[0].data);
-              let useData = data.tleadstatustype;
-              for (let i in useData) {
-                if (useData[i].TypeName === statusDataName) {
-                  $('#statusId').val(useData[i].Id);
-
-                }
-              }
               setTimeout(function () {
                 LoadingOverlay.hide();
                 $('#newStatusPopModal').modal('toggle');
               }, 200);
-            }
-          }).catch(function (err) {
-            LoadingOverlay.show();
-            sideBarService.getAllLeadStatus().then(function (data) {
-              for (let i in data.tleadstatustype) {
-                if (data.tleadstatustype[i].TypeName === statusDataName) {
-                  $('#statusId').val(data.tleadstatustype[i].Id);
-                }
-              }
+
+            } else {
+              $('#statusPopModal').modal();
               setTimeout(function () {
-                LoadingOverlay.hide();
-                $('#newStatusPopModal').modal('toggle');
-              }, 200);
-            });
-          });
-          setTimeout(function () {
-            LoadingOverlay.hide();
-            $('#newStatusPopModal').modal('toggle');
-          }, 200);
+                $('#tblStatusPopList_filter .form-control-sm').focus();
+                $('#tblStatusPopList_filter .form-control-sm').val('');
+                $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+                var datatable = $('#tblStatusPopList').DataTable();
 
-        } else {
-          $('#statusPopModal').modal();
-          setTimeout(function () {
-            $('#tblStatusPopList_filter .form-control-sm').focus();
-            $('#tblStatusPopList_filter .form-control-sm').val('');
-            $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-            var datatable = $('#tblStatusPopList').DataTable();
+                datatable.draw();
+                $('#tblStatusPopList_filter .form-control-sm').trigger("input");
 
-            datatable.draw();
-            $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+              }, 500);
+            }
+          }
+        });
 
-          }, 500);
-        }
-      }
-    });
+    // $('.sltCurrency').editableSelect()
+    //   .on('click.editable-select', function (e, li) {
+    //     var $earch = $(this);
+    //     var offset = $earch.offset();
+    //     var currencyDataName = e.target.value || '';
+    //     $('#edtCurrencyID').val('');
+    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //       $('#currencyModal').modal('toggle');
+    //     } else {
+    //       if (currencyDataName.replace(/\s/g, '') != '') {
+    //         $('#add-currency-title').text('Edit Currency');
+    //         $('#sedtCountry').prop('readonly', true);
+    //         getVS1Data('TCurrency').then(function (dataObject) {
+    //           if (dataObject.length == 0) {
+    //             LoadingOverlay.show();
+    //             sideBarService.getCurrencies().then(function (data) {
+    //               for (let i in data.tcurrency) {
+    //                 if (data.tcurrency[i].Code === currencyDataName) {
+    //                   $('#edtCurrencyID').val(data.tcurrency[i].Id);
+    //                   setTimeout(function () {
+    //                     $('#sedtCountry').val(data.tcurrency[i].Country);
+    //                   }, 200);
+    //                   //$('#sedtCountry').val(data.tcurrency[i].Country);
+    //                   $('#currencyCode').val(currencyDataName);
+    //                   $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+    //                   $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+    //                   $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+    //                   $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+    //                   $('#edtSellRate').val(data.tcurrency[i].SellRate);
+    //                 }
+    //               }
+    //               setTimeout(function () {
+    //                 LoadingOverlay.hide();
+    //                 $('#newCurrencyModal').modal('toggle');
+    //                 $('#sedtCountry').attr('readonly', true);
+    //               }, 200);
+    //             });
+    //           } else {
+    //             let data = JSON.parse(dataObject[0].data);
+    //             let useData = data.tcurrency;
+    //             for (let i = 0; i < data.tcurrency.length; i++) {
+    //               if (data.tcurrency[i].Code === currencyDataName) {
+    //                 $('#edtCurrencyID').val(data.tcurrency[i].Id);
+    //                 $('#sedtCountry').val(data.tcurrency[i].Country);
+    //                 $('#currencyCode').val(currencyDataName);
+    //                 $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+    //                 $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+    //                 $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+    //                 $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+    //                 $('#edtSellRate').val(data.tcurrency[i].SellRate);
+    //               }
+    //             }
+    //             setTimeout(function () {
+    //               LoadingOverlay.hide();
+    //               $('#newCurrencyModal').modal('toggle');
+    //             }, 200);
+    //           }
 
-  // $('#sltCurrency').editableSelect()
-  //   .on('click.editable-select', function (e, li) {
-  //     var $earch = $(this);
-  //     var offset = $earch.offset();
-  //     var currencyDataName = e.target.value || '';
-  //     $('#edtCurrencyID').val('');
-  //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-  //       $('#currencyModal').modal('toggle');
-  //     } else {
-  //       if (currencyDataName.replace(/\s/g, '') != '') {
-  //         $('#add-currency-title').text('Edit Currency');
-  //         $('#sedtCountry').prop('readonly', true);
-  //         getVS1Data('TCurrency').then(function (dataObject) {
-  //           if (dataObject.length == 0) {
-  //             LoadingOverlay.show();
-  //             sideBarService.getCurrencies().then(function (data) {
-  //               for (let i in data.tcurrency) {
-  //                 if (data.tcurrency[i].Code === currencyDataName) {
-  //                   $('#edtCurrencyID').val(data.tcurrency[i].Id);
-  //                   setTimeout(function () {
-  //                     $('#sedtCountry').val(data.tcurrency[i].Country);
-  //                   }, 200);
-  //                   //$('#sedtCountry').val(data.tcurrency[i].Country);
-  //                   $('#currencyCode').val(currencyDataName);
-  //                   $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-  //                   $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-  //                   $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-  //                   $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-  //                   $('#edtSellRate').val(data.tcurrency[i].SellRate);
-  //                 }
-  //               }
-  //               setTimeout(function () {
-  //                 LoadingOverlay.hide();
-  //                 $('#newCurrencyModal').modal('toggle');
-  //                 $('#sedtCountry').attr('readonly', true);
-  //               }, 200);
-  //             });
-  //           } else {
-  //             let data = JSON.parse(dataObject[0].data);
-  //             let useData = data.tcurrency;
-  //             for (let i = 0; i < data.tcurrency.length; i++) {
-  //               if (data.tcurrency[i].Code === currencyDataName) {
-  //                 $('#edtCurrencyID').val(data.tcurrency[i].Id);
-  //                 $('#sedtCountry').val(data.tcurrency[i].Country);
-  //                 $('#currencyCode').val(currencyDataName);
-  //                 $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-  //                 $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-  //                 $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-  //                 $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-  //                 $('#edtSellRate').val(data.tcurrency[i].SellRate);
-  //               }
-  //             }
-  //             setTimeout(function () {
-  //               LoadingOverlay.hide();
-  //               $('#newCurrencyModal').modal('toggle');
-  //             }, 200);
-  //           }
+    //         }).catch(function (err) {
+    //           LoadingOverlay.show();
+    //           sideBarService.getCurrencies().then(function (data) {
+    //             for (let i in data.tcurrency) {
+    //               if (data.tcurrency[i].Code === currencyDataName) {
+    //                 $('#edtCurrencyID').val(data.tcurrency[i].Id);
+    //                 setTimeout(function () {
+    //                   $('#sedtCountry').val(data.tcurrency[i].Country);
+    //                 }, 200);
+    //                 //$('#sedtCountry').val(data.tcurrency[i].Country);
+    //                 $('#currencyCode').val(currencyDataName);
+    //                 $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
+    //                 $('#edtCurrencyName').val(data.tcurrency[i].Currency);
+    //                 $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
+    //                 $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
+    //                 $('#edtSellRate').val(data.tcurrency[i].SellRate);
+    //               }
+    //             }
+    //             setTimeout(function () {
+    //               LoadingOverlay.hide();
+    //               $('#newCurrencyModal').modal('toggle');
+    //               $('#sedtCountry').attr('readonly', true);
+    //             }, 200);
+    //           });
+    //         });
 
-  //         }).catch(function (err) {
-  //           LoadingOverlay.show();
-  //           sideBarService.getCurrencies().then(function (data) {
-  //             for (let i in data.tcurrency) {
-  //               if (data.tcurrency[i].Code === currencyDataName) {
-  //                 $('#edtCurrencyID').val(data.tcurrency[i].Id);
-  //                 setTimeout(function () {
-  //                   $('#sedtCountry').val(data.tcurrency[i].Country);
-  //                 }, 200);
-  //                 //$('#sedtCountry').val(data.tcurrency[i].Country);
-  //                 $('#currencyCode').val(currencyDataName);
-  //                 $('#currencySymbol').val(data.tcurrency[i].CurrencySymbol);
-  //                 $('#edtCurrencyName').val(data.tcurrency[i].Currency);
-  //                 $('#edtCurrencyDesc').val(data.tcurrency[i].CurrencyDesc);
-  //                 $('#edtBuyRate').val(data.tcurrency[i].BuyRate);
-  //                 $('#edtSellRate').val(data.tcurrency[i].SellRate);
-  //               }
-  //             }
-  //             setTimeout(function () {
-  //               LoadingOverlay.hide();
-  //               $('#newCurrencyModal').modal('toggle');
-  //               $('#sedtCountry').attr('readonly', true);
-  //             }, 200);
-  //           });
-  //         });
+    //       } else {
+    //         $('#currencyModal').modal();
+    //         setTimeout(function () {
+    //           $('#tblCurrencyPopList_filter .form-control-sm').focus();
+    //           $('#tblCurrencyPopList_filter .form-control-sm').val('');
+    //           $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+    //           var datatable = $('#tblCurrencyPopList').DataTable();
+    //           datatable.draw();
+    //           $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
+    //         }, 500);
+    //       }
+    //     }
+    //   });
 
-  //       } else {
-  //         $('#currencyModal').modal();
-  //         setTimeout(function () {
-  //           $('#tblCurrencyPopList_filter .form-control-sm').focus();
-  //           $('#tblCurrencyPopList_filter .form-control-sm').val('');
-  //           $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-  //           var datatable = $('#tblCurrencyPopList').DataTable();
-  //           datatable.draw();
-  //           $('#tblCurrencyPopList_filter .form-control-sm').trigger("input");
-  //         }, 500);
-  //       }
-  //     }
-  //   });
-
-});
+  });
 
   $('#edtCustomerName').editableSelect().on('click.editable-select', function (e, li) {
     var $earch = $(this);
@@ -4401,8 +4452,8 @@ Template.new_salesorder.onRendered(function () {
               $('#sltTaxCode').val(popCustomerTaxCode);
 
               if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                  (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                  (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
                 $('#chkSameAsShipping2').attr("checked", "checked");
               }
 
@@ -4443,7 +4494,7 @@ Template.new_salesorder.onRendered(function () {
               }
               templateObject.customerRecord.set(customerRecord);
               setTimeout(function () {
-                $('#addCustomerModal').modal('show');
+                //$('#addCustomerModal').modal('show');
               }, 200);
             }).catch(function (err) {
               LoadingOverlay.hide();
@@ -4527,8 +4578,8 @@ Template.new_salesorder.onRendered(function () {
                 $('#sltTaxCode').val(popCustomerTaxCode);
 
                 if ((data.tcustomervs1[i].fields.Street == data.tcustomervs1[i].fields.BillStreet) && (data.tcustomervs1[i].fields.Street2 == data.tcustomervs1[i].fields.BillStreet2) &&
-                  (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
-                  (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
+                    (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
+                    (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
                   $('#chkSameAsShipping2').attr("checked", "checked");
                 }
 
@@ -4568,9 +4619,9 @@ Template.new_salesorder.onRendered(function () {
                   discount: 0
                 }
                 templateObject.customerRecord.set(customerRecord);
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }
             }
             if (!added) {
@@ -4647,8 +4698,8 @@ Template.new_salesorder.onRendered(function () {
                 $('#sltTaxCode').val(popCustomerTaxCode);
 
                 if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                  (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                  (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                    (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                    (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
                   $('#chkSameAsShipping2').attr("checked", "checked");
                 }
 
@@ -4659,9 +4710,9 @@ Template.new_salesorder.onRendered(function () {
                   $('#chkSameAsSupplier').removeAttr("checked");
                 }
 
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }).catch(function (err) {
                 LoadingOverlay.hide();
               });
@@ -4740,8 +4791,8 @@ Template.new_salesorder.onRendered(function () {
             $('#sltTaxCode').val(popCustomerTaxCode);
 
             if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-              (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-              (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
               $('#chkSameAsShipping2').attr("checked", "checked");
             }
 
@@ -4752,9 +4803,9 @@ Template.new_salesorder.onRendered(function () {
               $('#chkSameAsSupplier').removeAttr("checked");
             }
 
-            setTimeout(function () {
-              $('#addCustomerModal').modal('show');
-            }, 200);
+            // setTimeout(function () {
+            //   $('#addCustomerModal').modal('show');
+            // }, 200);
           }).catch(function (err) {
 
             LoadingOverlay.hide();
@@ -4878,8 +4929,8 @@ Template.new_salesorder.onRendered(function () {
               $('#sltTaxCode').val(popCustomerTaxCode);
 
               if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                  (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                  (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
                 $('#chkSameAsShipping2').attr("checked", "checked");
               }
 
@@ -4919,9 +4970,9 @@ Template.new_salesorder.onRendered(function () {
                 discount: 0
               }
               templateObject.customerRecord.set(customerRecord);
-              setTimeout(function () {
-                $('#addCustomerModal').modal('show');
-              }, 200);
+              // setTimeout(function () {
+              //   $('#addCustomerModal').modal('show');
+              // }, 200);
             }).catch(function (err) {
               LoadingOverlay.hide();
             });
@@ -5004,8 +5055,8 @@ Template.new_salesorder.onRendered(function () {
                 $('#sltTaxCode').val(popCustomerTaxCode);
 
                 if ((data.tcustomervs1[i].fields.Street == data.tcustomervs1[i].fields.BillStreet) && (data.tcustomervs1[i].fields.Street2 == data.tcustomervs1[i].fields.BillStreet2) &&
-                  (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
-                  (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
+                    (data.tcustomervs1[i].fields.State == data.tcustomervs1[i].fields.BillState) && (data.tcustomervs1[i].fields.Postcode == data.tcustomervs1[i].fields.BillPostcode) &&
+                    (data.tcustomervs1[i].fields.Country == data.tcustomervs1[i].fields.Billcountry)) {
                   $('#chkSameAsShipping2').attr("checked", "checked");
                 }
 
@@ -5045,9 +5096,9 @@ Template.new_salesorder.onRendered(function () {
                   discount: 0
                 }
                 templateObject.customerRecord.set(customerRecord);
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }
             }
             if (!added) {
@@ -5124,8 +5175,8 @@ Template.new_salesorder.onRendered(function () {
                 $('#sltTaxCode').val(popCustomerTaxCode);
 
                 if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-                  (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-                  (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                    (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                    (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
                   $('#chkSameAsShipping2').attr("checked", "checked");
                 }
 
@@ -5136,9 +5187,9 @@ Template.new_salesorder.onRendered(function () {
                   $('#chkSameAsSupplier').removeAttr("checked");
                 }
 
-                setTimeout(function () {
-                  $('#addCustomerModal').modal('show');
-                }, 200);
+                // setTimeout(function () {
+                //   $('#addCustomerModal').modal('show');
+                // }, 200);
               }).catch(function (err) {
                 LoadingOverlay.hide();
               });
@@ -5217,8 +5268,8 @@ Template.new_salesorder.onRendered(function () {
             $('#sltTaxCode').val(popCustomerTaxCode);
 
             if ((data.tcustomer[0].fields.Street == data.tcustomer[0].fields.BillStreet) && (data.tcustomer[0].fields.Street2 == data.tcustomer[0].fields.BillStreet2) &&
-              (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
-              (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
+                (data.tcustomer[0].fields.State == data.tcustomer[0].fields.BillState) && (data.tcustomer[0].fields.Postcode == data.tcustomer[0].fields.BillPostcode) &&
+                (data.tcustomer[0].fields.Country == data.tcustomer[0].fields.Billcountry)) {
               $('#chkSameAsShipping2').attr("checked", "checked");
             }
 
@@ -5229,9 +5280,9 @@ Template.new_salesorder.onRendered(function () {
               $('#chkSameAsSupplier').removeAttr("checked");
             }
 
-            setTimeout(function () {
-              $('#addCustomerModal').modal('show');
-            }, 200);
+            // setTimeout(function () {
+            //   $('#addCustomerModal').modal('show');
+            // }, 200);
           }).catch(function (err) {
 
             LoadingOverlay.hide();
@@ -5494,7 +5545,7 @@ Template.new_salesorder.onRendered(function () {
     x.addListener(mediaQuery)
   }, 10);
 
-  FxGlobalFunctions.handleChangedCurrency($('#sltCurrency').val(), defaultCurrencyCode);
+  FxGlobalFunctions.handleChangedCurrency($('.sltCurrency').val(), defaultCurrencyCode);
 
 });
 
@@ -5733,7 +5784,7 @@ Template.new_salesorder.helpers({
     var isMobile = false; //initiate as false
     // device detection
     if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|ipad|iris|kindle|Android|Silk|lge |maemo|midp|mmp|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows (ce|phone)|xda|xiino/i.test(navigator.userAgent) ||
-      /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
+        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0, 4))) {
       isMobile = true;
     }
 
@@ -5901,7 +5952,7 @@ Template.new_salesorder.helpers({
     var getso_id = url.split('?id=');
     var currentSalesOrder = getso_id[getso_id.length - 1];
 
-    var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+    var currencyCode = $(".sltCurrency").val() || CountryAbbr;
     let ForeignExchangeRate = $('#exchange_rate').val() || 0;
     if (FxGlobalFunctions.isCurrencyEnabled()) {
       foreignCurrencyFields = {
@@ -5981,166 +6032,166 @@ Template.new_salesorder.helpers({
     let mailSubject = 'Sales Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
 
     var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-      '        <tr>' +
-      '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-      '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-      '                    <table class="main">' +
-      '                        <tr>' +
-      '                            <td class="wrapper">' +
-      '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-      '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="height: 16px;"></tr>' +
-      '                                    <tr>' +
-      '                                        <td>' +
-      '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="height: 48px;"></tr>' +
-      '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-      '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-      '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-      '                                                <tbody>' +
-      '                                                    <tr>' +
-      '                                                        <td align="center" style="padding-bottom: 15px;">' +
-      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-      '                                                                <tbody>' +
-      '                                                                    <tr>' +
-      '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-      '                                                                    </tr>' +
-      '                                                                </tbody>' +
-      '                                                            </table>' +
-      '                                                        </td>' +
-      '                                                    </tr>' +
-      '                                                </tbody>' +
-      '                                            </table>' +
-      '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-      '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-      '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-      '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="background-color: #ededed;">' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <div style="width: 100%; padding: 16px 0px;">' +
-      '                                                <div style="width: 50%; float: left;">' +
-      '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-      '                                                </div>' +
-      '                                                <div style="width: 50%; float: right;">' +
-      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-      '                                                </div>' +
-      '                                            </div>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr style="background-color: #ededed;">' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-      '                                            <div style="width: 100%; padding: 16px 0px;">' +
-      '                                                <div style="width: 50%; float: left;">' +
-      '                                                    <p style="font-size: 18px;">Terms</p>' +
-      '                                                </div>' +
-      '                                                <div style="width: 50%; float: right;">' +
-      '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
-      '                                                </div>' +
-      '                                            </div>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-      '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-      '                                                <div style="width: 50%; float: left;">' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-      '                                                </div>' +
-      '                                                <div style="width: 50%; float: right; text-align: right;">' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-      '                                                </div>' +
-      '                                            </div>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-      '                                                <tbody>' +
-      '                                                    <tr>' +
-      '                                                        <td align="center">' +
-      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-      '                                                                <tbody>' +
-      '                                                                    <tr>' +
-      '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-      '                                                                    </tr>' +
-      '                                                                </tbody>' +
-      '                                                            </table>' +
-      '                                                        </td>' +
-      '                                                    </tr>' +
-      '                                                </tbody>' +
-      '                                            </table>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td class="content-block" style="padding: 16px 32px;">' +
-      '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                    <tr>' +
-      '                                        <td>' +
-      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-      '                                                <tbody>' +
-      '                                                    <tr>' +
-      '                                                        <td align="center">' +
-      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-      '                                                                <tbody>' +
-      '                                                                    <tr>' +
-      '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-      '                                                                    </tr>' +
-      '                                                                </tbody>' +
-      '                                                            </table>' +
-      '                                                        </td>' +
-      '                                                    </tr>' +
-      '                                                </tbody>' +
-      '                                            </table>' +
-      '                                        </td>' +
-      '                                    </tr>' +
-      '                                </table>' +
-      '                            </td>' +
-      '                        </tr>' +
-      '                    </table>' +
-      '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-      '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-      '                            <tr>' +
-      '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-      '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-      '                                    <br>' +
-      '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
-      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-      '                                </td>' +
-      '                            </tr>' +
-      '                        </table>' +
-      '                    </div>' +
-      '                </div>' +
-      '            </td>' +
-      '        </tr>' +
-      '    </table>';
+        '        <tr>' +
+        '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+        '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+        '                    <table class="main">' +
+        '                        <tr>' +
+        '                            <td class="wrapper">' +
+        '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+        '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="height: 16px;"></tr>' +
+        '                                    <tr>' +
+        '                                        <td>' +
+        '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="height: 48px;"></tr>' +
+        '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+        '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+        '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        '                                                <tbody>' +
+        '                                                    <tr>' +
+        '                                                        <td align="center" style="padding-bottom: 15px;">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        '                                                                <tbody>' +
+        '                                                                    <tr>' +
+        '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        '                                                                    </tr>' +
+        '                                                                </tbody>' +
+        '                                                            </table>' +
+        '                                                        </td>' +
+        '                                                    </tr>' +
+        '                                                </tbody>' +
+        '                                            </table>' +
+        '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+        '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+        '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+        '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+        '                                                </div>' +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+        '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+        '                                                </div>' +
+        '                                            </div>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr style="background-color: #ededed;">' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; padding: 16px 0px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px;">Terms</p>' +
+        '                                                </div>' +
+        '                                                <div style="width: 50%; float: right;">' +
+        '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
+        '                                                </div>' +
+        '                                            </div>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+        '                                                <div style="width: 50%; float: left;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+        '                                                </div>' +
+        '                                                <div style="width: 50%; float: right; text-align: right;">' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+        '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+        '                                                </div>' +
+        '                                            </div>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+        '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        '                                                <tbody>' +
+        '                                                    <tr>' +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        '                                                                <tbody>' +
+        '                                                                    <tr>' +
+        '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+        '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+        '                                                                    </tr>' +
+        '                                                                </tbody>' +
+        '                                                            </table>' +
+        '                                                        </td>' +
+        '                                                    </tr>' +
+        '                                                </tbody>' +
+        '                                            </table>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td class="content-block" style="padding: 16px 32px;">' +
+        '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                    <tr>' +
+        '                                        <td>' +
+        '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+        '                                                <tbody>' +
+        '                                                    <tr>' +
+        '                                                        <td align="center">' +
+        '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+        '                                                                <tbody>' +
+        '                                                                    <tr>' +
+        '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+        '                                                                    </tr>' +
+        '                                                                </tbody>' +
+        '                                                            </table>' +
+        '                                                        </td>' +
+        '                                                    </tr>' +
+        '                                                </tbody>' +
+        '                                            </table>' +
+        '                                        </td>' +
+        '                                    </tr>' +
+        '                                </table>' +
+        '                            </td>' +
+        '                        </tr>' +
+        '                    </table>' +
+        '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+        '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+        '                            <tr>' +
+        '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+        '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+        '                                    <br>' +
+        '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+        '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+        '                                </td>' +
+        '                            </tr>' +
+        '                        </table>' +
+        '                    </div>' +
+        '                </div>' +
+        '            </td>' +
+        '        </tr>' +
+        '    </table>';
 
     return {
       mailFromName,
@@ -6703,9 +6754,9 @@ Template.new_salesorder.events({
                 $('#slttaxcodepurchase').val(taxcodepurchase);
                 $('#edtbuyqty1cost').val(buyqty1cost);
 
-                setTimeout(function () {
-                  $('#newProductModal').modal('show');
-                }, 500);
+                // setTimeout(function () {
+                //   $('#newProductModal').modal('show');
+                // }, 500);
               }).catch(function (err) {
 
                 LoadingOverlay.hide();
@@ -6741,9 +6792,9 @@ Template.new_salesorder.events({
                   $('#slttaxcodepurchase').val(taxcodepurchase);
                   $('#edtbuyqty1cost').val(buyqty1cost);
 
-                  setTimeout(function () {
-                    $('#newProductModal').modal('show');
-                  }, 500);
+                  // setTimeout(function () {
+                  //   $('#newProductModal').modal('show');
+                  // }, 500);
                 }
               }
               if (!added) {
@@ -6771,9 +6822,9 @@ Template.new_salesorder.events({
                   $('#sltcogsaccount').val(cogsaccount);
                   $('#slttaxcodepurchase').val(taxcodepurchase);
                   $('#edtbuyqty1cost').val(buyqty1cost);
-                  setTimeout(function () {
-                    $('#newProductModal').modal('show');
-                  }, 500);
+                  // setTimeout(function () {
+                  //   $('#newProductModal').modal('show');
+                  // }, 500);
                 }).catch(function (err) {
                   LoadingOverlay.hide();
                 });
@@ -6804,9 +6855,9 @@ Template.new_salesorder.events({
               $('#sltcogsaccount').val(cogsaccount);
               $('#slttaxcodepurchase').val(taxcodepurchase);
               $('#edtbuyqty1cost').val(buyqty1cost);
-              setTimeout(function () {
-                $('#newProductModal').modal('show');
-              }, 500);
+              // setTimeout(function () {
+              //   $('#newProductModal').modal('show');
+              // }, 500);
             }).catch(function (err) {
               LoadingOverlay.hide();
             });
@@ -7098,10 +7149,10 @@ Template.new_salesorder.events({
   },
   'keydown .lineQty, keydown .lineUnitPrice': function (event) {
     if ($.inArray(event.keyCode, [46, 8, 9, 27, 13, 110]) !== -1 ||
-      // Allow: Ctrl+A, Command+A
-      (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
-      // Allow: home, end, left, right, down, up
-      (event.keyCode >= 35 && event.keyCode <= 40)) {
+        // Allow: Ctrl+A, Command+A
+        (event.keyCode === 65 && (event.ctrlKey === true || event.metaKey === true)) ||
+        // Allow: home, end, left, right, down, up
+        (event.keyCode >= 35 && event.keyCode <= 40)) {
       // let it happen, don't do anything
       return;
     }
@@ -7111,10 +7162,10 @@ Template.new_salesorder.events({
     }
 
     if ((event.keyCode >= 48 && event.keyCode <= 57) ||
-      (event.keyCode >= 96 && event.keyCode <= 105) ||
-      event.keyCode == 8 || event.keyCode == 9 ||
-      event.keyCode == 37 || event.keyCode == 39 ||
-      event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) { } else {
+        (event.keyCode >= 96 && event.keyCode <= 105) ||
+        event.keyCode == 8 || event.keyCode == 9 ||
+        event.keyCode == 37 || event.keyCode == 39 ||
+        event.keyCode == 46 || event.keyCode == 190 || event.keyCode == 189 || event.keyCode == 109) { } else {
       event.preventDefault();
     }
   },
@@ -7257,7 +7308,7 @@ Template.new_salesorder.events({
     let salesService = new SalesBoardService();
     setTimeout(async function () {
       swal({
-      title: 'You are deleting ' + $("#following_cnt").val() + ' Sales Order',
+        title: 'You are deleting ' + $("#following_cnt").val() + ' Sales Order',
         text: "Do you wish to delete this transaction and all others associated with it moving forward?",
         type: 'question',
         showCancelButton: true,
@@ -7281,11 +7332,11 @@ Template.new_salesorder.events({
             var fromDate = creationDate.substring(0, 10);
             var toDate = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
             var followingSOs = await sideBarService.getAllTSalesOrderListData(
-              fromDate,
-              toDate,
-              false,
-              initialReportLoad,
-              0
+                fromDate,
+                toDate,
+                false,
+                initialReportLoad,
+                0
             );
             var soList = followingSOs.tsalesorderlist;
             var j = 0;
@@ -7702,7 +7753,7 @@ Template.new_salesorder.events({
         var getso_id = url.split('?id=');
         var currentSalesOrder = getso_id[getso_id.length - 1];
 
-        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+        var currencyCode = $(".sltCurrency").val() || CountryAbbr;
         let ForeignExchangeRate = $('#exchange_rate').val() || 0;
         let foreignCurrencyFields = {}
         if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -8233,7 +8284,7 @@ Template.new_salesorder.events({
       tempObj.$("#confirm-action-" + attachmentID).remove();
     } else {
       let actionElement = '<div class="confirm-action" id="confirm-action-' + attachmentID + '"><a class="confirm-delete-attachment btn btn-default" id="delete-attachment-' + attachmentID + '">' +
-        'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
+          'Delete</a><button class="save-to-library btn btn-default">Remove & save to File Library</button></div>';
       tempObj.$('#attachment-name-' + attachmentID).append(actionElement);
     }
     tempObj.$("#new-attachment2-tooltip").show();
@@ -8437,7 +8488,7 @@ Template.new_salesorder.events({
           var getso_id = url.split('?id=');
           var currentSalesOrder = getso_id[getso_id.length - 1];
           let uploadedItems = templateObject.uploadedFiles.get();
-          var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+          var currencyCode = $(".sltCurrency").val() || CountryAbbr;
           let ForeignExchangeRate = $('#exchange_rate').val() || 0;
           let foreignCurrencyFields = {}
           if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -8548,166 +8599,166 @@ Template.new_salesorder.events({
                   let mailSubject = 'Sales Order ' + erpInvoiceId + ' from ' + mailFromName + ' for ' + customerEmailName;
 
                   var htmlmailBody = '<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: separate;mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%;">' +
-                    '        <tr>' +
-                    '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
-                    '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
-                    '                    <table class="main">' +
-                    '                        <tr>' +
-                    '                            <td class="wrapper">' +
-                    '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                    '                                    <tr>' +
-                    '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
-                    '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr style="height: 16px;"></tr>' +
-                    '                                    <tr>' +
-                    '                                        <td>' +
-                    '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr style="height: 48px;"></tr>' +
-                    '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
-                    '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
-                    '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
-                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                    '                                                <tbody>' +
-                    '                                                    <tr>' +
-                    '                                                        <td align="center" style="padding-bottom: 15px;">' +
-                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                    '                                                                <tbody>' +
-                    '                                                                    <tr>' +
-                    '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                    '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                    '                                                                    </tr>' +
-                    '                                                                </tbody>' +
-                    '                                                            </table>' +
-                    '                                                        </td>' +
-                    '                                                    </tr>' +
-                    '                                                </tbody>' +
-                    '                                            </table>' +
-                    '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr>' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
-                    '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
-                    '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
-                    '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr style="background-color: #ededed;">' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                    '                                                <div style="width: 50%; float: left;">' +
-                    '                                                    <p style="font-size: 18px;">Invoice To</p>' +
-                    '                                                </div>' +
-                    '                                                <div style="width: 50%; float: right;">' +
-                    '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
-                    '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
-                    '                                                </div>' +
-                    '                                            </div>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr style="background-color: #ededed;">' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                    '                                            <div style="width: 100%; padding: 16px 0px;">' +
-                    '                                                <div style="width: 50%; float: left;">' +
-                    '                                                    <p style="font-size: 18px;">Terms</p>' +
-                    '                                                </div>' +
-                    '                                                <div style="width: 50%; float: right;">' +
-                    '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
-                    '                                                </div>' +
-                    '                                            </div>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr>' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                    '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
-                    '                                                <div style="width: 50%; float: left;">' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
-                    '                                                </div>' +
-                    '                                                <div style="width: 50%; float: right; text-align: right;">' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
-                    '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
-                    '                                                </div>' +
-                    '                                            </div>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr>' +
-                    '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
-                    '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
-                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                    '                                                <tbody>' +
-                    '                                                    <tr>' +
-                    '                                                        <td align="center">' +
-                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                    '                                                                <tbody>' +
-                    '                                                                    <tr>' +
-                    '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
-                    '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
-                    '                                                                    </tr>' +
-                    '                                                                </tbody>' +
-                    '                                                            </table>' +
-                    '                                                        </td>' +
-                    '                                                    </tr>' +
-                    '                                                </tbody>' +
-                    '                                            </table>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr>' +
-                    '                                        <td class="content-block" style="padding: 16px 32px;">' +
-                    '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                    <tr>' +
-                    '                                        <td>' +
-                    '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
-                    '                                                <tbody>' +
-                    '                                                    <tr>' +
-                    '                                                        <td align="center">' +
-                    '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
-                    '                                                                <tbody>' +
-                    '                                                                    <tr>' +
-                    '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
-                    '                                                                    </tr>' +
-                    '                                                                </tbody>' +
-                    '                                                            </table>' +
-                    '                                                        </td>' +
-                    '                                                    </tr>' +
-                    '                                                </tbody>' +
-                    '                                            </table>' +
-                    '                                        </td>' +
-                    '                                    </tr>' +
-                    '                                </table>' +
-                    '                            </td>' +
-                    '                        </tr>' +
-                    '                    </table>' +
-                    '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
-                    '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
-                    '                            <tr>' +
-                    '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
-                    '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
-                    '                                    <br>' +
-                    '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
-                    '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
-                    '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
-                    '                                </td>' +
-                    '                            </tr>' +
-                    '                        </table>' +
-                    '                    </div>' +
-                    '                </div>' +
-                    '            </td>' +
-                    '        </tr>' +
-                    '    </table>';
+                      '        <tr>' +
+                      '            <td class="container" style="display: block; margin: 0 auto !important; max-width: 650px; padding: 10px; width: 650px;">' +
+                      '                <div class="content" style="box-sizing: border-box; display: block; margin: 0 auto; max-width: 650px; padding: 10px;">' +
+                      '                    <table class="main">' +
+                      '                        <tr>' +
+                      '                            <td class="wrapper">' +
+                      '                                <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                      '                                    <tr>' +
+                      '                                        <td class="content-block" style="text-align: center; letter-spacing: 2px;">' +
+                      '                                            <span class="doc-details" style="color: #999999; font-size: 12px; text-align: center; margin: 0 auto; text-transform: uppercase;">Sales Order No. ' + erpInvoiceId + ' Details</span>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr style="height: 16px;"></tr>' +
+                      '                                    <tr>' +
+                      '                                        <td>' +
+                      '                                            <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%;" />' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr style="height: 48px;"></tr>' +
+                      '                                    <tr style="background-color: rgba(0, 163, 211, 0.5); ">' +
+                      '                                        <td style="text-align: center;padding: 32px 0px 16px 0px;">' +
+                      '                                            <p style="font-weight: 700; font-size: 36px; color: #363a3b; margin-bottom: 6px; margin-top: 6px;">' + grandtotal + '</p>' +
+                      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                      '                                                <tbody>' +
+                      '                                                    <tr>' +
+                      '                                                        <td align="center" style="padding-bottom: 15px;">' +
+                      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                      '                                                                <tbody>' +
+                      '                                                                    <tr>' +
+                      '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                      '                                                                    </tr>' +
+                      '                                                                </tbody>' +
+                      '                                                            </table>' +
+                      '                                                        </td>' +
+                      '                                                    </tr>' +
+                      '                                                </tbody>' +
+                      '                                            </table>' +
+                      '                                            <p style="margin-top: 0px;">Powered by VS1 Cloud</p>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr>' +
+                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                      '                                            <p style="font-size: 18px;">Dear ' + customerEmailName + ',</p>' +
+                      '                                            <p style="font-size: 18px; margin: 34px 0px;">Here\'s your invoice! We appreciate your prompt payment.</p>' +
+                      '                                            <p style="font-size: 18px; margin-bottom: 8px;">Thanks for your business!</p>' +
+                      '                                            <p style="font-size: 18px;">' + mailFromName + '</p>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr style="background-color: #ededed;">' +
+                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                      '                                            <div style="width: 100%; padding: 16px 0px;">' +
+                      '                                                <div style="width: 50%; float: left;">' +
+                      '                                                    <p style="font-size: 18px;">Invoice To</p>' +
+                      '                                                </div>' +
+                      '                                                <div style="width: 50%; float: right;">' +
+                      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerEmailName + '</p>' +
+                      '                                                    <p style="margin-bottom: 0px;font-size: 16px;">' + customerBillingAddress + '</p>' +
+                      '                                                </div>' +
+                      '                                            </div>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr style="background-color: #ededed;">' +
+                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                      '                                            <div style="width: 100%; padding: 16px 0px;">' +
+                      '                                                <div style="width: 50%; float: left;">' +
+                      '                                                    <p style="font-size: 18px;">Terms</p>' +
+                      '                                                </div>' +
+                      '                                                <div style="width: 50%; float: right;">' +
+                      '                                                    <p style="font-size: 16px;">' + customerTerms + '</p>' +
+                      '                                                </div>' +
+                      '                                            </div>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr>' +
+                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                      '                                            <div style="width: 100%; float: right; padding-top: 24px;">' +
+                      '                                                <div style="width: 50%; float: left;">' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">Subtotal</p>' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">Tax</p>' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">Nett</p>' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">Balance Due</p>' +
+                      '                                                </div>' +
+                      '                                                <div style="width: 50%; float: right; text-align: right;">' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerSubtotal + '</p>' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTax + '</p>' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerNett + '</p>' +
+                      '                                                    <p style="font-size: 18px; font-weight: 600;">' + customerTotal + '</p>' +
+                      '                                                </div>' +
+                      '                                            </div>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr>' +
+                      '                                        <td class="content-block" style="padding: 16px 32px; padding-top: 0px;">' +
+                      '                                            <hr style=" border-top: 1px dotted #363a3b;" />' +
+                      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                      '                                                <tbody>' +
+                      '                                                    <tr>' +
+                      '                                                        <td align="center">' +
+                      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                      '                                                                <tbody>' +
+                      '                                                                    <tr>' +
+                      '                                                                        <td> <a href="https://www.depot.vs1cloud.com/stripe/' + stringQuery + '" style="border-radius: 5px; box-sizing: border-box; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; margin: 0; padding: 12px 25px; text-decoration: none;' +
+                      '                                                                        text-transform: capitalize; background-color: #363a3b; border-color: #363a3b; color: #ffffff;" target="">Pay Now</a> </td>' +
+                      '                                                                    </tr>' +
+                      '                                                                </tbody>' +
+                      '                                                            </table>' +
+                      '                                                        </td>' +
+                      '                                                    </tr>' +
+                      '                                                </tbody>' +
+                      '                                            </table>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr>' +
+                      '                                        <td class="content-block" style="padding: 16px 32px;">' +
+                      '                                            <p style="font-size: 15px; color: #666666;">If you receive an email that seems fraudulent, please check with the business owner before paying.</p>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                    <tr>' +
+                      '                                        <td>' +
+                      '                                            <table border="0" cellpadding="0" cellspacing="0" style="box-sizing: border-box; width: 100%;">' +
+                      '                                                <tbody>' +
+                      '                                                    <tr>' +
+                      '                                                        <td align="center">' +
+                      '                                                            <table border="0" cellpadding="0" cellspacing="0" style="width: auto;">' +
+                      '                                                                <tbody>' +
+                      '                                                                    <tr>' +
+                      '                                                                        <td> <img src="https://sandbox.vs1cloud.com/assets/VS1logo.png" class="uploadedImage" style="border: none; -ms-interpolation-mode: bicubic; max-width: 100%; width: 20%; margin: 0; padding: 12px 25px; display: inline-block;" /> </td>' +
+                      '                                                                    </tr>' +
+                      '                                                                </tbody>' +
+                      '                                                            </table>' +
+                      '                                                        </td>' +
+                      '                                                    </tr>' +
+                      '                                                </tbody>' +
+                      '                                            </table>' +
+                      '                                        </td>' +
+                      '                                    </tr>' +
+                      '                                </table>' +
+                      '                            </td>' +
+                      '                        </tr>' +
+                      '                    </table>' +
+                      '                    <div class="footer" style="clear: both; margin-top: 10px; text-align: center; width: 100%;">' +
+                      '                        <table border="0" cellpadding="0" cellspacing="0" style="width: 100%;">' +
+                      '                            <tr>' +
+                      '                                <td class="content-block" style="color: #999999; font-size: 12px; text-align: center;">' +
+                      '                                    <span class="apple-link" style="color: #999999; font-size: 12px; text-align: center;">' + mailFromName + '</span>' +
+                      '                                    <br>' +
+                      '                                    <a href="mailto:' + mailFrom + '" style="color: #999999; font-size: 12px; text-align: center;">Contact Us</a>' +
+                      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Privacy%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Privacy</a>' +
+                      '                                    <a href="https://vs1cloud.com/downloads/VS1%20Terms%20ZA.pdf" style="color: #999999; font-size: 12px; text-align: center;">Terms of Service</a>' +
+                      '                                </td>' +
+                      '                            </tr>' +
+                      '                        </table>' +
+                      '                    </div>' +
+                      '                </div>' +
+                      '            </td>' +
+                      '        </tr>' +
+                      '    </table>';
 
                   if (($('.chkEmailCopy').is(':checked')) && ($('.chkEmailRep').is(':checked'))) {
                     Meteor.call('sendEmail', {
@@ -9015,7 +9066,7 @@ Template.new_salesorder.events({
       var getso_id = url.split('?id=');
       var currentSalesOrder = getso_id[getso_id.length - 1];
       let uploadedItems = templateObject.uploadedFiles.get();
-      var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+      var currencyCode = $(".sltCurrency").val() || CountryAbbr;
       let ForeignExchangeRate = $('#exchange_rate').val() || 0;
       let foreignCurrencyFields = {}
       if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -9342,9 +9393,9 @@ Template.new_salesorder.events({
       $(".fullScreenSpin").css("display", "inline-block");
       var url = FlowRouter.current().path;
       if (
-        url.indexOf("?id=") > 0 ||
-        url.indexOf("?copyquid=") > 0 ||
-        url.indexOf("?copyinvid=")
+          url.indexOf("?id=") > 0 ||
+          url.indexOf("?copyquid=") > 0 ||
+          url.indexOf("?copyinvid=")
       ) {
         var getso_id = url.split("?id=");
         var currentInvoice = getso_id[getso_id.length - 1];
@@ -9456,14 +9507,14 @@ Template.new_salesorder.events({
               var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
               var oPost = new XMLHttpRequest();
               oPost.open(
-                "POST",
-                URLRequest +
-                erpGet.ERPIPAddress +
-                ":" +
-                erpGet.ERPPort +
-                "/" +
-                'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
-                true
+                  "POST",
+                  URLRequest +
+                  erpGet.ERPIPAddress +
+                  ":" +
+                  erpGet.ERPPort +
+                  "/" +
+                  'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
+                  true
               );
               oPost.setRequestHeader("database", erpGet.ERPDatabase);
               oPost.setRequestHeader("username", erpGet.ERPUsername);
@@ -9542,14 +9593,14 @@ Template.new_salesorder.events({
             var myString = '"JsonIn"' + ":" + JSON.stringify(dayObj);
             var oPost = new XMLHttpRequest();
             oPost.open(
-              "POST",
-              URLRequest +
-              erpGet.ERPIPAddress +
-              ":" +
-              erpGet.ERPPort +
-              "/" +
-              'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
-              true
+                "POST",
+                URLRequest +
+                erpGet.ERPIPAddress +
+                ":" +
+                erpGet.ERPPort +
+                "/" +
+                'erpapi/VS1_Cloud_Task/Method?Name="VS1_RepeatTrans"',
+                true
             );
             oPost.setRequestHeader("database", erpGet.ERPDatabase);
             oPost.setRequestHeader("username", erpGet.ERPUsername);
@@ -9602,739 +9653,739 @@ Template.new_salesorder.events({
     }
   },
   "focusout .lineQty": function (event) {
-      // $(".fullScreenSpin").css("display", "inline-block");
-      var target = event.target;
-      let selectedunit = $(target).closest("tr").find(".lineQty").val();
-      localStorage.setItem("productItem", selectedunit);
-      let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
-      localStorage.setItem("selectedProductName", selectedProductName);
+    // $(".fullScreenSpin").css("display", "inline-block");
+    var target = event.target;
+    let selectedunit = $(target).closest("tr").find(".lineQty").val();
+    localStorage.setItem("productItem", selectedunit);
+    let selectedProductName = $(target).closest("tr").find(".lineProductName").val();
+    localStorage.setItem("selectedProductName", selectedProductName);
 
-      let productService = new ProductService();
-      const templateObject = Template.instance();
-      let existProduct = false;
-      if(parseInt($(target).val()) > 0){
-          if (selectedProductName == "") {
-              swal("You have to select Product.", "", "info");
-              event.preventDefault();
-              return false;
-          } else {
-              getVS1Data("TProductQtyList").then(function (dataObject) {
-              if (dataObject.length == 0) {
-                  productService.getProductStatus(selectedProductName).then(async function (data) {
-                  if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                      return false;
-                  } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                      let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                      if(selectedLot != undefined && selectedLot != ""){
-                        shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                      }
-                      else{
-                        shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                      }
-                      setTimeout(function () {
-                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                      $("#availableLotNumberModal").attr("data-row", row + 1);
-                      $("#availableLotNumberModal").modal("show");
-                      }, 200);
-                  } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                      let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                      if(selectedSN != undefined && selectedSN != ""){
-                        shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                      }
-                      else{
-                        shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                      }
-                      setTimeout(function () {
-                      var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                      $("#availableSerialNumberModal").attr("data-row", row + 1);
-                      $('#availableSerialNumberModal').modal('show');
-                      if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                          $("#availableSerialNumberModal .btnSNCreate").show();
-                      }
-                      else{
-                          $("#availableSerialNumberModal .btnSNCreate").hide();
-                      }
-                      }, 200);
-                  }
-                  });
-              }
-              else{
-                  let data = JSON.parse(dataObject[0].data);
-                  let existProductInfo = false;
-                  for (let i = 0; i < data.tproductqtylist.length; i++) {
-                    if(data.tproductqtylist[i].ProductName == selectedProductName){
-                        existProductInfo = true;
-                        if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
-                          return false;
-                        } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
-                          let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                          if(selectedLot != undefined && selectedLot != ""){
-                              shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                          }
-                          else{
-                              shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                          }
-                          setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableLotNumberModal").attr("data-row", row + 1);
-                              $("#availableLotNumberModal").modal("show");
-                          }, 200);
-                        } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
-                          let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                          if(selectedSN != undefined && selectedSN != ""){
-                              shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                          }
-                          else{
-                              shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                          }
-                          setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableSerialNumberModal").attr("data-row", row + 1);
-                              $('#availableSerialNumberModal').modal('show');
-                              if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
-                              $("#availableSerialNumberModal .btnSNCreate").show();
-                              }
-                              else{
-                              $("#availableSerialNumberModal .btnSNCreate").hide();
-                              }
-                          }, 200);
-                        }
-                    }
-                  }
-
-                  if (!existProductInfo) {
-                    productService.getProductStatus(selectedProductName).then(async function (data) {
-                      if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                          return false;
-                      } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                          let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                          if(selectedLot != undefined && selectedLot != ""){
-                            shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                          }
-                          else{
-                            shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                          }
-                          setTimeout(function () {
-                          var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                          $("#availableLotNumberModal").attr("data-row", row + 1);
-                          $("#availableLotNumberModal").modal("show");
-                          }, 200);
-                      } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                          let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                          if(selectedSN != undefined && selectedSN != ""){
-                            shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                          }
-                          else{
-                            shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                          }
-                          setTimeout(function () {
-                          var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                          $("#availableSerialNumberModal").attr("data-row", row + 1);
-                          $('#availableSerialNumberModal').modal('show');
-                          if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                              $("#availableSerialNumberModal .btnSNCreate").show();
-                          }
-                          else{
-                              $("#availableSerialNumberModal .btnSNCreate").hide();
-                          }
-                          }, 200);
-                      }
-                    });
-                  }
-              }
-              }).catch(function (err) {
-              productService.getProductStatus(selectedProductName).then(async function (data) {
-                  if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                    return false;
-                  } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                    let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                    if(selectedLot != undefined && selectedLot != ""){
-                        shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                    }
-                    else{
-                        shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                    }
-                    setTimeout(function () {
-                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        $("#availableLotNumberModal").attr("data-row", row + 1);
-                        $("#availableLotNumberModal").modal("show");
-                    }, 200);
-                  } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                    let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                    if(selectedSN != undefined && selectedSN != ""){
-                        shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                    }
-                    else{
-                        shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                    }
-                    setTimeout(function () {
-                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        $("#availableSerialNumberModal").attr("data-row", row + 1);
-                        $('#availableSerialNumberModal').modal('show');
-                        if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                        $("#availableSerialNumberModal .btnSNCreate").show();
-                        }
-                        else{
-                        $("#availableSerialNumberModal .btnSNCreate").hide();
-                        }
-                    }, 200);
-                  }
-              });
-              });
-          }
-      }
-  },
-  'click .btnSnLotmodal': function(event) {
-      // LoadingOverlay.show();
-      const target = event.target;
-      let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
-      let selectedunit = $(target).closest('tr').find('.lineQty').val();
-      localStorage.setItem('productItem', selectedunit);
-      let productService = new ProductService();
-
-      const templateObject = Template.instance();
-      if(parseInt(selectedunit) > 0){
-          if (selectedProductName == "") {
-              swal("You have to select Product.", "", "info");
-              event.preventDefault();
-              return false;
-          } else {
-              $(".fullScreenSpin").css("display", "inline-block");
-              getVS1Data("TProductQtyList").then(function (dataObject) {
-                  if (dataObject.length == 0) {
-                    productService.getProductStatus(selectedProductName).then(async function (data) {
-                        $(".fullScreenSpin").css("display", "none");
-                        if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                          var buttons = $("<div>")
-                          .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                          .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                          .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                          swal({
-                              title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                              type: "warning",
-                              showCancelButton: false,
-                              showConfirmButton: false,
-                              html: buttons,
-                              onOpen: function (dObj) {
-                              $('#trackSN').on('click',function () {
-                                  objDetails = {
-                                  type: "TProductVS1",
-                                  fields: {
-                                      ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                      Active: true,
-                                      SNTracking: "true",
-                                      Batch: "false",
-                                  },
-                                  };
-
-                                  productService.saveProductVS1(objDetails)
-                                  .then(async function (objDetails) {
-                                  sideBarService.getProductListVS1("All", 0)
-                                      .then(async function (dataReload) {
-                                          await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                          swal.close();
-                                          $(target).click();
-                                      })
-                                      .catch(function (err) {
-                                      });
-                                  })
-                                  .catch(function (err) {
-                                  swal({
-                                      title: "Oooops...",
-                                      text: err,
-                                      type: "error",
-                                      showCancelButton: false,
-                                      confirmButtonText: "Try Again",
-                                  }).then((result) => {
-                                      if (result.value) {
-                                      // Meteor._reload.reload();
-                                      } else if (result.dismiss === "cancel") {
-                                      }
-                                  });
-                                  });
-                              });
-                              $('#trackLN').on('click',function () {
-                                  swal.close();
-                                  objDetails = {
-                                  type: "TProductVS1",
-                                  fields: {
-                                      ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                      Active: true,
-                                      SNTracking: "false",
-                                      Batch: "true",
-                                  },
-                                  };
-
-                                  productService.saveProductVS1(objDetails)
-                                  .then(async function (objDetails) {
-                                  sideBarService.getProductListVS1("All", 0)
-                                      .then(async function (dataReload) {
-                                          await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                          swal.close();
-                                          $(target).click();
-                                      })
-                                      .catch(function (err) {
-                                      });
-                                  })
-                                  .catch(function (err) {
-                                  swal({
-                                      title: "Oooops...",
-                                      text: err,
-                                      type: "error",
-                                      showCancelButton: false,
-                                      confirmButtonText: "Try Again",
-                                  }).then((result) => {
-                                      if (result.value) {
-                                      // Meteor._reload.reload();
-                                      } else if (result.dismiss === "cancel") {
-                                      }
-                                  });
-                                  });
-                              });
-                              $('#trackCancel').on('click',function () {
-                                  swal.close();
-                              });
-                              }
-                          });
-                        } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                        let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                        if(selectedLot != undefined && selectedLot != ""){
-                            shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                        }
-                        else{
-                            shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                        }
-                        setTimeout(function () {
-                            var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                            $("#availableLotNumberModal").attr("data-row", row + 1);
-                            $("#availableLotNumberModal").modal("show");
-                        }, 200);
-                        } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                        let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                        if(selectedSN != undefined && selectedSN != ""){
-                            shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                        }
-                        else{
-                            shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                        }
-                        setTimeout(function () {
-                            var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                            $("#availableSerialNumberModal").attr("data-row", row + 1);
-                            $('#availableSerialNumberModal').modal('show');
-                            if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                                $("#availableSerialNumberModal .btnSNCreate").show();
-                            }
-                            else{
-                                $("#availableSerialNumberModal .btnSNCreate").hide();
-                            }
-                        }, 200);
-                        }
-                    });
+    let productService = new ProductService();
+    const templateObject = Template.instance();
+    let existProduct = false;
+    if(parseInt($(target).val()) > 0){
+      if (selectedProductName == "") {
+        swal("You have to select Product.", "", "info");
+        event.preventDefault();
+        return false;
+      } else {
+        getVS1Data("TProductQtyList").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            productService.getProductStatus(selectedProductName).then(async function (data) {
+              if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                return false;
+              } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                if(selectedLot != undefined && selectedLot != ""){
+                  shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableLotNumberModal").attr("data-row", row + 1);
+                  $("#availableLotNumberModal").modal("show");
+                }, 200);
+              } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                if(selectedSN != undefined && selectedSN != ""){
+                  shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableSerialNumberModal").attr("data-row", row + 1);
+                  $('#availableSerialNumberModal').modal('show');
+                  if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                    $("#availableSerialNumberModal .btnSNCreate").show();
                   }
                   else{
-                    let data = JSON.parse(dataObject[0].data);
-                    let existProductInfo = false;
-                    for (let i = 0; i < data.tproductqtylist.length; i++) {
-                        if(data.tproductqtylist[i].ProductName == selectedProductName){
-                          $(".fullScreenSpin").css("display", "none");
-                          existProductInfo = true;
-                          if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
-                              var buttons = $("<div>")
-                              .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                              .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                              .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                              swal({
-                                  title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                                  type: "warning",
-                                  showCancelButton: false,
-                                  showConfirmButton: false,
-                                  html: buttons,
-                                  onOpen: function (dObj) {
-                                      $('#trackSN').on('click',function () {
-                                      objDetails = {
-                                          type: "TProductVS1",
-                                          fields: {
-                                              ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                              Active: true,
-                                              SNTracking: "true",
-                                              Batch: "false",
-                                          },
-                                      };
-
-                                      productService.saveProductVS1(objDetails)
-                                      .then(async function (objDetails) {
-                                          sideBarService.getProductListVS1("All", 0)
-                                          .then(async function (dataReload) {
-                                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                              swal.close();
-                                              $(target).click();
-                                          })
-                                          .catch(function (err) {
-                                          });
-                                      })
-                                      .catch(function (err) {
-                                          swal({
-                                              title: "Oooops...",
-                                              text: err,
-                                              type: "error",
-                                              showCancelButton: false,
-                                              confirmButtonText: "Try Again",
-                                          }).then((result) => {
-                                          if (result.value) {
-                                              // Meteor._reload.reload();
-                                          } else if (result.dismiss === "cancel") {
-                                          }
-                                          });
-                                      });
-                                      });
-                                      $('#trackLN').on('click',function () {
-                                      swal.close();
-                                      objDetails = {
-                                          type: "TProductVS1",
-                                          fields: {
-                                              ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                              Active: true,
-                                              SNTracking: "false",
-                                              Batch: "true",
-                                          },
-                                      };
-
-                                      productService.saveProductVS1(objDetails)
-                                      .then(async function (objDetails) {
-                                          sideBarService.getProductListVS1("All", 0)
-                                          .then(async function (dataReload) {
-                                              await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                              swal.close();
-                                              $(target).click();
-                                          })
-                                          .catch(function (err) {
-                                          });
-                                      })
-                                      .catch(function (err) {
-                                          swal({
-                                              title: "Oooops...",
-                                              text: err,
-                                              type: "error",
-                                              showCancelButton: false,
-                                              confirmButtonText: "Try Again",
-                                          }).then((result) => {
-                                          if (result.value) {
-                                              // Meteor._reload.reload();
-                                          } else if (result.dismiss === "cancel") {
-                                          }
-                                          });
-                                      });
-                                      });
-                                      $('#trackCancel').on('click',function () {
-                                          swal.close();
-                                      });
-                                  }
-                              });
-                          } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
-                              let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                              if(selectedLot != undefined && selectedLot != ""){
-                              shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                              }
-                              else{
-                              shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                              }
-                              setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableLotNumberModal").attr("data-row", row + 1);
-                              $("#availableLotNumberModal").modal("show");
-                              }, 200);
-                          } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
-                              let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                              if(selectedSN != undefined && selectedSN != ""){
-                              shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                              }
-                              else{
-                              shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                              }
-                              setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableSerialNumberModal").attr("data-row", row + 1);
-                              $('#availableSerialNumberModal').modal('show');
-                              if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
-                                  $("#availableSerialNumberModal .btnSNCreate").show();
-                              }
-                              else{
-                                  $("#availableSerialNumberModal .btnSNCreate").hide();
-                              }
-                              }, 200);
-                          }
-                        }
+                    $("#availableSerialNumberModal .btnSNCreate").hide();
+                  }
+                }, 200);
+              }
+            });
+          }
+          else{
+            let data = JSON.parse(dataObject[0].data);
+            let existProductInfo = false;
+            for (let i = 0; i < data.tproductqtylist.length; i++) {
+              if(data.tproductqtylist[i].ProductName == selectedProductName){
+                existProductInfo = true;
+                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                  return false;
+                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
                     }
-                    if (!existProductInfo) {
-                      productService.getProductStatus(selectedProductName).then(async function (data) {
-                          $(".fullScreenSpin").css("display", "none");
-                          if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                            var buttons = $("<div>")
-                            .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                            .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                            .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              }
+            }
+
+            if (!existProductInfo) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  return false;
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              });
+            }
+          }
+        }).catch(function (err) {
+          productService.getProductStatus(selectedProductName).then(async function (data) {
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              return false;
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+              if(selectedLot != undefined && selectedLot != ""){
+                shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+              }
+              else{
+                shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+              }
+              setTimeout(function () {
+                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                $("#availableLotNumberModal").attr("data-row", row + 1);
+                $("#availableLotNumberModal").modal("show");
+              }, 200);
+            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+              let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+              if(selectedSN != undefined && selectedSN != ""){
+                shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+              }
+              else{
+                shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+              }
+              setTimeout(function () {
+                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                $("#availableSerialNumberModal").attr("data-row", row + 1);
+                $('#availableSerialNumberModal').modal('show');
+                if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                  $("#availableSerialNumberModal .btnSNCreate").show();
+                }
+                else{
+                  $("#availableSerialNumberModal .btnSNCreate").hide();
+                }
+              }, 200);
+            }
+          });
+        });
+      }
+    }
+  },
+  'click .btnSnLotmodal': function(event) {
+    // LoadingOverlay.show();
+    const target = event.target;
+    let selectedProductName = $(target).closest('tr').find('.lineProductName').val();
+    let selectedunit = $(target).closest('tr').find('.lineQty').val();
+    localStorage.setItem('productItem', selectedunit);
+    let productService = new ProductService();
+
+    const templateObject = Template.instance();
+    if(parseInt(selectedunit) > 0){
+      if (selectedProductName == "") {
+        swal("You have to select Product.", "", "info");
+        event.preventDefault();
+        return false;
+      } else {
+        $(".fullScreenSpin").css("display", "inline-block");
+        getVS1Data("TProductQtyList").then(function (dataObject) {
+          if (dataObject.length == 0) {
+            productService.getProductStatus(selectedProductName).then(async function (data) {
+              $(".fullScreenSpin").css("display", "none");
+              if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                var buttons = $("<div>")
+                    .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                    .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                    .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                swal({
+                  title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                  type: "warning",
+                  showCancelButton: false,
+                  showConfirmButton: false,
+                  html: buttons,
+                  onOpen: function (dObj) {
+                    $('#trackSN').on('click',function () {
+                      objDetails = {
+                        type: "TProductVS1",
+                        fields: {
+                          ID: parseInt(data.tproductqtylist[i].PARTSID),
+                          Active: true,
+                          SNTracking: "true",
+                          Batch: "false",
+                        },
+                      };
+
+                      productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                                .then(async function (dataReload) {
+                                  await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                  swal.close();
+                                  $(target).click();
+                                })
+                                .catch(function (err) {
+                                });
+                          })
+                          .catch(function (err) {
                             swal({
-                                title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                                type: "warning",
-                                showCancelButton: false,
-                                showConfirmButton: false,
-                                html: buttons,
-                                onOpen: function (dObj) {
-                                $('#trackSN').on('click',function () {
-                                    objDetails = {
-                                    type: "TProductVS1",
-                                    fields: {
-                                        ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                        Active: true,
-                                        SNTracking: "true",
-                                        Batch: "false",
-                                    },
-                                    };
-    
-                                    productService.saveProductVS1(objDetails)
-                                    .then(async function (objDetails) {
-                                    sideBarService.getProductListVS1("All", 0)
-                                        .then(async function (dataReload) {
-                                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                            swal.close();
-                                            $(target).click();
-                                        })
-                                        .catch(function (err) {
-                                        });
-                                    })
-                                    .catch(function (err) {
-                                    swal({
-                                        title: "Oooops...",
-                                        text: err,
-                                        type: "error",
-                                        showCancelButton: false,
-                                        confirmButtonText: "Try Again",
-                                    }).then((result) => {
-                                        if (result.value) {
-                                        // Meteor._reload.reload();
-                                        } else if (result.dismiss === "cancel") {
-                                        }
-                                    });
-                                    });
-                                });
-                                $('#trackLN').on('click',function () {
-                                    swal.close();
-                                    objDetails = {
-                                    type: "TProductVS1",
-                                    fields: {
-                                        ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                        Active: true,
-                                        SNTracking: "false",
-                                        Batch: "true",
-                                    },
-                                    };
-    
-                                    productService.saveProductVS1(objDetails)
-                                    .then(async function (objDetails) {
-                                    sideBarService.getProductListVS1("All", 0)
-                                        .then(async function (dataReload) {
-                                            await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
-                                            swal.close();
-                                            $(target).click();
-                                        })
-                                        .catch(function (err) {
-                                        });
-                                    })
-                                    .catch(function (err) {
-                                    swal({
-                                        title: "Oooops...",
-                                        text: err,
-                                        type: "error",
-                                        showCancelButton: false,
-                                        confirmButtonText: "Try Again",
-                                    }).then((result) => {
-                                        if (result.value) {
-                                        // Meteor._reload.reload();
-                                        } else if (result.dismiss === "cancel") {
-                                        }
-                                    });
-                                    });
-                                });
-                                $('#trackCancel').on('click',function () {
-                                    swal.close();
-                                });
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
                               }
                             });
-                          } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                          let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                          if(selectedLot != undefined && selectedLot != ""){
-                              shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                          }
-                          else{
-                              shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                          }
-                          setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableLotNumberModal").attr("data-row", row + 1);
-                              $("#availableLotNumberModal").modal("show");
-                          }, 200);
-                          } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                          let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                          if(selectedSN != undefined && selectedSN != ""){
-                              shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                          }
-                          else{
-                              shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                          }
-                          setTimeout(function () {
-                              var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                              $("#availableSerialNumberModal").attr("data-row", row + 1);
-                              $('#availableSerialNumberModal').modal('show');
-                              if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                                  $("#availableSerialNumberModal .btnSNCreate").show();
+                          });
+                    });
+                    $('#trackLN').on('click',function () {
+                      swal.close();
+                      objDetails = {
+                        type: "TProductVS1",
+                        fields: {
+                          ID: parseInt(data.tproductqtylist[i].PARTSID),
+                          Active: true,
+                          SNTracking: "false",
+                          Batch: "true",
+                        },
+                      };
+
+                      productService.saveProductVS1(objDetails)
+                          .then(async function (objDetails) {
+                            sideBarService.getProductListVS1("All", 0)
+                                .then(async function (dataReload) {
+                                  await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                  swal.close();
+                                  $(target).click();
+                                })
+                                .catch(function (err) {
+                                });
+                          })
+                          .catch(function (err) {
+                            swal({
+                              title: "Oooops...",
+                              text: err,
+                              type: "error",
+                              showCancelButton: false,
+                              confirmButtonText: "Try Again",
+                            }).then((result) => {
+                              if (result.value) {
+                                // Meteor._reload.reload();
+                              } else if (result.dismiss === "cancel") {
                               }
-                              else{
-                                  $("#availableSerialNumberModal .btnSNCreate").hide();
-                              }
-                          }, 200);
-                          }
+                            });
+                          });
+                    });
+                    $('#trackCancel').on('click',function () {
+                      swal.close();
+                    });
+                  }
+                });
+              } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                if(selectedLot != undefined && selectedLot != ""){
+                  shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableLotNumberModal").attr("data-row", row + 1);
+                  $("#availableLotNumberModal").modal("show");
+                }, 200);
+              } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                if(selectedSN != undefined && selectedSN != ""){
+                  shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                }
+                else{
+                  shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                }
+                setTimeout(function () {
+                  var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                  $("#availableSerialNumberModal").attr("data-row", row + 1);
+                  $('#availableSerialNumberModal').modal('show');
+                  if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                    $("#availableSerialNumberModal .btnSNCreate").show();
+                  }
+                  else{
+                    $("#availableSerialNumberModal .btnSNCreate").hide();
+                  }
+                }, 200);
+              }
+            });
+          }
+          else{
+            let data = JSON.parse(dataObject[0].data);
+            let existProductInfo = false;
+            for (let i = 0; i < data.tproductqtylist.length; i++) {
+              if(data.tproductqtylist[i].ProductName == selectedProductName){
+                $(".fullScreenSpin").css("display", "none");
+                existProductInfo = true;
+                if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == false) {
+                  var buttons = $("<div>")
+                      .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                      .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                      .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                  swal({
+                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                    type: "warning",
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    html: buttons,
+                    onOpen: function (dObj) {
+                      $('#trackSN').on('click',function () {
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "true",
+                            Batch: "false",
+                          },
+                        };
+
+                        productService.saveProductVS1(objDetails)
+                            .then(async function (objDetails) {
+                              sideBarService.getProductListVS1("All", 0)
+                                  .then(async function (dataReload) {
+                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                    swal.close();
+                                    $(target).click();
+                                  })
+                                  .catch(function (err) {
+                                  });
+                            })
+                            .catch(function (err) {
+                              swal({
+                                title: "Oooops...",
+                                text: err,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Try Again",
+                              }).then((result) => {
+                                if (result.value) {
+                                  // Meteor._reload.reload();
+                                } else if (result.dismiss === "cancel") {
+                                }
+                              });
+                            });
+                      });
+                      $('#trackLN').on('click',function () {
+                        swal.close();
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "false",
+                            Batch: "true",
+                          },
+                        };
+
+                        productService.saveProductVS1(objDetails)
+                            .then(async function (objDetails) {
+                              sideBarService.getProductListVS1("All", 0)
+                                  .then(async function (dataReload) {
+                                    await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                    swal.close();
+                                    $(target).click();
+                                  })
+                                  .catch(function (err) {
+                                  });
+                            })
+                            .catch(function (err) {
+                              swal({
+                                title: "Oooops...",
+                                text: err,
+                                type: "error",
+                                showCancelButton: false,
+                                confirmButtonText: "Try Again",
+                              }).then((result) => {
+                                if (result.value) {
+                                  // Meteor._reload.reload();
+                                } else if (result.dismiss === "cancel") {
+                                }
+                              });
+                            });
+                      });
+                      $('#trackCancel').on('click',function () {
+                        swal.close();
                       });
                     }
+                  });
+                } else if (data.tproductqtylist[i].batch == true && data.tproductqtylist[i].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
                   }
-              }).catch(function (err) {
-                  productService.getProductStatus(selectedProductName).then(async function (data) {
-                    $(".fullScreenSpin").css("display", "none");
-                    if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
-                        var buttons = $("<div>")
-                        .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
-                        .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
-                        .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
-                        swal({
-                        title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
-                        type: "warning",
-                        showCancelButton: false,
-                        showConfirmButton: false,
-                        html: buttons,
-                        onOpen: function (dObj) {
-                            $('#trackSN').on('click',function () {
-                            objDetails = {
-                                type: "TProductVS1",
-                                fields: {
-                                ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                Active: true,
-                                SNTracking: "true",
-                                Batch: "false",
-                                },
-                            };
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductqtylist[i].batch == false && data.tproductqtylist[i].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductqtylist[i].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
+              }
+            }
+            if (!existProductInfo) {
+              productService.getProductStatus(selectedProductName).then(async function (data) {
+                $(".fullScreenSpin").css("display", "none");
+                if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+                  var buttons = $("<div>")
+                      .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                      .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                      .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+                  swal({
+                    title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                    type: "warning",
+                    showCancelButton: false,
+                    showConfirmButton: false,
+                    html: buttons,
+                    onOpen: function (dObj) {
+                      $('#trackSN').on('click',function () {
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "true",
+                            Batch: "false",
+                          },
+                        };
 
-                            productService.saveProductVS1(objDetails)
+                        productService.saveProductVS1(objDetails)
                             .then(async function (objDetails) {
-                                sideBarService.getProductListVS1("All", 0)
-                                .then(async function (dataReload) {
+                              sideBarService.getProductListVS1("All", 0)
+                                  .then(async function (dataReload) {
                                     await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                     swal.close();
                                     $(target).click();
-                                })
-                                .catch(function (err) {
-                                });
+                                  })
+                                  .catch(function (err) {
+                                  });
                             })
                             .catch(function (err) {
-                                swal({
+                              swal({
                                 title: "Oooops...",
                                 text: err,
                                 type: "error",
                                 showCancelButton: false,
                                 confirmButtonText: "Try Again",
-                                }).then((result) => {
+                              }).then((result) => {
                                 if (result.value) {
-                                    // Meteor._reload.reload();
+                                  // Meteor._reload.reload();
                                 } else if (result.dismiss === "cancel") {
                                 }
-                                });
+                              });
                             });
-                            });
-                            $('#trackLN').on('click',function () {
-                            swal.close();
-                            objDetails = {
-                                type: "TProductVS1",
-                                fields: {
-                                ID: parseInt(data.tproductqtylist[i].PARTSID),
-                                Active: true,
-                                SNTracking: "false",
-                                Batch: "true",
-                                },
-                            };
+                      });
+                      $('#trackLN').on('click',function () {
+                        swal.close();
+                        objDetails = {
+                          type: "TProductVS1",
+                          fields: {
+                            ID: parseInt(data.tproductqtylist[i].PARTSID),
+                            Active: true,
+                            SNTracking: "false",
+                            Batch: "true",
+                          },
+                        };
 
-                            productService.saveProductVS1(objDetails)
+                        productService.saveProductVS1(objDetails)
                             .then(async function (objDetails) {
-                                sideBarService.getProductListVS1("All", 0)
-                                .then(async function (dataReload) {
+                              sideBarService.getProductListVS1("All", 0)
+                                  .then(async function (dataReload) {
                                     await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
                                     swal.close();
                                     $(target).click();
-                                })
-                                .catch(function (err) {
-                                });
+                                  })
+                                  .catch(function (err) {
+                                  });
                             })
                             .catch(function (err) {
-                                swal({
+                              swal({
                                 title: "Oooops...",
                                 text: err,
                                 type: "error",
                                 showCancelButton: false,
                                 confirmButtonText: "Try Again",
-                                }).then((result) => {
+                              }).then((result) => {
                                 if (result.value) {
-                                    // Meteor._reload.reload();
+                                  // Meteor._reload.reload();
                                 } else if (result.dismiss === "cancel") {
                                 }
-                                });
+                              });
                             });
-                            });
-                            $('#trackCancel').on('click',function () {
-                                swal.close();
-                            });
-                        }
-                        });
-                    } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
-                        let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
-                        if(selectedLot != undefined && selectedLot != ""){
-                        shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
-                        }
-                        else{
-                        shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
-                        }
-                        setTimeout(function () {
-                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        $("#availableLotNumberModal").attr("data-row", row + 1);
-                        $("#availableLotNumberModal").modal("show");
-                        }, 200);
-                    } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
-                        let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
-                        if(selectedSN != undefined && selectedSN != ""){
-                        shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
-                        }
-                        else{
-                        shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
-                        }
-                        setTimeout(function () {
-                        var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
-                        $("#availableSerialNumberModal").attr("data-row", row + 1);
-                        $('#availableSerialNumberModal').modal('show');
-                        if(data.tproductvs1[0].CUSTFLD13 == 'true'){
-                            $("#availableSerialNumberModal .btnSNCreate").show();
-                        }
-                        else{
-                            $("#availableSerialNumberModal .btnSNCreate").hide();
-                        }
-                        }, 200);
+                      });
+                      $('#trackCancel').on('click',function () {
+                        swal.close();
+                      });
                     }
                   });
+                } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+                  let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+                  if(selectedLot != undefined && selectedLot != ""){
+                    shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableLotNumberModal").attr("data-row", row + 1);
+                    $("#availableLotNumberModal").modal("show");
+                  }, 200);
+                } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+                  let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+                  if(selectedSN != undefined && selectedSN != ""){
+                    shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+                  }
+                  else{
+                    shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+                  }
+                  setTimeout(function () {
+                    var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                    $("#availableSerialNumberModal").attr("data-row", row + 1);
+                    $('#availableSerialNumberModal').modal('show');
+                    if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                      $("#availableSerialNumberModal .btnSNCreate").show();
+                    }
+                    else{
+                      $("#availableSerialNumberModal .btnSNCreate").hide();
+                    }
+                  }, 200);
+                }
               });
+            }
           }
+        }).catch(function (err) {
+          productService.getProductStatus(selectedProductName).then(async function (data) {
+            $(".fullScreenSpin").css("display", "none");
+            if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == false) {
+              var buttons = $("<div>")
+                  .append($('<button id="trackSN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Serial Number</button>'))
+                  .append($('<button id="trackLN" class="swal2-styled" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">Track Lot Number</button>'))
+                  .append($('<button id="trackCancel" class="swal2-styled" style="background-color: rgb(170, 170, 170);">No</button>'));
+              swal({
+                title: 'This Product "' + selectedProductName + '" does not currently track Serial Numbers, Lot Numbers or Bin Locations, Do You Wish To Add that Ability.',
+                type: "warning",
+                showCancelButton: false,
+                showConfirmButton: false,
+                html: buttons,
+                onOpen: function (dObj) {
+                  $('#trackSN').on('click',function () {
+                    objDetails = {
+                      type: "TProductVS1",
+                      fields: {
+                        ID: parseInt(data.tproductqtylist[i].PARTSID),
+                        Active: true,
+                        SNTracking: "true",
+                        Batch: "false",
+                      },
+                    };
+
+                    productService.saveProductVS1(objDetails)
+                        .then(async function (objDetails) {
+                          sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                        })
+                        .catch(function (err) {
+                          swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                          }).then((result) => {
+                            if (result.value) {
+                              // Meteor._reload.reload();
+                            } else if (result.dismiss === "cancel") {
+                            }
+                          });
+                        });
+                  });
+                  $('#trackLN').on('click',function () {
+                    swal.close();
+                    objDetails = {
+                      type: "TProductVS1",
+                      fields: {
+                        ID: parseInt(data.tproductqtylist[i].PARTSID),
+                        Active: true,
+                        SNTracking: "false",
+                        Batch: "true",
+                      },
+                    };
+
+                    productService.saveProductVS1(objDetails)
+                        .then(async function (objDetails) {
+                          sideBarService.getProductListVS1("All", 0)
+                              .then(async function (dataReload) {
+                                await addVS1Data("TProductQtyList", JSON.stringify(dataReload));
+                                swal.close();
+                                $(target).click();
+                              })
+                              .catch(function (err) {
+                              });
+                        })
+                        .catch(function (err) {
+                          swal({
+                            title: "Oooops...",
+                            text: err,
+                            type: "error",
+                            showCancelButton: false,
+                            confirmButtonText: "Try Again",
+                          }).then((result) => {
+                            if (result.value) {
+                              // Meteor._reload.reload();
+                            } else if (result.dismiss === "cancel") {
+                            }
+                          });
+                        });
+                  });
+                  $('#trackCancel').on('click',function () {
+                    swal.close();
+                  });
+                }
+              });
+            } else if (data.tproductvs1[0].Batch == true && data.tproductvs1[0].SNTracking == false) {
+              let selectedLot = $(target).closest("tr").find(".colSerialNo").attr('data-lotnumbers');
+              if(selectedLot != undefined && selectedLot != ""){
+                shareFunctionByName.initTable(selectedLot, "tblAvailableLotCheckbox");
+              }
+              else{
+                shareFunctionByName.initTable("empty", "tblAvailableLotCheckbox");
+              }
+              setTimeout(function () {
+                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                $("#availableLotNumberModal").attr("data-row", row + 1);
+                $("#availableLotNumberModal").modal("show");
+              }, 200);
+            } else if (data.tproductvs1[0].Batch == false && data.tproductvs1[0].SNTracking == true) {
+              let selectedSN = $(target).closest("tr").find(".colSerialNo").attr('data-serialnumbers');
+              if(selectedSN != undefined && selectedSN != ""){
+                shareFunctionByName.initTable(selectedSN, "tblAvailableSNCheckbox");
+              }
+              else{
+                shareFunctionByName.initTable("empty", "tblAvailableSNCheckbox");
+              }
+              setTimeout(function () {
+                var row = $(target).parent().parent().parent().children().index($(target).parent().parent());
+                $("#availableSerialNumberModal").attr("data-row", row + 1);
+                $('#availableSerialNumberModal').modal('show');
+                if(data.tproductvs1[0].CUSTFLD13 == 'true'){
+                  $("#availableSerialNumberModal .btnSNCreate").show();
+                }
+                else{
+                  $("#availableSerialNumberModal .btnSNCreate").hide();
+                }
+              }, 200);
+            }
+          });
+        });
       }
+    }
   },
   "click .btnSNCreate": function (event) {
-      // $("#availableSerialNumberModal").modal("hide");
-      // $("#serialNumberModal").modal("show");
+    // $("#availableSerialNumberModal").modal("hide");
+    // $("#serialNumberModal").modal("show");
 
-      let tokenid = "random";
-      var rowData = `<tr class="dnd-moved checkRowSelected" id="${tokenid}">
+    let tokenid = "random";
+    var rowData = `<tr class="dnd-moved checkRowSelected" id="${tokenid}">
               <td class="colChkBox pointer" style="width:10%!important;">
                   <div class="custom-control custom-switch chkBox pointer chkServiceCard" style="width:15px;">
                       <input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-${tokenid}" checked>
@@ -10347,7 +10398,7 @@ Template.new_salesorder.events({
               <td class="colSN" contenteditable="true">Random</td>
           </tr>`;
 
-      $("#tblAvailableSNCheckbox tbody").prepend(rowData);
+    $("#tblAvailableSNCheckbox tbody").prepend(rowData);
   },
 
   'click #btnMakeWorkOrder': async function (event) {
@@ -10516,8 +10567,8 @@ Template.new_salesorder.events({
   "click #edtSaleCustField3": function (e) {
     $("#clickedControl").val("three");
   },
-  'change #sltCurrency': (e, ui) => {
-    if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+  'change .sltCurrency': (e, ui) => {
+    if ($(".sltCurrency").val() && $(".sltCurrency").val() != defaultCurrencyCode) {
       $(".foreign-currency-js").css("display", "block");
       ui.isForeignEnabled.set(true);
       FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);

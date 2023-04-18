@@ -394,11 +394,35 @@
                 </thead>
                 <tbody>
                     {{#each item in recordLineItems}}
+
                     <tr class="dnd-moved" id={{item.lineID}}>
+                        {{#if displayfields.[0].display}}
                         <td contenteditable="false"
-                            class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}"><input
+                            class="colProductName {{#if displayfields.[0].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
                                 class="es-input highlightSelect lineProductName" type="search" value="{{item.item}}"
-                                itemid="{{item.itemID}}"></td>
+                                itemid="{{item.itemID}}"> -->
+                            {{> vs1___dropdown
+                                data=item.item
+                                type='search'
+                                id='lineProductName'
+                                name=name
+                                modalId='productListModal'
+                                list_template_name='productlistpop'
+                                modal_title='Product List'
+                                innerModal=true
+                                label = ''
+                                colNameForValue='productName'
+                                target_modal_id='newProductModal'
+                                target_template_id='newproductpop'
+                                custid=item.lineID
+                                is_editable=true
+                                noBorder=true
+                            }}
+
+                        </td>
+                        {{/if}}
+                        {{#if displayfields.[1].display}}
                         {{#if item.serialnumbers}}
                         <td contenteditable="true"
                             class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}" data-pqa="(Serial Number: {{item.serialnumbers}})">
@@ -412,36 +436,105 @@
                             class="lineProductDesc colDescription {{#if displayfields.[1].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.description}}</td>
                         {{/if}}
+                        {{/if}}
+                        {{#if displayfields.[2].display}}
                         <td contenteditable="false"
-                            class="colAccountName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}"><input
+                            class="colAccountName {{#if displayfields.[2].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
                                 class="es-input highlightSelect lineAccountName" type="search"
-                                value="{{item.accountname}}"></td>
+                                value="{{item.accountname}}"></td> -->
+                                {{> vs1___dropdown
+                                    data=item.accountname
+                                    type='search'
+                                    id='lineAccountName'
+                                    name=name
+                                    modalId='accountListModal'
+                                    list_template_name='accountlistpop'
+                                    modal_title='Account List'
+                                    innerModal=true
+                                    colNameForValue='colAccountName'
+                                    target_modal_id='edtAccountModal'
+                                    target_template_id='addaccountpop'
+                                    custid=item.lineID
+                                    is_editable=true
+                                    noBorder=true
+                                }}
+                        </td>
+                        {{/if}}
+                        {{#if displayfields.[3].display}}
                         <td contenteditable="true"
                             class="lineMemo colMemo {{#if displayfields.[3].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.memo}}
                         </td>
-
-                        <td class="colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"></td>
-
-                        <td class="colOrdered {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="lineOrdered colOrdered highlightInput" type="number" value="{{item.qtyordered}}">
+                        {{/if}}
+                        {{#if displayfields.[4].display}}
+                        <td class="colQty {{#if displayfields.[4].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
+                                class="lineQty colQty highlightInput" type="number" value="{{item.quantity}}"> -->
+                            {{> default_input
+                                classes="lineQty colQty highlightInput" type="number" defaultValue=item.quantity
+                            }}
                         </td>
-
-                        <td class="colShipped {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}"><input
+                        {{/if}}
+                        {{#if displayfields.[5].display}}
+                        <td class="colOrdered {{#if displayfields.[5].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
+                                class="lineOrdered colOrdered highlightInput" type="number" value="{{item.qtyordered}}"> -->
+                            {{> default_input
+                                classes="lineOrdered colOrdered highlightInput" type='number' defaultValue=item.qtyordered
+                            }}
+                        </td>
+                        {{/if}}
+                        {{#if displayfields.[6].display}}
+                        <td class="colShipped {{#if displayfields.[6].active}}{{else}}hiddenColumn{{/if}}">
+                            {{> default_input
+                                classes= "lineQty colQty lineShipped highlightInput"
+                                defaultValue= item.qtyshipped
+                                type='number'
+                            }}
+                            <!-- <input
                                 class="lineQty colQty lineShipped highlightInput" type="number"
-                                value="{{item.qtyshipped}}">
+                                value="{{item.qtyshipped}}"> -->
                         </td>
-                        <td class="colBackOrder {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}"><input
+                        {{/if}}
+                        {{#if displayfields.[7].display}}
+                        <td class="colBackOrder {{#if displayfields.[7].active}}{{else}}hiddenColumn{{/if}}">
+                            {{> default_input
+                                classes="lineBackOrder colBackOrder highlightInput"
+                                type='number'
+                                readonly=true
+                                defaultValue=item.qtyordered
+                            }}
+                            <!-- <input
                                 class="lineBackOrder colBackOrder highlightInput" type="number" value="{{item.qtyordered}}"
-                                readonly></td>
-
-                        <td contenteditable="false"
-                            class="lineUOM colUnits pointer {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
-                            style="text-align: right!important;cursor: pointer;"><input
+                                readonly> -->
+                            </td>
+                        {{/if}}
+                        {{#if displayfields.[8].display}}
+                        <td class="lineUOM colUnits pointer {{#if displayfields.[8].active}}{{else}}hiddenColumn{{/if}}"
+                            style="text-align: right!important;cursor: pointer;">
+                            <!-- <input
                                 class="es-input highlightSelect colUnits lineUOM" type="search"
-                                value="{{item.UnitOfMeasure}}"></td>
-
+                                value="{{item.UnitOfMeasure}}"> -->
+                                {{> vs1___dropdown
+                                    data=item.UnitOfMeasure
+                                    type='search'
+                                    id='edtUOMID'
+                                    name='edtUOMID'
+                                    modalId='UOMListModal'
+                                    list_template_name='uomlistpop'
+                                    modal_title='UOM List'
+                                    innerModal=true
+                                    colNameForValue='colUOMName'
+                                    target_modal_id='newUOMModal'
+                                    target_template_id='adduompop'
+                                    custid=item.lineID
+                                    is_editable=true
+                                    noBorder=true
+                                }}
+                        </td>
+                        {{/if}}
+                        {{#if displayfields.[9].display}}
                         {{#if item.serialnumbers}}
                         <td class="th colSerialNo {{#if displayfields.[9].active}}{{else}}hiddenColumn{{/if}}"
                             data-serialnumbers="{{item.serialnumbers}}"><i
@@ -457,75 +550,132 @@
                                 class="fas fa-plus-square text-success btnSnLotmodal"
                                 style="margin-left: 40px; font-size: 22px;"></i></td>
                         {{/if}}
-
+                        {{/if}}
+                        {{#if displayfields.[10].display}}
                         <td class="th colFixedAsset {{#if displayfields.[10].active}}{{else}}hiddenColumn{{/if}}"
                             assetID="{{item.fixedAssetID}}" assetname="{{item.fixedAssetName}}"
                             costTypeID="{{item.costTypeID}}" costtypename="{{item.costTypeName}}"><i
                                 class="fas fa-plus-square text-success btnFixedAsset"
                                 style="margin-left: 40px; font-size: 22px;"></i></td>
+                        {{/if}}
+                        {{#if displayfields.[11].display}}
                         <td contenteditable="false"
                             class="colCustomerJob {{#if displayfields.[11].active}}{{else}}hiddenColumn{{/if}}">
-                            <input class="es-input highlightSelect lineCustomerJob" type="search"
-                                value="{{item.customerJob}}">
+                            <!-- <input class="es-input highlightSelect lineCustomerJob" type="search"
+                                value="{{item.customerJob}}"> -->
+                                {{> vs1___dropdown
+                                    data=''
+                                    type='search'
+                                    id='lineCustomerJob'
+                                    name='lineCustomerJob'
+                                    modalId= 'customerListModal'
+                                    list_template_name='customerlistpop'
+                                    modal_title='Customer List'
+                                    innerModal=true
+                                    colNameForValue ='colCompany'
+                                    target_modal_id='editCustomerModal'
+                                    target_template_id='addcustomerpop'
+                                    custid=item.lineID
+                                    is_editable=true
+                                    noBorder=true
+                                }}
                         </td>
+                        {{/if}}
+                        {{#if displayfields.[12].display}}
                         <td
                             class="colUnitPrice colUnitPriceEx {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">
-                            <input class="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange"
-                                type="text" value="{{item.unitPrice}}">
+                            {{> default_input classes="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange" type='text' defaultValue=item.unitPrice}}
+                            <!-- <input class="lineUnitPrice colUnitPrice colUnitPriceEx highlightInput colUnitPriceExChange"
+                                type="text" value="{{item.unitPrice}}"> -->
                         </td>
-
-
                         <td
-                            class="colUnitPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colUnitPriceEx {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">
-                            {{convertToForeignAmount item.unitPrice}}
+                        class="colUnitPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colUnitPriceEx {{#if displayfields.[12].active}}{{else}}hiddenColumn{{/if}}">
+                        {{convertToForeignAmount item.unitPrice}}
                         </td>
-
-
-                        <td class="colUnitPriceInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}"><input
+                        {{/if}}
+                        {{#if displayfields.[13].display}}
+                        <td class="colUnitPriceInc {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
                                 class="lineUnitPrice highlightInput colUnitPriceIncChange" type="text"
-                                value="{{item.unitPriceInc}}"></td>
-
-
+                                value="{{item.unitPriceInc}}"> -->
+                            {{> default_input classes="lineUnitPrice highlightInput colUnitPriceIncChange" type="text"
+                            defaultValue=item.unitPriceInc}}
+                        </td>
                         <td
                             class="colUnitPriceInc  convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} {{#if displayfields.[13].active}}{{else}}hiddenColumn{{/if}}">
                             {{convertToForeignAmount item.unitPriceInc}}</td>
-
-                        <td class="colCostPrice {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}">
+                        {{/if}}
+                        {{#if displayfields.[14].display}}
+                        <td class="colCostPrice {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
+                                class="lineCostPrice colCostPrice highlightInput" type="text" value="{{item.lineCost}}"> -->
+                            {{> default_input classes="lineCostPrice colCostPrice highlightInput" type="text" value=item.lineCost}}
                         </td>
+
                         <td contenteditable="false"
                             class="colCostPrice convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} pointer {{#if displayfields.[14].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount
                             item.lineCost}}</td>
-
-                        <td class="colDiscount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}"><input
+                        {{/if}}
+                        {{#if displayfields.[15].display}}
+                        <td class="colDiscount {{#if displayfields.[15].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
                                 class="lineDiscount highlightInput" type="number" value="{{item.DiscountPercent}}"
-                                max="100"></td>
-
+                                max="100"> -->
+                            {{> default_input
+                                classes = "lineDiscount highlightInput"
+                                type='number'
+                                defaultValue=DiscountPercent
+                            }}
+                        </td>
+                        {{/if}}
+                        {{#if displayfields.[16].display}}
                         <td contenteditable="true"
                             class="lineSalesLinesCustField1 colSalesLinesCustField1  {{#if displayfields.[16].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.SalesLinesCustField1}}</td>
+                        {{/if}}
+                        {{#if displayfields.[17].display}}
                         <td contenteditable="false"
                             class="lineTaxRate colTaxRate pointer {{#if displayfields.[17].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;">{{item.taxRate}}</td>
+                        {{/if}}
+                        {{#if displayfields.[18].display}}
                         <td contenteditable="false"
-                            class="colTaxCode {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}}"><input
-                                class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}">
+                            class="colTaxCode {{#if displayfields.[18].active}}{{else}}hiddenColumn{{/if}}">
+                            <!-- <input
+                                class="es-input highlightSelect lineTaxCode" type="search" value="{{item.taxCode}}"> -->
+                                {{> vs1___dropdown
+                                    data=item.taxCode
+                                    type='search'
+                                    id='lineTaxCode'
+                                    name=name
+                                    modalId='taxRateListModal'
+                                    list_template_name='taxratelistpop'
+                                    modal_title='Customer List'
+                                    innerModal=true
+                                    colNameForValue='colName'
+                                    target_modal_id='newTaxRateModal'
+                                    target_template_id='newtaxratepop'
+                                    custid=item.lineID
+                                    is_editable=true
+                                    noBorder=true
+                                }}
                         </td>
-
+                        {{/if}}
+                        {{#if displayfields.[19].display}}
                         <td contenteditable="false"
                             class="lineTaxAmount colTaxAmount pointer {{#if displayfields.[19].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;cursor: pointer;">{{item.TaxTotal}}</td>
 
 
-
                         <td contenteditable="false"
-                            class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[19].active}}{{else}}hiddenColumn{{/if}}"
-                            style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount
+                        class="lineTaxAmount convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colTaxAmount pointer {{#if displayfields.[19].active}}{{else}}hiddenColumn{{/if}}"
+                        style="text-align: right!important;cursor: pointer;">{{convertToForeignAmount
                             item.TaxTotal}}</td>
 
+                        {{/if}}
 
-
+                        {{#if displayfields.[20].display}}
                         <td contenteditable="false"
                             class="lineAmount lineAmt colAmount colAmountEx {{#if displayfields.[20].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;">{{item.TotalAmt}}</td>
@@ -534,25 +684,29 @@
                         <td contenteditable="false"
                             class="lineAmt convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}} colAmount colAmountEx {{#if displayfields.[20].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;">{{convertToForeignAmount item.TotalAmt}}</td>
+                        {{/if}}
 
-
-
+                        {{#if displayfields.[21].display}}
                         <td contenteditable="false"
                             class="lineAmtInc colAmountInc {{#if displayfields.[21].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;">{{item.TotalAmtInc}}</td>
 
-
-
                         <td contenteditable="false"
                             class="lineAmtInc convert-to-foreign   {{#if equals isForeignEnabled true}} fx-enabled {{/if}}  colAmountInc {{#if displayfields.[21].active}}{{else}}hiddenColumn{{/if}}"
                             style="text-align: right!important;">{{convertToForeignAmount item.TotalAmtInc}}</td>
+                        {{/if}}
 
+                        {{#if displayfields.[22].display}}
                         <td contenteditable="true"
                             class="lineCustomField1 colCustomField1  {{#if displayfields.[22].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.CustomField1}}</td>
+                        {{/if}}
+
+                        {{#if displayfields.[23].display}}
                         <td contenteditable="true"
                             class="lineCustomField2 colCustomField2  {{#if displayfields.[23].active}}{{else}}hiddenColumn{{/if}}">
                             {{item.CustomField2}}</td>
+                        {{/if}}
                         <td style="text-align: center;"><span class="table-remove btnRemove"><button type="button"
                                     class="btn btn-danger btn-rounded btn-sm my-0 "><i
                                         class="fa fa-remove"></i></button></span></td>

@@ -151,6 +151,7 @@
         <div class="{{#if isModal}}{{else}}col-10{{/if}} displayInfo" id="displayInfo" style="width: 100%;">
           {{#unless isModal}}
           <!-- All Cards List -->
+          {{> editCardChartButtons}}
           {{> allCardsLists tabGroupID="8" chartGroup="PaymentOverviewSupplier"}}
           {{/unless}}
           <div class="card shadow mb-4 cardSizing">
@@ -398,7 +399,7 @@
                             <label class="text-nowrap">Password</label>
                             <span data-toggle="#edtActivePrimaryPassword"
                               class="fa fa-fw fa-eye field-icon toggle-password"
-                              style="color: #00a3d3; margin-top: 42px; margin-left: 4px;"></span>                          
+                              style="color: #00a3d3; margin-top: 42px; margin-left: 4px;"></span>
                             <input type="password" class="form-control" id="edtActivePrimaryPassword" name="edtActivePrimaryPassword" style="width: calc(100% - 40px);">
                           </div>
                         </div>
@@ -523,6 +524,7 @@
                               </style>
 <!--                              {{> non_transactional_list tablename="tblSupplierCrmListWithDate"}}-->
                                 {{>datatablelist
+                                        tableclass="tblSupplierCrmListWithDate"
                                         tablename="tblSupplierCrmListWithDate"
                                         apiName= apiFunction
                                         indexeddbname = 'TCRMTaskList'
@@ -800,7 +802,7 @@
                                   </div>
                                 </div>
 
-                                <div class="col-6 col-md-4">
+                                <div class="col-6 col-md-4" data-toggle="tooltip" title="Selection required for Foreign Suppliers only" data-placement="bottom">
                                   {{> CurrencyWidget onlyCurrencyField="true" CurrentForeignExchangeCode =
                                   record.foreignExchangeCode}}
                                 </div>
@@ -1152,14 +1154,14 @@
                                 style="margin: 12px;">
                                 <div class="col d-xl-flex align-items-xl-start" style="width: 50%;">
                                   <div class="form-group flex-grow-1" style="margin: 4px;padding-right:4px;">
-                                    <label>Username or Email</label>                                    
+                                    <label>Username or Email</label>
                                     <input type="text" class="form-control" name="primaryAccountantUsername"
                                       id="primaryAccountantUsername">
                                   </div>
                                   <div class="form-group flex-grow-1" style="margin: 4px;">
                                     <label>Password</label>
                                     <div style="width: 100%">
-                                      <div style="width: 85%; float: left;">                                        
+                                      <div style="width: 85%; float: left;">
                                         <input type="password" class="form-control" id="primaryAccountantPassword"
                                           name="primaryAccountantPassword" autocomplete="new-password">
                                       </div>
@@ -1170,7 +1172,7 @@
                                       </div>
                                     </div>
                                   </div>
-                                </div>                                
+                                </div>
                               </div>
                             </div>
                           </div>

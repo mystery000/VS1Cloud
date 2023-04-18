@@ -25,10 +25,10 @@
     position="{{position}}"
     card-active="{{cardActive}}"
     card-key="{{cardKey}}">
-        <div class="card shadow border-left-{{highlightColor}} py-2" data-toggle="tooltip" data-bs-tooltip=""
+        <div class="card shadow border-left-{{highlightColor}}" data-toggle="tooltip" data-bs-tooltip=""
                 title="{{tooltipTitle}}">
-            <div class="hideShowDiv">
-                <a href="javascript:void(0);" class="cardShowBtn hideelement"><i class="far fa-eye"></i></a>
+            <div class="hideShowDiv d-flex justify-content-end">
+                {{> editCardChartOptions}}                              
                 <a href="javascript:void(0);" class="cardSettingBtn editCardBtn"><i class="fas fa-cog"></i></a>
             </div>
             <div class="card-body {{actionClass}}" style="cursor: pointer;">
@@ -45,7 +45,7 @@
         }
         .customCardMainDiv {
             position: relative;
-            padding-top: 15px !important;
+            /* padding-top: 15px !important; */
         }
         a.cardSettingBtn {
             display: inline-flex;

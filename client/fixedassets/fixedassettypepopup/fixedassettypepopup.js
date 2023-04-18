@@ -18,23 +18,37 @@ Template.fixedassettypepopup.onCreated(function () {
   templateObject.convertedStatus = new ReactiveVar();
 
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.fields.Active == true){
+      linestatus = "";
+    }
+    else if(data.fields.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.fields.ID || "",
       data.fields.AssetTypeCode || "",
       data.fields.AssetTypeName || "",
       data.fields.Notes || "",
-      data.fields.Active || false,
+      linestatus
     ];
     return dataList;
   };
 
   templateObject.getExData = function (data) {
+    let linestatus = '';
+    if(data.fields.Active == true){
+      linestatus = "";
+    }
+    else if(data.fields.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.fields.ID || "",
       data.fields.AssetTypeCode || "",
       data.fields.AssetTypeName || "",
       data.fields.Notes || "",
-      data.fields.Active || false,
+      linestatus
     ];
     return dataList;
   };
@@ -44,7 +58,7 @@ Template.fixedassettypepopup.onCreated(function () {
     {
       index: 0,
       label: "ID",
-      class: "FixedID",
+      class: "colFixedID",
       active: false,
       display: true,
       width: "0",
@@ -52,7 +66,7 @@ Template.fixedassettypepopup.onCreated(function () {
     {
       index: 1,
       label: "Asset Type Code",
-      class: "AssetCode",
+      class: "colAssetCode",
       active: true,
       display: true,
       width: "300",
@@ -60,7 +74,7 @@ Template.fixedassettypepopup.onCreated(function () {
     {
       index: 2,
       label: "Asset Type Name",
-      class: "AssetName",
+      class: "colAssetName",
       active: true,
       display: true,
       width: "300",
@@ -68,10 +82,18 @@ Template.fixedassettypepopup.onCreated(function () {
     {
       index: 3,
       label: "Notes",
-      class: "Notes",
+      class: "colNotes",
       active: true,
       display: true,
       width: "300",
+    },
+    {
+      index: 4,
+      label: "Status",
+      class: "colStatus",
+      active: true,
+      display: true,
+      width: "120",
     },
   ];
   templateObject.tableheaderrecords.set(headerStructure);

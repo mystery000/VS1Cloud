@@ -210,7 +210,7 @@ FlowRouter.triggers.enter([
                     localStorage.setItem("enteredURL", context.path);
                     $(document).find(".btn-auto-save").click();
                     // FlowRouter.go(previous_url);
-                    FlowRouter.reload();
+                    // FlowRouter.reload();
                 } else if (result.dismiss === 'cancel') {
                     FlowRouter.go(context.path);
                     // Meteor._reload.reload();
@@ -339,6 +339,15 @@ authenticatedRoutes.route('/salesordercard', {
     }
 });
 
+authenticatedRoutes.route('/invoicetemp', {
+    name: 'invoice_temp',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'invoice_temp'
+        });
+    }
+});
+
 authenticatedRoutes.route('/invoicecard', {
     name: 'new_invoice',
     action() {
@@ -347,6 +356,7 @@ authenticatedRoutes.route('/invoicecard', {
         });
     }
 });
+
 
 authenticatedRoutes.route('/refundcard', {
     name: 'refundcard',
@@ -1187,10 +1197,10 @@ authenticatedRoutes.route('/creditcard', {
 });
 
 authenticatedRoutes.route('/agedpayables', {
-    name: 'agedpayables',
+    name: 'newagedpayables',
     action() {
         BlazeLayout.render('layout', {
-            yield: 'agedpayables'
+            yield: 'newagedpayables'
         });
     }
 });
@@ -1492,6 +1502,24 @@ authenticatedRoutes.route('/process_clock_list', {
     action() {
         BlazeLayout.render('layout', {
             yield: 'process_clock_template'
+        });
+    }
+});
+
+authenticatedRoutes.route('/clockonreport', {
+    name: 'clockonreport_template',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'clockonreport_template'
+        });
+    }
+});
+
+authenticatedRoutes.route('/employeeclockstatus', {
+    name: 'employee_clock_status_template',
+    action() {
+        BlazeLayout.render('layout', {
+            yield: 'employee_clock_status_template'
         });
     }
 });

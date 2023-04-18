@@ -61,117 +61,259 @@ data
               name="txaNotes"
               }}{{data.notes}}{{/vs1_textarea}}
             </div>
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+              <div class="col-12 col-md-6 col-lg-4 col-xl-3">
                   <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_input
-                      label="Payment Amount"
-                      type="text"
-                      name="edtPaymentAmount"
-                      id="edtPaymentAmount"
-                      defaultValue=data.paymentAmount
-                      readonly=true
-                      }}
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> single_date_picker
-                      label="Payment Date"
-                      id="dtPaymentDate"
-                      name="dtPaymentDate"
-                      defaultValue=data.paymentDate
-                      }}
-                    </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="row">
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_input
+                                          label="Payment Amount"
+                                          type="text"
+                                          name="edtPaymentAmount"
+                                          id="edtPaymentAmount"
+                                          defaultValue=data.paymentAmount
+                                          readonly=true
+                                          divClass="form"
+                                          isjobelement=false
+                                  }}
+                              </div>
+                              <div class="col-6 col-md-12 col-lg-12 currency-js" type="sell">
+                                  {{> currencydropdown}}
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="row">
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_select
+                                          label="Bank Account"
+                                          type="search"
+                                          id="edtSelectBankAccountName"
+                                          name="edtSelectBankAccountName"
+                                  }}
+                              </div>
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_input
+                                          label="Foreign Amount"
+                                          type="text"
+                                          name="foreignAmount"
+                                          id="edtForeignAmount"
+                                          defaultValue=data.ForeignCurrencyAmount
+                                          divClass="form"
+                                          isjobelement=false
+                                  }}
+                              </div>
+                          </div>
+                      </div>
                   </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_select
-                      label="Bank Account"
-                      type="search"
-                      id="edtSelectBankAccountName"
-                      name="edtSelectBankAccountName"
-                      }}
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_select
-                      label="Payment Method"
-                      type="search"
-                      id="sltPaymentMethod"
-                      name="sltPaymentMethod"
-                      }}
-                    </div>
-                  </div>
-                </div>
               </div>
-            </div>
+              <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                  <div class="row">
+                      <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="row">
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_input
+                                          label="Reference No."
+                                          type="text"
+                                          id="edtReference"
+                                          name="edtReference"
+                                          defaultValue=data.reference
+                                          divClass="form"
+                                          isjobelement=false
+                                  }}
+                              </div>
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> CurrencyRate }}
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="row">
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> single_date_picker
+                                          label="Payment Date"
+                                          id="dtPaymentDate"
+                                          name="dtPaymentDate"
+                                          defaultValue=data.paymentDate
+                                  }}
+                              </div>
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_input
+                                          label="Payment Amount"
+                                          type="text"
+                                          name="edtPaymentAmount"
+                                          id="edtPaymentAmount"
+                                          defaultValue=data.paymentAmount
+                                          divClass="form"
+                                          isjobelement=false
+                                  }}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                  <div class="row">
+                      <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="row">
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_select
+                                          label="Payment Method"
+                                          type="search"
+                                          id="sltPaymentMethod"
+                                          name="sltPaymentMethod"
+                                  }}
+                              </div>
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_input
+                                          label="Variation"
+                                          type="text"
+                                          name="variation"
+                                          id="edtVariation"
+                                          defaultValue=data.ForeignVariationAmount
+                                          divClass="form"
+                                          isjobelement=false
+                                  }}
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-12 col-md-6 col-lg-6 col-xl-6">
+                          <div class="row">
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_select
+                                          label="Department"
+                                          type="search"
+                                          id="sltDepartment"
+                                          name="sltDepartment"
+                                  }}
+                              </div>
+                              <div class="col-6 col-md-12 col-lg-12">
+                                  {{> default_input
+                                          label="Applied"
+                                          type="text"
+                                          name="applied"
+                                          id="edtApplied"
+                                          defaultValue=data.ForeignApplied
+                                          divClass="form"
+                                          isjobelement=false
+                                  }}
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
 
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              <div class="row">
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_input
-                      label="Reference No."
-                      type="text"
-                      id="edtReference"
-                      name="edtReference"
-                      defaultValue=data.reference
-                      }}
-                    </div>
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> default_select
-                      label="Department"
-                      type="search"
-                      id="sltDepartment"
-                      name="sltDepartment"
-                      }}
-                    </div>
-                  </div>
-                </div>
-                {{#if isCurrencyEnable}}
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12">
-                      {{> CurrencyWidget rate="buy"}}
-                    </div>
-                  </div>
-                </div>
-                {{/if}}
-              </div>
-            </div>
+              <!--            <div class="col-12 col-md-6 col-lg-4 col-xl-3">-->
+<!--              <div class="row">-->
+<!--                <div class="col-12 col-md-6 col-lg-6 col-xl-6">-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> default_input-->
+<!--                      label="Payment Amount"-->
+<!--                      type="text"-->
+<!--                      name="edtPaymentAmount"-->
+<!--                      id="edtPaymentAmount"-->
+<!--                      defaultValue=data.paymentAmount-->
+<!--                      readonly=true-->
+<!--                      }}-->
+<!--                    </div>-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> single_date_picker-->
+<!--                      label="Payment Date"-->
+<!--                      id="dtPaymentDate"-->
+<!--                      name="dtPaymentDate"-->
+<!--                      defaultValue=data.paymentDate-->
+<!--                      }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <div class="col-12 col-md-6 col-lg-6 col-xl-6">-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> default_select-->
+<!--                      label="Bank Account"-->
+<!--                      type="search"-->
+<!--                      id="edtSelectBankAccountName"-->
+<!--                      name="edtSelectBankAccountName"-->
+<!--                      }}-->
+<!--                    </div>-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> default_select-->
+<!--                      label="Payment Method"-->
+<!--                      type="search"-->
+<!--                      id="sltPaymentMethod"-->
+<!--                      name="sltPaymentMethod"-->
+<!--                      }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
 
-            <div class="col-12 col-md-6 col-lg-4 col-xl-3">
-              <div class="row">
-                {{#if isCurrencyEnable}}
-                <div class="col-12 col-md-6 col-lg-6 col-xl-6">
-                  <div class="row">
-                    <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">
-                      <div class="form-group"><label>Foreign Amount</label>
-                        <div class="input-group">
-                          <input class="form-control form-control" type="text" value="$0.00" data-value="0.00"
-                            id="edtForeignAmount" name='foreignAmount'>
-                        </div>
-                      </div>
-                      <div class="form-group"><label>Variation</label>
-                        <input class="form-control form-control" type="text" value="0.00" data-value="0.00"
-                          id="edtVariation" name='variation'>
-                      </div>
-                      <div class="form-group ">
-                        <label>Applied</label>
-                        <div class="input-group">
-                          <input class="form-control form-control" type="text" value="{{data.applied}}" id="edtApplied"
-                            name='applied'>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                {{/if}}
-              </div>
-            </div>
+<!--            <div class="col-12 col-md-6 col-lg-4 col-xl-3">-->
+<!--              <div class="row">-->
+<!--                <div class="col-12 col-md-6 col-lg-6 col-xl-6">-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> default_input-->
+<!--                      label="Reference No."-->
+<!--                      type="text"-->
+<!--                      id="edtReference"-->
+<!--                      name="edtReference"-->
+<!--                      defaultValue=data.reference-->
+<!--                      }}-->
+<!--                    </div>-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> default_select-->
+<!--                      label="Department"-->
+<!--                      type="search"-->
+<!--                      id="sltDepartment"-->
+<!--                      name="sltDepartment"-->
+<!--                      }}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                {{#if isCurrencyEnable}}-->
+<!--                <div class="col-12 col-md-6 col-lg-6 col-xl-6">-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-6 col-md-12 col-lg-12">-->
+<!--                      {{> CurrencyWidget rate="buy"}}-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                {{/if}}-->
+<!--              </div>-->
+<!--            </div>-->
+
+<!--            <div class="col-12 col-md-6 col-lg-4 col-xl-3">-->
+<!--              <div class="row">-->
+<!--                {{#if isCurrencyEnable}}-->
+<!--                <div class="col-12 col-md-6 col-lg-6 col-xl-6">-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-6 col-md-12 col-lg-12 foreign-currency-js" style="display:none">-->
+<!--                      <div class="form-group"><label>Foreign Amount</label>-->
+<!--                        <div class="input-group">-->
+<!--                          <input class="form-control form-control" type="text" value="$0.00" data-value="0.00"-->
+<!--                            id="edtForeignAmount" name='foreignAmount'>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                      <div class="form-group"><label>Variation</label>-->
+<!--                        <input class="form-control form-control" type="text" value="0.00" data-value="0.00"-->
+<!--                          id="edtVariation" name='variation'>-->
+<!--                      </div>-->
+<!--                      <div class="form-group ">-->
+<!--                        <label>Applied</label>-->
+<!--                        <div class="input-group">-->
+<!--                          <input class="form-control form-control" type="text" value="{{data.applied}}" id="edtApplied"-->
+<!--                            name='applied'>-->
+<!--                        </div>-->
+<!--                      </div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                {{/if}}-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>

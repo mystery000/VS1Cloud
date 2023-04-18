@@ -129,8 +129,8 @@ Template.exebalancesheetreport.onRendered(() => {
         templateObject.setDateAs( dateAsOf );
         try {
             let data = await reportService.getCardDataReport(dateAsOf);
-            if (data.tcarddatareport) {
-                let resData = data.tcarddatareport[0];
+            if (data.tdashboardexecdata1) {
+                let resData = data.tdashboardexecdata1[0];
                 totalAgedReceivables[0] = parseFloat(resData.Bal_Debtors1);
                 totalAgedReceivables[1] = parseFloat(resData.Bal_Debtors2);
                 totalAgedPayables[0] = parseFloat(resData.Bal_Creditors1);

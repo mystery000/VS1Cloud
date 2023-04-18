@@ -26,6 +26,15 @@ export default class TableHandler {
     $(".dataTable tbody tr td").on("mouseover", () => {
       this.refreshDatatableResizable();
     });
+
+    $(".transactionLines tbody").on("mouseup", () => {
+      this.disableTransDatatableResizable();
+    });
+
+    $(".transactionLines tbody").on("mouseover", () => {
+      this.disableTransDatatableResizable();
+    });
+
   }
 
   /**
@@ -55,6 +64,8 @@ export default class TableHandler {
         let tableClassName = $(e.currentTarget.className)?$(e.currentTarget)[0].className:'';
         if(tableClassName.includes("transactionLines")){
             //this.saveTableColumns(tableName);
+        }else if (tableClassName.includes("dtTemplate")){
+          this.saveTableColumnsDatatableList(tableName);
         }else{
           if ((tableName != "tblBasReturnList")) {
             this.saveTableColumns(tableName);
@@ -74,8 +85,88 @@ export default class TableHandler {
   /**
      * We first need to disable all previous events listeners related
      */
-  disableDatatableResizable() {
+  async disableDatatableResizable() {
     $(".dataTable").colResizable({disable: true});
+  }
+
+  async disableTransDatatableResizable() {
+    $(".transactionLines").colResizable({disable: true});
+  }
+
+  async saveTableColumnsDatatableList(tableName) {
+    let lineItems = [];
+    //$(".fullScreenSpin").css("display", "inline-block");
+    let tableDisplay = $('#'+tableName).DataTable()||'';
+    if(tableDisplay?.context[0]?.aoColumns != ""){
+    $(tableDisplay?.context[0]?.aoColumns).each(function (index, value) {
+      var fieldID = index || 0;
+      var colTitle = value.title || "";
+      var colWidth = value.width || 0;
+      var colthClass = value.className || "";
+      var showCol = value.visible||false;
+
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: showCol,
+        width: parseFloat(colWidth),
+        class: colthClass,
+        display: true
+      };
+
+      lineItems.push(lineItemObj);
+
+    });
+
+  }else{
+    $(`#${tableName} thead tr th`).each(function (index) {
+      var $tblrow = $(this);
+      var fieldID = $tblrow.attr("data-column-index") || 0;
+      var colTitle = $tblrow.text().replace(/^\s+|\s+$/g, "") || "";
+      var colWidth = $tblrow.width() || 0;
+      var colthClass = $tblrow[0].classList[0]!='th'?$tblrow[0].classList[0]:$tblrow[0].classList[1]||$tblrow.attr("data-class") || "";
+       // shipdate:data.tinvoiceex[i].fields.ShipDate !=''? moment(data.tinvoiceex[i].fields.ShipDate).format("DD/MM/YYYY"): data.tinvoiceex[i].fields.ShipDate,
+
+      let allClass = $tblrow[0].className ||$tblrow.attr("data-class") || "";
+      var showCol = true;
+      if (allClass.includes("hiddenColumn")) {
+        showCol = false;
+      } else {
+        showCol = true;
+      };
+      let lineItemObj = {
+        index: parseInt(fieldID),
+        label: colTitle,
+        active: showCol,
+        width: parseFloat(colWidth),
+        class: colthClass,
+        display: true
+      };
+
+      lineItems.push(lineItemObj);
+    });
+
+  };
+    // lineItems.sort((a,b) => a.index - b.index);
+    try {
+      let erpGet = erpDb();
+      let employeeId = parseInt(localStorage.getItem("mySessionEmployeeLoggedID")) || 0;
+      let sideBarService = new SideBarService();
+      let added = await sideBarService.saveNewCustomFields(erpGet, tableName, employeeId, lineItems);
+      //$(".fullScreenSpin").css("display", "none");
+      if (added) {
+        sideBarService.getNewCustomFieldsWithQuery(parseInt(localStorage.getItem("mySessionEmployeeLoggedID")), "").then(function (dataCustomize) {
+          addVS1Data("VS1_Customize", JSON.stringify(dataCustomize));
+        }).catch(function (err) {});
+      } else {
+        // swal("Something went wrong!", "", "error");
+      }
+
+
+    } catch (error) {
+      $(".fullScreenSpin").css("display", "none");
+      swal("Something went wrong!", "", "error");
+    }
   }
 
   async saveTableColumns(tableName) {

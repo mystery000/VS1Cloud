@@ -267,6 +267,9 @@ import './settings/service-checker/serviceChecker.js';
 
 /* Riley*/
 import './accounts/addApcaModal/addApcaModal.html';
+import './vs1charts/editCardChartButtons/editCardChartButtons.js';
+import './vs1charts/datesForCardChart/datesForCardChart.js';
+import './vs1charts/editCardChartOptions/editCardChartOptions.html';
 /* Riley*/
 
 /* Tinyiko */
@@ -342,6 +345,23 @@ import './vs1_templates/drop_down/vs1___dropdown.js';
 import './manufacture/bomlistpop.js';
 import './vs1_templates/transaction_temp/transaction_header/transactionheader.js';
 import './vs1_templates/transaction_temp/transaction_header/components/customerselector/customerselector.js';
+
+import './vs1_templates/contact_card/contact_card.js';
+import './vs1_templates/vs1_tab/vs1_tab_address.html';
+import './vs1_templates/vs1_tab/vs1_tab_crm.html';
+import './vs1_templates/vs1_tab/vs1_tab_note.html';
+import './vs1_templates/vs1_tab/vs1_tab_invoicing.html';
+import './vs1_templates/vs1_tab/vs1_tab_attachments.html';
+import './vs1_templates/vs1_tab/vs1_tab_custom_fields.html';
+import './vs1_templates/vs1_tab/vs1_tab_tax.html';
+import './vs1_templates/template_buttons/export_refresh_import_print_display_button.js';
+import './vs1_templates/transaction_temp/transaction_footer/transactionfooter.js';
+import './vs1_templates/transaction_temp/transaction_template/transaction_card.js';
+import './invoice/frm_invoice.js';
+import './reports/reports.js';
+import './reports/reportcardtemp/reportcard.js';
+import './reports/agedpayables/newagedpayables.js';
+
 /* Jeyhun */
 
 /* DevTop/Dev Pioneer */
@@ -526,7 +546,10 @@ import './vs1_templates/transaction_temp/transaction_grid/transactiongrid.js';
 import './payroll/clockonoff/employeeclockonoff.js';
 import './reports/buildcost/buildcostreport';
 import './reports/worksheet/worksheetreport.js';
-/* Roverto */
+import './payroll/clockonoff/process_clock_list.js';
+import './payroll/clockonoff/employee_clock_status.js';
+import './payroll/clockonoff/clockonreport.js';
+/* Roverto / David */
 
 /* Kelvin More */
 import './js/new_bill.js';
@@ -572,6 +595,7 @@ import '../public/js/cdnjs/jszip.min.js';
 import '../public/js/cdnjs/vfs_fonts.js';
 import './vs1_templates/title_list_pop/title_list_pop.js';
 import './expenseclaim/expenseclaims.html';
+import './packages/currency/editcurrencypop.js';
 /* Stefan */
 
 /* Arthlo */

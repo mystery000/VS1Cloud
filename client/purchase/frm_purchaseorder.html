@@ -42,22 +42,24 @@
       showShippingInfo=true showPayment=true showCopyTransaction=true
       showCopyToInvoice=false showCopyToOrder=false }} -->
 
-      {{>transactionheader 
-        includeClient=true 
-        includeAddress=true 
-        Category='purchase' 
-        TranascationType='PO' 
-        clientType='Supplier' 
-        payment=true 
-        headerfields=headerfields 
-        headerbuttons=headerbuttons 
+      {{>transactionheader
+        includeClient=true
+        includeAddress=true
+        Category='purchase'
+        TranascationType='PO'
+        clientType='Supplier'
+        payment=true
+        headerfields=headerfields
+        headerbuttons=headerbuttons
         currency=true
         balanceDue=purchaseorderrecord.balanceDue
         isPaid=purchaseorderrecord.ispaid
         data=purchaseorderrecord
+        gridTableId='tblPurchaseOrderLine'
+        templateName=templateName
        }}
 
-<!--  
+<!--
       {{> deletepop itemName1="Purchase Order" itemName2="purchase order"
       itemName3="Purchase Order" button1="btnDeletePO"
       button2="btnDeleteFollowingPOs"}} -->
@@ -213,7 +215,7 @@
             </div>
           </div>
         </div>
-       
+
         {{> transaction_calculation
         isPartialPaid=purchaseorderrecord.isPartialPaid
         SubTotal=purchaseorderrecord.SubTotal
@@ -995,7 +997,7 @@
       </div>
     </div>
     <!-- END PDF -->
-    {{/if}} 
+    {{/if}}
     <!-- {{> all_transaction_modals supplierRecord=supplierRecord}} -->
   </div>
   <!-- Start Help Video Modal -->

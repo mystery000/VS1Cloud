@@ -34,8 +34,12 @@
 
                 /* .dataTables_filter { display: none; } */
             </style>
+            <div class="col-12 col-md-4">
+                {{> datesforcardchart}}
+            </div>
         </header>
         <!-- All charts list -->
+        {{> editCardChartButtons}}
         {{#if isStockonHandDemandChart}} {{> allChartLists tabGroupID="5" chartGroup="Inventory"
                 currentTemplate="Inventory_Overview"}} {{/if}}
         <style>
@@ -355,6 +359,11 @@
             <!--        ></a>-->
             <!--      </div>-->
             <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                <style>
+                    .vs1ButtonMargin {
+                        margin : 14px !important;
+                    }
+                </style>
                 <a
                         class="btn btnNav btn-primary float-right vs1ButtonMargin"
                         role="button"
@@ -364,6 +373,7 @@
                 >
                 {{> export_import_print_display_button tablename = "tblInventoryOverview"}}
                 {{> departmentModal}}
+                {{> import_template importformName="Product"}}
             </div>
 
             <div class="modal fade" role="dialog" tabindex="-1" id="newDepartmentModal">
@@ -924,6 +934,7 @@
                 </style>
 
                 {{>datatablelist
+                        tableclass="tblInventoryOverview"
                         tablename="tblInventoryOverview"
                         apiName= apiFunction
                         indexeddbname = 'TProductQtyList'

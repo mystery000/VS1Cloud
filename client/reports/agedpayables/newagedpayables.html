@@ -1,0 +1,58 @@
+<template name="newagedpayables">
+    <!-- {{# vs1_report_template tabledisplayname="Aged Payables" tablename="tblAgedPayables" dateAsAt=dateAsAt sheetname="Aged Payables Report Result"}}
+    <div class="table-responsive">
+      <table class="table table-sm" id="tableExport" name="tableExport">
+        <thead>
+            <tr class="table-active">
+              {{#if agedpayablesth}}
+              {{#each c in agedpayablesth }}
+              {{# if c.display}}
+              <th data-class="{{c.class}}" data-col-index="{{c.index}}" data-col-active="{{c.active}}"
+                  class="th {{c.class}} {{#if c.active}}{{else}}hiddenColumn{{/if}}"
+                  style="text-align: left; width:{{c.width}}px">{{ c.label }}</th>
+              {{/if}}
+              {{/each}}
+              {{/if}}
+            </tr>
+        </thead>
+        <tbody>
+            {{#if transactiondatatablerecords}}
+                {{#each items in transactiondatatablerecords}}
+                    <tr>
+                        {{#each item in items}}
+                            <td class="{{item.indent}}">
+                                <span class={{item.className}}>{{item.string}}</span>
+                            </td>
+                        {{/each}}
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr class="odd" style="text-align: center;">
+                    <td valign="top" colspan="10" class="dataTables_empty text-left">No data available in table</td>
+                </tr>
+            {{/if}}
+        </tbody>
+      </table>
+    </div>
+  {{/vs1_report_template}} -->
+  {{> reportcard 
+    datahandler=datahandler 
+    mainfieldname='Name'
+    mainfieldClass='colName'
+    lowercasename='tapreport' 
+    indexDBName='TAPReport' 
+    displaysettings=displaysettings 
+    tabledisplayname="Aged Payables" 
+    tablename="tblAgedPayables" 
+    sheetname="Aged Payables Report Result"
+    printDocTitle='Aged Payables.pdf'
+    typeIndex=6
+    localStorageKeyName='VS1AgedPayables_Report'
+    listParam=listParams
+    apiName=apiFunction
+    printTaleName='printReport'
+    service=service
+    transType='purchase'
+    searchFunction=searchFunction
+  }}
+</template>

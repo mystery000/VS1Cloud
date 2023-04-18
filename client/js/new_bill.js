@@ -95,6 +95,7 @@ Template.billcard.onCreated(() => {
     templateObject.hasFollow = new ReactiveVar(false);
 
     templateObject.supplierRecord = new ReactiveVar();
+    templateObject.currencyData = new ReactiveVar();
 });
 
 Template.billcard.onRendered(() => {
@@ -110,6 +111,53 @@ Template.billcard.onRendered(() => {
     var splashArrayTaxRateList = new Array();
     const taxCodesList = [];
     let taxCodes = new Array();
+
+    templateObject.getCurrencies = async function () {
+        let currencyData = [];
+        let dataObject = await getVS1Data("TCurrencyList");
+        if (dataObject.length == 0) {
+            taxRateService.getCurrencies().then(function (data) {
+                for (let i in data.tcurrencylist) {
+                    let currencyObj = {
+                        id: data.tcurrencylist[i].CurrencyID || "",
+                        currency: data.tcurrencylist[i].Currency || "",
+                        currencySellRate: data.tcurrencylist[i].SellRate || "",
+                        currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                        currencyCode: data.tcurrencylist[i].Code || "",
+                    };
+
+                    currencyData.push(currencyObj);
+                }
+                templateObject.currencyData.set(currencyData);
+            });
+        } else {
+            let data = JSON.parse(dataObject[0].data);
+            let useData = data.tcurrencylist;
+            for (let i in useData) {
+                let currencyObj = {
+                    id: data.tcurrencylist[i].CurrencyID || "",
+                    currency: data.tcurrencylist[i].Currency || "",
+                    currencySellRate: data.tcurrencylist[i].SellRate || "",
+                    currencyBuyRate: data.tcurrencylist[i].BuyRate || "",
+                    currencyCode: data.tcurrencylist[i].Code || "",
+                };
+
+                currencyData.push(currencyObj)
+            }
+            templateObject.currencyData.set(currencyData);
+        }
+    }
+    templateObject.getCurrencies();
+    templateObject.getCurrencyRate = (currency, type) => {
+        let currencyData = templateObject.currencyData.get();
+        for(let i = 0; i <currencyData.length; i++) {
+            if(currencyData[i].currencyCode == currency || currencyData[i].currency == currency) {
+                if (type == 0) return currencyData[i].currencySellRate;
+                else return currencyData[i].currencyBuyRate;
+            }
+        };
+    };
+
 
     templateObject.setSupplierInfo = () => {
         if (!FlowRouter.current().queryParams.supplierid) {
@@ -504,7 +552,7 @@ Template.billcard.onRendered(() => {
         var getso_id = url.split('?id=');
         var currentBill = getso_id[getso_id.length - 1];
 
-        var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+        var currencyCode = $(".sltCurrency").val() || CountryAbbr;
         let ForeignExchangeRate = $('#exchange_rate').val() || 0;
         let foreignCurrencyFields = {}
         if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -786,7 +834,7 @@ Template.billcard.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
+        let fx = $('.sltCurrency').val();
         var comment = $('#txaComment').val();
         var parking_instruction = $('#txapickmemo').val();
         var subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
@@ -1074,7 +1122,7 @@ Template.billcard.onRendered(() => {
         let name = $('#firstname').val();
         let surname = $('#lastname').val();
         let dept = $('#sltDept').val();
-        let fx = $('#sltCurrency').val();
+        let fx = $('.sltCurrency').val();
         var comment = $('#txaComment').val();
         var parking_instruction = $('#txapickmemo').val();
         var subtotal_tax = $('#subtotal_tax').html() || '$' + 0;
@@ -1654,8 +1702,10 @@ Template.billcard.onRendered(() => {
                             $('#sltDept').val(getDepartmentVal);
                             $('#sltStatus').val(data.fields.OrderStatus);
                             $('#shipvia').val(data.fields.Shipping);
-                            $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                            $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                            //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            let currencyRate = templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0);
+                            $('#exchange_rate').val(currencyRate);
 
                             FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
@@ -1882,8 +1932,10 @@ Template.billcard.onRendered(() => {
                                 $('#sltStatus').val(useData[d].fields.OrderStatus);
                                 templateObject.CleintName.set(useData[d].fields.SupplierName);
                                 $('#shipvia').val(useData[d].fields.Shipping);
-                                $('#sltCurrency').val(useData[d].fields.ForeignExchangeCode);
-                                $('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                                $('.sltCurrency').val(useData[d].fields.ForeignExchangeCode);
+                                //$('#exchange_rate').val(useData[d].fields.ForeignExchangeRate);
+                                //let currencyRate = templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 0);
+                                $('#exchange_rate').val(templateObject.getCurrencyRate(useData[d].fields.ForeignExchangeCode, 0));
                                 FxGlobalFunctions.handleChangedCurrency(useData[d].fields.ForeignExchangeCode, defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
@@ -2115,8 +2167,9 @@ Template.billcard.onRendered(() => {
                                 $('#sltDept').val(getDepartmentVal);
                                 $('#sltStatus').val(data.fields.OrderStatus);
                                 $('#shipvia').val(data.fields.Shipping);
-                                $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                                $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                                $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                                //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0));
                                 FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
                                 templateObject.attachmentCount.set(0);
@@ -2341,8 +2394,9 @@ Template.billcard.onRendered(() => {
                         $('#sltDept').val(getDepartmentVal);
                         $('#sltStatus').val(data.fields.OrderStatus);
                         $('#shipvia').val(data.fields.Shipping);
-                        $('#sltCurrency').val(data.fields.ForeignExchangeCode);
-                        $('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                        $('.sltCurrency').val(data.fields.ForeignExchangeCode);
+                        //$('#exchange_rate').val(data.fields.ForeignExchangeRate);
+                            $('#exchange_rate').val(templateObject.getCurrencyRate(data.fields.ForeignExchangeCode, 0));
                         FxGlobalFunctions.handleChangedCurrency(data.fields.ForeignExchangeCode, defaultCurrencyCode);
 
                         templateObject.attachmentCount.set(0);
@@ -3267,7 +3321,7 @@ Template.billcard.onRendered(() => {
     $(document).ready(function () {
         $('#edtSupplierName').editableSelect();
         $('#edtSupplierName').val('');
-        $('#sltCurrency').editableSelect();
+        $('.sltCurrency').editableSelect();
         $('#sltTerms').editableSelect();
         $('#sltDept').editableSelect();
         $('#sltStatus').editableSelect();
@@ -3334,7 +3388,7 @@ Template.billcard.onRendered(() => {
             LoadingOverlay.hide();
         }, 1000);
     });
-    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+    $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
         $(".colAccountName").removeClass('boldtablealertsborder');
         let selectLineID = $('#selectLineID').val();
         let taxcodeList = templateObject.taxraterecords.get();
@@ -3652,7 +3706,7 @@ Template.billcard.onRendered(() => {
 
 
     // $(document).on("click", "#tblCurrencyPopList tbody tr", function(e) {
-    //     $('#sltCurrency').val($(this).find(".colCode").text());
+    //     $('.sltCurrency').val($(this).find(".colCode").text());
     //     $('#currencyModal').modal('toggle');
 
     //     $('#tblCurrencyPopList_filter .form-control-sm').val('');
@@ -4057,7 +4111,7 @@ Template.billcard.onRendered(() => {
                 });
 
     });
-    // $('#sltCurrency').editableSelect()
+    // $('.sltCurrency').editableSelect()
     //     .on('click.editable-select', function(e, li) {
     //         var $earch = $(this);
     //         var offset = $earch.offset();
@@ -6472,7 +6526,7 @@ Template.billcard.events({
     // 'click #sltTerms': function(event) {
     //     $('#termsListModal').modal('toggle');
     // },
-    // 'click #sltCurrency': function(event) {
+    // 'click .sltCurrency': function(event) {
     //     $('#currencyModal').modal('toggle');
     // },
     // 'click #sltDept': function(event) {
@@ -8533,7 +8587,7 @@ Template.billcard.events({
                 var getso_id = url.split('?id=');
                 var currentBill = getso_id[getso_id.length - 1];
 
-                var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                var currencyCode = $(".sltCurrency").val() || CountryAbbr;
                 let ForeignExchangeRate = $('#exchange_rate').val() || 0;
                 let foreignCurrencyFields = {}
                 if (FxGlobalFunctions.isCurrencyEnabled()) {
@@ -9461,7 +9515,7 @@ Template.billcard.events({
                 var getso_id = url.split('?id=');
                 var currentBill = getso_id[getso_id.length - 1];
                 let uploadedItems = templateObject.uploadedFiles.get();
-                var currencyCode = $("#sltCurrency").val() || CountryAbbr;
+                var currencyCode = $(".sltCurrency").val() || CountryAbbr;
                 let ForeignExchangeRate = $('#exchange_rate').val() || 0;
                 var objDetails = '';
                 if (getso_id[1]) {
@@ -9759,8 +9813,8 @@ Template.billcard.events({
         $("#clickedControl").val("three");
     },
 
-    'change #sltCurrency': (e, ui) => {
-        if ($("#sltCurrency").val() && $("#sltCurrency").val() != defaultCurrencyCode) {
+    'change .sltCurrency': (e, ui) => {
+        if ($(".sltCurrency").val() && $(".sltCurrency").val() != defaultCurrencyCode) {
             $(".foreign-currency-js").css("display", "block");
             ui.isForeignEnabled.set(true);
             FxGlobalFunctions.toggleVisbilityOfValuesToConvert(true);

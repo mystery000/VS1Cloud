@@ -27,21 +27,31 @@ Template.assignLeaveTypePop.onCreated(function () {
             data.fields.OpeningBalance || 0,
             data.fields.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
             ""
+            // data.ID || "",
+            // data.LeaveType || "",
+            // data.LeaveCalcMethod || "",
+            // data.HoursAccruedAnnually || 0,
+            // data.HoursAccruedAnnuallyFullTimeEmp || 0,
+            // data.HoursFullTimeEmpFortnightlyPay || 0,
+            // data.HoursLeave || 0,
+            // data.OpeningBalance || 0,
+            // data.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
+            // data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
 
     let headerStructure = [
-        { index: 0, label: '#Assign Leave ID', class: 'colALTypeID', active: false, display: true, width: "50" },
-        { index: 1, label: 'Leave', class: 'colALTypeLeave', active: true, display: true, width: "50" },
-        { index: 2, label: 'Leave Calculation Method', class: 'colALTypeLeaveCalMethod', active: true, display: true, width: "50" },
+        { index: 0, label: 'Assign Leave ID', class: 'colALTypeID', active: false, display: true, width: "10" },
+        { index: 1, label: 'Leave', class: 'colALTypeLeave', active: true, display: true, width: "60" },
+        { index: 2, label: 'Leave Calculation Method', class: 'colALTypeLeaveCalMethod', active: true, display: true, width: "80" },
         { index: 3, label: 'Hours accrued annually', class: 'colALTypeHoursAccruedAnnually', active: true, display: true, width: "50" },
         { index: 4, label: 'Hours accrued annually full time employee', class: 'colALTypeHoursAccruedAnnuallyFullTimeEmp', active: true, display: true, width: "50" },
         { index: 5, label: 'Hours a full-time employee works in a Fortnightly pay Period', class: 'colALTypeHoursFullTimeEmpFortnightlyPay', active: true, display: true, width: "50" },
         { index: 6, label: 'Hours', class: 'colALTypeHours', active: true, display: true, width: "50" },
-        { index: 7, label: 'Opening Balance', class: 'colALTypeOpeningBalance', active: true, display: true, width: "50" },
-        { index: 8, label: 'On termination Balance', class: 'colALTypeTerminationBalance', active: true, display: true, width: "50" },
-        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
+        { index: 7, label: 'Opening Balance', class: 'colALTypeOpeningBalance', active: true, display: true, width: "110" },
+        { index: 8, label: 'On termination Balance', class: 'colALTypeTerminationBalance', active: true, display: true, width: "110" },
+        { index: 9, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
     ];
     templateObject.tableheaderrecords.set(headerStructure);
 });
@@ -74,8 +84,8 @@ Template.assignLeaveTypePop.events({
         let Hours = $(e.currentTarget).closest("tr").find(".colALTypeHours").text() ||'';
         $('#edtLeaveRequestID').val(id);
         $('#edtLeaveTypeofRequestID').val(id);
-        $('#edtLeaveTypeofRequest').val(name); 
-        $('#edtLeaveHours').val(Hours); 
+        $('#edtLeaveTypeofRequest').val(name);
+        $('#edtLeaveHours').val(Hours);
 
         $('#assignLeaveTypeSettingsModal').on('hidden.bs.modal', function(e) {
             // window.open("/appointments", "_self");
@@ -117,7 +127,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#period').editableSelect('add','Four Weekly');
         $('#period').editableSelect('add','Monthly');
         $('#period').editableSelect('add','Quarterly');
-        
+
         $('#edtTfnExemption').editableSelect('add', function(item){
             $(this).val(item.id);
             $(this).text(item.name);
@@ -232,7 +242,7 @@ Template.assignLeaveTypePop.onCreated(function () {
 
         //                     $('#leaveTypeSelect').val(tAssignteavetype[0].fields.LeaveType || '');
         //                     $('#leaveCalcMethodSelect').val(tAssignteavetype[0].fields.LeaveCalcMethod);
-                            
+
         //                     $('#openingBalance').val(tAssignteavetype[0].fields.OpeningBalance);
         //                     $('#onTerminationUnusedBalance').prop("checked", tAssignteavetype[0].fields.OnTerminationUnusedBalance);
         //                     $("#eftLeaveType").prop('checked', tAssignteavetype[0].fields.EFTLeaveType)
@@ -255,7 +265,7 @@ Template.assignLeaveTypePop.onCreated(function () {
         $('#' + searchFilterID).val(name);
         $('#' + searchFilterID + 'ID').val(ID);
         $('#edtLeaveHours').val(Hours);
-        
+
         $('#assignLeaveTypeSettingsModal').modal('toggle');
     });
 
@@ -265,7 +275,7 @@ Template.assignLeaveTypePop.helpers({
     terminationBalance: (t) => {
         return t ?  'Paid Out': 'Not Paid Out';
     },
-    leaveTypesList: () => { 
+    leaveTypesList: () => {
         return Template.instance().leaveTypesList.get();
     },
 
@@ -305,6 +315,11 @@ Template.assignLeaveTypePop.helpers({
     },
 
     apiParams: function() {
-        return ['limitCount', 'limitFrom'];
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+    tablename: () => {
+      let templateObject = Template.instance();
+      let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+    	return 'tblAssignLeaveTypes'+selCustID;
     },
 });

@@ -22,6 +22,13 @@ Template.fixedAssetListTable.onCreated(function () {
   templateObject.reset_data = new ReactiveVar([]);
   templateObject.selectedFile = new ReactiveVar();
   templateObject.getDataTableList = function (data) {
+    let linestatus = '';
+    if(data.Active == true){
+      linestatus = "";
+    }
+    else if(data.Active == false){
+      linestatus = "In-Active";
+    }
     const dataList = [
       data.AssetID || "",
       data.AssetName || "",
@@ -42,18 +49,16 @@ Template.fixedAssetListTable.onCreated(function () {
       data.Size || "",
       data.Shape || "",
       //data.Status || "",
-      data.Active ? "" : "In-Active",
+      // linestatus,
       data.BusinessUsePercent || 0.0,
       utilityService.modifynegativeCurrencyFormat(data.EstimatedValue) || 0.0,
       utilityService.modifynegativeCurrencyFormat(data.ReplacementCost) || 0.0,
       data.WarrantyType || "",
-      data.WarrantyExpiresDate
-        ? moment(data.WarrantyExpiresDate).format("DD/MM/YYYY")
-        : "",
+      data.WarrantyExpiresDate ? moment(data.WarrantyExpiresDate).format("DD/MM/YYYY"): "",
       data.InsuredBy || "",
       data.InsurancePolicy || "",
       data.InsuredUntil ? moment(data.InsuredUntil).format("DD/MM/YYYY") : "",
-      //data.Active ? "" : "In-Active",
+      linestatus
     ];
     return dataList;
   };
@@ -72,7 +77,7 @@ Template.fixedAssetListTable.onCreated(function () {
   let headerStructure = [
     {
       index: 0,
-      label: "#ID",
+      label: "ID",
       class: "colFixedID",
       active: false,
       display: true,
@@ -160,7 +165,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 11,
-      label: "#Serial",
+      label: "Serial",
       class: "colSerial",
       active: false,
       display: true,
@@ -184,7 +189,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 14,
-      label: "#Location Description",
+      label: "Location Description",
       class: "colLocationDescription",
       active: false,
       display: true,
@@ -192,7 +197,7 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 15,
-      label: "#Notes",
+      label: "Notes",
       class: "colNotes",
       active: false,
       display: true,
@@ -216,14 +221,6 @@ Template.fixedAssetListTable.onCreated(function () {
     },
     {
       index: 18,
-      label: "Status",
-      class: "colStatus",
-      active: true,
-      display: true,
-      width: "60",
-    },
-    {
-      index: 19,
       label: "Business Use(%)",
       class: "colBusinessUse",
       active: true,
@@ -231,70 +228,71 @@ Template.fixedAssetListTable.onCreated(function () {
       width: "60",
     },
     {
-      index: 20,
+      index: 19,
       label: "Estimated Value",
       class: "colEstimatedValue",
-      active: true,
+      active: false,
       display: true,
       width: "60",
     },
     {
-      index: 21,
+      index: 20,
       label: "Replacement Cost",
       class: "colReplacementCost",
-      active: true,
+      active: false,
       display: true,
       width: "50",
     },
     {
-      index: 22,
-      label: "#Warranty Type",
+      index: 21,
+      label: "Warranty Type",
       class: "colWarrantyType",
       active: false,
       display: true,
       width: "50",
     },
     {
-      index: 23,
-      label: "#Warranty Expires Date",
+      index: 22,
+      label: "Warranty Expires Date",
       class: "colWarrantyExpiresDate",
       active: false,
       display: true,
       width: "100",
     },
     {
-      index: 24,
-      label: "#Insured By",
+      index: 23,
+      label: "Insured By",
       class: "colInsuredBy",
       active: false,
       display: true,
       width: "80",
     },
     {
-      index: 25,
-      label: "#Insurance Policy",
+      index: 24,
+      label: "Insurance Policy",
       class: "colInsurancePolicy",
       active: false,
       display: true,
       width: "80",
     },
     {
-      index: 26,
-      label: "#Insured Until",
+      index: 25,
+      label: "Insured Until",
       class: "colInsuredUntil",
       active: false,
       display: true,
       width: "80",
     },
-    //{ index: 27, label: 'Status', class: 'colStatus', active: true, display: true, width: "" },
+    { index: 26, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
   ];
 
+  
   templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.fixedAssetListTable.onRendered(function () {
   $("#tblFixedAssetList tbody").on("click", "tr", function () {
-    var assetID = $(this).closest("tr").find(".colFixedID").text();
+    var assetID = $(this).closest("tr").attr('id');
     FlowRouter.go("/fixedassetcard?assetId=" + assetID);
   });
 });
@@ -476,7 +474,7 @@ Template.fixedAssetListTable.events({
               // $('#importModal').modal('toggle');
               //Meteor._reload.reload();
               $(".fullScreenSpin").css("display", "none");
-              await clearData("TFixedAssets");
+              await clearData("TFixedAssetsList");
               window.open("/fixedassetlist?success=true", "_self");
             }, parseInt(dataLength));
 

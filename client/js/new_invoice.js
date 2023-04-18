@@ -97,7 +97,10 @@ Template.new_invoice.onCreated(function () {
   templateObject.customerRecord = new ReactiveVar();
   templateObject.headerfields = new ReactiveVar();
   templateObject.headerbuttons = new ReactiveVar();
-
+  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly")||false;
+  if(JSON.parse(isBOnShippedQty)) {
+    templateObject.includeBOnShippedQty.set(false);
+  }
   function formatDate (date) {
     return moment(date).format('DD/MM/YYYY');
   }
@@ -3232,7 +3235,10 @@ Template.new_invoice.onRendered(function () {
 
   $(".fullScreenSpin").css("display", "inline-block");
   const templateObject = Template.instance();
-
+  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly")||false;
+  if(JSON.parse(isBOnShippedQty)) {
+    templateObject.includeBOnShippedQty.set(false);
+  }
   templateObject.hasFollowings = async function() {
     let salesService = new SalesBoardService();
     var url = FlowRouter.current().path;
@@ -3330,10 +3336,7 @@ Template.new_invoice.onRendered(function () {
     $(".uploadedImage").attr("src", imageData);
   }
 
-  let isBOnShippedQty = localStorage.getItem("CloudSalesQtyOnly")||false;
-  if(JSON.parse(isBOnShippedQty)) {
-    templateObject.includeBOnShippedQty.set(false);
-  }
+
 
   $("#date-input,#dtSODate,#dtDueDate,#customdateone").datepicker({
     showOn: "button",
@@ -3695,12 +3698,12 @@ Template.new_invoice.onRendered(function () {
     // $("#sltDept").editableSelect();
     // $("#sltStatus").editableSelect();
 
-    $(document).on("click", "#tblUOMList tbody tr", function (e) {
-      let table = $(this);
-      let uomName = table.find(".colUOMName").text();
-      $("input.lineUOM").val(uomName);
-      $("#UOMListModal").modal("toggle");
-    });
+    // $(document).on("click", "#tblUOMList tbody tr", function (e) {
+    //   let table = $(this);
+    //   let uomName = table.find(".colUOMName").text();
+    //   $("input.lineUOM").val(uomName);
+    //   $("#UOMListModal").modal("toggle");
+    // });
 
 
   // $("#sltTerms").editableSelect().on("click.editable-select", function (e, li) {
@@ -4525,7 +4528,7 @@ Template.new_invoice.onRendered(function () {
   //   }
   // })
 
-    $(document).on("click", "#tblInventory tbody tr", async function (e) {
+    $(document).on("click", ".tblInventory tbody tr", async function (e) {
       $(".colProductName").removeClass("boldtablealertsborder");
       let selectLineID = $("#selectLineID").val();
       let taxcodeList = await templateObject.taxraterecords.get();
@@ -4820,6 +4823,18 @@ Template.new_invoice.onRendered(function () {
       $(".fullScreenSpin").css("display", "none");
     });
 
+
+    $(document).on("click", ".tblUOMList tbody tr", async function (e) {
+
+       var selectLineID = $(this).closest('.vs1_dropdown_modal').attr('selectedid');
+      var table = $(this);
+      if (selectLineID) {
+        let lineUOMName = table.find(".colUOMName").text();
+        $("#" + selectLineID + " .edtUOMID").val(lineUOMName);
+      };
+      $(".fullScreenSpin").css("display", "none");
+    });
+
 });
 
 Template.new_invoice.helpers({
@@ -5087,6 +5102,12 @@ Template.new_invoice.helpers({
 });
 
 Template.new_invoice.events({
+  "blur .lineProductDesc": function (event) {
+    var targetID = $(event.target).closest("tr").attr("id");
+    $("#" + targetID + " #lineProductDesc").text(
+      $("#" + targetID + " .lineProductDesc").text()
+    );
+  },
   'click input[name="frequencyRadio"]': function (event) {
     if (event.target.id == "frequencyMonthly") {
       document.getElementById("monthlySettings").style.display = "block";
@@ -6948,7 +6969,7 @@ Template.new_invoice.events({
                     $("#edtbuyqty1cost").val(buyqty1cost);
 
                     setTimeout(function () {
-                      $("#newProductModal").modal("show");
+                      //$("#newProductModal").modal("show");
                     }, 500);
                   })
                   .catch(function (err) {
@@ -7003,7 +7024,7 @@ Template.new_invoice.events({
                     $("#slttaxcodepurchase").val(taxcodepurchase);
                     $("#edtbuyqty1cost").val(buyqty1cost);
 
-                    $("#newProductModal").modal("show");
+                    //$("#newProductModal").modal("show");
                   }
                 }
                 if (!added) {
@@ -7049,7 +7070,7 @@ Template.new_invoice.events({
                       $("#slttaxcodepurchase").val(taxcodepurchase);
                       $("#edtbuyqty1cost").val(buyqty1cost);
 
-                      $("#newProductModal").modal("show");
+                      //$("#newProductModal").modal("show");
                     })
                     .catch(function (err) {
                       $(".fullScreenSpin").css("display", "none");
@@ -7097,7 +7118,7 @@ Template.new_invoice.events({
                   $("#slttaxcodepurchase").val(taxcodepurchase);
                   $("#edtbuyqty1cost").val(buyqty1cost);
 
-                  $("#newProductModal").modal("show");
+                  //$("#newProductModal").modal("show");
                 })
                 .catch(function (err) {
                   $(".fullScreenSpin").css("display", "none");

@@ -1539,15 +1539,15 @@ Template.customerscard.onRendered(function () {
         }, 3000);
     });
 
-    $(document).on('click', '#editCustomerTitle', function (e, li) {
-        const $earch = $(this);
-        const offset = $earch.offset();
-        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            $('#customerTitlePopModal').modal('toggle');
-        } else {
-            $('#customerTitlePopModal').modal();
-        }
-    });
+    // $(document).on('click', '#editCustomerTitle', function (e, li) {
+    //     const $earch = $(this);
+    //     const offset = $earch.offset();
+    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //         $('#customerTitlePopModal').modal('toggle');
+    //     } else {
+    //         $('#customerTitlePopModal').modal();
+    //     }
+    // });
 
     $(document).on("click", "#termsList tbody tr", function (e) {
         let selectedTermsDropdownID = $('#selectLineID').val() || 'sltTerms';
@@ -1815,69 +1815,69 @@ Template.customerscard.onRendered(function () {
             $('.fullScreenSpin').css('display', 'none');
         }, 1000);
     });
-    $(document).on('click', '#leadStatus', function (e, li) {
-        const $earch = $(this);
-        const offset = $earch.offset();
-        $('#statusId').val('');
-        const statusDataName = e.target.value || '';
-        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            $('#statusPopModal').modal('toggle');
-        } else {
-            if (statusDataName.replace(/\s/g, '') != '') {
-                $('#newStatusHeader').text('Edit Status');
-                $('#newStatus').val(statusDataName);
-                getVS1Data('TLeadStatusType').then(function (dataObject) {
-                    if (dataObject.length == 0) {
-                        $('.fullScreenSpin').css('display', 'inline-block');
-                        sideBarService.getAllLeadStatus().then(function (data) {
-                            for (let i in data.tleadstatustype) {
-                                if (data.tleadstatustype[i].TypeName === statusDataName) {
-                                    $('#statusId').val(data.tleadstatustype[i].Id);
-                                }
-                            }
-                            $('.fullScreenSpin').css('display', 'none');
-                            $('#newStatusPopModal').modal('toggle');
-                        });
-                    } else {
-                        let data = JSON.parse(dataObject[0].data);
-                        let useData = data.tleadstatustype;
-                        for (let i in useData) {
-                            if (useData[i].TypeName === statusDataName) {
-                                $('#statusId').val(useData[i].Id);
-                            }
-                        }
-                        $('.fullScreenSpin').css('display', 'none');
-                        $('#newStatusPopModal').modal('toggle');
-                    }
-                }).catch(function (err) {
-                    $('.fullScreenSpin').css('display', 'inline-block');
-                    sideBarService.getAllLeadStatus().then(function (data) {
-                        for (let i in data.tleadstatustype) {
-                            if (data.tleadstatustype.hasOwnProperty(i)) {
-                                if (data.tleadstatustype[i].TypeName === statusDataName) {
-                                    $('#statusId').val(data.tleadstatustype[i].Id);
-                                }
-                            }
-                        }
-                        setTimeout(function () {
-                            $('.fullScreenSpin').css('display', 'none');
-                            $('#newStatusPopModal').modal('toggle');
-                        }, 200);
-                    });
-                });
-                setTimeout(function () {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#newStatusPopModal').modal('toggle');
-                }, 200);
+    // $(document).on('click', '#leadStatus', function (e, li) {
+    //     const $earch = $(this);
+    //     const offset = $earch.offset();
+    //     $('#statusId').val('');
+    //     const statusDataName = e.target.value || '';
+    //     if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //         $('#statusPopModal').modal('toggle');
+    //     } else {
+    //         if (statusDataName.replace(/\s/g, '') != '') {
+    //             $('#newStatusHeader').text('Edit Status');
+    //             $('#newStatus').val(statusDataName);
+    //             getVS1Data('TLeadStatusType').then(function (dataObject) {
+    //                 if (dataObject.length == 0) {
+    //                     $('.fullScreenSpin').css('display', 'inline-block');
+    //                     sideBarService.getAllLeadStatus().then(function (data) {
+    //                         for (let i in data.tleadstatustype) {
+    //                             if (data.tleadstatustype[i].TypeName === statusDataName) {
+    //                                 $('#statusId').val(data.tleadstatustype[i].Id);
+    //                             }
+    //                         }
+    //                         $('.fullScreenSpin').css('display', 'none');
+    //                         $('#newStatusPopModal').modal('toggle');
+    //                     });
+    //                 } else {
+    //                     let data = JSON.parse(dataObject[0].data);
+    //                     let useData = data.tleadstatustype;
+    //                     for (let i in useData) {
+    //                         if (useData[i].TypeName === statusDataName) {
+    //                             $('#statusId').val(useData[i].Id);
+    //                         }
+    //                     }
+    //                     $('.fullScreenSpin').css('display', 'none');
+    //                     $('#newStatusPopModal').modal('toggle');
+    //                 }
+    //             }).catch(function (err) {
+    //                 $('.fullScreenSpin').css('display', 'inline-block');
+    //                 sideBarService.getAllLeadStatus().then(function (data) {
+    //                     for (let i in data.tleadstatustype) {
+    //                         if (data.tleadstatustype.hasOwnProperty(i)) {
+    //                             if (data.tleadstatustype[i].TypeName === statusDataName) {
+    //                                 $('#statusId').val(data.tleadstatustype[i].Id);
+    //                             }
+    //                         }
+    //                     }
+    //                     setTimeout(function () {
+    //                         $('.fullScreenSpin').css('display', 'none');
+    //                         $('#newStatusPopModal').modal('toggle');
+    //                     }, 200);
+    //                 });
+    //             });
+    //             setTimeout(function () {
+    //                 $('.fullScreenSpin').css('display', 'none');
+    //                 $('#newStatusPopModal').modal('toggle');
+    //             }, 200);
 
-            } else {
-                $('#statusPopModal').modal();
-                $('#tblStatusPopList_filter .form-control-sm').focus();
-                $('#tblStatusPopList_filter .form-control-sm').val('');
-                $('#tblStatusPopList_filter .form-control-sm').trigger("input");
-            }
-        }
-    });
+    //         } else {
+    //             $('#statusPopModal').modal();
+    //             $('#tblStatusPopList_filter .form-control-sm').focus();
+    //             $('#tblStatusPopList_filter .form-control-sm').val('');
+    //             $('#tblStatusPopList_filter .form-control-sm').trigger("input");
+    //         }
+    //     }
+    // });
     $(document).on('click', '#leadRep', function (e, li) {
         if ($('#employeeListCRMModal').hasClass('show') == false) {
             $('#employeeListCRMModal').modal('show');
@@ -3671,8 +3671,20 @@ Template.customerscard.events({
 
 Template.customerscard.helpers({
     record: () => {
-        let temp = Template.instance().records.get();
-        return temp;
+        let parentRecord = Template.parentData(0).record;
+        if (parentRecord) {
+            return parentRecord;
+        } else {
+            let temp = Template.instance().records.get();
+            let phoneCodes = Template.instance().phoneCodeData.get();
+            if (temp && temp.mobile && temp.country) {
+                let thisCountry = phoneCodes.find(item => {
+                    return item.name == temp.country
+                })
+                temp.mobile = temp.mobile.replace(thisCountry.dial_code, '0')
+            }
+            return temp;
+        }
     },
     phoneCodeList: () => {
         return Template.instance().phoneCodeData.get();
