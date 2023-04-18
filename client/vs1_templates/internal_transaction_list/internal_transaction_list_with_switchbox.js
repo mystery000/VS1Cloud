@@ -2359,7 +2359,6 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
         let lineItemObj = {};
         let chkBox;
         let data_length;
-        console.log(data);
         if(data.length > 25 ) {
             data_length = 25;
         } else {

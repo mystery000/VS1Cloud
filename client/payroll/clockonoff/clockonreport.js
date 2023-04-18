@@ -106,9 +106,7 @@ Template.clockonreport_template.onRendered(function() {
                     let clockon_temp ;
                     let employee_data = empdata;
                     let timesheet_data = timesheet.ttimesheet;
-                    let workorder_data = workorder;
-                    console.log(workorder_data);
-                    
+                    let workorder_data = workorder;          
      
 
                     for(let i = 0; i < employee_data.length ; i++) {
@@ -158,28 +156,17 @@ Template.clockonreport_template.onRendered(function() {
                                 startedTimes = workorder[k].fields.StartedTimes;
                                 stoppedTimes = workorder[k].fields.StoppedTimes;
                                 let clocked_hrs = 0;  
-
-                                console.log(startedTimes);
-                                console.log(stoppedTimes);
-
-                                let currentDate = moment().format('DD/MM/YYYY');
-                                            
+                             
+                                           
                                 for(let k=0; k < stoppedTimes.length; k++) {
 
                                     const startTimeString = startedTimes[k];
                                     const endTimeString = stoppedTimes[k];
-
                                     const hoursDiff = templateObject.getDiffTime(startTimeString, endTimeString);
-
-                                    console.log(hoursDiff);
-
-                                clocked_hrs = clocked_hrs + hoursDiff;
+                                    clocked_hrs = clocked_hrs + hoursDiff;
                                 }
-
                                 process_clocked_time = clocked_hrs;
-
-                                console.log(process_clocked_time);
-
+                                
                             }
                         }
                          
