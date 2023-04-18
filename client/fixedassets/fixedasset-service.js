@@ -52,7 +52,7 @@ export class FixedAssetService extends BaseService {
       ListType: "Detail",
       Search: "[Active]=true"
     };
-    return this.GET(this.ERPObjects.TServiceLogList);
+    return this.getList(this.ERPObjects.TServiceLogList);
   }
 
 
