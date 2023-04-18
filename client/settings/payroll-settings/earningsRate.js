@@ -54,7 +54,7 @@ Template.earningRateSettings.onCreated(function() {
         data.fields.EarningsExemptSuperannuationGuaranteeCont || '',
         data.fields.EarningsReportableW1onActivityStatement || '',
         data.fields.Active == true ? '' : 'In-Active',
-       '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
+    //    '<td contenteditable="false" class="colDeleteEarnings"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>'
     ];
     return dataList;
   }
@@ -71,7 +71,7 @@ Template.earningRateSettings.onCreated(function() {
     { index: 9, label: 'Superannuation Guarantee Contribution', class: 'colEarningsSuperannuation', active: false, display: true, width: "" },
     { index: 10, label: 'Reportable as W1', class: 'colEarningsReportableasW1', active: false, display: true, width: "" },
     { index: 11, label: 'Status', class: 'colStatus', active: true, display: true, width: "50" },
-    { index: 12, label: '', class: 'colDeleteEarnings', active: true, display: true, width: "20" }
+    // { index: 12, label: '', class: 'colDeleteEarnings', active: true, display: true, width: "20" }
   ];
   templateObject.tableheaderrecords4.set(headerStructure4);
 });

@@ -367,7 +367,6 @@ $('#obSuperannuationFund').editableSelect()
         }
         $('#superannuationSettingsModal').modal('toggle');
     });
-
 })
 
 Template.superannuationSettings.events({
@@ -524,7 +523,7 @@ Template.superannuationSettings.events({
                         if (result.value) { }
                     }
                 });
-            }else{
+            } else {
                 $('.fullScreenSpin').css('display', 'none');
                 swal({
                     title: 'Oooops...',
