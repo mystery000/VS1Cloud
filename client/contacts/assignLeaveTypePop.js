@@ -17,16 +17,26 @@ Template.assignLeaveTypePop.onCreated(function () {
 
     templateObject.getDataTableList = function(data) {
         var dataList = [
-            data.ID || "",
-            data.LeaveType || "",
-            data.LeaveCalcMethod || "",
-            data.HoursAccruedAnnually || 0,
-            data.HoursAccruedAnnuallyFullTimeEmp || 0,
-            data.HoursFullTimeEmpFortnightlyPay || 0,
-            data.HoursLeave || 0,
-            data.OpeningBalance || 0,
-            data.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
-            data.Active ? "" : "In-Active",
+            data.fields.ID || "",
+            data.fields.LeaveType || "",
+            data.fields.LeaveCalcMethod || "",
+            data.fields.HoursAccruedAnnually || 0,
+            data.fields.HoursAccruedAnnuallyFullTimeEmp || 0,
+            data.fields.HoursFullTimeEmpFortnightlyPay || 0,
+            data.fields.HoursLeave || 0,
+            data.fields.OpeningBalance || 0,
+            data.fields.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
+            ""
+            // data.ID || "",
+            // data.LeaveType || "",
+            // data.LeaveCalcMethod || "",
+            // data.HoursAccruedAnnually || 0,
+            // data.HoursAccruedAnnuallyFullTimeEmp || 0,
+            // data.HoursFullTimeEmpFortnightlyPay || 0,
+            // data.HoursLeave || 0,
+            // data.OpeningBalance || 0,
+            // data.OnTerminationUnusedBalance ? 'Paid Out': 'Not Paid Out',
+            // data.Active ? "" : "In-Active",
         ];
         return dataList;
     }
