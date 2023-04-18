@@ -42,6 +42,22 @@
                         <h5 class="sectionClosed pointer" style="display: none;"><i class="fas fa-angle-right" style="margin-top: 2px; margin-right: 5px;"></i>[Section 1]</h5>
                     </div> -->
             <div class="col-12 sectionCol1">
+                {{>datatablelist
+                        tableclass="tblProjectTasks"
+                        tablename="tblProjectTasks"
+                        apiName= apiFunction_projectTaskModal
+                        indexeddbname = 'TProjectListReport'
+                        tableheaderrecords = tableheaderrecords_projectTaskModal
+                        exportfilename = 'Project List Report'
+                        istransaction = false
+                        apiParams= apiParams_projectTaskModal
+                        datahandler = datahandler_projectTaskModal
+                        service=service_projectTaskModal
+                        lowercaseDataName='tprojectlistreport'
+                        exIndexDBName = 'ttprojectlistreport'
+                        exdatahandler = exDataHandler_projectTaskModal
+                        searchAPI = searchAPI_projectTaskModal
+                }}
               <table id="tblProjectTasks" name="tblProjectTasks" style="width:100%"
                 class="dataTable table table-hover table-striped table-bordered tblProjectTasks">
                 <thead>

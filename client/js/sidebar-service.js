@@ -2895,6 +2895,7 @@ export class SideBarService extends BaseService {
       options = {
         ListType: "Detail",
         select: "[Active]=true",
+        //Search: "Active=true",
       };
     } else {
       options = {
@@ -2902,11 +2903,13 @@ export class SideBarService extends BaseService {
         OrderBy: "CreationDate desc",
         ListType: "Detail",
         select: "[Active]=true",
+        //Search: "Active=true",
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
     }
-
+    //if(deletefilter) options.Search = "";
+    //return this.getList(this.ERPObjects.TAppointmentList, options);
     return this.getList(this.ERPObjects.TAppointment, options);
   }
 
@@ -4778,4 +4781,35 @@ export class SideBarService extends BaseService {
         });
         return promise;
     }
+
+  getCombinedContacts(limitCount, limitFrom, deleteFilter) {
+    return this.getManualCombinedContacts(deleteFilter);
+
+  }
+  getManualCombinedContacts() {
+    return this.getWowCombinedContacts();
+  }
+  getWowCombinedContacts() {
+    var that = this;
+    var promise = new Promise(function(resolve, reject) {
+      var splashArrayTitleList = [
+        ["Armidale Building Society Limited",""],
+        ["Adelaide Bank Limited",""],
+        ["Test",""],
+      ];
+      resolve({"terpcombinedcontacts" : splashArrayTitleList});
+    });
+    return promise;
+  }
+
+  getBankCode(limitCount, limitFrom, deleteFilter) {
+    let options = {
+      ListType:"Detail",
+      select: "[Active]=true",
+      LimitCount: parseInt(limitCount)||initialReportLoad,
+      LimitFrom: parseInt(limitFrom)||0,
+    };
+    if(deleteFilter) options.select = "";
+    return this.getList(this.ERPObjects.TBankCode, options);
+  }
 }
