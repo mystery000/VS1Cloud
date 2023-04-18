@@ -189,30 +189,13 @@ Template.dashboardexe.onRendered(function() {
     let currentAssetPerc2 = 0;
     let termAssetPerc2 = 0;
 
-    templateObject.setTitleDE = (yy, mm, dd) => {
-        var currentDate = new Date(yy, mm, dd);
-        const monSml0 = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        var currMonth = monSml0[currentDate.getMonth()] + " " + currentDate.getFullYear();
-        templateObject.titleDE.set(currMonth);
+    templateObject.setTitleDE = () => {
+        templateObject.titleDE.set(moment($("#dateTo").val(), "DD/MM/YYYY").format("MMMM YYYY"));
     }
 
-    templateObject.setMonthsOnHeader = (yy, mm, dd) => {
-        var currentDate = new Date(yy, mm, dd);
-        const monSml = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var currMonth1 = "",
-            currMonth2 = "";
-        if (currentDate.getMonth() == 0) {
-            currMonth1 = monSml[10] + " " + (currentDate.getFullYear() - 1);
-            currMonth2 = monSml[11] + " " + (currentDate.getFullYear() - 1);
-        } else if (currentDate.getMonth() == 1) {
-            currMonth1 = monSml[11] + " " + (currentDate.getFullYear() - 1);
-            currMonth2 = monSml[0] + " " + currentDate.getFullYear();
-        } else {
-            currMonth1 = monSml[currentDate.getMonth() - 2] + " " + currentDate.getFullYear();
-            currMonth2 = monSml[currentDate.getMonth() - 1] + " " + currentDate.getFullYear();
-        }
-        templateObject.titleMonth1.set(currMonth1);
-        templateObject.titleMonth2.set(currMonth2);
+    templateObject.setMonthsOnHeader = () => {
+        templateObject.titleMonth1.set(moment($("#dateFrom").val(), "DD/MM/YYYY").format("MMM YYYY"));
+        templateObject.titleMonth2.set(moment($("#dateTo").val(), "DD/MM/YYYY").format("MMM YYYY"));
     }
 
     templateObject.deactivateDraggable = () => {
@@ -603,12 +586,16 @@ Template.dashboardexe.onRendered(function() {
         LoadingOverlay.hide();
     }
     const currentDate = new Date()
-    templateObject.setTitleDE(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
+    templateObject.setTitleDE();
+    templateObject.setMonthsOnHeader();
     var dateAsOf = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
     templateObject.getDashboardExecutiveData(dateAsOf, false);
     chartService.checkChartToDisplay(); // we run this so we load the correct charts to diplay
     templateObject.activateDraggable(); // this will enable charts resiable features
+    $(document).on("change", "#dateFrom, #dateTo", () => {
+        templateObject.setTitleDE();
+        templateObject.setMonthsOnHeader();
+    })
 });
 
 Template.dashboardexe.helpers({
