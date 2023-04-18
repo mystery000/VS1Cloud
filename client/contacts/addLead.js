@@ -44,57 +44,6 @@ Template.leadscard.onCreated(function() {
     templateObject.all_projects = new ReactiveVar([]);
     templateObject.subTasks = new ReactiveVar([]);
     templateObject.taskrecords = new ReactiveVar([]);
-
-    templateObject.tableheaderrecords = new ReactiveVar([]);
-    templateObject.getDataTableList = function(data) {
-        
-        let sort_date = data.MsTimeStamp == "" ? "1770-01-01" : data.MsTimeStamp;
-        sort_date = new Date(sort_date);
-        
-        // let taskLabel = data.TaskLabel;
-        let taskLabelArray = [];
-        // if (taskLabel !== null) {
-        //     if (taskLabel.length === undefined || taskLabel.length === 0) {
-        //         taskLabelArray.push(taskLabel.fields);
-        //     } else {
-        //         for (let j = 0; j < taskLabel.length; j++) {
-        //             taskLabelArray.push(taskLabel[j].fields);
-        //         }
-        //     }
-        // }
-        let taskDescription = data.TaskDescription || '';
-        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
-
-        const dataList = [
-            data.ID || 0,
-            data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
-            data.Position,
-            data.TaskName || '',
-            taskDescription,
-            data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
-            data.Completed ? "Completed" : "",
-            data.Active ? "" : "In-Active",
-            // priority: data.priority || 0,                
-            // projectID: data.ProjectID || '',
-            // projectName: data.ProjectName || '',
-            // labels: taskLabelArray,
-            // category: 'Task',                
-            
-        ];
-        
-        return dataList;
-    }
-    let headerStructure = [
-        { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
-        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
-        { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
-        { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
-        { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
-        { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
-        { index: 6, label: 'Completed', class: 'colCompleteTask', active: true, display: true, width: "120" },
-        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
-    ];
-    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.leadscard.onRendered(function() {
@@ -2698,44 +2647,7 @@ Template.leadscard.helpers({
         return isMobile;
     },
     setLeadStatus: (status) => status || 'Unqualified',
-    setLeadSource: (source) => source || 'Unknown',
-    tableheaderrecords: () => {
-        return Template.instance().tableheaderrecords.get();
-    },
-    apiFunction:function() {
-        let crmService = new CRMService();
-        return crmService.getAllProjectTasksList;
-    },
-
-    searchAPI: function() {
-        let crmService = new CRMService();
-        return crmService.getAllProjectTasksByTaskName;
-    },
-
-    service: ()=>{
-        let crmService = new CRMService();
-        return crmService;
-    },
-
-    datahandler: function () {
-        let templateObject = Template.instance();
-        return function(data) {
-            let dataReturn =  templateObject.getDataTableList(data)
-            return dataReturn
-        }
-    },
-
-    exDataHandler: function() {
-        let templateObject = Template.instance();
-        return function(data) {
-            let dataReturn =  templateObject.getDataTableList(data)
-            return dataReturn
-        }
-    },
-
-    apiParams: function() {
-        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
-    },
+    setLeadSource: (source) => source || 'Unknown'
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {

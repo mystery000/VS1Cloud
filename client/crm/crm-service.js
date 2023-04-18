@@ -37,12 +37,12 @@ export class CRMService extends BaseService {
             ListType: "Detail",
             Search: "pt.Active=true"
         };
-        // if (ContactName) {
-        //     options = {
-        //         ListType: "Detail",
-        //         Search: "pt.Active=true and ContactName='" + ContactName + "'"
-        //     };
-        // }
+        if (ContactName) {
+            options = {
+                ListType: "Detail",
+                Search: "pt.Active=true and ContactName='" + ContactName + "'"
+            };
+        }
         return this.getList(this.ERPObjects.TProjectTasksList, options);
     }
 
@@ -75,45 +75,6 @@ export class CRMService extends BaseService {
                 IgnoreDates: false,
                 DateFrom: '"' + dateFrom + '"',
                 DateTo: '"' + dateTo + '"',
-            };
-        }
-        if(deleteFilter) options.Search = "";
-        return this.getList(this.ERPObjects.Tprojectlist, options);
-    }
-
-    getAllProjectTasksByTaskName(TaskName = '') {
-        var options = {
-            ListType: "Detail",
-            Search: "pt.Active=true"
-        };
-        if (TaskName) {
-            options = {
-                ListType: "Detail",
-                Search: "pt.Active=true and TaskName='" + TaskName + "'"
-            };
-        }
-        return this.getList(this.ERPObjects.TProjectTasksList, options);
-    }
-
-    getAllProjectTasksList(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
-        let options;
-        if (ignoreDate == true) {
-            options = {
-                ListType: "Detail",
-                Search: "pt.Active=true",
-                IgnoreDates: true,
-                LimitCount: parseInt(limitcount)||initialReportLoad,
-                LimitFrom: parseInt(limitfrom)||0,
-            };
-        } else {
-            options = {
-                ListType: "Detail",
-                Search: "pt.Active=true",
-                IgnoreDates: false,
-                DateFrom: '"' + dateFrom + '"',
-                DateTo: '"' + dateTo + '"',
-                LimitCount: parseInt(limitcount)||initialReportLoad,
-                LimitFrom: parseInt(limitfrom)||0,
             };
         }
         if(deleteFilter) options.Search = "";

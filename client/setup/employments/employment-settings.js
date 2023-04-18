@@ -6,9 +6,7 @@ import "../../lib/global/indexdbstorage.js";
 import LoadingOverlay from "../../LoadingOverlay";
 import { UtilityService } from "../../utility-service";
 import { ContactService } from "../../contacts/contact-service";
-
-import {SideBarService} from "../../js/sidebar-service";
-
+import { SideBarService } from '../../js/sidebar-service';
 
 const utilityService = new UtilityService();
 const contactService = new ContactService();
@@ -16,7 +14,7 @@ let sideBarService = new SideBarService();
 
 
 Template.wizard_employment.onCreated(() => {
-  let templateObject = Template.instance();
+  const templateObject = Template.instance();
   templateObject.selectedFile = new ReactiveVar();
   templateObject.currentEmployees = new ReactiveVar([]);
   templateObject.editableEmployee = new ReactiveVar();
@@ -49,17 +47,17 @@ Template.wizard_employment.onCreated(() => {
     return dataList;
 }
 
-// let headerStructure = [
-//     {index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10"},
-//     {index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200"},
-//     {index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100"},
-//     {index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100"},
-//     {index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
-//     {index: 5, label: 'Email', class: 'colEmail', active: true, display: true, width: "200"},
-//     {index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
-//
-// ];
-// templateObject.tableheaderrecords.set(headerStructure);
+let headerStructure = [
+    {index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10"},
+    {index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200"},
+    {index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "100"},
+    {index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "100"},
+    {index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95"},
+    {index: 5, label: 'Email', class: 'colEmail', active: true, display: true, width: "200"},
+    {index: 6, label: 'Status', class: 'colStatus', active: true, display: true, width: "120"},
+   
+];
+templateObject.tableheaderrecords.set(headerStructure);
 
   // templateObject.getEmployeeProfileImageData = function (employeeName) {
   //   const contactService = new ContactService();
@@ -78,48 +76,6 @@ Template.wizard_employment.onCreated(() => {
   //     }
   //   });
   // };
-
-  templateObject.tableheaderrecords = new ReactiveVar([]);
-  templateObject.getDataTableList = function(data) {
-    var dataList = [
-      data.EmployeeID || "",
-      data.EmployeeName || "",
-      data.FirstName || "",
-      data.LastName || "",
-      data.Phone || "",
-      data.Mobile || '',
-      data.Email || '',
-      data.DefaultClassName || '',
-      data.CustFld1 || '',
-      data.CustFld2 || '',
-      data.Street || "",
-      data.Street2 || "",
-      data.State || "",
-      data.Postcode || "",
-      data.Country || "",
-      data.Active ? "" : "In-Active",
-    ];
-    return dataList;
-  }
-  let headerStructure = [
-    { index: 0, label: 'Emp #', class: 'colEmployeeNo', active: false, display: true, width: "10" },
-    { index: 1, label: 'Employee Name', class: 'colEmployeeName', active: true, display: true, width: "200" },
-    { index: 2, label: 'First Name', class: 'colFirstName', active: true, display: true, width: "120" },
-    { index: 3, label: 'Last Name', class: 'colLastName', active: true, display: true, width: "120" },
-    { index: 4, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
-    { index: 5, label: 'Mobile', class: 'colMobile', active: false, display: true, width: "110" },
-    { index: 6, label: 'Email', class: 'colEmail', active: true, display: true, width: "110" },
-    { index: 7, label: 'Department', class: 'colDepartment', active: true, display: true, width: "110" },
-    { index: 8, label: 'Custom Field 1', class: 'colCustFld1', active: false, display: true, width: "100" },
-    { index: 9, label: 'Custom Field 2', class: 'colCustFld2', active: false, display: true, width: "100" },
-    { index: 10, label: 'Address', class: 'colAddress', active: true, display: true, width: "110" },
-    { index: 11, label: 'City/Suburb', class: 'colSuburb', active: false, display: true, width: "110" },
-    { index: 12, label: 'State', class: 'colState', active: false, display: true, width: "110" },
-    { index: 13, label: 'Postcode', class: 'colPostcode', active: false, display: true, width: "110" },
-    { index: 14, label: 'Country', class: 'colCountry', active: false, display: true, width: "110" },
-    { index: 15, label: "Status", class: "colStatus", width: "120", active: true, display: true },
-  ];
-  templateObject.tableheaderrecords.set(headerStructure);
 
 })
 
@@ -143,44 +99,66 @@ Template.wizard_employment.helpers({
   editableEmployee: () => {
     return Template.instance().editableEmployee.get();
   },
-
+  datatablerecords: () => {
+    return Template.instance().datatablerecords.get().sort(function (a, b) {
+        if (a.employeename == 'NA') {
+            return 1;
+        } else if (b.employeename == 'NA') {
+            return -1;
+        }
+        return (a.employeename.toUpperCase() > b.employeename.toUpperCase()) ? 1 : -1;
+    });
+  },
   tableheaderrecords: () => {
-    return Template.instance().tableheaderrecords.get();
+      return Template.instance().tableheaderrecords.get();
   },
-  apiFunction:function() {
-    let sideBarService = new SideBarService();
-    return sideBarService.getAllTEmployeeList;
+  isSetupFinished: () => {
+      return Template.instance().setupFinished.get();
+  },
+  getSkippedSteps() {
+      let setupUrl = localStorage.getItem("VS1Cloud_SETUP_SKIPPED_STEP") || JSON.stringify().split();
+      return setupUrl[1];
+  },
+  // custom fields displaysettings
+  displayfields: () => {
+      return Template.instance().displayfields.get();
+  },
+  employees: () => Template.instance().employees.get(),
+
+  apiFunction: function () {
+      let sideBarService = new SideBarService();
+      return sideBarService.getAllTEmployeeList;
   },
 
-  searchAPI: function() {
-    let sideBarService = new SideBarService();
-    return sideBarService.getNewEmployeeByNameOrID;
+  searchAPI: function () {
+      return sideBarService.getAllEmployeesDataVS1ByName;
   },
 
-  service: ()=> {
+  service: () => {
       let sideBarService = new SideBarService();
       return sideBarService;
+
   },
 
   datahandler: function () {
-    let templateObject = Template.instance();
-    return function(data) {
-      let dataReturn =  templateObject.getDataTableList(data)
-      return dataReturn
-    }
+      let templateObject = Template.instance();
+      return function (data) {
+          let dataReturn = templateObject.getDataTableList(data)
+          return dataReturn
+      }
   },
 
-  exDataHandler: function() {
-    let templateObject = Template.instance();
-    return function(data) {
-      let dataReturn =  templateObject.getDataTableList(data)
-      return dataReturn
-    }
+  exDataHandler: function () {
+      let templateObject = Template.instance();
+      return function (data) {
+          let dataReturn = templateObject.getDataTableList(data)
+          return dataReturn
+      }
   },
 
-  apiParams: function() {
+  apiParams: function () {
     return ['limitCount', 'limitFrom', 'deleteFilter'];
-  },
+},
 })
 Template.wizard_employment.events({
   "click .btnSaveEmpPop"(e){

@@ -6,7 +6,6 @@ import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
-import { Template } from 'meteor/templating';
 
 import './supplierAwaitingPurchaseOrder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -19,119 +18,6 @@ Template.supplierawaitingpurchaseorder.onCreated(function () {
     templateObject.datatablerecords = new ReactiveVar([]);
     templateObject.tableheaderrecords = new ReactiveVar([]);
     templateObject.selectedAwaitingPayment = new ReactiveVar([]);
-
-    templateObject.getDataTableList = function(data) {
-        let supplierID;
-        var currenturl = window.location.href;
-        if (currenturl.indexOf("supplierawaitingpurchaseorder?id=") > 0) {
-            newurl = new URL(currenturl);
-            supplierID = ( !isNaN(newurl.searchParams.get("id")) )? newurl.searchParams.get("id") : 0;
-        }
-
-        if (data.Type == "Credit") {
-            totalPaidCal = data['Total Amount (Inc)'] + data.Balance;
-        } else {
-            totalPaidCal = data['Total Amount (Inc)'] - data.Balance;
-        }
-
-        let amount = utilityService.modifynegativeCurrencyFormat(data['Total Amount (Inc)']) || 0.00;
-        let applied = utilityService.modifynegativeCurrencyFormat(totalPaidCal) || 0.00;
-        // Currency+''+data.tpurchaseorder[i].TotalTax.toLocaleString(undefined, {minimumFractionDigits: 2});
-        let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
-        let totalPaid = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
-        let totalOutstanding = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
-        if (data.Type == "Credit") {
-           totalOutstanding = utilityService.modifynegativeCurrencyFormat(data['Total Amount (Inc)']) || 0.00;
-        }
-        let totalOrginialAmount = utilityService.modifynegativeCurrencyFormat(data['Total Amount (Inc)']) || 0.00;
-        //if (data.Balance != 0) {
-        var dueDateCal = new Date(data.DueDate);
-        var currentDateCal = new Date();
-        let overDueDays = 0;
-        let overDueDaysText = '';
-        let overDueType = 'text-Green';
-
-        if (dueDateCal < currentDateCal) {
-            overDueDays = Math.round((currentDateCal-dueDateCal)/(1000*60*60*24));
-            if(overDueDays > 0){
-            if(overDueDays == 1){
-              overDueDaysText = overDueDays + ' Day';
-            }else{
-              overDueDaysText = overDueDays + ' Days';
-            }
-            if(overDueDays <= 30){
-              overDueType = 'text-Yellow';
-            }else if(overDueDays <= 60){
-              overDueType = 'text-Orange';
-            }else{
-              overDueType = 'text-deleted';
-            }
-          }
-        }
-            if ((data.Type == "Purchase Order") || (data.Type == "Bill") || (data.Type == "Credit")) {
-                var dataList = [
-                    `<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-${data.PurchaseOrderID}" value="${totalOutstanding}"><label class="custom-control-label chkBox pointer" for="formCheck-${data.PurchaseOrderID}"></label></div>`,
-                    overDueDaysText,
-                    data.OrderDate != '' ? moment(data.OrderDate).format("YYYY/MM/DD") : data.OrderDate,
-                    data.OrderDate != '' ? moment(data.OrderDate).format("DD/MM/YYYY") : data.OrderDate,
-                    data.Company || '',
-                    data.PurchaseOrderID || '',
-                    data.InvoiceNumber || '',
-                    applied || 0.00,
-                    totalOrginialAmount || 0.00,
-                    totalOutstanding || 0.00,
-                    data.Type || '',
-                    data.Comments || '',
-                    data.Deleted ? "Deleted" : "",
-                    {/* sortdate: data.OrderDate != '' ? moment(data.OrderDate).format("YYYY/MM/DD") : data.OrderDate,
-                    paymentdate: data.OrderDate != '' ? moment(data.OrderDate).format("DD/MM/YYYY") : data.OrderDate,
-                    customername: data.Company || '',
-                    paymentamount: amount || 0.00,
-                    applied: applied || 0.00,
-                    balance: balance || 0.00,
-                    originalamount: totalOrginialAmount || 0.00,
-                    outsandingamount: totalOutstanding || 0.00,
-                    ponumber: data.PurchaseOrderID || '',
-                    // department: data.tpurchaseorder[i].SaleClassName || '',
-                    refno: data.InvoiceNumber || '',
-                    paymentmethod: '' || '',
-                    notes: data.Comments || '',
-                    type: data.Type || '',
-                    overduedays:overDueDaysText,
-                    overduetype:overDueType, */}
-                ];
-                //&& (data.tpurchaseorder[i].Invoiced == true)
-                if ((data.TotalBalance != 0) && (data.Deleted == false) ) {
-                    if( supplierID != 0 ){
-                        if( supplierID == data.ClientID ){
-                            return dataList;
-                        }
-                    }else{
-                        return dataList;
-                    }
-                }
-            }
-        //}
-    
-        return dataList;
-    }
-
-    let headerStructure = [
-        {index: 0, label: "", class: "chkBox", width: "15", active: true, display: true},
-        {index: 1, label: "Overdue", class: "colOverdueDays", width: "80", active: true, display: true},
-        {index: 2, label: "id", class: "colSortDate", width: "110", active: false, display: true},
-        {index: 3, label: "Date", class: "colPaymentDate", width: "110", active: true, display: true},
-        {index: 4, label: "Supplier Name", class: "colSupplierName", width: "200", active: true, display: true},
-        {index: 5, label: "Order No.", class: "colPaymentId", width: "80", active: true, display: true},
-        {index: 6, label: "Ref No.", class: "colReceiptNo", width: "110", active: true, display: true},
-        {index: 7, label: "Paid", class: "colPaymentAmount", width: "110", active: true, display: true},
-        {index: 8, label: "Original", class: "colApplied", width: "80", active: false, display: true},
-        {index: 9, label: "Outstanding", class: "colBalance", width: "110", active: true, display: true},
-        {index: 10, label: "Type", class: "colType", width: "80", active: true, display: true},
-        {index: 11, label: "Comments", class: "colNotes", width: "300", active: true, display: true},
-        {index: 12, label: "Status", class: "colStatus", width: "120", active: true, display: true},
-    ];
-    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.supplierawaitingpurchaseorder.onRendered(function () {
@@ -2301,10 +2187,10 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
       //addVS1Data('TAwaitingSupplierPaymentType', []);
       }
       setTimeout(function () {
-        //templateObject.getAllSupplierPaymentDataType();
+        templateObject.getAllSupplierPaymentDataType();
       }, 500);
     }else{
-      //templateObject.getAllSupplierPaymentData();
+      templateObject.getAllSupplierPaymentData();
     }
 
     $('#tblSupplierAwaitingPO tbody').on('click', 'tr .colPaymentDate, tr .colReceiptNo, tr .colPaymentAmount, tr .colApplied, tr .colBalance, tr .colSupplierName, tr .colDepartment, tr .colRefNo, tr .colPaymentMethod, tr .colNotes', function () {
@@ -2371,24 +2257,6 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
         }
     }
 
-    $(document).ready(function() {
-        setTimeout(function(){
-            jQuery('th.chkBox').removeClass('sorting');
-            jQuery('th.chkBox').append('<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard" type="checkbox" id="chkAll"><label class="custom-control-label chkBox pointer"></label></div>');
-            jQuery('#chkAll')[0].addEventListener('change', function() {
-                var eLen = jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer').length;
-                if (this.checked) {
-                    // jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer').click();
-                    for(var i = 0; i < eLen; i++)
-                        jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer')[i].checked = true;
-                } else {
-                    // jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer').click();
-                    for(var i = 0; i < eLen; i++)
-                        jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer')[i].checked = false;
-                }
-            });
-        }, 2000);
-    });
 });
 
 Template.supplierawaitingpurchaseorder.events({
@@ -2604,7 +2472,25 @@ Template.supplierawaitingpurchaseorder.events({
       $('#dateTo').attr('readonly', true);
       templateObject.getAllFilterAwaitingSuppData('', '', true);
   },
-    
+    'click .chkDatatable': function (event) {
+        var columns = $('#tblSupplierAwaitingPO th');
+        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+
+        $.each(columns, function (i, v) {
+            let className = v.classList;
+            let replaceClass = className[1];
+
+            if (v.innerText == columnDataValue) {
+                if ($(event.target).is(':checked')) {
+                    $("." + replaceClass + "").css('display', 'table-cell');
+                    $("." + replaceClass + "").css('padding', '.75rem');
+                    $("." + replaceClass + "").css('vertical-align', 'top');
+                } else {
+                    $("." + replaceClass + "").css('display', 'none');
+                }
+            }
+        });
+    },
      'keyup #tblSupplierAwaitingPO_filter input': function (event) {
         if($(event.target).val() != ''){
             $(".btnRefreshSupplierAwaiting").addClass('btnSearchAlert');
@@ -2758,6 +2644,157 @@ Template.supplierawaitingpurchaseorder.events({
     },
     'click .btnPaymentList': function() {
         FlowRouter.go('/supplierpayment');
+    },
+    'click .resetTable': function (event) {
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
+        if (getcurrentCloudDetails) {
+            if (getcurrentCloudDetails._id.length > 0) {
+                var clientID = getcurrentCloudDetails._id;
+                var clientUsername = getcurrentCloudDetails.cloudUsername;
+                var clientEmail = getcurrentCloudDetails.cloudEmail;
+                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblSupplierAwaitingPO' });
+                if (checkPrefDetails) {
+                    CloudPreference.remove({ _id: checkPrefDetails._id }, function (err, idTag) {
+                        if (err) {
+
+                        } else {
+                            Meteor._reload.reload();
+                        }
+                    });
+
+                }
+            }
+        }
+    },
+    'click .saveTable': function (event) {
+        let lineItems = [];
+        //let datatable =$('#tblSupplierAwaitingPO').DataTable();
+        $('.columnSettings').each(function (index) {
+            var $tblrow = $(this);
+            var colTitle = $tblrow.find(".divcolumn").text() || '';
+            var colWidth = $tblrow.find(".custom-range").val() || 0;
+            var colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+            var colHidden = false;
+            if ($tblrow.find(".custom-control-input").is(':checked')) {
+                colHidden = false;
+            } else {
+                colHidden = true;
+            }
+            let lineItemObj = {
+                index: index,
+                label: colTitle,
+                hidden: colHidden,
+                width: colWidth,
+                thclass: colthClass
+            }
+
+            lineItems.push(lineItemObj);
+        });
+        //datatable.state.save();
+
+        var getcurrentCloudDetails = CloudUser.findOne({ _id: localStorage.getItem('mycloudLogonID'), clouddatabaseID: localStorage.getItem('mycloudLogonDBID') });
+        if (getcurrentCloudDetails) {
+            if (getcurrentCloudDetails._id.length > 0) {
+                var clientID = getcurrentCloudDetails._id;
+                var clientUsername = getcurrentCloudDetails.cloudUsername;
+                var clientEmail = getcurrentCloudDetails.cloudEmail;
+                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblSupplierAwaitingPO' });
+                if (checkPrefDetails) {
+                    CloudPreference.update({ _id: checkPrefDetails._id }, {
+                        $set: {
+                            userid: clientID, username: clientUsername, useremail: clientEmail,
+                            PrefGroup: 'salesform', PrefName: 'tblSupplierAwaitingPO', published: true,
+                            customFields: lineItems,
+                            updatedAt: new Date()
+                        }
+                    }, function (err, idTag) {
+                        if (err) {
+                            $('#myModal2').modal('toggle');
+                        } else {
+                            $('#myModal2').modal('toggle');
+                        }
+                    });
+
+                } else {
+                    CloudPreference.insert({
+                        userid: clientID, username: clientUsername, useremail: clientEmail,
+                        PrefGroup: 'salesform', PrefName: 'tblSupplierAwaitingPO', published: true,
+                        customFields: lineItems,
+                        createdAt: new Date()
+                    }, function (err, idTag) {
+                        if (err) {
+                            $('#myModal2').modal('toggle');
+                        } else {
+                            $('#myModal2').modal('toggle');
+
+                        }
+                    });
+
+                }
+            }
+        }
+        $('#myModal2').modal('toggle');
+        //Meteor._reload.reload();
+    },
+    'blur .divcolumn': function (event) {
+        let columData = $(event.target).text();
+
+        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+
+        var datable = $('#tblSupplierAwaitingPO').DataTable();
+        var title = datable.column(columnDatanIndex).header();
+        $(title).html(columData);
+
+    },
+    'change .rngRange': function (event) {
+        let range = $(event.target).val();
+        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
+
+        // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
+        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+        var datable = $('#tblSupplierAwaitingPO th');
+        $.each(datable, function (i, v) {
+
+            if (v.innerText == columnDataValue) {
+                let className = v.className;
+                let replaceClass = className.replace(/ /g, ".");
+                $("." + replaceClass + "").css('width', range + 'px');
+
+            }
+        });
+
+    },
+    'click .btnOpenSettings': function (event) {
+        let templateObject = Template.instance();
+        var columns = $('#tblSupplierAwaitingPO th');
+
+        const tableHeaderList = [];
+        let sTible = "";
+        let sWidth = "";
+        let sIndex = "";
+        let sVisible = "";
+        let columVisible = false;
+        let sClass = "";
+        $.each(columns, function (i, v) {
+            if (v.hidden == false) {
+                columVisible = true;
+            }
+            if ((v.className.includes("hiddenColumn"))) {
+                columVisible = false;
+            }
+            sWidth = v.style.width.replace('px', "");
+
+            let datatablerecordObj = {
+                sTitle: v.innerText || '',
+                sWidth: sWidth || '',
+                sIndex: v.cellIndex || 0,
+                sVisible: columVisible || false,
+                sClass: v.className || ''
+            };
+            tableHeaderList.push(datatablerecordObj);
+        });
+
+        templateObject.tableheaderrecords.set(tableHeaderList);
     },
     'click #exportbtn': function () {
 
@@ -3138,39 +3175,5 @@ Template.supplierawaitingpurchaseorder.helpers({
     },
     salesCloudPreferenceRec: () => {
         return CloudPreference.findOne({ userid: localStorage.getItem('mycloudLogonID'), PrefName: 'tblSupplierAwaitingPO' });
-    },
-    apiFunction:function() {
-        let sideBarService = new SideBarService();
-        return sideBarService.getAllAwaitingSupplierPayment;
-    },
-
-    searchAPI: function() {
-        return sideBarService.getAllAwaitingSupplierPayment;
-    },
-
-    service: ()=>{
-        let sideBarService = new SideBarService();
-        return sideBarService;
-
-    },
-
-    datahandler: function () {
-        let templateObject = Template.instance();
-        return function(data) {
-            let dataReturn =  templateObject.getDataTableList(data)
-            return dataReturn
-        }
-    },
-
-    exDataHandler: function() {
-        let templateObject = Template.instance();
-        return function(data) {
-            let dataReturn =  templateObject.getDataTableList(data)
-            return dataReturn
-        }
-    },
-
-    apiParams: function() {
-      return ["dateFrom", "dateTo", "ignoredate", "limitCount", "limitFrom", 'deleteFilter'];
-    },
+    }
 });
