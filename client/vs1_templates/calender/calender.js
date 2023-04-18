@@ -675,7 +675,9 @@ Template.calender.onRendered(function() {
             click: async function() {
                 $(".fullScreenSpin").css("display", "inline-block");
                 await templateObject.saveUpdatedEvents();
-                templateObject.fetchAppointments();
+                setTimeout(() => {
+                    templateObject.fetchAppointments();
+                }, 1000);
             },
         },
     };
@@ -1406,6 +1408,7 @@ Template.calender.onRendered(function() {
     }
 
     function renderEventContent(event){
+        const pattern = /leave/;
         let leaveemployeerecords = templateObject.leaveemployeerecords.get();
                 let eventLeave  = [];
                 let eventStatus = [];
@@ -1414,24 +1417,30 @@ Template.calender.onRendered(function() {
                     eventLeave[item.EmployeeID]  = item.LeaveMethod;
                     eventStatus[item.EmployeeID] = item.Status;
                 });
+        let title = document.createElement("p");
+        if(pattern.test(event.event._def.publicId)){
+            var empid = event.event._def.publicId.split(':')[1];
+            if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
+                let newTitle = "<div><p style='font-size:24px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
+                $(title).append(newTitle);
+                title.style.color = "#dddddd";
+                title.style.rotate = '-90deg';
+                title.style.width = '100%';
+                title.style.height = '100%';
+                title.style.display = 'flex';
+                title.style.alignItems = 'center';
+                title.style.justifyContent = 'center';
+            }
+        } else {
+            title.innerHTML = event.timeText + " " + event.event.title;
+            title.style.backgroundColor = event.backgroundColor;
+            title.style.color = "#ffffff";
+        }
 
-                let title = document.createElement("p");
-                if (event.timeText != '') {
-                    title.innerHTML = event.timeText + " " + event.event.title;
-                    title.style.backgroundColor = event.backgroundColor;
-                    title.style.color = "#ffffff";
-                } else {
-                    var empid = event.event._def.publicId.split(':')[1];
-                    if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                        $(title).append( "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>");
-                        title.style.color = "#dddddd";
-                    }
-                }
-
-                let arrayOfDomNodes = [title];
-                return {
-                    domNodes: arrayOfDomNodes,
-                };
+        let arrayOfDomNodes = [title];
+        return {
+            domNodes: arrayOfDomNodes,
+        };
     }
 
     templateObject.renderNormalCalendar = function(slotMin, slotMax, hideDays) {
@@ -1535,7 +1544,7 @@ Template.calender.onRendered(function() {
                 renderEventDidMount(info)
             },
             eventContent: function(event) {
-                renderEventContent(event)
+                return renderEventContent(event)
             },
             eventResize: function(info) {
                renderEventDropAndResize(info)
@@ -2340,16 +2349,29 @@ Template.calender.onRendered(function() {
                 appColor = "#00a3d3";
                 leaveEmpName = "";
             }
-
-            dataList = {
-                id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
-                title: leaveEmpName,
-                start: leaveemployeerecords[i].StartDate || "",
-                end: leaveemployeerecords[i].EndDate || "",
-                description: leaveemployeerecords[i].Description || "",
-                color: appColor,
-            };
-            eventData.push(dataList);
+            if (JSON.parse(seeOwnAppointments) == true) {
+                if (leaveemployeerecords[i].EmployeeName == mySessionEmployee) {
+                    dataList = {
+                        id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                        title: leaveEmpName,
+                        start: leaveemployeerecords[i].StartDate || "",
+                        end: leaveemployeerecords[i].EndDate || "",
+                        description: leaveemployeerecords[i].Description || "",
+                        color: appColor,
+                    };
+                    eventData.push(dataList);
+                }
+            }else{
+                dataList = {
+                    id: "leave:" + leaveemployeerecords[i].EmployeeID + ":" + leaveemployeerecords[i].ID,
+                    title: leaveEmpName,
+                    start: leaveemployeerecords[i].StartDate || "",
+                    end: leaveemployeerecords[i].EndDate || "",
+                    description: leaveemployeerecords[i].Description || "",
+                    color: appColor,
+                };
+                eventData.push(dataList);
+            }
         }
         templateObject.appointmentrecords.set(appointmentList);
         templateObject.eventdata.set(eventData);

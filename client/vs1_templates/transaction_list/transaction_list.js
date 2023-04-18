@@ -2140,6 +2140,7 @@ Template.transaction_list.onRendered(function() {
     }
 
     templateObject.displayTimeSheetListData = function(data){
+     
         var currentBeginDate = new Date();
         var begunDate = moment(currentBeginDate).format("DD/MM/YYYY");
         let fromDateMonth = (currentBeginDate.getMonth() + 1);
@@ -2474,14 +2475,13 @@ Template.transaction_list.onRendered(function() {
         let bomData;
         let tempData;
 
-
         for (let t = 0; t < workorderdata.length; t++) {
-
               bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
-              
+            
               let bomdetails = JSON.parse(bomData.Details);
 
               for(let i = 0; i < bomdetails.length; i++) {
+                
                 if(bomdetails[i].process != '' ){
                     tempData = [
                         '',

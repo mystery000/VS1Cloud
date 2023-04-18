@@ -9,68 +9,42 @@
                 <div class="modal-body">
                     <input type="hidden" style="width: 100%; display:none;" id="assignLeaveTypeID" name="assignLeaveTypeID" />
                     <div class="card-body p-1 rounded">
-                        <div class="table-responsive">
+   
+                            <!--
                             {{>datatablelist
                                     tableclass="tblAssignLeaveTypes"
                                     tablename=tablename
                                     apiName= apiFunction
-                                    indexeddbname = 'TAssignLeaveType'
+                                    indexeddbname = 'TAssignLeaveTypeList'
                                     tableheaderrecords = tableheaderrecords
                                     exportfilename = 'Assign Leave List'
                                     istransaction = false
                                     apiParams= apiParams
                                     datahandler = datahandler
                                     service=service
-                                    lowercaseDataName='tassignleavetype'
-                                    exIndexDBName = 'tassignleavetype'
+                                    lowercaseDataName='tassignleavetypelist'
+                                    exIndexDBName = 'tassignleavetypelist'
                                     exdatahandler = exDataHandler
                                     searchAPI = searchAPI
                             }}
-<!--                            <table id="tblAssignLeaveTypes" style="width:100%" class="table table-striped table-bordered">-->
-<!--                                <thead>-->
-<!--                                    <tr class="dnd-moved">-->
-<!--                                        <th class="th colALTypeID hiddenColumn">Assign Leave ID</th>-->
-<!--                                        <th class="th colALTypeLeave">Leave</th>-->
-<!--                                        <th class="th colALTypeLeaveCalMethod">Leave Calculation Method</th>-->
-<!--                                        <th class="th colALTypeHoursAccruedAnnually">Hours accrued annually</th>-->
-<!--                                        <th class="th colALTypeHoursAccruedAnnuallyFullTimeEmp">Hours accrued annually full time employee</th>-->
-<!--                                        <th class="th colALTypeHoursFullTimeEmpFortnightlyPay">Hours a full-time employee works in a Fortnightly pay Period</th>-->
-<!--                                        <th class="th colALTypeHours">Hours</th>-->
-<!--                                        <th class="th colALTypeOpeningBalance">Opening Balance</th>-->
-<!--                                        <th class="th colALTypeTerminationBalance">On termination Balance</th>-->
-<!--                                        <th class="th colALTypeActions">Actions</th>-->
-
-<!--                                    </tr>-->
-<!--                                </thead>-->
-<!--                                .-->
-<!--                                <tbody> -->
-<!--                                    {{#if leaveTypesList}}-->
-<!--                                        {{#each leaveType in leaveTypesList}}-->
-<!--                                            <tr  leaveType-id="{{leaveType.fields.ID}}" -->
-<!--                                                 leave-type-name="{{leaveType.fields.LeaveType}}" -->
-<!--                                                 col-type-balance="{{leaveType.fields.HoursLeave}}" -->
-<!--                                                 class="colALType">-->
-<!--                                                <td class="colALTypeID hiddenColumn">-->
-<!--                                                    {{leaveType.fields.ID}}-->
-<!--                                                    <input type="hidden" class="coledtEmpID" value="{{leaveType.fields.ID}}">-->
-<!--                                                </td>-->
-<!--                                                <td >{{leaveType.fields.LeaveType}}</td>-->
-<!--                                                <td >{{leaveType.fields.LeaveCalcMethod}}</td>-->
-<!--                                                <td >{{leaveType.fields.HoursAccruedAnnually}}</td>-->
-<!--                                                <td >{{leaveType.fields.HoursAccruedAnnuallyFullTimeEmp}}</td>-->
-<!--                                                <td >{{leaveType.fields.HoursFullTimeEmpFortnightlyPay}}</td>-->
-<!--                                                <td >{{leaveType.fields.HoursLeave}}</td>-->
-<!--                                                <td >{{leaveType.fields.OpeningBalance}}</td>-->
-<!--                                                <td >{{ terminationBalance leaveType.fields.OnTerminationUnusedBalance}}</td>-->
-<!--                                                <td >-->
-<!--                                                    <button type="button" style="margin-bottom: 24px;" class="btn btn-danger btn-rounded btn-sm btnDeleteAssignLeaveType" id="btnDeleteAssignLeaveType" data-id="{{leaveType.fields.ID}}"><i class="fa fa-remove"></i></button>-->
-<!--                                                </td>-->
-<!--                                            </tr>-->
-<!--                                        {{/each}} -->
-<!--                                    {{/if}}-->
-<!--                                </tbody>-->
-<!--                            </table>-->
-                        </div>
+                        -->
+                        {{>datatablelist
+                            tableclass="tblAssignLeaveTypes"
+                            tablename=tablename
+                            apiName= apiFunction
+                            indexeddbname = 'TAssignLeaveType'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Assign Leave List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tassignleavetype'
+                            exIndexDBName = 'tassignleavetype'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                    }}
+                        
                     </div>
                 </div>
                 <div class="modal-footer">
