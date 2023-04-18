@@ -468,8 +468,7 @@ openDb = function (dbName) {
       db.createObjectStore("TVS1ClockOnReport", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1EmployeeClockStatus", {keyPath: "EmployeeEmail" });
       db.createObjectStore("TVS1BuildCostReport", {keyPath: "EmployeeEmail" });
-
-
+      db.createObjectStore("TClockOnStatus", {keyPath: "EmployeeEmail" });
 
 
 

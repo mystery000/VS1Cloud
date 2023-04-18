@@ -181,7 +181,7 @@ Template.process_clock_template.onRendered(function() {
     
                 for (let t = 0; t < workorderdata.length; t++) {
                     bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);         
-                    
+                    console.log(bomData);
                     let bomdetails = JSON.parse(bomData.Details);
 
                     for(let i = 0; i < bomdetails.length; i++) {
