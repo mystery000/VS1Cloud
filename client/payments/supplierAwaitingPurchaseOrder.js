@@ -2374,7 +2374,19 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
     $(document).ready(function() {
         setTimeout(function(){
             jQuery('th.chkBox').removeClass('sorting');
-            jQuery('th.chkBox').append('<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" ><label class="custom-control-label chkBox pointer"></label></div>');
+            jQuery('th.chkBox').append('<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard" type="checkbox" id="chkAll"><label class="custom-control-label chkBox pointer"></label></div>');
+            jQuery('#chkAll')[0].addEventListener('change', function() {
+                var eLen = jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer').length;
+                if (this.checked) {
+                    // jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer').click();
+                    for(var i = 0; i < eLen; i++)
+                        jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer')[i].checked = true;
+                } else {
+                    // jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer').click();
+                    for(var i = 0; i < eLen; i++)
+                        jQuery('input.custom-control-input.chkBox.chkPaymentCard.pointer')[i].checked = false;
+                }
+            });
         }, 2000);
     });
 });
