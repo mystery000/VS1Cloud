@@ -494,59 +494,8 @@
                                                 .table-responsive {
                                                     overflow-x: visible !important;
                                                 }
-                                                #tblPayCalendars .colPayCalendarName{
-                                                    width: 25%!important;
-                                                }
-                                                #tblPayCalendars .colPayPeriod{
-                                                    width: 20%!important;
-                                                }
-                                                #tblPayCalendars .colNextPayPeriod{
-                                                    width: 10%!important;
-                                                }
-                                                #tblPayCalendars .colNextPaymentDate{
-                                                    width: 10%!important;
-                                                }
                                                 #tblPayCalendars .colStatus{
                                                     width: 120px !important;
-                                                }
-                                                #tblPayCalendars .colAction{
-                                                    width: 1%!important;
-                                                    overflow: unset !important;
-                                                }
-                                                #tblPayCalendars .dropdown-menu {
-                                                    left: -40px !important;
-                                                    top: 90% !important;
-                                                    transform: translate3d(45px, 0px, 0px) !important;
-                                                }
-                                                #tblPayCalendars .dropdown button {
-                                                    display: flex;
-                                                    justify-content: center;
-                                                    align-items: center;
-                                                    background: none !important;
-                                                    border: none !important;
-                                                    border-radius: 50%;
-                                                    outline: none !important;
-                                                    color: #e3e6f0 !important;
-                                                }
-                                                #tblPayCalendars .dropdown button:hover {
-                                                    background-color: #ccc !important;
-                                                    border-color: black !important;
-                                                    color: black !important;
-                                                }
-                                                #tblPayCalendars .dropdown button:focus {
-                                                    box-shadow: none !important;
-                                                }
-                                                #tblPayCalendars .dropdown-toggle:after {
-                                                    display: none !important;
-                                                }
-                                                #tblPayCalendars .dropdown-item {
-                                                    font-size: 20px;
-                                                }
-                                                #tblPayCalendars .dropdown-item:hover {
-                                                    border: 1px solid #ccc;
-                                                }
-                                                #tblPayCalendars .dropdown-menu {
-                                                    border: 1px solid #e3e6f0 ;
                                                 }
                                             </style>
                                             {{> datatablelist
@@ -854,77 +803,11 @@
                                                         .table-responsive {
                                                             overflow-x: visible !important;
                                                         }
-
-                                                        .col-holiday-remove {
-                                                            display: flex;
-                                                            justify-content: center;
-                                                            align-items: center;
-                                                        }
-
                                                         #tblHolidays {
                                                             width: 100% !important;
                                                         }
-
-                                                        #tblHolidays .colHolidayId {
-                                                            width: 0% !important;
-                                                        }
-
-                                                        #tblHolidays .colHolidayName {
-                                                            /* display: none !important; */
-                                                            width: 35% !important;
-                                                        }
-
-                                                        #tblHolidays .colHolidayDate {
-                                                            width: 30% !important;
-                                                        }
-
                                                         #tblHolidays .colStatus {
                                                             width: 120px !important;
-                                                        }
-
-                                                        #tblHolidays .colHolidaygroup {
-                                                            width: 35% !important;
-                                                        }
-
-                                                        #tblHolidays .colHolidayDelete {
-                                                            width: 5% !important;
-                                                            text-align: center;
-                                                        }
-
-                                                        #tblHolidays .dropdown-menu {
-                                                            left: -40px !important;
-                                                            top: 90% !important;
-                                                            transform: translate3d(45px, 0px, 0px) !important;
-                                                        }
-                                                        #tblHolidays .dropdown button {
-                                                            display: flex;
-                                                            justify-content: center;
-                                                            align-items: center;
-                                                            background: none !important;
-                                                            border: none !important;
-                                                            border-radius: 50%;
-                                                            outline: none !important;
-                                                            color: #e3e6f0 !important;
-                                                        }
-                                                        #tblHolidays .dropdown button:hover {
-                                                            background-color: #ccc !important;
-                                                            border-color: black !important;
-                                                            color: black !important;
-                                                        }
-                                                        #tblHolidays .dropdown button:focus {
-                                                            box-shadow: none !important;
-                                                        }
-                                                        #tblHolidays .dropdown-toggle:after {
-                                                            display: none !important;
-                                                        }
-                                                        #tblHolidays .dropdown-item {
-                                                            font-size: 20px;
-                                                        }
-                                                        #tblHolidays .dropdown-item:first-child:hover {
-                                                            border: 1px solid #ccc;
-                                                        }
-                                                        #tblHolidays .dropdown-menu {
-                                                            border: 1px solid #e3e6f0 ;
                                                         }
                                                     </style>
                                                     {{> datatablelist
@@ -957,50 +840,7 @@
                                             <p>We've set up some defaults - However, you can add your own custom Pay Items.</p>
                                         </div>
                                         <div class="col-12 col-md-4 mb-3">
-                                            <!-- <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#newEarningsRateModal"><i class="fas fa-plus" style="margin-right: 5px;"></i>New Earnings Rate</button>
-                                            <div class="modal fade" id="newEarningsRateModal" tabindex="-1" role="dialog" aria-labelledby="newEarningsRateLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title" id="newEarningsRateLabel">New Earnings Rate</h5>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">&times;</span>
-                                                            </button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <label for="">Name</label>
-                                                                        <input type="text" class="form-control" id="">
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <label>Date</label>
-                                                                        <div class="input-group date" style="cursor: pointer;">
-                                                                            <input type="text" class="form-control formClassDate edtHolidayDate" id="edtHolidayDate" name="edtHolidayDate" value="">
-                                                                            <div class="input-group-addon" >
-                                                                                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-12">
-                                                                    <div class="form-group">
-                                                                        <label for="">Add to Group</label>
-                                                                        <input type="text" class="form-control" id="">
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-success"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> -->
+                                           
                                         </div>
                                     </div>
                                     <style>
@@ -1280,26 +1120,11 @@
                                                     </div>
                                                 </div>
                                                 <style>
-                                                    #tblAlowances .colAlowancesNames{
-                                                        width: 20%!important;
-                                                    }
-                                                    #tblAlowances .colAllowancesType{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblAlowances .colAllowancesDisplayName{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblAlowances .colAllowancesAmount{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblAlowances .colAllowancesAccounts{
-                                                        width: 20%!important;
+                                                    #tblAlowances {
+                                                        width: 100% !important;
                                                     }
                                                     #tblAlowances .colStatus{
                                                         width: 120px !important;
-                                                    }
-                                                    #tblAlowances .colDeleteAllowances{
-                                                        width: 3%!important;
                                                     }
                                                 </style>
                                                 {{> datatablelist
@@ -1318,30 +1143,7 @@
                                                     showPlusButton=true
                                                     showPlusButtonClass='btnAddNewAllowance'
                                                     showModalID='#allowanceModal'
-                                                    }}
-                                                <!-- <div class="table-responsive">
-                                                    <table id="tblAlowances" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblAlowances">
-                                                        <thead>
-                                                            <tr class="dnd-moved">
-                                                                <th class="th colAllowancesID hiddenColumn" >Allowance ID</th>
-                                                                <th class="th colAlowancesNames" style="width: 200px;">Allowance Name</th>
-                                                                <th class="th colAllowancesType" style="width: 80px;">Allowance Type</th>
-                                                                <th class="th colAllowancesDisplayName" >Display Name</th>
-                                                                <th class="th colAllowancesAmount" style="width: 80px;">Amount</th>
-                                                                <th class="th colAllowancesAccounts" >Account</th>
-                                                                <th class="th colAllowancesAccountsID hiddenColumn" >Account ID</th>
-                                                                <th class="th colAllowancesPAYG hiddenColumn" >PAYG withholding</th>
-                                                                <th class="th colAllowancesSuperannuation hiddenColumn" >Superannuation Guarantee Contribution</th>
-                                                                <th class="th colAllowancesReportableasW1 hiddenColumn" >Reportable as W1</th>
-                                                                <th class="th colDeleteAllowances" style="width: 20px!important;"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-
-                                                        </tbody>
-
-                                                    </table>
-                                                </div> -->
+                                                }}
                                             </div>
                                             <div class="" id="earnings" style="display: none;">
                                                 <div class="row mb-2">
@@ -2177,29 +1979,11 @@
                                                     </div>
                                                 </div>
                                                 <style>
-                                                    #tblEarnings .colEarningsNames{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblEarnings .colEarningsType{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblEarnings .colEarningsDisplayName{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblEarnings .colEarningsratetype{
-                                                        width: 12%!important;
-                                                    }
-                                                    #tblEarnings .colEarningsAmount{
-                                                        width: 12%!important;
-                                                    }
-                                                    #tblEarnings .colEarningsAccounts{
-                                                        width: 16%!important;
+                                                    #tblEarnings {
+                                                        width: 100% !important;
                                                     }
                                                     #tblEarnings .colStatus{
                                                         width: 120px !important;
-                                                    }
-                                                    #tblEarnings .colDeleteEarnings{
-                                                        width: 3%!important;
                                                     }
                                                 </style>
                                                 {{> datatablelist
@@ -2216,76 +2000,6 @@
                                                     exdatahandler=exDataHandler4
                                                     searchAPI=searchAPI4
                                                 }}
-                                                <!-- <div class="table-responsive">
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="deleteEarningsModal">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                            <div class="modal-content">
-                                                                <input type="hidden" style="width: 100%; display:none;" id="" name="" readonly>
-                                                                <div class="modal-header">
-                                                                    <h4 style="margin-bottom: 0px;">Delete Earnings Rate</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p style="text-align: center;">Are you sure you want to delete this earnings rate?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-danger float-right btnDeleteEarningsRate" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <table id="tblEarnings" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblEarnings">
-                                                        <thead>
-                                                            <tr class="dnd-moved">
-                                                                <th class="th colEarningsID hiddenColumn" >Earning ID</th>
-                                                                <th class="th colEarningsNames" style="width: 200px;">Earnings Name</th>
-                                                                <th class="th colEarningsType" style="width: 80px;">Earnings Type</th>
-                                                                <th class="th colEarningsDisplayName" >Display name</th>
-                                                                <th class="th colEarningsratetype" >Rate Type</th>
-                                                                <th class="th colEarningsAmount" style="width: 80px;">Amount</th>
-                                                                <th class="th colEarningsAccounts" >Account</th>
-
-                                                                <th class="th colEarningsAccountsID hiddenColumn" >Account ID</th>
-                                                                <th class="th colEarningsPAYG hiddenColumn" >PAYG withholding</th>
-                                                                <th class="th colEarningsSuperannuation hiddenColumn" >Superannuation Guarantee Contribution</th>
-                                                                <th class="th colEarningsReportableasW1 hiddenColumn" >Reportable as W1</th>
-                                                                <th class="th colDeleteEarnings" style="width: 20px!important;"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {{#if earnings}}
-                                                                {{#each earning in earnings}}
-                                                                <tr>
-                                                                    <td class="colEarningsID hiddenColumn" >{{ earning.ID }}</td>
-                                                                    <td class="colEarningsNames" style="width: 200px;">{{ earning.EarningName }}</td>
-                                                                    <td class="colEarningsType" style="width: 80px;">{{ earning.EarningType }}</td>
-                                                                    <td class="colEarningsDisplayName" >{{ earning.EarningDisplayName }}</td>
-                                                                    <td class="colEarningsratetype" >{{ earning.EarningRateType }}</td>
-                                                                    <td class="colEarningsAmount" style="width: 80px;">N/A</td>
-                                                                    <td class="colEarningsAccounts" >{{ earning.EarningExpanceAccount }}</td>
-    
-                                                                    <td class="colEarningsAccountsID hiddenColumn">Account ID</td>
-                                                                    <td class="colEarningsPAYG hiddenColumn" >{{ earning.Earningpaygholding }}</td>
-                                                                    <td class="colEarningsSuperannuation hiddenColumn" >{{ earning.Earningsuperannuation }}</td>
-                                                                    <td class="colEarningsReportableasW1 hiddenColumn" >{{ earning.Earningactivitystatement }}</td>
-                                                                    <td contenteditable="false" class="colDeleteEarnings">
-                                                                        <span class="table-remove">
-                                                                            <button type="button" class="btn btn-danger btn-rounded btn-sm my-0">
-                                                                                <i class="fa fa-remove"></i>
-                                                                            </button>
-                                                                        </span>
-                                                                    </td>
-                                                                </tr>
-                                                                {{/each}}
-                                                            {{/if}}
-
-                                                        </tbody>
-
-                                                    </table>
-                                                </div> -->
                                             </div>
                                             <div class="" id="deductions" style="display: none;">
                                                 <div class="row mb-2">
@@ -2598,26 +2312,11 @@
                                                     </div>
                                                 </div>
                                                 <style>
-                                                    #tblDeductions .colDeductionsNames{
-                                                        width: 20%!important;
-                                                    }
-                                                    #tblDeductions .colDeductionsType{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblDeductions .colDeductionsDisplayName{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblDeductions .colDeductionsAmount{
-                                                        width: 16%!important;
-                                                    }
-                                                    #tblDeductions .colDeductionsAccounts{
-                                                        width: 20%!important;
+                                                    #tblDeductions {
+                                                        width: 100% !important;
                                                     }
                                                     #tblDeductions .colStatus{
                                                         width: 120px !important;
-                                                    }
-                                                    #tblDeductions .colDeleteDeductions{
-                                                        width: 3%!important;
                                                     }
                                                 </style>
                                                 {{> datatablelist
@@ -2759,17 +2458,11 @@
                                                     </div>
                                                 </div>
                                                 <style>
-                                                    #tblReimbursements .colReimbursementName{
-                                                        width: 45%!important;
-                                                    }
-                                                    #tblReimbursements .colReimbursementAccount{
-                                                        width: 40%!important;
+                                                    #tblReimbursements {
+                                                        width: 100% !important;
                                                     }
                                                     #tblReimbursements .colStatus{
                                                         width: 120px !important;
-                                                    }
-                                                    #tblReimbursements .colDeleterei{
-                                                        width: 3%!important;
                                                     }
                                                 </style>
                                                 {{> datatablelist
@@ -2945,29 +2638,11 @@
                                                 </div>
 
                                                 <style>
-                                                    #tblLeave .colLeaveName{
-                                                        width: 18%!important;
-                                                    }
-                                                    #tblLeave .colLeaveUnits{
-                                                        width: 8%!important;
-                                                    }
-                                                    #tblLeave .colLeaveNormalEntitlement{
-                                                        width: 18%!important;
-                                                    }
-                                                    #tblLeave .colLeaveLeaveLoadingRate{
-                                                        width: 18%!important;
-                                                    }
-                                                    #tblLeave .colLeavePaidLeave{
-                                                        width: 12%!important;
-                                                    }
-                                                    #tblLeave .colLeaveShownOnPayslip{
-                                                        width: 14%!important;
-                                                    }                                                    
+                                                    #tblLeave {
+                                                        width: 100% !important;
+                                                    }                                                
                                                     #tblLeave .colStatus{
                                                         width: 120px !important;
-                                                    }
-                                                    #tblLeave .colDeleterei{
-                                                        width: 3%!important;
                                                     }
                                                 </style>
                                                 {{> datatablelist
@@ -2987,55 +2662,6 @@
                                                     showPlusButtonClass='addpaidleave'
                                                     showModalID='#paidLeaveModal'
                                                 }}
-                                                <!-- <div class="table-responsive">
-                                                    <div class="modal fade" role="dialog" tabindex="-1" id="deleteLeaveoModal">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                            <div class="modal-content">
-                                                                <input type="hidden" style="width: 100%; display:none;" id="selectDeleteLineID" name="selectDeleteLineID" readonly>
-                                                                <div class="modal-header">
-                                                                    <h4 style="margin-bottom: 0px;">Delete Leave</h4>
-                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                        <span aria-hidden="true">×</span>
-                                                                    </button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    <p style="text-align: center;">Are you sure you want to delete this leave?</p>
-                                                                </div>
-                                                                <div class="modal-footer">
-                                                                    <button class="btn btn-danger float-right btnDeleteLeave" type="button"><i class="fa fa-close" style="margin-right: 5px;"></i>Delete</button>
-                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"><i class="fa fa-close" style="margin-right: 5px;"></i>Cancel</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <table id="tblLeave" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblLeave">
-                                                        <thead>
-                                                            <tr class="dnd-moved">
-                                                                <th class="th colLeaveID hiddenColumn" >Leave ID</th>
-                                                                <th class="th colLeaveName" >Leave Name</th>
-                                                                <th class="th colLeaveUnits" >Units</th>
-                                                                <th class="th colLeaveNormalEntitlement" >Normal Entitlement</th>
-                                                                <th class="th colLeaveLeaveLoadingRate" >Leave Loading Rate</th>
-                                                                <th class="th colLeavePaidLeave" >Leave Type</th>
-                                                                <th class="th colLeaveShownOnPayslip" >Shown On Payslip</th>
-                                                                <th class="th colDeletepaidrem" style="width: 3% !important;"></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                                                <td contenteditable="false" class="th colLeaveID hiddenColumn">Leave ID</td>
-                                                                <td contenteditable="false" class="colLeaveName"></td>
-                                                                <td contenteditable="false" class="colLeaveUnits"></td>
-                                                                <td contenteditable="false" class="colLeaveNormalEntitlement"></td>
-                                                                <td contenteditable="false" class="colLeaveLeaveLoadingRate"></td>
-                                                                <td contenteditable="false" class="colLeavePaidLeave"></td>
-                                                                <td contenteditable="false" class="colLeaveShownOnPayslip"></td>
-                                                                <td contenteditable="false" class="colDeletepaidrem"><span class="table-remove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0"><i class="fa fa-remove"></i></button></span>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
@@ -3247,63 +2873,9 @@
                                                     width: 100%!important;
                                                     overflow: visible !important;
                                                 }
-                                                #tblSuperannuation .colSuperannuationName{
-                                                    width: 20%!important;
-                                                }
-                                                #tblSuperannuation .colSuperannuationType{
-                                                    width: 17%!important;
-                                                }
-                                                #tblSuperannuation .colEmployerNum{
-                                                    width: 5%!important;
-                                                }
-                                                #tblSuperannuation .colbsb{
-                                                    width: 15%!important;
-                                                }
                                                 #tblSuperannuation .colStatus{
                                                     width: 120px !important;
                                                     display: table-cell !important;
-                                                }
-                                                #tblSuperannuation .colDeletesup{
-                                                    width: 5%!important;
-                                                    display: table-cell !important;
-                                                }
-                                                .table-responsive {
-                                                    overflow-x: visible !important;
-                                                }
-                                                #tblSuperannuation .dropdown-menu {
-                                                    left: -40px !important;
-                                                    top: 90% !important;
-                                                    transform: translate3d(45px, 0px, 0px) !important;
-                                                }
-                                                #tblSuperannuation .dropdown button {
-                                                    display: flex;
-                                                    justify-content: center;
-                                                    align-items: center;
-                                                    background: none !important;
-                                                    border: none !important;
-                                                    border-radius: 50%;
-                                                    outline: none !important;
-                                                    color: #e3e6f0 !important;
-                                                }
-                                                #tblSuperannuation .dropdown button:hover {
-                                                    background-color: #ccc !important;
-                                                    border-color: black !important;
-                                                    color: black !important;
-                                                }
-                                                #tblSuperannuation .dropdown button:focus {
-                                                    box-shadow: none !important;
-                                                }
-                                                #tblSuperannuation .dropdown-toggle:after {
-                                                    display: none !important;
-                                                }
-                                                #tblSuperannuation .dropdown-item {
-                                                    font-size: 20px;
-                                                }
-                                                #tblSuperannuation .dropdown-item:first-child:hover {
-                                                    border: 1px solid #ccc;
-                                                }
-                                                #tblSuperannuation .dropdown-menu {
-                                                    border: 1px solid #e3e6f0 ;
                                                 }
                                             </style>
                                             {{> datatablelist
@@ -3478,14 +3050,8 @@
                                                         border: 1px solid #e3e6f0 !important;
                                                         border-collapse: collapse;
                                                     }
-                                                    #tblOverTimeSheet .colRate{
-                                                        width: 30%!important;
-                                                    }
-                                                    #tblOverTimeSheet .colRateRule{
-                                                        width: 30%!important;
-                                                    }
-                                                    #tblOverTimeSheet .colHourlyAmount{
-                                                        width: 30%!important;
+                                                    #tblOverTimeSheet {
+                                                        width: 100% !important;
                                                     }
                                                     #tblOverTimeSheet .colStatus{
                                                         width: 120px !important;
@@ -3655,50 +3221,6 @@
      <div class="modal fade" role="dialog" tabindex="-1" id="addRateModel">
         {{> addratetypepop}}
     </div>
-
-    <!-- <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal1">
-        <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Account List</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                </div>
-                <div class="modal-body">
-                    <input type="hidden" style="width: 100%; display:none;" class="selectAccountLineID" id="selectLineID1" name="selectLineID"  readonly>
-                    <div class="card-body p-1 rounded tbl" id="tblAccount1" >
-                        <style>
-                            td.colBalance, td.colTaxCode{
-                                text-align: right !important;
-                            }
-                        </style>
-                        {{>datatablelist
-                                tableclass="tblAccountList1"
-                                tablename=tablename
-                                apiName= apiFunction
-                                indexeddbname = 'TAccountVS1List'
-                                tableheaderrecords = tableheaderrecords
-                                exportfilename = 'Account List'
-                                istransaction = false
-                                apiParams= apiParams
-                                datahandler = datahandler
-                                service=service
-                                lowercaseDataName='taccountvs1list'
-                                exIndexDBName = 'taccountvs1list'
-                                exdatahandler = exDataHandler
-                                searchAPI = searchAPI
-                                orderby = '[[ 1, "asc" ]]'
-                                showPlusButton = true
-                                showPlusButtonDataTarget = "addAccountModal"
-                                showPlusButtonClass = "btnAddNewAccount"
-                                typefilter = typefilter
-                        }}
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>  -->
 
     <div class="modal fade" role="dialog" tabindex="-1" id="fundTypeListModel">
         {{> fundtypelistpop}}

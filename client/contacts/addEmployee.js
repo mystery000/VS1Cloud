@@ -63,6 +63,9 @@ function MakeNegative() {
 Template.employeescard.onCreated(function () {
   const templateObject = Template.instance();
 
+  templateObject.paysliptableheaderrecords = new ReactiveVar([]);
+  templateObject.tableheaderrecordspayrun = new ReactiveVar([]);
+
   templateObject.AppTableModalData = new ReactiveVar([]);
   templateObject.ResidencyStatusList = new ReactiveVar();
   templateObject.EmploymentBasisList = new ReactiveVar();
@@ -128,6 +131,47 @@ Template.employeescard.onCreated(function () {
   templateObject.taskrecords = new ReactiveVar([]);
   templateObject.all_projects = new ReactiveVar([]);
 
+  templateObject.getPaysLipsDataTableList = function (data) {
+    let dataList = [
+        data.fields.ID || '0',
+        data.fielde,mPortfolio,
+        bage 
+    ];
+
+    return dataList;
+  }
+  let headerstructurepayslip = [
+    { index: 0, label: '#ID', class: 'colPayslipID', active: false, display: true, width: "" },
+    { index: 1, label: 'Period', class: 'colPayslipPeriod', active: true, display: true, width: "200" },
+    { index: 2, label: 'Payment Date', class: 'colPayslipPaymentDate', active: true, display: true, width: "200" },
+    { index: 3, label: 'Total Pay', class: 'colPayslipTotalPay', active: true, display: true, width: "200" },
+    { index: 3, label: '', class: 'colPayslipDownload', active: true, display: true, width: "10" },
+  ]
+  templateObject.paysliptableheaderrecords.set(headerstructurepayslip);
+
+
+  templateObject.getDataTableListpayrun = function(data){
+    var status = data.fields.PayrollCalendarActive == true ? 'In-Active' : 'Active';
+    let dataList = [
+        data.fields.ID || "",
+        data.fields.PayrollCalendarName || "",
+        data.fields.PayrollCalendarPayPeriod || "",
+        moment(data.fields.PayrollCalendarStartDate).format('DD/MM/YYYY') || "",
+        moment(data.fields.PayrollCalendarFirstPaymentDate).format('DD/MM/YYYY') || "",
+        data.fields.PayrollCalendarActive == true ? '' : 'In-Active',
+    ];
+    return dataList;
+}
+let headerStructurepayrun  = [
+    { index: 0, label: '#ID', class: 'colCalenderID', active: false, display: true, width: "" },
+    { index: 1, label: 'Name', class: 'colPayCalendarName', active: true, display: true, width: "100" },
+    { index: 2, label: 'Pay Period', class: 'colPayPeriod', active: true, display: true, width: "100" },
+    { index: 3, label: 'Next Pay Period', class: 'colNextPayPeriod', active: true, display: true, width: "100" },
+    { index: 4, label: 'Next Payment Date', class: 'colNextPaymentDate', active: true, display: true, width: "100" },
+    { index: 5, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+];
+templateObject.tableheaderrecordspayrun.set(headerStructurepayrun);
+
   templateObject.getDataTableList = function(data) {
     let currentId = FlowRouter.current().queryParams;
     let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
@@ -139,7 +183,7 @@ Template.employeescard.onCreated(function () {
         data.fields.PayPeriod || '',
         data.fields.LeaveMethod || '',
         data.fields.Status || '',
-        (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
+        // (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
       ];
     }
     return dataList;
@@ -150,8 +194,8 @@ Template.employeescard.onCreated(function () {
     { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
     { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
     { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
-    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "250" },
-    { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "120" },
+    // { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
 ];
 templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
 
@@ -2150,25 +2194,29 @@ Template.employeescard.onRendered(function () {
       $('#edtHolidays').editableSelect();
       $('#obEarningsRate').editableSelect();
       
-      $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
+      $('#edtPayrollCalendar').editableSelect(                                                                                                                                                                                                                                                                                                                                                                                                                                                                ).on('click.editable-select', async function (e, li) {
           // let $search = $(this);
           // let offset = $search.offset();
           // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-            $('#payrollCalendarPopModal').modal("toggle");
+            // var datatable = $('#tblPayCalendars').DataTable();
+            // datatable.draw();
+            $('#payrollCalendarPopModal').modal("toggle");                                                                                                    
           // } else {
+          //   var datatable = $('#tblPayCalendars').DataTable();
+          //   datatable.draw();
           //   $('#payrollCalendarPopModal').modal("toggle");
           // }
       });
 
       $('#edtHolidays').editableSelect()
         .on('click.editable-select', async function (e, li) {
-          let $search = $(this);
-          let offset = $search.offset();
-          if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
+          // let $search = $(this);
+          // let offset = $search.offset();
+          // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
             $('#holidaysPopModal').modal("toggle");
-          } else {
-            $('#holidaysPopModal').modal("toggle");
-          }
+          // } else {
+          //   $('#holidaysPopModal').modal("toggle");
+          // }
         });
     }, 1000)
 
@@ -3694,7 +3742,7 @@ Template.employeescard.onRendered(function () {
                   datatable.clear();
                   datatable.rows.add(uniqueChars);
                   datatable.draw(false);
-                  setTimeout(function () {
+                  setTimeout(function () { 
                     $("#tblPayslipHistory").dataTable().fnPageChange('last');
                   }, 400);
 
@@ -10097,6 +10145,8 @@ Template.employeescard.events({
     $('#SelectPayRunModal').modal("show");
   },
   // "click input#edtPayrollCalendar": (e, ui) => {
+  //   var datatable = $('#tblPayCalendars').DataTable();
+  //   datatable.draw();
   //   $('#payrollCalendarPopModal').modal("show");
   // },
   // "click input#edtHolidays": (e, ui) => {
@@ -10236,6 +10286,35 @@ Template.employeescard.events({
 });
 
 Template.employeescard.helpers({
+
+apiFunctionpayrun:function() {
+    return sideBarService.getCalender;
+},
+searchAPIpayrun: function() {
+    return sideBarService.getNewCalenderByNameOrPayPeriod;
+},
+servicepayrun: ()=>{
+    return sideBarService;
+},
+datahandlerpayrun: function () {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableListpayrun(data);
+        return dataReturn;
+    }
+},
+exDataHandlerpayrun: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getDataTableListpayrun(data);
+        return dataReturn;
+    }
+},
+apiParamspayrun: ()=>{
+    return ['limitCount', 'limitFrom', 'deleteFilter'];
+},
+
+
   AppTableModalData: () => {
     return Template.instance().AppTableModalData.get();
   },
@@ -10503,6 +10582,34 @@ Template.employeescard.helpers({
     let sideBarService = new SideBarService();
     return sideBarService;
   },
+
+
+  tableheaderrecords4: () => {
+    return Template.instance().paysliptableheaderrecords.get();
+  },
+  apiFunction4:function() {
+      return sideBarService.getPaySlips;
+  },
+  searchAPI4: function() {
+      return sideBarService.getPaySlips;
+  },
+  service4: ()=>{
+      return sideBarService;
+  },
+  datahandler4: function () {
+      let templateObject = Template.instance();
+      return function(data) {
+          let dataReturn =  templateObject.getPaysLipsDataTableList(data);
+          return dataReturn;
+      }
+  },
+  exDataHandler4: function() {
+    let templateObject = Template.instance();
+    return function(data) {
+        let dataReturn =  templateObject.getPaysLipsDataTableList(data);
+        return dataReturn;
+    }
+},
 });
 
 function openEditTaskModals(id, type) {
