@@ -1169,6 +1169,8 @@ Template.customerscard.onCreated(function () {
                 return [];
         }
         let arBalance = utilityService.modifynegativeCurrencyFormat(data.ARBalance) || 0.00;
+        let apBalance = utilityService.modifynegativeCurrencyFormat(data.APBalance) || 0.00;
+        let soBalance = utilityService.modifynegativeCurrencyFormat(data.SOBalance) || 0.00;
         // let creditBalance = utilityService.modifynegativeCurrencyFormat(data.CreditBalance) || 0.00;
         let balance = utilityService.modifynegativeCurrencyFormat(data.Balance) || 0.00;
         let creditLimit = utilityService.modifynegativeCurrencyFormat(data.CreditLimit) || 0.00;
@@ -1179,10 +1181,12 @@ Template.customerscard.onCreated(function () {
             data.Company || '',
             data.Phone || '',
             arBalance || 0.00,
+            apBalance || 0.00,
             // creditBalance || 0.00,
             balance || 0.00,
             creditLimit || 0.00,
-            salesOrderBalance || 0.00,
+            // salesOrderBalance || 0.00,
+            soBalance || 0.00,
             data.Country || LoggedCountry,
             data.Email || '',
             data.AccountNo || '',
@@ -1195,20 +1199,20 @@ Template.customerscard.onCreated(function () {
     }
     let headerStructure_JobDetailsList = [
         { index: 0, label: 'ID', class: 'colSortDate', active: false, display: true, width: "10" },
-        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "200" },
-        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "95" },
-        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "100" },
-        // { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "100" },
-        { index: 4, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
-        { index: 5, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "105" },
-        { index: 6, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
-        { index: 7, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
-        { index: 8, label: 'Email', class: 'colEmail', active: false, display: true, width: "70" },
-        { index: 9, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "105" },
-        { index: 10, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "90" },
-        { index: 11, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "90" },
-        { index: 12, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
-        { index: 13, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },
+        { index: 1, label: 'Company', class: 'colCompany', active: true, display: true, width: "110" },
+        { index: 2, label: 'Phone', class: 'colPhone', active: true, display: true, width: "110" },
+        { index: 3, label: 'AR Balance', class: 'colARBalance', active: true, display: true, width: "110" },
+        { index: 4, label: 'Credit Balance', class: 'colCreditBalance', active: true, display: true, width: "110" },
+        { index: 5, label: 'Balance', class: 'colBalance', active: true, display: true, width: "110" },
+        { index: 6, label: 'Credit Limit', class: 'colCreditLimit', active: true, display: true, width: "110" },
+        { index: 7, label: 'Order Balance', class: 'colSalesOrderBalance', active: true, display: true, width: "110" },
+        { index: 8, label: 'Country', class: 'colCountry', active: true, display: true, width: "100" },
+        { index: 9, label: 'Email', class: 'colEmail', active: false, display: true, width: "110" },
+        { index: 10, label: 'Account No', class: 'colAccountNo', active: false, display: true, width: "110" },
+        { index: 11, label: 'Custom Field 1', class: 'colClientNo', active: false, display: true, width: "110" },
+        { index: 12, label: 'Custom Field 2', class: 'colJobTitle', active: false, display: true, width: "110" },
+        { index: 13, label: 'Notes', class: 'colNotes', active: true, display: true, width: "300" },
+        { index: 14, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords_JobDetailsList.set(headerStructure_JobDetailsList);
 
@@ -2699,65 +2703,65 @@ Template.customerscard.events({
             }
         }
     },
-    'click .chkDatatable': function (event) {
-        const columns = $('#tblTransactionlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-        $.each(columns, function (i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-            if (v.innerText == columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function (event) {
-        Meteor._reload.reload();
-    },
-    'click .saveTable': function (event) {
-        let lineItems = [];
-        $('.columnSettings').each(function (index) {
-            const $tblrow = $(this);
-            const colTitle = $tblrow.find(".divcolumn").text() || '';
-            const colWidth = $tblrow.find(".custom-range").val() || 0;
-            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            const colHidden = !$tblrow.find(".custom-control-input").is(':checked');
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            };
-            lineItems.push(lineItemObj);
-        });
-
-        $('#myModal2').modal('toggle');
-    },
-    'blur .divcolumn': function (event) {
-        let columData = $(event.target).text();
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        const datable = $('#tblTransactionlist').DataTable();
-        const title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-    },
-    'change .rngRange': function (event) {
-        let range = $(event.target).val();
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        const datable = $('#tblTransactionlist th');
-        $.each(datable, function (i, v) {
-            if (v.innerText == columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-            }
-        });
-    },
+    // 'click .chkDatatable': function (event) {
+    //     const columns = $('#tblTransactionlist th');
+    //     let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
+    //     $.each(columns, function (i, v) {
+    //         let className = v.classList;
+    //         let replaceClass = className[1];
+    //         if (v.innerText == columnDataValue) {
+    //             if ($(event.target).is(':checked')) {
+    //                 $("." + replaceClass + "").css('display', 'table-cell');
+    //                 $("." + replaceClass + "").css('padding', '.75rem');
+    //                 $("." + replaceClass + "").css('vertical-align', 'top');
+    //             } else {
+    //                 $("." + replaceClass + "").css('display', 'none');
+    //             }
+    //         }
+    //     });
+    // },
+    // 'click .resetTable': function (event) {
+    //     Meteor._reload.reload();
+    // },
+    // 'click .saveTable': function (event) {
+    //     let lineItems = [];
+    //     $('.columnSettings').each(function (index) {
+    //         const $tblrow = $(this);
+    //         const colTitle = $tblrow.find(".divcolumn").text() || '';
+    //         const colWidth = $tblrow.find(".custom-range").val() || 0;
+    //         const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
+    //         const colHidden = !$tblrow.find(".custom-control-input").is(':checked');
+    //         let lineItemObj = {
+    //             index: index,
+    //             label: colTitle,
+    //             hidden: colHidden,
+    //             width: colWidth,
+    //             thclass: colthClass
+    //         };
+    //         lineItems.push(lineItemObj);
+    //     });
+    //
+    //     $('#myModal2').modal('toggle');
+    // },
+    // 'blur .divcolumn': function (event) {
+    //     let columData = $(event.target).text();
+    //     let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
+    //     const datable = $('#tblTransactionlist').DataTable();
+    //     const title = datable.column(columnDatanIndex).header();
+    //     $(title).html(columData);
+    // },
+    // 'change .rngRange': function (event) {
+    //     let range = $(event.target).val();
+    //     let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
+    //     const datable = $('#tblTransactionlist th');
+    //     $.each(datable, function (i, v) {
+    //         if (v.innerText == columnDataValue) {
+    //             let className = v.className;
+    //             let replaceClass = className.replace(/ /g, ".");
+    //             $("." + replaceClass + "").css('width', range + 'px');
+    //         }
+    //     });
+    // },
     'click .btnOpenSettingsTransaction': function (event) {
         let templateObject = Template.instance();
         const columns = $('#tblTransactionlist th');
@@ -4100,7 +4104,7 @@ Template.customerscard.helpers({
     },
 
     apiParams_AppointmentsByCustomer: function () {
-        return ['dateFrom', 'dateTo', 'ignoreDate', 'limitcount', 'limitfrom'];
+        return ['dateFrom', 'dateTo', 'ignoreDate', 'limitcount', 'limitfrom', 'deleteFilter'];
     },
 
     salesTableHeaderRecords: () => {

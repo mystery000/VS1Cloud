@@ -1851,23 +1851,8 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TBillList, options);
   }
 
-  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter, contactID) {
+  getAllAwaitingSupplierPayment(dateFrom,dateTo,ignoreDate,limitcount,limitfrom, deleteFilter) {
     let options = "";
-    if(contactID != '' && contactID != undefined){
-      options = {
-        IgnoreDates: true,
-        IncludePOs: true,
-        IncludeBills: true,
-        IsDetailReport: false,
-        Paid: false,
-        Unpaid: true,
-        OrderBy: "PurchaseOrderID desc",
-        LimitCount: parseInt(limitcount)||initialReportLoad,
-        LimitFrom: parseInt(limitfrom)||0,
-        ClientID:contactID,
-        Search: "Deleted = false",
-      };
-    }else{
     if (ignoreDate == true) {
       options = {
         IgnoreDates: true,
@@ -1879,7 +1864,7 @@ export class SideBarService extends BaseService {
         OrderBy: "PurchaseOrderID desc",
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
-        Search: "Deleted = false",
+        Search: "Deleted != true",
       };
     } else {
       options = {
@@ -1894,10 +1879,9 @@ export class SideBarService extends BaseService {
         DateTo: '"' + dateTo + '"',
         LimitCount: parseInt(limitcount),
         LimitFrom: parseInt(limitfrom),
-        Search: "Deleted = false",
+        Search: "Deleted != true",
       };
     }
-   }
    if(deleteFilter) options.Search = "";
     return this.getList(this.ERPObjects.TbillReport, options);
   }
@@ -2319,53 +2303,103 @@ export class SideBarService extends BaseService {
     return this.getList(this.ERPObjects.TCreditList, options);
   }
 
-  getTAppointmentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom) {
+  getTAppointmentListData(dateFrom, dateTo, ignoreDate, limitcount, limitfrom, deleteFilter) {
     let options = "";
     let seeOwnAppointments =
       localStorage.getItem("CloudAppointmentSeeOwnAppointmentsOnly") || false;
     let loggedEmpID = localStorage.getItem("mySessionEmployeeLoggedID") || 0;
-    if (seeOwnAppointments == true) {
-      //Check Access Level
-      if (ignoreDate == true) {
-        options = {
-          OrderBy: "CreationDate desc",
-          IgnoreDates: true,
-          IsDetailReport: false,
-          LimitCount: parseInt(limitcount)||initialReportLoad,
-          LimitFrom: parseInt(limitfrom)||0,
-          Search: "TrainerID = " + loggedEmpID + "",
-        };
+    if(deleteFilter == true) {
+      if (seeOwnAppointments == true) {
+        //Check Access Level
+        if (ignoreDate == true) {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: true,
+            IsDetailReport: false,
+            LimitCount: parseInt(limitcount) || initialReportLoad,
+            LimitFrom: parseInt(limitfrom) || 0,
+            Search: "TrainerID = " + loggedEmpID + "",
+          };
+        } else {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: false,
+            IsDetailReport: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(limitcount) || initialReportLoad,
+            LimitFrom: parseInt(limitfrom) || 0,
+            Search: "TrainerID = " + loggedEmpID + "",
+          };
+        }
       } else {
-        options = {
-          OrderBy: "CreationDate desc",
-          IgnoreDates: false,
-          IsDetailReport: false,
-          DateFrom: '"' + dateFrom + '"',
-          DateTo: '"' + dateTo + '"',
-          LimitCount: parseInt(limitcount)||initialReportLoad,
-          LimitFrom: parseInt(limitfrom)||0,
-          Search: "TrainerID = " + loggedEmpID + "",
-        };
+        if (ignoreDate == true) {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: true,
+            IsDetailReport: false,
+            LimitCount: parseInt(limitcount) || initialReportLoad,
+            LimitFrom: parseInt(limitfrom) || 0,
+          };
+        } else {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: false,
+            IsDetailReport: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(limitcount) || initialReportLoad,
+            LimitFrom: parseInt(limitfrom) || 0,
+          };
+        }
       }
-    } else {
-      if (ignoreDate == true) {
-        options = {
-          OrderBy: "CreationDate desc",
-          IgnoreDates: true,
-          IsDetailReport: false,
-          LimitCount: parseInt(limitcount)||initialReportLoad,
-          LimitFrom: parseInt(limitfrom)||0,
-        };
+    }
+    else {
+      if (seeOwnAppointments == true) {
+        //Check Access Level
+        if (ignoreDate == true) {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: true,
+            IsDetailReport: false,
+            LimitCount: parseInt(limitcount)||initialReportLoad,
+            LimitFrom: parseInt(limitfrom)||0,
+            Search: "TrainerID = " + loggedEmpID + "and Active = true",
+          };
+        } else {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: false,
+            IsDetailReport: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(limitcount)||initialReportLoad,
+            LimitFrom: parseInt(limitfrom)||0,
+            Search: "TrainerID = " + loggedEmpID + "and Active = true",
+          };
+        }
       } else {
-        options = {
-          OrderBy: "CreationDate desc",
-          IgnoreDates: false,
-          IsDetailReport: false,
-          DateFrom: '"' + dateFrom + '"',
-          DateTo: '"' + dateTo + '"',
-          LimitCount: parseInt(limitcount)||initialReportLoad,
-          LimitFrom: parseInt(limitfrom)||0,
-        };
+        if (ignoreDate == true) {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: true,
+            IsDetailReport: false,
+            LimitCount: parseInt(limitcount)||initialReportLoad,
+            LimitFrom: parseInt(limitfrom)||0,
+            Search: "Active = true",
+          };
+        } else {
+          options = {
+            OrderBy: "CreationDate desc",
+            IgnoreDates: false,
+            IsDetailReport: false,
+            DateFrom: '"' + dateFrom + '"',
+            DateTo: '"' + dateTo + '"',
+            LimitCount: parseInt(limitcount)||initialReportLoad,
+            LimitFrom: parseInt(limitfrom)||0,
+            Search: "Active = true",
+          };
+        }
       }
     }
     return this.getList(this.ERPObjects.TAppointmentList, options);

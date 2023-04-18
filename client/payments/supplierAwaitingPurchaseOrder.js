@@ -6,6 +6,7 @@ import { AccountService } from "../accounts/account-service";
 import { UtilityService } from "../utility-service";
 import { SideBarService } from '../js/sidebar-service';
 import '../lib/global/indexdbstorage.js';
+import { Template } from 'meteor/templating';
 
 import './supplierAwaitingPurchaseOrder.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
@@ -69,7 +70,7 @@ Template.supplierawaitingpurchaseorder.onCreated(function () {
         }
             if ((data.Type == "Purchase Order") || (data.Type == "Bill") || (data.Type == "Credit")) {
                 var dataList = [
-                    '<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-{{item.id}}" value="{{item.outsandingamount}}"><label class="custom-control-label chkBox pointer" for="formCheck-{{item.id}}"></label></div>',
+                    `<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-${data.PurchaseOrderID}" value="${totalOutstanding}"><label class="custom-control-label chkBox pointer" for="formCheck-${data.PurchaseOrderID}"></label></div>`,
                     overDueDaysText,
                     data.OrderDate != '' ? moment(data.OrderDate).format("YYYY/MM/DD") : data.OrderDate,
                     data.OrderDate != '' ? moment(data.OrderDate).format("DD/MM/YYYY") : data.OrderDate,
@@ -2370,6 +2371,12 @@ Template.supplierawaitingpurchaseorder.onRendered(function () {
         }
     }
 
+    $(document).ready(function() {
+        setTimeout(function(){
+            jQuery('th.chkBox').removeClass('sorting');
+            jQuery('th.chkBox').append('<div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" ><label class="custom-control-label chkBox pointer"></label></div>');
+        }, 2000);
+    });
 });
 
 Template.supplierawaitingpurchaseorder.events({
@@ -3152,6 +3159,6 @@ Template.supplierawaitingpurchaseorder.helpers({
     },
 
     apiParams: function() {
-      return ["dateFrom", "dateTo", "ignoredate", "limitCount", "limitFrom", 'deleteFilter', "contactID"];
+      return ["dateFrom", "dateTo", "ignoredate", "limitCount", "limitFrom", 'deleteFilter'];
     },
 });
