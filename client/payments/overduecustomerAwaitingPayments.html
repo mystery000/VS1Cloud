@@ -28,105 +28,6 @@
                 </div>
             </header>
 
-            <div class="modal fade" role="dialog" tabindex="-1" id="myModal2">
-                <div class="modal-dialog modal-dialog-centered" role="document" style="float: right;">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4>Display Settings</h4><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        </div>
-                        <div class="modal-body">
-                            <div>
-                                {{#if tableheaderrecords}}
-                                    <form class="d-xl-flex align-items-xl-center">
-                                        <div class="flex-grow-1">
-                                            <style>
-                                                .groove {
-                                                    border-style: solid;
-                                                    border-width: 1px;
-                                                    width: 200px;
-                                                    padding: 2px;
-                                                    border-radius: .35rem;
-                                                }
-
-                                                .custom-control-label {
-                                                    position: absolute;
-                                                }
-
-                                                .rngRange {
-                                                    position: relative;
-                                                    display: flex;
-                                                    flex-direction: column;
-                                                    width: 100%;
-                                                    pointer-events: auto;
-                                                    background-color: rgb(255, 255, 255);
-                                                    background-clip: padding-box;
-                                                    border: 1px solid rgb(133, 135, 150);
-                                                    border-radius: .3rem;
-                                                    border-style: solid;
-                                                    border-width: 1px;
-                                                    padding: 2px;
-                                                    border-radius: .35rem;
-                                                    color: rgb(128, 128, 128);
-                                                    height: inherit !important;
-                                                }
-
-                                                @media only screen and (max-width: 480px) {
-                                                    .modal.show .modal-dialog {
-                                                        float: inherit !important;
-                                                        left: inherit !important;
-                                                        top: auto !important;
-
-                                                    }
-                                                }
-                                            </style>
-                                            {{#each item in tableheaderrecords}}
-                                                {{#if equals item.sTitle ""}}
-                                                    <!-- {{#elseif equals item.sTitle "id"}} -->
-                                                {{else}}
-                                                    {{#if equals item.sTitle "id"}}
-                                                    {{else}}
-                                                        <div id="{{item.sIndex}}" class="columnSettings">
-                                                            <div class="custom-control custom-switch" style="margin: 8px; float:left;">
-                                                                <input class="custom-control-input chkDatatable" type="checkbox" id="chkSalesNo-{{item.sIndex}}" name="chkSalesNo-{{item.sIndex}}" checked="{{#if item.sVisible}}checked{{else}}{{/if}}"
-                                                                    value="{{item.sTitle}}">
-                                                                <label class="custom-control-label" for="chkSalesNo-{{item.sIndex}}"></label>
-                                                                <div contenteditable="true" class="groove divcolumn" type="text" value="{{item.sTitle}}" valueupdate="{{item.sClass}}">{{item.sTitle}}</div>
-                                                            </div>
-                                                            <div class="d-xl-flex align-items-xl-center divColWidth" style="margin: 8px;">
-                                                                <label class="text-nowrap" style="padding-left: 0px;margin-top: 8px;">Width:
-                                                                    <!--<span class="spWidth" value="{{item.sTitle}}">{{item.sWidth}}px</span>-->
-                                                                </label>
-                                                                <input class="custom-range rngRange" type="number" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000">
-                                                                <!-- <input class="custom-range rngRange" type="range" style="margin: 8px;" value="{{item.sWidth}}" min="0" max="1000"> -->
-                                                            </div>
-                                                        </div>
-
-                                                        {{#if equals item.sVisible true}}
-                                                            <script>
-                                                                $("#" + {{item.sIndex}} + ".chkDatatable").attr("checked", "checked");
-                                                            </script>
-                                                        {{else}}
-                                                            <script>
-                                                                $("#" + {{item.sIndex}} + ".chkDatatable").removeAttr("checked");
-                                                            </script>
-                                                        {{/if}}
-                                                    {{/if}}
-                                                {{/if}}
-                                            {{/each}}
-                                        </div>
-                                    </form>
-                                {{/if}}
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary saveTable" type="button"><i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
-                            <button class="btn btn-warning resetTable" data-dismiss="modal" type="reset"><i class="fa fa-repeat" style="margin-right: 5px;"></i>Reset</button>
-                            <button class="btn btn-secondary" data-dismiss="modal" type="button"><i class="fa fa-remove" style="margin-right: 5px;"></i>Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <div class="modal fade" role="dialog" tabindex="-1" id="helpViewModal">
                 <div class="modal-dialog modal-sm" role="document">
                     <div class="modal-content">
@@ -172,11 +73,14 @@
                         <input type="text" id="selectedTot" name="selectedTot" class="form-control" style="cursor: default;background-color:#EDEDED; border-color:#EDEDED; font-size:20px; font-weight:600; padding: 0px;" readonly>
                     </div>
                 </div>
-                <div class="col-6 col-md-5 col-lg-4">
+                <!-- <div class="col-6 col-md-5 col-lg-4">
                     <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 12px;"><i class="icon ion-android-more-horizontal"></i></a>
                     <button class="btn btn-primary printConfirm float-right btnNav" type="button" style="margin: 12px;"><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
                     <button class="btn btn-primary export float-right btnNav" type="button" style="margin: 12px;" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
                     <a class="btn btnOpenSettings btnOpenSettingsMobile float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px; display: none;"><i class="icon ion-android-more-horizontal"></i></a>
+                </div> -->
+                <div class="col-5 col-md-4 d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename="tblcustomerAwaitingPayment"}}
                 </div>
             </div>
 
@@ -217,7 +121,7 @@
                                 opacity: 1;
                             }
                         </style>
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <!-- <div class="row no-gutters d-xl-flex align-items-xl-end">
                             <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
 
                             </div>
@@ -233,58 +137,24 @@
                                 </div>
                                   {{> daterangefromto_trans}}
                             </div>
-                        </div>
-                        <table id="tblcustomerAwaitingPayment" name="tblcustomerAwaitingPayment" style="width:100%" class="dataTable table table-hover table-striped table-bordered tblcustomerAwaitingPayment">
-                            <thead>
-                                <tr class="dnd-moved">
-                                    <th class="th chkBox" style="width:15px;">
-                                        <div class="custom-control custom-checkbox chkBox" style="width:15px;"><input class="custom-control-input chkBoxAll" type="checkbox" id="formCheck-All"><label class="custom-control-label chkBoxAll"
-                                                for="formCheck-All"></label></div>
-                                    </th>
-                                    <th class="th colOverdueDays" style="width:80px;">Overdue</th>
-                                    <th class="th colSortDate hiddenColumn">id</th>
-                                    <th class="th colPaymentDate" style="width:80px;">Date</th>
-                                    <th class="th colCustomerName" style="width:200px;">Customer Name</th>
-                                    <th class="th colPaymentId" style="width:80px;">Sales No.</th>
-                                    <th class="th colReceiptNo" style="width:85px;">Ref No.</th>
-                                    <th class="th colPaymentAmount" style="width:80px;">Paid</th>
-                                    <th class="th colApplied" style="width:80px;">Original</th>
-                                    <th class="th colBalance" style="width:80px;">Outstanding</th>
-                                    <!-- <th class="th colBankAccount" style="width:80px;">Bank Account</th> -->
-                                    <th class="th colDepartment" style="width:80px;">Department</th>
-                                    <th class="th colRefNo hiddenColumn">Custom Field 1</th>
-                                    <th class="th colPaymentMethod hiddenColumn">Custom Field 2</th>
-                                    <th class="th colNotes">Comments</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {{#if datatablerecords}}
-                                    {{#each item in datatablerecords}}
-                                        <tr class="dnd-moved" id="{{item.id}}" style="cursor: pointer;">
-                                            <td contenteditable="false" class="chkBox pointer" style="width:15px;">
-                                                <div class="custom-control custom-checkbox chkBox pointer" style="width:15px;"><input class="custom-control-input chkBox chkPaymentCard pointer" type="checkbox" id="formCheck-{{item.id}}"
-                                                        value="{{item.outsandingamount}}"><label class="custom-control-label chkBox pointer" for="formCheck-{{item.id}}"></label></div>
-                                            </td>
-                                            <td contenteditable="false" class="colOverdueDays {{item.overduetype}}" id="colOverdueDays{{item.id}}">{{item.overduedays}}</td>
-                                            <td contenteditable="false" class="colSortDate hiddenColumn">{{item.sortdate}}</td>
-                                            <td contenteditable="false" class="colPaymentDate"><span style="display:none;">{{item.sortdate}}</span>{{item.paymentdate}}</td>
-                                            <td contenteditable="false" class="colCustomerName" id="colCustomerName{{item.id}}">{{item.customername}}</td>
-                                            <td contenteditable="false" class="colPaymentId">{{item.id}}</td>
-                                            <td contenteditable="false" class="colReceiptNo">{{item.refno}}</td>
-                                            <td contenteditable="false" class="colPaymentAmount" style="text-align: right!important;">{{item.applied}}</td>
-                                            <td contenteditable="false" class="colApplied" style="text-align: right!important;">{{item.originalamount}}</td>
-                                            <td contenteditable="false" class="colBalance" style="text-align: right!important;">{{item.outsandingamount}}</td>
-                                            <!-- <td contenteditable="false" class="colBankAccount">{{item.bankaccount}}</td> -->
-                                            <td contenteditable="false" class="colDepartment">{{item.department}}</td>
-                                            <td contenteditable="false" class="colRefNo hiddenColumn">{{item.refno}}</td>
-                                            <td contenteditable="false" class="colPaymentMethod hiddenColumn">{{item.paymentmethod}}</td>
-                                            <td contenteditable="false" class="colNotes">{{item.notes}}</td>
-                                        </tr>
-                                    {{/each}}
-                                {{/if}}
-
-                            </tbody>
-                        </table>
+                        </div> -->
+                        
+                        {{>datatablelist
+                            tablename="tblcustomerAwaitingPayment"
+                            tableclass="tblcustomerAwaitingPayment"
+                            apiName= apiFunction
+                            indexeddbname = 'TOverdueAwaitingCustomerPayment'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Customer Awaiting Payment'
+                            istransaction = true
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tsaleslist'
+                            exIndexDBName = 'tsaleslist'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                          }}
                     </div>
                 </div>
             </div>
