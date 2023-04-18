@@ -4026,7 +4026,7 @@ Template.customerscard.helpers({
     },
 
     apiParams_CrmListWithDate: function () {
-        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+        return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
     },
 
 
