@@ -2555,12 +2555,12 @@ Template.leadscard.helpers({
     },
     apiFunction:function() {
         let crmService = new CRMService();
-        return crmService.getAllProjectTasksList;
+        return crmService.getAllTasksList;
     },
 
     searchAPI: function() {
         let crmService = new CRMService();
-        return crmService.getAllProjectTasksByTaskName;
+        return crmService.getAllTasksByName;
     },
 
     service: ()=>{
@@ -2585,7 +2585,7 @@ Template.leadscard.helpers({
     },
 
     apiParams: function() {
-        return ['dateFrom', 'dateTo', 'ignoredate', 'deleteFilter'];
+        return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
     },
 });
 
