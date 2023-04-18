@@ -126,7 +126,7 @@
           </div>
           <div class="card-body">
             <div class="card-body p-3 rounded">
-              <div class="bg-white row d-xl-flex flex-row justify-c ontent-xl-center m-0 p-2">
+              <div class="bg-white row d-xl-flex flex-row justify-content-xl-center m-0 p-2">
                 <div class="modal fade addEmployeeModalNew" role="dialog" tabindex="-1" id="addEmployeeModal">
                   {{> addemployeepop editableEmployee=editableEmployee isSetup="true" }}
                 </div>
@@ -217,25 +217,23 @@
                       </div>
                     </div>
                   </div>
-                </div>
-                {{> non_transactional_list tablename='tblEmployeelist'}}-->
-
-                  {{>datatablelist
-                          tablename="tblEmployeelist"
-                          apiName= apiFunction
-                          indexeddbname = 'TEmployeeList'
-                          tableheaderrecords = tableheaderrecords
-                          exportfilename = 'Employee List'
-                          istransaction = false
-                          apiParams= apiParams
-                          datahandler = datahandler
-                          service=service
-                          lowercaseDataName='temployeelist'
-                          exIndexDBName = 'temployeelist'
-                          exdatahandler = exDataHandler
-                          searchAPI = searchAPI
-                  }}
-
+                </div> -->
+                <!-- {{> non_transactional_list tablename='tblEmployeelist'}} -->
+                {{>datatablelist
+                  tablename="tblEmployeelist"
+                  apiName= apiFunction
+                  indexeddbname = 'TEmployeeList'
+                  tableheaderrecords = tableheaderrecords
+                  exportfilename = 'Employee List'
+                  istransaction = false
+                  apiParams= apiParams
+                  datahandler = datahandler
+                  service=service
+                  lowercaseDataName='temployeelist'
+                  exIndexDBName = 'temployeelist'
+                  exdatahandler = exDataHandler
+                  searchAPI = searchAPI
+                }}
               </div>
             </div>
             <div class="row no-gutters">
