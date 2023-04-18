@@ -1417,14 +1417,19 @@ Template.calender.onRendered(function() {
                     eventLeave[item.EmployeeID]  = item.LeaveMethod;
                     eventStatus[item.EmployeeID] = item.Status;
                 });
-
         let title = document.createElement("p");
         if(pattern.test(event.event._def.publicId)){
             var empid = event.event._def.publicId.split(':')[1];
             if(eventStatus[empid] == 'Awaiting' || eventStatus[empid] == 'Approved'){
-                let newTitle = "<div><p style='font-size:12px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
+                let newTitle = "<div><p style='font-size:24px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
                 $(title).append(newTitle);
                 title.style.color = "#dddddd";
+                title.style.rotate = '-90deg';
+                title.style.width = '100%';
+                title.style.height = '100%';
+                title.style.display = 'flex';
+                title.style.alignItems = 'center';
+                title.style.justifyContent = 'center';
             }
         } else {
             title.innerHTML = event.timeText + " " + event.event.title;
@@ -1432,10 +1437,10 @@ Template.calender.onRendered(function() {
             title.style.color = "#ffffff";
         }
 
-                let arrayOfDomNodes = [title];
-                return {
-                    domNodes: arrayOfDomNodes,
-                };
+        let arrayOfDomNodes = [title];
+        return {
+            domNodes: arrayOfDomNodes,
+        };
     }
 
     templateObject.renderNormalCalendar = function(slotMin, slotMax, hideDays) {
