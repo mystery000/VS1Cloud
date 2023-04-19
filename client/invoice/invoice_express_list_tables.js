@@ -46,7 +46,7 @@ Template.invoicelist.onCreated(function () {
     // };
     let dataList = [
         // data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate,
-        '<span style="display:none;">'+data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate+'</span>'+data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate,
+        '<span style="display:none;">'+(data.SaleDate !=''? moment(data.SaleDate).format("YYYY/MM/DD"): data.SaleDate)+'</span>'+(data.SaleDate !=''? moment(data.SaleDate).format("DD/MM/YYYY"): data.SaleDate),
         data.SaleID || '',
         data.DueDate !=''? moment(data.DueDate).format("DD/MM/YYYY"): data.DueDate,
         data.CustomerName || '',
