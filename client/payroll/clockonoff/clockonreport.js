@@ -30,7 +30,7 @@ Template.clockonreport_template.onCreated(function() {
         }
         else {
             
-            percent_variance = parseFloat(data.ProcessClockedTime)/parseFloat(data.TotalClockedTime);
+            percent_variance = parseFloat(data.ProcessClockedTime)/parseFloat(data.TotalClockedTime)*100;
         }
 
         let linestatus = "";
@@ -52,6 +52,14 @@ Template.clockonreport_template.onCreated(function() {
         ];
 
         return dataList;
+    }
+    templateObject.getDiffTime = function (time1, time2) {
+        const [h1, m1, s1] = time1.split(/[:\s]/).map(Number);
+        const [h2, m2, s2] = time2.split(/[:\s]/).map(Number);
+
+        // Calculate the difference in hours
+        const diffInHours = (h2 - h1) + (m2 - m1) / 60 + (s2 - s1) / 3600;
+        return diffInHours;
     }
 });
 
@@ -98,8 +106,8 @@ Template.clockonreport_template.onRendered(function() {
                     let clockon_temp ;
                     let employee_data = empdata;
                     let timesheet_data = timesheet.ttimesheet;
-                    let workorder_data = workorder;
-        
+                    let workorder_data = workorder;          
+     
 
                     for(let i = 0; i < employee_data.length ; i++) {
                         let employee_name = employee_data[i].fields.EmployeeName;
@@ -113,23 +121,56 @@ Template.clockonreport_template.onRendered(function() {
                             }
                         }
                         
-                        for(let k = 0; k < workorder_data.length ; k++) {
-                          
-                           
-                           if(workorder_data[k].fields.EmployeeName == employee_name ) {
-                             let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
-                             let bomDetailData = JSON.parse(bomData.Details);
+                        for(let k = 0; k < workorder_data.length ; k++) {                      
+    
+                         if(workorder_data[k].fields.EmployeeName == employee_name ) {
+                            //  let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
+                            //  let bomDetailData = JSON.parse(bomData.Details);
+                                 
+                            //  console.log(bomDetailData);
 
-                         
-
-                             for(let l=0; l < bomDetailData.length; l++ ) {
-                                process_clocked_time = process_clocked_time + bomDetailData[l].ClockedTime;
+                            //  for(let l=0; l < bomDetailData.length; l++ ) {
+                            //     console.log(bomDetailData[i]);
+                            //     startedTimes = bomDetailData[i].StartedTimes;
+                            //     stoppedTimes = bomDetailData[i].StoppedTimes;
+                            //     let clocked_hrs = 0;              
+                                                    
+                            //     for(let k=0; k < startedTimes.length; k++) {
+            
+                            //         const startTimeString = startedTimes[k];
+                            //         const endTimeString = stoppedTimes[k];
+            
+                            //         // Convert the time strings to Date objects
+                            //         const startTime = new Date(startTimeString);
+                            //         const endTime = new Date(endTimeString);
+            
+                            //     // Calculate the difference in hours
+                            //        const hoursDiff = Math.abs(endTime - startTime) / 36e5; // 36e5 is the number of milliseconds in an hour
+                            //        clocked_hrs = clocked_hrs + hoursDiff;
+                            //     }
+                            //     process_clocked_time = clocked_hrs;
+                            //     console.log(process_clocked_time);
                                 
-                             }
+                            //  }
+                               
+                                startedTimes = workorder[k].fields.StartedTimes;
+                                stoppedTimes = workorder[k].fields.StoppedTimes;
+                                let clocked_hrs = 0;  
+                             
+                                           
+                                for(let k=0; k < stoppedTimes.length; k++) {
 
+                                    const startTimeString = startedTimes[k];
+                                    const endTimeString = stoppedTimes[k];
+                                    const hoursDiff = templateObject.getDiffTime(startTimeString, endTimeString);
+                                    clocked_hrs = clocked_hrs + hoursDiff;
+                                }
+                                process_clocked_time = clocked_hrs;
+                                
                             }
                         }
-
+                         
+                                           
                         clockon_temp = {EmployeeId : employee_id,
                                         EmployeeName: employee_name , 
                                         TotalClockedTime: total_clocked_time,
@@ -137,24 +178,16 @@ Template.clockonreport_template.onRendered(function() {
                                         Active: false,
                                         };
                         clockon_report_data.push(clockon_temp);
-
-
                     }
 
                     addVS1Data('TVS1ClockOnReport', JSON.stringify({tvs1clockonreport: clockon_report_data})).then(function(datareturn){
                     }).catch(function(err){
                         
-                    });
-
+                    });                    
                     
-                    
-                })
-
-                                   
+                })                                   
             }) 
-
         })
-
     }
     
     templateObject.makeIndexedDBdata("","");       

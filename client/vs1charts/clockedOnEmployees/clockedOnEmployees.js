@@ -118,7 +118,102 @@ Template.clockedOnEmployees.onRendered(function () {
       });
   };
 
-  templateObject.getAllTimeSheetDataClock();
+//  templateObject.getAllTimeSheetDataClock();
+
+  templateObject.getClockOnEmployee = function () {
+    getVS1Data("TClockOnStatus")
+      .then(function (dataObject) {
+        if (dataObject == 0) {
+          // sideBarService
+          //   .getAllTimeSheetList()
+          //   .then(function (data) {
+          //     /* Update Clocked On Employees */
+          //     let clockedOnEmpList = []
+          //     let dataListClockedOnEmployeeObj = {};
+          //     for (let t = 0; t < data.ttimesheet.length; t++) {
+          //       if (data.ttimesheet[t].fields.Logs != null) {
+          //         if ( data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" || data.ttimesheet[t].fields.InvoiceNotes == "paused") {
+          //           let duplicateCheck = false;
+          //           for(let j = 0; j < clockedOnEmpList.length; j++) {
+          //             if(clockedOnEmpList[j].employeename == data.ttimesheet[t].fields.EmployeeName ) {
+          //               duplicateCheck = true;
+          //             }
+          //           }
+          //           if(!duplicateCheck) {
+          //             dataListClockedOnEmployeeObj = {
+          //               employeename: data.ttimesheet[t].fields.EmployeeName || "",
+          //             };
+          //             clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+    
+          //           }                 
+          //         }
+          //       }
+          //     }
+          //     templateObject.clockedOnEmpData.set(clockedOnEmpList);
+          //     // $(".fullScreenSpin").css("display", "none");
+          //   })
+          //   .catch(function (err) {
+          //     // Bert.alert('<strong>' + err + '</strong>!', 'danger');
+          //     $(".fullScreenSpin").css("display", "none");
+          //     // Meteor._reload.reload();
+          //   });
+        } else {
+          let clockedOnEmpList = []
+          let data = JSON.parse(dataObject[0].data);
+
+          /* Update Clocked On Employees */
+          let dataListClockedOnEmployeeObj = {};
+          for (let t = 0; t < data.length; t++) {
+          
+              if ( data[t].fields.Status == "Clock On") {
+               
+                  dataListClockedOnEmployeeObj = {
+                    employeename: data[t].fields.EmployeeName || "",
+                  };
+                  clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+                  
+                }                 
+             
+            }          
+          
+          templateObject.clockedOnEmpData.set(clockedOnEmpList);
+        }
+      })
+      .catch(function (err) {
+        // sideBarService
+        //   .getAllTimeSheetList()
+        //   .then(function (data) {
+        //     /* Update Clocked On Employees */
+        //     let clockedOnEmpList = []
+        //     let dataListClockedOnEmployeeObj = {};
+        //     for (let t = 0; t < data.ttimesheet.length; t++) {
+        //       if (data.ttimesheet[t].fields.Logs != null) {
+        //         if ( data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" || data.ttimesheet[t].fields.InvoiceNotes == "paused") {
+        //         let duplicateCheck = false;
+        //         for(let j = 0; j < clockedOnEmpList.length; j++) {
+        //           if(clockedOnEmpList[j].employeename == data.ttimesheet[t].fields.EmployeeName ) {
+        //             duplicateCheck = true;
+        //           }
+        //         }
+        //         if(!duplicateCheck) {
+        //           dataListClockedOnEmployeeObj = {
+        //             employeename: data.ttimesheet[t].fields.EmployeeName || "",
+        //           };
+        //           clockedOnEmpList.push(dataListClockedOnEmployeeObj);
+
+        //         }                 
+        //       }
+        //       }
+        //     }
+        //     templateObject.clockedOnEmpData.set(clockedOnEmpList); 
+        //   })
+        //   .catch(function (err) {
+        //     $(".fullScreenSpin").css("display", "none"); 
+        //   });
+      });
+  };
+
+  templateObject.getClockOnEmployee();
 });
 
 
