@@ -191,7 +191,7 @@ Template.payrollrules.onCreated(function() {
         return dataList;
     }
     let headerStructure5  = [
-        { index: 0, label: '#ID', class: 'colDeductionsID', active: false, display: false, width: "" },
+        { index: 0, label: 'ID', class: 'colDeductionsID', active: false, display: false, width: "" },
         { index: 1, label: 'Deduction Name', class: 'colDeductionsNames', active: true, display: true, width: "200" },
         { index: 2, label: 'Deduction Type', class: 'colDeductionsType', active: true, display: true, width: "80" },
         { index: 3, label: 'Display Name', class: 'colDeductionsDisplayName', active: true, display: true, width: "200" },
@@ -1218,7 +1218,7 @@ Template.payrollrules.onRendered(function() {
                                                         data.tdeduction[i].fields.Taxexempt || false,
                                                         data.tdeduction[i].fields.SuperInc || false,
                                                         data.tdeduction[i].fields.WorkCoverExempt || false,
-                                                        ''
+                                                        data.tdeduction[i].fields.Active == true ? '' : 'In-Active',
                                                     ];
 
                                                     splashArrayDeductionList.push(dataListCustomerDupp);
@@ -1329,7 +1329,7 @@ Template.payrollrules.onRendered(function() {
                     data.tdeduction[i].fields.Taxexempt || false,
                     data.tdeduction[i].fields.SuperInc || false,
                     data.tdeduction[i].fields.WorkCoverExempt || false,
-                    ''
+                    data.tdeduction[i].fields.Active == true ? '' : 'In-Active',
                 ];
 
                 splashArrayDeductionList.push(dataListDeduction);
@@ -1436,10 +1436,9 @@ Template.payrollrules.onRendered(function() {
                                                     data.tdeduction[i].fields.Taxexempt || false,
                                                     data.tdeduction[i].fields.SuperInc || false,
                                                     data.tdeduction[i].fields.WorkCoverExempt || false,
+                                                    data.tdeduction[i].fields.Active == true ? '' : 'In-Active',
                                                 ];
-
                                                 splashArrayDeductionList.push(dataListCustomerDupp);
-                                                //}
                                             }
 
                                             let uniqueChars = [...new Set(splashArrayDeductionList)];
@@ -1541,7 +1540,7 @@ Template.payrollrules.onRendered(function() {
                     data.tdeduction[i].fields.Taxexempt || false,
                     data.tdeduction[i].fields.SuperInc || false,
                     data.tdeduction[i].fields.WorkCoverExempt || false,
-                    ''
+                    data.tdeduction[i].fields.Active == true ? '' : 'In-Active',
                 ];
 
                 splashArrayDeductionList.push(dataListDeduction);
@@ -2049,6 +2048,10 @@ Template.payrollrules.onRendered(function() {
                            {
                             className: "colEarningsReportableasW1 hiddenColumn",
                             "targets": [10]
+                           },
+                           {
+                            className: "colStatus",
+                            "targets": [11]
                            }
                         ],
                         select: true,
@@ -2203,7 +2206,7 @@ Template.payrollrules.onRendered(function() {
                             "targets": [9]
                            },
                            {
-                            className: "colEarningsReportableasW1 hiddenColumn",
+                            className: "colStatus",
                             "targets": [10]
                            },
                         ],
@@ -6983,8 +6986,8 @@ Template.payrollrules.onRendered(function() {
         });
 
         $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
-            // e.preventDefault();
-            // e.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
             var $earch = $(this);
             var offset = $earch.offset();
             let accountService = new AccountService();
@@ -7366,8 +7369,8 @@ Template.payrollrules.onRendered(function() {
         });
 
         $('#editsuperexpbankaccount').editableSelect().on('click.editable-select', function (e, li) {
-            // e.preventDefault();
-            // e.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
             var $earch = $(this);
             var offset = $earch.offset();
             let accountService = new AccountService();
@@ -20185,6 +20188,7 @@ Template.payrollrules.events({
                     axempt:data.tdeduction[i].fields.Payrolltaxexempt || false,
                     superinc:data.tdeduction[i].fields.Superinc || false,
                     workcover:data.tdeduction[i].fields.Workcoverexempt || false,
+                    active: data.tdeduction[i].fields.Active == true ? '' : 'In-Active',
                     deletedata:''
                 };
 
