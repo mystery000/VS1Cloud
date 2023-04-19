@@ -18,6 +18,8 @@ import { Template } from 'meteor/templating';
 import './dashboardexe.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import Tvs1chart from "../js/Api/Model/Tvs1Chart";
+import { ChartService } from "../vs1charts/chart-service";
+import { CardService } from "../vs1charts/card-service";
 
 let _ = require("lodash");
 
@@ -26,100 +28,9 @@ let arrChartActive = [1, 1, 1, 1, 1, 1];
 let curChartActive = [];
 localStorage.setItem("arrChartActive", JSON.stringify(arrChartActive));
 
-/**
- * Current User ID
- */
-const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-const _chartGroup = "";
-const _tabGroup = 0;
-const chartsEditor = new ChartsEditor(
-    () => {
-        $("#resetcharts2").removeClass("hideelement").addClass("showelement"); // This will show the reset charts button
-        $("#btnDone2").addClass("showelement");
-        $("#btnDone2").removeClass("hideelement");
-        $("#btnCancel2").addClass("showelement");
-        $("#btnCancel2").removeClass("hideelement");
-        $("#btnReset2").addClass("showelement");
-        $("#btnReset2").removeClass("hideelement");
-        $(".btnchartdropdown").addClass("hideelement");
-        $(".btnchartdropdown").removeClass("showelement");
+let chartService = new ChartService
+let cardService = new CardService
 
-        $(".sortable-chart-widget-js").removeClass("hideelement"); // display every charts
-        $(".on-editor-change-mode").removeClass("hideelement");
-        $(".on-editor-change-mode").addClass("showelement");
-    },
-    () => {
-        $("#resetcharts2").addClass("hideelement").removeClass("showelement"); // this will hide it back
-        $("#btnDone2").addClass("hideelement");
-        $("#btnDone2").removeClass("showelement");
-        $("#btnCancel2").addClass("hideelement");
-        $("#btnCancel2").removeClass("showelement");
-        $("#btnReset2").addClass("hideelement");
-        $("#btnReset2").removeClass("showelement");
-        $(".btnchartdropdown").removeClass("hideelement");
-        $(".btnchartdropdown").addClass("showelement");
-
-        $(".on-editor-change-mode").removeClass("showelement");
-        $(".on-editor-change-mode").addClass("hideelement");
-    }
-);
-
-/**
- * This function will save the charts on the dashboard
- */
-async function saveCharts() {
-    /**
-     * Lets load all API colections
-     */
-    const dashboardApis = new DashboardApi(); // Load all dashboard APIS
-    ChartHandler.buildPositions();
-    const charts = $(".chart-visibility.editCharts");
-    /**
-     * @property {Tvs1ChartDashboardPreference[]}
-     */
-    let chartList = [];
-    // now we have to make the post request to save the data in database
-    const apiEndpoint = dashboardApis.collection.findByName(
-        dashboardApis.collectionNames.Tvs1dashboardpreferences
-    );
-
-    Array.prototype.forEach.call(charts, (chart) => {
-        chartList.push(
-            new Tvs1ChartDashboardPreference({
-                type: "Tvs1dashboardpreferences",
-                fields: new Tvs1ChartDashboardPreferenceField({
-                    Active: $(chart).find(".on-editor-change-mode").attr("is-hidden") == true ||
-                        $(chart).find(".on-editor-change-mode").attr("is-hidden") == "true" ?
-                        false :
-                        true,
-                    ChartID: parseInt($(chart).attr("chart-id")),
-                    ID: parseInt($(chart).attr("pref-id")),
-                    EmployeeID: employeeId,
-                    Chartname: $(chart).attr("chart-name"),
-                    Position: parseInt($(chart).attr("position")),
-                    ChartGroup: $(chart).attr("chart-group"),
-                    TabGroup: parseInt(_tabGroup),
-                    ChartWidth: ChartHandler.calculateWidth(chart),
-                    ChartHeight: ChartHandler.calculateHeight(chart),
-                }),
-            })
-        );
-    });
-    // for (const _chart of chartList) {
-    let chartJSON = {
-        type: "Tvs1dashboardpreferences",
-        objects: chartList
-    };
-    const ApiResponse = await apiEndpoint.fetch(null, {
-        method: "POST",
-        headers: ApiService.getPostHeaders(),
-        body: JSON.stringify(chartJSON),
-    });
-    if (ApiResponse.ok == true) {
-        const jsonResponse = await ApiResponse.json();
-    }
-    // }
-}
 
 Template.dashboardexe.onCreated(function() {
     this.loggedDb = new ReactiveVar("");
@@ -189,91 +100,17 @@ Template.dashboardexe.onRendered(function() {
     if (isDashboard) {
         templateObject.includeDashboard.set(true);
     }
-    const currentDate = new Date();
-    let fromDate = moment().subtract(2, 'month').format('DD/MM/YYYY');
-    let toDate = moment(currentDate).format("DD/MM/YYYY");
 
-    setTimeout(function() {
-        $("#date-input,#dateTo,#dateFrom").datepicker({
-            showOn: "button",
-            buttonText: "Show Date",
-            buttonImageOnly: true,
-            buttonImage: "/img/imgCal2.png",
-            dateFormat: "dd/mm/yy",
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-90:+10",
-            onChangeMonthYear: function(year, month, inst) {
-                // Set date to picker
-                $(this).datepicker('setDate', new Date(year, inst.selectedMonth, inst.selectedDay));
-                // Hide (close) the picker
-                // $(this).datepicker('hide');
-                // // Change ttrigger the on change function
-                // $(this).trigger('change');
-            }
-        });
-        let urlParametersDateFrom = FlowRouter.current().queryParams.fromDate;
-        let urlParametersDateTo = FlowRouter.current().queryParams.toDate;
-        let urlParametersIgnoreDate = FlowRouter.current().queryParams.ignoredate;
-        if (urlParametersDateFrom) {
-            if (urlParametersIgnoreDate == true) {
-                $("#dateFrom").attr("readonly", true);
-                $("#dateTo").attr("readonly", true);
-            } else {
-                let paramFromDate = urlParametersDateFrom != "" ? new Date(urlParametersDateFrom) : urlParametersDateFrom;
-                paramFromDate = moment(paramFromDate).format("DD/MM/YYYY");
-                $("#dateFrom").val(paramFromDate);
-                let paramToDate = urlParametersDateTo != "" ? new Date(urlParametersDateTo) : urlParametersDateTo;
-                paramToDate = moment(paramToDate).format("DD/MM/YYYY");
-                $("#dateTo").val(paramToDate);
-            }
-        } else {
-            $("#dateFrom").val(fromDate);
-            $("#dateTo").val(toDate);
-        }
-        if (urlParametersIgnoreDate == "true") {
-            $("#dateFrom").val(null);
-            $("#dateTo").val(null);
-        }
-        $('[data-toggle="tooltip"]').tooltip({ html: true });
-    }, 500);
     //-fix 12.22
-    let _tabGroup = $("#connectedSortable2").data("tabgroup");
-    let _chartGroup = $("#connectedSortable2").data("chartgroup");
+    let _tabGroup = $("#connectedSortable").data("tabgroup");
+    let _chartGroup = $("#connectedSortable").data("chartgroup");
     // if (_chartGroup == undefined)
     //   _chartGroup = "DashboardExe";
 
     let reportService = new ReportService();
     let utilityService = new UtilityService();
     // let currentDate = new Date();
-    $(document).ready(function() {
-        $("#balancedate").datepicker({
-            showOn: "button",
-            buttonText: "Show Date",
-            buttonImageOnly: true,
-            buttonImage: "/img/imgCal2.png",
-            dateFormat: "dd/mm/yy",
-            // dateFormat: 'yy-mm-dd',
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            changeMonth: true,
-            changeYear: true,
-            yearRange: "-90:+10",
-            onChangeMonthYear: function(year, month, inst) {
-                // Set date to picker
-                $(this).datepicker(
-                    "setDate",
-                    new Date(year, inst.selectedMonth, inst.selectedDay)
-                );
-                // Hide (close) the picker
-                // $(this).datepicker('hide');
-                // // Change ttrigger the on change function
-                // $(this).trigger('change');
-            },
-        });
-    });
+
     let varianceRed = "#ff420e";
     let varianceGreen = "#1cc88a"; //#579d1c
     let panelLeftYellow = "#f7c544"; //#1cc88a
@@ -352,300 +189,14 @@ Template.dashboardexe.onRendered(function() {
     let currentAssetPerc2 = 0;
     let termAssetPerc2 = 0;
 
-    // let isDashboard = localStorage.getItem("CloudDashboardModule");
-    if (isDashboard) {
-        templateObject.includeDashboard.set(true);
+    templateObject.setTitleDE = () => {
+        templateObject.titleDE.set(moment($("#dateTo").val(), "DD/MM/YYYY").format("MMMM YYYY"));
     }
 
-    templateObject.setTitleDE = (yy, mm, dd) => {
-        var currentDate = new Date(yy, mm, dd);
-        const monSml0 = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-        var currMonth = monSml0[currentDate.getMonth()] + " " + currentDate.getFullYear();
-        templateObject.titleDE.set(currMonth);
+    templateObject.setMonthsOnHeader = () => {
+        templateObject.titleMonth1.set(moment($("#dateFrom").val(), "DD/MM/YYYY").format("MMM YYYY"));
+        templateObject.titleMonth2.set(moment($("#dateTo").val(), "DD/MM/YYYY").format("MMM YYYY"));
     }
-
-    templateObject.setMonthsOnHeader = (yy, mm, dd) => {
-        var currentDate = new Date(yy, mm, dd);
-        const monSml = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        var currMonth1 = "",
-            currMonth2 = "";
-        if (currentDate.getMonth() == 0) {
-            currMonth1 = monSml[10] + " " + (currentDate.getFullYear() - 1);
-            currMonth2 = monSml[11] + " " + (currentDate.getFullYear() - 1);
-        } else if (currentDate.getMonth() == 1) {
-            currMonth1 = monSml[11] + " " + (currentDate.getFullYear() - 1);
-            currMonth2 = monSml[0] + " " + currentDate.getFullYear();
-        } else {
-            currMonth1 = monSml[currentDate.getMonth() - 2] + " " + currentDate.getFullYear();
-            currMonth2 = monSml[currentDate.getMonth() - 1] + " " + currentDate.getFullYear();
-        }
-        templateObject.titleMonth1.set(currMonth1);
-        templateObject.titleMonth2.set(currMonth2);
-    }
-
-    templateObject.hideChartElements = () => {
-        // on edit mode false
-        // $(".on-editor-change-mode").removeClass("showelement");
-        // $(".on-editor-change-mode").addClass("hideelement");
-        const dimmedElements = document.getElementsByClassName("dimmedChart");
-        while (dimmedElements.length > 0) {
-            dimmedElements[0].classList.remove("dimmedChart");
-        }
-    };
-
-    templateObject.showChartElements = function() {
-        // on edit mode true
-        // $(".on-editor-change-mode").addClass("showelement");
-        // $(".on-editor-change-mode").removeClass("hideelement");
-        $('.sortable-chart-widget-js').removeClass("col-md-8 col-md-6 col-md-4");
-        $('.sortable-chart-widget-js').addClass("editCharts");
-        $('.sortable-chart-widget-js').each(function() {
-            let className = $(this).data('default-class');
-            $(this).addClass(className);
-            $(this).show();
-        });
-        $(".card").addClass("dimmedChart");
-        // $(".py-2").removeClass("dimmedChart");
-    };
-
-    templateObject.checkChartToDisplay = async() => {
-        let defaultChartList = [];
-        let chartList = [];
-        const dashboardApis = new DashboardApi(); // Load all dashboard APIS
-        let displayedCharts = 0;
-        chartList = await ChartHandler.getTvs1charts();
-        if (chartList.length == 0) {
-            // Fetching data from API
-            const allChartsEndpoint = dashboardApis.collection.findByName(
-                dashboardApis.collectionNames.vs1charts
-            );
-            allChartsEndpoint.url.searchParams.append("ListType", "'Detail'");
-            const allChartResponse = await allChartsEndpoint.fetch();
-            if (allChartResponse.ok == true) {
-                const allChartsJsonResponse = await allChartResponse.json();
-                chartList = Tvs1chart.fromList(allChartsJsonResponse.tvs1charts);
-            }
-        }
-        if (chartList.length > 0) {
-            // Hide all charts
-            $('.sortable-chart-widget-js').addClass("hideelement");
-            // the goal here is to get the right names so it can be used for preferences
-            chartList.forEach((chart) => {
-                setTimeout(() => {
-                    //chart.fields.active = false; // Will set evething to false
-                    chart.fields._chartSlug =
-                        chart.fields.ChartGroup.toLowerCase() +
-                        "__" +
-                        chart.fields.ChartName.toLowerCase().split(" ").join("_");
-                    $(`[key='${chart.fields._chartSlug}']`).addClass("chart-visibility");
-                    $(`[key='${chart.fields._chartSlug}']`).attr("pref-id", 0);
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-id",
-                        chart.fields.ID
-                    );
-                    // Default charts
-                    let defaultClass = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-class');
-                    let defaultPosition = $(`[key='${chart.fields._chartSlug}']`).attr('data-default-position');
-                    $(`[key='${chart.fields._chartSlug}']`).addClass(defaultClass);
-                    $(`[key='${chart.fields._chartSlug}']`).attr('position', defaultPosition);
-                    $(`[key='${chart.fields._chartSlug}']`).attr('width', '100%');
-                    $(`[key='${chart.fields._chartSlug}']`).css('height', "auto");
-                    $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
-                        "width",
-                        "100%"
-                    );
-                    $(`[key='${chart.fields._chartSlug}'] .ui-resizable`).css(
-                        "height",
-                        "auto"
-                    );
-                    if (chart.fields.ChartGroup == _chartGroup) {
-                        defaultChartList.push(chart.fields._chartSlug);
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
-                            "<i class='far fa-eye'></i>"
-                        );
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "false"
-                        );
-                        $(`[key='${chart.fields._chartSlug}']`).removeClass("hideelement");
-                        if (chart.fields._chartSlug == 'accounts__profit_and_loss') {
-                            $(`[key='dashboard__profit_and_loss']`).removeClass("hideelement");
-                        }
-                        if (chart.fields._chartSlug == 'sales__sales_overview') {
-                            $(`[key='contacts__top_10_customers']`).removeClass("hideelement");
-                            $(`[key='dashboard__employee_sales_comparison']`).removeClass("hideelement");
-                        }
-                        if (chart.fields._chartSlug == 'inventory__stock_on_hand_and_demand') {
-                            $(`[key='contacts__top_10_supplies']`).removeClass("hideelement");
-                        }
-                        if (_chartGroup == 'Dashboard' && (chart.fields._chartSlug == 'dashboard__monthly_earnings' || chart.fields._chartSlug == 'dashboard__quoted_amounts_/_invoiced_amounts')) {
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
-                        if (_chartGroup == 'DSMCharts' && (chart.fields._chartSlug == 'spd-employee-chart' || chart.fields._chartSlug == 'spd-gauge-area')) {
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
-                        if (_chartGroup == 'DSCharts' && (chart.fields._chartSlug == 'sd-comparison-chart' || chart.fields._chartSlug == 'opens-opportunities-chart')) {
-                            $(`[key='${chart.fields._chartSlug}']`).addClass("hideelement");
-                        }
-                        if (_chartGroup == 'Dashboard') {
-                            $(`[key='dashboard__account_list']`).removeClass("hideelement");
-                        }
-                    } else {
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).html(
-                            "<i class='far fa-eye-slash'></i>"
-                        );
-                        $(`[key='${chart.fields._chartSlug}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "true"
-                        );
-                    }
-                    // $(`[key='${chart.fields._chartSlug}']`).attr(
-                    //   "pref-id",
-                    //   chart.fields.ID
-                    // );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-slug",
-                        chart.fields._chartSlug
-                    );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-group",
-                        chart.fields.ChartGroup
-                    );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-name",
-                        chart.fields.ChartName
-                    );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-active",
-                        chart.fields.Active
-                    );
-                    $(`[key='${chart.fields._chartSlug}']`).attr(
-                        "chart-user-pref-is-hidden", !chart.fields.Active
-                    );
-                }, 500);
-            });
-        }
-
-        arrChartKey.forEach((chartKey) => {
-            $(`[key='${chartKey}']`).removeClass('hideelement');
-        });
-
-        // Now get user preferences
-        let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences(_tabGroup);
-        // let tvs1ChartDashboardPreference = await ChartHandler.getLocalChartPreferences( 2 );
-        if (tvs1ChartDashboardPreference.length > 0) {
-            // if charts to be displayed are specified
-            tvs1ChartDashboardPreference.forEach((tvs1chart, index) => {
-                setTimeout(() => {
-                    if (!tvs1chart.fields.Chartname || tvs1chart.fields.Chartname == "") {
-                        return;
-                    }
-                    const itemName =
-                        tvs1chart.fields.ChartGroup.toLowerCase() +
-                        "__" +
-                        tvs1chart.fields.Chartname.toLowerCase().split(" ").join("_"); // this is the new item name
-                    $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").removeClass("col-md-8 col-md-6 col-md-4");
-                    $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass("resizeAfterChart");
-                    $(`[key='${itemName}']`).attr("pref-id", tvs1chart.fields.ID);
-                    $(`[key='${itemName}']`).attr("position", tvs1chart.fields.Position);
-                    $(`[key='${itemName}']`).attr("chart-id", tvs1chart.fields.ChartID);
-                    $(`[key='${itemName}']`).attr(
-                        "chart-group",
-                        tvs1chart.fields.chartGroup
-                    );
-                    $(`[key='${itemName}']`).addClass("chart-visibility");
-                    //$(`[key='${itemName}']`).attr('chart-id', tvs1chart.fields.Id);
-                    $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-                        "chart-slug",
-                        itemName
-                    );
-                    if (tvs1chart.fields.Active == true) {
-                        $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-                        $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "false"
-                        );
-                        // If the item name exist
-                        if (tvs1chart.fields.ChartWidth) {
-                            $(`[key='${itemName}'] .ui-resizable`).parents('.sortable-chart-widget-js').css(
-                                "width",
-                                tvs1chart.fields.ChartWidth + '%'
-                            );
-                            $(`[key='${itemName}'] .ui-resizable`).css(
-                                "width", "100%"
-                            );
-                        }
-                        // This is the ChartHeight saved in the preferences
-                        if (tvs1chart.fields.ChartHeight) {
-                            $(`[key='${itemName}'] .ui-resizable`).css(
-                                "height",
-                                tvs1chart.fields.ChartHeight + 'vh'
-                            );
-                        }
-                        $(`[key='${itemName}']`).removeClass("hideelement");
-                    } else {
-                        let defaultClassName = $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").data('default-class');
-                        $(`[key='${itemName}'] .ui-resizable`).parents(".sortable-chart-widget-js").addClass(defaultClassName);
-                        $(`[key='${itemName}']`).addClass("hideelement");
-                        $(`[key='${itemName}'] .on-editor-change-mode`).html("<i class='far fa-eye-slash'></i>");
-                        // $(`[key='${itemName}']`).attr("is-hidden", true);
-                        $(`[key='${itemName}'] .on-editor-change-mode`).attr(
-                            "is-hidden",
-                            "true"
-                        );
-                    }
-                }, 500);
-            });
-            displayedCharts = document.querySelectorAll(
-                ".sortable-chart-widget-js:not(.hideelement)"
-            );
-            if (displayedCharts.length == 0) {
-                // show only the first one
-                let item = defaultChartList.length ? defaultChartList[0] : "";
-                if (item) {
-                    $(`[key='${item}'] .on-editor-change-mode`).html("<i class='far fa-eye'></i>");
-                    $(`[key='${item}'] .on-editor-change-mode`).attr("is-hidden", false);
-                    $(`[key='${item}'] .on-editor-change-mode`).attr("chart-slug", item);
-                    $(`[key='${item}']`).removeClass("hideelement");
-                    $(`[key='${item}']`).addClass("chart-visibility");
-                }
-            }
-        } else {
-            // Set default chart list
-            $('.card-visibility').each(function() {
-                $(this).find('.cardShowBtn .far').removeClass('fa-eye');
-                let position = $(this).data('default-position');
-                $(this).attr('position', position);
-                $(this).find('.cardShowBtn .far').addClass('fa-eye-slash');
-                $(this).attr("card-active", 'false');
-            })
-            $(`[chart-group='${_chartGroup}']`).attr("card-active", 'true');
-            $(`[chart-group='${_chartGroup}']`).removeClass('hideelement');
-            $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').removeClass('fa-eye-slash');
-            $(`[chart-group='${_chartGroup}']`).find('.cardShowBtn .far').addClass('fa-eye');
-        }
-
-        await ChartHandler.buildPositions();
-        // Handle sorting
-        setTimeout(() => {
-            let $chartWrappper = $(".connectedChartSortable2");
-            $chartWrappper
-                .find(".sortable-chart-widget-js")
-                .sort(function(a, b) {
-                    return +a.getAttribute("position") - +b.getAttribute("position");
-                })
-                .appendTo($chartWrappper);
-        }, 500);
-        for (var i = 0; i < curChartActive.length; i++) {
-            if (curChartActive[i] == 1) {
-                $(`[key='${arrChartKey[i]}']`).show();
-            } else {
-                $(`[key='${arrChartKey[i]}']`).hide();
-            }
-        }
-        // if ($(`[key='dashboardexe_cash'] .on-editor-change-mode`).attr("is-hidden") == "true") {
-        // }
-    };
 
     templateObject.deactivateDraggable = () => {
         draggableCharts.disable();
@@ -753,8 +304,8 @@ Template.dashboardexe.onRendered(function() {
         //LoadingOverlay.show();
         try {
             let data = await reportService.getCardDataReport(dateAsOf);
-            if (data.tcarddatareport) {
-                let resData = data.tcarddatareport[0];
+            if (data.tdashboardexecdata1) {
+                let resData = data.tdashboardexecdata1[0];
 
                 cashReceived[0] = parseFloat(resData.Cash_Received1);
                 cashReceived[1] = parseFloat(resData.Cash_Received2);
@@ -1034,15 +585,17 @@ Template.dashboardexe.onRendered(function() {
         } catch (err) {}
         LoadingOverlay.hide();
     }
-    templateObject.setTitleDE(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    templateObject.setMonthsOnHeader(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
-    templateObject.activateDraggable(); // this will enable charts resiable features
-    $("#balancedate").val(moment(currentDate).format("DD/MM/YYYY"));
+    const currentDate = new Date()
+    templateObject.setTitleDE();
+    templateObject.setMonthsOnHeader();
     var dateAsOf = currentDate.getFullYear() + '-' + ("0" + (currentDate.getMonth() + 1)).slice(-2) + '-' + ("0" + (currentDate.getDate())).slice(-2);
     templateObject.getDashboardExecutiveData(dateAsOf, false);
-
-    templateObject.checkChartToDisplay(); // we run this so we load the correct charts to diplay
+    chartService.checkChartToDisplay(); // we run this so we load the correct charts to diplay
     templateObject.activateDraggable(); // this will enable charts resiable features
+    $(document).on("change", "#dateFrom, #dateTo", () => {
+        templateObject.setTitleDE();
+        templateObject.setMonthsOnHeader();
+    })
 });
 
 Template.dashboardexe.helpers({
@@ -1203,158 +756,6 @@ Template.dashboardexe.helpers({
 
 // Listen to event to update reactive variable
 Template.dashboardexe.events({
-    //fix
-    "change #dateTo": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        const dateTo = new Date($("#dateTo").datepicker("getDate"));
-        let formatDateFrom =
-            dateFrom.getFullYear() +
-            "-" +
-            (dateFrom.getMonth() + 1) +
-            "-" +
-            dateFrom.getDate();
-        let formatDateTo =
-            dateTo.getFullYear() +
-            "-" +
-            (dateTo.getMonth() + 1) +
-            "-" +
-            dateTo.getDate();
-        window.open("/dashboardsalesmanager?fromDate=" + formatDateFrom + "&toDate=" + formatDateTo, '_self');
-    },
-    "change #dateFrom": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const dateFrom = new Date($("#dateFrom").datepicker("getDate"));
-        const dateTo = new Date($("#dateTo").datepicker("getDate"));
-        let formatDateFrom =
-            dateFrom.getFullYear() +
-            "-" +
-            (dateFrom.getMonth() + 1) +
-            "-" +
-            dateFrom.getDate();
-        let formatDateTo =
-            dateTo.getFullYear() +
-            "-" +
-            (dateTo.getMonth() + 1) +
-            "-" +
-            dateTo.getDate();
-        window.open("/dashboardsalesmanager?fromDate=" + formatDateFrom + "&toDate=" + formatDateTo, '_self');
-    },
-    "click #today": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const currentBeginDate = new Date();
-        let fromDateMonth = currentBeginDate.getMonth() + 1;
-        let fromDateDay = currentBeginDate.getDate();
-        if (currentBeginDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-        } else {
-            fromDateMonth = currentBeginDate.getMonth() + 1;
-        }
-        if (currentBeginDate.getDate() < 10) {
-            fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        const toDateERPFrom = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-        const toDateERPTo = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-        window.open("/dashboardsalesmanager?fromDate=" + toDateERPFrom + "&toDate=" + toDateERPTo, '_self');
-    },
-    "click #lastweek": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const currentBeginDate = new Date();
-        let fromDateMonth = currentBeginDate.getMonth() + 1;
-        let fromDateDay = currentBeginDate.getDate();
-        if (currentBeginDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (currentBeginDate.getMonth() + 1);
-        } else {
-            fromDateMonth = currentBeginDate.getMonth() + 1;
-        }
-        if (currentBeginDate.getDate() < 10) {
-            fromDateDay = "0" + currentBeginDate.getDate();
-        }
-        const toDateERPFrom =
-            currentBeginDate.getFullYear() +
-            "-" +
-            fromDateMonth +
-            "-" +
-            (fromDateDay - 7);
-        const toDateERPTo = currentBeginDate.getFullYear() + "-" + fromDateMonth + "-" + fromDateDay;
-        window.open("/dashboardsalesmanager?fromDate=" + toDateERPFrom + "&toDate=" + toDateERPTo, '_self');
-    },
-    "click #lastMonth": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const currentDate = new Date();
-        const prevMonthLastDate = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            0
-        );
-        const prevMonthFirstDate = new Date(
-            currentDate.getFullYear() - (currentDate.getMonth() > 0 ? 0 : 1),
-            (currentDate.getMonth() - 1 + 12) % 12,
-            1
-        );
-        const formatDateComponent = function(dateComponent) {
-            return (dateComponent < 10 ? "0" : "") + dateComponent;
-        };
-        const formatDateERP = function(date) {
-            return (
-                date.getFullYear() +
-                "-" +
-                formatDateComponent(date.getMonth() + 1) +
-                "-" +
-                formatDateComponent(date.getDate())
-            );
-        };
-        const getLoadDate = formatDateERP(prevMonthLastDate);
-        const getDateFrom = formatDateERP(prevMonthFirstDate);
-        window.open("/dashboardsalesmanager?fromDate=" + getDateFrom + "&toDate=" + getLoadDate, '_self');
-    },
-    "click #lastQuarter": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const quarterAdjustment = (moment().month() % 3) + 1;
-        const lastQuarterEndDate = moment()
-            .subtract({
-                months: quarterAdjustment,
-            })
-            .endOf("month");
-        const lastQuarterStartDate = lastQuarterEndDate
-            .clone()
-            .subtract({
-                months: 2,
-            })
-            .startOf("month");
-        const getLoadDate = moment(lastQuarterEndDate).format("YYYY-MM-DD");
-        const getDateFrom = moment(lastQuarterStartDate).format("YYYY-MM-DD");
-        window.open("/dashboardsalesmanager?fromDate=" + getDateFrom + "&toDate=" + getLoadDate, '_self');
-    },
-    "click #last12Months": function() {
-        $("#dateFrom").attr("readonly", false);
-        $("#dateTo").attr("readonly", false);
-        const currentDate = new Date();
-        const toDate = moment(currentDate).format("YYYY-MM-DD");
-        let fromDateMonth = Math.floor(currentDate.getMonth() + 1);
-        let fromDateDay = currentDate.getDate();
-        if (currentDate.getMonth() + 1 < 10) {
-            fromDateMonth = "0" + (currentDate.getMonth() + 1);
-        }
-        if (currentDate.getDate() < 10) {
-            fromDateDay = "0" + currentDate.getDate();
-        }
-        const fromDate = Math.floor(currentDate.getFullYear() - 1) + "-" + fromDateMonth + "-" + fromDateDay;
-        window.open("/dashboardsalesmanager?fromDate=" + fromDate + "&toDate=" + toDate, '_self');
-        // FlowRouter.go("/dashboardsalesmanager?fromDate="+fromDate+"&toDate="+toDate);
-    },
-    "click #ignoreDate": function() {
-        $("#dateFrom").attr("readonly", true);
-        $("#dateTo").attr("readonly", true);
-        window.open("/dashboardsalesmanager?ignoredate=" + true, '_self');
-    },
-    //-fix
     "change .balancedate": function() {
         let templateObject = Template.instance();
         LoadingOverlay.show();
@@ -1373,129 +774,15 @@ Template.dashboardexe.events({
         let arrDate = balanceDate.split("/");
         let formatBalDate = arrDate[2] + "-" + arrDate[1] + "-" + arrDate[0];
         location.href = '/' + reportURL + '?viewDate="' + formatBalDate + '"';
+    },    
+    "click .editchartsbtn": () => {
+        chartService.onEdit()
+        cardService.onEdit()
     },
-    "click .on-editor-change-mode": (e) => {
-        // this will toggle the visibility of the widget
-        // const templateObject = Template.instance();
-
-        var curChartKey = $(e.currentTarget).parents('.sortable-chart-widget-js').attr('key');
-        var keyIdx = arrChartKey.indexOf(curChartKey);
-        if (keyIdx > -1) {
-            if ($(e.currentTarget).attr("is-hidden") == "true") {
-                $(e.currentTarget).attr("is-hidden", "false");
-                $(e.currentTarget).html("<i class='far fa-eye'></i>");
-                curChartActive[keyIdx] = 1;
-            } else {
-                $(e.currentTarget).attr("is-hidden", "true");
-                $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
-                curChartActive[keyIdx] = 0;
-            }
-        } else {
-            if ($(e.currentTarget).attr("is-hidden") == "true") {
-                $(e.currentTarget).attr("is-hidden", "false");
-                $(e.currentTarget).html("<i class='far fa-eye'></i>");
-            } else {
-                $(e.currentTarget).attr("is-hidden", "true");
-                $(e.currentTarget).html("<i class='far fa-eye-slash'></i>");
-            }
-        }
-    },
-    "click .editchartsbtn2": () => {
-        $(".editcharts").trigger("click");
-        chartsEditor.enable();
-        const templateObject = Template.instance();
-        templateObject.showChartElements();
-        $(".card-visibility").removeClass('hideelement');
-    },
-    "click #btnReset2": async(event) => {
-        event.preventDefault();
-        $(".fullScreenSpin").css("display", "block");
-        chartsEditor.disable();
-        const templateObject = Template.instance();
-
-        $("#btnDone2").addClass("hideelement");
-        $("#btnDone2").removeClass("showelement");
-        $("#btnCancel2").addClass("hideelement");
-        $("#btnCancel2").removeClass("showelement");
-        $("#btnReset2").addClass("hideelement");
-        $("#btnReset2").removeClass("showelement");
-        $("#editcharts").addClass("showelement");
-        $("#editcharts").removeClass("hideelement");
-        $(".btnchartdropdown").removeClass("hideelement");
-        $(".btnchartdropdown").addClass("showelement");
-
-        const dashboardApis = new DashboardApi(); // Load all dashboard APIS
-        let _tabGroup = $("#connectedSortable2").data("tabgroup");
-        let employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
-        templateObject.hideChartElements();
-        const apiEndpoint = dashboardApis.collection.findByName(
-            dashboardApis.collectionNames.Tvs1dashboardpreferences
-        );
-        let resetCharts = {
-            type: "Tvs1dashboardpreferences",
-            delete: true,
-            fields: {
-                EmployeeID: parseInt(employeeId),
-                TabGroup: _tabGroup,
-            }
-        }
-        try {
-            const ApiResponse = await apiEndpoint.fetch(null, {
-                method: "POST",
-                headers: ApiService.getPostHeaders(),
-                body: JSON.stringify(resetCharts),
-            });
-            if (ApiResponse.ok == true) {
-                const jsonResponse = await ApiResponse.json();
-                await ChartHandler.saveChartsInLocalDB();
-                await templateObject.checkChartToDisplay();
-                $(".fullScreenSpin").css("display", "none");
-            }
-        } catch (error) {
-            $(".fullScreenSpin").css("display", "none");
-        }
-        // templateObject.deactivateDraggable();
-
-        localStorage.setItem("arrChartActive", JSON.stringify(arrChartActive));
-        // templateObject.checkChartToDisplay();
-    },
-    "click #btnCancel2": async() => {
-        playCancelAudio();
-        const templateObject = Template.instance();
-        setTimeout(async function() {
-            $(".fullScreenSpin").css("display", "block");
-            chartsEditor.disable();
-            await templateObject.hideChartElements();     
-            await templateObject.checkChartToDisplay();
-            $(".card-visibility").addClass('hideelement');
-            $(".fullScreenSpin").css("display", "none");
-            //templateObject.deactivateDraggable();
-        }, delayTimeAfterSound);
-    },
-
-    "click #btnDone2": async() => {
-        playSaveAudio();
-        let templateObject = Template.instance();
-        setTimeout(async function() {
-            $(".fullScreenSpin").css("display", "block");
-            await saveCharts();
-            await chartsEditor.disable();
-            await templateObject.hideChartElements();
-            // Save Into local indexDB
-            await ChartHandler.saveChartsInLocalDB();
-            await templateObject.checkChartToDisplay();
-
-            let cards = $(".card-visibility");
-            $.each(cards, function (i, card) {
-                if ($(card).attr("card-active") == 'false') $(card).addClass("hideelement");
-            });
-
-            $(".fullScreenSpin").css("display", "none");
-
-            localStorage.setItem("arrChartActive", JSON.stringify(curChartActive));
-            // templateObject.checkChartToDisplay();
-        }, delayTimeAfterSound);
-    },
+    "click .resetchartbtn": () => {        
+        chartService.resetCharts()
+        cardService.resetCards()
+    }, 
 });
 
 Template.registerHelper('equals', function(a, b) {

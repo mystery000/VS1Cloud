@@ -3,17 +3,12 @@
         <div class="fullScreenSpin" style="display:none;">
             <div class="spinner"></div>
         </div>
-        <!-- <style>
-            .dataTables_filter {
-                display: none;
-            }
-        </style> -->
+        
         <div style="margin-top: -24px;">
-            <header style="padding: 16px;background-color: #ededed;">
+            <header style="padding: 16px; padding-bottom: 0px; background-color: #ededed;">
                 <div class="row">
                     <div class="col-12 col-md-4">
-                        <h1 class="headingMobile" style="margin: 16px; margin-bottom: 0px;">Build Cost Report
-
+                        <h1 style="margin: 16px; margin-bottom: 0px;">Build Cost Report
                             {{> helpbutton}}
 
                             <!-- Start Help View Modal -->
@@ -40,12 +35,8 @@
                                         margin-right: 0px;
                                     }
                                 }
-                                @media screen and (max-width: 420px) {
-                                    .headingMobile {
-                                        margin-bottom: 40px;
-                                    }
-                                }
                             </style>
+
 
 
                         </h1>
@@ -55,34 +46,38 @@
             </header>
 
             <div class="row d-xl-flex flex-row justify-content-xl-center" style="padding: 0px 20px; background-color: #ededed;">
-                <style>
-                    /*
-                    @media screen and (max-width: 420px) {
-                    #btnNewJournalEntry {
-                    width: 190px;
-                    }
-                    #exportbtn {
-                    width: 120px;
-                    }
-                    }
-                    */
-                </style>
+
                 <div class="col float-left flex-grow-1 mb-4">
-                    <button class="btn btn-primary btnRefresh "  style="margin :14px;"  type="button"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
+                    <button class="btn btn-primary btnRefresh" type="button" style="margin: 12px;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                 </div>
 
-                <div class="col">
-                    <!-- <a class="btn btnOpenSettings float-right" role="button" data-toggle="modal" href="#myModal2" style="margin: 16px;"><i class="icon ion-android-more-horizontal"></i></a> -->
-                    <button class="btn btn-primary printConfirm float-right " style="margin:14px;" type="button" ><i class="fa fa-print" style="padding-right: 5px;"></i>Print</button>
-                    <button  class="btn btnNav btn-primary float-right vs1ButtonMargin" role="button" data-toggle="modal" href="#importAccountModal"><i class="fas fa-file-import" style="padding-right: 5px;"></i>Import</button>
-                    <button class="btn btn-primary export float-right vs1ButtonMargin" type="button" id="exportbtn" name="exportbtn"><i class="fas fa-file-export" style="padding-right: 5px;"></i>Export</button>
-                </div>
 
+                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                    {{> export_import_print_display_button tablename="tblBuildCostReport"}}
+                </div>
             </div>
 
             <div>
                 <div class="card-body p-3 rounded" style="margin: 0px 16px;">
-                    {{> non_transactional_list tablename = "tblBuildCostReport"}}
+
+                    {{>datatablelist
+                            tablename="tblBuildCostReport"
+                            apiName= apiFunction
+                            indexeddbname = 'TVS1BuildCostReport'
+                            tableheaderrecords = tableheaderrecords
+                            exportfilename = 'Process Clocked OnOff List'
+                            istransaction = false
+                            apiParams= apiParams
+                            datahandler = datahandler
+                            service=service
+                            lowercaseDataName='tvs1buildcostreport'
+                            exIndexDBName = 'tvs1buildcostreport'
+                            exdatahandler = exDataHandler
+                            searchAPI = searchAPI
+                            orderby = '[]'
+                    }}
+
+                         
                 </div>
             </div>
         </div>
@@ -93,26 +88,23 @@
             <div class="modal-content" >
                 <div class="modal-header" >
 
-                    <h4 class="title-header" >Build Cost Report</h4>
+                    <h4 class="title-header" >Job</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
                 </div>
                 <div class="modal-body">
                     <!-- <iframe width="640" height="360" src="https://player.vimeo.com/video/99892791" frameborder="0" allowfullscreen=""></iframe> -->
-                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/journalentrylist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
-                    <video id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
-                        <source src="https://erphelpes.com/vs1videos/journalentrylist.mp4" type="video/mp4">
+                    <!-- <iframe width="640" height="360" src="https://erphelpes.com/vs1videos/customerlist.mp4" frameborder="0" allowfullscreen=""></iframe> -->
+                    <video preload="none" id="myVideo" width="640" height="360" controls="" name="media" style="border: solid 5px #999999f0; height: auto; outline: none;">
+                        <source src="https://erphelpes.com/vs1videos/joblist.mp4" type="video/mp4">
                     </video>
                 </div>
             </div>
         </div>
     </div>
 
-
-    <!-- Start Currency Modal -->
-    {{> FxRateModal currencies=currencyList}}
-     <!-- End Currency Modal -->
-
     <!-- End Help Video Modal -->
+
+    
     <script>
         modalDraggable();
     </script>

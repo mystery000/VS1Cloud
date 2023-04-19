@@ -31,12 +31,8 @@ Template.employeeLeave.onRendered(() => {
 	}
 
 	function setChart(data){
-		let clockedOnEmpList = [];
-		let max = {};
-		let max_tmp = 0;
-
-		let empName = [];
-		let empClockedCount = [];
+		let clockedOnEmpList = [], max = {}, max_tmp = 0;
+		let empName = [], empClockedCount = [], backgroundColor = [], borderColor = [];
 
 		for (let t = 0; t < data.ttimesheet.length; t++) {
 			if (data.ttimesheet[t].fields.Logs != null) {
@@ -44,7 +40,7 @@ Template.employeeLeave.onRendered(() => {
 					data.ttimesheet[t].fields.InvoiceNotes == "Clocked On" ||
 					data.ttimesheet[t].fields.InvoiceNotes == "paused"
 				) {
-					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName]++;
+					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] ? clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] ++ : clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] = 1;
 				}else{
 					clockedOnEmpList[data.ttimesheet[t].fields.EmployeeName] = 1;
 				}
@@ -60,7 +56,9 @@ Template.employeeLeave.onRendered(() => {
 		for (var emp in clockedOnEmpList) {
 			let dataObj = {
 				name: emp,
-				clockedOn: clockedOnEmpList[emp]
+				clockedOn: clockedOnEmpList[emp],
+				backgroundColor: "#f6c23e",
+				borderColor: "rgba(78,115,223,0)"
 			};
 			sortArray.push(dataObj);
 		}
@@ -72,6 +70,8 @@ Template.employeeLeave.onRendered(() => {
 		for (let j = 0; j < sortArray.length; j++) {
 			empName.push(sortArray[j].name);
 			empClockedCount.push(sortArray[j].clockedOn);
+			backgroundColor.push(sortArray[j].backgroundColor);
+			borderColor.push(sortArray[j].borderColor);
 		}
 
 		empName.reverse();
@@ -86,23 +86,8 @@ Template.employeeLeave.onRendered(() => {
 				{
 					label: "Employee #" + this.empName,
 					data: empClockedCount,
-
-					backgroundColor: [
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e",
-					"#f6c23e"
-					],
-					borderColor: [
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)",
-					"rgba(78,115,223,0)"
-					],
+					backgroundColor: backgroundColor,
+					borderColor: borderColor,
 					borderWidth: 1
 				}
 				]

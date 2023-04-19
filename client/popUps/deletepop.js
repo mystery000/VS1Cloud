@@ -134,34 +134,34 @@ Template.deletepop.onRendered(function () {
 })
 
 Template.deletepop.helpers({
-  itemName1: () => {
-    const templateInstance = Template.instance();
-    const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item1;
-    return formName;
-  },
-  itemName2: () => {
-    const templateInstance = Template.instance();
-    const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item2;
+  // itemName1: () => {
+  //   const templateInstance = Template.instance();
+  //   const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item1;
+  //   return formName;
+  // },
+  // itemName2: () => {
+  //   const templateInstance = Template.instance();
+  //   const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item2;
 
-    return formName;
-  },
-  itemName3: () => {
-    const templateInstance = Template.instance();
-    const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item3;
+  //   return formName;
+  // },
+  // itemName3: () => {
+  //   const templateInstance = Template.instance();
+  //   const formName = TransactionTypeTemplates[templateInstance.data.formType]?.item3;
 
-    return formName;
-  },
-  button1: () => {
-    const templateInstance = Template.instance();
-    const formName = TransactionTypeTemplates[templateInstance.data.formType]?.button1;
+  //   return formName;
+  // },
+  // button1: () => {
+  //   const templateInstance = Template.instance();
+  //   const formName = TransactionTypeTemplates[templateInstance.data.formType]?.button1;
 
-    return formName;
-  },
-  button2: () => {
-    const templateInstance = Template.instance();
-    const formName = TransactionTypeTemplates[templateInstance.data.formType]?.button2;
-    return formName;
-  }
+  //   return formName;
+  // },
+  // button2: () => {
+  //   const templateInstance = Template.instance();
+  //   const formName = TransactionTypeTemplates[templateInstance.data.formType]?.button2;
+  //   return formName;
+  // }
 
 })
 
