@@ -215,6 +215,21 @@
               text-align: right!important;
             }
 
+            // Floating table, dragged with the mouse
+            .DTCR_clonedTable.dataTable .th {
+            	position: absolute !important;
+            	background-color: rgba(255, 255, 255, 0.7);
+            	z-index: 202;
+              width : auto !important;
+            }
+
+            // Insert line
+            div.DTCR_pointer {
+            	width: 1px;
+            	background-color: rgba(255, 255, 255, 0.7);
+            	z-index: 201;
+            }
+
         </style>
         <table id="{{tablename}}" name="{{tablename}}" class="dtTemplate dataTable table table-striped table-bordered {{tableclass}}">
             <thead>
