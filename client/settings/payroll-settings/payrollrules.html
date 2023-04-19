@@ -187,8 +187,8 @@
                                                             label='Superannuation Expense Account'
                                                             innerModal=true
                                                             colNameForValue='colAccountName'
-                                                            target_modal_id='edtAccountModal'
-                                                            target_template_id='addaccountpop'
+                                                            target_modal_id=''
+                                                            target_template_id=''
                                                             custid=item.lineID
                                                             is_editable=true
                                                             noBorder=false
@@ -496,26 +496,24 @@
                                                 }
                                             </style>
                                             <div class="card-body p-1 rounded">
-                                                <div class="table-responsive">
-                                                    {{> datatablelist
-                                                        tablename="tblPayCalendars"
-                                                        apiName=apiFunction
-                                                        indexeddbname='TPayrollCalendars'
-                                                        tableheaderrecords=tableheaderrecords
-                                                        exportfilename='Pay Calendars'
-                                                        apiParams=apiParams
-                                                        istransaction = false
-                                                        datahandler=datahandler
-                                                        service=service
-                                                        lowercaseDataName='tpayrollcalendars'
-                                                        exIndexDBName='tpayrollcalendars'
-                                                        exdatahandler=exDataHandler
-                                                        searchAPI=searchAPI
-                                                        showPlusButton=true
-                                                        showPlusButtonClass='btnAddNewPayCalender'
-                                                        showModalID='#newPayCalendarModal'
-                                                    }}
-                                                </div>
+                                                {{> datatablelist
+                                                    tablename="tblPayCalendars"
+                                                    apiName=apiFunction
+                                                    indexeddbname='TPayrollCalendars'
+                                                    tableheaderrecords=tableheaderrecords
+                                                    exportfilename='Pay Calendars'
+                                                    apiParams=apiParams
+                                                    istransaction = false
+                                                    datahandler=datahandler
+                                                    service=service
+                                                    lowercaseDataName='tpayrollcalendars'
+                                                    exIndexDBName='tpayrollcalendars'
+                                                    exdatahandler=exDataHandler
+                                                    searchAPI=searchAPI
+                                                    showPlusButton=true
+                                                    showPlusButtonClass='btnAddNewPayCalender'
+                                                    showModalID='#newPayCalendarModal'
+                                                }}
                                             </div>
                                         </div>
                                     </div>
@@ -812,25 +810,23 @@
                                                         }
                                                     </style>
                                                     <div class="card-body p-1 rounded">
-                                                        <div class="table-responsive">
-                                                            {{> datatablelist
-                                                                tablename="tblHolidays"
-                                                                apiName=apiFunction2
-                                                                indexeddbname='TPayrollHolidays'
-                                                                tableheaderrecords=tableheaderrecords2
-                                                                exportfilename='Holidays'
-                                                                apiParams=apiParams2
-                                                                datahandler=datahandler2
-                                                                service=service2
-                                                                lowercaseDataName='tpayrollholidays'
-                                                                exIndexDBName='tpayrollholidays'
-                                                                exdatahandler=exDataHandler2
-                                                                searchAPI=searchAPI2
-                                                                showPlusButton=true
-                                                                showPlusButtonClass='btnAddNewHoliday'
-                                                                showModalID='#newHolidayModal'
-                                                            }}
-                                                        </div>
+                                                        {{> datatablelist
+                                                            tablename="tblHolidays"
+                                                            apiName=apiFunction2
+                                                            indexeddbname='TPayrollHolidays'
+                                                            tableheaderrecords=tableheaderrecords2
+                                                            exportfilename='Holidays'
+                                                            apiParams=apiParams2
+                                                            datahandler=datahandler2
+                                                            service=service2
+                                                            lowercaseDataName='tpayrollholidays'
+                                                            exIndexDBName='tpayrollholidays'
+                                                            exdatahandler=exDataHandler2
+                                                            searchAPI=searchAPI2
+                                                            showPlusButton=true
+                                                            showPlusButtonClass='btnAddNewHoliday'
+                                                            showModalID='#newHolidayModal'
+                                                        }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -1133,25 +1129,23 @@
                                                     }
                                                 </style>
                                                 <div class="card-body p-1 rounded">
-                                                    <div class="table-responsive">
-                                                        {{> datatablelist
-                                                            tablename="tblAlowances"
-                                                            apiName=apiFunction3
-                                                            indexeddbname='TAllowance'
-                                                            tableheaderrecords=tableheaderrecords3
-                                                            exportfilename='Allowances'
-                                                            apiParams=apiParams3
-                                                            datahandler=datahandler3
-                                                            service=service3
-                                                            lowercaseDataName='tallowance'
-                                                            exIndexDBName='tallowance'
-                                                            exdatahandler=exDataHandler3
-                                                            searchAPI=searchAPI3
-                                                            showPlusButton=true
-                                                            showPlusButtonClass='btnAddNewAllowance'
-                                                            showModalID='#allowanceModal'
-                                                        }}
-                                                    </div>
+                                                    {{> datatablelist
+                                                        tablename="tblAlowances"
+                                                        apiName=apiFunction3
+                                                        indexeddbname='TAllowance'
+                                                        tableheaderrecords=tableheaderrecords3
+                                                        exportfilename='Allowances'
+                                                        apiParams=apiParams3
+                                                        datahandler=datahandler3
+                                                        service=service3
+                                                        lowercaseDataName='tallowance'
+                                                        exIndexDBName='tallowance'
+                                                        exdatahandler=exDataHandler3
+                                                        searchAPI=searchAPI3
+                                                        showPlusButton=true
+                                                        showPlusButtonClass='btnAddNewAllowance'
+                                                        showModalID='#allowanceModal'
+                                                    }}
                                                 </div>
                                             </div>
                                             <div class="" id="earnings" style="display: none;">
@@ -1996,22 +1990,20 @@
                                                     }
                                                 </style>
                                                 <div class="card-body p-1 rounded">
-                                                    <div class="table-responsive">
-                                                        {{> datatablelist
-                                                            tablename="tblEarnings"
-                                                            apiName=apiFunction4
-                                                            indexeddbname='TEarnings'
-                                                            tableheaderrecords=tableheaderrecords4
-                                                            exportfilename='Earnings'
-                                                            apiParams=apiParams4
-                                                            datahandler=datahandler4
-                                                            service=service4
-                                                            lowercaseDataName='tearnings'
-                                                            exIndexDBName='tearnings'
-                                                            exdatahandler=exDataHandler4
-                                                            searchAPI=searchAPI4
-                                                        }}
-                                                    </div>
+                                                    {{> datatablelist
+                                                        tablename="tblEarnings"
+                                                        apiName=apiFunction4
+                                                        indexeddbname='TEarnings'
+                                                        tableheaderrecords=tableheaderrecords4
+                                                        exportfilename='Earnings'
+                                                        apiParams=apiParams4
+                                                        datahandler=datahandler4
+                                                        service=service4
+                                                        lowercaseDataName='tearnings'
+                                                        exIndexDBName='tearnings'
+                                                        exdatahandler=exDataHandler4
+                                                        searchAPI=searchAPI4
+                                                    }}
                                                 </div>
                                             </div>
                                             <div class="" id="deductions" style="display: none;">
@@ -2333,25 +2325,23 @@
                                                     }
                                                 </style>
                                                 <div class="card-body p-1 rounded">
-                                                    <div class="table-responsive">
-                                                        {{> datatablelist
-                                                            tablename="tblDeductions"
-                                                            apiName=apiFunction5
-                                                            indexeddbname='TDeduction'
-                                                            tableheaderrecords=tableheaderrecords5
-                                                            exportfilename='Deductions'
-                                                            apiParams=apiParams5
-                                                            datahandler=datahandler5
-                                                            service=service5
-                                                            lowercaseDataName='tdeduction'
-                                                            exIndexDBName='tdeduction'
-                                                            exdatahandler=exDataHandler5
-                                                            searchAPI=searchAPI5
-                                                            showPlusButton=true
-                                                            showPlusButtonClass='btnAddNewDeduction'
-                                                            showModalID='#deductionModal'
-                                                        }}
-                                                    </div>
+                                                    {{> datatablelist
+                                                        tablename="tblDeductions"
+                                                        apiName=apiFunction5
+                                                        indexeddbname='TDeduction'
+                                                        tableheaderrecords=tableheaderrecords5
+                                                        exportfilename='Deductions'
+                                                        apiParams=apiParams5
+                                                        datahandler=datahandler5
+                                                        service=service5
+                                                        lowercaseDataName='tdeduction'
+                                                        exIndexDBName='tdeduction'
+                                                        exdatahandler=exDataHandler5
+                                                        searchAPI=searchAPI5
+                                                        showPlusButton=true
+                                                        showPlusButtonClass='btnAddNewDeduction'
+                                                        showModalID='#deductionModal'
+                                                    }}
                                                 </div>
                                             </div>
                                             <div class="" id="reimbursements" style="display: none;">
@@ -2483,25 +2473,23 @@
                                                     }
                                                 </style>
                                                 <div class="card-body p-1 rounded">
-                                                    <div class="table-responsive">
-                                                        {{> datatablelist
-                                                            tablename="tblReimbursements"
-                                                            apiName=apiFunction6
-                                                            indexeddbname='TReimbursement'
-                                                            tableheaderrecords=tableheaderrecords6
-                                                            exportfilename='Reimbursements'
-                                                            apiParams=apiParams6
-                                                            datahandler=datahandler6
-                                                            service=service6
-                                                            lowercaseDataName='treimbursement'
-                                                            exIndexDBName='treimbursement'
-                                                            exdatahandler=exDataHandler6
-                                                            searchAPI=searchAPI6
-                                                            showPlusButton=true
-                                                            showPlusButtonClass='btnAddNewReimbursement'
-                                                            showModalID='#newReimbursementModal'
-                                                        }}
-                                                    </div>
+                                                    {{> datatablelist
+                                                        tablename="tblReimbursements"
+                                                        apiName=apiFunction6
+                                                        indexeddbname='TReimbursement'
+                                                        tableheaderrecords=tableheaderrecords6
+                                                        exportfilename='Reimbursements'
+                                                        apiParams=apiParams6
+                                                        datahandler=datahandler6
+                                                        service=service6
+                                                        lowercaseDataName='treimbursement'
+                                                        exIndexDBName='treimbursement'
+                                                        exdatahandler=exDataHandler6
+                                                        searchAPI=searchAPI6
+                                                        showPlusButton=true
+                                                        showPlusButtonClass='btnAddNewReimbursement'
+                                                        showModalID='#newReimbursementModal'
+                                                    }}
                                                 </div>
                                             </div>
                                             <div class="" id="leave" style="display: none;">
@@ -2667,25 +2655,23 @@
                                                     }
                                                 </style>
                                                 <div class="card-body p-1 rounded">
-                                                    <div class="table-responsive">
-                                                        {{> datatablelist
-                                                            tablename="tblLeave"
-                                                            apiName=apiFunction7
-                                                            indexeddbname='TPaidLeave'
-                                                            tableheaderrecords=tableheaderrecords7
-                                                            exportfilename='Leaves'
-                                                            apiParams=apiParams7
-                                                            datahandler=datahandler7
-                                                            service=service7
-                                                            lowercaseDataName='tpaidleave'
-                                                            exIndexDBName='tpaidleave'
-                                                            exdatahandler=exDataHandler7
-                                                            searchAPI=searchAPI7
-                                                            showPlusButton=true
-                                                            showPlusButtonClass='addpaidleave'
-                                                            showModalID='#paidLeaveModal'
-                                                        }}
-                                                    </div>
+                                                    {{> datatablelist
+                                                        tablename="tblLeave"
+                                                        apiName=apiFunction7
+                                                        indexeddbname='TPaidLeave'
+                                                        tableheaderrecords=tableheaderrecords7
+                                                        exportfilename='Leaves'
+                                                        apiParams=apiParams7
+                                                        datahandler=datahandler7
+                                                        service=service7
+                                                        lowercaseDataName='tpaidleave'
+                                                        exIndexDBName='tpaidleave'
+                                                        exdatahandler=exDataHandler7
+                                                        searchAPI=searchAPI7
+                                                        showPlusButton=true
+                                                        showPlusButtonClass='addpaidleave'
+                                                        showModalID='#paidLeaveModal'
+                                                    }}
                                                 </div>
                                             </div>
                                         </div>
@@ -2904,25 +2890,23 @@
                                                 }
                                             </style>
                                             <div class="card-body p-1 rounded">
-                                                <div class="table-responsive">
-                                                    {{> datatablelist
-                                                        tablename="tblSuperannuation"
-                                                        apiName=apiFunction8
-                                                        indexeddbname='Tsuperannuation'
-                                                        tableheaderrecords=tableheaderrecords8
-                                                        exportfilename='Superannuations'
-                                                        apiParams=apiParams8
-                                                        datahandler=datahandler8
-                                                        service=service8
-                                                        lowercaseDataName='tsuperannuation'
-                                                        exIndexDBName='tsuperannuation'
-                                                        exdatahandler=exDataHandler8
-                                                        searchAPI=searchAPI8
-                                                        showPlusButton=true
-                                                        showPlusButtonClass='btnAddNewSuperannuation'
-                                                        showModalID='#newSuperannuationFundModal'
-                                                    }}
-                                                </div>
+                                                {{> datatablelist
+                                                    tablename="tblSuperannuation"
+                                                    apiName=apiFunction8
+                                                    indexeddbname='Tsuperannuation'
+                                                    tableheaderrecords=tableheaderrecords8
+                                                    exportfilename='Superannuations'
+                                                    apiParams=apiParams8
+                                                    datahandler=datahandler8
+                                                    service=service8
+                                                    lowercaseDataName='tsuperannuation'
+                                                    exIndexDBName='tsuperannuation'
+                                                    exdatahandler=exDataHandler8
+                                                    searchAPI=searchAPI8
+                                                    showPlusButton=true
+                                                    showPlusButtonClass='btnAddNewSuperannuation'
+                                                    showModalID='#newSuperannuationFundModal'
+                                                }}
                                             </div>
                                         </div>
                                     </div>
@@ -3068,27 +3052,24 @@
                                                 </div>
                                             </div>
                                         
-                                            <div class="table-responsive">
-                                                <style>
-                                                    .btn-success.btn-sm,
-                                                    .btn-sm.btn-danger {
-                                                        padding: 0.5px 5px !important;
-                                                        margin-top: 0px !important;
-                                                    }
-                                                    .table-bordered, .table-bordered td, .table-bordered th {
-                                                        border: 1px solid #e3e6f0 !important;
-                                                        border-collapse: collapse;
-                                                    }
-                                                    #tblOverTimeSheet {
-                                                        width: 100% !important;
-                                                    }
-                                                    #tblOverTimeSheet .colStatus{
-                                                        width: 120px !important;
-                                                    }                                                    
-                                                </style>
-                                                
-                                                {{> non_transactional_list tablename="tblOverTimeSheet"}}
-                                            </div>
+                                            <style>
+                                                .btn-success.btn-sm,
+                                                .btn-sm.btn-danger {
+                                                    padding: 0.5px 5px !important;
+                                                    margin-top: 0px !important;
+                                                }
+                                                .table-bordered, .table-bordered td, .table-bordered th {
+                                                    border: 1px solid #e3e6f0 !important;
+                                                    border-collapse: collapse;
+                                                }
+                                                #tblOverTimeSheet {
+                                                    width: 100% !important;
+                                                }
+                                                #tblOverTimeSheet .colStatus{
+                                                    width: 120px !important;
+                                                }                                                    
+                                            </style>
+                                            {{> non_transactional_list tablename="tblOverTimeSheet"}}
                                         </div>
                                     </div>
                                 </div>
@@ -3188,7 +3169,7 @@
                                     width: 40% !important;
                                 }                        
                            </style>
-    
+
                             <table id="tblgrouptypelist1" style="width:100%" class="table table-striped table-bordered tblratetypelist">
                                  <thead>
                                      <tr class="dnd-moved">

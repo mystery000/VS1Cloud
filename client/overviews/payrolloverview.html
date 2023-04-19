@@ -238,7 +238,7 @@
             {{> allChartLists  tabGroupID="6" chartGroup="Payroll" currentTemplate="Payroll_Overview"}}
 
             {{#if includePayrollClockOnOffOnly}}
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-6 col-md-7 col-lg-8">
                         <button class="btn btnNav btn-primary btnRefresh" type="button" style="margin: 12px; margin-left: 0;"><i class="la la-lightbulb-o" style="padding-right: 5px;"></i>Refresh</button>
                         {{#if equals clockOnOff true}}
@@ -337,7 +337,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> -->
             {{else}}
             <div class="row">
                 <div class="col-6 col-md-7 col-lg-8">
@@ -498,16 +498,14 @@
                     <!-- <div class="table-responsive my-3">
                         {{> non_transactional_list tablename = "tblPayRuns"}}
                     </div> -->
-                    <div class="table-responsive">
-                        <div class="row no-gutters d-xl-flex align-items-xl-end">
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                                <h4 style="font-weight: 600;">Pay Runs</h4>
-                            </div>
-                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                            </div>
+                    <div class="row no-gutters d-xl-flex align-items-xl-end">
+                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                            <h4 style="font-weight: 600;">Pay Runs</h4>
                         </div>
-                        {{> non_transactional_list tablename = "tblDraftPayRun"}}
+                        <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                        </div>
                     </div>
+                    {{> non_transactional_list tablename = "tblDraftPayRun"}}
                     <hr class="mt-2" />
                     </div>
                 </div>
@@ -516,56 +514,52 @@
             <div class="row">
                 <div class="col-12" style="margin-bottom: 16px;">
                     <div class="card-body p-5 rounded" style="padding: 0rem 0rem !important;">
-                        <div class="table-responsive">
-                            <div class="row no-gutters d-xl-flex align-items-xl-end">
-                                <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-                                    <h4 style="font-weight: 600;">Pay Run History</h4>
-                                </div>
-                                <div class="row no-gutters d-xl-flex align-items-xl-end">
-                                    <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
-                                        {{> export_import_print_display_button tablename="tblPayRunHistory"}}
-                                    </div>
-                                    <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
-
-                                    </div>
-                                    <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
-                                        <div class="dropdown" style="margin: 8px; margin-top: 0px;">
-                                            <style>
-                                                .dropdown-toggle::after {
-                                                    display: none;
-                                                }
-                                            </style>
-                                            <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
-                                            {{> daterangedropdownoption}}
-                                        </div>
-                                        <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
-                                            <label style="margin-top: 8px; margin-right: 16px;">From</label>
-                                            <div class="input-group date" style="width: 160px;">
-                                                <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
-                                                <div class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-th"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
-                                            <label style="margin-top: 8px; margin-right: 16px;">To</label>
-                                            <div class="input-group date" style="width: 160px;">
-                                                <input type="text" class="form-control" id="dateTo" name="dateTo" >
-                                                <div class="input-group-addon">
-                                                    <span class="glyphicon glyphicon-th"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> -->
-                                </div>
+                        <div class="row no-gutters d-xl-flex align-items-xl-end">
+                            <div class="col d-sm-flex justify-content-sm-start align-items-sm-center">
+                                <h4 style="font-weight: 600;">Pay Run History</h4>
                             </div>
-                            {{> non_transactional_list tablename = "tblPayRunHistory" }}
+                            <div class="row no-gutters d-xl-flex align-items-xl-end">
+                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start">
+                                    {{> export_import_print_display_button tablename="tblPayRunHistory"}}
+                                </div>
+                                <!-- <div class="col float-right d-sm-flex d-xl-flex justify-content-sm-end align-items-sm-center justify-content-xl-end align-items-xl-end myvarFilterForm">
+                                    <div class="dropdown" style="margin: 8px; margin-top: 0px;">
+                                        <style>
+                                            .dropdown-toggle::after {
+                                                display: none;
+                                            }
+                                        </style>
+                                        <button class="btn dropdown-toggle" data-toggle="dropdown" aria-expanded="true" type="button"><i class="fas fa-ellipsis-v"></i></button>
+                                        {{> daterangedropdownoption}}
+                                    </div>
+                                    <div class="form-group" style="margin: 8px; margin-top: 0px; display: inline-flex;">
+                                        <label style="margin-top: 8px; margin-right: 16px;">From</label>
+                                        <div class="input-group date" style="width: 160px;">
+                                            <input type="text" class="form-control" id="dateFrom" name="dateFrom" >
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin: 8px; margin-right: 0px; margin-top: 0px; display: inline-flex;">
+                                        <label style="margin-top: 8px; margin-right: 16px;">To</label>
+                                        <div class="input-group date" style="width: 160px;">
+                                            <input type="text" class="form-control" id="dateTo" name="dateTo" >
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-th"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> -->
+                            </div>
                         </div>
+                        {{> non_transactional_list tablename = "tblPayRunHistory" }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="clockOnOffModal">
         <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -847,12 +841,15 @@
     <div class="modal fade" role="dialog" tabindex="-1" id="addCustomerModal">
         {{> addcustomerpop}}
     </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="payrollProductlistModal">
         {{> payrollproductlistpop}}
     </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="newProductModal">
         {{> newproductpop}}
     </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="scanBarcodeModalClockOff">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
             <div class="modal-content">
@@ -894,6 +891,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" role="dialog" tabindex="-1" id="addTimeSheetModal" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable ui-draggable" role="document" style="left: -6px; top: -49px;">
             <div class="modal-content">
@@ -1187,6 +1185,48 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+    
+    <div class="modal fade" role="dialog" tabindex="-1" id="add-tblDraftPayRun_modal">
+        <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4>
+                <div id="add-timesheet-title" name="add-account-title" style="float: left;">Add a Pay Run</div>
+              </h4>
+              <a role="button" data-toggle="modal" href="#helpModal" class="helpModal" style="    margin-left: 8px; margin-top: 3px; font-size: 18px;">Help
+                <i class="fa fa-question-circle-o"></i>
+              </a>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for="">Select a Pay Period</label>
+                <select class="form-control selectAPayRun" id="selectAPayRun">
+                </select>
+              </div>
+            </div>
+            <div class="modal-footer"> 
+              <button class="btn btn-success btnPayRunNext" type="button" style="margin: 8px;">
+                <i class="fas fa-caret-right" style="margin-right: 5px;"></i>Save</button>
+              <button class="btn btn-secondary" data-dismiss="modal" type="button" style="margin: 8px;">
+                <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <script>
         modalDraggable();
     </script>

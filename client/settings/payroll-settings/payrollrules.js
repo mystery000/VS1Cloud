@@ -4525,7 +4525,7 @@ Template.payrollrules.onRendered(function() {
                 $('.updateAlowanceActive').hide();
             }
 
-            $('#edtAllowanceID').val(listData);
+            $('.edtAllowanceID').val(listData);
             $('#edtAllowanceType').val(allowanceType);
             $('.edtEarningsNameAllowance').val(earningName);
             $('.edtDisplayNameAllowance').val(earningDisplayName);
@@ -6962,8 +6962,8 @@ Template.payrollrules.onRendered(function() {
         });
 
         $('#editsuperliabbankaccount').editableSelect().on('click.editable-select', function (e, li) {
-            e.preventDefault();
-            e.stopPropagation();
+            // e.preventDefault();
+            // e.stopPropagation();
             var $earch = $(this);
             var offset = $earch.offset();
             let accountService = new AccountService();
@@ -7333,9 +7333,9 @@ Template.payrollrules.onRendered(function() {
                 $('#selectLineID').val('editsuperliabbankaccount');
                 $('#accountListModal').modal('toggle');
                 setTimeout(function () {
-                $('#tblAccount_filter .form-control-sm').focus();
-                $('#tblAccount_filter .form-control-sm').val('OCLIAB');
-                $('#tblAccount_filter .form-control-sm').trigger("input");
+                    $('#tblAccount_filter .form-control-sm').focus();
+                    $('#tblAccount_filter .form-control-sm').val('OCLIAB');
+                    $('#tblAccount_filter .form-control-sm').trigger("input");
                     var datatable = $('#tblSupplierlist').DataTable();
                     datatable.draw();
                     $('#tblAccount_filter .form-control-sm').trigger("input");

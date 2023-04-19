@@ -145,7 +145,8 @@ Template.employeescard.onCreated(function () {
     { index: 1, label: 'Period', class: 'colPayslipPeriod', active: true, display: true, width: "200" },
     { index: 2, label: 'Payment Date', class: 'colPayslipPaymentDate', active: true, display: true, width: "200" },
     { index: 3, label: 'Total Pay', class: 'colPayslipTotalPay', active: true, display: true, width: "200" },
-    { index: 3, label: '', class: 'colPayslipDownload', active: true, display: true, width: "10" },
+    { index: 4, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+    { index: 5, label: '', class: 'colPayslipDownload', active: true, display: true, width: "10" },
   ]
   templateObject.paysliptableheaderrecords.set(headerstructurepayslip);
 
@@ -172,30 +173,29 @@ let headerStructurepayrun  = [
 ];
 templateObject.tableheaderrecordspayrun.set(headerStructurepayrun);
 
-  templateObject.getDataTableList = function(data) {
-    let currentId = FlowRouter.current().queryParams;
-    let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
-    let dataList = [];
-    if(parseInt(data.fields.EmployeeID) == parseInt(employeeID)){
-      dataList = [
-        data.fields.ID || '',
-        data.fields.Description || '',
-        data.fields.PayPeriod || '',
-        data.fields.LeaveMethod || '',
-        data.fields.Status || '',
-        // (data.fields.Status == 'Deleted') ? '' : `<button type="button" class="btn btn-danger btn-rounded removeLeaveRequest smallFontSizeBtn" data-id="${data.fields.ID}" autocomplete="off"><i class="fa fa-remove"></i></button>`
-      ];
-    }
-    return dataList;
+templateObject.getDataTableList = function(data) {
+    console.log(data);
+  let currentId = FlowRouter.current().queryParams;
+  let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
+  let dataList = [];
+  if(parseInt(data.fields.EmployeeID) == parseInt(employeeID)){
+    dataList = [
+      data.fields.ID || '',
+      data.fields.Description || '',
+      data.fields.PayPeriod || '',
+      data.fields.LeaveMethod || '',
+      data.fields.Active == true ? '' : 'In-Active',
+    ];
   }
+  return dataList;
+}
 
-  let headerStructure = [
-    { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
-    { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
-    { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
-    { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
-    { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "120" },
-    // { index: 5, label: 'Action', class: 'colLRAction', active: true, display: true, width: "100" },
+let headerStructure = [
+  { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
+  { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
+  { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
+  { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
+  { index: 4, label: 'Status', class: 'colLRStatus', active: true, display: true, width: "120" },
 ];
 templateObject.tableLeaveRequestheaderrecords.set(headerStructure);
 
@@ -2193,6 +2193,7 @@ Template.employeescard.onRendered(function () {
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
       $('#obEarningsRate').editableSelect();
+      $('#edtPayPeriod').editableSelect();
       
       $('#edtPayrollCalendar').editableSelect(                                                                                                                                                                                                                                                                                                                                                                                                                                                                ).on('click.editable-select', async function (e, li) {
           // let $search = $(this);
@@ -2206,6 +2207,11 @@ Template.employeescard.onRendered(function () {
           //   datatable.draw();
           //   $('#payrollCalendarPopModal').modal("toggle");
           // }
+      });
+
+      $('#edtPayPeriod').editableSelect()
+        .on('click.editable-select', async function (e, li) {
+          $('#SelectPayRunModal').modal("toggle");
       });
 
       $('#edtHolidays').editableSelect()
@@ -6134,6 +6140,7 @@ Template.employeescard.events({
     }, delayTimeAfterSound);
   },
   'click #savePayRollNotes': async function () {
+    LoadingOverlay.show();
     let templateObject = Template.instance();
 
     const employeePayrolApis = new EmployeePayrollApi();
@@ -10584,18 +10591,18 @@ apiParamspayrun: ()=>{
   },
 
 
-  tableheaderrecords4: () => {
+  paysliptableheaderrecords: () => {
     return Template.instance().paysliptableheaderrecords.get();
   },
+
   apiFunction4:function() {
       return sideBarService.getPaySlips;
   },
+
   searchAPI4: function() {
       return sideBarService.getPaySlips;
   },
-  service4: ()=>{
-      return sideBarService;
-  },
+
   datahandler4: function () {
       let templateObject = Template.instance();
       return function(data) {
@@ -10603,13 +10610,14 @@ apiParamspayrun: ()=>{
           return dataReturn;
       }
   },
+  
   exDataHandler4: function() {
     let templateObject = Template.instance();
     return function(data) {
         let dataReturn =  templateObject.getPaysLipsDataTableList(data);
         return dataReturn;
     }
-},
+  },
 });
 
 function openEditTaskModals(id, type) {
