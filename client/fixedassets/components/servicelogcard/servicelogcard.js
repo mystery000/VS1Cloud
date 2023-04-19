@@ -61,7 +61,7 @@ Template.servicelogcard.onRendered(function () {
         $("#chkDone").trigger("click");
       }
     }
-
+    
   }
 
   $("#date-input,#dtServiceDate,#dtNextServiceDate").datepicker({
@@ -88,6 +88,18 @@ Template.servicelogcard.onRendered(function () {
       return '';
   }
 
+  $('#edtAssetCode').editableSelect();
+
+  $(document).on("click", "#tblFixedAssetList tbody tr", function(e) {
+    const assetId = parseInt($(this).find('td.colFixedID').html());
+    const assetName = $(this).find('td.colAssetName').html();
+    const assetCode = $(this).find('td.colAssetCode').html();
+    templateObject.asset_id.set(assetId);
+    templateObject.asset_name.set(assetName);
+    templateObject.asset_code.set(assetCode);
+    $('input#edtAssetCode').val(assetCode);
+    $('#fixedassetlistpopModal').modal('hide');
+  });
 });
 
 Template.servicelogcard.events({
@@ -148,7 +160,7 @@ Template.servicelogcard.events({
     const templateObject = Template.instance();
     templateObject.servicelog_status.set(!templateObject.servicelog_status.get());
   },
-
+  
   "click button.btnBack": function() {
     FlowRouter.go('/serviceloglist');
   }

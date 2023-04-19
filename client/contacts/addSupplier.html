@@ -324,36 +324,23 @@
                     style="background-color: #ededed; border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;">
 
                     <div class="row no-gutters" style="padding: 8px;">
-                      <div class="col-12 col-md-4" style="padding: 0px 8px;">
+                      <div class="col-12 col-md-6" style="padding: 0px 8px;">
                         <div class="form-group">
                           <label>Supplier Name</label>
                           <input type="text" class="form-control" id="edtSupplierCompany" name="edtSupplierCompany"
                             value="{{record.company}}">
                         </div>
                       </div>
-                      <div class="col-12 col-md-4" style="padding: 0px 8px;">
+                      <div class="col-12 col-md-6" style="padding: 0px 8px;">
                         <div class="form-group">
                           <label>Supplier Email</label>
                           <input type="text" class="form-control" id="edtSupplierCompanyEmail"
                             name="edtSupplierCompanyEmail" value="{{record.email}}">
                         </div>
                       </div>
-                      <div class="col-6 col-md-4" style="padding: 0px 8px;">
+                      <div class="col-6 col-md-1" style="padding: 0px 8px;">
                         <div class="form-group">
-                            {{>vs1___dropdown
-                                    data=record.title
-                                    type='search'
-                                    id='editSupplierTitle'
-                                    name='editSupplierTitle'
-                                    modalId= 'titlePopModal'
-                                    list_template_name='title_list_pop'
-                                    modal_title='Title'
-                                    innerModal=true
-                                    label = 'Title'
-                                    colNameForValue = 'colTitleName'
-                                    is_editable=true
-                                    noBorder=false
-                            }}
+                          {{> contact_title target="editSupplierTitle" value=record.title}}
                         </div>
                       </div>
                       <div class="col-6 col-md-3" style="padding: 0px 8px;">
@@ -377,7 +364,7 @@
                             value="{{record.lastname}}">
                         </div>
                       </div>
-                      <div class="col-6 col-md-3">
+                      <div class="col-6 col-md-2">
                         <div class="custom-control custom-switch chkSamePrimary"
                           style="padding: 0px 8px; margin-top: 38px; padding-left: 2.25rem;">
                           <input class="custom-control-input" type="checkbox" id="chkSameAsPrimary"
@@ -595,23 +582,20 @@
                                           </div>
                                         </div>
                                         <div class="col-6" style="padding: 0px;">
-                                          <div class="form-group" style="margin: 4px;">
-                                              <label>Country</label>
-
-                                              {{>vs1___dropdown
-                                                      data=record.scountry
-                                                      type='search'
-                                                      id='sedtCountry'
-                                                      name='sedtCountry'
-                                                      modalId= 'countryPopModal'
-                                                      list_template_name='CountryModal'
-                                                      modal_title='Country'
-                                                      innerModal=true
-                                                      label = ''
-                                                      colNameForValue = 'colCountry'
-                                                      is_editable=true
-                                                      noBorder=false
-                                              }}
+                                          <div class="form-group" style="margin: 4px;"><label>Country</label>
+                                            <select class="form-control" id="sedtCountry" name="sedtCountry"
+                                              style=" cursor: pointer;">
+                                              <option value="{{record.scountry}}" selected="">{{record.scountry}}
+                                              </option>
+                                              {{#each item in countryList}}
+                                              {{#if equals item record.scountry }}
+                                              <option value="{{record.scountry}}" selected="">{{record.scountry}}
+                                              </option>
+                                              {{else}}
+                                              <option value="{{item}}">{{item}}</option>
+                                              {{/if}}
+                                              {{/each}}
+                                            </select>
                                           </div>
                                         </div>
                                       </div>
@@ -734,44 +718,19 @@
                                   <div class="row">
                                     <div class="col-md-3">
                                       <div class="form-group d-xl-flex flex-column justify-content-xl-start"
-                                        style="margin: 4px;">
-                                          <label class="text-nowrap">Terms</label>
-
-                                          {{>vs1___dropdown
-                                                  data=record.terms
-                                                  type='search'
-                                                  id='sltTerms'
-                                                  name='sltTerms'
-                                                  modalId= 'termPopModal'
-                                                  list_template_name='termlistpop'
-                                                  modal_title='Terms'
-                                                  innerModal=true
-                                                  label = ''
-                                                  colNameForValue = 'colTermsAmount'
-                                                  is_editable=true
-                                                  noBorder=false
-                                          }}
+                                        style="margin: 4px;"><label class="text-nowrap">Terms</label>
+                                        <select type="search" class="form-control" id="sltTerms" name="sltTerms"
+                                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        </select>
                                       </div>
                                     </div>
                                     <div class="col-md-3">
                                       <div class="form-group d-xl-flex flex-column align-items-xl-start"
-                                        style="margin: 4px;">
-                                          <label class="text-nowrap">Preferred Payment Method</label>
-
-                                          {{>vs1___dropdown
-                                                  data=''
-                                                  type='search'
-                                                  id='sltPreferredPayment'
-                                                  name='sltPreferredPayment'
-                                                  modalId= 'preferredPaymentPopModal'
-                                                  list_template_name='paymentmethodpop'
-                                                  modal_title='Preferred Payment Method'
-                                                  innerModal=true
-                                                  label = ''
-                                                  colNameForValue = 'colName'
-                                                  is_editable=true
-                                                  noBorder=false
-                                          }}
+                                        style="margin: 4px;"><label class="text-nowrap">Preferred Payment Method</label>
+                                        <select type="search" class="form-control" id="sltPreferredPayment"
+                                          name="sltPreferredPayment"
+                                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        </select>
                                       </div>
                                     </div>
                                     <div class="col-md-3">
@@ -802,21 +761,9 @@
                                 <div class="col-6 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
                                     <label>Bank Name</label>
-
-                                      {{>vs1___dropdown
-                                              data=''
-                                              type='search'
-                                              id='dropdownBankName'
-                                              name='dropdownBankName'
-                                              modalId= 'bankNameModal'
-                                              list_template_name='bankNameModal'
-                                              modal_title='Bank Name'
-                                              innerModal=true
-                                              label = ''
-                                              colNameForValue = 'colBankName'
-                                              is_editable=true
-                                              noBorder=false
-                                      }}
+                                    <select type="search" class="form-control pointer" id="edtBankName"
+                                      name="edtBankName" value="{{record.bankName}}">
+                                    </select>
                                   </div>
                                 </div>
                                 <div class="col-6 col-md-3">
@@ -1555,6 +1502,11 @@
         </div>
       </div>
     </div>
+  </div>
+
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="bankNameModal">
+    {{> bankNameModal}}
   </div>
 
   {{> taskDetailModal}}

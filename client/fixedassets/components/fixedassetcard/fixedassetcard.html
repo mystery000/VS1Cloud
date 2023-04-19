@@ -42,7 +42,7 @@
     #fixedAssetCardContainer {
       background-color: white;
     }
-
+    
     #fixedAssetCardContainer .tab-pane {
       background-color: #ededed;
       border-color: #ededed #00a3d3 #00a3d3 #00a3d3 !important;
@@ -55,7 +55,7 @@
       border-radius: 5px;
       height: 100%;
     }
-
+    
     #fixedAssetCardContainer .input-tab > div {
       padding: 0px;
     }
@@ -64,19 +64,8 @@
       margin: 4px;
     }
 
-    #fixedAssetCardContainer .input-tab div.input-item .form-group {
+    #fixedAssetCardContainer .input-tab div.input-item .form-group{
       margin: 0px;
-        width: 100%;
-        display: flex;
-    }
-    #fixedAssetCardContainer .input-tab div.input-item .form-group label {
-        min-width: 120px;
-        text-align: right;
-        margin-right: 10px;
-        margin-bottom: 0;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
     }
 
     #btnView {
@@ -105,7 +94,7 @@
     .currencyTab {
       position: relative;
     }
-
+    
     .currencyTab span {
       position: absolute;
       left: 10px;
@@ -124,7 +113,7 @@
       <div class="spinner"></div>
     </div>
 
-
+ 
     <!-- <header
       style="padding: 16px; padding-right: 0px;background-color: #ededed;margin-top: -24px;padding-bottom: 0px;" class="row">
         <div class="col-12 col-md-4">
@@ -247,7 +236,7 @@
               </style>
               <div class="tab-pane active border rounded-0 tab-asset-info" role="tabpanel" id="tab-asset-info">
                 <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
-                  <div class="row input-tab">
+                  <div class="row input-tab"> 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Code</label>
@@ -270,21 +259,9 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Asset Type</label>
-
-                          {{> vs1___dropdown
-                                  data=''
-                                  type='search'
-                                  id='edtAssetType'
-                                  name='edtAssetType'
-                                  modalId= 'assetTypeListPopModal'
-                                  list_template_name='fixedassetlistpop'
-                                  modal_title='Asset Type'
-                                  innerModal=false
-                                  label = ''
-                                  colNameForValue = 'colRegisterAssetCode'
-                                  is_editable=true
-                                  noBorder=false
-                          }}
+                        <select type="search" class="form-control" id="edtAssetType" name="edtAssetType" suppid=" "
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -295,23 +272,25 @@
                     </div>
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
-                          {{> single_date_picker
-                                  id="edtDateofPurchase"
-                                  name="edtDateofPurchase"
-                                  defaultValue=''
-                                  label='Date of Purchase'
-                          }}
+                        <label>Date of Purchase</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtDateofPurchase" name="edtDateofPurchase">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
-                          {{> single_date_picker
-                                  id="edtDepreciationStartDate"
-                                  name="edtDepreciationStartDate"
-                                  defaultValue=''
-                                  label='Depreciation Start Date'
-                          }}
+                        <label>Depreciation Start Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtDepreciationStartDate" name="edtDepreciationStartDate">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -328,21 +307,9 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Bought From</label>
-
-                          {{> vs1___dropdown
-                                  data=''
-                                  type='search'
-                                  id='edtSupplierName'
-                                  name='edtSupplierName'
-                                  modalId= 'supplierNameListPopModal'
-                                  list_template_name='supplierlistpop'
-                                  modal_title='Bought From'
-                                  innerModal=false
-                                  label = ''
-                                  colNameForValue = 'colCompany'
-                                  is_editable=true
-                                  noBorder=false
-                          }}
+                        <select type="search" class="form-control" id="edtSupplierName" name="edtSupplierName" suppid=" "
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -358,43 +325,33 @@
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
                         <label>Department</label>
-
-                          {{> vs1___dropdown
-                                  data=''
-                                  type='search'
-                                  id='edtDepartmentName'
-                                  name='edtDepartmentName'
-                                  modalId= 'departmentListPopModal'
-                                  list_template_name='departmentpop'
-                                  modal_title='Department'
-                                  innerModal=true
-                                  label = ''
-                                  colNameForValue = 'colDeptName'
-                                  is_editable=true
-                                  noBorder=false
-                          }}
+                        <select type="search" class="form-control" id="edtDepartmentName" name="edtDepartmentName" suppid=" "
+                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                        </select>
                       </div>
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
-                          {{> single_date_picker
-                                  id="edtLastTestDate"
-                                  name="edtLastTestDate"
-                                  defaultValue=''
-                                  label='Last Test Date'
-                          }}
+                        <label>Last Test Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtLastTestDate" name="edtLastTestDate">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="form-group" style="margin: 4px;">
-                          {{> single_date_picker
-                                  id="edtNextTestDate"
-                                  name="edtNextTestDate"
-                                  defaultValue=''
-                                  label='Next Test Date'
-                          }}
+                        <label>Next Test Date</label>
+                        <div class="input-group date" style="cursor: pointer;">
+                          <input type="text" class="form-control" id="edtNextTestDate" name="edtNextTestDate">
+                          <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -409,35 +366,23 @@
                         <label style="color: #00A3D3; font-size: 18px;">Insurance Info</label>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:120px; text-align: right; margin-right: 10px;">Insured By </div>
-
-                            {{> vs1___dropdown
-                                    data=''
-                                    type='search'
-                                    id='edtInsuranceByName'
-                                    name='edtInsuranceByName'
-                                    modalId= 'insuredByListPopModal'
-                                    list_template_name='supplierlistpop'
-                                    modal_title='Insured By'
-                                    innerModal=false
-                                    label = ''
-                                    colNameForValue = 'colCompany'
-                                    is_editable=true
-                                    noBorder=false
-                                    custid='insuredby'
-                            }}
+                          <select type="search" class="form-control" id="edtInsuranceByName" name="edtInsuranceByName" suppid=" "
+                            style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                          </select>
                         </div>
-
+                        
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:120px; text-align: right; margin-right: 10px;">Policy</div>
                           <input class="form-control" type="text" id="edtInsurancePolicy" name="edtInsurancePolicy" customerid=" ">
                         </div>
                         <div class="d-flex align-items-center input-item">
-                            {{> single_date_picker
-                                    id="edtInsuranceEndDate"
-                                    name="edtInsuranceEndDate"
-                                    defaultValue=''
-                                    label='Insured Until'
-                            }}
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Insured Until</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtInsuranceEndDate" name="edtInsuranceEndDate" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -445,15 +390,16 @@
                       <div class="input-tab">
                         <label style="color: #00A3D3; font-size: 18px;">Warranty Info</label>
                         <div class="d-flex align-items-center input-item">
-                            {{> single_date_picker
-                                    id="edtWarrantyExpiresDate"
-                                    name="edtWarrantyExpiresDate"
-                                    defaultValue=''
-                                    label='Warranty Expires'
-                            }}
+                          <div style="min-width:130px; text-align: right; margin-right: 10px;">Warranty Expires</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtWarrantyExpiresDate" name="edtWarrantyExpiresDate" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
                         </div>
                         <div class="d-flex align-items-center input-item">
-                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Warranty Type</div>
+                          <div style="min-width:130px; text-align: right; margin-right: 10px;">Warranty Type</div>
                           <input class="form-control" type="text" id="edtWarrantyType" name="edtWarrantyType" />
                         </div>
                       </div>
@@ -487,7 +433,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Status'
                           classes = ''
                           type = 'text'
@@ -501,19 +447,19 @@
                   <div class="row input-tab">
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Manufacture'
                           classes = ''
                           type = 'text'
                           id = 'edtManufacture'
                           name = 'edtManufacture'
                         }}
-                      </div>
+                      </div> 
                     </div>
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Brand Name'
                           classes = ''
                           type = 'text'
@@ -525,7 +471,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Model Number'
                           classes = ''
                           type = 'text'
@@ -537,7 +483,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Condition'
                           classes = ''
                           type = 'text'
@@ -549,7 +495,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Color'
                           classes = ''
                           type = 'text'
@@ -561,7 +507,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Size'
                           classes = ''
                           type = 'text'
@@ -573,7 +519,7 @@
 
                     <div class="col-12 col-md-6 col-lg-6 col-xl-3">
                       <div class="input-item">
-                        {{> default_input
+                        {{> default_input 
                           label = 'Shape'
                           classes = ''
                           type = 'text'
@@ -595,42 +541,15 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Fixed Assets Cost Asset Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='edtCostAssetAccount'
-                                      name='edtCostAssetAccount'
-                                      modalId= 'edtCostAssetAccountListPopModal'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Fixed Assets Cost Asset Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                              }}
+                            <select type="search" class="form-control" id="edtCostAssetAccount" name="edtCostAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Fixed Assets Bank Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='editBankAccount'
-                                      name='editBankAccount'
-                                      modalId= 'editBankAccountListPopModal'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Fixed Assets Bank Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='faba'
-                              }}
+                            <select type="search" class="form-control" id="editBankAccount" name="editBankAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -640,43 +559,15 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Asset Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='edtDepreciationAssetAccount'
-                                      name='edtDepreciationAssetAccount'
-                                      modalId= 'edtDepreciationAssetAccountListPopModal'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Depreciation Asset Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='daa'
-                              }}
+                            <select type="search" class="form-control" id="edtDepreciationAssetAccount" name="edtDepreciationAssetAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Expense Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='edtDepreciationExpenseAccount'
-                                      name='edtDepreciationExpenseAccount'
-                                      modalId= 'edtDepreciationExpenseAccountListPopModal'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Depreciation Expense Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='dea'
-                              }}
+                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount" name="edtDepreciationExpenseAccount" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -694,7 +585,7 @@
                         </select>
                       </div>
                     </div>
-<!--
+<!--                     
                     <div class="col-12 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>&nbsp;</label>
@@ -713,7 +604,7 @@
                     </div>
 
                     <div class="col-4 col-md-4 col-lg-2 col-xl-2">
-                      <div class="form-group" style="margin: 4px;">
+                      <div class="form-group" style="margin: 4px;"> 
                         <label>&nbsp;</label>
                         <select type="search" class="form-control" id="edtSalvageType" name="edtSalvageType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
                           <option value="1">Amount</option>
@@ -742,7 +633,7 @@
                         <div class="col-12">
                           <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
                             <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
-                            <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label>
+                            <label class="custom-control-label" for="chkEnterAmount" style="cursor: pointer;">Enter Amount</label> 
                           </div>
                         </div>
 
@@ -752,7 +643,7 @@
 
                             <div class="currencyTab">
                               <span>{{currency}}</span>
-                              <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation"
+                              <input type="text" class="form-control" id="edtAccumulatedDepreciation" name="edtAccumulatedDepreciation" 
                               disabled="{{#if chkEnterAmount}}true{{/if}}">
                             </div>
                           </div>
@@ -794,7 +685,7 @@
                         </table>
                       </div>
                     </div>
-
+                    
                     <div class="col-12">
                       <button class="btn btn-success btnCalculate" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
@@ -813,43 +704,15 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Fixed Assets Cost Asset Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='edtCostAssetAccount2'
-                                      name='edtCostAssetAccount2'
-                                      modalId= 'edtCostAssetAccountListPopModal2'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Fixed Assets Cost Asset Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='facaa1'
-                              }}
+                            <select type="search" class="form-control" id="edtCostAssetAccount2" name="edtCostAssetAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Fixed Assets Bank Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='editBankAccount2'
-                                      name='editBankAccount2'
-                                      modalId= 'editBankAccountListPopModal2'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Fixed Assets Bank Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='faba1'
-                              }}
+                            <select type="search" class="form-control" id="editBankAccount2" name="editBankAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                       </div>
@@ -859,49 +722,21 @@
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Asset Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='edtDepreciationAssetAccount2'
-                                      name='edtDepreciationAssetAccount2'
-                                      modalId= 'edtDepreciationAssetAccountModal2'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Fixed Assets Bank Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='daa1'
-                              }}
+                            <select type="search" class="form-control" id="edtDepreciationAssetAccount2" name="edtDepreciationAssetAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-6 col-xl-6">
                           <div class="form-group" style="margin: 4px;">
                             <label>Depreciation Expense Account</label>
-
-                              {{> vs1___dropdown
-                                      data=''
-                                      type='search'
-                                      id='edtDepreciationExpenseAccount2'
-                                      name='edtDepreciationExpenseAccount2'
-                                      modalId= 'edtDepreciationExpenseAccountModal2'
-                                      list_template_name='accountlistpop'
-                                      modal_title='Fixed Assets Bank Account'
-                                      innerModal=true
-                                      label = ''
-                                      colNameForValue = 'colAccountName'
-                                      is_editable=true
-                                      noBorder=false
-                                      custid='dea1'
-                              }}
+                            <select type="search" class="form-control" id="edtDepreciationExpenseAccount2" name="edtDepreciationExpenseAccount2" style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                            </select>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-
+                  
                   <div class="row input-tab">
                     <div class="col-12 col-md-8 col-lg-4 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
@@ -913,7 +748,7 @@
                         </select>
                       </div>
                     </div>
-
+                    
                     <!-- <div class="col-12 col-md-4 col-lg-2 col-xl-2">
                       <div class="form-group" style="margin: 4px;">
                         <label>&nbsp;</label>
@@ -929,7 +764,7 @@
                     </div>
 
                     <div class="col-4 col-md-4 col-lg-2 col-xl-2">
-                      <div class="form-group" style="margin: 4px;">
+                      <div class="form-group" style="margin: 4px;"> 
                         <label>&nbsp;</label>
                         <select type="search" class="form-control" id="edtSalvageType2" name="edtSalvageType" style="background-color:rgb(255, 255, 255); cursor: pointer; width: 100px;" disabled>
                           <option value="1">Amount</option>
@@ -958,7 +793,7 @@
                         <div class="col-12">
                           <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
                             <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkEnterAmount2" name="Additional" style="cursor: pointer;" additionalqty="1" autocomplete="off">
-                            <label class="custom-control-label" for="chkEnterAmount2" style="cursor: pointer;">Enter Amount</label>
+                            <label class="custom-control-label" for="chkEnterAmount2" style="cursor: pointer;">Enter Amount</label> 
                           </div>
                         </div>
 
@@ -968,7 +803,7 @@
 
                             <div class="currencyTab">
                               <span>{{currency}}</span>
-                              <input type="text" class="form-control" id="edtAccumulatedDepreciation2" name="edtAccumulatedDepreciation2"
+                              <input type="text" class="form-control" id="edtAccumulatedDepreciation2" name="edtAccumulatedDepreciation2" 
                               disabled="{{#if chkEnterAmount2}}true{{/if}}">
                             </div>
                           </div>
@@ -1010,7 +845,7 @@
                         </table>
                       </div>
                     </div>
-
+                    
                     <div class="col-12">
                       <button class="btn btn-success btnCalculate2" type="button" style="margin: 14px 0; width: 100px; float: right;">
                         Calculate
@@ -1024,7 +859,7 @@
                 <div class="d-xl-flex flex-column justify-content-xl-center" style="margin: 12px;">
                   <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
                     <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkDisposalAsset" name="chkDisposalAsset" style="cursor: pointer;" additionalqty="1" />
-                    <label class="custom-control-label" for="chkDisposalAsset" style="cursor: pointer;">Disposal of Asset</label>
+                    <label class="custom-control-label" for="chkDisposalAsset" style="cursor: pointer;">Disposal of Asset</label> 
                   </div>
 
                   <div class="row" style="margin: 0px;">
@@ -1032,12 +867,13 @@
                       <div class="input-tab">
                         <label style="color: #00A3D3; font-size: 18px; margin-top: 15px;">Depreciation #1</label>
                         <div class="d-flex align-items-center input-item justify-content-center">
-                            {{> single_date_picker
-                                    id="edtDisposalDate"
-                                    name="edtDisposalDate"
-                                    defaultValue=''
-                                    label='Disposal Date'
-                            }}
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Disposal Date</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtDisposalDate" name="edtDisposalDate" disabled="{{#if chkDisposalAsset}}true{{/if}}" />
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
                         </div>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:120px; text-align: right; margin-right: 10px;">Sales Price</div>
@@ -1080,18 +916,19 @@
                       </div>
                     </div>
                   </div>
-
+                  
                   <div class="row" style="margin: 0px;">
                     <div class="col-12 col-md-6" style="padding: 0; height: 100%;">
                       <div class="input-tab">
                         <label style="color: #00A3D3; font-size: 18px; margin-top: 15px;">Depreciation #2</label>
                         <div class="d-flex align-items-center input-item justify-content-center">
-                            {{> single_date_picker
-                                    id="edtDisposalDate2"
-                                    name="edtDisposalDate2"
-                                    defaultValue=''
-                                    label='Disposal Date'
-                            }}
+                          <div style="min-width:120px; text-align: right; margin-right: 10px;">Disposal Date</div>
+                          <div class="input-group date" style="cursor: pointer;">
+                            <input type="text" class="form-control" id="edtDisposalDate2" name="edtDisposalDate2" disabled="{{#if chkDisposalAsset}}true{{/if}}"/>
+                            <div class="input-group-addon">
+                              <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+                            </div>
+                          </div>
                         </div>
                         <div class="d-flex align-items-center input-item">
                           <div style="min-width:120px; text-align: right; margin-right: 10px;">Sales Price</div>
@@ -1191,6 +1028,30 @@
 
   </div>
 
+  {{> fixedassettypepopup modalID='fixedAssetTypeListModal'}}
+
+  <div class="modal fade supplierListModal" role="dialog" tabindex="-1" id="supplierListModal">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable supplierListModalInner" role="document" style="max-width: 90vw;">
+        <div class="modal-content supplierListContent">
+            <div class="modal-header">
+                <h4>Supplier List</h4><button type="button" class="close checkclose" aria-label="Close"><span aria-hidden="true">×</span></button>
+            </div>
+            <div class="modal-body mainSupplierModalBody" style="padding: 0px; overflow-x: hidden;">
+                <input type="hidden" style="width: 100%; display:none;" id="supplierSelectLineID" name="supplierSelectLineID" readonly>
+                <input type="hidden" id="edtSupplierType" />
+                {{> supplierlistpop}}
+            </div>
+            <div class="modal-footer"><button class="btn btn-success addAutoSupplier" type="button">Add Supplier</button>
+            </div>
+        </div>
+    </div>
+  </div>
   {{> vs1_attachments }}
+  <div class="modal fade" role="dialog" tabindex="-1" id="accountListModal">
+    {{> accountlistpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="departmentModal">
+    {{> departmentpop}}
+  </div>
 
 </template>

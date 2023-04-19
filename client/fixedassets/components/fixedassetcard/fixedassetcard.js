@@ -105,6 +105,27 @@ Template.fixedassetcard.onCreated(function () {
 
 Template.fixedassetcard.onRendered(function () {
   const templateObject = Template.instance();
+  $('#edtAssetType').editableSelect();
+  $('#edtAssetType').editableSelect().on('click.editable-select', function (e, li) {
+    $('#fixedAssetTypeListModal').modal('toggle');
+  });
+
+  $('#edtSupplierName').editableSelect();
+  $('#edtSupplierName').editableSelect().on('click.editable-select', function (e, li) {
+    $('#supplierListModal').modal('show');
+    $('input#edtSupplierType').val('supplier');
+  });
+
+  $('#edtDepartmentName').editableSelect();
+  $('#edtDepartmentName').editableSelect().on('click.editable-select', function (e, li) {
+    $('#departmentModal').modal('show');
+  });
+
+  $('#edtInsuranceByName').editableSelect();
+  $('#edtInsuranceByName').editableSelect().on('click.editable-select', function (e, li) {
+    $('#supplierListModal').modal('show');
+    $('input#edtSupplierType').val('insurance');
+  });
   // $('#edtBoughtFrom').editableSelect();
   // $('#edtDepartment').editableSelect();
   $('#edtDepreciationType').editableSelect();
@@ -177,6 +198,63 @@ Template.fixedassetcard.onRendered(function () {
       initializeCard(assetInfo);
     }
   }
+
+  $(document).on("click", "#tblFixedAssetType tbody tr", function(e) {
+    $('input#edtAssetType').val($(this).find('td.AssetName').html());
+    $('#fixedAssetTypeListModal').modal('hide');
+  });
+
+  $(document).on("click", "#tblSupplierlist tbody tr", function(e) {
+    const callType = $('input#edtSupplierType').find('.colID').text();
+    if (callType === 'supplier') {
+      $('input#edtSupplierName').val($(this).find('td.colCompany').html());
+      templateObject.edtSupplierId.set(parseInt($(this).find('td.colID').html()));
+    }
+    if (callType === 'insurance') {
+      $('input#edtInsuranceByName').val($(this).find('td.colCompany').html());
+      templateObject.edtInsuranceById.set(parseInt($(this).find('td.colID').html()));
+    }
+    $('#supplierListModal').modal('hide');
+  });
+
+  $(document).on("click", "#departmentList tbody tr", function(e) {
+    $('input#edtDepartmentName').val($(this).find('td.colDeptName').html());
+    templateObject.edtDepartmentId.set(parseInt($(this).attr('id').html()));
+    $('div#departmentModal').modal('hide');
+  });
+
+  $(document).on("click", "#tblAccountListPop tbody tr", function(e) {
+    const accountName = $(this).find('td.colAccountName').html();
+    const accountId = parseInt($(this).find('td.colAccountId').html());
+    switch ($('input#edtAccountType').val()) {
+      case 'edtCostAssetAccount':
+        templateObject.edtCostAssetAccount.set(accountId);
+        break;
+      case 'editBankAccount':
+        templateObject.editBankAccount.set(accountId);
+        break;
+      case 'edtDepreciationAssetAccount':
+        templateObject.edtDepreciationAssetAccount.set(accountId);
+        break;
+      case 'edtDepreciationExpenseAccount':
+        templateObject.edtDepreciationExpenseAccount.set(accountId);
+        break;
+      case 'edtCostAssetAccount2':
+        templateObject.edtCostAssetAccount2.set(accountId);
+        break;
+      case 'editBankAccount2':
+        templateObject.editBankAccount.set(accountId);
+        break;
+      case 'edtDepreciationAssetAccount2':
+        templateObject.edtDepreciationAssetAccount2.set(accountId);
+        break;
+      case 'edtDepreciationExpenseAccount2':
+        templateObject.edtDepreciationExpenseAccount2.set(accountId);
+        break;
+    }
+    $('input#'+$('input#edtAccountType').val()).val(accountName);
+    $('#accountListModal').modal('hide');
+  });
 
   function initializeCard(assetInfo) {
     const allAccountsData = templateObject.allAcounts.get();
@@ -569,6 +647,39 @@ Template.fixedassetcard.events({
         templateObject.deprecitationPlans2.set(plan);
         break;
     }
+  },
+  "click input#edtCostAssetAccount": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtCostAssetAccount');
+  },
+  "click input#editBankAccount": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('editBankAccount');
+  },
+  "click input#edtDepreciationAssetAccount": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtDepreciationAssetAccount');
+  },
+  "click input#edtDepreciationExpenseAccount": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtDepreciationExpenseAccount');
+  },
+
+  "click input#edtCostAssetAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtCostAssetAccount2');
+  },
+  "click input#editBankAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('editBankAccount2');
+  },
+  "click input#edtDepreciationAssetAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtDepreciationAssetAccount2');
+  },
+  "click input#edtDepreciationExpenseAccount2": function() {
+    $('#accountListModal').modal('show');
+    $('input#edtAccountType').val('edtDepreciationExpenseAccount2');
   },
 
   "click button#btnAddAttachment": function() {

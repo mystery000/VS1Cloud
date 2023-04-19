@@ -31,6 +31,14 @@ Template.bankNameModal.onCreated(function () {
 });
 
 Template.bankNameModal.onRendered(function () {
+  $(document).on('click', '#tblBankName tbody tr', function (e) {
+      var eftTable = $(this).closest("tr");
+      let eftBankName = eftTable.find('.colBankName').text();
+      let eftDescription = eftTable.find('.colDescription').text();
+      // $('#eftOptionsModal').modal('toggle');
+      $('#eftBankName').val(eftBankName);
+      $('#eftDescription').val(eftDescription);
+  });
 
 });
 

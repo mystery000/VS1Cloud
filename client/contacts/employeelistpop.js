@@ -2092,7 +2092,7 @@ Template.employeelistpop.helpers({
     tablename: () => {
         let templateObject = Template.instance();
         let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
-        return 'tblEmployeelist' + selCustID;
+        return 'tblEmployeelist'+selCustID;
     },
 
     apiFunction:function() {
@@ -2129,4 +2129,9 @@ Template.employeelistpop.helpers({
     apiParams: function() {
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
+    tablename: () => {
+    let templateObject = Template.instance();
+    let selCustID = templateObject.data.custid ? templateObject.data.custid:'';
+  	return 'tblEmployeelist'+selCustID;
+  	}
 });

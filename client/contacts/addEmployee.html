@@ -94,6 +94,13 @@
       z-index: 9999999999 !important;
     }
 
+
+    /* form Zindedx */
+    #addReimbursementLineModal,
+    #addSuperannuationLineModal {
+      z-index: 9999 !important;
+    }
+
     #newReimbursementModal,
     #newSuperannuationFundModal {
       z-index: 99999 !important;
@@ -106,14 +113,6 @@
     p.annualLeave::first-letter {
       font-size: inherit;
     }
-
-
-    /* Damien */
-    #tblTitleList {
-        min-width: 99%;
-    }
-
-
   </style>
   <div>
     <div class="fullScreenSpin" style="display:none;">
@@ -181,7 +180,7 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-8 col-lg-10 displayInfo" id="displayInfo">
+        <div class="col-12 col-md-8 col-lg-10 displayInfo" id="displayInfo">          
           <div class="row">
             <div class="container-fluid">
               <div style="margin-top: 1.5rem;">
@@ -321,7 +320,7 @@
                 </ul>
                 <div class="tab-content">
                   <style>
-                      .table-responsive {
+                    .table-responsive {
                       overflow-x: auto;
                     }
 
@@ -386,22 +385,7 @@
                           </div>
                           <div class="col-12 col-md-3" style="padding: 0px;">
                             <div class="form-group" style="margin: 4px; padding-left:4px;">
-                                <label>Dashboard Options</label>
-
-                                {{>vs1___dropdown
-                                        data=record.loginDefault
-                                        type='search'
-                                        id='employeeDashboard'
-                                        name='employeeDashboard'
-                                        modalId= 'dashboardOptionsPopModal'
-                                        list_template_name='dashboardoptionspopup'
-                                        modal_title='Dashboard Options'
-                                        innerModal=true
-                                        label = ''
-                                        colNameForValue = 'colOptionsName'
-                                        is_editable=true
-                                        noBorder=false
-                                }}
+                              {{> dashboard_options target="edtDashboardOptions" value=record.loginDefault}}
                             </div>
                           </div>
                           <div class="col-12 col-md-2" style="padding: 0px;">
@@ -417,22 +401,7 @@
                         <div class="row">
                           <div class="col-6 col-md-1" style="padding: 0px;">
                             <div class="form-group" style="margin: 4px;padding-right :4px;">
-                                <label>Title</label>
-
-                                {{> vs1___dropdown
-                                        data=record.title
-                                        type='search'
-                                        id='leadTitle'
-                                        name='leadTitle'
-                                        modalId= 'titlePopModal'
-                                        list_template_name='title_list_pop'
-                                        modal_title='Title'
-                                        innerModal=true
-                                        label = ''
-                                        colNameForValue = 'colTitleName'
-                                        is_editable=true
-                                        noBorder=false
-                                }}
+                              {{> contact_title target="editEmployeeTitle" value=record.title}}
                             </div>
                           </div>
                           <div class="col-6 col-md-3" style="padding: 0px;">
@@ -498,12 +467,13 @@
                           </div>
                           <div class="col-6 col-md-2" style="padding: 0px;">
                             <div class="form-group flex-grow-1" style="margin: 4px;padding-left:4px;">
-                                {{> single_date_picker
-                                        id="dtDOB"
-                                        name="dtDOB"
-                                        defaultValue=record.dob
-                                        label='Date of Birth'
-                                }}
+                              <label>Date of Birth</label>
+                              <div class="input-group date">
+                                <input type="text" class="form-control" id="dtDOB" name="dtDOB" value="{{record.dob}}">
+                                <div class="input-group-addon">
+                                  <span class="glyphicon glyphicon-th"></span>
+                                </div>
+                              </div>
                             </div>
                           </div>
                           <div class="col-6 col-md-2" style="padding: 0px;">
@@ -657,20 +627,17 @@
                                     <div class="col-6" style="padding: 0px;">
                                       <div class="form-group" style="margin: 4px;padding-left:4px;">
                                         <label>Country</label>
-                                          {{>vs1___dropdown
-                                                  data=record.scountry
-                                                  type='search'
-                                                  id='edtCountry'
-                                                  name='edtCountry'
-                                                  modalId= 'countryPopModal'
-                                                  list_template_name='CountryModal'
-                                                  modal_title='Country'
-                                                  innerModal=true
-                                                  label = ''
-                                                  colNameForValue = 'colCountry'
-                                                  is_editable=true
-                                                  noBorder=false
-                                          }}
+                                        <select class="form-control" id="edtCountry" name="edtCountry"
+                                          style=" cursor: pointer;">
+                                          <option value="{{record.country}}" selected="">{{record.country}}</option>
+                                          {{#each item in countryList}}
+                                          {{#if equals item record.country }}
+                                          <option value="{{record.country}}" selected="">{{record.country}}</option>
+                                          {{else}}
+                                          <option value="{{item}}">{{item}}</option>
+                                          {{/if}}
+                                          {{/each}}
+                                        </select>
                                       </div>
                                     </div>
                                   </div>
@@ -1284,22 +1251,11 @@
                                       <div class="form-group flex-grow-1" style="margin: 8px 0px;"><label>Default
                                           Product /
                                           Service</label>
-
-                                          {{>vs1___dropdown
-                                                  data=''
-                                                  type='search'
-                                                  id='product-list'
-                                                  name='product-list'
-                                                  modalId= 'productServicePopModal'
-                                                  list_template_name='employeeproductlistpop'
-                                                  modal_title='Default Product / Service'
-                                                  innerModal=true
-                                                  label = ''
-                                                  colNameForValue = 'colproductName'
-                                                  is_editable=true
-                                                  noBorder=false
-                                                  custid='myCustId'
-                                          }}
+                                        <select type="search" class="form-control" id="product-list" name="product-list"
+                                          style="background-color:rgb(255, 255, 255); cursor: pointer;">
+                                        </select>
+                                        <input type="hidden" class="form-control" id="product-listID"
+                                          name="product-listID">
                                       </div>
                                     </div>
                                   </div>
@@ -1509,7 +1465,10 @@
                         </div>
                       </div>
                       <!-- Set Payroll Templates -->
-                        {{> reimbursementSettings}}
+                      {{> earningRateSettings}}
+                      {{> deductionSettings}}
+                      {{> superannuationSettings }}
+                      {{> reimbursementSettings}}
                       <!-- END Payroll Templates -->
                       <div class="col-12 col-md-3" style="padding: 8px; margin: 0px;">
                         <div class="card shadow">
@@ -1642,12 +1601,12 @@
                                     <div class="row">
                                       <div class="col-12 col-md-3">
                                         <div class="form-group" style="margin: 4px;">
-                                            {{> single_date_picker
-                                                label="Start Date"
-                                                id="edtFirstPayDate"
-                                                name="edtFirstPayDate"
-                                                defaultValue=employeePaySetting.FirstPayDate
-                                            }}
+                                          <label>Start Date</label>
+                                          <div class="input-group date">
+                                            <input type="text" class="form-control" name="edtFirstPayDate"
+                                              id="edtFirstPayDate"
+                                              value="{{ formatDate employeePaySetting.FirstPayDate}}" />
+                                          </div>
                                         </div>
                                       </div>
                                       <div class="col-12 col-md-3">
@@ -1750,25 +1709,25 @@
                               </style>
                               <div class="row">
                                 <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                  {{> toggle_button
+                                  {{> toggle_button 
                                     className="chkGlobalSettings"
-                                    id="employee_includeHolidaysInPayslips_toggle"
+                                    id="employee_includeHolidaysInPayslips_toggle" 
                                     width="131px"
-                                    for="employee_includeHolidaysInPayslips_toggle"
+                                    for="employee_includeHolidaysInPayslips_toggle" 
                                     displayName="Include holidays in Payslips"
                                   }}
                                 </div>
                                 <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                  {{> toggle_button
+                                  {{> toggle_button 
                                     className="chkGlobalSettings"
-                                    id="employee_authorisedToApproveLeave_toggle"
+                                    id="employee_authorisedToApproveLeave_toggle" 
                                     width="131px"
-                                    for="employee_authorisedToApproveLeave_toggle"
+                                    for="employee_authorisedToApproveLeave_toggle" 
                                     displayName="Authorised to Approve Leave"
                                   }}
                                 </div>
                                 <div class="col-12 col-md-3 taxesCheckBoxesCol" style="padding: 12px;">
-                                  {{> toggle_button
+                                  {{> toggle_button 
                                     className="chkGlobalSettings"
                                     id="employee_authorisedToApproveTimesheets_toggle"
                                     width="131px"
@@ -1912,12 +1871,11 @@
                                 </div>
                                 <div class="col-12 col-md-3">
                                   <div class="form-group" style="margin: 4px;">
-                                      {{> single_date_picker
-                                              id="edtFirstPayDate"
-                                              name="edtFirstPayDate"
-                                              defaultValue=employeePaySetting.FirstPayDate
-                                              label='First Pay Date'
-                                      }}
+                                    <label>First Pay Date</label>
+                                    <div class="input-group date">
+                                      <input type="text" class="form-control" name="edtFirstPayDate"
+                                        id="edtFirstPayDate" value="{{ formatDate employeePaySetting.FirstPayDate}}" />
+                                    </div>
                                   </div>
                                 </div>
                               </div>
@@ -2281,41 +2239,41 @@
                                               custid=item.lineID
                                               is_editable=true
                                               noBorder=false
-                                          }}
+                                          }}                                       
                                           </div>
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption fixedAmountEachPeriodOption">
                                           <div class="form-group">
-                                            {{> default_input
-                                              label="Hours accrued annually"
-                                              classes="hoursAccruedAnnually"
-                                              id="hoursAccruedAnnually"
-                                              name="hoursAccruedAnnually"
-                                              defaultValue=""
+                                            {{> default_input 
+                                              label="Hours accrued annually" 
+                                              classes="hoursAccruedAnnually" 
+                                              id="hoursAccruedAnnually" 
+                                              name="hoursAccruedAnnually" 
+                                              defaultValue="" 
                                               type="number"
                                             }}
                                           </div>
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
                                           <div class="form-group">
-                                            {{> default_input
-                                              label="Hours of leave accrued annually by a full-time employee"
-                                              classes=""
-                                              id="hoursAccruedAnnuallyFullTimeEmp"
-                                              name="hoursAccruedAnnually"
-                                              defaultValue=""
+                                            {{> default_input 
+                                              label="Hours of leave accrued annually by a full-time employee" 
+                                              classes="" 
+                                              id="hoursAccruedAnnuallyFullTimeEmp" 
+                                              name="hoursAccruedAnnually" 
+                                              defaultValue="" 
                                               type="text"
                                             }}
                                           </div>
                                         </div>
                                         <div class="col-12 handleLeaveTypeOption basedonOrdinaryEarnings hideelement">
                                           <div class="form-group">
-                                            {{> default_input
-                                              label="Hours a full-time employee works in a Fortnightly pay period"
-                                              classes=""
-                                              id="hoursFullTimeEmpFortnightlyPay"
-                                              name="hoursFullTimeEmpFortnightlyPay"
-                                              defaultValue=""
+                                            {{> default_input 
+                                              label="Hours a full-time employee works in a Fortnightly pay period" 
+                                              classes="" 
+                                              id="hoursFullTimeEmpFortnightlyPay" 
+                                              name="hoursFullTimeEmpFortnightlyPay" 
+                                              defaultValue="" 
                                               type="text"
                                             }}
                                           </div>
@@ -2323,24 +2281,24 @@
 
                                         <div class="col-6 handleLeaveTypeOption manuallyRecordedRate hideelement">
                                           <div class="form-group">
-                                            {{> default_input
-                                              label="Hours"
-                                              classes="hoursLeave"
-                                              id="hoursLeave"
-                                              name="hoursLeave"
-                                              defaultValue=""
+                                            {{> default_input 
+                                              label="Hours" 
+                                              classes="hoursLeave" 
+                                              id="hoursLeave" 
+                                              name="hoursLeave" 
+                                              defaultValue="" 
                                               type="text"
                                             }}
                                           </div>
                                         </div>
                                         <div class="col-6">
                                           <div class="form-group">
-                                            {{> default_input
-                                              label="Opening Balance"
-                                              classes="openingBalance"
-                                              id="openingBalance"
-                                              name="openingBalance"
-                                              defaultValue=""
+                                            {{> default_input 
+                                              label="Opening Balance" 
+                                              classes="openingBalance" 
+                                              id="openingBalance" 
+                                              name="openingBalance" 
+                                              defaultValue="" 
                                               type="text"
                                             }}
                                           </div>
@@ -2374,7 +2332,7 @@
                                           <div class="custom-control custom-switch hideelement superannuationGuaranteeCont" style="margin:8px">
                                             <input class="custom-control-input" type="checkbox" id="superannuationGuarantee" name="superannuationGuarantee">
                                             <label class="custom-control-label" for="superannuationGuarantee">Includes Superannuation Guarantee Contribution</label>
-                                          </div>
+                                          </div>                                          
                                         </div>
                                       </form>
                                     </div>
@@ -2621,12 +2579,12 @@
                                         </div>
                                         <div class="col-12">
                                           <div class="form-group">
-                                            {{> default_input
-                                              label="Total Pay"
-                                              classes="edtPriceFormatting"
-                                              id="totalPay"
-                                              name="totalPay"
-                                              defaultValue=""
+                                            {{> default_input 
+                                              label="Total Pay" 
+                                              classes="edtPriceFormatting" 
+                                              id="totalPay" 
+                                              name="totalPay" 
+                                              defaultValue="" 
                                               type="text"
                                             }}
                                           </div>
@@ -2768,22 +2726,10 @@
                                         <div class="col-6 col-md-7">
                                           <div class="form-group">
                                             <label class="borderBottom1">Earnings Rate</label>
-
-                                              {{> vs1___dropdown
-                                                      data=item.EarningRate
-                                                      type='search'
-                                                      id=(generateEarningRateDropdownId item.ID)
-                                                      name='earningRateSelect'
-                                                      modalId= (generateEarningRateModalId item.ID)
-                                                      list_template_name='earningRateSettings'
-                                                      modal_title='Earning Rate'
-                                                      innerModal=true
-                                                      label = ''
-                                                      colNameForValue = 'colEarningsNames'
-                                                      is_editable=true
-                                                      noBorder=false
-                                                      custid=item.ID
-                                              }}
+                                            <input type="search" class="form-control earningLineDropDown"
+                                              id="ptEarningRate{{ item.ID }}" data-value="{{ item.EarningRate }}"
+                                              value="{{ item.EarningRate }}"
+                                              style="background-color:rgb(255, 255, 255); cursor: pointer;" />
                                           </div>
                                         </div>
                                         <div class="col-5 col-md-2">
@@ -2827,22 +2773,9 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Earnings Rate</label>
-
-                                                        {{> vs1___dropdown
-                                                                data=''
-                                                                type='search'
-                                                                id='earningRateSelect1'
-                                                                name='earningRateSelect1'
-                                                                modalId= 'earningRateSelectListPopModal'
-                                                                list_template_name='earningRateSettings'
-                                                                modal_title='Earning Rate'
-                                                                innerModal=true
-                                                                label = ''
-                                                                colNameForValue = 'colEarningsNames'
-                                                                is_editable=true
-                                                                noBorder=false
-                                                                custid='emp1'
-                                                        }}
+                                                      <input type="search" class="form-control earningLineDropDown"
+                                                        id="earningRateSelect" name="earningRateSelect"
+                                                        style="background-color:rgb(255, 255, 255); cursor: pointer;" />
                                                       <input type="hidden" id="earningRateSelectID" value="0">
                                                     </div>
                                                   </div>
@@ -2880,20 +2813,8 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Expense Account</label>
-
-                                                        {{> vs1___dropdown
-                                                                type='search'
-                                                                id='expenseAccount1'
-                                                                name='expenseAccount1'
-                                                                modalId= 'expenseAccountModal'
-                                                                list_template_name='accountlistpop'
-                                                                innerModal=true
-                                                                modal_title='Account List'
-                                                                label = ''
-                                                                colNameForValue = 'colAccountName'
-                                                                is_editable=true
-                                                                custid='emp_expense1'
-                                                        }}
+                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
+                                                        id="expenseAccount" name="expenseAccount">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -2987,21 +2908,8 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Deduction Type</label>
-
-                                                        {{> vs1___dropdown
-                                                                data=workorderrecord.productname
-                                                                type='search'
-                                                                id='deductionTypeSelect'
-                                                                name='deductionTypeSelect'
-                                                                modalId= 'deductionTypeSelectListPopModal'
-                                                                list_template_name='deductionSettings'
-                                                                modal_title='Deduction Type'
-                                                                innerModal=true
-                                                                label = ''
-                                                                colNameForValue = 'colDeductionsNames'
-                                                                is_editable=true
-                                                                noBorder=false
-                                                        }}
+                                                      <input type="search" class="form-control deductionLineDropDown"
+                                                        id="deductionTypeSelect">
                                                       <input type="hidden" id="deductionTypeSelectID" value="0">
                                                     </div>
                                                   </div>
@@ -3039,22 +2947,8 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Control Account</label>
-
-                                                        {{> vs1___dropdown
-                                                                type='search'
-                                                                id='controlAccountDeduction'
-                                                                name='controlAccountDeduction'
-                                                                modalId= 'controlAccountDeductionListModal'
-                                                                list_template_name='accountlistpop'
-                                                                innerModal=true
-                                                                modal_title='Account List'
-                                                                label = ''
-                                                                colNameForValue = 'colAccountName'
-                                                                target_modal_id= 'addAccountModal'
-                                                                target_template_id='addaccountpop'
-                                                                is_editable=true
-                                                                custid='emp_control'
-                                                        }}
+                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
+                                                        id="controlAccountDeduction">
                                                     </div>
                                                   </div>
                                                 </div>
@@ -3140,21 +3034,8 @@
                                                     <div class="form-group">
                                                       <label>Superannuation Fund</label>
                                                       <input type="hidden" id="superannuationFundID" value="0">
-
-                                                        {{> vs1___dropdown
-                                                                data=''
-                                                                type='search'
-                                                                id='superannuationFund'
-                                                                name='superannuationFund'
-                                                                modalId= 'superannuationFundPopModal'
-                                                                list_template_name='superannuationSettings'
-                                                                modal_title='Superannuation Fund'
-                                                                innerModal=true
-                                                                label = 'Superannuation Fund'
-                                                                colNameForValue = 'colSuperannuationName'
-                                                                is_editable=true
-                                                                noBorder=false
-                                                        }}
+                                                      <input type="search" class="form-control superannuationDropDown"
+                                                        id="superannuationFund">
                                                     </div>
                                                   </div>
                                                   <div class="col-12">
@@ -3225,43 +3106,15 @@
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Expense Account</label>
-
-                                                        {{> vs1___dropdown
-                                                                type='search'
-                                                                id='expenseSuperannuationAccount'
-                                                                name='expenseSuperannuationAccount'
-                                                                modalId= 'expenseSuperannuationAccountListModal'
-                                                                list_template_name='accountlistpop'
-                                                                innerModal=true
-                                                                modal_title='Account List'
-                                                                label = ''
-                                                                colNameForValue = 'colAccountName'
-                                                                target_modal_id= 'addAccountModal'
-                                                                target_template_id='addaccountpop'
-                                                                is_editable=true
-                                                                custid='emp_expense'
-                                                        }}
+                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
+                                                        id="expenseSuperannuationAccount">
                                                     </div>
                                                   </div>
                                                   <div class="col-12">
                                                     <div class="form-group">
                                                       <label>Liability Account</label>
-
-                                                        {{> vs1___dropdown
-                                                                type='search'
-                                                                id='liabilityAccount'
-                                                                name='liabilityAccount'
-                                                                modalId= 'liabilityAccountListModal'
-                                                                list_template_name='accountlistpop'
-                                                                innerModal=true
-                                                                modal_title='Account List'
-                                                                label = ''
-                                                                colNameForValue = 'colAccountName'
-                                                                target_modal_id= 'addAccountModal'
-                                                                target_template_id='addaccountpop'
-                                                                is_editable=true
-                                                                custid='emp_liability'
-                                                        }}
+                                                      <input type="text" class="form-control edtExpenseAccountDropDown"
+                                                        id="liabilityAccount">
                                                     </div>
                                                   </div>
                                                   <div class="col-12 col-md-6">
@@ -3391,20 +3244,23 @@
                                                   </div>
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                        <label>Control of Expense Account</label>
-                                                        {{> vs1___dropdown
-                                                                type='search'
-                                                                id='controlExpenseAccount'
-                                                                name='controlExpenseAccount'
-                                                                modalId= 'controlExpenseAccountModal'
-                                                                list_template_name='accountlistpop'
-                                                                innerModal=true
-                                                                modal_title='Account List'
-                                                                label = ''
-                                                                colNameForValue = 'colAccountName'
-                                                                is_editable=true
-                                                                custid='emp_control1'
-                                                        }}
+                                                      {{> vs1___dropdown
+                                                        data=item.item
+                                                        type='search'
+                                                        id='controlExpenseAccount'
+                                                        name='controlExpenseAccount'
+                                                        modalId='accountListModal'
+                                                        list_template_name='accountlistpop'
+                                                        modal_title=''
+                                                        label='Control of Expense Account'
+                                                        innerModal=true
+                                                        colNameForValue='colAccountName'
+                                                        target_modal_id='edtAccountModal'
+                                                        target_template_id='accountlistpop'
+                                                        custid=item.lineID
+                                                        is_editable=true
+                                                        noBorder=false
+                                                    }}                                              
                                                     </div>
                                                   </div>
                                                 </div>
@@ -3488,20 +3344,23 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                        {{> vs1___dropdown
-                                                                data=''
-                                                                type='search'
-                                                                id='obEarningsRate'
-                                                                name='obEarningsRate'
-                                                                modalId= 'obEarningsRateListPopModal'
-                                                                list_template_name='earningRateSettings'
-                                                                modal_title='Earnings Name'
-                                                                innerModal=true
-                                                                label = ''
-                                                                colNameForValue = 'colEarningsNames'
-                                                                is_editable=true
-                                                                noBorder=false
-                                                        }}
+                                                      {{> vs1___dropdown
+                                                        data=item.item
+                                                        type='search'
+                                                        id='obEarningsRate'
+                                                        name='obEarningsRate'
+                                                        modalId='earningRateSettingsModal'
+                                                        list_template_name=''
+                                                        modal_title='Earning Rate List'
+                                                        label='Earnings Name'
+                                                        innerModal=true
+                                                        colNameForValue='colEarningsNames'
+                                                        target_modal_id=''
+                                                        target_template_id=''
+                                                        custid=item.lineID
+                                                        is_editable=true
+                                                        noBorder=false
+                                                    }}
                                                       <input type="hidden" id="obEarningsRateID" value="0">
                                                     </div>
                                                   </div>
@@ -3584,21 +3443,23 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                        {{> vs1___dropdown
-                                                                data=''
-                                                                type='search'
-                                                                id='obDeductionType'
-                                                                name='obDeductionType'
-                                                                modalId= 'obDeductionTypeListPopModal'
-                                                                list_template_name='deductionSettings'
-                                                                modal_title='Deduction Type'
-                                                                innerModal=true
-                                                                label = 'Deduction Type'
-                                                                colNameForValue = 'colDeductionsNames'
-                                                                is_editable=true
-                                                                noBorder=false
-                                                                custid='emp1'
-                                                        }}
+                                                      {{> vs1___dropdown
+                                                        data=item.item
+                                                        type='search'
+                                                        id='edtLeavePayStatus'
+                                                        name='edtLeavePayStatus'
+                                                        modalId='deductionSettingsModal'
+                                                        list_template_name=''
+                                                        modal_title='Earning Rate List'
+                                                        label='Deduction Type'
+                                                        innerModal=true
+                                                        colNameForValue='colDeductionsNames'
+                                                        target_modal_id=''
+                                                        target_template_id=''
+                                                        custid=item.lineID
+                                                        is_editable=true
+                                                        noBorder=false
+                                                    }}
                                                       <input type="hidden" id="obDeductionTypeID" value="0">
                                                     </div>
                                                   </div>
@@ -3684,21 +3545,23 @@
                                                 <div class="row">
                                                   <div class="col-12">
                                                     <div class="form-group">
-                                                        {{> vs1___dropdown
-                                                                data=''
-                                                                type='search'
-                                                                id='obSuperannuationFund'
-                                                                name='obSuperannuationFund'
-                                                                modalId= 'obSuperannuationFundListPopModal'
-                                                                list_template_name='superannuationSettings'
-                                                                modal_title='Superannuation Fund'
-                                                                innerModal=true
-                                                                label = 'Superannuation Fund'
-                                                                colNameForValue = 'colSuperannuationName'
-                                                                is_editable=true
-                                                                noBorder=false
-                                                                custid='emp_add1'
-                                                        }}
+                                                      {{> vs1___dropdown
+                                                        data=item.item
+                                                        type='search'
+                                                        id='obSuperannuationFund'
+                                                        name='obSuperannuationFund'
+                                                        modalId='superannuationSettingsModal'
+                                                        list_template_name=''
+                                                        modal_title='Earning Rate List'
+                                                        label='Superannuation Fund'
+                                                        innerModal=true
+                                                        colNameForValue='colSuperannuationName'
+                                                        target_modal_id=''
+                                                        target_template_id=''
+                                                        custid=item.lineID
+                                                        is_editable=true
+                                                        noBorder=false
+                                                    }}
                                                       <input type="hidden" id="obSuperannuationFundID" value="0">
                                                     </div>
                                                   </div>
@@ -4212,7 +4075,7 @@
             <label for="FileName" class="browseBtn"></label>
             <label for="exampleFormControlFile1" class="Choose_file">No file selected</label>
             <input type="file" name="fileInput" id="fileInput" style="display:none;" accept="image/*">
-
+            
             <div id="row1">
               <div id="column1"></div><button class="btn btn-primary btnUploadFilePicture" type="button"
                 style="margin: 12px;"><i class="fa fa-cloud-upload" style="margin-right: 5px;"></i>Browse</button>
@@ -4324,7 +4187,7 @@
               }
               #tblPayCalendars .colStatus{
                   width: 10%!important;
-              }
+              }              
           </style>
           {{> non_transactional_list tablename="tblPayCalendars"}}
         </div>
@@ -4362,7 +4225,7 @@
               }
               #tblHolidays .colStatus{
                   width: 10%!important;
-              }
+              }              
           </style>
           {{> non_transactional_list tablename="tblHolidays"}}
         </div>
@@ -4424,33 +4287,38 @@
         </div>
         <div class="col-12">
           <div class="form-group">
-            {{> default_input
-              label="Description"
-              classes="edtLeaveDescription"
-              id="edtLeaveDescription"
-              name="edtLeaveDescription"
-              defaultValue=""
+            {{> default_input 
+              label="Description" 
+              classes="edtLeaveDescription" 
+              id="edtLeaveDescription" 
+              name="edtLeaveDescription" 
+              defaultValue="" 
               type="text"
             }}
           </div>
         </div>
         <div class="col-6">
           <div class="form-group">
-              {{> single_date_picker
-                      label="Start Date"
-                      id="edtLeaveStartDate"
-                      name="edtLeaveStartDate"
-              }}
+            <label>Start Date</label>
+            <div class="input-group date" style="cursor: pointer;">
+              <input type="text" class="form-control formClassDate edtLeaveStartDate"
+                id="edtLeaveStartDate" name="edtLeaveStartDate" value="">
+              <div class="input-group-addon" style="">
+                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-6">
           <div class="form-group">
-
-              {{> single_date_picker
-                      label="End Date"
-                      id="edtLeaveEndDate"
-                      name="edtLeaveEndDate"
-              }}
+            <label>End Date</label>
+            <div class="input-group date" style="cursor: pointer;">
+              <input type="text" class="form-control formClassDate edtLeaveEndDate"
+                id="edtLeaveEndDate" name="edtLeaveEndDate" value="">
+              <div class="input-group-addon" style="">
+                <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="col-8">
@@ -4476,12 +4344,12 @@
         </div>
         <div class="col-4">
           <div class="form-group">
-            {{> default_input
-              label="Hours"
-              classes="edtLeaveHours"
-              id="edtLeaveHours"
-              name="edtLeaveHours"
-              defaultValue=""
+            {{> default_input 
+              label="Hours" 
+              classes="edtLeaveHours" 
+              id="edtLeaveHours" 
+              name="edtLeaveHours" 
+              defaultValue="" 
               type="text"
             }}
           </div>
