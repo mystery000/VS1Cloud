@@ -48,14 +48,15 @@
           <div class="row no-gutters" style="padding: 0px 32px;">
             <div class="col-12">
               <div class="card mb-3">
-                <div class="card-body">
+                <div class="card-body p-1 rounded tbl">
                   <style>
-                    td.colAmountEx, td.colTax, td.colAmount{
+                    td.colRegisterAssetCost {
                           text-align: right !important;
                       }
                   </style>
                   {{>datatablelist
-                    tablename="tblFixedAssetList"
+                    tableclass="tblFixedAssetList"
+                    tablename=tablename
                     apiName= apiFunction
                     indexeddbname = 'TFixedAssetsList'
                     tableheaderrecords = tableheaderrecords
@@ -66,7 +67,7 @@
                     service=service
                     lowercaseDataName='tfixedassetslist'
                     exportfilename='Fixed Assets List'
-                    exIndexDBName = 'tfixedassetslistex'
+                    exIndexDBName = 'tfixedassetslist'
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
                     orderby = '[[ 0, "asc" ]]'

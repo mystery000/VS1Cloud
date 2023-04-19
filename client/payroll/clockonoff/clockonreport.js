@@ -127,10 +127,7 @@ Template.clockonreport_template.onRendered(function() {
                             //  let bomData = JSON.parse(workorder_data[k].fields.BOMStructure);
                             //  let bomDetailData = JSON.parse(bomData.Details);
                                  
-                            //  console.log(bomDetailData);
-
                             //  for(let l=0; l < bomDetailData.length; l++ ) {
-                            //     console.log(bomDetailData[i]);
                             //     startedTimes = bomDetailData[i].StartedTimes;
                             //     stoppedTimes = bomDetailData[i].StoppedTimes;
                             //     let clocked_hrs = 0;              
@@ -149,7 +146,6 @@ Template.clockonreport_template.onRendered(function() {
                             //        clocked_hrs = clocked_hrs + hoursDiff;
                             //     }
                             //     process_clocked_time = clocked_hrs;
-                            //     console.log(process_clocked_time);
                                 
                             //  }
                                

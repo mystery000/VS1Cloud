@@ -70,7 +70,6 @@ Template.productlistpop.onCreated(() => {
   templateObject.getDataTableList = function (data) {
     var currentLoc = FlowRouter.current().route.path;
     let linestatus = '';
-    if(!data.fields) data.fields = data;
     if(data.fields.Active == true){
       linestatus = "";
     }
@@ -79,6 +78,7 @@ Template.productlistpop.onCreated(() => {
     }
     if (currentLoc == "/purchaseordercard") {
       dataList = [
+        data.fields.ID || "",
         data.fields.ProductName || "-",
         data.fields.SalesDescription || "",
         data.fields.BARCODE || "",
@@ -86,12 +86,12 @@ Template.productlistpop.onCreated(() => {
         utilityService.modifynegativeCurrencyFormat(          Math.floor(data.fields.SellQty1Price * 100) / 100        ),
         data.fields.TotalQtyInStock,
         data.fields.TaxCodePurchase || "",
-        data.fields.ID || "",
         JSON.stringify(data.fields.ExtraSellPrice) || null,
         linestatus
       ];
     } else {
       dataList = [
+        data.fields.ID || "",
         data.fields.ProductName || "-",
         data.fields.SalesDescription || "",
         data.fields.BARCODE || "",
@@ -99,7 +99,6 @@ Template.productlistpop.onCreated(() => {
         utilityService.modifynegativeCurrencyFormat(          Math.floor(data.fields.SellQty1Price * 100) / 100        ),
         data.fields.TotalQtyInStock,
         data.fields.TaxCodeSales || "",
-        data.fields.ID || "",
         JSON.stringify(data.fields.ExtraSellPrice) || null,
         linestatus
       ];
@@ -127,6 +126,7 @@ Template.productlistpop.onCreated(() => {
     }
     if (currentLoc == "/purchaseordercard") {
       dataList = [
+        data.fields.ID || "",
         data.fields.ProductName || "-",
         data.fields.SalesDescription || "",
         data.fields.BARCODE || "",
@@ -134,12 +134,12 @@ Template.productlistpop.onCreated(() => {
         utilityService.modifynegativeCurrencyFormat(          Math.floor(data.fields.SellQty1Price * 100) / 100        ),
         data.fields.TotalQtyInStock,
         data.fields.TaxCodePurchase || "",
-        data.fields.ID || "",
         JSON.stringify(data.fields.ExtraSellPrice) || null,
         linestatus,
       ];
     } else {
       dataList = [
+        data.fields.ID || "",
         data.fields.ProductName || "-",
         data.fields.SalesDescription || "",
         data.fields.BARCODE || "",
@@ -147,7 +147,6 @@ Template.productlistpop.onCreated(() => {
         utilityService.modifynegativeCurrencyFormat(          Math.floor(data.fields.SellQty1Price * 100) / 100        ),
         data.fields.TotalQtyInStock,
         data.fields.TaxCodeSales || "",
-        data.fields.ID || "",
         JSON.stringify(data.fields.ExtraSellPrice) || null,
         linestatus,
       ];
@@ -156,6 +155,9 @@ Template.productlistpop.onCreated(() => {
     if (currentLoc == "/stockadjustmentcard") {
       if (data.fields.ProductType == "INV") {
         return dataList;
+      }
+      else{
+        return [];
       }
     } else {
       return dataList;
@@ -166,54 +168,62 @@ Template.productlistpop.onCreated(() => {
     // { index: 0, label: '#Sort Date', class:'colSortDate', active: false, display: true, width: "20" },
     {
       index: 0,
+      label: "ID",
+      class: "colProuctPOPID",
+      active: false,
+      display: true,
+      width: "100",
+    },
+    {
+      index: 1,
       label: "Product Name",
       class: "colproductName",
       active: true,
       display: true,
-      width: "150",
+      width: "200",
     },
     {
-      index: 1,
+      index: 2,
       label: "Sales Description",
       class: "colproductDesc",
       active: true,
       display: true,
-      width: "100",
-    },
-    {
-      index: 2,
-      label: "Barcoder",
-      class: "colcolBarcode",
-      active: true,
-      display: true,
-      width: "100",
+      width: "500",
     },
     {
       index: 3,
-      label: "Cost Price",
-      class: "colcostPrice text-right",
+      label: "Barcoder",
+      class: "colBarcode",
       active: true,
       display: true,
-      width: "80",
+      width: "300",
     },
     {
       index: 4,
-      label: "Sale Price",
-      class: "colsalePrice text-right",
+      label: "Cost Price",
+      class: "colcostPrice",
       active: true,
       display: true,
-      width: "80",
+      width: "110",
     },
     {
       index: 5,
-      label: "Quantity",
-      class: "colprdqty text-right",
+      label: "Sale Price",
+      class: "colsalePrice",
       active: true,
       display: true,
-      width: "80",
+      width: "110",
     },
     {
       index: 6,
+      label: "Quantity",
+      class: "colprdqty",
+      active: true,
+      display: true,
+      width: "110",
+    },
+    {
+      index: 7,
       label: "Tax Rate",
       class: "coltaxrate",
       active: true,
@@ -221,20 +231,12 @@ Template.productlistpop.onCreated(() => {
       width: "80",
     },
     {
-      index: 7,
-      label: "POP ID",
-      class: "colProuctPOPID",
-      active: false,
-      display: true,
-      width: "100",
-    },
-    {
       index: 8,
       label: "ExSellPrice",
       class: "colExtraSellPrice",
       active: false,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
         index: 9,
@@ -650,7 +652,7 @@ Template.productlistpop.onRendered(function () {
   //                         // datatable.rows.add(uniqueChars);
   //                         // datatable.draw(false);
   //                         // setTimeout(function () {
-  //                         //   $("#tblInventory").dataTable().fnPageChange('last');
+  //                         //   $(".tblInventory").DataTable().fnPageChange('last');
   //                         // }, 400);
 
   //                         $(".fullScreenSpin").css("display", "none");
@@ -964,7 +966,7 @@ Template.productlistpop.events({
             //localStorage.setItem('VS1SalesProductList', JSON.stringify(splashArrayProductList));
             $(".fullScreenSpin").css("display", "none");
             if (splashArrayProductList) {
-              var datatable = $("#tblInventory").DataTable();
+              var datatable = $(".tblInventory").DataTable();
               datatable.clear();
               datatable.rows.add(splashArrayProductList);
               datatable.draw(false);
@@ -1153,4 +1155,8 @@ Template.productlistpop.helpers({
       return dataReturn;
     };
   },
+  tablename : function () {
+    let templateObject = Template.instance();
+    return 'tblInventory' + templateObject.data.custid;
+  }
 });
