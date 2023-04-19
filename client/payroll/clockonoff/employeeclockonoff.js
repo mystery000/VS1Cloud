@@ -79,16 +79,28 @@ Template.clockOnOff.onRendered(function () {
 
   $("#employeeClockonoffModal").modal("show");
 
-  let clockmodal = $("#employeeClockonoffModal");
+
+  let barcodeForce = false;  // Barcode Force Check
+  barcodeForce = JSON.parse(localStorage.getItem("CloudEnforceBarcodeScan"));
+
+  if(barcodeForce) {
+    $('#employee_name').prop("disabled", true);
+    $('#employee_name').css('background-color', '#e3e6f0');
+    
+    $("#barcodeScanInput").removeAttr('disabled');
+    $("#btnDesktopSearch").removeAttr('disabled');
+    $("#scanBarcode").removeAttr('disabled');
+
+  } else {
+    $('#barcodeScanInput').prop("disabled", true);
+    $('#btnDesktopSearch').prop("disabled", true);
+    $('#scanBarcode').prop("disabled", true);
+    $("#employee_name").removeAttr('disabled');
+    $('#employee_name').css('background-color', '#ffffff');
+  }
+
   
 
-  // $(document).on("click",function(event) {
-  //   if (event.target == clockmodal[0]) {
-  //     event.stopPropagation(); // prevent event from bubbling up
-  //   } else {
-  //     clockmodal.hide();
-  //   }
-  // });
 
   
   $(document).on("click", "#tblEmployeelist tbody tr", function (e) {
@@ -262,7 +274,7 @@ Template.clockOnOff.events({
     if(clockonindex > -1) {
         currentClockOnStatus = clockonstatusList[clockonindex];        
         let tempClockOnStatus = cloneDeep(currentClockOnStatus);
-        tempClockOnStatus.fields = {...tempClockOnStatus.fields, Status:"Clock On", StartTime:startTime }
+        tempClockOnStatus.fields = {...tempClockOnStatus.fields, Status:"Clock On", StartTime:startTime };
         clockonstatusList.splice(clockonindex, 1, tempClockOnStatus);
         addVS1Data('TClockOnStatus', JSON.stringify(clockonstatusList)).then(function(){
 
@@ -278,9 +290,7 @@ Template.clockOnOff.events({
         }
       };
       clockonstatusList.push(clockon_data);
-
-      console.log(clockonstatusList);
-  
+      
       addVS1Data("TClockOnStatus",JSON.stringify(clockonstatusList));
     }
 
@@ -307,7 +317,6 @@ Template.clockOnOff.events({
     
     let clockonstatusList = await templateObject.getClockOnStatus();
     let currentClockOnStatus;
-    console.log(clockonstatusList);
 
     let clockonindex = clockonstatusList.findIndex(order => {
         return order.fields.EmployeeName == employee_name;
