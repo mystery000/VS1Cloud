@@ -1147,6 +1147,16 @@ Template.leadscard.onRendered(function() {
 
     })
 
+    $(document).on('click', '#editLeadTitle', function(e, li) {
+        const $earch = $(this);
+        const offset = $earch.offset();
+        if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+            $('#leadTitlePopModal').modal('toggle');
+        } else {
+            $('#leadTitlePopModal').modal();
+        }
+    });
+
     $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function(e) {
         if ($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null) {
             swal({
@@ -1489,6 +1499,11 @@ Template.leadscard.onRendered(function() {
     });
     $(document).on('click', '#leadRep', function(e, li) {
         $('#employeeListPOPModal').modal('show');
+    })
+
+    $(document).on("click", "#tblTitleList tbody tr", function (e) {
+        $('#editLeadTitle').val($(this).find(".colTypeName").text());
+        $('#leadTitlePopModal').modal('toggle');
     });
 
     setTimeout(() => $('#leadStatus').editableSelect(), 500);

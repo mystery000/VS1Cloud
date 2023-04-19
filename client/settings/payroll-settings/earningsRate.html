@@ -1,72 +1,72 @@
 <template name="earningRateSettings">
+  <div class="modal fade" role="dialog" tabindex="1" id="earningRateSettingsModal" style="z-index:99999;">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document" style="max-width: 90vw;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4>Earning Rate List</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span></button>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4>Earning Rate List</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" style="width: 100%; display:none;" id="earningRateID" name="earningRateID"/>
+          <div class="card-body p-1 rounded">
+            <div class="row">
+              <div class="col-12 col-md-12 mb-3">
+                  <a href="#add-tblEarnings_modal" data-toggle="modal">
+                      {{> vs1_button
+                          color='primary'
+                          classes='float-right btnAddordinaryTimeEarnings'
+                          type='button'
+                          id="btnAddordinaryTimeEarnings"
+                          iconName='plus'
+                          title='New Earning'
+                      }}
+                  </a>
+              </div>
+              <div class="col-12 col-md-12">
+                <style>
+                  #tblEarnings{
+                    width: 100% !important
+                  }
+                  #tblEarnings .colEarningsNames{
+                      width: 18%!important;
+                  }
+                  #tblEarnings .colEarningsType{
+                      width: 18%!important;
+                  }
+                  #tblEarnings .colEarningsDisplayName{
+                      width: 18%!important;
+                  }
+                  #tblEarnings .colEarningsratetype{
+                      width: 12%!important;
+                  }
+                  #tblEarnings .colEarningsAmount{
+                      width: 12%!important;
+                  }
+                  #tblEarnings .colEarningsAccounts{
+                      width: 12%!important;
+                  }
+                  #tblEarnings .colStatus{
+                      width: 10%!important;
+                  }
+                </style>
+                {{> datatablelist
+                  tablename="tblEarnings"
+                  apiName=apiFunction4
+                  indexeddbname='TEarnings'
+                  tableheaderrecords=tableheaderrecords4
+                  exportfilename='Earnings'
+                  apiParams=apiParams4
+                  datahandler=datahandler4
+                  service=service4
+                  lowercaseDataName='tearnings'
+                  exIndexDBName='tearnings'
+                  exdatahandler=exDataHandler4
+                  searchAPI=searchAPI4
+                }}
+              </div>
             </div>
-            <div class="modal-body">
-                <input type="hidden" style="width: 100%; display:none;" id="earningRateID" name="earningRateID"/>
-                <div class="card-body p-1 rounded">
-                    <div class="row">
-                        <div class="col-12 col-md-12 mb-3">
-                            <a href="#add-tblEarnings_modal" data-toggle="modal">
-                                {{> vs1_button
-                                        color='primary'
-                                        classes='float-right btnAddordinaryTimeEarnings'
-                                        type='button'
-                                        id="btnAddordinaryTimeEarnings"
-                                        iconName='plus'
-                                        title='New Earning'
-                                }}
-                            </a>
-                        </div>
-                        <div class="col-12 col-md-12">
-                            <style>
-                                #tblEarnings{
-                                    width: 100% !important
-                                }
-                                #tblEarnings .colEarningsNames{
-                                    width: 18%!important;
-                                }
-                                #tblEarnings .colEarningsType{
-                                    width: 18%!important;
-                                }
-                                #tblEarnings .colEarningsDisplayName{
-                                    width: 18%!important;
-                                }
-                                #tblEarnings .colEarningsratetype{
-                                    width: 12%!important;
-                                }
-                                #tblEarnings .colEarningsAmount{
-                                    width: 12%!important;
-                                }
-                                #tblEarnings .colEarningsAccounts{
-                                    width: 12%!important;
-                                }
-                                #tblEarnings .colStatus{
-                                    width: 10%!important;
-                                }
-                            </style>
-                            {{> datatablelist
-                                    tablename=tablename
-                                    apiName=apiFunction4
-                                    indexeddbname='TEarnings'
-                                    tableheaderrecords=tableheaderrecords4
-                                    exportfilename='Earnings'
-                                    apiParams=apiParams4
-                                    datahandler=datahandler4
-                                    service=service4
-                                    lowercaseDataName='tearnings'
-                                    exIndexDBName='tearnings'
-                                    exdatahandler=exDataHandler4
-                                    searchAPI=searchAPI4
-                                    custid=custId
-                            }}
-                        </div>
-                    </div>
-                    <!-- <div class="table-responsive">
+            <!-- <div class="table-responsive">
               <table id="tblEarnings" style="width:100%" class="table table-striped table-bordered">
                 <thead>
                   <tr class="dnd-moved">
@@ -84,7 +84,7 @@
                 </thead>
                 <tbody>
                   {{#if earnings}}
-                        {{#each earning in earnings}}
+                    {{#each earning in earnings}}
                       <tr earning-id="{{ earning.ID }}">
                         <td class="colEarningsID hiddenColumn">{{ earning.ID }}</td>
                         <td class="colEarningsNames" style="width: 200px;">{{ earning.EarningsName }}</td>
@@ -106,15 +106,166 @@
                         </td>
                       </tr>
                     {{/each}}
-                    {{/if}}
+                  {{/if}}
                 </tbody>
               </table>
             </div> -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
-            </div>
+          </div>
         </div>
+        <div class="modal-footer">
+          <button class="btn btn-light" data-dismiss="modal" type="button">Close</button>
+        </div>
+      </div>
     </div>
+  </div>
+  <div class="modal fade" id="add-tblEarnings_modal" tabindex="-1" role="dialog" aria-labelledby="add-tblEarnings_modal" aria-hidden="true" style="z-index: 999999;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="heaederEarningLabel">Add Earnings</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form class="row" id="earningRateForm">
+            <div class="col-12">
+              <div class="form-group">
+                {{> default_input 
+                  label="Earnings Name" 
+                  classes="edtEarningsName" 
+                  id="edtEarningsName" 
+                  name="edtEarningsName" 
+                  defaultValue="" 
+                  type="text"
+                }}
+                <!-- <label for="edtEarningsName">Earnings Name</label>
+                <input type="text" class="form-control" id="edtEarningsName"> -->
+                <input type="hidden" name="earningID" id="earningID"/>
+                <input type="hidden" name="edtEarningDropDownID" id="edtEarningDropDownID"/>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                {{> default_input 
+                  label="Earnings Type" 
+                  classes="customEditableSelect" 
+                  id="edtEarningsType" 
+                  name="edtEarningsType" 
+                  defaultValue="" 
+                  type="search"
+                }}
+                <!-- <label for="edtEarningsName">Earnings Type</label>
+                <select type="search" name="edtEarningsType" class="form-control customEditableSelect" id="edtEarningsType">
+                  {{#if earningTypes}}
+                    {{#each type in earningTypes}}
+                      <option value="{{type.value}}">{{ type.text }}</option>
+                    {{/each}}
+                  {{/if}}
+
+                  <option value="Ordinary Time Earnings">Ordinary Time Earnings</option> <option value="Overtime Earnings">Overtime Earnings</option> <option value="Employment Termnination Payments">Employment Termnination Payments</option> <option value="Lump Sum E">Lump Sum E</option> <option value="Bonuses & Commissions">Bonuses & Commissions</option> <option value="Lump Sum W">Lump Sum W</option> <option value="Directors Fees">Directors Fees</option>
+                </select>-->
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                {{> default_input 
+                  label="Display Name (optional)" 
+                  classes="edtDisplayName" 
+                  id="edtDisplayName" 
+                  name="edtDisplayName" 
+                  defaultValue="" 
+                  type="text"
+                }}
+                <!-- <label for="edtDisplayName">Display Name
+                  <span style="font-weight: 200;">(optional)</span></label>
+                <input type="text" class="form-control" id="edtDisplayName"> -->
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                {{> default_input 
+                  label="Rate Type" 
+                  classes="edtRateTypeDropDown" 
+                  id="edtRateType" 
+                  name="edtRateType" 
+                  defaultValue="" 
+                  type="search"
+                }}
+                <!-- <label for="edtRateType">Rate Type</label>
+                <input type="search" class="form-control edtRateTypeDropDown" id="edtRateType" name="edtRateType"> -->
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="form-group">
+                {{> default_input 
+                  label="Expense Account" 
+                  classes="edtExpenseAccountDropDown" 
+                  id="edtExpenseAccount" 
+                  name="edtExpenseAccount" 
+                  defaultValue="" 
+                  type="search"
+                }}
+                <!-- <label for="edtExpenseAccount">Expense Account</label>
+                <input type="search" class="form-control edtExpenseAccountDropDown" id="edtExpenseAccount" name="edtExpenseAccount"> -->
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="custom-control custom-switch pointer">
+                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ExemptPAYG" value="ordinaryTimeEarnings1">
+                <label class="custom-control-label chkBox pointer" for="formCheck-ExemptPAYG">Exempt from PAYG withholding</label>
+              </div>
+              <div class="custom-control custom-switch pointer">
+                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ExemptSuperannuation" value="ordinaryTimeEarnings2">
+                <label class="custom-control-label chkBox pointer" for="formCheck-ExemptSuperannuation">Exempt from Superannuation Guarantee Contribution</label>
+              </div>
+              <div class="custom-control custom-switch pointer">
+                <input class="custom-control-input chkBox pointer" type="checkbox" id="formCheck-ExemptReportable" value="ordinaryTimeEarnings3">
+                <label class="custom-control-label chkBox pointer" for="formCheck-ExemptReportable">Reportable as W1 on Activity Statement</label>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          {{> vs1_button
+            color='success'
+            classes='saveEarningRates'
+            type='button'
+            id="saveEarningRates"
+            iconName='save'
+            title='Save'
+          }}
+          <a data-dismiss="modal">
+              {{> vs1_button
+                  color='secondary'
+                  classes=''
+                  type='button'
+                  id="btnCancel"
+                  iconName='close'
+                  title='Close'
+              }}
+          </a>
+          <!-- <button type="button" class="btn btn-success saveEarningRates">
+            <i class="fa fa-save" style="margin-right: 5px;"></i>Save</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            <i class="fa fa-close" style="margin-right: 5px;"></i>Close</button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="rateTypeListModel" style="z-index: 999999;">
+    {{> ratetypelistpop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="addRateModel" style="z-index: 9999999;">
+    {{> addratetypepop}}
+  </div>
+
+  <div class="modal fade" role="dialog" tabindex="-1" id="taxRateListModal" style="z-index: 999999999 !important;">
+    {{> taxratelistpop}}
+  </div>
+  <div class="modal fade" role="dialog" tabindex="-1" id="newTaxRateModal" style="z-index: 9999999999 !important;">
+    {{> newtaxratepop}}
+  </div>
 </template>

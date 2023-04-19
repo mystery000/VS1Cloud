@@ -905,8 +905,4 @@ Template.employeeproductlistpop.helpers({
       return dataReturn;
     };
   },
-  tablename: () => {
-    let templateObject = Template.instance();
-    return 'tblInventoryServicePop'+templateObject.data.custid;
-  },
 });

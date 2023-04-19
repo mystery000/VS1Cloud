@@ -828,7 +828,7 @@ Template.internal_transaction_list_with_switchbox.onRendered(function() {
                 linestatus = "In-Active";
             };
 
-            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard text-center" style=""><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
+            chkBox = '<div class="custom-control custom-switch chkBox pointer chkServiceCard text-center" style="margin-right: -8px"><input name="pointer" class="custom-control-input chkBox pointer chkServiceCard" type="checkbox" id="formCheck-' + data.tdeptclasslist[i].ClassID +
                 '"><label class="custom-control-label chkBox pointer" for="formCheck-' + data.tdeptclasslist[i].ClassID +
                 '"></label></div>'; //switchbox
 
