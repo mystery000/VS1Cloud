@@ -174,7 +174,6 @@ let headerStructurepayrun  = [
 templateObject.tableheaderrecordspayrun.set(headerStructurepayrun);
 
 templateObject.getDataTableList = function(data) {
-    console.log(data);
   let currentId = FlowRouter.current().queryParams;
   let employeeID = (!isNaN(currentId.id)) ? currentId.id : 0;
   let dataList = [];
@@ -191,7 +190,7 @@ templateObject.getDataTableList = function(data) {
 }
 
 let headerStructure = [
-  { index: 0, label: 'ID', class: 'colLRID', active: true, display: true, width: "150" },
+  { index: 0, label: 'ID', class: 'colLRID', active: false, display: true, width: "150" },
   { index: 1, label: 'Description', class: 'colLRDescription', active: true, display: true, width: "200" },
   { index: 2, label: 'Leave Period', class: 'colLRLeavePeriod', active: true, display: true, width: "200" },
   { index: 3, label: 'Leave Type', class: 'colLRLeaveType', active: true, display: true, width: "250" },
@@ -2223,7 +2222,11 @@ Template.employeescard.onRendered(function () {
           //   $('#holidaysPopModal').modal("toggle");
           // }
         });
-    }, 1000)
+
+        $('#edtPayPeriod').editableSelect().on('click.editable-select', async function (e, li) {
+          $('#SelectPayRunModal').modal("show");
+        });
+    }, 1000);
 
     //On Click Client Type List
     $(document).on("click", ".tblInventoryService tbody tr", function (e) {
@@ -10592,6 +10595,7 @@ apiParamspayrun: ()=>{
 
 
   paysliptableheaderrecords: () => {
+    console.log(paysliptableheaderrecords, paysliptableheaderrecords.get());
     return Template.instance().paysliptableheaderrecords.get();
   },
 

@@ -379,23 +379,7 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        {{> vs1___dropdown
-                                                                            data=item.item
-                                                                            type='search'
-                                                                            id='payperiod'
-                                                                            name='payperiod'
-                                                                            modalId=''
-                                                                            list_template_name=''
-                                                                            modal_title=''
-                                                                            label=''
-                                                                            innerModal=true
-                                                                            colNameForValue=''
-                                                                            target_modal_id=''
-                                                                            target_template_id=''
-                                                                            custid=item.lineID
-                                                                            is_editable=true
-                                                                            noBorder=false
-                                                                        }}
+                                                                        {{> vs1_dropdown id='payperiod' name='payperiod' value=bindept type='search' classes='es-input'}}
                                                                         <input type="hidden" id="paycalendarId" name="paycalendarId" value="0" />
                                                                     </div>
                                                                 </div>

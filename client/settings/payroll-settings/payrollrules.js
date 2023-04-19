@@ -191,7 +191,7 @@ Template.payrollrules.onCreated(function() {
         return dataList;
     }
     let headerStructure5  = [
-        { index: 0, label: 'ID', class: 'colDeductionsID', active: false, display: false, width: "" },
+        { index: 0, label: 'ID', class: 'colDeductionsID', active: false, display: true, width: "" },
         { index: 1, label: 'Deduction Name', class: 'colDeductionsNames', active: true, display: true, width: "200" },
         { index: 2, label: 'Deduction Type', class: 'colDeductionsType', active: true, display: true, width: "80" },
         { index: 3, label: 'Display Name', class: 'colDeductionsDisplayName', active: true, display: true, width: "200" },
@@ -13411,7 +13411,7 @@ Template.payrollrules.onRendered(function() {
         } else {
             status = 1;
         }
-        let calender_id =   $(this).closest('tr').find(".colCalenderID").text();
+        let calender_id =   $(this).closest('tr').attr('id');
         let calenderName =  $(this).closest('tr').find(".colPayCalendarName").text()||'';
         let payperiod =     $(this).closest('tr').find(".colPayPeriod").text()||'';
         let NextPayPeriod = $(this).closest('tr').find(".colNextPayPeriod").text()||'';
@@ -13447,7 +13447,7 @@ Template.payrollrules.onRendered(function() {
     $(document).on("click", "#tblHolidays tbody tr td:not(.colHolidayDelete) ", function(e) {
 
 
-        let holiday_id = $(this).closest('tr').find(".colHolidayID").text();
+        let holiday_id = $(this).closest('tr').attr('id');
         let holidayName = $(this).closest('tr').find(".colHolidayName").text()||'';
         let holiday_date = $(this).closest('tr').find(".colHolidayDate").text()||'';
         let holidaygroup = $(this).closest('tr').find(".colHolidaygroup").text() || '';
@@ -13480,7 +13480,7 @@ Template.payrollrules.onRendered(function() {
             status = $(this).closest('tr').find(".colStatus").text() == "" ? 1 : 0;
 
         var table = $(this);
-        let super_id = $(this).closest('tr').find(".colSuperannuationID").text();
+        let super_id = $(this).closest('tr').attr('id');
         let super_name = $(this).closest('tr').find(".colSuperannuationName").text()||'';
         let super_type = $(this).closest('tr').find(".colSuperannuationType").text()||'';
         let super_employe_num = $(this).closest('tr').find(".colEmployerNum").text() || '';
@@ -13969,6 +13969,12 @@ Template.payrollrules.onRendered(function() {
 
 Template.payrollrules.events({
     'click .btnAddNewPayCalender':function(){
+        if( !$(".updateCalendarInActive").hasClass("d-none") || !$('.updateCalendarActive').hasClass('d-none')) {
+            if(!$(".updateCalendarInActive").hasClass("d-none"))
+                $(".updateCalendarInActive").addClass('d-none');
+            else 
+                $(".updateCalendarActive").addClass('d-none');
+        }
         if(!$('.body-panel').hasClass('d-none')) {
             $('.body-panel').addClass('d-none');
         }
@@ -14481,7 +14487,7 @@ Template.payrollrules.events({
             let exemptFromPAYG = false;
             let exemptFromSupernation = false;
             let reportableW1ActivityStatement = false;
-            let expensesAccountID = $('#edtExpenseAccountID').val()||0;
+            let expensesAccountID = $('.edtExpenseAccountID').val()||0;
 
             if($('#formCheck-ExemptPAYGAllowance').is(':checked')){
                 exemptFromPAYG = true;
@@ -14752,7 +14758,7 @@ Template.payrollrules.events({
             let exemptFromPAYG = false;
             let exemptFromSupernation = false;
             let reportableW1ActivityStatement = false;
-            let expensesAccountID = $('#edtExpenseAccountID').val()||0;
+            let expensesAccountID = $('.edtExpenseAccountID').val() || 1;
 
             if($('#formCheck-ExemptPAYGAllowance').is(':checked')){
                 exemptFromPAYG = true;
@@ -14876,7 +14882,7 @@ Template.payrollrules.events({
             let exemptFromPAYG = false;
             let exemptFromSupernation = false;
             let reportableW1ActivityStatement = false;
-            let expensesAccountID = $('#edtExpenseAccountID').val()||0;
+            let expensesAccountID = $('.edtExpenseAccountID').val() || 1;
 
             if($('#formCheck-ExemptPAYGAllowance').is(':checked')){
                 exemptFromPAYG = true;
@@ -15206,12 +15212,14 @@ Template.payrollrules.events({
                     }).then((result) => {
                         if (result.value) {
                             sideBarService.getNewGroupListVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                                LoadingOverlay.show();
                                 addVS1Data("TPayrollHolidayGroup", JSON.stringify(dataReload)).then(function (datareturn) {
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 }).catch(function (err) {
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 });
                             }).catch(function (err) {
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=holiday','_self');
                             });
                         }else if (result.dismiss === 'cancel') {
@@ -15258,12 +15266,14 @@ Template.payrollrules.events({
                     }).then((result) => {
                         if (result.value) {
                             sideBarService.getNewGroupListVS1(initialBaseDataLoad, 0).then(function (dataReload) {
+                                LoadingOverlay.show();
                                 addVS1Data("TPayrollHolidayGroup", JSON.stringify(dataReload)).then(function (datareturn) {
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 }).catch(function (err) {
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 });
                             }).catch(function (err) {
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=holiday','_self');
                             });
                         }else if (result.dismiss === 'cancel') {
@@ -15310,12 +15320,14 @@ Template.payrollrules.events({
                     }).then((result) => {
                         if (result.value) {
                             sideBarService.saveGroupType(initialBaseDataLoad, 0).then(function (dataReload) {
+                                LoadingOverlay.show();
                                 addVS1Data("TPayrollHolidayGroup", JSON.stringify(dataReload)).then(function (datareturn) {
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 }).catch(function (err) {
                                     window.open('/payrollrules?active_key=holiday','_self');
                                 });
                             }).catch(function (err) {
+                                LoadingOverlay.show();
                                 window.open('/payrollrules?active_key=holiday','_self');
                             });
                         }else if (result.dismiss === 'cancel') {
@@ -16273,7 +16285,7 @@ Template.payrollrules.events({
                         PayrollCalendarName:calender_name,
                         PayrollCalendarStartDate:moment(startdate,'DD/MM/YYYY').format('YYYY-MM-DD'),
                         PayrollCalendarFirstPaymentDate:moment(FirstPaymentDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
-                        PayrollCalendarActive :true,
+                        PayrollCalendarActive : false,
                     }
                 };
 
@@ -16377,7 +16389,7 @@ Template.payrollrules.events({
                         PayrollCalendarName:calender_name,
                         PayrollCalendarStartDate:moment(startdate,'DD/MM/YYYY').format('YYYY-MM-DD'),
                         PayrollCalendarFirstPaymentDate:moment(FirstPaymentDate,'DD/MM/YYYY').format('YYYY-MM-DD'),
-                        PayrollCalendarActive :false,
+                        PayrollCalendarActive : true,
                     }
                 };
 
