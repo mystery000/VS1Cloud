@@ -1472,7 +1472,7 @@ Template.newbankrecon.onRendered(function() {
             setCalculated();
         }
     });
-    $(document).on("click", ".newbankrecon #tblInventory tbody tr", function (e) {
+    $(document).on("click", ".newbankrecon .tblInventory tbody tr", function (e) {
         $(".colProductName").removeClass('boldtablealertsborder');
         const trow = $(this);
         if (selectedYodleeID && selectedLineID) {

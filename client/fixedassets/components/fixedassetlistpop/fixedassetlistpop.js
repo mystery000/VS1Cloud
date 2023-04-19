@@ -7,9 +7,9 @@ import { Template } from "meteor/templating";
 import "./fixedassetlistpop.html";
 
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
-
+import { UtilityService } from "../../../utility-service";
 let fixedAssetService = new FixedAssetService();
-
+let utilityService = new UtilityService();
 Template.fixedassetlistpop.onCreated(function () {
   const templateObject = Template.instance();
   templateObject.datatablerecords = new ReactiveVar([]);
@@ -41,7 +41,7 @@ Template.fixedassetlistpop.onCreated(function () {
       data.CUSTFLD4 || "",
       data.CUSTFLD5 || "",
       data.PurchDate ? moment(data.PurchDate).format("DD/MM/YYYY") : "",
-      data.PurchCost || "",
+      utilityService.modifynegativeCurrencyFormat(data.PurchCost) || 0.0,
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
@@ -68,7 +68,7 @@ Template.fixedassetlistpop.onCreated(function () {
       data.CUSTFLD4 || "",
       data.CUSTFLD5 || "",
       data.PurchDate ? moment(data.PurchDate).format("DD/MM/YYYY") : "",
-      data.PurchCost || "",
+      utilityService.modifynegativeCurrencyFormat(data.PurchCost) || 0.0,
       data.SupplierName,
       data.CUSTDATE1 ? moment(data.CUSTDATE1).format("DD/MM/YYYY") : "",
       data.CUSTFLD7 || "",
@@ -86,9 +86,9 @@ Template.fixedassetlistpop.onCreated(function () {
       index: 0,
       label: "ID",
       class: "colAssetRegisterId",
-      active: true,
+      active: false,
       display: true,
-      width: "60",
+      width: "10",
     },
     {
       index: 1,
@@ -104,7 +104,7 @@ Template.fixedassetlistpop.onCreated(function () {
       class: "colRegisterAssetName",
       active: true,
       display: true,
-      width: "150",
+      width: "200",
     },
     {
       index: 3,
@@ -142,7 +142,7 @@ Template.fixedassetlistpop.onCreated(function () {
       index: 7,
       label: "Number",
       class: "colRegisterAssetNumber",
-      active: true,
+      active: false,
       display: true,
       width: "100",
     },
@@ -150,15 +150,15 @@ Template.fixedassetlistpop.onCreated(function () {
       index: 8,
       label: "Registration No",
       class: "colRegisterAssetRegistrationNo",
-      active: true,
+      active: false,
       display: true,
-      width: "160",
+      width: "50",
     },
     {
       index: 9,
       label: "Type",
       class: "colRegisterAssetType",
-      active: true,
+      active: false,
       display: true,
       width: "80",
     },
@@ -166,25 +166,25 @@ Template.fixedassetlistpop.onCreated(function () {
       index: 10,
       label: "Capacity Weight",
       class: "colRegisterAssetCapacityWeight",
-      active: true,
+      active: false,
       display: true,
-      width: "160",
+      width: "60",
     },
     {
       index: 11,
       label: "Capacity Volume",
       class: "colRegisterAssetCapacityVolume",
-      active: true,
+      active: false,
       display: true,
-      width: "160",
+      width: "60",
     },
     {
       index: 12,
       label: "Purchased Date",
       class: "colRegisterAssetPurchasedDate",
-      active: true,
+      active: false,
       display: true,
-      width: "160",
+      width: "80",
     },
     {
       index: 13,
@@ -192,7 +192,7 @@ Template.fixedassetlistpop.onCreated(function () {
       class: "colRegisterAssetCost",
       active: true,
       display: true,
-      width: "100",
+      width: "110",
     },
     {
       index: 14,
@@ -200,7 +200,7 @@ Template.fixedassetlistpop.onCreated(function () {
       class: "colRegisterAssetSupplier",
       active: true,
       display: true,
-      width: "110",
+      width: "200",
     },
     {
       index: 15,
@@ -208,13 +208,13 @@ Template.fixedassetlistpop.onCreated(function () {
       class: "colRegisterAssetRegisterRenewDate",
       active: true,
       display: true,
-      width: "250",
+      width: "80",
     },
     {
       index: 16,
       label: "Insurance Info",
       class: "colRegisterAssetInsuranceInfo",
-      active: true,
+      active: false,
       display: true,
       width: "140",
     },
@@ -222,9 +222,9 @@ Template.fixedassetlistpop.onCreated(function () {
       index: 17,
       label: "Depreciation Start Date",
       class: "colRegisterAssetRenewDate",
-      active: true,
+      active: false,
       display: true,
-      width: "250",
+      width: "80",
     },
     {
       index: 18,
@@ -269,7 +269,8 @@ Template.fixedassetlistpop.events({
   "click .btnNewFixedAsset" : function(){
     $('div#fixedassetlistpopModal').modal('toggle');
     FlowRouter.go("/fixedassetcard");
-  }
+  },
+  
 });
 
 Template.fixedassetlistpop.helpers({
@@ -331,4 +332,9 @@ Template.fixedassetlistpop.helpers({
       return dataReturn;
     };
   },
+
+  tablename : function() {
+    let templateObject = Template.instance();
+    return 'tblFixedAssetList' + templateObject.data.custid;
+  }
 });

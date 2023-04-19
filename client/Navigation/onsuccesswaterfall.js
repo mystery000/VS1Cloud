@@ -13,12 +13,14 @@ import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import './onsuccesswaterfall.html';
 import GlobalFunctions from "../GlobalFunctions.js";
 import EmployeePayrollApi from "../js/Api/EmployeePayrollApi";
+import { ManufacturingService } from '../manufacture/manufacturing-service.js';
 
 
 const productService = new ProductService();
 const sideBarService = new SideBarService();
 const organisationService = new OrganisationService();
 const reportService = new ReportService();
+const manufacturingService = new ManufacturingService();
 
 Template.onsuccesswaterfall.onCreated(function () {
   const templateObject = Template.instance();
@@ -2675,6 +2677,33 @@ Template.onsuccesswaterfall.onRendered(function () {
     });
   }
 
+  templateObject.getTProcessStepData = function () {
+    manufacturingService.getAllProcessData(initialDataLoad, 0, false).then(function (data) {
+      countObjectTimes++;
+      progressPercentage = (countObjectTimes * 100) / allDataToLoad;
+      $('.loadingbar').css('width', progressPercentage + '%').attr('aria-valuenow', progressPercentage);
+      //$(".progressBarInner").text("Statement List "+Math.round(progressPercentage)+"%");
+      $(".progressBarInner").text(Math.round(progressPercentage) + "%");
+      $(".progressName").text("Statement List ");
+      if ((progressPercentage > 0) && (Math.round(progressPercentage) != 100)) {
+        if ($('.headerprogressbar').hasClass("headerprogressbarShow")) {
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        } else {
+          $('.headerprogressbar').addClass('headerprogressbarShow');
+          $('.headerprogressbar').removeClass('headerprogressbarHidden');
+        }
+
+      } else if (Math.round(progressPercentage) >= 100) {
+        $('.checkmarkwrapper').removeClass("hide");
+        templateObject.dashboardRedirectOnLogin();
+      }
+      addVS1Data('TProcessStep', JSON.stringify(data));
+      $("<span class='process'>Process List Loaded <i class='fas fa-check process-check'></i><br></span>").insertAfter(".processContainerAnchor");
+    }).catch(function (err) {
+
+    });
+  }
+
   templateObject.getTVS1BankDepositData = function () {
     sideBarService.getAllTVS1BankDepositData(initialDataLoad, 0).then(function (data) {
       countObjectTimes++;
@@ -3995,6 +4024,7 @@ Template.onsuccesswaterfall.onRendered(function () {
             templateObject.getAllJournalEntryLineData();
           });
         }
+        templateObject.getTProcessStepData();
         if (JSON.parse(isBanking)) {
           getVS1Data('TReconciliation').then(function (dataObject) {
             if (dataObject.length == 0) {
