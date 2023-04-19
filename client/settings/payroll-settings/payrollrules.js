@@ -41,6 +41,7 @@ Template.payrollrules.onCreated(function() {
     templateObject.tableheaderrecords6 = new ReactiveVar([]);
     templateObject.tableheaderrecords7 = new ReactiveVar([]);
     templateObject.tableheaderrecords8 = new ReactiveVar([]);
+    templateObject.tableheaderrecords9 = new ReactiveVar([]);
     templateObject.datatableallowancerecords = new ReactiveVar([]);
     templateObject.tableGrouplistheaderrecord = new ReactiveVar([]);
     templateObject.countryData = new ReactiveVar();
@@ -276,6 +277,25 @@ Template.payrollrules.onCreated(function() {
         { index: 10, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
     ];
     templateObject.tableheaderrecords8.set(headerStructure8);
+
+    templateObject.getDataTableList9 = function (data) {
+        let dataList = [
+            data[i].id || "",
+            data[i].rate || "",
+            data[i].rule || "",
+            data[i].hourlyMultiplier || "",
+            data[i].active == true ? '' : 'In-Active',
+        ]
+        return dataList;
+    }
+    let headerStructure9 = [
+        { index: 0, label: "#ID", class: "colOverTimeSheetID", active: false, display: true, width: "10" },
+        { index: 1, label: "Rate", class: "colRate", active: true, display: true, width: "500" },
+        { index: 2, label: "Rule", class: "colRateRule", active: true, display: true, width: "500" },
+        { index: 3, label: "hourly Multiplier", class: "colHourlyAmount", active: true, display: true, width: "500" },
+        { index: 4, label: "Status", class: "colStatus", active: true, display: true, width: "100" },
+    ]
+    templateObject.tableheaderrecords9.set(headerStructure9);
 });
 
 Template.payrollrules.onRendered(function() {
@@ -20923,6 +20943,36 @@ Template.payrollrules.helpers({
         }
     },
     apiParams8: ()=>{
+        return ['limitCount', 'limitFrom', 'deleteFilter'];
+    },
+
+    tableheaderrecords9: () => {
+        return Template.instance().tableheaderrecords9.get();
+    },
+    apiFunction9:function() {
+        return sideBarService.getOvertimes;
+    },
+    searchAPI9: function() {
+        return sideBarService.getOvertimes;
+    },
+    service9: ()=>{
+        return sideBarService;
+    },
+    datahandler9: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList9(data);
+            return dataReturn;
+        }
+    },
+    exDataHandler9: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList9(data);
+            return dataReturn;
+        }
+    },
+    apiParams9: ()=>{
         return ['limitCount', 'limitFrom', 'deleteFilter'];
     },
 

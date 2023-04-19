@@ -3069,7 +3069,21 @@
                                                     width: 120px !important;
                                                 }                                                    
                                             </style>
-                                            {{> non_transactional_list tablename="tblOverTimeSheet"}}
+                                            <!-- {{> non_transactional_list tablename="tblOverTimeSheet"}} -->
+                                            {{> datatablelist
+                                                tablename="tblOverTimeSheet"
+                                                apiName=apiFunction8
+                                                indexeddbname='TPayrollSettingOvertimes'
+                                                tableheaderrecords=tableheaderrecords8
+                                                exportfilename='Superannuations'
+                                                apiParams=apiParams9
+                                                datahandler=datahandler9
+                                                service=service9
+                                                lowercaseDataName='tpayrollsettingovertimes'
+                                                exIndexDBName='tpayrollsettingovertimes'
+                                                exdatahandler=exDataHandler9
+                                                searchAPI=searchAPI9
+                                            }}
                                         </div>
                                     </div>
                                 </div>
