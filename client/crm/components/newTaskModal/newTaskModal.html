@@ -34,14 +34,12 @@
             <div class="col-12 no-modal">
               <div class="form-group no-modal">
                 <label class="no-modal">Task Description</label>
-                <textarea class="form-control no-modal" rows="4" id="add_task_description" name=""
-                  autocomplete="off"></textarea>
+                <textarea class="form-control no-modal" rows="4" id="add_task_description" name="" autocomplete="off"></textarea>
               </div>
             </div>
             <div class="col-6 no-modal" style="display: inline-flex">
               <div class="dropdown taskDropdownSchedule no-modal">
-                <button class="btn btn-primary dropdown-toggle btnSchedule no-modal" type="button" id=""
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <button class="btn btn-primary dropdown-toggle btnSchedule no-modal" type="button" id="btnSchedule" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <i class="far fa-calendar-minus no-modal" style="margin-right: 8px"></i>
                   <span class="lblAddTaskSchedule">Schedule</span>
                 </button>
@@ -72,7 +70,8 @@
                   </a>
                   <a class="dropdown-item no-modal setScheduleNodateAdd">
                     <i class="fas fa-ban text-secondary no-modal" style="margin-right: 8px"></i>
-                    No Date</a>
+                    No Date
+                  </a>
                   <div class="dropdown-divider no-modal"></div>
 
                   <div class="form-group no-modal" data-toggle="tooltip" data-placement="bottom"
@@ -89,70 +88,56 @@
               </div>
 
               <div class="dropdown taskDropdownFilter no-modal">
-                <button class="btn btn-primary dropdown-toggle btnSchedule no-modal"
-                  style="background-color: rgba(0, 0, 0, 0)" type="button" id="" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <span class="dropdownFilter no-modal" title="Select a project for this task"><i class="fas fa-inbox text-primary"
-                      style="margin-right: 5px"></i><span class="addTaskModalProjectName">All Tasks</span></span>
+                <button class="btn btn-primary dropdown-toggle btnSchedule no-modal" style="background-color: rgba(0, 0, 0, 0)" type="button" id="btnAllTasks" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="dropdownFilter no-modal" title="Select a project for this task">
+                    <i class="fas fa-inbox text-primary" style="margin-right: 5px"></i>
+                    <span class="addTaskModalProjectName">All Tasks</span>
+                  </span>
                 </button>
-                <div class="dropdown-menu no-modal" id="goProjectWrapper" aria-labelledby="dropdownMenuButton"
-                  style="width: 275px"></div>
+                <div class="dropdown-menu no-modal" id="goProjectWrapper" aria-labelledby="dropdownMenuButton" style="width: 275px"></div>
               </div>
             </div>
             <div class="col-6 no-modal" style="display: inline-flex; justify-content: end">
               <div class="dropdown no-modal">
-                <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle no-modal"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
-                <div class="dropdown-menu dropdown-menu-right no-modal" id="addTaskLabelWrapper"
-                  aria-labelledby="dropdownMenuButton"></div>
+                <i class="fas fa-tag taskModalAction taskModalActionDropdown dropdown-toggle no-modal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Select the label(s) for this task"></i>
+                <div class="dropdown-menu dropdown-menu-right no-modal" id="addTaskLabelWrapper" aria-labelledby="dropdownMenuButton"></div>
               </div>
               <div class="dropdown no-modal">
-                <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle no-modal"
-                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
+                <i class="fas fa-flag taskModalAction taskModalActionFlagDropdown dropdown-toggle no-modal" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Set the priority..."></i>
                 <div class="dropdown no-modal">
-                  <div class="dropdown-menu dropdown-menu-right no-modal" aria-labelledby="dropdownMenuButton"
-                    style="width: 200px">
-                    <a class="dropdown-item task_modal_priority_3 no-modal" href="#"><i class="fas fa-tag no-modal"
-                        style="margin-right: 8px"></i>Priority 1
+                  <div class="dropdown-menu dropdown-menu-right no-modal" aria-labelledby="dropdownMenuButton" style="width: 200px">
+                    <a class="dropdown-item task_modal_priority_3 no-modal" href="#">
+                      <i class="fas fa-tag no-modal" style="margin-right: 8px"></i>Priority 1
                       <div style="width: 20%; float: right" class="no-modal">
-                        <div class="custom-control custom-checkbox chkBox pointer no-modal"
-                          style="width: 15px; float: right">
-                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox"
-                            id="chkPriorityAdd3" value="3" />
-                          <label class="custom-control-label chkBox pointer no-modal chkPriorityAdd"
-                            for=" chkPriorityAdd3" value="3"></label>
+                        <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; float: right">
+                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox" id="chkPriorityAdd3" value="3" />
+                          <label class="custom-control-label chkBox pointer no-modal chkPriorityAdd" for=" chkPriorityAdd3" value="3"></label>
                         </div>
                       </div>
                     </a>
-                    <a class="dropdown-item task_modal_priority_2 no-modal" href="#"><i class="fas fa-tag no-modal"
-                        style="margin-right: 8px"></i>Priority 2
+                    <a class="dropdown-item task_modal_priority_2 no-modal" href="#">
+                      <i class="fas fa-tag no-modal" style="margin-right: 8px"></i>Priority 2
                       <div style="width: 20%; float: right" class="no-modal">
-                        <div class="custom-control custom-checkbox chkBox pointer no-modal"
-                          style="width: 15px; float: right">
-                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox"
-                            id="chkPriorityAdd2" value="2" />
+                        <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; float: right">
+                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox" id="chkPriorityAdd2" value="2" />
                           <label class="custom-control-label chkBox pointer no-modal" for="chkPriorityAdd2"></label>
                         </div>
                       </div>
                     </a>
-                    <a class="dropdown-item task_modal_priority_1 no-modal" href="#"><i class="fas fa-tag no-modal"
-                        style="margin-right: 8px"></i>Priority 3
+                    <a class="dropdown-item task_modal_priority_1 no-modal" href="#">
+                      <i class="fas fa-tag no-modal" style="margin-right: 8px"></i>Priority 3
                       <div style="width: 20%; float: right" class="no-modal">
-                        <div class="custom-control custom-checkbox chkBox pointer no-modal"
-                          style="width: 15px; float: right">
-                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox"
-                            id="chkPriorityAdd1" value="1" />
+                        <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; float: right">
+                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox" id="chkPriorityAdd1" value="1" />
                           <label class="custom-control-label chkBox pointer no-modal" for="chkPriorityAdd1"></label>
                         </div>
                       </div>
                     </a>
-                    <a class="dropdown-item task_modal_priority_0 no-modal" href="#"><i class="fas fa-tag no-modal"
-                        style="margin-right: 8px"></i>Priority 4
+                    <a class="dropdown-item task_modal_priority_0 no-modal" href="#">
+                      <i class="fas fa-tag no-modal" style="margin-right: 8px"></i>Priority 4
                       <div style="width: 20%; float: right" class="no-modal">
-                        <div class="custom-control custom-checkbox chkBox pointer no-modal"
-                          style="width: 15px; float: right">
-                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox"
-                            id="chkPriorityAdd0" value="0" />
+                        <div class="custom-control custom-checkbox chkBox pointer no-modal" style="width: 15px; float: right">
+                          <input class="custom-control-input chkBox chkPriorityAdd pointer no-modal" type="checkbox" id="chkPriorityAdd0" value="0" />
                           <label class="custom-control-label chkBox pointer no-modal" for="chkPriorityAdd0"></label>
                         </div>
                       </div>
@@ -162,7 +147,6 @@
               </div>
             </div>
           </div>
-
           <input type="hidden" id="addProjectID" value="11" />
         </div>
         <div class="modal-footer">
