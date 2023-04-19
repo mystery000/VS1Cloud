@@ -94,7 +94,8 @@ Template.process_clock_template.onRendered(function() {
                     bomData =  JSON.parse(workorderdata[t].fields.BOMStructure);           
                     
                     let bomdetails = JSON.parse(bomData.Details);
-    
+
+   
                     for(let i = 0; i < bomdetails.length; i++) {
                         
                         if(bomdetails[i].process != '' ){
@@ -210,7 +211,7 @@ Template.process_clock_template.onRendered(function() {
         });    
 
     }
-    
+
     templateObject.getProcessClockedList();
     
     //get all work orders

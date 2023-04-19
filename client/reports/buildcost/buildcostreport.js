@@ -196,9 +196,7 @@ Template.buildcostreport.onRendered(function() {
                         const hoursDiff = templateObject.getDiffTime(startTimeString, endTimeString);
                    
                        clocked_hrs = clocked_hrs + hoursDiff;
-                    }
-
-                                   
+                    }                           
                                       
 
                     let details = JSON.parse(bomData.Details);
@@ -223,7 +221,6 @@ Template.buildcostreport.onRendered(function() {
                         
 
                     };
-
 
                     buildcostreport_data.push(temp);
 
@@ -273,9 +270,8 @@ Template.buildcostreport.onRendered(function() {
 
     }
     
-    templateObject.makeIndexedDBdata();       
-       
-   
+    templateObject.makeIndexedDBdata();     
+      
     templateObject.timeToHours = function (time) {
         const parts = time.split(":");
         const hours = parseInt(parts[0]);
@@ -283,9 +279,7 @@ Template.buildcostreport.onRendered(function() {
         const seconds = parseInt(parts[2]);
         const totalHours = hours + minutes / 60 + seconds / 3600;
         return totalHours;
-    } ;
-
-    
+    } ;    
 
     templateObject.timeFormat = function(hours) {
         var decimalTime = parseFloat(hours).toFixed(2);
@@ -305,9 +299,7 @@ Template.buildcostreport.onRendered(function() {
         var hours = parseInt(hoursMinutes[0], 10);
         var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
         return hours + minutes / 60;
-    }
-    
-      
+    }   
 
 });
 
@@ -525,6 +517,7 @@ Template.buildcostreport.events({
 
 
 });
+
 
 Template.buildcostreport.helpers({
     datatablerecords: () => {
