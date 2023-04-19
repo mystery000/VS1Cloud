@@ -50,7 +50,7 @@ export class FixedAssetService extends BaseService {
   getServiceLogList() {
     let options = {
       ListType: "Detail",
-      Search: "[Active]=true"
+      Search: "Active=true"
     };
     return this.getList(this.ERPObjects.TServiceLogList);
   }
