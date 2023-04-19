@@ -2149,7 +2149,6 @@ Template.employeescard.onRendered(function () {
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
 $('#obEarningsRate').editableSelect();
-
       $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
           // let $search = $(this);
           // let offset = $search.offset();
@@ -2210,6 +2209,17 @@ $('#obEarningsRate').editableSelect();
     $(document).on("click", "#tblHolidays tbody tr", function (e) {
       $('#edtHolidays').val($(this).find(".colHolidayName").text());
       $('#holidaysPopModal').modal('toggle');
+    });
+
+    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+        var table = $(this);
+        const id = table.find('.colAccountID').text();
+        const accountName = table.find('.colAccountName').text();
+        $("#edtExpenseAccount").val(accountName);
+        $(".paste-expenses").val(accountName);
+        $(".paste-expenses").attr('account-id', id);
+        $(".paste-expenses").removeClass('paste-expenses')
+        $("#accountListModal").modal("toggle");
     });
   });
 
@@ -5064,13 +5074,13 @@ Template.employeescard.events({
           var enteredEmail = $("#cloudEmpEmailAddress").val();
           var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
           var enteredPassword = $("#cloudEmpUserPassword").val();
-          let cloudpassword = $("#cloudEmpUserPassword").val() && $("#cloudEmpUserPassword").val().replace(/;/g, ",");
+          let cloudpassword = $("#cloudEmpUserPassword").val();
+          //&& $("#cloudEmpUserPassword").val().replace(/;/g, ",");
           let cloudcheckpassword = $("#cloudCheckEmpUserPassword").val();
           if (($.trim(enteredEmail).length != 0) && ($.trim(enteredPassword).length != 0)) {
-            if (cloudpassword && cloudcheckpassword && cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
+            if ((cloudpassword) && (cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase())) {
               var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
               if ($.trim(checkifupdate).length != 0) {
-
                 if (cloudpassword.length < 8) {
 
                   swal('Invalid VS1 Password', 'Password must be at least eight characters including one capital letter and one number!', 'error');
@@ -5315,7 +5325,6 @@ Template.employeescard.events({
               } else {
                 $('.fullScreenSpin').css('display', 'none');
                 $('#addvs1userModal').modal('toggle');
-
               }
 
             } else {
@@ -5324,6 +5333,7 @@ Template.employeescard.events({
 
           } else {
             if (employeeSaveID) {
+
               sideBarService.getAllEmployees(25, 0).then(function (dataReload) {
                 addVS1Data('TEmployee', JSON.stringify(dataReload)).then(function (datareturn) {
                   sideBarService.getAllAppointmentPredList().then(function (dataAPPPref) {
@@ -5349,6 +5359,7 @@ Template.employeescard.events({
                   FlowRouter.go('/employeelist?success=true');
                 });
               });
+
             }
           }
         });

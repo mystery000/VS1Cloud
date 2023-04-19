@@ -54,6 +54,10 @@ export class ManufacturingService extends BaseService {
       return this.POST(this.ERPObjects.TVS1Workorder, data)
     }
 
+    saveBuildCostReport(data){
+      return this.POST(this.ERPObjects.TVS1BuildCostReport, data)
+    }
+
     getWorkOrderList() {
 
        const now = new Date();

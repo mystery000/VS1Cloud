@@ -1,49 +1,5 @@
 <template name="departmentModal">
     <div class="modal fade" role="dialog" tabindex="-1" id="myModalDepartment">
-        <!-- <div class="modal-dialog modal-sm" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4>Departments</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          {{#each item in deptrecords}}
-          {{#if equals item.department "Head Office"}}
-          <div class="custom-control custom-switch" style="margin: 8px">
-            <input
-              class="custom-control-input chkDepartment"
-              type="checkbox"
-              id="formCheck-{{item.id}}"
-              name="chkDepartment"
-              checked=""
-              value="{{item.department}}"
-            /><label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-          </div>
-          {{else}}
-          <div class="custom-control custom-switch" style="margin: 8px">
-            <input
-              class="custom-control-input chkDepartment"
-              type="checkbox"
-              id="formCheck-{{item.id}}"
-              name="chkDepartment"
-              value="{{item.department}}"
-            /><label class="custom-control-label" for="formCheck-{{item.id}}">{{item.department}}</label>
-          </div>
-          {{/if}}
-          {{/each}}
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-primary btnSaveSelect" type="button">
-            <i class="fa fa-save" style="margin-right: 8px"></i>Save
-          </button>
-          <button class="btn btn-secondary" data-dismiss="modal" type="button">
-            <i class="fa fa-close" style="margin-right: 8px"></i>Close
-          </button>
-        </div>
-      </div>
-    </div> -->
         <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -54,9 +10,11 @@
                 </div>
                 <div class="modal-body">
                     <style>
-                        /* input[type="checkbox"]{
-                      margin: 40px!important
-                  } */
+                        #tblDepartmentCheckbox {
+                            width: 100%;
+                            min-width: 0 !important;
+                            max-width: none !important;
+                        }
                         #tblDepartmentCheckbox .colChkBox {
                             width: 40px !important;
                         }

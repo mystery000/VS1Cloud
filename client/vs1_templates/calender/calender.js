@@ -369,7 +369,6 @@ Template.calender.onRendered(function() {
     if (startAndStopAppointmentOnly == true) {
         //$("#btnHold").prop("disabled", true);
     }
-
     if (FlowRouter.current().queryParams.leadid) {
         openAppointModalDirectly( FlowRouter.current().queryParams.leadid,templateObject,true);
     } else if (FlowRouter.current().queryParams.customerid) {
@@ -1424,7 +1423,8 @@ Template.calender.onRendered(function() {
                 let newTitle = "<div><p style='font-size:24px;'>" + event.event.title + "<br/>" + eventLeave[empid] + "<br/>Status : " + eventStatus[empid] + "</p></div>"
                 $(title).append(newTitle);
                 title.style.color = "#dddddd";
-                title.style.rotate = '-90deg';
+                title.style.transform = 'rotate(304deg)';
+                title.style.opacity = .8;
                 title.style.width = '100%';
                 title.style.height = '100%';
                 title.style.display = 'flex';
@@ -1626,9 +1626,10 @@ Template.calender.onRendered(function() {
             }
 
             let url = window.location.href;
-            if (url.indexOf("?id") > 1) {} else {
+            if (url.indexOf("?id") > 1) {
+            } else {
                 if (localStorage.getItem("appt_historypage") != undefined && localStorage.getItem("appt_historypage") != "") {
-                    $("#employeeListModal").modal("show");
+                    // $("#employeeListModal").modal("show");
                 }
             }
         }, 500);
