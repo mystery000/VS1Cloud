@@ -1171,6 +1171,10 @@ Template.vs1login.onRendered(function () {
         let isStockonHandDemandChart = false;
         let isAppointmentSMS = false;
 
+        // New Setting for clock on/off
+        let isEnforceBarcodeScan = false;
+        let isJobClockOnOff = false;
+
         /* Lincence Check for Menu Options */
         let isFixedAssetsLicence = localStorage.getItem('CloudFixedAssetsLicence');
         let isInventoryLicence = localStorage.getItem('CloudInventoryLicence');
@@ -1199,6 +1203,7 @@ Template.vs1login.onRendered(function () {
         let isFxCurrencyLicence = localStorage.getItem('CloudUseForeignLicenceModule');
         /*End Licence Check Menu to add */
         /* End Licence Check for menu option */
+       
         if (userAccessOptions.items) {
             $.each(userAccessOptions.items, function (itemaccess, optionaccess) {
                 lineItemObjlevel = {
@@ -1413,6 +1418,16 @@ Template.vs1login.onRendered(function () {
                         isAppointmentSMS = true;
                     }
 
+                    if (optionaccess.fields.Description === "Job Clock On/Off") {
+                        isJobClockOnOff = true;
+
+                    }
+
+
+                    if (optionaccess.fields.Description === "Enforce BarCode Scan") {
+                        isEnforceBarcodeScan = true;
+                    }
+
                     lineItemAccessObjlevel = {
                         formID: optionaccess.fields.FormId || '',
                         accessLevel: optionaccess.fields.AccessLevel || '',
@@ -1585,6 +1600,9 @@ Template.vs1login.onRendered(function () {
              localStorage.setItem('CloudStockOnHand', isStockonHandDemandChart);
              localStorage.setItem('CloudApptSMS', isAppointmentSMS);
              //localStorage.setItem('CloudUseForeignLicence', isFXEnabled);
+
+             localStorage.setItem('CloudJobClockOnOff', isJobClockOnOff);
+             localStorage.setItem('CloudEnforceBarcodeScan', isEnforceBarcodeScan);   
 
             let userSerssion = {
                 'loggedEmpID': userAccessOptions.items[0].fields.EmployeeId,

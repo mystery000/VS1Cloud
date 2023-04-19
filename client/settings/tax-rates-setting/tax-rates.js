@@ -65,7 +65,7 @@ Template.taxRatesSettings.onCreated(function() {
             rate,
             purchasesDefault,
             salesDefault,
-            data.active ? "" : "In-Active",
+            data.Active ? "" : "In-Active",
         ]
         return dataList;
     }
