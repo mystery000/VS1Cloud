@@ -134,7 +134,7 @@ Template.mobileapp.events({
 
     'click #tblEmployeeList tbody tr' : function(e, instance) {
         let empId = $(e.target).closest('tr').find('td:eq(0)').text();
-        let empName = $(e.target).closest('tr').find('td:eq(1)').text() + "  " + $(e.target).closest('tr').find('td:eq(2)').text() ;
+        let empName = $(e.target).closest('tr').find('td:eq(1)').text() + " " + $(e.target).closest('tr').find('td:eq(2)').text() ;
               
         Template.instance().employeeNameData.set(empName);
         Template.instance().employeeIdData.set(empId);     
@@ -145,15 +145,9 @@ Template.mobileapp.events({
 
     'click #btnOpentList': function(e, instance) {
 
-        let isEnterJobProcess = Template.instance().isEnterJobProcess.get();
-        let isEnterJobNumber = Template.instance().isEnterJobNumber.get();
-        let isSelectEmployeeNumber = Template.instance().isSelectEmployeeNumber.get();
         let manufacturingService = new ManufacturingService();
-
         let inputStatus = Template.instance().inputStatus.get();
-
         let isMobile = window.innerWidth < 468;
-
 
         if(inputStatus == "enterJobNumber"){
 
@@ -163,7 +157,9 @@ Template.mobileapp.events({
 
                                   
             getVS1Data('TVS1Workorder').then(function (dataObject) {
-                if(dataObject.length == 0) {
+
+                
+                if(dataObject.length == 0 || dataObject[0].data.length == 0 ) {
 
                     let workOrderList = manufacturingService.getWorkOrderList();
                     $(".mobile-left-workorder-list").css('display', 'block');
@@ -660,6 +656,8 @@ Template.mobileapp.events({
         
         let templateObject = Template.instance();
         Template.instance().isClockin.set(true);
+
+        let empName = templateObject.employeeNameData.get();
         
        // Template.instance().inputStatus.set("enterEmployee");
        
@@ -687,15 +685,27 @@ Template.mobileapp.events({
         })
 
         let currentime = new Date().toLocaleTimeString();
+        let startedTimes = [];
        
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
-            let startedTimes = currentworkorder.fields.StartedTimes;
+            startedTimes = currentworkorder.fields.StartedTimes;
             startedTimes.push(currentime);
 
+            let process_name = templateObject.jobProcess.get();
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes}
+            let bomStructure = JSON.parse(tempworkorder.fields.BOMStructure);
+            let bomDetailData = JSON.parse(bomStructure.Details);
+
+            for(let i=0 ;i < bomDetailData.length; i++) {
+                if(bomDetailData[i].process == process_name) {
+                    bomDetailData[i].startedTimes = startedTimes;
+                }
+            }
+             bomStructure.details = JSON.stringify(bomDetailData);
+            
+            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes,EmployeeName: empName, BOMStructure:JSON.stringify(bomStructure)};
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
@@ -727,6 +737,8 @@ Template.mobileapp.events({
         $(".mobile-header-status-text").text("Clock In");
 
         let jobNumber = templateObject.jobNumber.get();
+        let empName = templateObject.employeeNameData.get();
+ 
 
        
         let workorders = await templateObject.getAllWorkorders();
@@ -737,15 +749,27 @@ Template.mobileapp.events({
         })
 
         let currentime = new Date().toLocaleTimeString();
+        let startedTimes = [];
        
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
-            let startedTimes = currentworkorder.fields.StartedTimes;
+            startedTimes = currentworkorder.fields.StartedTimes;
             startedTimes.push(currentime);
 
+            let process_name = templateObject.jobProcess.get();
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes}
+            let bomStructure = JSON.parse(tempworkorder.fields.BOMStructure);
+            let bomDetailData = JSON.parse(bomStructure.Details);
+
+            for(let i=0 ;i < bomDetailData.length; i++) {
+                if(bomDetailData[i].process == process_name) {
+                    bomDetailData[i].startedTimes = startedTimes;
+                }
+            }
+             bomStructure.details = JSON.stringify(bomDetailData);
+            
+            tempworkorder.fields = {...tempworkorder.fields, StartedTimes: startedTimes,EmployeeName: empName, BOMStructure:JSON.stringify(bomStructure)};
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
@@ -783,15 +807,27 @@ Template.mobileapp.events({
         })
 
         let currentime = new Date().toLocaleTimeString();
+        let stoppedTimes = [];
        
+        
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
-            let stoppedTimes = currentworkorder.fields.StoppedTimes;
+            stoppedTimes = currentworkorder.fields.StoppedTimes;
             stoppedTimes.push(currentime);
 
+            let process_name = templateObject.jobProcess.get();
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes}
+            let bomStructure = JSON.parse(tempworkorder.fields.BOMStructure);
+            let bomDetailData = JSON.parse(bomStructure.Details);
+
+            for(let i=0 ;i < bomDetailData.length; i++) {
+                if(bomDetailData[i].process == process_name) {
+                    bomDetailData[i].StoppedTime = stoppedTimes;
+                }
+            }
+            bomStructure.details = JSON.stringify(bomDetailData);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes, BOMStructure:JSON.stringify(bomStructure)};
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
@@ -831,15 +867,26 @@ Template.mobileapp.events({
         })
 
         let currentime = new Date().toLocaleTimeString();
+        let stoppedTimes;
        
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
 
-            let stoppedTimes = currentworkorder.fields.StoppedTimes;
+            stoppedTimes = currentworkorder.fields.StoppedTimes;
             stoppedTimes.push(currentime);
 
+            let process_name = templateObject.jobProcess.get();
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes}
+            let bomStructure = JSON.parse(tempworkorder.fields.BOMStructure);
+            let bomDetailData = JSON.parse(bomStructure.Details);
+
+            for(let i=0 ;i < bomDetailData.length; i++) {
+                if(bomDetailData[i].process == process_name) {
+                    bomDetailData[i].StoppedTime = stoppedTimes;
+                }
+            }
+            bomStructure.details = JSON.stringify(bomDetailData);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes, BOMStructure:JSON.stringify(bomStructure)};
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
@@ -1266,41 +1313,40 @@ Template.mobileapp.events({
 
         let workorderindex = workorders.findIndex(order => {
             return order.fields.ID == jobNumber;
-        })
-
+        });
+        let stoppedTimes;
+        
         if(workorderindex > -1) {
             currentworkorder = workorders[workorderindex];
-    
-            // Set bom Structure for current workorder
-            templateObject.bomStructure.set(JSON.parse(currentworkorder.fields.BOMStructure));
 
-            let stoppedTimes = currentworkorder.fields.StoppedTimes;
-
+            stoppedTimes = currentworkorder.fields.StoppedTimes;
             stoppedTimes.push(currentime);
 
-                         
-
+            let process_name = templateObject.jobProcess.get();
             let tempworkorder = cloneDeep(currentworkorder);
-            tempworkorder.fields = {...tempworkorder.fields, IsCompleted: true, Status: 'Completed', StoppedTimes: stoppedTimes}
+            let bomStructure = JSON.parse(tempworkorder.fields.BOMStructure);
+            let bomDetailData = JSON.parse(bomStructure.Details);
+
+            for(let i=0 ;i < bomDetailData.length; i++) {
+                if(bomDetailData[i].process == process_name) {
+                    bomDetailData[i].StoppedTime = stoppedTimes;
+                }
+            }
+            bomStructure.details = JSON.stringify(bomDetailData);
+            tempworkorder.fields = {...tempworkorder.fields, StoppedTimes: stoppedTimes, BOMStructure:JSON.stringify(bomStructure)};
             workorders.splice(workorderindex, 1, tempworkorder);
             addVS1Data('TVS1Workorder', JSON.stringify({tvs1workorder: workorders})).then(function(){
 
-             //   $('.fullScreenSpin').css('display', 'none')
-             //   swal('Work Order state is updated', '', 'success');
-            })
-             
+            })            
           
-
+            
             
             let BomDataList = [];
-
             let bomStructureData = JSON.parse(currentworkorder.fields.BOMStructure);
-
-
             let change_to = bomStructureData.TotalChangeQty;
             let total_qty_original = bomStructureData.TotalQtyOriginal;
             let wastage_qty_temp; 
-         
+       
 
             if(isNaN(total_qty_original) || total_qty_original == "") {
                 total_qty_original = 0;
@@ -1324,7 +1370,7 @@ Template.mobileapp.events({
 
             BomDataList.push(tempBomData);
 
-            let bomDetailData = JSON.parse(bomStructureData.Details);
+            bomDetailData = JSON.parse(bomStructureData.Details);
             let change_to_detail;
             let total_qty_detail;
             let wastage_qty_detail;
