@@ -202,6 +202,20 @@ Template.npleditlayoutscreen.onRendered(function () {
 
           var nodes = pnlLayoutTree.tree('getSelectedNodes');
           $(".selectedRowCount").text(`${nodes.length} Rows`);
+
+          if(!nodes.length) {
+            /* Cases for no selected row. Hide side layout. */
+            $(".pnlSideLayout").addClass("hidden");
+          }
+
+          if(nodes.length == 1) {
+            if(nodes[0].children.length) {
+              $(".selectedRowCount").text("Group");
+            }
+            else {
+              $(".selectedRowCount").text("Row");
+            }
+          }
         }
     );
   });
@@ -290,7 +304,7 @@ Template.npleditlayoutscreen.events({
     let firstNode = nodes[0];
     let newNode = {
       name:"Untitled Group",
-      id: parseInt(Math.random() * 100),
+      id: parseInt(Math.random() * 1000),
       children: [],
     }
     pnlLayoutTree.tree("addNodeAfter", newNode, firstNode);
