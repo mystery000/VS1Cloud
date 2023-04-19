@@ -23,6 +23,9 @@ import {Session} from 'meteor/session';
 import { Template } from 'meteor/templating';
 import './nplEditLayoutScreenModal.html';
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
+import {NumberResource as random} from "twilio/lib/rest/pricing/v1/voice/number";
+import {Integer} from "read-excel-file";
+import newnode from "../../CronSetting";
 
 let utilityService = new UtilityService();
 let reportService = new ReportService();
@@ -33,6 +36,7 @@ const productService = new ProductService();
 const defaultPeriod = 3;
 const employeeId = localStorage.getItem("mySessionEmployeeLoggedID");
 let defaultCurrencyCode = CountryAbbr; // global variable "AUD"
+
 
 Template.npleditlayoutscreen.onCreated(function () {
   const templateObject = Template.instance();
@@ -46,6 +50,72 @@ Template.npleditlayoutscreen.onCreated(function () {
   templateObject.daterange = new ReactiveVar();
   templateObject.layoutinfo = new ReactiveVar([]);
   FxGlobalFunctions.initVars(templateObject);
+  templateObject.pnlEditLayoutData = new ReactiveVar();
+
+  var pnlEditLayoutData = [
+    {
+      name: 'Tranding Income',
+      id: 'Tranding Income',
+      children: [
+        {
+          label: 'Sales',
+          id: 'Sales',
+        },
+        {
+          label: 'Total Trending Income',
+          id: 'Total Trending Income',
+        }
+      ]
+    },
+    {
+      name: 'Cost of Sales',
+      id: 'Cost of Sales',
+      children: [
+        {
+          label: 'Cost of Goods Sold',
+          id: 'Cost of Goods Sold',
+        },
+        {
+          label: 'Purchases',
+          id: 'Purchases',
+        },
+        {
+          label: 'Total Cost of Sales',
+          id: 'Total Cost of Sales',
+        }
+      ]
+    },
+    {
+      label: "Gross Profit",
+      id: "Gross Profit",
+    },
+    {
+      label: "Other Income",
+      id: "Other Income",
+      children: [
+        {
+          label: 'Interest Income',
+          id: 'Interest Income',
+        },
+        {
+          label: 'Other Revenue',
+          id: 'Other Revenue',
+        },
+        {
+          label: 'Total Other Income',
+          id: 'Total Other Income',
+        }
+      ]
+    },
+    {
+      label: "Net Profit",
+      id: "Net Profit",
+    }
+  ];
+
+  templateObject.pnlEditLayoutData.set(pnlEditLayoutData);
+
+
 });
 
 function buildPositions() {
@@ -87,7 +157,54 @@ function buildSubAccountJson( $sortContainer ){
 
 Template.npleditlayoutscreen.onRendered(function () {
   const templateObject = Template.instance();
-  
+
+  $(document).ready(function () {
+    let pnlLayoutTree = $('#pnlLayoutTree');
+
+    pnlLayoutTree.tree({
+      data: templateObject.pnlEditLayoutData.get(),
+      autoOpen: true,
+      dragAndDrop: true,
+      onCanMoveTo: function(movedNode, targetNode, position) {
+        if(targetNode.children.length > 0) {
+          //console.log(movedNode, targetNode, position);
+          return true;
+        }
+        if(position == "inside") {
+          //console.log(movedNode, targetNode, position)
+          return false;
+        }
+        if(!targetNode.parent.parent && movedNode.parent.parent)
+          return false;
+        return true;
+      }
+    });
+
+    pnlLayoutTree.on(
+        'tree.click',
+        function(e) {
+          // The clicked node is 'event.node'
+          e.preventDefault();
+          var selected_node = e.node;
+
+          if (selected_node.id === undefined) {
+            console.warn('The multiple selection functions require that nodes have an id');
+          }
+
+          if (pnlLayoutTree.tree('isNodeSelected', selected_node)) {
+            pnlLayoutTree.tree('removeFromSelection', selected_node);
+          } else {
+            pnlLayoutTree.tree('addToSelection', selected_node);
+          }
+
+          $(".formCreateLayout").addClass('hidden');
+          $(".pnlSideLayout").removeClass("hidden");
+
+          var nodes = pnlLayoutTree.tree('getSelectedNodes');
+          $(".selectedRowCount").text(`${nodes.length} Rows`);
+        }
+    );
+  });
   // templateObject.getPNLLayout = async () => {    
   //   getVS1Data("TPNLLayout")
   //     .then(function (dataObject) {
@@ -167,7 +284,22 @@ Template.npleditlayoutscreen.onRendered(function () {
 
 Template.npleditlayoutscreen.events({
   "click #btnGroupSelection": async function () {
-    $("#nplAddGroupScreen").modal("toggle");    
+    //$("#nplAddGroupScreen").modal("toggle");
+    let pnlLayoutTree = $('#pnlLayoutTree');
+    let nodes = pnlLayoutTree.tree("getSelectedNodes");
+    let firstNode = nodes[0];
+    let newNode = {
+      name:"Untitled Group",
+      id: parseInt(Math.random() * 100),
+      children: [],
+    }
+    pnlLayoutTree.tree("addNodeAfter", newNode, firstNode);
+    newNode = pnlLayoutTree.tree("getNodeById", newNode.id);
+    pnlLayoutTree.tree("refresh");
+    nodes.forEach(function (node) {
+      pnlLayoutTree.tree('moveNode', node, newNode, 'inside');
+    })
+    pnlLayoutTree.tree("refresh");
   },
   "click .saveProfitLossLayouts": async function () {
     let id = $("#nplLayoutID").val();
@@ -321,6 +453,7 @@ Template.npleditlayoutscreen.events({
   },
 
   "click #nplShowCreateLayoutForm" : function (event) {
+    $(".pnlSideLayout").addClass("hidden");
     $(".formCreateLayout").removeClass('hidden');
   },
 });
