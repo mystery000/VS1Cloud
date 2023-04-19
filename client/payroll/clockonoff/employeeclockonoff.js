@@ -9,7 +9,8 @@ import LoadingOverlay from "../../LoadingOverlay";
 import { SideBarService } from "../../js/sidebar-service";
 import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import CachedHttp from "../../lib/global/CachedHttp";
-import erpObject from "../../lib/global/erp-objects"; 
+import erpObject from "../../lib/global/erp-objects";
+import { cloneDeep, template } from 'lodash'; 
 
 
 let utilityService = new UtilityService();
@@ -209,13 +210,27 @@ Template.clockOnOff.onRendered(function () {
 
   templateObject.loadTimeSheet(false) ;
 
+  //get all work orders
+  templateObject.getClockOnStatus = async function() {
+    return new Promise(async(resolve, reject)=>{
+        getVS1Data('TClockOnStatus').then(function(dataObject){
+            if(dataObject.length == 0) {
+                resolve ([]);
+            }else  {
+                let data = JSON.parse(dataObject[0].data);
+                resolve(data);
+            }
+        })
+    })
+  }
+
   $("#btnClockOff").prop("disabled", true);
 
 });
 
 Template.clockOnOff.events({
   
-  'click #btnClockOn': function () {
+  'click #btnClockOn': async function () {
     const templateObject = Template.instance();
     $("#startTime").val(moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm'));
     let date = new Date();
@@ -232,15 +247,49 @@ Template.clockOnOff.events({
 
     $("#btnClockOn").prop("disabled", true);
     $(".btnClockOff").removeAttr("disabled");
+    let employee_name = $("#employee_name").val();
+    let employee_id = $("#employee_id").val();
+
+   
+    let clockonstatusList = [];
+    clockonstatusList = await templateObject.getClockOnStatus();
+    let currentClockOnStatus;
+
+    let clockonindex = clockonstatusList.findIndex(clockonstatus => {
+        return clockonstatus.fields.EmployeeName == employee_name;
+    })
+   
+    if(clockonindex > -1) {
+        currentClockOnStatus = clockonstatusList[clockonindex];        
+        let tempClockOnStatus = cloneDeep(currentClockOnStatus);
+        tempClockOnStatus.fields = {...tempClockOnStatus.fields, Status:"Clock On", StartTime:startTime }
+        clockonstatusList.splice(clockonindex, 1, tempClockOnStatus);
+        addVS1Data('TClockOnStatus', JSON.stringify(clockonstatusList)).then(function(){
+
+        })
+    } else {
+      let clockon_data = {
+        type : "TClockOnStatus",
+        fields: {
+          EmployeeName: employee_name || '',
+          EmployeeId: employee_id || '',
+          Status: "Clock On",
+          StartTime:startTime,
+        }
+      };
+      clockonstatusList.push(clockon_data);
+
+      console.log(clockonstatusList);
+  
+      addVS1Data("TClockOnStatus",JSON.stringify(clockonstatusList));
+    }
 
     swal($("#employee_name").val() + ' is Clocked On now', '', 'success');      
-
-
-
   },
 
 
-  'click #btnClockOff': function () {
+  'click #btnClockOff': async function () {
+    
     const templateObject = Template.instance();
     let date = new Date();
     document.getElementById("endTime").value = moment().startOf('hour').format('HH') + ":" + moment().startOf('minute').format('mm');
@@ -252,7 +301,48 @@ Template.clockOnOff.events({
     $("#btnClockOff").prop("disabled", true);
     $(".btnClockOn").removeAttr("disabled");
 
+    let employee_name = $("#employee_name").val();
+    let employee_id = $("#employee_id").val();
+
+    
+    let clockonstatusList = await templateObject.getClockOnStatus();
+    let currentClockOnStatus;
+    console.log(clockonstatusList);
+
+    let clockonindex = clockonstatusList.findIndex(order => {
+        return order.fields.EmployeeName == employee_name;
+    })
+
+   
+    if(clockonindex > -1) {
+        currentClockOnStatus = clockonstatusList[clockonindex];        
+        let tempClockOnStatus = cloneDeep(currentClockOnStatus);
+        tempClockOnStatus.fields = {...tempClockOnStatus.fields, Status:"Clock Off", EndTime:endTime }
+        clockonstatusList.splice(clockonindex, 1, tempClockOnStatus);
+        addVS1Data('TClockOnStatus', JSON.stringify(clockonstatusList)).then(function(){
+
+        })
+    } else {
+      let clockon_data = {
+        type : "TClockOnStatus",
+        fields: {
+          EmployeeName: employee_name || '',
+          EmployeeId: employee_id || '',
+          Status: "Clock Off",
+          EndTime: endTime,
+        }
+      }
+
+      clockonstatusList.push(clockon_data);
+  
+      addVS1Data("TClockOnStatus",JSON.stringify(clockon_data));
+    }
+    
     swal($("#employee_name").val() + ' is Clocked Off ', '', 'success');
+
+
+
+
 
     // let clockList = templateObject.timesheetrecords.get();
 
@@ -472,16 +562,27 @@ Template.clockOnOff.events({
             WhoEntered: localStorage.getItem("mySessionEmployee") || "",
           },
         };
-        
+
+        // addVS1Data("TTimeSheet", JSON.stringify(data));
+
+        //     $("#employeeStatusField").removeClass("statusOnHold");
+        //     $("#employeeStatusField").removeClass("statusClockedOff");
+        //     $("#employeeStatusField")
+        //       .addClass("statusClockedOn")
+        //       .text("Clocked On");
+            
+        //     $("#startTime").prop("disabled", true);
+          
+        //     swal($("#employee_name").val() + ' Clock On data is saved', '', 'success');
+        //     $("#employeeClockonoffModal").modal("hide");
+             
+        //     $(".fullScreenSpin").css("display", "none");
+
         contactService
         .saveTimeSheet(data)
         .then(function (dataReturnRes) {
           sideBarService.getAllTimeSheetList().then(function (data) {
-            // Bert.alert(
-            //   $("#employee_name").val() + " you are now Clocked On",
-            //   "now-success"
-            // );
-
+          
             addVS1Data("TTimeSheet", JSON.stringify(data));
 
             $("#employeeStatusField").removeClass("statusOnHold");
@@ -519,11 +620,9 @@ Template.clockOnOff.events({
           
     }, delayTimeAfterSound);
 
-
   },
 
   "click .btnSaveTimeSheet_One": async function () {
-    alert("sdfsdfsf");
     playSaveAudio();
     let templateObject = Template.instance();
     setTimeout(async function(){
@@ -1204,14 +1303,10 @@ Template.clockOnOff.events({
 
   "click .btnHoldSave" : function() {
     let templateObject = Template.instance();
-    
     let current_time = new Date();
     let break_start_time = templateObject.breakStartTime.get();
-    
     let break_time = parseFloat(templateObject.diff_hours(current_time, break_start_time)).toFixed(3);
-        
     templateObject.breaktime.set(break_time);
-    
     $("#frmOnHoldModal").modal("hide");
   }
  
