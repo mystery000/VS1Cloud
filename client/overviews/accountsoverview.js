@@ -2012,6 +2012,9 @@ Template.accountsoverview.events({
         $(".showOnTransactions").prop("checked", false);
         $(".useReceiptClaim").prop("checked", false);
         $("#expenseCategory").val("");
+        $("#edtSubAccount1").val("");
+        $("#edtSubAccount2").val("");
+        $("#edtSubAccount3").val("");
         // let availableCategories = Template.instance().availableCategories.get();
         // let cateogoryHtml = "";
         // availableCategories.forEach(function(item) {
