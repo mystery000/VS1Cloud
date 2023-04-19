@@ -598,6 +598,7 @@ openDb = function (dbName) {
       db.createObjectStore("CloudAppointmentAllocationLaunch", { keyPath: "EmployeeEmail" });
       db.createObjectStore("CloudAppointmentCreateAppointment", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TFavoriteReport", { keyPath: "EmployeeEmail" });
+      db.createObjectStore("TCRMLeadTaskList", { keyPath: "EmployeeEmail" });
       db.createObjectStore("TProjectListReport", { keyPath: "EmployeeEmail" });
     };
     dbReq.onerror = (event) => reject(new Error("Failed to open DB"));
