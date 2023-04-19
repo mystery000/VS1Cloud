@@ -1216,8 +1216,6 @@ Template.vs1login.onRendered(function () {
                 };
 
                 if (optionaccess.fields.AccessLevel === 1) {
-                    console.log(optionaccess.fields);
-
                     if (optionaccess.fields.Description === "Print Delivery Docket") {
                         isDocket = true;
                     }
