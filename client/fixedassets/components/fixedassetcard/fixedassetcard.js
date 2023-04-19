@@ -156,6 +156,27 @@ Template.fixedassetcard.onRendered(function () {
       }
     });
 
+    $('#edtDepreciationType2').editableSelect()
+    .on('select.editable-select', function (e, li) {
+      if (li) {
+        templateObject.edtDepreciationType2.set(parseInt(li.val() || 0));
+        const val = parseInt(li.val() || 0);
+        switch(val) {
+          case 0:
+            $('select#edtSalvageType2').val(1);
+            $('input#edtSalvage2').val(0);
+            break;
+          case 1:
+            $('select#edtSalvageType2').val(1);
+            break;
+          case 2:
+            $('input#edtSalvage2').val(100);
+            $('select#edtSalvageType2').val(2);
+            break;
+        }
+        templateObject.deprecitationPlans2.set([]);
+      }
+    });
   $("#date-input, #edtDateofPurchase, #edtDateRegisterRenewal, #edtDepreciationStartDate, #edtInsuranceEndDate, #edtDateLastTest, #edtDateNextTest, #edtWarrantyExpiresDate, #edtDisposalDate2, #edtDisposalDate, #edtLastTestDate, #edtNextTestDate").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
@@ -197,6 +218,9 @@ Template.fixedassetcard.onRendered(function () {
       const assetInfo = assetData[0];
       initializeCard(assetInfo);
     }
+    fixedAssetService.getTFixedAssetDetail(assetID).then(function (data) {
+      console.log(data);
+    })
   }
 
   $(document).on("click", "#tblFixedAssetType tbody tr", function(e) {
@@ -257,6 +281,7 @@ Template.fixedassetcard.onRendered(function () {
   });
 
   function initializeCard(assetInfo) {
+    console.log(assetInfo);
     const allAccountsData = templateObject.allAcounts.get();
     templateObject.currentAssetName.set(assetInfo.AssetName);
     templateObject.currentAssetCode.set(assetInfo.AssetCode);
@@ -406,8 +431,9 @@ Template.fixedassetcard.events({
     }
     for (i = 0; i < depPlans2.length; i++) {
       const plan = {
-        type: 'TFixedAssetsDepreciationDetails2',
+        type: 'TFixedAssetsDepreciationDetails1',
         fields: {
+          ID: i,
           "Year": depPlans2[i].year.toString(),
           "Depreciation": depPlans2[i].depreciation,
           "TotalDepreciation": depPlans2[i].accDepreciation,
@@ -450,7 +476,7 @@ Template.fixedassetcard.events({
         FixedAssetCostAccountID: templateObject.edtCostAssetAccount.get(),
         FixedAssetCostAccountID2: templateObject.edtCostAssetAccount2.get(),
         // fixedassetsdepreciationdetails: planList,
-        // fixedassetsdepreciationdetails2: planList2,
+        fixedassetsdepreciationdetails1: planList2,
         CUSTFLD6: templateObject.editBankAccount.get().toString(),
         CUSTFLD8: templateObject.editBankAccount2.get().toString(),
         FixedAssetDepreciationAccountID: templateObject.edtDepreciationAssetAccount.get(),
@@ -500,7 +526,7 @@ Template.fixedassetcard.events({
         FlowRouter.go('/fixedassetlist');
       })
       .catch((err) => {
-
+        console.log(err);
       });
     }
   },
@@ -601,6 +627,7 @@ Template.fixedassetcard.events({
       templateObject.deprecitationPlans2.set([]);
       return;
     }
+
     if (!enterAmountFlag && yearEnding !== 0 && (yearEnding - startYear - life + 1) < 0) {
       // Bert.alert( '<strong>WARNING:</strong>Depreciation Life is too longer to calculate ', 'danger','fixed-top', 'fa-frown-o' );
       templateObject.deprecitationPlans2.set([]);

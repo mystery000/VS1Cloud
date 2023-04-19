@@ -238,7 +238,7 @@ Template.assetregisteroverview.onCreated(function () {
 
 Template.assetregisteroverview.onRendered(function () {
   $("#tblAssetRegisterList tbody").on("click", "tr", function () {
-    var assetID = parseInt($(this).find(".colAssetRegisterId").html());
+    var assetID = $(this).closest("tr").attr('id');
     FlowRouter.go("/fixedassetcard?assetId=" + assetID);
   });
 });
