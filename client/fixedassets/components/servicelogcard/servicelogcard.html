@@ -51,16 +51,28 @@
           <div class="row" style="margin: 8px 16px 0px 16px;">
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
               <div class="form-group"><label>Asset Code</label>
-                <select type="search" class="form-control" id="edtAssetCode" name="edtAssetCode" suppid=" "
-                  style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                </select>
+
+                  {{> vs1___dropdown
+                          data=''
+                          type='search'
+                          id='edtAssetCode'
+                          name='edtAssetCode'
+                          modalId= 'assetTypeListPopModal'
+                          list_template_name='fixedassetlistpop'
+                          modal_title='Asset Type'
+                          innerModal=false
+                          label = ''
+                          colNameForValue = 'colRegisterAssetCode'
+                          is_editable=true
+                          noBorder=false
+                  }}
               </div>
             </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
               <div class="form-group"><label>Asset Name</label>
                 <input class="form-control" type="text" id="edtAssetName" name="edtAssetName" value="{{assetName}}" disabled>
               </div>
-            </div> 
+            </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
               <div class="form-group"><label>Service Type</label>
                 <input class="form-control" type="text" id="edtServiceType" name="edtServiceType"
@@ -68,13 +80,13 @@
               </div>
             </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
-              <div class="form-group"><label>Service Date</label>
-                <div class="input-group date" style="cursor: pointer;">
-                  <input type="text" class="form-control" id="dtServiceDate" name="dtServiceDate">
-                  <div class="input-group-addon">
-                    <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                  </div>
-                </div>
+              <div class="form-group">
+                  {{> single_date_picker
+                          id="dtServiceDate"
+                          name="dtServiceDate"
+                          defaultValue=''
+                          label='Service Date'
+                  }}
               </div>
             </div>
             <div class="col-12 col-md-6 col-lg-6 col-xl-3">
@@ -89,13 +101,13 @@
             <div class="col-12 col-md-6 col-lg-6 col-xl-6">
               <div class="row">
                 <div class="col-12 col-md-4 col-lg-4 col-xl-4">
-                  <div class="form-group"><label>Next Service Date</label>
-                    <div class="input-group date" style="cursor: pointer;">
-                      <input type="text" class="form-control" id="dtNextServiceDate" name="dtNextServiceDate">
-                      <div class="input-group-addon">
-                        <span class="glyphicon glyphicon-th" style="cursor: pointer;"></span>
-                      </div>
-                    </div> 
+                  <div class="form-group">
+                      {{> single_date_picker
+                              id="dtNextServiceDate"
+                              name="dtNextServiceDate"
+                              defaultValue=''
+                              label='Next Service Date'
+                      }}
                   </div>
                 </div>
                 <div class="col-12 col-md-4 col-lg-4 col-xl-4">
@@ -111,7 +123,7 @@
                   </div>
                 </div>
               </div>
-            </div> 
+            </div>
             <!-- <div class="col-12 col-md-6 col-lg-6 col-xl-3">
               <div class="form-group"><label>Rep</label>
                 <select type="search" class="form-control" id="edtRep" name="edtRep" suppid=" "
@@ -123,7 +135,7 @@
               <div class="form-group" style="float: right;">
                 <div class="custom-control custom-switch" style="cursor: pointer;margin-top: 5px;">
                   <input class="custom-control-input additionalModule pointer" type="checkbox" id="chkDone" name="chkDone" style="cursor: pointer;" additionalqty="1" autocomplete="off">
-                  <label class="custom-control-label" for="chkDone" style="cursor: pointer;">Done</label> 
+                  <label class="custom-control-label" for="chkDone" style="cursor: pointer;">Done</label>
                 </div>
               </div>
             </div>
@@ -163,8 +175,4 @@
     </form>
   </div>
   {{> init_form_page_script}}
-  <div class="modal fade" role="dialog" tabindex="-1" id="fixedassetlistpopModal" style="padding: 32px;z-index: 1051;">
-    
-    {{> fixedassetlistpop}}
-  </div>
 </template>

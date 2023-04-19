@@ -105,15 +105,61 @@ Template.productlistpop.onCreated(() => {
       ];
     }
 
-    if (currentLoc == "/stockadjustmentcard") {
-      if (data.fields.ProductType == "INV") {
-        return dataList;
+      if (currentLoc == "/stockadjustmentcard") {
+        if (data.fields.ProductType == "INV") {
+          return dataList;
+        } else {
+          return [];
+        }
       } else {
-        return [];
+        return dataList;
       }
     } else {
-      return dataList;
+      if(data.Active == true){
+        linestatus = "";
+      }
+      else if(data.Active == false){
+        linestatus = "In-Active";
+      }
+      if (currentLoc == "/purchaseordercard") {
+        dataList = [
+          data.ProductName || "-",
+          data.SalesDescription || "",
+          data.BARCODE || "",
+          utilityService.modifynegativeCurrencyFormat(          Math.floor(data.BuyQty1Cost * 100) / 100        ),
+          utilityService.modifynegativeCurrencyFormat(          Math.floor(data.SellQty1Price * 100) / 100        ),
+          data.TotalQtyInStock,
+          data.TaxCodePurchase || "",
+          data.ID || "",
+          JSON.stringify(data.ExtraSellPrice) || null,
+          linestatus
+        ];
+      } else {
+        dataList = [
+          data.ProductName || "-",
+          data.SalesDescription || "",
+          data.BARCODE || "",
+          utilityService.modifynegativeCurrencyFormat(          Math.floor(data.BuyQty1Cost * 100) / 100        ),
+          utilityService.modifynegativeCurrencyFormat(          Math.floor(data.SellQty1Price * 100) / 100        ),
+          data.TotalQtyInStock,
+          data.TaxCodeSales || "",
+          data.ID || "",
+          JSON.stringify(data.ExtraSellPrice) || null,
+          linestatus
+        ];
+      }
+
+      if (currentLoc == "/stockadjustmentcard") {
+        if (data.ProductType == "INV") {
+          return dataList;
+        } else {
+          return [];
+        }
+      } else {
+        return dataList;
+      }
     }
+
   };
 
   templateObject.getExData = function (data) {

@@ -97,33 +97,13 @@ Template.supplierscard.onCreated(function () {
       let swiftCode = queryParams.swiftCode;
       let routingNo = queryParams.routingNo;
       $('.bilingTab').click();
-      $('#edtBankName').val(edtBankName)
+      $('#dropdownBankName').val(edtBankName)
       $('#edtBankAccountName').val(edtBankAccountName)
       $('#edtBsb').val(edtBSB)
       $('#edtBankAccountNumber').val(edtBankAccountNo)
       $('#edtSwiftCode').val(swiftCode)
       $('#edtRoutingNumber').val(routingNo);
 
-      $("#edtBankName").editableSelect();
-      $("#edtBankName")
-        .editableSelect()
-        .on("click.editable-select", function (e, li) {
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var bankName = e.target.value || "";
-
-          if (e.pageX > offset.left + $earch.width() - 8) {
-            $("#bankNameModal").modal();
-            $(".fullScreenSpin").css("display", "none");
-
-          } else {
-            if (bankName.replace(/\s/g, "") != "") {
-              $("#bankNameModal").modal("toggle");
-            } else {
-              $("#bankNameModal").modal();
-            }
-          }
-        });
     }
   }
   templateObject.getReferenceLetters = () => {
@@ -403,7 +383,7 @@ Template.supplierscard.onCreated(function () {
       if (primaryAccountantName === lineItemObj.company) {
         $('#chkSameAsPrimary').prop('checked', true)
         $('.active-password-wrapper').removeClass('invisible')
-        $('.vs1-login-nav').removeClass('d-none')        
+        $('.vs1-login-nav').removeClass('d-none')
       }
       $('#primaryAccountantUsername').val(lineItemObj.email)
       $('#primaryAccountantPassword').val(`${lineItemObj.firstname}@123`)
@@ -699,13 +679,6 @@ Template.supplierscard.onRendered(function () {
   templateObject.fillBankInfoFromUrl();
   templateObject.getCountryData();
 
-  $(document).on("click", "#tblBankName tbody tr", function (e) {
-    var table = $(this);
-    let BankName = table.find(".colBankName").text();
-    $('#bankNameModal').modal('toggle');
-    $('#edtBankName').val(BankName);
-  });
-
   $("#dtStartingDate,#dtDOB,#dtTermninationDate,#dtAsOf").datepicker({
     showOn: 'button',
     buttonText: 'Show Date',
@@ -770,276 +743,8 @@ Template.supplierscard.onRendered(function () {
     x.addListener(mediaQuery)
   }, 500);
 
-  $(document).on("click", "#paymentmethodList tbody tr", function (e) {
-    let table = $(this);
-    let linePaymentMethod = table.find(".colName").text();
-    $("#sltPreferredPayment").val(linePaymentMethod);
-    $('#paymentMethodModal').modal('toggle');
-  });
-
-  $(document).on('click', '#editSupplierTitle', function (e, li) {
-    const $earch = $(this);
-    const offset = $earch.offset();
-    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-      $('#supplierTitlePopModal').modal('toggle');
-    } else {
-      $('#supplierTitlePopModal').modal();
-    }
-  });
-
   $(document).ready(function () {
     setTimeout(function () {
-      $('#sltTerms').editableSelect();
-      $('#sltPreferredPayment').editableSelect();
-      $('#editSupplierTitle').editableSelect();
-      $('#sltTerms').editableSelect()
-        .on('click.editable-select', function (e, li) {
-          var $earch = $(this);
-          var offset = $earch.offset();
-          var termsDataName = e.target.value || '';
-          $('#edtTermsID').val('');
-          if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-            $('#termsListModal').modal('toggle');
-          } else {
-            if (termsDataName.replace(/\s/g, '') != '') {
-              $('#termModalHeader').text('Edit Terms');
-              getVS1Data('TTermsVS1').then(function (dataObject) { //edit to test indexdb
-                if (dataObject.length == 0) {
-                  $('.fullScreenSpin').css('display', 'inline-block');
-                  sideBarService.getTermsVS1().then(function (data) {
-                    for (let i in data.ttermsvs1) {
-                      if (data.ttermsvs1[i].TermsName === termsDataName) {
-                        $('#edtTermsID').val(data.ttermsvs1[i].Id);
-                        $('#edtDays').val(data.ttermsvs1[i].Days);
-                        $('#edtName').val(data.ttermsvs1[i].TermsName);
-                        $('#edtDesc').val(data.ttermsvs1[i].Description);
-                        if (data.ttermsvs1[i].IsEOM === true) {
-                          $('#isEOM').prop('checked', true);
-                        } else {
-                          $('#isEOM').prop('checked', false);
-                        }
-                        if (data.ttermsvs1[i].IsEOMPlus === true) {
-                          $('#isEOMPlus').prop('checked', true);
-                        } else {
-                          $('#isEOMPlus').prop('checked', false);
-                        }
-                        if (data.ttermsvs1[i].isSalesdefault === true) {
-                          $('#chkCustomerDef').prop('checked', true);
-                        } else {
-                          $('#chkCustomerDef').prop('checked', false);
-                        }
-                        if (data.ttermsvs1[i].isPurchasedefault === true) {
-                          $('#chkSupplierDef').prop('checked', true);
-                        } else {
-                          $('#chkSupplierDef').prop('checked', false);
-                        }
-                      }
-                    }
-                    setTimeout(function () {
-                      $('.fullScreenSpin').css('display', 'none');
-                      $('#newTermsModal').modal('toggle');
-                    }, 200);
-                  });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  let useData = data.ttermsvs1;
-                  for (let i in useData) {
-                    if (useData[i].TermsName === termsDataName) {
-                      $('#edtTermsID').val(useData[i].Id);
-                      $('#edtDays').val(useData[i].Days);
-                      $('#edtName').val(useData[i].TermsName);
-                      $('#edtDesc').val(useData[i].Description);
-                      if (useData[i].IsEOM === true) {
-                        $('#isEOM').prop('checked', true);
-                      } else {
-                        $('#isEOM').prop('checked', false);
-                      }
-                      if (useData[i].IsEOMPlus === true) {
-                        $('#isEOMPlus').prop('checked', true);
-                      } else {
-                        $('#isEOMPlus').prop('checked', false);
-                      }
-                      if (useData[i].isSalesdefault === true) {
-                        $('#chkCustomerDef').prop('checked', true);
-                      } else {
-                        $('#chkCustomerDef').prop('checked', false);
-                      }
-                      if (useData[i].isPurchasedefault === true) {
-                        $('#chkSupplierDef').prop('checked', true);
-                      } else {
-                        $('#chkSupplierDef').prop('checked', false);
-                      }
-                    }
-                  }
-                  setTimeout(function () {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#newTermsModal').modal('toggle');
-                  }, 200);
-                }
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                sideBarService.getTermsVS1().then(function (data) {
-                  for (let i in data.ttermsvs1) {
-                    if (data.ttermsvs1[i].TermsName === termsDataName) {
-                      $('#edtTermsID').val(data.ttermsvs1[i].Id);
-                      $('#edtDays').val(data.ttermsvs1[i].Days);
-                      $('#edtName').val(data.ttermsvs1[i].TermsName);
-                      $('#edtDesc').val(data.ttermsvs1[i].Description);
-                      if (data.ttermsvs1[i].IsEOM === true) {
-                        $('#isEOM').prop('checked', true);
-                      } else {
-                        $('#isEOM').prop('checked', false);
-                      }
-                      if (data.ttermsvs1[i].IsEOMPlus === true) {
-                        $('#isEOMPlus').prop('checked', true);
-                      } else {
-                        $('#isEOMPlus').prop('checked', false);
-                      }
-                      if (data.ttermsvs1[i].isSalesdefault === true) {
-                        $('#chkCustomerDef').prop('checked', true);
-                      } else {
-                        $('#chkCustomerDef').prop('checked', false);
-                      }
-                      if (data.ttermsvs1[i].isPurchasedefault === true) {
-                        $('#chkSupplierDef').prop('checked', true);
-                      } else {
-                        $('#chkSupplierDef').prop('checked', false);
-                      }
-                    }
-                  }
-                  setTimeout(function () {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#newTermsModal').modal('toggle');
-                  }, 200);
-                });
-              });
-            } else {
-              $('#termsListModal').modal();
-              setTimeout(function () {
-                $('#termsList_filter .form-control-sm').focus();
-                $('#termsList_filter .form-control-sm').val('');
-                $('#termsList_filter .form-control-sm').trigger("input");
-                var datatable = $('#termsList').DataTable();
-                datatable.draw();
-                $('#termsList_filter .form-control-sm').trigger("input");
-              }, 500);
-            }
-          }
-        });
-
-
-      $('#sltPreferredPayment').editableSelect()
-        .on('click.editable-select', function (e, li) {
-          var $earch = $(event.currentTarget);
-          var offset = $earch.offset();
-
-          const templateObject = Template.instance();
-          $("#selectPaymentMethodLineID").val('');
-          $('#edtPaymentMethodID').val('');
-          $('#paymentMethodHeader').text('New Payment Method');
-          var paymentDataName = $(event.target).val() || '';
-          if (event.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-            $('#paymentMethodModal').modal('toggle');
-            var targetID = $(event.target).closest('tr').attr('id');
-            $('#selectPaymentMethodLineID').val(targetID);
-            setTimeout(function () {
-              $('#paymentmethodList_filter .form-control-sm').focus();
-              $('#paymentmethodList_filter .form-control-sm').val('');
-              $('#paymentmethodList_filter .form-control-sm').trigger("input");
-
-              var datatable = $('#paymentmethodList').DataTable();
-              datatable.draw();
-              $('#paymentmethodList_filter .form-control-sm').trigger("input");
-
-            }, 500);
-          } else {
-            if (paymentDataName.replace(/\s/g, '') != '') {
-              var targetID = $(event.target).closest('tr').attr('id');
-              $('#selectPaymentMethodLineID').val(targetID);
-
-              $('#paymentMethodHeader').text('Edit Payment Method');
-
-              getVS1Data('TPaymentMethod').then(function (dataObject) {
-                if (dataObject.length == 0) {
-                  $('.fullScreenSpin').css('display', 'inline-block');
-                  sideBarService.getPaymentMethodDataVS1().then(function (data) {
-                    for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                      if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
-                        $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
-                        $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                        if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                          $('#isformcreditcard').prop('checked', true);
-                        } else {
-                          $('#isformcreditcard').prop('checked', false);
-                        }
-                      }
-                    }
-                    setTimeout(function () {
-                      $('.fullScreenSpin').css('display', 'none');
-                      $('#newPaymentMethodModal').modal('toggle');
-                    }, 200);
-                  });
-                } else {
-                  let data = JSON.parse(dataObject[0].data);
-                  let useData = data.tpaymentmethodvs1;
-
-                  for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
-                      $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
-                      $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                      if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                        $('#isformcreditcard').prop('checked', true);
-                      } else {
-                        $('#isformcreditcard').prop('checked', false);
-                      }
-                    }
-                  }
-                  setTimeout(function () {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#newPaymentMethodModal').modal('toggle');
-                  }, 200);
-                }
-              }).catch(function (err) {
-                $('.fullScreenSpin').css('display', 'inline-block');
-                sideBarService.getPaymentMethodDataVS1().then(function (data) {
-                  for (let i = 0; i < data.tpaymentmethodvs1.length; i++) {
-                    if (data.tpaymentmethodvs1[i].fields.PaymentMethodName === paymentDataName) {
-                      $('#edtPaymentMethodID').val(data.tpaymentmethodvs1[i].fields.ID);
-                      $('#edtPaymentMethodName').val(data.tpaymentmethodvs1[i].fields.PaymentMethodName);
-                      if (data.tpaymentmethodvs1[i].fields.IsCreditCard === true) {
-                        $('#isformcreditcard').prop('checked', true);
-                      } else {
-                        $('#isformcreditcard').prop('checked', false);
-                      }
-                    }
-                  }
-                  setTimeout(function () {
-                    $('.fullScreenSpin').css('display', 'none');
-                    $('#newPaymentMethodModal').modal('toggle');
-                  }, 200);
-                });
-              });
-
-            } else {
-              $('#paymentMethodModal').modal('toggle');
-              var targetID = $(event.target).closest('tr').attr('id');
-              $('#selectPaymentMethodLineID').val(targetID);
-              setTimeout(function () {
-                $('#paymentmethodList_filter .form-control-sm').focus();
-                $('#paymentmethodList_filter .form-control-sm').val('');
-                $('#paymentmethodList_filter .form-control-sm').trigger("input");
-
-                var datatable = $('#paymentmethodList').DataTable();
-                datatable.draw();
-                $('#paymentmethodList_filter .form-control-sm').trigger("input");
-
-              }, 500);
-            }
-
-          }
-
-        });
-
       $(document).on("click", "#referenceLetterModal .btnSaveLetterTemp", function (e) {
         if ($("input[name='refTemp']:checked").attr('value') == undefined || $("input[name='refTemp']:checked").attr('value') == null) {
           swal({
@@ -1270,16 +975,6 @@ Template.supplierscard.onRendered(function () {
         // $('#addLetterTemplateModal').modal('toggle');
       })
 
-      $(document).on("click", "#termsListModal tbody tr", function (e) {
-        $('#sltTerms').val($(this).find(".colName").text());
-        $('#termsListModal').modal('hide');
-      });
-
-      $(document).on("click", "#tblTitleList tbody tr", function (e) {
-        $('#editSupplierTitle').val($(this).find(".colTitleName").text());
-        $('#supplierTitlePopModal').modal('toggle');
-      });
-
     }, 3000);
   });
 
@@ -1309,7 +1004,7 @@ Template.supplierscard.onRendered(function () {
     }
   });
 
-  
+
   $(document).on('click', ".toggle-password", function (ev) {
     $(this).toggleClass("fa-eye fa-eye-slash");
     var passwordSecret = $($(this).data('toggle'));
@@ -1319,7 +1014,7 @@ Template.supplierscard.onRendered(function () {
       passwordSecret.attr("type", "password");
     }
   });
-                                
+
 });
 
 Template.supplierscard.events({
@@ -1518,7 +1213,7 @@ Template.supplierscard.events({
       let suppaccountno = $('#suppAccountNo').val() || '';
       let BankAccountName = $('#edtBankAccountName').val() || '';
       let BSB = $('#edtBsb').val() || '';
-      let BankName = $('#edtBankName').val() || '';
+      let BankName = $('#dropdownBankName').val() || '';
       let BankAccountNo = $('#edtBankAccountNumber').val() || '';
       let SwiftCode = $('#edtSwiftCode').val() || '';
       let RoutingNumber = $('#edtRoutingNumber').val() || '';
@@ -1752,7 +1447,7 @@ Template.supplierscard.events({
         if (supplierSaveID) {
           organisationService.getOrganisationDetail().then(function(data) {
             if (!data || !data.tcompanyinfo || !data.tcompanyinfo[0]) return
-            data.tcompanyinfo[0] = {...data.tcompanyinfo[0], Contact: company}         
+            data.tcompanyinfo[0] = {...data.tcompanyinfo[0], Contact: company}
             let organisationSettings = {type: "TCompanyInfo", fields: data.tcompanyinfo[0]}
             organisationService
               .saveOrganisationSetting(organisationSettings)
@@ -1771,7 +1466,7 @@ Template.supplierscard.events({
                   });
               })
               .catch(function (err) {
-                  swal('Oooops...', err, 'error');                  
+                  swal('Oooops...', err, 'error');
               });
           });
         }
@@ -2708,7 +2403,7 @@ Template.supplierscard.events({
           showCancelButton: true,
           confirmButtonText: 'Yes',
           cancelButtonText: 'No'
-        })        
+        })
         if (result.dismiss === 'cancel') {
           $("#chkSameAsPrimary").prop('checked', false)
         }

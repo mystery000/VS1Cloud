@@ -584,5 +584,10 @@ Template.superannuationSettings.helpers({
     },
     apiParams8: ()=>{
         return ['limitCount', 'limitFrom', 'deleteFilter'];
-    }
+    },
+    tablename: () => {
+        let templateObject = Template.instance();
+        let accCustID = templateObject.data.custid ? templateObject.data.custid : '';
+        return 'tblSuperannuation'+ accCustID;
+    },
 });

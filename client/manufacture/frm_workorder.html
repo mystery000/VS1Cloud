@@ -7,6 +7,7 @@
                 {{#if workorderrecord}}
                 {{> transaction_header
                     cardType="Sales Order"
+                    clientType="Customer Name"
                     cardName='WO'
                     data=workorderrecord
                     uploadedFile=uploadedFile
@@ -73,7 +74,7 @@
                                                                     color: rgb(128, 128, 128);
                                                                     height: inherit !important;
                                                                 }
-  
+
                                                                 .groove {
                                                                     border-style: solid;
                                                                     border-width: 1px;
@@ -81,30 +82,30 @@
                                                                     padding: 2px;
                                                                     border-radius: .35rem;
                                                                 }
-  
+
                                                                 .custom-control-label {
                                                                     position: absolute;
                                                                 }
-  
+
                                                                 .file-name span {
                                                                     width: 100%;
                                                                     float: left;
                                                                 }
-  
+
                                                                 #file-display .fileIocns i.fa.fa-file {
                                                                     color: rgb(252, 181, 38);
                                                                     font-size: 24px;
                                                                 }
-  
+
                                                                 #file-display {
                                                                     padding: 0;
                                                                     margin: 0;
                                                                 }
-  
+
                                                                 .uploaded-element {
                                                                     display: inherit;
                                                                 }
-  
+
                                                                 .uploaded-element {
                                                                     /* padding-top: 7px;
                                                                 padding-bottom: 5px;
@@ -119,23 +120,23 @@
                                                                     align-items: center;
                                                                     padding: 1rem;
                                                                 }
-  
+
                                                                 #file-display .fileIocns {
                                                                     background-image: url(img/file_icons-samall.png);
                                                                     background-repeat: no-repeat;
                                                                     background-position: 0 -105px;
                                                                 }
-  
+
                                                                 #file-display .fileIocns {
                                                                     float: left;
                                                                     margin-right: 10px;
                                                                 }
-  
+
                                                                 .file-name {
                                                                     float: left;
                                                                     width: 87%;
                                                                 }
-  
+
                                                                 .uploaded-element-header {
                                                                     border: 1px solid rgb(237, 237, 237);
                                                                     border-top: none;
@@ -146,12 +147,12 @@
                                                                     padding: 10px;
                                                                     background: #e3e6f0;
                                                                 }
-  
+
                                                                 .uploaded-header {
                                                                     width: 100%;
                                                                     text-align: center;
                                                                 }
-  
+
                                                                 .uploaded-element .confirm-action a.confirm-delete-attachment {
                                                                     padding: 6px 13px 5px;
                                                                     background-color: rgb(216, 68, 68) !important;
@@ -162,7 +163,7 @@
                                                                     font-size: 12px;
                                                                     float: left;
                                                                 }
-  
+
                                                                 button.save-to-library {
                                                                     padding: 6px 13px 5px;
                                                                     border-radius: 4px;
@@ -174,11 +175,11 @@
                                                                     margin-left: 10px !important;
                                                                     font-size: 12px;
                                                                 }
-  
+
                                                                 .uploaded-element {
                                                                     display: inherit;
                                                                 }
-  
+
                                                                 /* HERE */
                                                                 #files_view .modal-title {
                                                                     white-space: nowrap;
@@ -186,7 +187,7 @@
                                                                     text-overflow: ellipsis;
                                                                     width: 70%;
                                                                 }
-  
+
                                                                 #files_view .modal-title {
                                                                     color: #333;
                                                                     font-size: 18px;
@@ -196,12 +197,12 @@
                                                                     padding-left: 15px;
                                                                     padding-top: 11px;
                                                                 }
-  
+
                                                                 #files_view .modal-dialog {
                                                                     /* width: 750px; */
                                                                     margin: 30px auto;
                                                                 }
-  
+
                                                                 #files_view .modal-header .close {
                                                                     margin-top: 0;
                                                                     width: 46px;
@@ -211,29 +212,29 @@
                                                                     opacity: 1;
                                                                     margin: 0;
                                                                 }
-  
+
                                                                 #files_view .modal-header {
                                                                     padding: 0;
                                                                     display: block;
                                                                 }
-  
+
                                                                 #files_view .modal-body {
                                                                     background-color: rgb(250, 251, 251);
                                                                 }
-  
+
                                                                 #files_view .image-previewer img {
                                                                     border: 3px solid #fff;
                                                                     box-shadow: 2px 2px 8px rgba(0, 0, 0, .2);
                                                                     width: 100%;
                                                                 }
-  
+
                                                                 .download_button {
                                                                     width: 100%;
                                                                     text-align: center;
                                                                     margin-top: 20px;
                                                                 }
                                                             </style>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[0].id}}">
                                                               <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                   <input class="custom-control-input chkProductName" type="checkbox" id="formCheck-01" checked="{{displayfields.[0].active}}">
@@ -245,7 +246,7 @@
                                                                   <input class="custom-range widthElement rngRangeProductName" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[0].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                               </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[1].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkDescription" type="checkbox" id="formCheck-02" checked="{{displayfields.[1].active}}">
@@ -257,7 +258,7 @@
                                                                     <input class="custom-range widthElement rngRangeDescription" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[1].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[2].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkQty" type="checkbox" id="formCheck-03" checked="{{displayfields.[2].active}}">
@@ -269,7 +270,7 @@
                                                                     <input class="custom-range widthElement rngRangeQty" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[2].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[3].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkUnitPrice" type="checkbox" id="formCheck-04" checked="{{displayfields.[3].active}}">
@@ -281,7 +282,7 @@
                                                                     <input class="custom-range widthElement rngRangeUnitPrice" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[3].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[10].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkUnitPriceInc" type="checkbox" id="formCheck-10" checked="{{displayfields.[10].active}}">
@@ -293,7 +294,7 @@
                                                                     <input class="custom-range widthElement rngRangeUnitPrice" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[12].id}}">
                                                               <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                   <input class="custom-control-input chkDiscount" type="checkbox" id="formCheck-12" checked="{{displayfields.[12].active}}">
@@ -305,7 +306,7 @@
                                                                   <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[12].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                               </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[4].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkCostPrice" type="checkbox" id="formCheck-07" checked="{{displayfields.[4].active}}">
@@ -317,7 +318,7 @@
                                                                     <input class="custom-range widthElement rngRangeCostPrice" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[4].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[5].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkSalesLinesCustField1" type="checkbox" id="formCheck-08"  checked="{{displayfields.[5].active}}">
@@ -329,7 +330,7 @@
                                                                     <input class="custom-range widthElement rngRangeSalesLinesCustField1" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[5].width}}{{else}}80{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[6].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkTaxRate" type="checkbox" id="formCheck-05" checked="{{displayfields.[6].active}}">
@@ -341,7 +342,7 @@
                                                                     <input class="custom-range widthElement rngRangeTaxRate" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[6].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[7].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkTaxCode" type="checkbox" id="formCheck-06" checked="{{displayfields.[7].active}}">
@@ -353,7 +354,7 @@
                                                                     <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[7].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[9].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkTaxAmount" type="checkbox" id="formCheck-09" checked="{{displayfields.[9].active}}">
@@ -365,7 +366,7 @@
                                                                     <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[13].id}}">
                                                               <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                   <input class="custom-control-input chkSerialNo" type="checkbox" id="formCheck-13" checked="{{displayfields.[13].active}}">
@@ -377,7 +378,7 @@
                                                                   <input class="custom-range widthElement rngRangeTaxCode" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[13].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                               </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[8].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkAmount" type="checkbox" id="formCheck-16" checked="{{displayfields.[8].active}}">
@@ -389,7 +390,7 @@
                                                                     <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[8].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                             <div class="columnSettings displaySettings" custid="{{displayfields.[11].id}}">
                                                                 <div class="custom-control custom-switch" style="margin: 8px; float:left;">
                                                                     <input class="custom-control-input chkAmountInc" type="checkbox" id="formCheck-11" checked="{{displayfields.[11].active}}">
@@ -401,7 +402,7 @@
                                                                     <input class="custom-range widthElement rngRangeAmount" type="number" style="margin: 8px;" value="{{#if displayfields}}{{displayfields.[11].width}}{{else}}0{{/if}}" min="0" max="1000">
                                                                 </div>
                                                             </div>
-  
+
                                                         </div>
                                                     </form>
                                                 </div>
@@ -422,28 +423,28 @@
                                 th {
                                     background-color: #ededed;
                                 }
-  
-  
+
+
                                 .table-striped tbody tr:nth-of-type(odd) {
                                     background-color: white !important;
                                 }
-  
+
                                 .table-striped tbody tr:nth-of-type(even) {
                                     background-color: rgba(0, 163, 211, 0.07) !important;
                                 }
-  
+
                                 #productListModal .dataTables_scrollHeadInner,
                                 #productListModal .dataTables_scrollHeadInner .table {
                                     width: 100% !important;
                                 }
-  
+
                                 #taxRateListModal .dataTables_scrollHeadInner,
                                 #taxRateListModal .dataTables_scrollHeadInner .table {
                                     width: 100% !important;
                                 }
-  
+
                                 @media only screen and (max-width: 480px) {
-  
+
                                     #ponumber,
                                     #edtRef,
                                     .form-group,
@@ -452,16 +453,16 @@
                                         max-width: 100% !important;
                                         width: 100% !important;
                                     }
-  
+
                                     .formgoup {
                                         margin: 0px !important;
                                     }
-  
+
                                     .flex-row {
                                         margin: 16px !important;
                                     }
                                 }
-  
+
                                 .resizer {
                                     position: absolute;
                                     top: 0;
@@ -471,35 +472,35 @@
                                     width: 16px;
                                     cursor: col-resize;
                                 }
-  
+
                                 .box {
                                     /* display: none; */
                                 }
-  
+
                                 .outerBox {
                                     display: none;
                                 }
-  
+
                                 .hiddenColumn {
                                     display: none;
                                 }
-  
+
                                 .showColumn {
                                     display: table-cell;
                                     padding: .75rem;
                                     vertical-align: top;
                                 }
                             </style>
-                            
+
                             <style>
                                 th.colAmountEx {
                                     color: #00a3d3;
                                 }
-  
+
                                 th.colAmountInc {
                                     color: #17a673;
                                 }
-  
+
                                 th.colAmount {
                                     cursor: pointer;
                                     -webkit-touch-callout: none;
@@ -509,16 +510,16 @@
                                     -ms-user-select: none;
                                     user-select: none;
                                 }
-  
-  
+
+
                                 th.colUnitPriceEx {
                                     color: #00a3d3;
                                 }
-  
+
                                 th.colUnitPriceInc {
                                     color: #17a673;
                                 }
-  
+
                                 th.colUnitPrice {
                                     cursor: pointer;
                                     -webkit-touch-callout: none;
@@ -528,12 +529,12 @@
                                     -ms-user-select: none;
                                     user-select: none;
                                 }
-  
+
                                 .fa-random {
                                     float: right;
                                     margin-top: 4px;
                                 }
-  
+
                                 .fa-trans {
                                     -ms-transform: rotate(180deg);
                                     transform: rotate(180deg);
@@ -543,7 +544,7 @@
                                  }
 
                             </style>
-  
+
                             <!-- {{#if displayfields}} -->
                             <table id="tblWorkOrderLine" style="width:100%" class="table table-striped table-bordered tblWorkOrderLine">
                               <thead>
@@ -557,8 +558,22 @@
                               </thead>
                               <tbody>
                                 <tr class="dnd-moved">
-                                  <td contenteditable="false" class="colProductName"><input
-                                      class="es-input highlightSelect lineProductName" type="search" value="{{workorderrecord.productname}}"></td>
+                                  <td contenteditable="false" class="colProductName">
+                                      {{> vs1___dropdown
+                                              data=workorderrecord.productname
+                                              type='search'
+                                              id='lineProductName'
+                                              name='lineProductName'
+                                              modalId= 'lineProductNameListPopModal'
+                                              list_template_name='bomlistpop'
+                                              modal_title='Product Name'
+                                              innerModal=true
+                                              label = ''
+                                              colNameForValue = 'colName'
+                                              is_editable=true
+                                              noBorder=true
+                                      }}
+                                  </td>
                                   <td contenteditable="false"
                                     class="lineProductDesc colDescription ">
                                     {{workorderrecord.productDescription}}</td>
@@ -589,7 +604,7 @@
                               </tbody>
                             </table>
                             <!-- {{/if}} -->
-  
+
                             <style>
                                 .highlightInput {
                                     border: 0px solid transparent !important;
@@ -599,23 +614,23 @@
                                     text-align: right !important;
                                     color: #858796 !important;
                                 }
-  
+
                                 .highlightInput::-webkit-outer-spin-button,
                                 .highlightInput::-webkit-inner-spin-button {
                                     -webkit-appearance: none !important;
                                     margin: 0 !important;
                                 }
-  
+
                                 /* Firefox */
                                 .highlightInput[type=number] {
                                     -moz-appearance: textfield !important;
                                 }
                             </style>
-  
-  
+
+
                         </div>
                     </div>
-  
+
                 </div>
 
                 <style>
@@ -626,16 +641,16 @@
                         color: #696969;
                         float: right;
                     }
-  
+
                     .leadTotal {
                         font-weight: 800 !important;
                     }
-  
+
                     .leadHidden {
                         visibility: hidden;
                         height: 0px !important;
                     }
-  
+
                     @media screen and (min-width: 1366px) {
                         .colComments {
                             padding-right: 2.5rem;
@@ -646,7 +661,7 @@
                             font-size: 14px !important;
                         }
                     }
-  
+
                     @media screen and (max-width: 450px) {
                         .desktopButtons {
                             display: none;
@@ -667,12 +682,12 @@
                             </div>
                         </div>
                         <div class="row mt-4">
-                          
+
                             <div class="col-12">
                                 <div class="row justify-content-center desktopButtons">
                                     {{> transaction_footer AttachmentCount=attachmentCount TransactionType="workorders" }}
                                 </div>
-  
+
                             </div>
                         </div>
                     </div>
@@ -709,12 +724,6 @@
         </div>
         {{/if}}
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="bomProductListModal">
-            {{> bomlistpop}}
-        </div>
-        <div class="modal fade" role="dialog" tabindex="-1" id="productListModal">
-            {{> productlistpop}}
-        </div>
         <div class="modal fade" role="dialog" tabindex="-1" id="processListModal">
             {{> processlistpopup}}
             <!-- {{> statuspop}} -->

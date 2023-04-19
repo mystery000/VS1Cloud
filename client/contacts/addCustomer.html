@@ -973,8 +973,21 @@
                           </div>
                           <div class="form-group col-md-3" style="padding-left:4px;">
                             <label for="leadStatus">Status</label>
-                            <input type="search" class="form-control es-input" id="leadStatus" name="leadStatus"
-                              style="background-color:rgb(255, 255, 255); cursor: pointer;" value="{{record.status}}">
+
+                              {{>vs1___dropdown
+                                      data=record.status
+                                      type='search'
+                                      id='leadStatus'
+                                      name='leadStatus'
+                                      modalId= 'statusPopModal'
+                                      list_template_name='statuspop'
+                                      modal_title='Status'
+                                      innerModal=true
+                                      label = ''
+                                      colNameForValue = 'colStatusName'
+                                      is_editable=true
+                                      noBorder=false
+                              }}
                           </div>
                           <div class="form-group col-md-2" style="padding-left :4px;padding-right:4px;">
                             <label>Sales Quota</label>
@@ -987,7 +1000,22 @@
                           <div class="col d-xl-flex align-items-xl-start" style="padding: 0;">
                             <div class="col-6 col-md-1" style="padding: 0px 8px;">
                               <div class="form-group" style="margin: 4px;padding-right:4px;">
-                                {{> contact_title target="editCustomerTitle" value=record.title}}
+                                  <label>Title</label>
+
+                                  {{>vs1___dropdown
+                                          data=record.title
+                                          type='search'
+                                          id='editCustomerTitle'
+                                          name='editCustomerTitle'
+                                          modalId= 'titlePopModal'
+                                          list_template_name='title_list_pop'
+                                          modal_title='Title'
+                                          innerModal=true
+                                          label = ''
+                                          colNameForValue = 'colTitleName'
+                                          is_editable=true
+                                          noBorder=false
+                                  }}
                               </div>
                             </div>
                             <div class="form-group flex-grow-1" style="margin: 4px;"><label class="text-nowrap">First
@@ -1222,25 +1250,24 @@
                                             <input type="text" class="form-control" id="edtCustomerShippingZIP"
                                               name="edtCustomerShippingZIP" value="{{record.spostalcode}}">
                                           </div>
-                                          <div
-                                            class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start"
+                                          <div class="form-group d-xl-flex flex-column flex-grow-1 justify-content-xl-start"
                                             style="margin: 4px;padding-left:4px;">
-                                            <label>Country</label>
-                                            <select class="form-control" id="sedtCountry" name="sedtCountry"
-                                              style="cursor: pointer;">
-                                              {{#each item in
-                                              countryList}}
-                                              {{#if equals item
-                                              record.scountry }}
-                                              <option value="{{record.scountry}}" selected="">
-                                                {{record.scountry}}
-                                              </option>
-                                              {{else}}
-                                              <option value="{{item}}">
-                                                {{item}}</option>
-                                              {{/if}}
-                                              {{/each}}
-                                            </select>
+                                              <label>Country</label>
+
+                                              {{>vs1___dropdown
+                                                      data=record.scountry
+                                                      type='search'
+                                                      id='sedtCountry'
+                                                      name='sedtCountry'
+                                                      modalId= 'countryPopModal'
+                                                      list_template_name='CountryModal'
+                                                      modal_title='Country'
+                                                      innerModal=true
+                                                      label = ''
+                                                      colNameForValue = 'colCountry'
+                                                      is_editable=true
+                                                      noBorder=false
+                                              }}
                                           </div>
                                         </div>
                                       </div>
@@ -1369,20 +1396,41 @@
                                     style="margin: 4px;padding-right:4px;"><label class="text-nowrap">Customer
                                       Type</label>
 
-                                    <select type="search" class="form-control" id="sltCustomerType"
-                                      name="sltCustomerType" value="{{record.clienttype}}"
-                                      style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
+                                      {{>vs1___dropdown
+                                              data=record.clienttype
+                                              type='search'
+                                              id='sltCustomerType'
+                                              name='sltCustomerType'
+                                              modalId= 'customerTypePopModal'
+                                              list_template_name='clienttypepopup'
+                                              modal_title='Customer Type'
+                                              innerModal=true
+                                              label = ''
+                                              colNameForValue = 'colTypeName'
+                                              is_editable=true
+                                              noBorder=false
+                                      }}
 
                                   </div>
                                 </div>
                                 <div class="col-md-2 col-6" style="padding: 0;">
                                   <div class="form-group" style="margin: 4px;padding-left:4px;">
                                     <label>Terms</label>
-                                    <select type="search" class="form-control" id="sltTerms" name="sltTerms"
-                                      value="{{record.terms}}"
-                                      style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                    </select>
+
+                                      {{>vs1___dropdown
+                                              data=record.terms
+                                              type='search'
+                                              id='sltTerms'
+                                              name='sltTerms'
+                                              modalId= 'termPopModal'
+                                              list_template_name='termlistpop'
+                                              modal_title='Terms'
+                                              innerModal=true
+                                              label = ''
+                                              colNameForValue = 'colTermsAmount'
+                                              is_editable=true
+                                              noBorder=false
+                                      }}
                                   </div>
                                 </div>
 
@@ -1818,11 +1866,21 @@
                                       class="form-group d-flex d-sm-flex d-xl-flex flex-column flex-grow-1 align-items-start align-items-sm-start align-items-xl-start"
                                       style="margin: 4px;"><label class="text-nowrap">Tax
                                         Code</label>
-                                      <select type="search" class="form-control taxCodeSelect"
-                                        value="{{record.taxcode}}"
-                                        style="width: 260px; background-color:rgb(255, 255, 255); cursor: pointer;"
-                                        id="sltTaxCode" name="sltTaxCode">
-                                      </select>
+
+                                        {{>vs1___dropdown
+                                                data=record.taxcode
+                                                type='search'
+                                                id='sltTaxCode'
+                                                name='sltTaxCode'
+                                                modalId= 'taxCodePopModal'
+                                                list_template_name='taxratelistpop'
+                                                modal_title='Tax Code'
+                                                innerModal=true
+                                                label = ''
+                                                colNameForValue = 'colName'
+                                                is_editable=true
+                                                noBorder=false
+                                        }}
                                     </div>
                                   </div>
                                 </div>
@@ -2350,13 +2408,23 @@
                                           style="margin: 12px;">
                                           <div class="col d-xl-flex align-items-xl-end">
                                             <div class="form-group d-xl-flex flex-column justify-content-xl-start"
-                                              style="margin: 4px;"><label class="text-nowrap">Customer
-                                                Type</label>
+                                              style="margin: 4px;">
+                                                <label class="text-nowrap">Customer Type</label>
 
-                                              <select type="search" class="form-control" id="sltJobCustomerType"
-                                                name="sltJobCustomerType" value="{{record.jobclienttype}}"
-                                                style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                              </select>
+                                                {{>vs1___dropdown
+                                                        data=record.jobclienttype
+                                                        type='search'
+                                                        id='sltJobCustomerType'
+                                                        name='sltJobCustomerType'
+                                                        modalId= 'customerTypePopModal'
+                                                        list_template_name='clienttypepopup'
+                                                        modal_title='Customer Type'
+                                                        innerModal=true
+                                                        label = ''
+                                                        colNameForValue = 'colTypeName'
+                                                        is_editable=true
+                                                        noBorder=false
+                                                }}
                                             </div>
 
                                             <div class="form-group d-xl-flex flex-column align-items-xl-start"
@@ -2369,12 +2437,24 @@
                                               </select>
                                             </div>
                                             <div class="form-group d-xl-flex flex-column justify-content-xl-start"
-                                              style="margin: 4px;"><label class="text-nowrap">Terms</label>
+                                              style="margin: 4px;">
 
-                                              <select type="search" class="form-control" id="sltJobTerms"
-                                                name="sltJobTerms"
-                                                style="background-color:rgb(255, 255, 255); cursor: pointer;">
-                                              </select>
+                                                <label class="text-nowrap">Terms</label>
+
+                                                {{>vs1___dropdown
+                                                        data=record.scountry
+                                                        type='search'
+                                                        id='sltJobTerms'
+                                                        name='sltJobTerms'
+                                                        modalId= 'termPopModal'
+                                                        list_template_name='termlistpop'
+                                                        modal_title='Terms'
+                                                        innerModal=true
+                                                        label = ''
+                                                        colNameForValue = 'colName'
+                                                        is_editable=true
+                                                        noBorder=false
+                                                }}
                                             </div>
 
                                             <div class="form-group d-xl-flex flex-column justify-content-xl-start"

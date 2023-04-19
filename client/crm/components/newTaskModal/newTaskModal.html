@@ -13,16 +13,44 @@
             <div class="col-12 no-modal">
               <div class="form-group no-modal">
                 <label class="no-modal">Assigned Name</label>
-                <select type="search" id="add_assigned_name" class="form-control crmSelectEmployeeList">
-                </select>
+
+                  {{>vs1___dropdown
+                          data=''
+                          type='search'
+                          id='add_assigned_name'
+                          name='add_assigned_name'
+                          modalId= 'employeeListModalForNew'
+                          list_template_name='employeelistpop'
+                          modal_title='Employee List'
+                          innerModal=false
+                          label = ''
+                          colNameForValue = 'colEmployeeName'
+                          is_editable=true
+                          noBorder=false
+                          custid='newtask'
+                  }}
               </div>
             </div>
 
-            <div class="col-12 no-modal">
-              <div class="form-group no-modal">
-                <label class="no-modal">Contact Name</label>
-                <select type="search" id="add_contact_name" class="form-control crmSelectLeadList">
-                </select>
+            <div class="col-12">
+              <div class="form-group">
+                <label class="">Contact Name</label>
+
+                  {{>vs1___dropdown
+                          data=''
+                          type='search'
+                          id='add_contact_name'
+                          name='add_contact_name'
+                          modalId= 'contactListModalForNew'
+                          list_template_name='contactlistpop'
+                          modal_title='Contact List'
+                          innerModal=false
+                          label = ''
+                          colNameForValue = 'colClientName'
+                          is_editable=true
+                          noBorder=false
+                          custid='newtask'
+                  }}
               </div>
             </div>
             <div class="col-12 no-modal">

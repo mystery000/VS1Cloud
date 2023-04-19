@@ -2106,13 +2106,13 @@ Template.employeescard.onRendered(function () {
         const dashboardoptions = e.target.value || '';
         const dashboardDefaultoptions = $("#edtDashboardOptions").attr("defaultlogin") || 'Accounts';
         if (e.pageX > offset.left + $earch.width() - 10) { // X button 16px wide?
-          $('#dashboardOptionListModal').modal('toggle');
+          // $('#dashboardOptionListModal').modal('toggle');
         } else {
           if (dashboardoptions.replace(/\s/g, '') != '') {
             // $("input[name=optradioDL][value=" + dashboardDefaultoptions + "]").attr('checked', 'checked');
-            $('#dashboardOptionListModal').modal('toggle');
+            // $('#dashboardOptionListModal').modal('toggle');
           } else {
-            $('#dashboardOptionListModal').modal('toggle');
+            // $('#dashboardOptionListModal').modal('toggle');
 
             setTimeout(function () {
               $('#tblDashboardOptions_filter .form-control-sm').focus();
@@ -2148,8 +2148,7 @@ Template.employeescard.onRendered(function () {
 
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
-      $('#obEarningsRate').editableSelect();
-
+$('#obEarningsRate').editableSelect();
       $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
           // let $search = $(this);
           // let offset = $search.offset();
@@ -2191,7 +2190,7 @@ Template.employeescard.onRendered(function () {
       let isDefaultLogin = $("input[name=optradioDL]:checked").val() || "Accounts";
       $('#edtDashboardOptions').val(optionName);
       $('#edtDashboardOptions').attr("defaultlogin", isDefaultLogin);
-      $('#dashboardOptionListModal').modal('toggle');
+      // $('#dashboardOptionListModal').modal('toggle');
     });
 
     $(document).on("click", "#tblTitleList tbody tr", function (e) {
@@ -2201,7 +2200,7 @@ Template.employeescard.onRendered(function () {
         localStorage.setItem("isFormUpdated", true);
       }
       $('#editEmployeeTitle').val($(this).find(".colTypeName").text());
-      $('#employeeTitlePopModal').modal('toggle');
+      // $('#employeeTitlePopModal').modal('toggle');
     });
     $(document).on("click", "#tblPayCalendars tbody tr", function (e) {
       $('#edtPayrollCalendar').val($(this).find(".colPayCalendarName").text());
@@ -2229,11 +2228,11 @@ Template.employeescard.onRendered(function () {
     e.stopPropagation();
     const $earch = $(this);
     const offset = $earch.offset();
-    if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
-      $('#employeeTitlePopModal').modal('toggle');
-    } else {
-      $('#employeeTitlePopModal').modal();
-    }
+    // if (e.pageX > offset.left + $earch.width() - 8) { // X button 16px wide?
+    //   $('#employeeTitlePopModal').modal('toggle');
+    // } else {
+    //   $('#employeeTitlePopModal').modal();
+    // }
   });
 
   let prefObject = "";
@@ -10237,6 +10236,12 @@ Template.employeescard.events({
 });
 
 Template.employeescard.helpers({
+  generateEarningRateDropdownId: (id) => {
+    return "ptEarningRate" + id;
+  },
+  generateEarningRateModalId: (id) => {
+    return "earningRateSelectListPopModal" + id;
+  },
   AppTableModalData: () => {
     return Template.instance().AppTableModalData.get();
   },
