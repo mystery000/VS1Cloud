@@ -40,13 +40,15 @@ Template.employee_clock_status_template.onCreated(function() {
         } else if (data.Active  == true) {
             linestatus = "In-Active";
         }
-
-
         
+        const date_1 = new Date(data.OrderDate);
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };  
+        const formattedDate = date_1.toLocaleDateString('en-GB', options);
+                
         var dataList = [
             data.EmployeeId || '',
             data.EmployeeName || '',
-            data.OrderDate || '',
+            formattedDate || '',
             data.WorkorderNumber || '',
             data.ClockedOn || '',
             '',
