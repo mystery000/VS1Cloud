@@ -106,7 +106,7 @@ Template.clockonreport_template.onRendered(function() {
                     let clockon_temp ;
                     let employee_data = empdata;
                     let timesheet_data = timesheet.ttimesheet;
-                    let workorder_data = workorder;          
+                    let workorder_data = workorder;      
      
 
                     for(let i = 0; i < employee_data.length ; i++) {
@@ -256,8 +256,7 @@ Template.clockonreport_template.events({
         let templateObject = Template.instance();
        // templateObject.getProcessClockedList();
         setTimeout(function () {
-            window.open('/clockonreport','_self');
-            
+            window.open('/clockonreport','_self');            
         }, 2000);
 
     },
