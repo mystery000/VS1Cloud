@@ -42,7 +42,8 @@ Template.paymentmethodpop.onRendered(function() {
     const tableHeaderList = [];
     const deptrecords = [];
     let deptprodlineItems = [];
-    let currenttablename = templateObject.data.tablename || "paymentmethodList";
+    console.log(templateObject.data);
+    let currenttablename = "paymentmethodList" + templateObject.data.custid;
     templateObject.tablename.set(currenttablename);
 
     function MakeNegative() {

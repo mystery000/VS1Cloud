@@ -370,12 +370,17 @@
                                         <tr class="dnd-moved" id="{{item.lineID}}">
                                             <!-- <td contenteditable="false" class="colAccount lineAccountName" lineid="{{item.id}}">{{item.accountname}}</td> -->
                                             <td contenteditable="false" class="colAccount">
+                                            {{#let
+                                                    accountID = (addString 'sltAccountName-' item.lineID)
+                                                    accountModalID = (addString 'lineAccountModal-' item.lineID)
+                                            }}
                                                 {{> vs1___dropdown
                                                         type='search'
-                                                        id='sltAccountName1'
-                                                        name='sltAccountName1'
+                                                        classes='lineAccountName'
+                                                        id=accountID
+                                                        name=accountID
                                                         usedModal=false
-                                                        modalId= 'accountListModal1'
+                                                        modalId=accountModalID
                                                         list_template_name='accountlistpop'
                                                         innerModal=true
                                                         modal_title='Account List'
@@ -384,19 +389,24 @@
                                                         target_modal_id= 'addAccountModal1'
                                                         target_template_id='addaccountpop'
                                                         is_editable=false
-                                                        custid='rcq7ZWZnptT6TzBwZ'
-                                                        noBorder=false
+                                                        custid=item.lineID
+                                                        noBorder=true
                                                 }}
+                                            {{/let}}
                                             </td>
                                             <!-- <td contenteditable="false" class="colPaymentMethod td-input">{{item.paymentmethod}}</td> -->
                                             <td contenteditable="false" class="colPaymentMethod">
-<!--                                                <input class="es-input highlightSelect linePaymentMethod" type="search" value="{{item.paymentmethod}}" >-->
+                                            {{#let
+                                                    paymentID = (addString 'sltPaymentMethod-' item.lineID)
+                                                    paymentModalID = (addString 'linePaymentModal-' item.lineID)
+                                            }}
                                                 {{> vs1___dropdown
                                                         type='search'
-                                                        id='sltPaymentMethod1'
-                                                        name='sltPaymentMethod1'
+                                                        classes='linePaymentMethod'
+                                                        id=paymentID
+                                                        name=paymentID
                                                         usedModal=false
-                                                        modalId= 'sltPaymentMethodModal1'
+                                                        modalId=paymentModalID
                                                         list_template_name='paymentmethodpop'
                                                         innerModal=true
                                                         modal_title='Payment Method'
@@ -405,20 +415,25 @@
                                                         target_modal_id= 'addAccountModal1'
                                                         target_template_id='addaccountpop'
                                                         is_editable=false
-                                                        custid='rcq7ZWZnptT6TzBwA'
-                                                        noBorder=false
+                                                        custid=item.lineID
+                                                        noBorder=true
                                                 }}
+                                            {{/let}}
                                             </td>
                                             <td style="text-align: right!important;"><input class="colAmount highlightInput" type="text" value="{{item.lineamount}}"></td>
                                             <td contenteditable="true" class="colReference">{{item.memo}}</td>
                                             <td contenteditable="false" class="colCompany">
-<!--                                              <input class="es-input highlightSelect lineCompany" type="search" value="{{item.companyname}}" >-->
+                                            {{#let
+                                                    companyID = (addString 'sltCompanyFrom-' item.lineID)
+                                                    companyModalID = (addString 'lineCompanyModal-' item.lineID)
+                                            }}
                                                 {{> vs1___dropdown
                                                         type='search'
-                                                        id='sltReceivedFrom1'
-                                                        name='sltReceivedFrom1'
+                                                        classes='lineCompany'
+                                                        id=companyID
+                                                        name=companyID
                                                         usedModal=false
-                                                        modalId= 'sltReceivedFromModal'
+                                                        modalId=companyModalID
                                                         list_template_name='customerlistpopup'
                                                         innerModal=true
                                                         modal_title='Customer List'
@@ -427,9 +442,10 @@
                                                         target_modal_id= 'addcustomerpopModal'
                                                         target_template_id='addcustomerpop'
                                                         is_editable=false
-                                                        custid='rcq7ZWZnptT6TzBwG'
-                                                        noBorder=false
+                                                        custid=item.lineID
+                                                        noBorder=true
                                                 }}
+                                            {{/let}}
                                             </td>
 
                                             <td><span class="table-remove btnRemove"><button type="button" class="btn btn-danger btn-rounded btn-sm my-0 "><i class="fa fa-remove"></i></button></span></td>
@@ -569,9 +585,9 @@
         </div> -->
         <!-- End AccountList -->
 
-        <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">
-            {{> paymentmethodpop}}
-        </div>
+<!--        <div class="modal fade" role="dialog" tabindex="-1" id="paymentMethodModal">-->
+<!--            {{> paymentmethodpop}}-->
+<!--        </div>-->
 
         <div class="modal fade" role="dialog" tabindex="-1" id="newPaymentMethodModal">
             {{> newpaymentmethodpop}}

@@ -2153,46 +2153,62 @@ Template.chequecard.onRendered(() => {
 
   let table;
   $(document).ready(function () {
-    $("#edtSupplierName").editableSelect();
     $("#sltChequeBankAccountName").editableSelect();
     $("#sltCurrency").editableSelect();
     $("#sltStatus").editableSelect();
     //$("#shipvia").editableSelect();
-
-    $("#addRow").on("click", function () {
-      var rowData = $("#tblChequeLine tbody>tr:last").clone(true);
-      let tokenid = Random.id();
-      $(".lineAccountName", rowData).val("");
-      $(".lineMemo", rowData).text("");
-      $(".lineQty", rowData).text("");
-      $(".lineAmount", rowData).val("");
-      $(".lineTaxRate", rowData).text("");
-      $(".lineTaxCode", rowData).val("");
-      $(".lineAmt", rowData).text("");
-      $(".lineTaxAmount", rowData).text("");
-      $(".lineAccountName", rowData).attr("lineid", "");
-      rowData.attr("id", tokenid);
-      $("#tblChequeLine tbody").append(rowData);
-      if ($("#printID").val() != "") {
-        var rowData1 = $(".cheque_print tbody>tr:last").clone(true);
-        $("#lineAccountName", rowData1).text("");
-        $("#lineMemo", rowData1).text("");
-        $("#lineQty", rowData1).text("");
-        $("#lineAmount", rowData1).text("");
-        $("#lineTaxRate", rowData).text("");
-        $("#lineTaxCode", rowData1).text("");
-        $("#lineAmt", rowData1).text("");
-        rowData1.attr("id", tokenid);
-        $(".cheque_print tbody").append(rowData1);
-      }
-
-      setTimeout(function () {
-        $("#" + tokenid + " .lineAccountName").trigger("click");
-      }, 200);
-    });
   });
 
-
+    $(document).on("click", "#addRow", function () {
+        console.log(templateObject.chequerecord.get());
+        let chequeTempData = templateObject.chequerecord.get();
+        let tokenid = Random.id();
+        chequeTempData.LineItems.push({
+                TaxRate:0,
+                TaxTotal:0,
+                TotalAmt:0,
+                accountname:"",
+                curTotalAmt:0,
+                description:"",
+                item:"",
+                lineID:tokenid,
+                memo:"",
+                quantity:"",
+                taxCode:"",
+                taxRate:0,
+                unitPrice:0,
+                unitPriceInc:0
+        });
+        templateObject.chequerecord.set(chequeTempData);
+        // var rowData = $("#tblChequeLine tbody>tr").clone(true);
+        // $(".lineAccountName", rowData).val("");
+        // $(".lineMemo", rowData).text("");
+        // $(".lineQty", rowData).text("");
+        // $(".lineAmount", rowData).val("");
+        // $(".lineTaxRate", rowData).text("");
+        // $(".lineTaxCode", rowData).val("");
+        // $(".lineAmt", rowData).text("");
+        // $(".lineTaxAmount", rowData).text("");
+        // $(".lineAccountName", rowData).attr("lineid", "");
+        // rowData.attr("id", tokenid);
+        // $("#tblChequeLine tbody").append(rowData);
+        // if ($("#printID").val() != "") {
+        //     var rowData1 = $(".cheque_print tbody>tr:last").clone(true);
+        //     $("#lineAccountName", rowData1).text("");
+        //     $("#lineMemo", rowData1).text("");
+        //     $("#lineQty", rowData1).text("");
+        //     $("#lineAmount", rowData1).text("");
+        //     $("#lineTaxRate", rowData).text("");
+        //     $("#lineTaxCode", rowData1).text("");
+        //     $("#lineAmt", rowData1).text("");
+        //     rowData1.attr("id", tokenid);
+        //     $(".cheque_print tbody").append(rowData1);
+        // }
+        //
+        // setTimeout(function () {
+        //     $("#" + tokenid + " .lineAccountName").trigger("click");
+        // }, 200);
+    });
 
   $(document).on("click", "#tblShipViaPopList tbody tr", function (e) {
     $("#shipvia").val($(this).find(".colShipName ").text());
@@ -4012,7 +4028,7 @@ $(document).ready(function () {
     //     }
     //   }
     // });
-
+/*
     $(document).on('click', '#edtSupplierName', function(e, li) {
       var $earch = $(this);
       var offset = $earch.offset();
@@ -4755,8 +4771,8 @@ $(document).ready(function () {
         }
       }
     })
-
-
+*/
+/*
   $(document).on("click", "#tblSupplierlist tbody tr", function (e) {
     let selectLineID = $("#supplierSelectLineID").val();
     const table = $(this);
@@ -4862,7 +4878,7 @@ $(document).ready(function () {
       $(".fullScreenSpin").css("display", "none");
     }, 1000);
   });
-
+*/
 
 
     $(document).on("click", ".templateItem .btnPreviewTemplate", function(e) {
@@ -5836,7 +5852,9 @@ Template.chequecard.helpers({
 
     return isMobile;
   },
-
+    addString: (arg1, arg2) => {
+      return `${arg1}${arg2}`
+    }
   // custfields: () => {
   //   return Template.instance().custfields.get();
   // },
@@ -6355,10 +6373,10 @@ Template.chequecard.events({
   // 'click #sltStatus': function(event) {
   //     $('#statusPopModal').modal('toggle');
   // },
-  "click #edtSupplierName": function (event) {
-    $("#edtSupplierName").select();
-    $("#edtSupplierName").editableSelect();
-  },
+  // "click #edtSupplierName": function (event) {
+  //   $("#edtSupplierName").select();
+  //   $("#edtSupplierName").editableSelect();
+  // },
   "click .th.colAmountEx": function (event) {
     $(".colAmountEx").addClass("hiddenColumn");
     $(".colAmountEx").removeClass("showColumn");
