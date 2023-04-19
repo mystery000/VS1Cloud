@@ -44,6 +44,57 @@ Template.leadscard.onCreated(function() {
     templateObject.all_projects = new ReactiveVar([]);
     templateObject.subTasks = new ReactiveVar([]);
     templateObject.taskrecords = new ReactiveVar([]);
+
+    templateObject.tableheaderrecords = new ReactiveVar([]);
+    templateObject.getDataTableList = function(data) {
+
+        let sort_date = data.MsTimeStamp == "" ? "1770-01-01" : data.MsTimeStamp;
+        sort_date = new Date(sort_date);
+
+        // let taskLabel = data.TaskLabel;
+        let taskLabelArray = [];
+        // if (taskLabel !== null) {
+        //     if (taskLabel.length === undefined || taskLabel.length === 0) {
+        //         taskLabelArray.push(taskLabel.fields);
+        //     } else {
+        //         for (let j = 0; j < taskLabel.length; j++) {
+        //             taskLabelArray.push(taskLabel[j].fields);
+        //         }
+        //     }
+        // }
+        let taskDescription = data.TaskDescription || '';
+        taskDescription = taskDescription.length < 50 ? taskDescription : taskDescription.substring(0, 49) + "...";
+
+        const dataList = [
+            data.ID || 0,
+            data.MsTimeStamp !== '' ? moment(data.MsTimeStamp).format("DD/MM/YYYY") : '',
+            data.Position,
+            data.TaskName || '',
+            taskDescription,
+            data.due_date ? moment(data.due_date).format("DD/MM/YYYY") : "",
+            data.Completed ? "Completed" : "",
+            data.Active ? "" : "In-Active",
+            // priority: data.priority || 0,
+            // projectID: data.ProjectID || '',
+            // projectName: data.ProjectName || '',
+            // labels: taskLabelArray,
+            // category: 'Task',
+
+        ];
+
+        return dataList;
+    }
+    let headerStructure = [
+        { index: 0, label: 'ID', class: 'colTaskId', active: false, display: true, width: "10" },
+        { index: 1, label: 'Date', class: 'colDate', active: true, display: true, width: "80" },
+        { index: 2, label: 'Action', class: 'colType', active: true, display: true, width: "110" },
+        { index: 3, label: 'Name', class: 'colTaskName', active: true, display: true, width: "110" },
+        { index: 4, label: 'Description', class: 'colTaskDesc', active: true, display: true, width: "300" },
+        { index: 5, label: 'Completed By', class: 'colTaskLabels', active: true, display: true, width: "110" },
+        { index: 6, label: 'Completed', class: 'colCompleteTask', active: true, display: true, width: "120" },
+        { index: 7, label: 'Status', class: 'colStatus', active: true, display: true, width: "120" },
+    ];
+    templateObject.tableheaderrecords.set(headerStructure);
 });
 
 Template.leadscard.onRendered(function() {
@@ -1027,9 +1078,9 @@ Template.leadscard.onRendered(function() {
                 sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (data) {
                     addVS1Data('TProspectEx', JSON.stringify(data)).then(function (res) {
                         setAllLeads(data);
-                    }).catch(function (err) {                        
+                    }).catch(function (err) {
                     });
-                }).catch(function (err) {                    
+                }).catch(function (err) {
                 });
             } else {
                 let data = JSON.parse(dataObject[0].data);
@@ -1044,9 +1095,9 @@ Template.leadscard.onRendered(function() {
             sideBarService.getAllLeadsEx(initialDataLoad, 0, false).then(function (data) {
                 addVS1Data('TProspectEx', JSON.stringify(data)).then(function (res) {
                     setAllLeads(data);
-                }).catch(function (err) {                        
+                }).catch(function (err) {
                 });
-            }).catch(function (err) {                    
+            }).catch(function (err) {
             });
         });
 
@@ -1801,7 +1852,7 @@ Template.leadscard.events({
     'click .tblLeadCrmListWithDate tbody tr': function(event) {
         const taskID = $(event.target).parent().attr('id');
         let colType = $(event.target).parent().find(".colType").text();
-        
+
         if (taskID !== undefined && taskID !== "random") {
             if (colType == 'Task') {
                 // FlowRouter.go('/crmoverview?taskid=' + taskID);
@@ -1812,155 +1863,6 @@ Template.leadscard.events({
                 $("#event-modal").modal("toggle");
             }
         }
-    },
-    'click .chkDatatable': function(event) {
-        const columns = $('#tblTransactionlist th');
-        let columnDataValue = $(event.target).closest("div").find(".divcolumn").text();
-        $.each(columns, function(i, v) {
-            let className = v.classList;
-            let replaceClass = className[1];
-            if (v.innerText === columnDataValue) {
-                if ($(event.target).is(':checked')) {
-                    $("." + replaceClass + "").css('display', 'table-cell');
-                    $("." + replaceClass + "").css('padding', '.75rem');
-                    $("." + replaceClass + "").css('vertical-align', 'top');
-                } else {
-                    $("." + replaceClass + "").css('display', 'none');
-                }
-            }
-        });
-    },
-    'click .resetTable': function(event) {
-        let checkPrefDetails = getCheckPrefDetails();
-        if (checkPrefDetails) {
-            CloudPreference.remove({ _id: checkPrefDetails._id }, function(err, idTag) {
-                if (err) {
-
-                } else {
-                    Meteor._reload.reload();
-                }
-            });
-        }
-    },
-    'click .saveTable': function(event) {
-        let lineItems = [];
-        //let datatable =$('#tblTransactionlist').DataTable();
-        $('.columnSettings').each(function(index) {
-            const $tblrow = $(this);
-            const colTitle = $tblrow.find(".divcolumn").text() || '';
-            const colWidth = $tblrow.find(".custom-range").val() || 0;
-            const colthClass = $tblrow.find(".divcolumn").attr("valueupdate") || '';
-            const colHidden = !$tblrow.find(".custom-control-input").is(':checked');
-            let lineItemObj = {
-                index: index,
-                label: colTitle,
-                hidden: colHidden,
-                width: colWidth,
-                thclass: colthClass
-            };
-            lineItems.push(lineItemObj);
-        });
-        //datatable.state.save();
-
-        const getcurrentCloudDetails = CloudUser.findOne({
-            _id: localStorage.getItem('mycloudLogonID'),
-            clouddatabaseID: localStorage.getItem('mycloudLogonDBID')
-        });
-        if (getcurrentCloudDetails) {
-            if (getcurrentCloudDetails._id.length > 0) {
-                var clientID = getcurrentCloudDetails._id;
-                var clientUsername = getcurrentCloudDetails.cloudUsername;
-                var clientEmail = getcurrentCloudDetails.cloudEmail;
-                var checkPrefDetails = CloudPreference.findOne({ userid: clientID, PrefName: 'tblTransactionlist' });
-                if (checkPrefDetails) {
-                    CloudPreference.update({ _id: checkPrefDetails._id }, {
-                        $set: {
-                            userid: clientID,
-                            username: clientUsername,
-                            useremail: clientEmail,
-                            PrefGroup: 'salesform',
-                            PrefName: 'tblTransactionlist',
-                            published: true,
-                            customFields: lineItems,
-                            updatedAt: new Date()
-                        }
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-                        }
-                    });
-
-                } else {
-                    CloudPreference.insert({
-                        userid: clientID,
-                        username: clientUsername,
-                        useremail: clientEmail,
-                        PrefGroup: 'salesform',
-                        PrefName: 'tblTransactionlist',
-                        published: true,
-                        customFields: lineItems,
-                        createdAt: new Date()
-                    }, function(err, idTag) {
-                        if (err) {
-                            $('#myModal2').modal('toggle');
-                        } else {
-                            $('#myModal2').modal('toggle');
-
-                        }
-                    });
-                }
-            }
-        }
-        $('#myModal2').modal('toggle');
-        //Meteor._reload.reload();
-    },
-    'blur .divcolumn': function(event) {
-        let columData = $(event.target).text();
-        let columnDatanIndex = $(event.target).closest("div.columnSettings").attr('id');
-        const datable = $('#tblTransactionlist').DataTable();
-        const title = datable.column(columnDatanIndex).header();
-        $(title).html(columData);
-    },
-    'change .rngRange': function(event) {
-        let range = $(event.target).val();
-        // $(event.target).closest("div.divColWidth").find(".spWidth").html(range+'px');
-        // let columData = $(event.target).closest("div.divColWidth").find(".spWidth").attr("value");
-        let columnDataValue = $(event.target).closest("div").prev().find(".divcolumn").text();
-        const datable = $('#tblTransactionlist th');
-        $.each(datable, function(i, v) {
-            if (v.innerText === columnDataValue) {
-                let className = v.className;
-                let replaceClass = className.replace(/ /g, ".");
-                $("." + replaceClass + "").css('width', range + 'px');
-            }
-        });
-    },
-    'click .btnOpenSettingsCrm': function(event) {
-        let templateObject = Template.instance();
-        const columns = $('#tblCrmList th');
-        const tableHeaderList = [];
-        let sWidth = "";
-        let columVisible = false;
-        $.each(columns, function(i, v) {
-            if (v.hidden === false) {
-                columVisible = true;
-            }
-            if ((v.className.includes("hiddenColumn"))) {
-                columVisible = false;
-            }
-            sWidth = v.style.width.replace('px', "");
-            let datatablerecordObj = {
-                sTitle: v.innerText || '',
-                sWidth: sWidth || '',
-                sIndex: v.cellIndex || 0,
-                sVisible: columVisible || false,
-                sClass: v.className || ''
-            };
-            tableHeaderList.push(datatablerecordObj);
-        });
-        templateObject.crmTableheaderRecords.set(tableHeaderList);
     },
     'click #exportbtn': function() {
         $('.fullScreenSpin').css('display', 'inline-block');
@@ -2560,7 +2462,7 @@ Template.leadscard.events({
         if (getemp_id[1]) {
             TCustomerID = parseInt(currentEmployee);
         }
-        
+
         $("#contactID").val(TCustomerID);
         $('#contactType').val('Lead')
         $('#crmEditSelectLeadList').val($('#edtLeadEmployeeName').val());
@@ -2647,7 +2549,44 @@ Template.leadscard.helpers({
         return isMobile;
     },
     setLeadStatus: (status) => status || 'Unqualified',
-    setLeadSource: (source) => source || 'Unknown'
+    setLeadSource: (source) => source || 'Unknown',
+    tableheaderrecords: () => {
+        return Template.instance().tableheaderrecords.get();
+    },
+    apiFunction:function() {
+        let crmService = new CRMService();
+        return crmService.getAllTasksList;
+    },
+
+    searchAPI: function() {
+        let crmService = new CRMService();
+        return crmService.getAllTasksByName;
+    },
+
+    service: ()=>{
+        let crmService = new CRMService();
+        return crmService;
+    },
+
+    datahandler: function () {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    exDataHandler: function() {
+        let templateObject = Template.instance();
+        return function(data) {
+            let dataReturn =  templateObject.getDataTableList(data)
+            return dataReturn
+        }
+    },
+
+    apiParams: function() {
+        return ['dateFrom', 'dateTo', 'ignoredate', 'limitCount', 'limitFrom', 'deleteFilter'];
+    },
 });
 
 function getPreviewFile(uploadedFiles, attachmentID) {
@@ -2758,7 +2697,7 @@ function openEditTaskModals(id, type) {
     // let catg = e.target.dataset.catg;
     let templateObject = Template.instance();
     // $("#editProjectID").val("");
-    
+
     $("#txtCrmSubTaskID").val(id);
 
     $(".fullScreenSpin").css("display", "inline-block");
@@ -2875,7 +2814,7 @@ function openEditTaskModals(id, type) {
                     let tomorrowDay = moment().add(1, "day").format("ddd");
                     let nextMonday = moment(moment()).day(1 + 7).format("ddd MMM D");
                     let date_component = due_date;
-                    
+
                     $("#taskmodalDuedate").val(date_component);
                     $("#taskmodalDescription").html(selected_record.TaskDescription);
 
@@ -3017,17 +2956,17 @@ function openEditTaskModals(id, type) {
                         <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                             <div class="row">
                             <span class="activityName">${activity.EnteredBy
-                    } </span> <span class="activityAction">${activity.ActivityName
-                    } </span>
+                            } </span> <span class="activityAction">${activity.ActivityName
+                            } </span>
                             </div>
                             <div class="row">
                             <span class="activityComment">${activity.ActivityDescription
-                    }</span>
+                            }</span>
                             </div>
                             <div class="row">
                             <span class="activityTime">${moment(
-                    activity.ActivityDateStartd
-                    ).format("h:mm A")}</span>
+                                activity.ActivityDateStartd
+                            ).format("h:mm A")}</span>
                             </div>
                         </div>
                         <hr style="width: 100%; margin: 16px;" />
@@ -3059,17 +2998,17 @@ function openEditTaskModals(id, type) {
                             <div class="col-11" style="padding-top: 4px; padding-left: 24px;">
                             <div class="row">
                                 <span class="activityName">${activity.EnteredBy
-                    } </span> <span class="activityAction">${activity.ActivityName
-                    } </span>
+                                } </span> <span class="activityAction">${activity.ActivityName
+                                } </span>
                             </div>
                             <div class="row">
                                 <span class="activityComment">${activity.ActivityDescription
-                    }</span>
+                                }</span>
                             </div>
                             <div class="row">
                                 <span class="activityTime">${moment(
-                        activity.ActivityDateStartd
-                    ).format("h:mm A")}</span>
+                                    activity.ActivityDateStartd
+                                ).format("h:mm A")}</span>
                             </div>
                             </div>
                             <hr style="width: 100%; margin: 16px;" />
