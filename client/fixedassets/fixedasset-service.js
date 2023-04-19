@@ -14,7 +14,7 @@ export class FixedAssetService extends BaseService {
   getTFixedAssetByNameOrID(dataSearchName) {
     let options = {
       ListType: "Detail",
-      Search: 'AssetName like "' + dataSearchName + '" OR AssetID like "' + dataSearchName + '"',
+      Search: 'AssetName like "%' + dataSearchName + '%" OR AssetID like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TFixedAssetsList, options);
   }
@@ -50,9 +50,9 @@ export class FixedAssetService extends BaseService {
   getServiceLogList() {
     let options = {
       ListType: "Detail",
-      select: "[Active]=true"
+      Search: "Active=true"
     };
-    return this.GET(this.ERPObjects.TServiceLogList);
+    return this.getList(this.ERPObjects.TServiceLogList);
   }
 
 
@@ -71,6 +71,14 @@ export class FixedAssetService extends BaseService {
   getCostTypeList() {
     let options = {
       ListType: "Detail"
+    };
+    return this.getList(this.ERPObjects.TCostTypes, options);
+  }
+
+  getCostTypeListDetail(data) {
+    let options = {
+      ListType: "Detail",
+      select: 'TypeName like "%' + data + '%"',
     };
     return this.getList(this.ERPObjects.TCostTypes, options);
   }

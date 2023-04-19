@@ -167,11 +167,9 @@ Template.npleditlayoutscreen.onRendered(function () {
       dragAndDrop: true,
       onCanMoveTo: function(movedNode, targetNode, position) {
         if(targetNode.children.length > 0) {
-          //console.log(movedNode, targetNode, position);
           return true;
         }
         if(position == "inside") {
-          //console.log(movedNode, targetNode, position)
           return false;
         }
         if(!targetNode.parent.parent && movedNode.parent.parent)

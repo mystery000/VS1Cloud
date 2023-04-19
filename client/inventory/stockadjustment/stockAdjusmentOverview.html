@@ -155,11 +155,12 @@
         <div style="padding: 0px 12px;">
             <div class="card-body p-3 rounded">
                 <style>
-                    td.colAmountEx, td.colTax, td.colAmount{
+                    td.colTotalCost{
                         text-align: right !important;
                     }
                 </style>
                 {{>datatablelist
+					tableclass="tblStockAdjustOverview"
                     tablename="tblStockAdjustOverview"
                     apiName= apiFunction
                     indexeddbname = 'TStockAdjustEntry'
@@ -170,10 +171,10 @@
                     datahandler = datahandler
                     service=service
                     lowercaseDataName='tstockadjustentry'
-                    exIndexDBName = 'tstockadjustentryex'
+                    exIndexDBName = 'tstockadjustentry'
                     exdatahandler = exDataHandler
                     searchAPI = searchAPI
-                    orderby = '[[ 1, "desc" ]]'
+                    orderby = '[[ 2, "desc" ]]'
                 }}
                 
             </div>

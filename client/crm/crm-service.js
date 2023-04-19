@@ -60,13 +60,15 @@ export class CRMService extends BaseService {
         return this.getList(this.ERPObjects.TProjectTasksList, options);
     }
 
-    getAllTasksList(dateFrom, dateTo, ignoreDate, deleteFilter) {
+    getAllTasksList(dateFrom, dateTo, ignoreDate, limitCount, limitFrom, deleteFilter) {
         let options;
         if (ignoreDate == true) {
             options = {
                 ListType: "Detail",
                 Search: "pt.Active=true",
                 IgnoreDates: true,
+                LimitCount: parseInt(limitCount)||initialReportLoad,
+                LimitFrom: parseInt(limitFrom)||0,
             };
         } else {
             options = {
@@ -75,6 +77,8 @@ export class CRMService extends BaseService {
                 IgnoreDates: false,
                 DateFrom: '"' + dateFrom + '"',
                 DateTo: '"' + dateTo + '"',
+                LimitCount: parseInt(limitCount)||initialReportLoad,
+                LimitFrom: parseInt(limitFrom)||0,
             };
         }
         if(deleteFilter) options.Search = "";
