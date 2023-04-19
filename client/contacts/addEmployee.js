@@ -2189,13 +2189,12 @@ Template.employeescard.onRendered(function () {
       $('#edtResidencyStatus').editableSelect('add', 'Australian Resident');
       $('#edtResidencyStatus').editableSelect('add', 'Foreign Resident');
       $('#edtResidencyStatus').editableSelect('add', 'Working Holiday Maker');
-      
+
       $('#edtPayrollCalendar').editableSelect();
       $('#edtHolidays').editableSelect();
       $('#obEarningsRate').editableSelect();
-      $('#edtPayPeriod').editableSelect();
-      
-      $('#edtPayrollCalendar').editableSelect(                                                                                                                                                                                                                                                                                                                                                                                                                                                                ).on('click.editable-select', async function (e, li) {
+
+      $('#edtPayrollCalendar').editableSelect().on('click.editable-select', async function (e, li) {
           // let $search = $(this);
           // let offset = $search.offset();
           // if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
@@ -2275,7 +2274,7 @@ Template.employeescard.onRendered(function () {
         $(".paste-expenses").attr('account-id', id);
         $(".paste-expenses").removeClass('paste-expenses')
         $("#accountListModal").modal("toggle");
-    });    
+    });
   });
 
   $(document).on('click', '#editEmployeeTitle', function (e, li) {
@@ -2899,7 +2898,7 @@ Template.employeescard.onRendered(function () {
             let $search = $(this);
             let offset = $search.offset();
             if (e.pageX > offset.left + $search.width() - 8) { // X button 16px wide?
-              $('#earningRateSettingsModal').modal('show');            
+              $('#earningRateSettingsModal').modal('show');
             } else {
               $('#earningRateSettingsModal').modal('show');
             }
@@ -2907,7 +2906,7 @@ Template.employeescard.onRendered(function () {
           $('#ptEarningRate'+earningLines[i].ID).val(earningLines[i].EarningRate);
       }
     }, 1000);
-    
+
     templateObject.setEarningLineDropDown();
 
   };
@@ -5129,13 +5128,13 @@ Template.employeescard.events({
           var enteredEmail = $("#cloudEmpEmailAddress").val();
           var checkifupdate = $("#cloudCheckEmpEmailAddress").val();
           var enteredPassword = $("#cloudEmpUserPassword").val();
-          let cloudpassword = $("#cloudEmpUserPassword").val() && $("#cloudEmpUserPassword").val().replace(/;/g, ",");
+          let cloudpassword = $("#cloudEmpUserPassword").val();
+          //&& $("#cloudEmpUserPassword").val().replace(/;/g, ",");
           let cloudcheckpassword = $("#cloudCheckEmpUserPassword").val();
           if (($.trim(enteredEmail).length != 0) && ($.trim(enteredPassword).length != 0)) {
-            if (cloudpassword && cloudcheckpassword && cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase()) {
+            if ((cloudpassword) && (cloudpassword.toUpperCase() != cloudcheckpassword.toUpperCase())) {
               var cloudHashPassword = CryptoJS.MD5(enteredPassword).toString().toUpperCase();
               if ($.trim(checkifupdate).length != 0) {
-
                 if (cloudpassword.length < 8) {
 
                   swal('Invalid VS1 Password', 'Password must be at least eight characters including one capital letter and one number!', 'error');
@@ -5380,7 +5379,6 @@ Template.employeescard.events({
               } else {
                 $('.fullScreenSpin').css('display', 'none');
                 $('#addvs1userModal').modal('toggle');
-
               }
 
             } else {
@@ -5389,6 +5387,7 @@ Template.employeescard.events({
 
           } else {
             if (employeeSaveID) {
+
               sideBarService.getAllEmployees(25, 0).then(function (dataReload) {
                 addVS1Data('TEmployee', JSON.stringify(dataReload)).then(function (datareturn) {
                   sideBarService.getAllAppointmentPredList().then(function (dataAPPPref) {
@@ -5414,6 +5413,7 @@ Template.employeescard.events({
                   FlowRouter.go('/employeelist?success=true');
                 });
               });
+
             }
           }
         });
@@ -6010,7 +6010,7 @@ Template.employeescard.events({
       let HoursAccruedAnnuallyFullTimeEmp = 0;
       let HoursFullTimeEmpFortnightlyPay = 0;
       let HoursAccruedAnnually = 0;
-    
+
       if (LeaveType == "") {
         handleValidationError('Please select a Leave!', 'leaveTypeSelect');
         return false;
@@ -10167,7 +10167,7 @@ Template.employeescard.events({
   "click #expenseAccount": (e, ui) => {
     $(e.currentTarget).addClass('paste-expenses');
   },
-  
+
   "click #tblEarnings tbody tr": (e, ui) => {
     const tr = $(e.currentTarget);
     const id = parseInt(tr.find('.colEarningsID').text());

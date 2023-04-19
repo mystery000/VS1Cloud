@@ -101,7 +101,7 @@ export default class TableHandler {
     $(tableDisplay?.context[0]?.aoColumns).each(function (index, value) {
       var fieldID = index || 0;
       var colTitle = value.title || "";
-      var colWidth = value.width || 0;
+      var colWidth = value.nTh.style.width?.includes("px")?value.nTh.style.width.slice(0,-2):value.nTh.style.width || value.width;
       var colthClass = value.className || "";
       var showCol = value.visible||false;
 
@@ -115,7 +115,6 @@ export default class TableHandler {
       };
 
       lineItems.push(lineItemObj);
-
     });
 
   }else{
