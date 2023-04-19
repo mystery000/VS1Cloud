@@ -463,8 +463,7 @@ export class SideBarService extends BaseService {
     options = {
       ListType: "Detail",
       OrderBy: '"PARTSID desc"',
-      LimitCount: parseInt(initialReportLoad),
-      search: 'ProductName="'+ dataSearchName+ '" OR BARCODE="' + dataSearchName + '"',
+      select: '[ProductName] f7like "'+ dataSearchName+ '" OR [BARCODE] f7like "' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TProductQtyList, options);
   }
@@ -1030,7 +1029,7 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       ListType: "Detail",
-      select: '[AccountName] f7like "' + dataSearchName + '"',
+      Search: 'AccountName like "%' + dataSearchName + '%"',
     };
     return this.getList(this.ERPObjects.TAccountVS1List, options);
   }
@@ -2550,6 +2549,38 @@ export class SideBarService extends BaseService {
         LimitCount: parseInt(limitcount)||initialReportLoad,
         LimitFrom: parseInt(limitfrom)||0,
       };
+    }
+    return this.getList(this.ERPObjects.TStockAdjustEntry, options);
+  }
+
+  getAllStockAdjustEntryByName(dataName) {
+    let options = "";
+    // if (limitcount == "All") {
+    //   options = {
+    //     ListType: "Detail",
+    //     select: "[Deleted]=false",
+    //   };
+    // } else {
+    //   options = {
+    //     orderby: '"StockAdjustEntryID desc"',
+    //     ListType: "Detail",
+    //     select: "[Deleted]=false",
+    //     LimitCount: parseInt(limitcount)||initialReportLoad,
+    //     LimitFrom: parseInt(limitfrom)||0,
+    //   };
+    // }
+    if(dataName && dataName != ""){
+      options = {
+        ListType : "Detail",
+        select : "[Employee]  like '%" + dataName + "%' OR [AccountName] like '%" + dataName + "%'",
+      }
+    }
+    else{
+      options = {
+        orderby: '"StockAdjustEntryID desc"',
+        ListType : "Detail",
+        select : "[Deleted]=false",
+      }
     }
     return this.getList(this.ERPObjects.TStockAdjustEntry, options);
   }

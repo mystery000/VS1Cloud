@@ -474,7 +474,7 @@ Template.employeescard.onRendered(function () {
     const filterProducts = (productToRemove = [], productList = []) => {
       return productList.filter(p => !productToRemove.some(pr => pr.Id == p.Id));
     }
-    let productIds = $("#tblInventoryService").find("input.chkServiceCard:checked");
+    let productIds = $(".tblInventoryService").find("input.chkServiceCard:checked");
     selectedProducts.push(...filterProducts(selectedProducts, productIds.map((index, input) => allProducts.find(p => p.Id == parseInt($(input).attr("product-id")))).toArray()));
 
     // We do this to avoid undefined valeus
@@ -2173,7 +2173,7 @@ Template.employeescard.onRendered(function () {
     }, 1000)
 
     //On Click Client Type List
-    $(document).on("click", "#tblInventoryService tbody tr", function (e) {
+    $(document).on("click", ".tblInventoryService tbody tr", function (e) {
       const table = $(this);
       if (edtProductSelect == "appointment") {
         let productName = table.find(".productName").text() || '';
@@ -2212,7 +2212,7 @@ Template.employeescard.onRendered(function () {
       $('#holidaysPopModal').modal('toggle');
     });
 
-    $(document).on("click", "#tblAccountListPop tbody tr", function (e) {
+    $(document).on("click", ".tblAccountListPop tbody tr", function (e) {
         var table = $(this);
         const id = table.find('.colAccountID').text();
         const accountName = table.find('.colAccountName').text();
