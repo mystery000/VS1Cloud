@@ -2530,6 +2530,10 @@
                                 <div class="col-12 col-md-6">
                                   <h4>Payslip</h4>
                                 </div>
+                                <div class="col d-xl-flex justify-content-xl-end align-items-xl-start"
+                                      style="padding: 0px !important">
+                                    {{> export_import_print_display_button Import="hiddenButton" tablename="tblPayslipHistory"}}
+                                </div>
                               </div>
 
                               <div class="modal fade" id="paySlipModal" role="dialog" aria-labelledby="paySlipModal"
@@ -2625,52 +2629,34 @@
                               </div>
 
                               <div class="row">
+                                <style>
+                                  .tblPayslipHistory td.colPayslipTotalPay{
+                                    text-align: right;
+                                  }
+                                  .tblPayslipHistory td.colPayslipDownload{
+                                    text-align: center;
+                                  }
+                                </style>
                                 <div class="col-12">
-                                    <style>
-                                      .hiddenColumn {
-                                        display: none;
-                                      }
-
-                                      #tblPayslipHistory {
-                                        width: 100% !important;
-                                      }
-
-                                      .showColumn {
-                                        display: table-cell;
-                                        padding: .75rem;
-                                        vertical-align: top;
-                                      }
-
-                                      .smallFontSizeBtn i {
-                                        font-size: 12px;
-                                      }
-
-                                      .smallFontSizeBtn {
-                                        padding: 0;
-                                        width: 25px;
-                                        height: 25px;
-                                        display: inline-flex;
-                                        justify-content: center;
-                                        align-items: center;
-                                      }
-                                    </style>
-                                    {{> datatablelist
-                                      tablename="tblPayslipHistory"
-                                      apiName=apiFunction8
-                                      indexeddbname='TPaySlips'
-                                      tableheaderrecords=paysliptableheaderrecords
-                                      exportfilename='PaySlips'
-                                      apiParams=apiParams4
-                                      datahandler=datahandler4
-                                      service=service
-                                      lowercaseDataName='tpayslips'
-                                      exIndexDBName='tpayslips'
-                                      exdatahandler=exDataHandler4
-                                      searchAPI=searchAPI4
-                                      showPlusButton=true
-                                      showPlusButtonClass='addNewSlip'
-                                      showModalID='#paySlipModal'
-                                    }}
+                                  {{> datatablelist
+                                    tablename="tblPayslipHistory"
+                                    tableclass="tblPayslipHistory"
+                                    apiName=apiFunction8
+                                    indexeddbname='TPaySlips'
+                                    tableheaderrecords=paysliptableheaderrecords
+                                    exportfilename='PaySlips'
+                                    istransaction = false
+                                    apiParams=apiParams4
+                                    datahandler=datahandler4
+                                    service=service
+                                    lowercaseDataName='tpayslips'
+                                    exIndexDBName='tpayslips'
+                                    exdatahandler=exDataHandler4
+                                    searchAPI=searchAPI4
+                                    showPlusButton=true
+                                    showPlusButtonClass='addNewSlip'
+                                    showModalID='#paySlipModal'
+                                  }}
                                 </div>
                               </div>
                             </div>
