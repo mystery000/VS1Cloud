@@ -1383,7 +1383,8 @@ export class SideBarService extends BaseService {
     let options = "";
     options = {
       orderby: '"PrintName asc"',
-      Search: 'ClientName f7like "' + dataSearchName + '"',
+      //Search: 'ClientName f7like "' + dataSearchName + '"',
+      Search: 'Company="' + dataSearchName + '"',
     };
     return this.getList(this.ERPObjects.TCustomerVS1List, options);
   }
