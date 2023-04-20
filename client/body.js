@@ -596,6 +596,7 @@ import '../public/js/cdnjs/vfs_fonts.js';
 import './vs1_templates/title_list_pop/title_list_pop.js';
 import './expenseclaim/expenseclaims.html';
 import './packages/currency/editcurrencypop.js';
+import '../public/js/tree.jquery.js';
 /* Stefan */
 
 /* Arthlo */

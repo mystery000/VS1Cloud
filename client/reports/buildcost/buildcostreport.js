@@ -30,7 +30,7 @@ Template.buildcostreport.onCreated(function() {
              
         let labour_cost = (data.HourlyLabourCost * clocked_hrs).toFixed(2);
         let changed_qty;
-
+       
         if(data.ChangedQty == 0) { 
             changed_qty = data.BOMQty ;
         } else {
@@ -61,7 +61,6 @@ Template.buildcostreport.onCreated(function() {
           //clocked_times = parseFloat(clocked_hrs).toFixed(4);
         }
       
-        
         if(labour_cost == "" || over_head_cost == "" ) {
              total_bom_cost =  RawMaterialcost + wastage_cost;
         } else {
@@ -95,9 +94,8 @@ Template.buildcostreport.onCreated(function() {
                         total_bom_cost || 0, 
                         linestatus,   ];
         return dataList;
-    }
+    };
 
-       
     let headerStructure = [
         { index: 0, label: 'Work Order', class: 'colWorkorder', active: true, display: true, width: "100" },
         { index: 1, label: 'Product ID', class: 'colProductID', active: true, display: true, width: "100" },
@@ -118,8 +116,16 @@ Template.buildcostreport.onCreated(function() {
         { index: 16, label: 'Total BOM Cost', class: 'colTotalBOMCost', active: true, display: true, width: "120" },  
         { index: 17, label: 'Status', class: 'colStatus', active: true, display: true, width: "100" },     
     ];
-
     templateObject.tableheaderrecords.set(headerStructure);
+
+    templateObject.getDiffTime = function (time1, time2) {
+        const [h1, m1, s1] = time1.split(/[:\s]/).map(Number);
+        const [h2, m2, s2] = time2.split(/[:\s]/).map(Number);
+
+        // Calculate the difference in hours
+        const diffInHours = (h2 - h1) + (m2 - m1) / 60 + (s2 - s1) / 3600;
+        return diffInHours;
+    }
 });
 
 Template.buildcostreport.onRendered(function() {
@@ -182,23 +188,15 @@ Template.buildcostreport.onRendered(function() {
                     startedTimes = workorder[i].fields.StartedTimes;
                     stoppedTimes = workorder[i].fields.StoppedTimes;
                     let clocked_hrs = 0;  
-
-                                        
-                    for(let k=0; k < startedTimes.length; k++) {
+                                                           
+                    for(let k=0; k < stoppedTimes.length; k++) {
 
                         const startTimeString = startedTimes[k];
                         const endTimeString = stoppedTimes[k];
-
-                        // Convert the time strings to Date objects
-                        const startTime = new Date(`04/07/2023 ${startTimeString}`);
-                        const endTime = new Date(`04/07/2023 ${endTimeString}`);
-
-                    // Calculate the difference in hours
-                       const hoursDiff = Math.abs(endTime - startTime) / 36e5; // 36e5 is the number of milliseconds in an hour
+                        const hoursDiff = templateObject.getDiffTime(startTimeString, endTimeString);
+                   
                        clocked_hrs = clocked_hrs + hoursDiff;
-                    }
-
-                                                 
+                    }                           
                                       
 
                     let details = JSON.parse(bomData.Details);
@@ -223,7 +221,6 @@ Template.buildcostreport.onRendered(function() {
                         
 
                     };
-
 
                     buildcostreport_data.push(temp);
 
@@ -273,9 +270,8 @@ Template.buildcostreport.onRendered(function() {
 
     }
     
-    templateObject.makeIndexedDBdata();       
-       
-   
+    templateObject.makeIndexedDBdata();     
+      
     templateObject.timeToHours = function (time) {
         const parts = time.split(":");
         const hours = parseInt(parts[0]);
@@ -283,9 +279,7 @@ Template.buildcostreport.onRendered(function() {
         const seconds = parseInt(parts[2]);
         const totalHours = hours + minutes / 60 + seconds / 3600;
         return totalHours;
-    } ;
-
-    
+    } ;    
 
     templateObject.timeFormat = function(hours) {
         var decimalTime = parseFloat(hours).toFixed(2);
@@ -305,9 +299,7 @@ Template.buildcostreport.onRendered(function() {
         var hours = parseInt(hoursMinutes[0], 10);
         var minutes = hoursMinutes[1] ? parseInt(hoursMinutes[1], 10) : 0;
         return hours + minutes / 60;
-    }
-    
-      
+    }   
 
 });
 
@@ -344,9 +336,8 @@ Template.buildcostreport.events({
     'click .templateDownload': function () {
         let utilityService = new UtilityService();
         let rows = [];
-        const filename = 'SampleCustomer' + '.csv';
-        rows[0] = ['Company', 'First Name', 'Last Name', 'Phone', 'Mobile', 'Email', 'Skype', 'Street', 'Street2', 'State', 'Post Code', 'Country'];
-        rows[1] = ['ABC Company', 'John', 'Smith', '9995551213', '9995551213', 'johnsmith@email.com', 'johnsmith', '123 Main Street', 'Main Street', 'New York', '1234', 'United States'];
+        const filename = 'SampleBuildcostReport' + '.csv';
+        rows[0] = ['Work Order', 'Product ID', 'Process BOM', 'Process BOM Changed', 'BOM Products', 'Product Changed', 'Unit Cost', 'BOM Qty', 'Changed Qty', 'Variance', 'Wastage', 'Total Clocked Hours', 'Labour Cost', 'Overhead Cost', 'Raw Material Cost', 'Wastage Cost', 'Total BOM Cost'];
         utilityService.exportToCsv(rows, filename, 'csv');
     },
     'click .btnUploadFile': function (event) {
@@ -359,7 +350,7 @@ Template.buildcostreport.events({
     'click .templateDownloadXLSX': function (e) {
 
         e.preventDefault();  //stop the browser from following
-        window.location.href = 'sample_imports/SampleCustomer.xlsx';
+        window.location.href = 'sample_imports/SampleBuildcostReport.xlsx';
     },
     'change #attachment-upload': function (e) {
         let templateObj = Template.instance();
@@ -399,7 +390,6 @@ Template.buildcostreport.events({
                 var data = e.target.result;
                 data = new Uint8Array(data);
                 var workbook = XLSX.read(data, { type: 'array' });
-
                 var result = {};
                 workbook.SheetNames.forEach(function (sheetName) {
                     var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
@@ -433,12 +423,15 @@ Template.buildcostreport.events({
             complete: function (results) {
 
                 if (results.data.length > 0) {
-                    if ((results.data[0][0] == "Company") && (results.data[0][1] == "First Name")
-                        && (results.data[0][2] == "Last Name") && (results.data[0][3] == "Phone")
-                        && (results.data[0][4] == "Mobile") && (results.data[0][5] == "Email")
-                        && (results.data[0][6] == "Skype") && (results.data[0][7] == "Street")
-                        && (results.data[0][8] == "Street2") && (results.data[0][9] == "State")
-                        && (results.data[0][10] == "Post Code") && (results.data[0][11] == "Country")) {
+                    if ((results.data[0][0] == "Work Order") && (results.data[0][1] == "Product ID")
+                        && (results.data[0][2] == "Process BOM") && (results.data[0][3] == "Process BOM Changed")
+                        && (results.data[0][4] == "BOM Products") && (results.data[0][5] = "Product Changed")
+                        && (results.data[0][6] == "Unit Cost") && (results.data[0][7] == "BOM Qty")
+                        && (results.data[0][8] == "Changed Qty") && (results.data[0][9] == "Vairance")
+                        && (results.data[0][10] == "Wastage") && (results.data[0][11] == "Total Clocked Hours")
+                        && (results.data[0][12] == "Labour Cost") && (results.data[0][13] == "Overhead Cost")
+                        && (results.data[0][14] == "Raw Material Cost ") && (results.data[0][15] == "Wastage Cost ")
+                        && (results.data[0][16] == "Total BOM Cost") ) {
 
                         let dataLength = results.data.length * 500;
                         setTimeout(function () {
@@ -448,33 +441,31 @@ Template.buildcostreport.events({
 
                         for (let i = 0; i < results.data.length - 1; i++) {
                             objDetails = {
-                                type: "TCustomer",
+                                type: "TVS1BuildCostReport",
                                 fields:
                                 {
-                                    ClientName: results.data[i + 1][0],
-                                    FirstName: results.data[i + 1][1],
-                                    LastName: results.data[i + 1][2],
-                                    Phone: results.data[i + 1][3],
-                                    Mobile: results.data[i + 1][4],
-                                    Email: results.data[i + 1][5],
-                                    SkypeName: results.data[i + 1][6],
-                                    Street: results.data[i + 1][7],
-                                    Street2: results.data[i + 1][8],
-                                    State: results.data[i + 1][9],
-                                    PostCode: results.data[i + 1][10],
-                                    Country: results.data[i + 1][11],
-
-                                    BillStreet: results.data[i + 1][7],
-                                    BillStreet2: results.data[i + 1][8],
-                                    BillState: results.data[i + 1][9],
-                                    BillPostCode: results.data[i + 1][10],
-                                    Billcountry: results.data[i + 1][11],
-                                    PublishOnVS1: true
+                                    WorkOrder: results.data[i + 1][0],
+                                    ProductID: results.data[i + 1][1],
+                                    ProcessBOM: results.data[i + 1][2],
+                                    ProcessBOMChanged: results.data[i + 1][3],
+                                    BOMProducts: results.data[i + 1][4],
+                                    ProductsChanged: results.data[i + 1][5],
+                                    UnitCost: results.data[i + 1][6],
+                                    BOMQty: results.data[i + 1][7],
+                                    ChangedQty: results.data[i + 1][8],
+                                    Variance: results.data[i + 1][9],
+                                    Wastage: results.data[i + 1][10],
+                                    TotalClockedTime: results.data[i + 1][11],
+                                    LabourCost: results.data[i + 1][12],
+                                    OverheadCost: results.data[i + 1][13],
+                                    RawMaterialcost: results.data[i + 1][14],
+                                    WastageCost: results.data[i + 1][15],
+                                    TotalBOMCost: results.data[i + 1][16],
                                 }
                             };
                             if (results.data[i + 1][1]) {
                                 if (results.data[i + 1][1] !== "") {
-                                    contactService.saveCustomer(objDetails).then(function (data) {
+                                    manufacturingService.saveBuildCostReport(objDetails).then(function (data) {
                                         //$('.fullScreenSpin').css('display','none');
                                         //Meteor._reload.reload();
                                     }).catch(function (err) {
