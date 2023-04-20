@@ -221,7 +221,7 @@ Template.transaction_print_modal.onCreated(async function () {
         .filter((item) => item.active)
         .map((template) => {
           let templateList = vs1DataList.ttemplatesettings
-            .filter((item) => item.fields.SettingName == template.name)
+            .filter((item) => item.fields.SettingName == template.name && item.fields.GlobalRef == template.name)
             .map((item) => ({
               fields: {
                 SettingName: item.fields.SettingName,
